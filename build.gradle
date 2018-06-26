@@ -1,7 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.50'
+    ext {
+        sdk = 27
+        minSdk = 19
+        kotlin_version = '1.2.50'
+
+        libs = [
+                kotlin: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+        ]
+    }
     repositories {
         google()
         jcenter()
@@ -15,10 +23,41 @@ buildscript {
     }
 }
 
-allprojects {
+subprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://www.jitpack.io" }
+    }
+
+    if (name == 'app') {
+        apply plugin: 'com.android.application'
+    } else {
+        apply plugin: 'com.android.library'
+    }
+    apply plugin: 'kotlin-android'
+    apply plugin: 'kotlin-kapt'
+
+    android {
+        compileSdkVersion sdk
+        defaultConfig {
+            minSdkVersion minSdk
+            targetSdkVersion sdk
+
+            vectorDrawables {
+                useSupportLibrary true
+            }
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_7
+            targetCompatibility JavaVersion.VERSION_1_7
+        }
+    }
+
+    kapt {
+        useBuildCache = true
+        mapDiagnosticLocations = true
+        correctErrorTypes = true
     }
 }
 
