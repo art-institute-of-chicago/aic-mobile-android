@@ -14,9 +14,9 @@ class AppModule {
     @Provides
     fun provideApplication(): Context = ArticApp.app
 
-//    @Provides
-//    @Named(VERSION)
-//    fun getBuildVersion(): String = BuildConfig.VERSION_NAME
+    @Provides
+    @Named(VERSION)
+    fun getBuildVersion(): String = BuildConfig.VERSION_NAME
 
     @Module
     companion object {
