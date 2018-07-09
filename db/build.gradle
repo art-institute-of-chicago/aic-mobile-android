@@ -1,0 +1,52 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.android.library'
+
+def baseUrlOverride = project.hasProperty('baseUrl') ? project.baseUrl : ""
+android {
+    defaultConfig {
+        buildConfigField("String", "BASE_URL_OVERRIDE", "\"${baseUrlOverride}\"")
+    }
+}
+
+dependencies {
+    implementation project(':base')
+    implementation libs.rxHelper
+    api libs.retrofit_rx
+
+    api libs.retrofit
+    api libs.retrofit_scalars
+
+    api libs.moshi
+    api libs.retrofit_moshi
+
+    // dont leak to enforce explicit handling
+    implementation libs.kotshi
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+
+    api 'com.evernote:android-job:1.2.4'
+
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+    kapt libs.kotshi_compiler
+
+    api libs.kotlin
+    api libs.arch_runtime
+    api libs.arch_paging
+
+    api libs.room
+    kapt libs.room_compiler
+
+    api libs.dagger
+    kapt libs.dagger_compiler
+
+    api libs.rx_kotlin
+    api libs.rx
+    api libs.rx_android
+    api libs.room_rx
+}
+
+androidExtensions {
+    experimental = true
+}
