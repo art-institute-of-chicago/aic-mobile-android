@@ -5,10 +5,31 @@ buildscript {
         sdk = 27
         minSdk = 19
         kotlin_version = '1.2.50'
+        latest_helper = '7f1d88469155cedd57df87682806736437088abc'
+        dagger_version = '2.15'
+        support_version = '27.1.1'
+        arch_version = '1.1.0'
+        paging_version = '1.0.0-beta1'
+        rx_binding_version = '2.0.0'
 
         libs = [
-                kotlin: "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+                kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+                rxHelper               : "com.github.fuzz-productions:rx-helpers:${latest_helper}",
+                dagger                 : "com.google.dagger:dagger:${dagger_version}",
+                dagger_android         : "com.google.dagger:dagger-android-support:${dagger_version}",
+                dagger_compiler        : "com.google.dagger:dagger-compiler:${dagger_version}",
+                dagger_android_compiler: "com.google.dagger:dagger-android-processor:${dagger_version}",
+                rx                     : 'io.reactivex.rxjava2:rxjava:2.1.7',
+                rx_kotlin              : 'io.reactivex.rxjava2:rxkotlin:2.1.0',
+                rx_android             : 'io.reactivex.rxjava2:rxandroid:2.0.1',
+                arch_runtime           : "android.arch.lifecycle:runtime:${arch_version}",
+                arch_extensions        : "android.arch.lifecycle:extensions:${arch_version}",
+                arch_paging            : "android.arch.paging:runtime:${paging_version}",
+                arch_common            : "android.arch.paging:common:${arch_version}",
+                arch_rx                : "android.arch.lifecycle:reactivestreams:${arch_version}",
+
         ]
+
     }
     repositories {
         google()
@@ -55,6 +76,10 @@ subprojects {
         sourceSets {
             main.java.srcDirs += 'src/main/kotlin'
         }
+    }
+
+    dependencies {
+        api libs.kotlin
     }
 
     kapt {
