@@ -1,5 +1,6 @@
 package edu.artic.viewmodel
 
+import android.os.Bundle
 import edu.artic.ui.BaseActivity
 import kotlin.reflect.KClass
 
@@ -9,4 +10,5 @@ abstract class BaseViewModelActivity<TViewModel : BaseViewModel> : BaseActivity(
 
     open val useFactory: Boolean
     get() = true
+
 }
