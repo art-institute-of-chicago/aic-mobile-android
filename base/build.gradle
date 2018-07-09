@@ -1,0 +1,18 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    kapt libs.dagger_compiler
+
+    api libs.kotlin
+
+    api libs.dagger
+    api libs.dagger_android
+    api 'javax.annotation:jsr250-api:1.0'
+
+}
+
+
+androidExtensions {
+    experimental = true
+}
