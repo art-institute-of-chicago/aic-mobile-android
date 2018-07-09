@@ -30,7 +30,7 @@ class ViewModelFactory @Inject constructor(private val creators: MutableMap<Clas
     override fun <T : ViewModel> create(viewModelClass: Class<T>): T {
         val creator = creators[viewModelClass]
                 ?: creators.entries.find { viewModelClass.isAssignableFrom(it.key) }?.value
-                ?: throw IllegalArgumentException("unknown model class " + viewModelClass)
+                ?: throw IllegalArgumentException("unknown model class $viewModelClass")
         try {
             return creator.get() as T
         } catch (e: Exception) {
