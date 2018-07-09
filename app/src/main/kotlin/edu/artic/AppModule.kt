@@ -3,9 +3,7 @@ package edu.artic
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import edu.artic.ui.BuildConfig
 import javax.inject.Named
-import javax.inject.Singleton
 
 /**
  * Description:
@@ -16,9 +14,9 @@ class AppModule {
     @Provides
     fun provideApplication(): Context = ArticApp.app
 
-    @Provides
-    @Named(VERSION)
-    fun getBuildVersion(): String = BuildConfig.VERSION_NAME
+//    @Provides
+//    @Named(VERSION)
+//    fun getBuildVersion(): String = BuildConfig.VERSION_NAME
 
     @Module
     companion object {
