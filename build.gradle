@@ -64,10 +64,6 @@ subprojects {
         defaultConfig {
             minSdkVersion minSdk
             targetSdkVersion sdk
-
-            vectorDrawables {
-                useSupportLibrary true
-            }
         }
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_7

@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion sdk
+    compileSdkVersion 27
     defaultConfig {
         applicationId "edu.artic"
         minSdkVersion minSdk
@@ -21,21 +21,18 @@ android {
 }
 
 dependencies {
-    implementation project(":ui")
-    implementation project(":viewmodel")
-    implementation project(":base")
+    implementation project(':ui')
+    implementation project(':viewmodel')
+    implementation project(':base')
+    implementation project(':splash')
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
-
     //Dagger
     implementation libs.dagger
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler
-
-
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
