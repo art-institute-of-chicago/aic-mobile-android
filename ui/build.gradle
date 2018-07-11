@@ -5,6 +5,8 @@ dependencies {
     implementation libs.rxHelper
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
+    api libs.dagger
+    api libs.dagger_android
 
     api "com.android.support:appcompat-v7:${support_version}"
     api "com.android.support:support-v4:${support_version}"
