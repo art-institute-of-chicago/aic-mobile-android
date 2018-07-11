@@ -2,10 +2,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.android.library'
 
-def baseUrlOverride = project.hasProperty('baseUrl') ? project.baseUrl : ""
 android {
     defaultConfig {
-        buildConfigField("String", "BASE_URL_OVERRIDE", "\"${baseUrlOverride}\"")
+        buildConfigField("String", "BLOB_URL", "\"http://aic-mobile-tours.artic.edu/sites/default/files/\"")
     }
 }
 
