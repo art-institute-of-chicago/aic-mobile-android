@@ -26,6 +26,7 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':base')
     implementation project(':splash')
+    implementation project(':welcome')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
