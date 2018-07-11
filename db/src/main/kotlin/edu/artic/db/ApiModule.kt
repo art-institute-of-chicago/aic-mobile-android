@@ -53,9 +53,16 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
+        fun provideBlobService(blobProvider: BlobProvider) = BlobService(blobProvider)
+
+        @JvmStatic
+        @Provides
+        @Singleton
         fun provideBlobProvider(
                 @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit
         ): BlobProvider = RetrofitBlobProvider(retrofit)
+
+
 
         @JvmStatic
         @Provides

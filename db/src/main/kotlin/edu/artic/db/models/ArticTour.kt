@@ -18,9 +18,9 @@ val image_filemime : String,
 val image_filesize : String,
 val image_width : String,
 val image_height : String,
-//val thumbnail_crop_rect : [],
+//val thumbnail_crop_rect : [], // Unsure what type goes here so leaving removed for now
 val thumbnail_full_path : String,
-//val large_image_crop_rect : [],
+//val large_image_crop_rect : [], // Unsure what type goes here so leaving removed for now
 val large_image_crop_v2 : CropRect,
 val large_image_full_path : String,
 val tour_banner : String ,
