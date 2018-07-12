@@ -24,7 +24,7 @@ dependencies {
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
-    api 'com.evernote:android-job:1.2.4'
+    implementation libs.threeten
 
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
