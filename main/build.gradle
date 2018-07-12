@@ -2,14 +2,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
-    implementation libs.rxHelper
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
-    implementation project(':ui')
-    implementation project(':viewmodel')
-    implementation project(':main')
+    api libs.design_support
 
-    api libs.arch_runtime
-    api libs.arch_extensions
-    api libs.arch_rx
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation project(':ui')
+    implementation project(':base')
+    implementation project(':viewmodel')
 }

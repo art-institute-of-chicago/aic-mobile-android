@@ -41,6 +41,7 @@ buildscript {
                 room                   : "android.arch.persistence.room:runtime:${room_version}",
                 room_compiler          : "android.arch.persistence.room:compiler:${room_version}",
                 room_rx                : "android.arch.persistence.room:rxjava2:${room_version}",
+                design_support         :"com.android.support:design:${support_version}"
 
         ]
 
