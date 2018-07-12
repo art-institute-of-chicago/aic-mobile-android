@@ -9,10 +9,10 @@ import retrofit2.http.GET
 import retrofit2.http.HEAD
 import retrofit2.http.Header
 
-interface BlobApi {
+interface AppDataApi {
 
     @HEAD("appData-v2.json")
-    fun getBlobHeaders(): Observable<Result<Response<Void>>>
+    fun getBlobHeaders(): Observable<Response<Void>>
 
 
     @GET("appData-v2.json")

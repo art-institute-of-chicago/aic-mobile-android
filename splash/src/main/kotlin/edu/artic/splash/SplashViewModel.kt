@@ -3,14 +3,14 @@ package edu.artic.splash
 import android.util.Log
 import com.fuzz.rx.disposedBy
 import edu.artic.viewmodel.BaseViewModel
-import edu.artic.db.BlobService
+import edu.artic.db.AppDataManager
 import edu.artic.db.BlobState
 import javax.inject.Inject
 
-class SplashViewModel @Inject constructor(blobService : BlobService) : BaseViewModel() {
+class SplashViewModel @Inject constructor(appDataManager : AppDataManager) : BaseViewModel() {
 
     init {
-        blobService.getBlob()
+        appDataManager.getBlob()
                 .subscribe({
                     when(it) {
 
