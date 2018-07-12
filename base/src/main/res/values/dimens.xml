@@ -12,4 +12,9 @@
     <dimen name="marginQuad">32dp</dimen>
 
     <dimen name="appBarImageHeight">200dp</dimen>
+
+    <dimen name="textMedium">17sp</dimen>
+    <dimen name="textLarge">21sp</dimen>
+    <dimen name="textPrompt">24sp</dimen>
+    <dimen name="textLink">15sp</dimen>
 </resources>
