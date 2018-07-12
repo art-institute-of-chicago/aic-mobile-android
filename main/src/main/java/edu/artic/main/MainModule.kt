@@ -20,6 +20,6 @@ abstract class MainModule {
 
 
     @get:ContributesAndroidInjector
-    abstract val welcomeActivity: MainActivity
+    abstract val mainActivity: MainActivity
 
 }

@@ -12,4 +12,5 @@ dependencies {
     implementation project(':ui')
     implementation project(':base')
     implementation project(':viewmodel')
+    implementation project(':welcome')
 }

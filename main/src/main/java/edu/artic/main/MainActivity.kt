@@ -1,9 +1,12 @@
 package edu.artic.main
 
+
 import android.os.Bundle
+import android.support.v4.app.FragmentTransaction
 import edu.artic.base.disableShiftMode
 
 import edu.artic.viewmodel.BaseViewModelActivity
+import edu.artic.welcome.WelcomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.reflect.KClass
 
@@ -18,5 +21,16 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bottomNavigation.disableShiftMode(R.color.menu_color_list)
+
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+
+        if (container!!.childCount > 1) {
+            transaction.replace(R.id.container, WelcomeFragment())
+        } else {
+            transaction.add(R.id.container, WelcomeFragment())
+        }
+
+        transaction.commit()
+
     }
 }
