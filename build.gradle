@@ -40,6 +40,8 @@ buildscript {
                 room                   : "android.arch.persistence.room:runtime:${room_version}",
                 room_compiler          : "android.arch.persistence.room:compiler:${room_version}",
                 room_rx                : "android.arch.persistence.room:rxjava2:${room_version}",
+                timber                 : 'com.jakewharton.timber:timber:4.5.1',
+                threeten               : 'com.jakewharton.threetenabp:threetenabp:1.0.5',
 
         ]
 

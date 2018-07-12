@@ -10,8 +10,12 @@ import dagger.multibindings.Multibinds
 import edu.artic.db.progress.DownloadProgressInterceptor
 import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -84,14 +88,14 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideBlobService(blobProvider: BlobProvider) :BlobService = BlobService(blobProvider)
+        fun provideBlobService(appDataServiceProvider: AppDataServiceProvider) :AppDataManager = AppDataManager(appDataServiceProvider)
 
         @JvmStatic
         @Provides
         @Singleton
         fun provideBlobProvider(
                 @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit, progressEventBus: ProgressEventBus
-        ): BlobProvider = RetrofitBlobProvider(retrofit, progressEventBus)
+        ): AppDataServiceProvider = RetrofitAppDataServiceProvider(retrofit, progressEventBus)
 
 
 
@@ -112,5 +116,19 @@ class MainThreadExecutor : Executor {
 
     override fun execute(r: Runnable) {
         handler.post(r)
+    }
+}
+
+object UnitConverterFactory : Converter.Factory() {
+    override fun responseBodyConverter(type: Type, annotations: Array<out Annotation>,
+                                       retrofit: Retrofit): Converter<ResponseBody, *>? {
+        val isActualArgument = type is ParameterizedType && type.actualTypeArguments.contains(Void::class.java)
+        return if (isActualArgument) UnitConverter else null
+    }
+
+    private object UnitConverter : Converter<ResponseBody, Unit> {
+        override fun convert(value: ResponseBody) {
+            value.close()
+        }
     }
 }

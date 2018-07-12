@@ -1,17 +1,16 @@
 package edu.artic.db
 
-import android.util.Log
 import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import javax.inject.Named
 
-class RetrofitBlobProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit, private val progressEventBus: ProgressEventBus) : BlobProvider {
+class RetrofitAppDataServiceProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit, private val progressEventBus: ProgressEventBus) : AppDataServiceProvider {
     companion object {
         const val HEADER_ID = "blob_download_header_id"
     }
 
-    private val service = retrofit.create(BlobApi::class.java)
+    private val service = retrofit.create(AppDataApi::class.java)
 
     override fun getBlob(): Observable<BlobState> {
         return Observable.create<BlobState> { observer ->
@@ -36,15 +35,13 @@ class RetrofitBlobProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofi
     override fun getBlobHeaders(): Observable<Map<String, List<String>>> {
         return Observable.create { observer ->
             service.getBlobHeaders()
-                    .subscribe{
-                        Log.d("BlobProvider", "isError ${it.isError}")
-//                        observer.onNext(it.headers().toMultimap())
-                    }
-//            , {
-//                        observer.onError(it)
-//                    }, {
-//                        observer.onComplete()
-//                    })
+                    .subscribe({
+                        observer.onNext(it.headers().toMultimap())
+                    }, {
+                        observer.onError(it)
+                    }, {
+                        observer.onComplete()
+                    })
 
         }
     }
