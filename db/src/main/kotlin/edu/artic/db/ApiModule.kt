@@ -88,7 +88,7 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideBlobService(appDataServiceProvider: AppDataServiceProvider) :AppDataManager = AppDataManager(appDataServiceProvider)
+        fun provideAppDataManager(appDataServiceProvider: AppDataServiceProvider) :AppDataManager = AppDataManager(appDataServiceProvider)
 
         @JvmStatic
         @Provides
