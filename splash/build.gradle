@@ -8,6 +8,7 @@ dependencies {
     implementation project(':ui')
     implementation project(':viewmodel')
     implementation project(':main')
+    implementation project(':db')
 
     api libs.arch_runtime
     api libs.arch_extensions
