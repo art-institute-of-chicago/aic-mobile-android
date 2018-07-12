@@ -3,15 +3,15 @@ package edu.artic.welcome
 import android.content.res.AssetManager
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.View
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.welcome.R.id.appBarLayout
+import edu.artic.welcome.R.id.tourSummaryRecyclerView
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
 import java.nio.charset.Charset
@@ -49,10 +49,11 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         }
 
         val list = getTours()
-        Log.d("test", "${list.size}")
+
         context?.let {
             tourSummaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             tourSummaryRecyclerView.adapter = ToursAdapter(list, it)
+
         }
 
     }

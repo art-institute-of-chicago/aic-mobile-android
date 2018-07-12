@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context="edu.artic.welcome.WelcomeFragment">
 
     <include
@@ -84,12 +83,16 @@
                 android:nestedScrollingEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginDouble" />
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginDouble"
+                />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_margin="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginStandard"
+                android:layout_marginEnd="@dimen/marginStandard"
                 android:background="@color/warmGrey" />
 
         </LinearLayout>
