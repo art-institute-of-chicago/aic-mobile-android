@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 
 class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     override val title: String
-        get() = "welcome"
+        get() = "Welcome"
 
     override val viewModelClass: KClass<WelcomeViewModel>
         get() = WelcomeViewModel::class
@@ -20,6 +20,11 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /**
+         * TODO:: move this logic away into the app bar view class
+         * TODO:: Make a Custom AppBar view that dynamically switches the toolbar type (collapsible and non collapsible)
+         */
         val appBar = appBarLayout as AppBarLayout
         appBar.addOnOffsetChangedListener { aBarLayout, verticalOffset ->
             val progress: Double = 1 - Math.abs(verticalOffset) / aBarLayout!!.totalScrollRange.toDouble()
@@ -27,6 +32,5 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             appBar.flagIcon.drawable.alpha = (progress * 255).toInt()
         }
 
-        baseActivity.title = "Welcome"
     }
 }
