@@ -1,6 +1,6 @@
 package edu.artic.db.models
 
-class ArticObject(
+data class ArticObject(
         val title: String,
         val status: String,
         val nid: String,

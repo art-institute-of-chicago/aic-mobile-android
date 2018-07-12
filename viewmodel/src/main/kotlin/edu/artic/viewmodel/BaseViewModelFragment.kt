@@ -8,6 +8,10 @@ import edu.artic.ui.BaseFragment
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
+/**
+ * Description: Provides common [ParentViewModel] methods for subclasses, so duplicate code doesn't
+ * happen.
+ */
 abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment() {
 
     protected abstract val viewModelClass: KClass<TViewModel>

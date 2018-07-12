@@ -22,6 +22,9 @@ abstract class BaseFragment : Fragment() {
 
     val disposeBag = DisposeBag()
 
+    protected val baseActivity : BaseActivity
+    get() = activity as BaseActivity
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layoutResId, container, false)
         toolbar = view.findViewById(R.id.toolbar)
