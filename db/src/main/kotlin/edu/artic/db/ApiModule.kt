@@ -1,8 +1,12 @@
 package edu.artic.db
 
+import android.os.Handler
+import android.os.Looper
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.Multibinds
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,8 +18,23 @@ import javax.inject.Singleton
 @Module
 abstract class ApiModule {
 
+    @get:Multibinds
+    @get:AdapterFactory
+    abstract val jsonAdapterFactorySet: MutableSet<JsonAdapter.Factory>
+
     @Module
     companion object {
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideRetrofitExecutor(): Executor = MainThreadExecutor()
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideJsonAdapterFactory(@AdapterFactory creators: MutableSet<JsonAdapter.Factory>) =
+                JsonAdapterFactory(creators)
 
         @JvmStatic
         @Provides
@@ -53,7 +72,7 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideBlobService(blobProvider: BlobProvider) = BlobService(blobProvider)
+        fun provideBlobService(blobProvider: BlobProvider) :BlobService = BlobService(blobProvider)
 
         @JvmStatic
         @Provides
@@ -74,4 +93,12 @@ abstract class ApiModule {
         const val BLOB_CLIENT_API = "BLOB_CLIENT_API"
     }
 
+}
+
+class MainThreadExecutor : Executor {
+    private val handler = Handler(Looper.getMainLooper())
+
+    override fun execute(r: Runnable) {
+        handler.post(r)
+    }
 }
