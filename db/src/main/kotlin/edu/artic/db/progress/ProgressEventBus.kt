@@ -8,11 +8,11 @@ import io.reactivex.subjects.PublishSubject
  */
 class ProgressEventBus {
 
-    val mBusSubject: PublishSubject<ProgressEvent> = PublishSubject.create()
+    private val busSubject: PublishSubject<ProgressEvent> = PublishSubject.create()
 
     fun post(progressEvent: ProgressEvent) {
-        mBusSubject.onNext(progressEvent)
+        busSubject.onNext(progressEvent)
     }
 
-    fun observable(): Observable<ProgressEvent> = mBusSubject
+    fun observable(): Observable<ProgressEvent> = busSubject
 }

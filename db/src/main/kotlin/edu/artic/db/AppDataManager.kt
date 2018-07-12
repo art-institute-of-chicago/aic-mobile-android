@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class AppDataManager @Inject constructor(private val serviceProvider: AppDataServiceProvider) {
 
-    fun getBlob(): Observable<BlobState> {
+    fun getBlob(): Observable<AppDataState> {
         return serviceProvider.getBlobHeaders()
                 .flatMap {
                     val dtf = DateTimeFormatterBuilder()
@@ -20,7 +20,7 @@ class AppDataManager @Inject constructor(private val serviceProvider: AppDataSer
                         if(newLocalDateTime.isAfter(/*TODO: get from storage*/ LocalDateTime.parse("Thu, 12 Jul 2018 16:56:12 GMT", dtf))) {
                             return@flatMap serviceProvider.getBlob()
                         } else {
-                            return@flatMap Observable.just(BlobState.Empty())
+                            return@flatMap Observable.just(AppDataState.Empty)
                         }
                     } else {
                         serviceProvider.getBlob()
@@ -30,7 +30,7 @@ class AppDataManager @Inject constructor(private val serviceProvider: AppDataSer
                     }
 
                 }.doOnNext {
-                    if (it is BlobState.Done) {
+                    if (it is AppDataState.Done) {
                         //Save to db
                     }
                 }

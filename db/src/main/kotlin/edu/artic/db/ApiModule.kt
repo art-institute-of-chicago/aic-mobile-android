@@ -69,9 +69,9 @@ abstract class ApiModule {
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
                     .addInterceptor(DownloadProgressInterceptor(progressEventBus))
-//            if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
                 builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-//            }
+            }
             return builder.build()
 
         }
@@ -84,11 +84,10 @@ abstract class ApiModule {
         }
 
 
-
         @JvmStatic
         @Provides
         @Singleton
-        fun provideAppDataManager(appDataServiceProvider: AppDataServiceProvider) :AppDataManager = AppDataManager(appDataServiceProvider)
+        fun provideAppDataManager(appDataServiceProvider: AppDataServiceProvider): AppDataManager = AppDataManager(appDataServiceProvider)
 
         @JvmStatic
         @Provides
@@ -96,7 +95,6 @@ abstract class ApiModule {
         fun provideBlobProvider(
                 @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit, progressEventBus: ProgressEventBus
         ): AppDataServiceProvider = RetrofitAppDataServiceProvider(retrofit, progressEventBus)
-
 
 
         @JvmStatic
@@ -116,19 +114,5 @@ class MainThreadExecutor : Executor {
 
     override fun execute(r: Runnable) {
         handler.post(r)
-    }
-}
-
-object UnitConverterFactory : Converter.Factory() {
-    override fun responseBodyConverter(type: Type, annotations: Array<out Annotation>,
-                                       retrofit: Retrofit): Converter<ResponseBody, *>? {
-        val isActualArgument = type is ParameterizedType && type.actualTypeArguments.contains(Void::class.java)
-        return if (isActualArgument) UnitConverter else null
-    }
-
-    private object UnitConverter : Converter<ResponseBody, Unit> {
-        override fun convert(value: ResponseBody) {
-            value.close()
-        }
     }
 }

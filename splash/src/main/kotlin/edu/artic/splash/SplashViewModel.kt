@@ -4,7 +4,7 @@ import android.util.Log
 import com.fuzz.rx.disposedBy
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.db.AppDataManager
-import edu.artic.db.BlobState
+import edu.artic.db.AppDataState
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(appDataManager : AppDataManager) : BaseViewModel() {
@@ -14,13 +14,13 @@ class SplashViewModel @Inject constructor(appDataManager : AppDataManager) : Bas
                 .subscribe({
                     when(it) {
 
-                        is BlobState.Downloading -> {
+                        is AppDataState.Downloading -> {
                             Log.d("SplashViewModel", "GetBlob: Downloading ${it.progress}")
                         }
-                        is BlobState.Done -> {
+                        is AppDataState.Done -> {
                             Log.d("SplashViewModel", "GetBlob: Done")
                         }
-                        is BlobState.Empty -> {
+                        is AppDataState.Empty -> {
                             Log.d("SplashViewModel", "GetBlob: Empty")
                         }
                     }

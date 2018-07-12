@@ -26,7 +26,6 @@ inline fun constructRetrofit(
                 .client(client)
                 .callbackExecutor(executor)
                 .addCallAdapterFactory(schedulerFactory)
-                .addConverterFactory(UnitConverterFactory)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
                 .apply(customConfiguration)
