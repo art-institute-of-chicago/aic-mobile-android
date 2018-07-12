@@ -13,16 +13,16 @@ class RetrofitAppDataServiceProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofi
 
     private val service = retrofit.create(AppDataApi::class.java)
 
-    override fun getBlob(): Observable<BlobState> {
-        return Observable.create<BlobState> { observer ->
+    override fun getBlob(): Observable<AppDataState> {
+        return Observable.create<AppDataState> { observer ->
             progressEventBus.observable()
                     .subscribe {
                         if (it.downloadIdentifier == HEADER_ID) {
-                            observer.onNext(BlobState.Downloading(it.progress / 100f))
+                            observer.onNext(AppDataState.Downloading(it.progress / 100f))
                         }
                     }
             service.getBlob(HEADER_ID)
-                    .map { BlobState.Done(it) }
+                    .map { AppDataState.Done(it) }
                     .bindTo(observer)
         }
     }
