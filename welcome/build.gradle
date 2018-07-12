@@ -1,0 +1,10 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+    api libs.design_support
+    implementation project(':ui')
+    implementation project(':viewmodel')
+}
