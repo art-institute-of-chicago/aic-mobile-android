@@ -2,13 +2,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
-    implementation project(':ui')
-
     implementation libs.rxHelper
-
     kapt libs.dagger_compiler
-    api libs.dagger_android
     kapt libs.dagger_android_compiler
+    implementation project(':ui')
+    implementation project(':viewmodel')
+    implementation project(':db')
 
     api libs.arch_runtime
     api libs.arch_extensions
