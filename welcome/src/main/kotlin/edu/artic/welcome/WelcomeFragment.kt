@@ -9,6 +9,8 @@ import kotlinx.android.synthetic.main.fragment_welcome.*
 import kotlin.reflect.KClass
 
 class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
+    override val title: String
+        get() = "welcome"
 
     override val viewModelClass: KClass<WelcomeViewModel>
         get() = WelcomeViewModel::class
@@ -24,5 +26,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             appBar.searchIcon.background.alpha = (progress * 255).toInt()
             appBar.flagIcon.drawable.alpha = (progress * 255).toInt()
         }
+
+        baseActivity.title = "Welcome"
     }
 }
