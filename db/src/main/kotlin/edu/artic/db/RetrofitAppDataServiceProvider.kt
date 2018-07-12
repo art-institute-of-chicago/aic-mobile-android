@@ -1,6 +1,6 @@
 package edu.artic.db
 
-import com.fuzz.rx.bindTo
+import com.fuzz.retrofit.rx.requireValue
 import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
 import retrofit2.Retrofit
@@ -15,15 +15,27 @@ class RetrofitAppDataServiceProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofi
 
     override fun getBlob(): Observable<AppDataState> {
         return Observable.create<AppDataState> { observer ->
-            progressEventBus.observable()
+            val disposable = progressEventBus.observable()
                     .subscribe {
                         if (it.downloadIdentifier == HEADER_ID) {
                             observer.onNext(AppDataState.Downloading(it.progress / 100f))
                         }
                     }
             service.getBlob(HEADER_ID)
-                    .map { AppDataState.Done(it) }
-                    .bindTo(observer)
+                    .subscribe({
+                        if (it.isError) {
+                            observer.onError(it.error())
+                        } else {
+                            observer.onNext(AppDataState.Done(it.requireValue()))
+                        }
+                        disposable.dispose()
+                    }, {
+                        observer.onError(it)
+                        disposable.dispose()
+                    }, {
+                        observer.onComplete()
+                        disposable.dispose()
+                    })
         }
     }
 
