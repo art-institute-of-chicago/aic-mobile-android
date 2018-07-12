@@ -16,6 +16,10 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override fun onViewModelCreated(viewModel: SplashViewModel) {
         super.onViewModelCreated(viewModel)
         val handler = Handler()
+
+        /**
+         * TODO:: Remove the post delay once splash is functional.
+         */
         handler.postDelayed({
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
