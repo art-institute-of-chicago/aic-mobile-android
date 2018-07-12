@@ -7,62 +7,9 @@
     android:background="#FAB"
     tools:context="edu.artic.welcome.WelcomeFragment">
 
-    <android.support.design.widget.AppBarLayout
+    <include
         android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-
-            <ImageView
-                android:id="@+id/expandedImage"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/dummy"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.7" />
-
-
-            <ImageView
-                android:id="@+id/flagIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="90dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/tours"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.2" />
-
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin">
-
-                <ImageView
-                    android:id="@+id/searchIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/ic_search_background"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_search_24dp" />
-
-            </android.support.v7.widget.Toolbar>
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
+        layout="@layout/app_bar_layout" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
