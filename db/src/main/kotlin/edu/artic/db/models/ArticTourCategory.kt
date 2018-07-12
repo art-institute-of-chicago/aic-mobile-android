@@ -1,11 +1,13 @@
 package edu.artic.db.models
 
+import com.squareup.moshi.Json
+
 data class ArticTourCategory(
-        val category: String,
-        val translations: List<Translation>) {
+        @Json(name = "category") val category: String,
+        @Json(name = "translations") val translations: List<Translation>) {
 
     data class Translation(
-            val language: String,
-            val category: String
+            @Json(name = "language") val language: String,
+            @Json(name = "category") val category: String
     )
 }
