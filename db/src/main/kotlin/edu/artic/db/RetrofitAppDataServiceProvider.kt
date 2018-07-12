@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import com.fuzz.rx.bindTo
 import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
 import retrofit2.Retrofit
@@ -14,7 +15,6 @@ class RetrofitAppDataServiceProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofi
 
     override fun getBlob(): Observable<BlobState> {
         return Observable.create<BlobState> { observer ->
-            //TODO: Create subsribe to some kind of progress listener and then send that to observer in BlobState.Downloading()
             progressEventBus.observable()
                     .subscribe {
                         if (it.downloadIdentifier == HEADER_ID) {
@@ -22,13 +22,8 @@ class RetrofitAppDataServiceProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofi
                         }
                     }
             service.getBlob(HEADER_ID)
-                    .subscribe({
-                        observer.onNext(BlobState.Done(it))
-                    }, {
-                        observer.onError(it)
-                    }, {
-                        observer.onComplete()
-                    })
+                    .map { BlobState.Done(it) }
+                    .bindTo(observer)
         }
     }
 
