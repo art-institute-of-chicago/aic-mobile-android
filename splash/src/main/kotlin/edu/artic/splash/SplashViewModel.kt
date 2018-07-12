@@ -13,12 +13,11 @@ class SplashViewModel @Inject constructor(appDataManager : AppDataManager) : Bas
         appDataManager.getBlob()
                 .subscribe({
                     when(it) {
-
                         is AppDataState.Downloading -> {
                             Log.d("SplashViewModel", "GetBlob: Downloading ${it.progress}")
                         }
                         is AppDataState.Done -> {
-                            Log.d("SplashViewModel", "GetBlob: Done")
+                            Log.d("SplashViewModel", "GetBlob: Done ${it.result.objects}")
                         }
                         is AppDataState.Empty -> {
                             Log.d("SplashViewModel", "GetBlob: Empty")
