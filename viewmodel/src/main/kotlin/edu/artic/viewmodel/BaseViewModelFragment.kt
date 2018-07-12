@@ -25,7 +25,6 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
     open val useFactory: Boolean
         get() = true
 
-    val baseActivity: BaseActivity get() = activity as BaseActivity
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
