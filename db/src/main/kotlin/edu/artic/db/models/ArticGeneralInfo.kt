@@ -1,44 +1,46 @@
 package edu.artic.db.models
 
+import com.squareup.moshi.Json
+
 data class ArticGeneralInfo(
-        val title: String,
-        val status: String,
-        val nid: String,
-        val translations: List<Translation>,
-        val museum_hours: String,
-        val home_member_prompt_text: String,
-        val audio_title: String,
-        val audio_subtitle: String,
-        val map_title: String,
-        val map_subtitle: String,
-        val info_title: String,
-        val info_subtitle: String,
-        val gift_shops_title: String,
-        val gift_shops_text: String,
-        val members_lounge_title: String,
-        val members_lounge_text: String,
-        val see_all_tours_intro: String,
-        val restrooms_title: String,
-        val restrooms_text: String
+        @Json(name = "title") val title: String,
+        @Json(name = "status") val status: String,
+        @Json(name = "nid") val nid: String,
+        @Json(name = "translations") val translations: List<Translation>,
+        @Json(name = "museum_hours") val museumHours: String,
+        @Json(name = "home_member_prompt_text") val homeMemberPromptText: String,
+        @Json(name = "audio_title") val audioTitle: String,
+        @Json(name = "audio_subtitle") val audioSubtitle: String,
+        @Json(name = "map_title") val mapTitle: String,
+        @Json(name = "map_subtitle") val mapSubtitle: String,
+        @Json(name = "info_title") val infoTitle: String,
+        @Json(name = "info_subtitle") val infoSubtitle: String,
+        @Json(name = "gift_shops_title") val giftShopsTitle: String,
+        @Json(name = "gift_shops_text") val gift_shops_text: String,
+        @Json(name = "members_lounge_title") val membersLoungeTitle: String,
+        @Json(name = "members_lounge_text") val membersLoungeText: String,
+        @Json(name = "see_all_tours_intro") val seeAllToursIntro: String,
+        @Json(name = "restrooms_title") val restroomsTitle: String,
+        @Json(name = "restrooms_text") val restroomsText: String
 
 ) {
 
     data class Translation(
             val language: String,
-            val museum_hours: String,
-            val home_member_prompt_text: String,
-            val audio_title: String,
-            val audio_subtitle: String,
-            val map_title: String,
-            val map_subtitle: String,
-            val info_title: String,
-            val info_subtitle: String,
-            val gift_shops_title: String,
-            val gift_shops_text: String,
-            val members_lounge_title: String,
-            val members_lounge_text: String,
-            val see_all_tours_intro: String,
-            val restrooms_title: String,
-            val restrooms_text: String
+            @Json(name = "museum_hours") val museumHours: String,
+            @Json(name = "home_member_prompt_text") val homeMemberPromptText: String,
+            @Json(name = "audio_title") val audioTitle: String,
+            @Json(name = "audio_subtitle") val audioSubtitle: String,
+            @Json(name = "map_title") val mapTitle: String,
+            @Json(name = "map_subtitle") val mapSubtitle: String,
+            @Json(name = "info_title") val infoTitle: String,
+            @Json(name = "info_subtitle") val infoSubtitle: String,
+            @Json(name = "gift_shops_title") val giftShopsTitle: String,
+            @Json(name = "gift_shops_text") val gift_shops_text: String,
+            @Json(name = "members_lounge_title") val membersLoungeTitle: String,
+            @Json(name = "members_lounge_text") val membersLoungeText: String,
+            @Json(name = "see_all_tours_intro") val seeAllToursIntro: String,
+            @Json(name = "restrooms_title") val restroomsTitle: String,
+            @Json(name = "restrooms_text") val restroomsText: String
     )
 }
