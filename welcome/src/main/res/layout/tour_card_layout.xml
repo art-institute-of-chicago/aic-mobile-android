@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginEnd="@dimen/marginTwenty"
     android:layout_width="285dp"
     android:layout_height="300dp"
     >
@@ -73,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginStandard"
             android:textColor="@color/greyText"
-            android:textSize="@dimen/textMedium"
+            android:textSize="@dimen/textSmall"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tourTitle"
             tools:text="Tour description deails blah blah blah blah bl Tour description deails blah blah blah blah " />
