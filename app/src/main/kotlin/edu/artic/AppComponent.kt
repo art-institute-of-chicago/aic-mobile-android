@@ -3,6 +3,7 @@ package edu.artic
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import edu.artic.main.MainModule
 import edu.artic.splash.SplashModule
 import edu.artic.viewmodel.ViewModelModule
 import edu.artic.welcome.WelcomeModule
@@ -12,6 +13,7 @@ import javax.inject.Singleton
 @Component(modules = [
     SplashModule::class,
     WelcomeModule::class,
+    MainModule::class,
     ViewModelModule::class,
     AndroidSupportInjectionModule::class
 ])
