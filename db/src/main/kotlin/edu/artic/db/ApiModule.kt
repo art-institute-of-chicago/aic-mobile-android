@@ -7,6 +7,8 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
+import edu.artic.db.progress.DownloadProgressInterceptor
+import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -58,16 +60,26 @@ abstract class ApiModule {
         @Provides
         @Singleton
         @Named(BLOB_CLIENT_API)
-        fun provideClient(): OkHttpClient {
+        fun provideClient(progressEventBus: ProgressEventBus): OkHttpClient {
             val builder = OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
-            if (BuildConfig.DEBUG) {
-                builder.addInterceptor(HttpLoggingInterceptor())
-            }
+                    .addInterceptor(DownloadProgressInterceptor(progressEventBus))
+//            if (BuildConfig.DEBUG) {
+                builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+//            }
             return builder.build()
 
         }
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideProgressEventBus(): ProgressEventBus {
+            return ProgressEventBus()
+        }
+
+
 
         @JvmStatic
         @Provides
@@ -78,8 +90,8 @@ abstract class ApiModule {
         @Provides
         @Singleton
         fun provideBlobProvider(
-                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit
-        ): BlobProvider = RetrofitBlobProvider(retrofit)
+                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit, progressEventBus: ProgressEventBus
+        ): BlobProvider = RetrofitBlobProvider(retrofit, progressEventBus)
 
 
 
