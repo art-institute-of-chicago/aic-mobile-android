@@ -34,7 +34,11 @@ dependencies {
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler
+
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
+    // testing uses real threetenbp
+    testImplementation('org.threeten:threetenbp:1.3.3') {
+        exclude group: 'com.jakewharton.threetenabp', module: 'threetenabp'
+    }
 }
