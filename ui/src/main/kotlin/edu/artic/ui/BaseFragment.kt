@@ -46,4 +46,20 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected abstract val title: String
+
+    override fun onDestroy() {
+        // fix for bug where viewmodel store is not cleared on 27.1.0, might be fixed later.
+        val activity = activity
+        if (activity != null
+                && activity.isFinishing
+                && !activity.isChangingConfigurations) {
+            viewModelStore.clear()
+        }
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposeBag.clear()
+    }
 }
