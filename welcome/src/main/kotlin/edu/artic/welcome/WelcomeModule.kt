@@ -20,6 +20,6 @@ abstract class WelcomeModule {
 
 
     @get:ContributesAndroidInjector
-    abstract val welcomeActivity: WelcomeActivity
+    abstract val welcomeFragment: WelcomeFragment
 
 }
