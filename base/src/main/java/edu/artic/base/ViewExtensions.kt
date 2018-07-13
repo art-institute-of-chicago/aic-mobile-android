@@ -1,12 +1,10 @@
 package edu.artic.base
 
 import android.annotation.SuppressLint
-import android.content.res.AssetManager
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.content.ContextCompat
-import java.nio.charset.Charset
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -40,7 +38,3 @@ fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
         }
     }
 }
-
-
-
-
