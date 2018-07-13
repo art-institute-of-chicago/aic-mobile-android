@@ -30,6 +30,8 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     @Inject
     lateinit var moshi: Moshi
 
+    var welcomePreferencesManager: WelcomePreferencesManager? = null
+
     private val handler = Handler()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,24 +55,29 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         context?.let {
             tourSummaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             tourSummaryRecyclerView.adapter = ToursAdapter(list, it)
+            welcomePreferencesManager = WelcomePreferencesManager(it)
         }
 
         /**
          * Peak Animation.
          * Scroll RecyclerView to the last item and back again to first item.
          */
-        handler.postDelayed({
-            tourSummaryRecyclerView.post {
-                tourSummaryRecyclerView.smoothScrollToPosition(list.count() - 1)
-            }
-        }, 2000)
+        val peekedTourSummary = welcomePreferencesManager?.peekedTourSummary ?: false
 
-        handler.postDelayed({
-            tourSummaryRecyclerView.post {
-                tourSummaryRecyclerView.smoothScrollToPosition(0)
-            }
-        }, 3000)
+        if (!peekedTourSummary) {
+            handler.postDelayed({
+                tourSummaryRecyclerView.post {
+                    tourSummaryRecyclerView.smoothScrollToPosition(list.count() - 1)
+                }
+            }, 2000)
 
+            handler.postDelayed({
+                tourSummaryRecyclerView.post {
+                    tourSummaryRecyclerView.smoothScrollToPosition(0)
+                    welcomePreferencesManager?.peekedTourSummary = true
+                }
+            }, 3000)
+        }
     }
 
 
