@@ -33,4 +33,7 @@ class DBModule {
 
     @Provides
     fun provideTourDao(appDatabase: AppDatabase) = appDatabase.articTourDao
+
+    @Provides
+    fun provideMapAnnotationDao(appDatabase: AppDatabase) = appDatabase.articMapAnnotationDao
 }

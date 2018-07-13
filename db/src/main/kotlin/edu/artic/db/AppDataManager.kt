@@ -67,7 +67,17 @@ class AppDataManager @Inject constructor(
 
                         if (it.result.tours?.isNotEmpty() == true) {
                             try {
-                                appDatabase.articTourDao.addTours(it.result.tours.toList())
+                                appDatabase.articTourDao.addTours(it.result.tours)
+                            } catch (e: Throwable) {
+                                e.printStackTrace()
+                            }
+                        }
+
+
+
+                        if (it.result.mapAnnotations?.isNotEmpty() == true) {
+                            try {
+                                appDatabase.articMapAnnotationDao.addAnnotations(it.result.mapAnnotations.values.toList())
                             } catch (e: Throwable) {
                                 e.printStackTrace()
                             }
