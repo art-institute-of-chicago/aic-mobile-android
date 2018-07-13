@@ -2,6 +2,7 @@ package edu.artic.welcome
 
 import android.content.res.AssetManager
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -10,8 +11,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModelFragment
-import edu.artic.welcome.R.id.appBarLayout
-import edu.artic.welcome.R.id.tourSummaryRecyclerView
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
 import java.nio.charset.Charset
@@ -31,6 +30,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     @Inject
     lateinit var moshi: Moshi
 
+    private val handler = Handler()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,8 +53,23 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         context?.let {
             tourSummaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             tourSummaryRecyclerView.adapter = ToursAdapter(list, it)
-
         }
+
+        /**
+         * Peak Animation.
+         * Scroll RecyclerView to the last item and back again to first item.
+         */
+        handler.postDelayed({
+            tourSummaryRecyclerView.post {
+                tourSummaryRecyclerView.smoothScrollToPosition(list.count() - 1)
+            }
+        }, 2000)
+
+        handler.postDelayed({
+            tourSummaryRecyclerView.post {
+                tourSummaryRecyclerView.smoothScrollToPosition(0)
+            }
+        }, 3000)
 
     }
 
@@ -71,8 +86,11 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             }
 
         }
+    }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 
 }
@@ -82,3 +100,4 @@ fun AssetManager.fileAsString(subdirectory: String, filename: String): String {
         it.readBytes().toString(Charset.defaultCharset())
     }
 }
+
