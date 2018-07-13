@@ -7,13 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import edu.artic.db.models.ArticTour
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 
-class ToursAdapter(val tours: List<ArticTour>, val context: Context) : RecyclerView.Adapter<ToursViewHolder>() {
+class ToursAdapter(val tours: List<ArticTour>, private val context: Context) : RecyclerView.Adapter<ToursViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToursViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.tour_card_layout, parent, false)
@@ -31,6 +32,10 @@ class ToursAdapter(val tours: List<ArticTour>, val context: Context) : RecyclerV
         val count = tour.tourStops?.count() ?: 0
         holder.tourStopsCount.text = count.toString()
         holder.tourTime.text = tour.tourDuration
+
+        Glide.with(context)
+                .load(tour.imageUrl)
+                .into(holder.tourImage)
     }
 
 }
