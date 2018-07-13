@@ -1,9 +1,5 @@
 package edu.artic.db
 
-import android.util.Log
-import edu.artic.db.daos.ArticGalleryDao
-import edu.artic.db.daos.DashboardDao
-import edu.artic.db.daos.GeneralInfoDao
 import io.reactivex.Observable
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatterBuilder
@@ -11,9 +7,8 @@ import javax.inject.Inject
 
 class AppDataManager @Inject constructor(
         private val serviceProvider: AppDataServiceProvider,
-        private val dashboardDao: DashboardDao,
-        private val generalInfoDao: GeneralInfoDao,
-        private val galleryDao: ArticGalleryDao) {
+        private val appDatabase: AppDatabase
+) {
 
     fun getBlob(): Observable<AppDataState> {
         return serviceProvider.getBlobHeaders()
@@ -37,19 +32,27 @@ class AppDataManager @Inject constructor(
                 }.doOnNext {
                     if (it is AppDataState.Done) {
                         try {
-                            dashboardDao.setDashBoard(it.result.dashboard)
-                        } catch (e : Throwable) {
+                            appDatabase.dashboardDao.setDashBoard(it.result.dashboard)
+                        } catch (e: Throwable) {
                             e.printStackTrace()
                         }
                         try {
-                            generalInfoDao.setGeneralInfo(it.result.generalInfo)
-                        } catch (e : Throwable) {
+                            appDatabase.generalInfoDao.setGeneralInfo(it.result.generalInfo)
+                        } catch (e: Throwable) {
                             e.printStackTrace()
                         }
-                        if(it.result.galleries?.isNotEmpty() == true){
+                        if (it.result.galleries?.isNotEmpty() == true) {
                             try {
-                                galleryDao.addGalleries(it.result.galleries.values.toList())
-                            } catch (e : Throwable) {
+                                appDatabase.galleryDao.addGalleries(it.result.galleries.values.toList())
+                            } catch (e: Throwable) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        if (it.result.objects?.isNotEmpty() == true) {
+                            try {
+                                appDatabase.objectDao.addObjects(it.result.objects.values.toList())
+                            } catch (e: Throwable) {
                                 e.printStackTrace()
                             }
                         }
