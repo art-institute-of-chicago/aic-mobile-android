@@ -2,10 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginEnd="@dimen/marginTwenty"
-    android:layout_width="285dp"
-    android:layout_height="300dp"
-    >
+    android:layout_width="@dimen/tourTileWidth"
+    android:layout_height="@dimen/tourTileHeight"
+    android:layout_marginEnd="@dimen/marginTwenty">
 
 
     <android.support.constraint.ConstraintLayout
@@ -16,17 +15,16 @@
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="177dp"
+            android:layout_height="@dimen/tourSummaryImageHeight"
             android:scaleType="centerCrop"
-            android:src="@drawable/picasso" />
+            tools:background="#fab" />
 
         <View
             android:id="@+id/infoBar"
             android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:background="#73000000"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            tools:layout_width="285dp" />
+            android:layout_height="@dimen/tourSummaryInfoBarHeight"
+            android:background="@color/transparentInfoBarColor"
+            app:layout_constraintBottom_toBottomOf="@id/image" />
 
 
         <TextView
