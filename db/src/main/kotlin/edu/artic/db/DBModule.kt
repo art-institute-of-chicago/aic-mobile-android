@@ -18,4 +18,6 @@ class DBModule {
 
     @Provides
     fun provideDashboardDao(appDatabase: AppDatabase) = appDatabase.dashboardDao
+    @Provides
+    fun provideGeneralInfoDao(appDatabase: AppDatabase) = appDatabase.generalInfoDao
 }
