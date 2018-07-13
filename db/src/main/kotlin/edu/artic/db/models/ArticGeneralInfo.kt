@@ -1,11 +1,16 @@
 package edu.artic.db.models
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
+@Entity
 data class ArticGeneralInfo(
         @Json(name = "title") val title: String,
         @Json(name = "status") val status: String,
-        @Json(name = "nid") val nid: String,
+        @Json(name = "nid") @PrimaryKey val nid: String,
         @Json(name = "translations") val translations: List<Translation>,
         @Json(name = "museum_hours") val museumHours: String,
         @Json(name = "home_member_prompt_text") val homeMemberPromptText: String,
