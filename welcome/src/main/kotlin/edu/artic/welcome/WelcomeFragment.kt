@@ -67,7 +67,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         if (!peekedTourSummary) {
             handler.postDelayed({
                 tourSummaryRecyclerView.post {
-                    tourSummaryRecyclerView.smoothScrollToPosition(list.count() - 1)
+                    tourSummaryRecyclerView.smoothScrollToPosition(1)
                 }
             }, 2000)
 
@@ -76,7 +76,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     tourSummaryRecyclerView.smoothScrollToPosition(0)
                     welcomePreferencesManager?.peekedTourSummary = true
                 }
-            }, 3000)
+            }, 2400)
         }
     }
 
