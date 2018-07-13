@@ -1,8 +1,10 @@
 package edu.artic.db.models
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 
-data class ArticBlobData(
+data class ArticAppData(
         @Json(name = "dashboard") val dashboard: DashBoard,
         @Json(name = "general_info ") val generalInfo: ArticGeneralInfo,
         @Json(name = "galleries") val galleries: Map<String, ArticGallery>,
@@ -17,7 +19,10 @@ data class ArticBlobData(
         @Json(name = "search") val search: ArticSearchObject
 )
 
+@Entity
 data class DashBoard(
+        @PrimaryKey
+        val id: Int = 0,
         @Json(name = "featured_tours") val featuredTours: List<String>,
         @Json(name = "featured_exhibitions") val featuredExhibitions: List<String>
 )
