@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import android.util.Log
 import com.fuzz.retrofit.rx.requireValue
 import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
@@ -25,6 +26,7 @@ class RetrofitAppDataServiceProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofi
                     .subscribe({
                         if (it.isError) {
                             observer.onError(it.error())
+                            it.error().printStackTrace()
                         } else {
                             observer.onNext(AppDataState.Done(it.requireValue()))
                         }
