@@ -18,6 +18,7 @@ dependencies {
 
     api libs.moshi
     api libs.retrofit_moshi
+    api libs.moshi_kotlin
 
     // dont leak to enforce explicit handling
     implementation libs.kotshi

@@ -7,7 +7,7 @@ data class ArticTour(
         @Json(name = "status") val status: String,
         @Json(name = "nid") val nid: String,
         @Json(name = "type") val type: String,
-        @Json(name = "translations") val translations: List<Translation>,
+        @Json(name = "translations") val translations: List<Translation>?,
         @Json(name = "location") val location: String,
         @Json(name = "latitude") val latitude: String,
         @Json(name = "longitude") val longitude: String,
