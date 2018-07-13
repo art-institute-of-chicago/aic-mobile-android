@@ -8,15 +8,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
 import edu.artic.db.daos.DashboardDao
+import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.progress.DownloadProgressInterceptor
 import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Converter
 import retrofit2.Retrofit
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -88,8 +85,15 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideAppDataManager(appDataServiceProvider: AppDataServiceProvider, dashboardDao : DashboardDao): AppDataManager
-                = AppDataManager(appDataServiceProvider, dashboardDao)
+        fun provideAppDataManager(
+                appDataServiceProvider: AppDataServiceProvider,
+                dashboardDao: DashboardDao,
+                generalInfoDao: GeneralInfoDao
+        ): AppDataManager = AppDataManager(
+                appDataServiceProvider,
+                dashboardDao,
+                generalInfoDao
+        )
 
         @JvmStatic
         @Provides

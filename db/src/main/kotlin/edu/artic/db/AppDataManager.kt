@@ -2,6 +2,7 @@ package edu.artic.db
 
 import android.util.Log
 import edu.artic.db.daos.DashboardDao
+import edu.artic.db.daos.GeneralInfoDao
 import io.reactivex.Observable
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatterBuilder
@@ -9,7 +10,8 @@ import javax.inject.Inject
 
 class AppDataManager @Inject constructor(
         private val serviceProvider: AppDataServiceProvider,
-        private val dashboardDao: DashboardDao) {
+        private val dashboardDao: DashboardDao,
+        private val generalInfoDao: GeneralInfoDao) {
 
     fun getBlob(): Observable<AppDataState> {
         return serviceProvider.getBlobHeaders()
@@ -37,7 +39,12 @@ class AppDataManager @Inject constructor(
                         } catch (e : Throwable) {
                             e.printStackTrace()
                         }
-                        Log.d("AppDataManager", "saved");
+                        try {
+                            generalInfoDao.setGeneralInfo(it.result.generalInfo)
+                        } catch (e : Throwable) {
+                            e.printStackTrace()
+                        }
+
                     }
                 }
     }
