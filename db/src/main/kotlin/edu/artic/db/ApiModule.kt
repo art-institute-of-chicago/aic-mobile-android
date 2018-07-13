@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.DashboardDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.progress.DownloadProgressInterceptor
@@ -88,11 +89,13 @@ abstract class ApiModule {
         fun provideAppDataManager(
                 appDataServiceProvider: AppDataServiceProvider,
                 dashboardDao: DashboardDao,
-                generalInfoDao: GeneralInfoDao
+                generalInfoDao: GeneralInfoDao,
+                galleryDao: ArticGalleryDao
         ): AppDataManager = AppDataManager(
                 appDataServiceProvider,
                 dashboardDao,
-                generalInfoDao
+                generalInfoDao,
+                galleryDao
         )
 
         @JvmStatic

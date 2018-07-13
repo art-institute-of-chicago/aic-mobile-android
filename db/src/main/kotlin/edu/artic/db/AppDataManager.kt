@@ -1,6 +1,7 @@
 package edu.artic.db
 
 import android.util.Log
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.DashboardDao
 import edu.artic.db.daos.GeneralInfoDao
 import io.reactivex.Observable
@@ -11,7 +12,8 @@ import javax.inject.Inject
 class AppDataManager @Inject constructor(
         private val serviceProvider: AppDataServiceProvider,
         private val dashboardDao: DashboardDao,
-        private val generalInfoDao: GeneralInfoDao) {
+        private val generalInfoDao: GeneralInfoDao,
+        private val galleryDao: ArticGalleryDao) {
 
     fun getBlob(): Observable<AppDataState> {
         return serviceProvider.getBlobHeaders()
@@ -44,6 +46,14 @@ class AppDataManager @Inject constructor(
                         } catch (e : Throwable) {
                             e.printStackTrace()
                         }
+                        if(it.result.galleries?.isNotEmpty() == true){
+                            try {
+                                galleryDao.addGalleries(it.result.galleries.values.toList())
+                            } catch (e : Throwable) {
+                                e.printStackTrace()
+                            }
+                        }
+
 
                     }
                 }

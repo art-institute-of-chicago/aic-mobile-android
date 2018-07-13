@@ -1,6 +1,5 @@
 package edu.artic.db
 
-import android.util.Log
 import com.fuzz.retrofit.rx.requireValue
 import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
