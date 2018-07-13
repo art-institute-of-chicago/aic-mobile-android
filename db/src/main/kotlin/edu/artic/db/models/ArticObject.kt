@@ -1,14 +1,19 @@
 package edu.artic.db.models
 
+import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Entity
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
+@Entity
 data class ArticObject(
         @Json(name = "title") val title: String?,
         @Json(name = "status") val status: String?,
         @Json(name = "nid") val nid: String?,
         @Json(name = "type") val type: String?,
         @Json(name = "id") val id: Int?,
-        @Json(name = "object_id") val objectId: Int,
+        @Json(name = "object_id") val objectId: Int?,
         @Json(name = "alt_titles") val altTitles: String?,
         @Json(name = "main_reference_number") val mainReferenceNumber: String?,
         @Json(name = "boost_rank") val boostRank: String?,
@@ -31,11 +36,9 @@ data class ArticObject(
         @Json(name = "image_filesize") val imageFileSize: String?,
         @Json(name = "image_width") val imageWidth: String?,
         @Json(name = "image_height") val imageHeight: String?,
-        @Json(name = "thumbnail_crop_rect") val thumbnailCropRect: CropRect,
-        @Json(name = "thumbnail_crop_v2") val thumbnailCropRectV2: CropRect,
+        @Json(name = "thumbnail_crop_v2") @Embedded(prefix = "thumbnail_crop_rect") val thumbnailCropRectV2: CropRect?,
         @Json(name = "thumbnail_full_path") val thumbnailFullPath: String?,
-        @Json(name = "large_image_crop_rect") val largeImageCropRect: CropRect,
-        @Json(name = "large_image_crop_v2") val largeImageCropRectV2: CropRect,
+        @Json(name = "large_image_crop_v2") @Embedded(prefix = "large_image_crop_rect") val largeImageCropRectV2: CropRect?,
         @Json(name = "large_image_full_path") val largeImageFullPath: String?,
         @Json(name = "title_t") val titleT: String?,
         @Json(name = "gallery_location") val galleryLocation: String?,

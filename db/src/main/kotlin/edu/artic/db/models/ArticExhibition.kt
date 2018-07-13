@@ -1,7 +1,9 @@
 package edu.artic.db.models
 
+import android.arch.persistence.room.Entity
 import com.squareup.moshi.Json
 
+@Entity
 data class ArticExhibition(
         @Json(name="title") val title: String?,
         @Json(name="image_filename") val imageFilename: String?,
@@ -11,6 +13,5 @@ data class ArticExhibition(
         @Json(name="image_width") val imageWidth: String?,
         @Json(name="image_height") val imageHeight: String?,
         @Json(name="exhibition_id") val exhibitionId: String,
-//        @Json(name="exhibition_id") val exhibition_id: String,
         @Json(name="sort") val sort: Int
 )

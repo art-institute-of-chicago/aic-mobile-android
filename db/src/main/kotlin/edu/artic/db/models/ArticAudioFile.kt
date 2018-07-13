@@ -1,7 +1,9 @@
 package edu.artic.db.models
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ArticAudioFile(
         @Json(name = "title") val title: String?,
         @Json(name = "status") val status: String?,
@@ -16,6 +18,7 @@ data class ArticAudioFile(
         @Json(name = "credits") val credits: String?,
         @Json(name = "track_title") val trackTitle: String?
 ) {
+    @JsonClass(generateAdapter = true)
     data class Translation(
             @Json(name = "language") val language: String?,
             @Json(name = "title") val title: String?,

@@ -1,7 +1,11 @@
 package edu.artic.db.models
 
+import android.arch.persistence.room.Entity
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
+@Entity
 data class ArticGallery(
         @Json(name = "title" ) val title: String?,
         @Json(name = "status" ) val status: String?,
