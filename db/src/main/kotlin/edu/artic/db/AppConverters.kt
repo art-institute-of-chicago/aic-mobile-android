@@ -95,7 +95,7 @@ class AppConverters {
     private fun getTourStopListAdapter() : JsonAdapter<List<ArticTour.TourStop>>{
         return tourStopListAdapter.let {
             if(it == null) {
-                tourTranslationListAdapter = moshi.adapter(
+                tourStopListAdapter = moshi.adapter(
                         Types.newParameterizedType(
                                 List::class.java,
                                 ArticTour.TourStop::class.java

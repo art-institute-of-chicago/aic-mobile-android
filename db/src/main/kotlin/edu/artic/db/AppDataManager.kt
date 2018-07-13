@@ -65,6 +65,14 @@ class AppDataManager @Inject constructor(
                             }
                         }
 
+                        if (it.result.tours?.isNotEmpty() == true) {
+                            try {
+                                appDatabase.articTourDao.addTours(it.result.tours.toList())
+                            } catch (e: Throwable) {
+                                e.printStackTrace()
+                            }
+                        }
+
 
                     }
                 }
