@@ -1,6 +1,7 @@
 package edu.artic.db.models
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -9,7 +10,7 @@ import com.squareup.moshi.JsonClass
 data class ArticGallery(
         @Json(name = "title" ) val title: String?,
         @Json(name = "status" ) val status: String?,
-        @Json(name = "nid" ) val nid: String?,
+        @Json(name = "nid" ) @PrimaryKey val nid: String,
         @Json(name = "type" ) val type: String?,
         @Json(name = "location" ) val location: String?,
         @Json(name = "latitude" ) val latitude: Double,

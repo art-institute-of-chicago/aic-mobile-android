@@ -3,15 +3,18 @@ package edu.artic.db
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.DashboardDao
 import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticGeneralInfo
 import edu.artic.db.models.DashBoard
 
 @Database(
         entities = [
             DashBoard::class,
-            ArticGeneralInfo::class
+            ArticGeneralInfo::class,
+            ArticGallery::class
         ],
         version = 1,
         exportSchema = false
@@ -20,4 +23,5 @@ import edu.artic.db.models.DashBoard
 abstract class AppDatabase : RoomDatabase() {
     abstract val dashboardDao: DashboardDao
     abstract val generalInfoDao: GeneralInfoDao
+    abstract val galleryDao: ArticGalleryDao
 }
