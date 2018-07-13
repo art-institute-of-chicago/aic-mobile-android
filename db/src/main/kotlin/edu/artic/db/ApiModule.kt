@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
+import edu.artic.db.daos.DashboardDao
 import edu.artic.db.progress.DownloadProgressInterceptor
 import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
@@ -66,8 +67,8 @@ abstract class ApiModule {
         @Named(BLOB_CLIENT_API)
         fun provideClient(progressEventBus: ProgressEventBus): OkHttpClient {
             val builder = OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(10, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
                     .addInterceptor(DownloadProgressInterceptor(progressEventBus))
             if (BuildConfig.DEBUG) {
                 builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -87,7 +88,8 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideAppDataManager(appDataServiceProvider: AppDataServiceProvider): AppDataManager = AppDataManager(appDataServiceProvider)
+        fun provideAppDataManager(appDataServiceProvider: AppDataServiceProvider, dashboardDao : DashboardDao): AppDataManager
+                = AppDataManager(appDataServiceProvider, dashboardDao)
 
         @JvmStatic
         @Provides

@@ -17,10 +17,11 @@ dependencies {
     api libs.retrofit_scalars
 
     api libs.moshi
+    api libs.moshi_kotlin
+    kapt libs.moshi_kotlin_compiler
+
     api libs.retrofit_moshi
 
-    // dont leak to enforce explicit handling
-    implementation libs.kotshi
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
@@ -28,7 +29,6 @@ dependencies {
 
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
-    kapt libs.kotshi_compiler
 
     api libs.kotlin
     api libs.arch_runtime
