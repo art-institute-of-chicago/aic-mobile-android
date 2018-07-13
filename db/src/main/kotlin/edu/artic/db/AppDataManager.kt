@@ -57,6 +57,14 @@ class AppDataManager @Inject constructor(
                             }
                         }
 
+                        if (it.result.audioFiles?.isNotEmpty() == true) {
+                            try {
+                                appDatabase.audioFileDao.addAudioFiles(it.result.audioFiles.values.toList())
+                            } catch (e: Throwable) {
+                                e.printStackTrace()
+                            }
+                        }
+
 
                     }
                 }

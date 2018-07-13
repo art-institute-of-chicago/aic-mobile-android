@@ -24,4 +24,10 @@ class DBModule {
 
     @Provides
     fun provideGalleryDao(appDatabase: AppDatabase) = appDatabase.galleryDao
+
+    @Provides
+    fun provideObjectDao(appDatabase: AppDatabase) = appDatabase.objectDao
+
+    @Provides
+    fun provideAudioFileDao(appDatabase: AppDatabase) = appDatabase.audioFileDao
 }
