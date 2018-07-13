@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/expandedImage"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/appBarImageHeight"
+            android:layout_height="@dimen/collapsibleImageHeight"
             android:scaleType="centerCrop"
             android:src="@drawable/dummy"
             app:layout_collapseMode="parallax"

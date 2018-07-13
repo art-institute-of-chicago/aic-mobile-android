@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import edu.artic.db.models.ArticTour
+import edu.artic.welcome.R.id.stops
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -28,9 +29,10 @@ class ToursAdapter(val tours: List<ArticTour>, private val context: Context) : R
     override fun onBindViewHolder(holder: ToursViewHolder, position: Int) {
         val tour = tours[position]
         holder.tourTitle.text = tour.title
-        holder.tourDescription.text = tour.description
+        holder.tourDescription.text = tour.description.clean()
         val count = tour.tourStops?.count() ?: 0
-        holder.tourStopsCount.text = count.toString()
+        val toursStop = "$count ${context.getString(R.string.stops)}"
+        holder.tourStopsCount.text = toursStop
         holder.tourTime.text = tour.tourDuration
 
         Glide.with(context)
@@ -47,4 +49,8 @@ class ToursViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val tourDescription: TextView = itemView.findViewById(R.id.tourDescription)
     val tourStopsCount: TextView = itemView.findViewById(R.id.stops)
     val tourTime: TextView = itemView.findViewById(R.id.tourTime)
+}
+
+fun String.clean(): String {
+    return this.replace("&nbsp;", " ")
 }
