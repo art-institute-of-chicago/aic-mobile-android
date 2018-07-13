@@ -4,7 +4,10 @@ apply plugin: 'kotlin-kapt'
 dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
+    kapt libs.glide_compiler
+
     api libs.design_support
+    implementation libs.glide
     implementation libs.constraint_layout
     implementation project(':ui')
     implementation project(':db')
