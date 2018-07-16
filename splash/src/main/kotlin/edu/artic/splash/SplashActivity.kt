@@ -4,6 +4,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.viewmodel.BaseViewModelActivity
+import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlin.reflect.KClass
 
@@ -20,6 +21,21 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 .map { "Percentage : ${it * 100}" }
                 .bindToMain(percentText.text())
                 .disposedBy(disposeBag)
+        viewModel.navigateTo
+                .subscribe {
+            when (it) {
+                is Navigate.Forward -> {
+                    when (it.endpoint) {
+                        is SplashViewModel.NavigationEndpoint.Welcome -> {
+                            //TODO: send to welcome screen :)
+                        }
+                    }
+                }
+                is Navigate.Back -> {
+
+                }
+            }
+        }.disposedBy(disposeBag)
     }
 
     override fun onPause() {
