@@ -1,19 +1,21 @@
 package edu.artic.welcome
 
-import android.content.res.AssetManager
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.fuzz.rx.disposedBy
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import edu.artic.base.fileAsString
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
-import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -29,8 +31,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     @Inject
     lateinit var moshi: Moshi
-
-    var welcomePreferencesManager: WelcomePreferencesManager? = null
 
     private val handler = Handler()
 
@@ -55,37 +55,42 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         context?.let {
             tourSummaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             tourSummaryRecyclerView.adapter = ToursAdapter(list, it)
-            welcomePreferencesManager = WelcomePreferencesManager(it)
         }
 
-        /**
-         * Peak Animation.
-         * Scroll RecyclerView to the last item and back again to first item.
-         */
-        val peekedTourSummary = welcomePreferencesManager?.peekedTourSummary ?: false
 
-        if (!peekedTourSummary) {
-            handler.postDelayed({
-                tourSummaryRecyclerView.post {
-                    tourSummaryRecyclerView.smoothScrollToPosition(1)
+        viewModel.shouldPeekTourSummary
+                .filter { it }
+                .subscribe {
+                    animateRecyclerView()
                 }
-            }, 2000)
+                .disposedBy(disposeBag)
 
-            handler.postDelayed({
-                tourSummaryRecyclerView.post {
-                    tourSummaryRecyclerView.smoothScrollToPosition(0)
-                    welcomePreferencesManager?.peekedTourSummary = true
-                }
-            }, 2400)
-        }
     }
 
+    /**
+     * Peek Animation.
+     * Scroll RecyclerView to the last item and back again to first item.
+     */
+    private fun animateRecyclerView() {
+
+        Observable.interval(2000, 500, TimeUnit.MILLISECONDS)
+                .take(2)
+                .subscribe { it ->
+                    if (it == 0L) {
+                        tourSummaryRecyclerView.smoothScrollToPosition(1)
+                    } else {
+                        tourSummaryRecyclerView.smoothScrollToPosition(0)
+                        viewModel.onPeekedTour()
+                    }
+                }
+                .disposedBy(disposeBag)
+    }
 
     private fun getTours(): List<ArticTour> {
 
         return activity.let {
             if (it == null) {
-                emptyList<ArticTour>()
+                emptyList()
             } else {
                 val toursJson = it.assets.fileAsString("json", "tours.json")
                 val adapter: JsonAdapter<List<ArticTour>> = moshi.adapter(Types.newParameterizedType(List::class.java, ArticTour::class.java))
@@ -102,9 +107,4 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
 }
 
-fun AssetManager.fileAsString(subdirectory: String, filename: String): String {
-    return open("$subdirectory/$filename").use {
-        it.readBytes().toString(Charset.defaultCharset())
-    }
-}
 

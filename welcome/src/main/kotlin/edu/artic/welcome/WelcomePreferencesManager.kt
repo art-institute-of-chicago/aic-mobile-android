@@ -10,8 +10,8 @@ import edu.artic.base.BasePreferencesManager
 class WelcomePreferencesManager(context: Context)
     : BasePreferencesManager(context, "welcome") {
 
-    var peekedTourSummary: Boolean
-        set(value) = putBoolean("peeked_tour_summary", value)
-        get() = getBoolean("peeked_tour_summary", false)
+    var shouldPeekTourSummary: Boolean
+        set(value) = putBoolean("should_peek_tour_summary", value)
+        get() = getBoolean("should_peek_tour_summary", true)
 
 }

@@ -8,6 +8,7 @@ android {
         applicationId "edu.artic"
         minSdkVersion minSdk
         targetSdkVersion sdk
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

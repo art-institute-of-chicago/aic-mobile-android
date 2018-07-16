@@ -12,6 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
+    AppModule::class,
     SplashModule::class,
     WelcomeModule::class,
     MainModule::class,
