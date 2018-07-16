@@ -12,112 +12,60 @@ class AppConverters {
 
     private val moshi = getMoshi()
 
-    private var stringListAdapter: JsonAdapter<List<String>>? = null
-    private var audioTranslationListAdapter : JsonAdapter<List<ArticAudioFile.Translation>>? = null
-    private var generalInfoTranslationListAdapter : JsonAdapter<List<ArticGeneralInfo.Translation>>? = null
-    private var tourTranslationListAdapter : JsonAdapter<List<ArticTour.Translation>>? = null
-    private var audioCommentaryObjectListAdapter : JsonAdapter<List<AudioCommentaryObject>>? = null
-    private var tourStopListAdapter : JsonAdapter<List<ArticTour.TourStop>>? = null
-    private var tourCategoryListAdapter : JsonAdapter<List<ArticTourCategory>>? = null
-
-
-    private fun getStringListAdapter() : JsonAdapter<List<String>> {
-        return stringListAdapter.let {
-            if(it == null) {
-                stringListAdapter = moshi.adapter(
-                        Types.newParameterizedType(
-                                List::class.java,
-                                String::class.java
-                        )
+    private val stringListAdapter: JsonAdapter<List<String>> by lazy {
+        moshi.adapter<List<String>>(
+                Types.newParameterizedType(List::class.java, String::class.java)
+        )
+    }
+    private val audioTranslationListAdapter : JsonAdapter<List<ArticAudioFile.Translation>> by lazy {
+        moshi.adapter<List<ArticAudioFile.Translation>>(
+                Types.newParameterizedType(
+                        List::class.java,
+                        ArticAudioFile.Translation::class.java
                 )
-            }
-            return@let stringListAdapter!!
-        }
-
+        )
+    }
+    private val generalInfoTranslationListAdapter : JsonAdapter<List<ArticGeneralInfo.Translation>> by lazy {
+        moshi.adapter<List<ArticGeneralInfo.Translation>>(
+                Types.newParameterizedType(
+                        List::class.java,
+                        ArticGeneralInfo.Translation::class.java
+                )
+        )
+    }
+    private val tourTranslationListAdapter : JsonAdapter<List<ArticTour.Translation>> by lazy {
+        moshi.adapter<List<ArticTour.Translation>>(
+                Types.newParameterizedType(
+                        List::class.java,
+                        ArticTour.Translation::class.java
+                )
+        )
     }
 
-    private fun getAudioTranslationListAdapter() : JsonAdapter<List<ArticAudioFile.Translation>>{
-        return audioTranslationListAdapter.let {
-            if(it == null) {
-                audioTranslationListAdapter = moshi.adapter(
-                        Types.newParameterizedType(
-                                List::class.java,
-                                ArticAudioFile.Translation::class.java
-                        )
+    private val audioCommentaryObjectListAdapter : JsonAdapter<List<AudioCommentaryObject>> by lazy {
+        moshi.adapter<List<AudioCommentaryObject>>(
+                Types.newParameterizedType(
+                        List::class.java,
+                        AudioCommentaryObject::class.java
                 )
-            }
-            return@let audioTranslationListAdapter!!
-        }
+        )
+    }
+    private val tourStopListAdapter : JsonAdapter<List<ArticTour.TourStop>> by lazy {
+        moshi.adapter<List<ArticTour.TourStop>>(
+                Types.newParameterizedType(
+                        List::class.java,
+                        ArticTour.TourStop::class.java
+                )
+        )
     }
 
-    private fun getGeneralInfoTranslationListAdapter() : JsonAdapter<List<ArticGeneralInfo.Translation>>{
-        return generalInfoTranslationListAdapter.let {
-            if(it == null) {
-                generalInfoTranslationListAdapter = moshi.adapter(
-                        Types.newParameterizedType(
-                                List::class.java,
-                                ArticGeneralInfo.Translation::class.java
-                        )
+    private val tourCategoryListAdapter : JsonAdapter<List<ArticTourCategory>> by lazy {
+        moshi.adapter<List<ArticTourCategory>>(
+                Types.newParameterizedType(
+                        List::class.java,
+                        ArticTourCategory::class.java
                 )
-            }
-            return@let generalInfoTranslationListAdapter!!
-        }
-    }
-
-    private fun getAudioComentaryListAdapter() : JsonAdapter<List<AudioCommentaryObject>>{
-        return audioCommentaryObjectListAdapter.let {
-            if(it == null) {
-                audioCommentaryObjectListAdapter = moshi.adapter(
-                        Types.newParameterizedType(
-                                List::class.java,
-                                AudioCommentaryObject::class.java
-                        )
-                )
-            }
-            return@let audioCommentaryObjectListAdapter!!
-        }
-    }
-
-    private fun getTourTranslationListAdapter() : JsonAdapter<List<ArticTour.Translation>>{
-        return tourTranslationListAdapter.let {
-            if(it == null) {
-                tourTranslationListAdapter = moshi.adapter(
-                        Types.newParameterizedType(
-                                List::class.java,
-                                ArticTour.Translation::class.java
-                        )
-                )
-            }
-            return@let tourTranslationListAdapter!!
-        }
-    }
-
-    private fun getTourStopListAdapter() : JsonAdapter<List<ArticTour.TourStop>>{
-        return tourStopListAdapter.let {
-            if(it == null) {
-                tourStopListAdapter = moshi.adapter(
-                        Types.newParameterizedType(
-                                List::class.java,
-                                ArticTour.TourStop::class.java
-                        )
-                )
-            }
-            return@let tourStopListAdapter!!
-        }
-    }
-
-    private fun getTourCategoryListAdapter() : JsonAdapter<List<ArticTourCategory>>{
-        return tourCategoryListAdapter.let {
-            if(it == null) {
-                tourCategoryListAdapter = moshi.adapter(
-                        Types.newParameterizedType(
-                                List::class.java,
-                                ArticTourCategory::class.java
-                        )
-                )
-            }
-            return@let tourCategoryListAdapter!!
-        }
+        )
     }
 
     @TypeConverter
@@ -126,19 +74,19 @@ class AppConverters {
             if (it == null) {
                 emptyList()
             } else {
-                getStringListAdapter().fromJson(it) ?: emptyList()
+                stringListAdapter.fromJson(it) ?: emptyList()
             }
         }
     }
 
     @TypeConverter
     fun listToString(someObjects: List<String>): String {
-        return getStringListAdapter().toJson(someObjects)
+        return stringListAdapter.toJson(someObjects)
     }
 
     @TypeConverter
     fun audioTranslationListToString(objects : List<ArticAudioFile.Translation>) : String {
-        return getAudioTranslationListAdapter().toJson(objects)
+        return audioTranslationListAdapter.toJson(objects)
     }
 
     @TypeConverter
@@ -147,14 +95,14 @@ class AppConverters {
             if (it == null) {
                 emptyList()
             } else {
-                getAudioTranslationListAdapter().fromJson(it) ?: emptyList()
+                audioTranslationListAdapter.fromJson(it) ?: emptyList()
             }
         }
     }
 
     @TypeConverter
     fun generalInfoTranslationListToString(objects : List<ArticGeneralInfo.Translation>) : String {
-        return getGeneralInfoTranslationListAdapter().toJson(objects)
+        return generalInfoTranslationListAdapter.toJson(objects)
     }
 
     @TypeConverter
@@ -163,14 +111,14 @@ class AppConverters {
             if (it == null) {
                 emptyList()
             } else {
-                getGeneralInfoTranslationListAdapter().fromJson(it) ?: emptyList()
+                generalInfoTranslationListAdapter.fromJson(it) ?: emptyList()
             }
         }
     }
 
     @TypeConverter
     fun audioCommentaryObjectListToString(objects : List<AudioCommentaryObject>) : String {
-        return getAudioComentaryListAdapter().toJson(objects)
+        return audioCommentaryObjectListAdapter.toJson(objects)
     }
 
     @TypeConverter
@@ -179,14 +127,14 @@ class AppConverters {
             if (it == null) {
                 emptyList()
             } else {
-                getAudioComentaryListAdapter().fromJson(it) ?: emptyList()
+                audioCommentaryObjectListAdapter.fromJson(it) ?: emptyList()
             }
         }
     }
 
     @TypeConverter
     fun tourTranslationListToString(objects : List<ArticTour.Translation>) : String {
-        return getTourTranslationListAdapter().toJson(objects)
+        return tourTranslationListAdapter.toJson(objects)
     }
 
     @TypeConverter
@@ -195,14 +143,14 @@ class AppConverters {
             if (it == null) {
                 emptyList()
             } else {
-                getTourTranslationListAdapter().fromJson(it) ?: emptyList()
+                tourTranslationListAdapter.fromJson(it) ?: emptyList()
             }
         }
     }
 
     @TypeConverter
     fun tourStopListToString(objects : List<ArticTour.TourStop>) : String {
-        return getTourStopListAdapter().toJson(objects)
+        return tourStopListAdapter.toJson(objects)
     }
 
     @TypeConverter
@@ -211,7 +159,7 @@ class AppConverters {
             if (it == null) {
                 emptyList()
             } else {
-                getTourStopListAdapter().fromJson(it) ?: emptyList()
+                tourStopListAdapter.fromJson(it) ?: emptyList()
             }
         }
     }
@@ -219,7 +167,7 @@ class AppConverters {
 
     @TypeConverter
     fun tourCategoryListToString(objects : List<ArticTourCategory>) : String {
-        return getTourCategoryListAdapter().toJson(objects)
+        return tourCategoryListAdapter.toJson(objects)
     }
 
     @TypeConverter
@@ -228,9 +176,14 @@ class AppConverters {
             if (it == null) {
                 emptyList()
             } else {
-                getTourCategoryListAdapter().fromJson(it) ?: emptyList()
+                tourCategoryListAdapter.fromJson(it) ?: emptyList()
             }
         }
     }
+//
+//    private inline fun <T> safeList(adapterGetter: () -> JsonAdapter<List<T>>): List<T> {
+//        return data?.let { adapterGetter().fromJson(it)  }
+//                ?: emptyList()
+//    }
 
 }

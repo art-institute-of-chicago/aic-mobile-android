@@ -28,6 +28,8 @@ abstract class ApiModule {
     @Module
     companion object {
 
+        private const val DEFAULT_TIMEOUT = 10L
+
         @JvmStatic
         @Provides
         @Singleton
@@ -63,8 +65,8 @@ abstract class ApiModule {
         @Named(BLOB_CLIENT_API)
         fun provideClient(progressEventBus: ProgressEventBus): OkHttpClient {
             val builder = OkHttpClient.Builder()
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                    .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                     .addInterceptor(DownloadProgressInterceptor(progressEventBus))
             if (BuildConfig.DEBUG) {
                 builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -76,9 +78,7 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideProgressEventBus(): ProgressEventBus {
-            return ProgressEventBus()
-        }
+        fun provideProgressEventBus(): ProgressEventBus = ProgressEventBus()
 
 
         @JvmStatic
@@ -93,8 +93,7 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideAppDataPreferencesManager(context:Context) : AppDataPreferencesManager
-                = AppDataPreferencesManager(context)
+        fun provideAppDataPreferencesManager(context: Context): AppDataPreferencesManager = AppDataPreferencesManager(context)
 
         @JvmStatic
         @Provides
