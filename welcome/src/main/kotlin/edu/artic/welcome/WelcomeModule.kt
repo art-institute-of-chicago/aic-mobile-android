@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.viewmodel.ViewModelKey
+import javax.inject.Singleton
 
 /**
  *@author Sameer Dhakal (Fuzz)
@@ -23,5 +24,17 @@ abstract class WelcomeModule {
 
     @get:ContributesAndroidInjector
     abstract val welcomeFragment: WelcomeFragment
+
+    @Module
+    companion object {
+
+        @JvmStatic
+        @Provides
+        fun provideWelcomePreferenceManager(context : Context) : WelcomePreferencesManager
+                = WelcomePreferencesManager(context)
+
+    }
+
+
 
 }
