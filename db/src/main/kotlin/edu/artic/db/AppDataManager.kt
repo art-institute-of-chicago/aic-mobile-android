@@ -1,8 +1,7 @@
 package edu.artic.db
 
+import com.fuzz.rx.asObservable
 import io.reactivex.Observable
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatterBuilder
 import javax.inject.Inject
 
 class AppDataManager @Inject constructor(
@@ -17,24 +16,12 @@ class AppDataManager @Inject constructor(
     fun getBlob(): Observable<AppDataState> {
         return serviceProvider.getBlobHeaders()
                 .flatMap { headers ->
-
-                    val dtf = DateTimeFormatterBuilder()
-                            //Thu, 12 Jul 2018 16:56:12 GMT
-                            .appendPattern("E, dd MMM yyyy HH:mm:ss O")
-                            .toFormatter()
-                    if (headers.containsKey(HEADER_LAST_MODIFIED)) {
-                        val lastModified = headers[HEADER_LAST_MODIFIED]?.get(0)!!
-                        val newLocalDateTime = LocalDateTime.parse(lastModified, dtf)
-                        val storedLastModified = appDataPreferencesManager.lastModified
-                        if (storedLastModified.isNotEmpty() && newLocalDateTime.isAfter(LocalDateTime.parse(storedLastModified, dtf))) {
-                            return@flatMap serviceProvider.getBlob()
-                        } else {
-                            return@flatMap Observable.just(AppDataState.Empty)
-                        }
-                    } else {
+                    if (!headers.containsKey(HEADER_LAST_MODIFIED) || headers[HEADER_LAST_MODIFIED]?.get(0)
+                            != appDataPreferencesManager.lastModified) {
                         serviceProvider.getBlob()
+                    } else {
+                        AppDataState.Empty.asObservable()
                     }
-
                 }.flatMap { appDataState ->
                     if (appDataState is AppDataState.Done) {
                         //Save last downloaded headers
