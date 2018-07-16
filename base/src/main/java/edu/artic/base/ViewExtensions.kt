@@ -38,4 +38,3 @@ fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
         }
     }
 }
-

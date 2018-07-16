@@ -2,4 +2,7 @@
     <string name="app_name">AIC Mobile</string>
     <string name="accessYourMemberCard">Access your member card.</string>
     <string name="welcomePrompt">Explore the museum with your personal, pocket-sized guide</string>
+    <string name="tours">Tours</string>
+    <string name="seeAll">See All</string>
+    <string name="stops">Stops</string>
 </resources>
