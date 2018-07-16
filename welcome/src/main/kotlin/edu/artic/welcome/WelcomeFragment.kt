@@ -5,10 +5,12 @@ import android.os.Handler
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import edu.artic.adapter.itemChanges
 import edu.artic.base.fileAsString
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -53,8 +55,12 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         val list = getTours()
 
         context?.let {
+            viewModel.addTours(getTours())
             tourSummaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            tourSummaryRecyclerView.adapter = ToursAdapter(list, it)
+            val adapter = ToursAdapter()
+            tourSummaryRecyclerView.adapter = adapter
+
+            viewModel.tours.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
         }
 
 

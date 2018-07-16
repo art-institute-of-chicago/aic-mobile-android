@@ -3,6 +3,7 @@ package edu.artic.welcome
 import android.arch.lifecycle.LifecycleOwner
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager: WelcomePreferencesManager) : BaseViewModel() {
 
     val shouldPeekTourSummary: Subject<Boolean> = BehaviorSubject.create()
+    val tours: Subject<List<TourCellViewModel>> = BehaviorSubject.create()
 
     init {
         shouldPeekTourSummary.distinctUntilChanged()
@@ -33,5 +35,14 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         Observable.just(false)
                 .bindTo(this.shouldPeekTourSummary)
                 .disposedBy(disposeBag)
+    }
+
+    //Temp method until dao is ready
+    fun addTours(tours: List<ArticTour>) {
+        val viewModelList = ArrayList<TourCellViewModel>()
+        tours.forEach {
+            viewModelList.add(TourCellViewModel(it))
+        }
+        this.tours.onNext(viewModelList)
     }
 }

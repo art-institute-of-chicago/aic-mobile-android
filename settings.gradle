@@ -1,1 +1,1 @@
-include ':app', ':ui', ':viewmodel', ':base', ':splash', ':db', ':welcome', ':main'
+include ':app', ':ui', ':viewmodel', ':base', ':splash', ':db', ':welcome', ':main', ':adapter'
