@@ -1,7 +1,6 @@
 package edu.artic.welcome
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -33,8 +32,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     @Inject
     lateinit var moshi: Moshi
-
-    private val handler = Handler()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -104,11 +101,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             }
 
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacksAndMessages(null)
     }
 
 }
