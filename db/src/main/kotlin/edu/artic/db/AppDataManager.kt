@@ -29,7 +29,7 @@ class AppDataManager @Inject constructor(
                         serviceProvider.getBlob()
                     }
 
-                }.doOnNext {
+                }.flatMap {
                     if (it is AppDataState.Done) {
                         try {
                             appDatabase.dashboardDao.setDashBoard(it.result.dashboard)
@@ -72,9 +72,6 @@ class AppDataManager @Inject constructor(
                                 e.printStackTrace()
                             }
                         }
-
-
-
                         if (it.result.mapAnnotations?.isNotEmpty() == true) {
                             try {
                                 appDatabase.articMapAnnotationDao.addAnnotations(it.result.mapAnnotations.values.toList())
@@ -82,9 +79,8 @@ class AppDataManager @Inject constructor(
                                 e.printStackTrace()
                             }
                         }
-
-
                     }
+                    return@flatMap Observable.just(it)
                 }
     }
 }
