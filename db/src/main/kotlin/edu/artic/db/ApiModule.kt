@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import com.squareup.moshi.JsonAdapter
@@ -10,12 +11,8 @@ import dagger.multibindings.Multibinds
 import edu.artic.db.progress.DownloadProgressInterceptor
 import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Converter
 import retrofit2.Retrofit
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -30,6 +27,8 @@ abstract class ApiModule {
 
     @Module
     companion object {
+
+        private const val DEFAULT_TIMEOUT = 10L
 
         @JvmStatic
         @Provides
@@ -66,8 +65,8 @@ abstract class ApiModule {
         @Named(BLOB_CLIENT_API)
         fun provideClient(progressEventBus: ProgressEventBus): OkHttpClient {
             val builder = OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(10, TimeUnit.SECONDS)
+                    .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                    .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                     .addInterceptor(DownloadProgressInterceptor(progressEventBus))
             if (BuildConfig.DEBUG) {
                 builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -79,15 +78,22 @@ abstract class ApiModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideProgressEventBus(): ProgressEventBus {
-            return ProgressEventBus()
-        }
+        fun provideProgressEventBus(): ProgressEventBus = ProgressEventBus()
 
 
         @JvmStatic
         @Provides
         @Singleton
-        fun provideAppDataManager(appDataServiceProvider: AppDataServiceProvider): AppDataManager = AppDataManager(appDataServiceProvider)
+        fun provideAppDataManager(
+                appDataServiceProvider: AppDataServiceProvider,
+                appDataPreferencesManager: AppDataPreferencesManager,
+                database: AppDatabase
+        ): AppDataManager = AppDataManager(appDataServiceProvider, appDataPreferencesManager, database)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideAppDataPreferencesManager(context: Context): AppDataPreferencesManager = AppDataPreferencesManager(context)
 
         @JvmStatic
         @Provides

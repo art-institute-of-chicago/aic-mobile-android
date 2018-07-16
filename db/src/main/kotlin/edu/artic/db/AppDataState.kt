@@ -1,10 +1,9 @@
 package edu.artic.db
 
-import com.jakewharton.retrofit2.adapter.rxjava2.Result
-import edu.artic.db.models.ArticBlobData
+import edu.artic.db.models.ArticAppData
 
 sealed class AppDataState {
     class Downloading(val progress: Float) : AppDataState()
-    class Done(val result: Result<ArticBlobData>) : AppDataState()
+    class Done(val result: ArticAppData, val headers: Map<String, List<String>>) : AppDataState()
     object Empty : AppDataState()
 }

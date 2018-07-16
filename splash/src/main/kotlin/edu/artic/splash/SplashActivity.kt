@@ -1,9 +1,13 @@
 package edu.artic.splash
 
 import android.content.Intent
-import android.os.Handler
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.widget.text
 import edu.artic.main.MainActivity
 import edu.artic.viewmodel.BaseViewModelActivity
+import edu.artic.viewmodel.Navigate
+import kotlinx.android.synthetic.main.activity_splash.*
 import kotlin.reflect.KClass
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -13,16 +17,31 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override val viewModelClass: KClass<SplashViewModel>
         get() = SplashViewModel::class
 
-    override fun onViewModelCreated(viewModel: SplashViewModel) {
-        super.onViewModelCreated(viewModel)
-        val handler = Handler()
+    override fun onResume() {
+        super.onResume()
+        viewModel.percentage
+                .map { "Percentage : ${it * 100}" }
+                .bindToMain(percentText.text())
+                .disposedBy(disposeBag)
+        viewModel.navigateTo
+                .subscribe {
+            when (it) {
+                is Navigate.Forward -> {
+                    when (it.endpoint) {
+                        is SplashViewModel.NavigationEndpoint.Welcome -> {
+                            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                        }
+                    }
+                }
+                is Navigate.Back -> {
 
-        /**
-         * TODO:: Remove the post delay once splash is functional.
-         */
-        handler.postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }, 1000)
+                }
+            }
+        }.disposedBy(disposeBag)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposeBag.clear()
     }
 }
