@@ -1,10 +1,9 @@
 package edu.artic.splash
 
+import android.content.Intent
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
-import android.content.Intent
-import android.os.Handler
 import edu.artic.main.MainActivity
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
@@ -30,7 +29,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 is Navigate.Forward -> {
                     when (it.endpoint) {
                         is SplashViewModel.NavigationEndpoint.Welcome -> {
-                            //TODO: send to welcome screen :)
+                            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                         }
                     }
                 }
