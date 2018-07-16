@@ -7,7 +7,7 @@ dependencies {
     kapt libs.dagger_android_compiler
     api libs.dagger
     api libs.dagger_android
-
+    implementation project(":base")
     api "com.android.support:appcompat-v7:${support_version}"
     api "com.android.support:support-v4:${support_version}"
     api "com.android.support:design:${support_version}"
