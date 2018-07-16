@@ -1,56 +1,47 @@
 package edu.artic.welcome
 
-import android.content.Context
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.bumptech.glide.Glide
-import edu.artic.db.models.ArticTour
-import edu.artic.welcome.R.id.stops
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.widget.text
+import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import kotlinx.android.synthetic.main.tour_card_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 
-class ToursAdapter(val tours: List<ArticTour>, private val context: Context) : RecyclerView.Adapter<ToursViewHolder>() {
+class ToursAdapter : AutoHolderRecyclerViewAdapter<TourCellViewModel>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToursViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.tour_card_layout, parent, false)
-        return ToursViewHolder(view)
+
+    override fun View.onBindView(item: TourCellViewModel, position: Int) {
+
+        item.tourImageUrl.subscribe {
+            Glide.with(context)
+                    .load(it)
+                    .into(image)
+        }.disposedBy(item.viewDisposeBag)
+
+        item.tourTitle.bindToMain(tourTitle.text()).disposedBy(item.viewDisposeBag)
+
+        item.tourDescription
+                .map {
+                    it.replace("&nbsp;", " ")
+                }.subscribe { tourDescription.text = it }
+                .disposedBy(item.viewDisposeBag)
+
+        item.tourStops
+                .map {
+                    "$it ${context.getString(R.string.stops)}"
+                }.subscribe { stops.text = it.toString() }
+                .disposedBy(item.viewDisposeBag)
+        
+        item.tourDuration.bindToMain(tourTime.text()).disposedBy(item.viewDisposeBag)
     }
 
-    override fun getItemCount(): Int {
-        return tours.count()
+    override fun getLayoutResId(position: Int): Int {
+        return R.layout.tour_card_layout
     }
 
-    override fun onBindViewHolder(holder: ToursViewHolder, position: Int) {
-        val tour = tours[position]
-        holder.tourTitle.text = tour.title
-        holder.tourDescription.text = tour.description.clean()
-        val count = tour.tourStops?.count() ?: 0
-        val toursStop = "$count ${context.getString(R.string.stops)}"
-        holder.tourStopsCount.text = toursStop
-        holder.tourTime.text = tour.tourDuration
-
-        Glide.with(context)
-                .load(tour.imageUrl)
-                .into(holder.tourImage)
-    }
-
-}
-
-
-class ToursViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val tourImage: ImageView = itemView.findViewById(R.id.image)
-    val tourTitle: TextView = itemView.findViewById(R.id.tourTitle)
-    val tourDescription: TextView = itemView.findViewById(R.id.tourDescription)
-    val tourStopsCount: TextView = itemView.findViewById(R.id.stops)
-    val tourTime: TextView = itemView.findViewById(R.id.tourTime)
-}
-
-fun String.clean(): String {
-    return this.replace("&nbsp;", " ")
 }
