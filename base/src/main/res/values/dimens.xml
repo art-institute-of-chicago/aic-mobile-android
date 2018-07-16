@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="marginQuarter">2dp</dimen>
+    <dimen name="marginHalf">4dp</dimen>
+    <dimen name="marginStandard">8dp</dimen>
+    <dimen name="marginOneHalf">12dp</dimen>
+    <dimen name="marginDouble">16dp</dimen>
+    <dimen name="marginTwenty">20dp</dimen>
+    <dimen name="marginNinety">90dp</dimen>
+    <dimen name="marginTriple">24dp</dimen>
+    <dimen name="marginQuad">32dp</dimen>
+
+    <dimen name="collapsibleImageHeight">200dp</dimen>
+    <dimen name="tourTileWidth">285dp</dimen>
+    <dimen name="tourTileHeight">300dp</dimen>
+    <dimen name="tourSummaryImageHeight">177dp</dimen>
+    <dimen name="tourSummaryInfoBarHeight">36dp</dimen>
+
+    <dimen name="textMedium">17sp</dimen>
+    <dimen name="textLarge">21sp</dimen>
+    <dimen name="textSmall">14sp</dimen>
+    <dimen name="textPrompt">24sp</dimen>
+    <dimen name="textLink">15sp</dimen>
+</resources>

@@ -8,6 +8,7 @@ android {
         applicationId "edu.artic"
         minSdkVersion minSdk
         targetSdkVersion sdk
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -24,8 +25,10 @@ dependencies {
     implementation project(':ui')
     implementation project(':db')
     implementation project(':viewmodel')
+    implementation project(':main')
     implementation project(':base')
     implementation project(':splash')
+    implementation project(':welcome')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin

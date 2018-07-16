@@ -14,7 +14,8 @@ buildscript {
         kotshi_version = '1.0.4'
         moshi_version = '1.6.0'
         room_version = '1.1.1'
-
+        glide_version = '4.4.0'
+        
         libs = [
                 kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
                 rxHelper               : "com.github.fuzz-productions:rx-helpers:${latest_helper}",
@@ -42,7 +43,10 @@ buildscript {
                 room_rx                : "android.arch.persistence.room:rxjava2:${room_version}",
                 timber                 : 'com.jakewharton.timber:timber:4.5.1',
                 threeten               : 'com.jakewharton.threetenabp:threetenabp:1.0.5',
-
+                design_support            : "com.android.support:design:${support_version}",
+                constraint_layout         : "com.android.support.constraint:constraint-layout:1.1.2",
+                glide                     : "com.github.bumptech.glide:glide:${glide_version}",
+                glide_compiler: "com.github.bumptech.glide:compiler:${glide_version}"
         ]
 
     }

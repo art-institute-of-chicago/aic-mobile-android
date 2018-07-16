@@ -3,13 +3,13 @@ apply plugin: 'kotlin-kapt'
 
 dependencies {
     kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
 
     api libs.kotlin
-
+    api libs.design_support
     api libs.dagger
     api libs.dagger_android
     api 'javax.annotation:jsr250-api:1.0'
-
 }
 
 

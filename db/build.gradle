@@ -10,7 +10,7 @@ android {
 
 dependencies {
     implementation project(':base')
-    implementation libs.rxHelper
+    api libs.rxHelper
     api libs.retrofit_rx
 
     api libs.retrofit
@@ -21,6 +21,7 @@ dependencies {
     kapt libs.moshi_kotlin_compiler
 
     api libs.retrofit_moshi
+    api libs.moshi_kotlin
 
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
