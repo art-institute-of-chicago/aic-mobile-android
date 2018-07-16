@@ -27,7 +27,7 @@ class RetrofitAppDataServiceProvider(@Named(ApiModule.RETROFIT_BLOB_API) retrofi
                             observer.onError(it.error())
                             it.error().printStackTrace()
                         } else {
-                            observer.onNext(AppDataState.Done(it.requireValue()))
+                            observer.onNext(AppDataState.Done(it.requireValue(), it.response().headers().toMultimap()))
                         }
                         disposable.dispose()
                     }, {

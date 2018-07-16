@@ -35,19 +35,22 @@ class SplashViewModel @Inject constructor(appDataManager : AppDataManager) : Nav
                             percentage.onNext(it.progress)
                         }
                         is AppDataState.Done -> {
-                            Log.d("SplashViewModel", "GetBlob: Done ${it.result.objects}")
-                            Navigate.Forward(NavigationEndpoint.Welcome())
-                                    .asObservable()
-                                    .bindTo(navigateTo)
-                                    .disposedBy(disposeBag)
+                            goToWelcome()
                         }
                         is AppDataState.Empty -> {
-                            Log.d("SplashViewModel", "GetBlob: Empty")
+                            goToWelcome()
                         }
                     }
                 },{
                     it.printStackTrace()
                 },{})
+                .disposedBy(disposeBag)
+    }
+
+    private fun goToWelcome() {
+        Navigate.Forward(NavigationEndpoint.Welcome())
+                .asObservable()
+                .bindTo(navigateTo)
                 .disposedBy(disposeBag)
     }
 }

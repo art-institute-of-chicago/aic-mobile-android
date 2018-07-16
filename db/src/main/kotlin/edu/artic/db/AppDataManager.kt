@@ -7,20 +7,26 @@ import javax.inject.Inject
 
 class AppDataManager @Inject constructor(
         private val serviceProvider: AppDataServiceProvider,
+        private val appDataPreferencesManager: AppDataPreferencesManager,
         private val appDatabase: AppDatabase
 ) {
+    companion object {
+        const val HEADER_LAST_MODIFIED = "last-modified"
+    }
 
     fun getBlob(): Observable<AppDataState> {
         return serviceProvider.getBlobHeaders()
                 .flatMap {
+
                     val dtf = DateTimeFormatterBuilder()
                             //Thu, 12 Jul 2018 16:56:12 GMT
                             .appendPattern("E, dd MMM yyyy HH:mm:ss O")
                             .toFormatter()
-                    if (it.containsKey("last-modified")) {
-                        val lastModified = it["last-modified"]?.get(0)!!
+                    if (it.containsKey(HEADER_LAST_MODIFIED)) {
+                        val lastModified = it[HEADER_LAST_MODIFIED]?.get(0)!!
                         val newLocalDateTime = LocalDateTime.parse(lastModified, dtf)
-                        if (newLocalDateTime.isAfter(/*TODO: get from storage*/ LocalDateTime.parse("Thu, 12 Jul 2018 16:56:12 GMT", dtf))) {
+                        val storedLastModified = appDataPreferencesManager.lastModified
+                        if (storedLastModified.isNotEmpty() && newLocalDateTime.isAfter(LocalDateTime.parse(storedLastModified, dtf))) {
                             return@flatMap serviceProvider.getBlob()
                         } else {
                             return@flatMap Observable.just(AppDataState.Empty)
@@ -31,6 +37,11 @@ class AppDataManager @Inject constructor(
 
                 }.flatMap {
                     if (it is AppDataState.Done) {
+                        //Save last downloaded headers
+                        it.headers[HEADER_LAST_MODIFIED]?.let {
+                            appDataPreferencesManager.lastModified = it[0]
+                        }
+
                         try {
                             appDatabase.dashboardDao.setDashBoard(it.result.dashboard)
                         } catch (e: Throwable) {

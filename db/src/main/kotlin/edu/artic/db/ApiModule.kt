@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import com.squareup.moshi.JsonAdapter
@@ -85,8 +86,15 @@ abstract class ApiModule {
         @Singleton
         fun provideAppDataManager(
                 appDataServiceProvider: AppDataServiceProvider,
+                appDataPreferencesManager: AppDataPreferencesManager,
                 database: AppDatabase
-        ): AppDataManager = AppDataManager(appDataServiceProvider, database)
+        ): AppDataManager = AppDataManager(appDataServiceProvider, appDataPreferencesManager, database)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideAppDataPreferencesManager(context:Context) : AppDataPreferencesManager
+                = AppDataPreferencesManager(context)
 
         @JvmStatic
         @Provides
