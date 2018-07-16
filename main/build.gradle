@@ -8,7 +8,7 @@ dependencies {
     kapt libs.dagger_android_compiler
     api libs.design_support
 
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    api libs.constraint_layout
     implementation project(':ui')
     implementation project(':base')
     implementation project(':viewmodel')

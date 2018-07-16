@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 
 
@@ -16,4 +17,5 @@ internal val apiErrorMoshi: Moshi = getMoshi()
 
 fun Moshi.Builder.registerAdapters() = apply {
     add(ApiJsonAdapterFactory.INSTANCE)
+    add(KotlinJsonAdapterFactory())
 }

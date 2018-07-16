@@ -3,49 +3,31 @@ package edu.artic.db.models
 import com.squareup.moshi.Json
 
 data class ArticTour(
-val title : String,
-val status : String,
-val nid : String,
-val type : String,
-val translations : String,
-val location : String,
-val latitude : String,
-val longitude : String,
-val floor : String,
-val image_filename : String,
-val image_url : String,
-val image_filemime : String,
-val image_filesize : String,
-val image_width : String,
-val image_height : String,
-//val thumbnail_crop_rect : [], // Unsure what type goes here so leaving removed for now
-val thumbnail_full_path : String,
-//val large_image_crop_rect : [], // Unsure what type goes here so leaving removed for now
-val large_image_crop_v2 : CropRect,
-val large_image_full_path : String,
-val tour_banner : String ,
-val selector_number : String ,
-val description : String,
-val description_html : String,
-val tour_dates : TourDate,
-val intro : String,
-val intro_html : String,
-val tour_duration : String,
-val tour_audio : String,
-val category : Any, // TODO: figure out what this is
-val stops : List<Any>, //TODO: figure out what this is
-val weight : Int,
-val tour_stops: List<TourStop>
+        @Json(name = "title") val title: String,
+        @Json(name = "image_url") val imageUrl: String,
+        @Json(name = "description") val description: String,
+        @Json(name = "tour_duration") val tourDuration: String,
+        @Json(name = "tour_stops") val tourStops: List<TourStop>?
 ) {
     data class TourDate(
-    val start_date : String,
-    val end_date : String
+            @Json(name = "start_date") val startDate: String,
+            @Json(name = "end_date") val endDate: String
     )
 
     data class TourStop(
-        @Json(name = "object") val objectId: String,
-        val audio_id : String,
-        val audio_bumper : String,
-        val sort : Int
-        )
+            @Json(name = "object") val objectId: String,
+            val audio_id: String,
+            val audio_bumper: String?,
+            val sort: Int
+    )
+
+    data class Translation(
+            @Json(name = "language") val language: String,
+            @Json(name = "title") val title: String,
+            @Json(name = "description") val description: String,
+            @Json(name = "description_html") val description_html: String,
+            @Json(name = "intro") val intro: String,
+            @Json(name = "intro_html") val intro_html: String,
+            @Json(name = "tour_duration") val tour_duration: String
+    )
 }
