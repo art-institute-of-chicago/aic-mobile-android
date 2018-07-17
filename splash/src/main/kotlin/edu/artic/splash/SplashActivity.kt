@@ -31,6 +31,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                             when (it.endpoint) {
                                 is SplashViewModel.NavigationEndpoint.Welcome -> {
                                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                                    finish()
                                 }
                             }
                         }
