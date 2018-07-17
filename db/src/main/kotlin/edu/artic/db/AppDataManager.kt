@@ -1,7 +1,9 @@
 package edu.artic.db
 
+import android.util.Log
 import com.fuzz.rx.asObservable
 import edu.artic.db.models.ArticAppData
+import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -26,16 +28,45 @@ class AppDataManager @Inject constructor(
 
                     is ProgressDataState.Done<*> -> {
                         loadPostAppData()
-                                .subscribe({
-                                    observer
+                                .subscribe({ postAppData ->
+                                    when (postAppData) {
+                                        is ProgressDataState.Downloading -> {
+                                            Log.d("AppdataManager", "${postAppData.progress}")
+                                            if (postAppData.progress >= 1) {
+                                                observer.onNext(ProgressDataState.Downloading(1.0f))
+                                                observer.onNext(ProgressDataState.Done(it.result))
+                                            } else {
+                                                observer.onNext(
+                                                        ProgressDataState.Downloading(.33f + (postAppData.progress * .67f)))
+                                            }
+                                        }
+                                    }
                                 }, {
-
+                                    observer.onError(it)
                                 }, {
-
+                                    observer.onComplete()
                                 })
                     }
                     is ProgressDataState.Empty -> {
-
+                        loadPostAppData()
+                                .subscribe({ postAppData ->
+                                    when (postAppData) {
+                                        is ProgressDataState.Downloading -> {
+                                            Log.d("AppdataManager", "${postAppData.progress}")
+                                            if (postAppData.progress >= 1) {
+                                                observer.onNext(ProgressDataState.Downloading(1.0f))
+                                                observer.onNext(ProgressDataState.Empty)
+                                            } else {
+                                                observer.onNext(
+                                                        ProgressDataState.Downloading(postAppData.progress))
+                                            }
+                                        }
+                                    }
+                                }, {
+                                    observer.onError(it)
+                                }, {
+                                    observer.onComplete()
+                                })
                     }
                     is ProgressDataState.Downloading -> {
                         observer.onNext(ProgressDataState.Downloading(it.progress * .33f))
@@ -132,12 +163,13 @@ class AppDataManager @Inject constructor(
                 getExhibitions()
                         .filter { it is ProgressDataState.Downloading }
                         .map { it as ProgressDataState.Downloading },
-                getExhibitions()
+                getEvents()
                         .filter { it is ProgressDataState.Downloading }
                         .map { it as ProgressDataState.Downloading },
-                BiFunction<ProgressDataState.Downloading, ProgressDataState.Downloading, ProgressDataState> { exhibitions, events ->
+                BiFunction<ProgressDataState.Downloading, ProgressDataState.Downloading, ProgressDataState> { exhibitionProgress, eventsProgress ->
+                    Log.d("LoadPostAppData", "exhibitionProgress: ${exhibitionProgress.progress} eventProgress ${eventsProgress.progress}")
                     ProgressDataState.Downloading(
-                            (exhibitions.progress + events.progress) / 2.0f
+                            (exhibitionProgress.progress + eventsProgress.progress) / 2.0f
                     )
                 })
 
@@ -149,9 +181,28 @@ class AppDataManager @Inject constructor(
                     when (it) {
                         is ProgressDataState.Done<*> -> {
                             val result = it.result as ArticResult<*>
-                            if(result.data.isNotEmpty() && result.data[0] is ArticExhibition) {
+                            if (result.data.isNotEmpty() && result.data[0] is ArticExhibition) {
                                 @Suppress("UNCHECKED_CAST")
                                 appDatabase.exhibitionDao.updateExhibitions((result as ArticResult<ArticExhibition>).data)
+
+                            }
+                        }
+                    }
+
+                    it.asObservable()
+                }
+    }
+
+
+    private fun getEvents(): Observable<ProgressDataState> {
+        return serviceProvider.getEvents()
+                .flatMap {
+                    when (it) {
+                        is ProgressDataState.Done<*> -> {
+                            val result = it.result as ArticResult<*>
+                            if (result.data.isNotEmpty() && result.data[0] is ArticEvent) {
+                                @Suppress("UNCHECKED_CAST")
+                                appDatabase.eventDao.updateEvents((result as ArticResult<ArticEvent>).data)
 
                             }
                         }

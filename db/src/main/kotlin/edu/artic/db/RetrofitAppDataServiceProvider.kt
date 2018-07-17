@@ -131,12 +131,12 @@ class RetrofitAppDataServiceProvider(
 
             val disposable = progressEventBus.observable()
                     .subscribe {
-                        if (it.downloadIdentifier == BLOB_HEADER_ID) {
+                        if (it.downloadIdentifier == EXHIBITIONS_HEADER_ID) {
                             observer.onNext(ProgressDataState.Downloading(it.progress / 100f))
                         }
                     }
 
-            service.getExhibitions(url, postParams)
+            service.getExhibitions(EXHIBITIONS_HEADER_ID, url, postParams)
                     .subscribe({
                         if (!it.isError) {
                             observer.onNext(
@@ -161,4 +161,83 @@ class RetrofitAppDataServiceProvider(
         }
     }
 
+
+    override fun getEvents(): Observable<ProgressDataState> {
+        return Observable.create { observer ->
+            var url = dataObject.dataApiUrl + dataObject.eventsEndpoint
+            Log.d("AppDataServiceProvider", "url: $url")
+            if (!url.contains("/search")) {
+                url += "/search"
+            }
+            url += "?limit=500"
+
+            val postParams = mutableMapOf<String, Any>()
+            postParams["fields"] = listOf(
+                    "id",
+                    "title",
+                    "description",
+                    "short_description",
+                    "image",
+                    "location",
+                    "start_at",
+                    "end_at",
+                    "button_text",
+                    "button_url"
+            )
+            postParams["sort"] = listOf("start_at", "end_at")
+            postParams["query"] = mutableMapOf<String, Any>().apply {
+                //Boolean map
+                this["bool"] = mutableMapOf<String, Any>().apply {
+                    this["must"] = mutableListOf<Any>().apply {
+                        this.add(mutableMapOf<String, Any>().apply {
+                            //range
+                            this["range"] = mutableMapOf<String, Any>().apply {
+                                this["start_at"] = mutableMapOf<String, String>().apply {
+                                    this["lte"] = "now+2w"
+                                }
+                            }
+                        })
+
+                        this.add(mutableMapOf<String, Any>().apply {
+                            this["range"] = mutableMapOf<String, Any>().apply {
+                                this["end_at"] = mutableMapOf<String, String>().apply {
+                                    this["gte"] = "now"
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+
+            val disposable = progressEventBus.observable()
+                    .subscribe {
+                        if (it.downloadIdentifier == EVENT_HEADER_ID) {
+                            observer.onNext(ProgressDataState.Downloading(it.progress / 100f))
+                        }
+                    }
+
+            service.getEvents(EVENT_HEADER_ID, url, postParams)
+                    .subscribe({
+                        if (!it.isError) {
+                            observer.onNext(
+                                    ProgressDataState.Done(
+                                            it.requireValue(),
+                                            it.response().headers().toMultimap()
+                                    )
+                            )
+                        } else {
+                            observer.onError(it.error())
+                        }
+                        disposable.dispose()
+                    }, {
+                        observer.onError(it)
+                        disposable.dispose()
+                    }, {
+                        observer.onComplete()
+                        disposable.dispose()
+                    }
+
+                    )
+        }
+    }
 }

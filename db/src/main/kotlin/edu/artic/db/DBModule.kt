@@ -42,4 +42,7 @@ class DBModule {
 
     @Provides
     fun provideExhibitionDao(appDatabase: AppDatabase) = appDatabase.exhibitionDao
+
+    @Provides
+    fun provideEventDao(appDatabase: AppDatabase) = appDatabase.eventDao
 }

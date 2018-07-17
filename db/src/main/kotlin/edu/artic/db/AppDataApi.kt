@@ -2,6 +2,7 @@ package edu.artic.db
 
 import com.jakewharton.retrofit2.adapter.rxjava2.Result
 import edu.artic.db.models.ArticAppData
+import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.progress.Constants
 import io.reactivex.Observable
@@ -21,8 +22,15 @@ interface AppDataApi {
 
     @POST()
     fun getExhibitions(
+            @Header(Constants.DOWNLOAD_IDENTIFIER_HEADER) header: String,
             @Url url : String,
             @Body searchParams : MutableMap<String, Any>
     ) : Observable<Result<ArticResult<ArticExhibition>>>
 
+    @POST()
+    fun getEvents(
+            @Header(Constants.DOWNLOAD_IDENTIFIER_HEADER) header: String,
+            @Url url : String,
+            @Body searchParams : MutableMap<String, Any>
+    ) : Observable<Result<ArticResult<ArticEvent>>>
 }
