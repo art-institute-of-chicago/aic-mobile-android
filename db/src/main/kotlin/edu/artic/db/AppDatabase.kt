@@ -16,6 +16,7 @@ import edu.artic.db.models.*
             ArticTour::class,
             ArticMapAnnotation::class,
             ArticExhibition::class,
+            ArticEvent::class,
             ArticDataObject::class
         ],
         version = 1,
@@ -32,4 +33,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val articMapAnnotationDao: ArticMapAnnotationDao
     abstract val dataObjectDao: ArticDataObjectDao
     abstract val exhibitionDao : ArticExhibitionDao
+    abstract val eventDao: ArticEventDao
 }
