@@ -14,12 +14,15 @@
     <dimen name="collapsibleImageHeight">200dp</dimen>
     <dimen name="tourTileWidth">285dp</dimen>
     <dimen name="tourTileHeight">300dp</dimen>
+    <dimen name="exhibitionTileWidth">240dp</dimen>
+    <dimen name="exhibitionTileHeight">373dp</dimen>
     <dimen name="tourSummaryImageHeight">177dp</dimen>
     <dimen name="tourSummaryInfoBarHeight">36dp</dimen>
 
     <dimen name="textMedium">17sp</dimen>
     <dimen name="textLarge">21sp</dimen>
     <dimen name="textSmall">14sp</dimen>
+    <dimen name="textSmallest">12sp</dimen>
     <dimen name="textPrompt">24sp</dimen>
     <dimen name="textLink">15sp</dimen>
 </resources>
