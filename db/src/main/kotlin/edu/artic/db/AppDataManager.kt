@@ -176,6 +176,7 @@ class AppDataManager @Inject constructor(
                         is ProgressDataState.Done<*> -> {
                             val result = it.result as ArticResult<*>
                             if (result.data.isNotEmpty() && result.data[0] is ArticExhibition) {
+                                appDatabase.exhibitionDao.clear()
                                 @Suppress("UNCHECKED_CAST")
                                 appDatabase.exhibitionDao.updateExhibitions((result as ArticResult<ArticExhibition>).data)
 
@@ -195,6 +196,7 @@ class AppDataManager @Inject constructor(
                         is ProgressDataState.Done<*> -> {
                             val result = it.result as ArticResult<*>
                             if (result.data.isNotEmpty() && result.data[0] is ArticEvent) {
+                                appDatabase.eventDao.clear()
                                 @Suppress("UNCHECKED_CAST")
                                 appDatabase.eventDao.updateEvents((result as ArticResult<ArticEvent>).data)
 

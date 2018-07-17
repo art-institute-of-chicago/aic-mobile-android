@@ -13,7 +13,7 @@ import io.reactivex.Flowable
 interface ArticEventDao {
 
     @Query("DELETE FROM ArticEvent")
-    fun clearTable()
+    fun clear()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateEvents(exhibitions: List<ArticEvent>)
