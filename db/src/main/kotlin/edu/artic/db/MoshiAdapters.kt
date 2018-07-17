@@ -20,7 +20,6 @@ inline fun getMoshi(configureBlock: (Moshi.Builder.() -> Unit) = {}): Moshi =
 internal val apiErrorMoshi: Moshi = getMoshi()
 
 fun Moshi.Builder.registerAdapters() = apply {
-//    add(ApiJsonAdapterFactory.INSTANCE)
     add(KotlinJsonAdapterFactory())
     add(NullPrimitiveAdapter())
 }
