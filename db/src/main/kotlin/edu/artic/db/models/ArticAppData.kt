@@ -16,8 +16,7 @@ data class ArticAppData(
         @Json(name = "map_annontations") val mapAnnotations: Map<String, ArticMapAnnotation>?,
         @Json(name = "map_floors ") val mapFloors: Map<String, ArticMapFloor>?,
         @Json(name = "tour_categories ") val tourCategories: Map<String, ArticTourCategory>?,
-        @Json(name = "exhibitions") val exhibitions: List<ArticExhibition>?,
-        @Json(name = "data") val data: ArticDataObject?,
+        @Json(name = "data") val data: ArticDataObject,
         @Json(name = "search") val search: ArticSearchObject?
 )
 

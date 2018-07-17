@@ -23,21 +23,22 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 .map { "Percentage : ${it * 100}" }
                 .bindToMain(percentText.text())
                 .disposedBy(disposeBag)
+
         viewModel.navigateTo
                 .subscribe {
-            when (it) {
-                is Navigate.Forward -> {
-                    when (it.endpoint) {
-                        is SplashViewModel.NavigationEndpoint.Welcome -> {
-                            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    when (it) {
+                        is Navigate.Forward -> {
+                            when (it.endpoint) {
+                                is SplashViewModel.NavigationEndpoint.Welcome -> {
+                                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                                }
+                            }
+                        }
+                        is Navigate.Back -> {
+
                         }
                     }
-                }
-                is Navigate.Back -> {
-
-                }
-            }
-        }.disposedBy(disposeBag)
+                }.disposedBy(disposeBag)
     }
 
     override fun onPause() {
