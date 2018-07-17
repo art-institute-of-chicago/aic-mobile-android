@@ -2,6 +2,7 @@ package edu.artic.db
 
 import android.util.Log
 import com.fuzz.rx.asObservable
+import com.fuzz.rx.disposedBy
 import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
@@ -22,24 +23,16 @@ class AppDataManager @Inject constructor(
 
         //First load app data. if empty is returned, do nothing, otherwise download everything else.
         return Observable.create<ProgressDataState> { observer ->
-
-            getBlob().subscribe {
+            getBlob().subscribe({
                 when (it) {
 
                     is ProgressDataState.Done<*> -> {
                         loadPostAppData()
-                                .subscribe({ postAppData ->
-                                    when (postAppData) {
-                                        is ProgressDataState.Downloading -> {
-                                            Log.d("AppdataManager", "${postAppData.progress}")
-                                            if (postAppData.progress >= 1) {
-                                                observer.onNext(ProgressDataState.Downloading(1.0f))
-                                                observer.onNext(ProgressDataState.Done(it.result))
-                                            } else {
-                                                observer.onNext(
-                                                        ProgressDataState.Downloading(.33f + (postAppData.progress * .67f)))
-                                            }
-                                        }
+                                .subscribe({ amountDownload ->
+                                    Log.d("AppDataManager", "Amount downloaded $amountDownload")
+                                    ProgressDataState.Downloading(.34f + amountDownload * .33f)
+                                    if (amountDownload == 2) {
+                                        observer.onNext(ProgressDataState.Done(true))
                                     }
                                 }, {
                                     observer.onError(it)
@@ -49,18 +42,11 @@ class AppDataManager @Inject constructor(
                     }
                     is ProgressDataState.Empty -> {
                         loadPostAppData()
-                                .subscribe({ postAppData ->
-                                    when (postAppData) {
-                                        is ProgressDataState.Downloading -> {
-                                            Log.d("AppdataManager", "${postAppData.progress}")
-                                            if (postAppData.progress >= 1) {
-                                                observer.onNext(ProgressDataState.Downloading(1.0f))
-                                                observer.onNext(ProgressDataState.Empty)
-                                            } else {
-                                                observer.onNext(
-                                                        ProgressDataState.Downloading(postAppData.progress))
-                                            }
-                                        }
+                                .subscribe({ amountDownload ->
+                                    Log.d("AppDataManager", "Amount downloaded $amountDownload")
+                                    ProgressDataState.Downloading(.34f + amountDownload * .33f)
+                                    if (amountDownload == 2) {
+                                        observer.onNext(ProgressDataState.Done(true))
                                     }
                                 }, {
                                     observer.onError(it)
@@ -73,7 +59,12 @@ class AppDataManager @Inject constructor(
                     }
                 }
 
+            }, {
+                observer.onError(it)
+            }, {
+
             }
+            )
         }
     }
 
@@ -158,20 +149,36 @@ class AppDataManager @Inject constructor(
                 }
     }
 
-    private fun loadPostAppData(): Observable<ProgressDataState> {
-        return Observable.combineLatest(
-                getExhibitions()
-                        .filter { it is ProgressDataState.Downloading }
-                        .map { it as ProgressDataState.Downloading },
-                getEvents()
-                        .filter { it is ProgressDataState.Downloading }
-                        .map { it as ProgressDataState.Downloading },
-                BiFunction<ProgressDataState.Downloading, ProgressDataState.Downloading, ProgressDataState> { exhibitionProgress, eventsProgress ->
-                    Log.d("LoadPostAppData", "exhibitionProgress: ${exhibitionProgress.progress} eventProgress ${eventsProgress.progress}")
-                    ProgressDataState.Downloading(
-                            (exhibitionProgress.progress + eventsProgress.progress) / 2.0f
-                    )
-                })
+    private fun loadPostAppData(): Observable<Int> {
+        return Observable.create { observer ->
+            val maxDownloads = 2
+            var currentDownloads = 0
+            observer.onNext(currentDownloads)
+            getExhibitions().subscribe({
+                if (it is ProgressDataState.Done<*>) {
+                    currentDownloads++
+                    observer.onNext(currentDownloads)
+                }
+            }, {
+                observer.onError(it)
+            }, {
+                if (currentDownloads == maxDownloads) {
+                    observer.onComplete()
+                }
+            })
+            getEvents().subscribe({
+                if (it is ProgressDataState.Done<*>) {
+                    currentDownloads++
+                    observer.onNext(currentDownloads)
+                }
+            }, {
+                observer.onError(it)
+            }, {
+                if (currentDownloads == maxDownloads) {
+                    observer.onComplete()
+                }
+            })
+        }
 
     }
 

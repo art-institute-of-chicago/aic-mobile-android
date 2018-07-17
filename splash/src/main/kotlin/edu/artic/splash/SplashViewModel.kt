@@ -25,7 +25,6 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavV
                 .subscribe({
                     when (it) {
                         is ProgressDataState.Downloading -> {
-                            Log.d("SplashViewModel", "GetBlob: Downloading ${it.progress}")
                             percentage.onNext(it.progress)
                         }
                         is ProgressDataState.Done<*> -> {
@@ -38,24 +37,6 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavV
                 }, {
                     it.printStackTrace()
                 }, {}).disposedBy(disposeBag)
-//        appDataManager.getBlob()
-//                .subscribe({
-//                    when(it) {
-//                        is AppDataState.Downloading -> {
-//                            Log.d("SplashViewModel", "GetBlob: Downloading ${it.progress}")
-//                            percentage.onNext(it.progress)
-//                        }
-//                        is AppDataState.Done -> {
-//                            goToWelcome()
-//                        }
-//                        is AppDataState.Empty -> {
-//                            goToWelcome()
-//                        }
-//                    }
-//                },{
-//                    it.printStackTrace()
-//                },{})
-//                .disposedBy(disposeBag)
     }
 
     private fun goToWelcome() {
