@@ -33,9 +33,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif"
-                    android:textColor="@color/greyText"
                     android:gravity="center"
                     android:text="@string/welcomePrompt"
+                    android:textColor="@color/greyText"
                     android:textSize="@dimen/textMedium" />
 
                 <TextView
@@ -80,13 +80,54 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/tourSummaryRecyclerView"
-                android:nestedScrollingEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginBottom="@dimen/marginDouble"
-                />
+                android:nestedScrollingEnabled="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/marginStandard"
+                android:layout_marginEnd="@dimen/marginStandard"
+                android:background="@color/warmGrey" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginDouble"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/onViewLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/onView"
+                    android:textColor="@color/greyText"
+                    android:textSize="@dimen/textLarge" />
+
+                <TextView
+                    android:id="@+id/onViewLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/seeAll"
+                    android:textColor="@color/keppel"
+                    android:textSize="@dimen/textLink"
+                    tools:text="See All" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/onViewRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginDouble"
+                android:nestedScrollingEnabled="false" />
 
             <View
                 android:layout_width="match_parent"
@@ -96,6 +137,14 @@
                 android:background="@color/warmGrey" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/marginStandard"
+            android:layout_marginEnd="@dimen/marginStandard"
+            android:background="@color/warmGrey" />
+
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

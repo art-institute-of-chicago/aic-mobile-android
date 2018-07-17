@@ -11,6 +11,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import edu.artic.adapter.itemChanges
 import edu.artic.base.fileAsString
+import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.Observable
@@ -49,15 +50,20 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             }
         }
 
-        val list = getTours()
-
         context?.let {
             viewModel.addTours(getTours())
-            tourSummaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            val adapter = ToursAdapter()
-            tourSummaryRecyclerView.adapter = adapter
+            val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            tourSummaryRecyclerView.layoutManager = layoutManager
+            val tourSummaryAdapter = ToursAdapter()
+            tourSummaryRecyclerView.adapter = tourSummaryAdapter
+            viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
 
-            viewModel.tours.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
+            viewModel.addExhibitions(getExhibitions())
+            val adapter = OnViewAdapter()
+            val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            onViewRecyclerView.layoutManager = exhibitionLayoutManager
+            onViewRecyclerView.adapter = adapter
+            viewModel.exhibitions.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
         }
 
 
@@ -68,6 +74,19 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
+    }
+
+    private fun getExhibitions(): List<ArticExhibition> {
+        return activity.let {
+            if (it == null) {
+                emptyList()
+            } else {
+                val exhibitionJson = it.assets.fileAsString("json", "exhibition.json")
+                val adapter: JsonAdapter<List<ArticExhibition>> = moshi.adapter(Types.newParameterizedType(List::class.java, ArticExhibition::class.java))
+                return@let adapter.fromJson(exhibitionJson) as List<ArticExhibition>
+            }
+
+        }
     }
 
     /**
