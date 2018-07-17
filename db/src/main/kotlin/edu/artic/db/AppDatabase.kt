@@ -14,7 +14,9 @@ import edu.artic.db.models.*
             ArticObject::class,
             ArticAudioFile::class,
             ArticTour::class,
-            ArticMapAnnotation::class
+            ArticMapAnnotation::class,
+            ArticExhibition::class,
+            ArticDataObject::class
         ],
         version = 1,
         exportSchema = false
@@ -28,4 +30,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val audioFileDao: ArticAudioFileDao
     abstract val articTourDao: ArticTourDao
     abstract val articMapAnnotationDao: ArticMapAnnotationDao
+    abstract val dataObjectDao: ArticDataObjectDao
+    abstract val exhibitionDao : ArticExhibitionDao
 }

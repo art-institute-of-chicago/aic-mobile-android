@@ -8,6 +8,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
+import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.progress.DownloadProgressInterceptor
 import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
@@ -99,8 +100,10 @@ abstract class ApiModule {
         @Provides
         @Singleton
         fun provideBlobProvider(
-                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit, progressEventBus: ProgressEventBus
-        ): AppDataServiceProvider = RetrofitAppDataServiceProvider(retrofit, progressEventBus)
+                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit,
+                progressEventBus: ProgressEventBus,
+                dataObjectDao: ArticDataObjectDao
+        ): AppDataServiceProvider = RetrofitAppDataServiceProvider(retrofit, progressEventBus, dataObjectDao)
 
 
         @JvmStatic

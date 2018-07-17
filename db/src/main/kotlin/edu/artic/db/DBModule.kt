@@ -36,4 +36,10 @@ class DBModule {
 
     @Provides
     fun provideMapAnnotationDao(appDatabase: AppDatabase) = appDatabase.articMapAnnotationDao
+
+    @Provides
+    fun provideDataObjectDao(appDatabase: AppDatabase) = appDatabase.dataObjectDao
+
+    @Provides
+    fun provideExhibitionDao(appDatabase: AppDatabase) = appDatabase.exhibitionDao
 }
