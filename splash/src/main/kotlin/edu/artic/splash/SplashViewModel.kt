@@ -9,6 +9,7 @@ import edu.artic.db.ProgressDataState
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavViewViewModel<SplashViewModel.NavigationEndpoint>() {
@@ -41,7 +42,7 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavV
 
     private fun goToWelcome() {
         Navigate.Forward(NavigationEndpoint.Welcome())
-                .asObservable()
+                .asObservable().delay(5, TimeUnit.SECONDS)
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)
     }

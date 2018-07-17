@@ -1,13 +1,10 @@
 package edu.artic.db
 
-import android.util.Log
 import com.fuzz.rx.asObservable
-import com.fuzz.rx.disposedBy
 import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
 class AppDataManager @Inject constructor(
@@ -17,54 +14,45 @@ class AppDataManager @Inject constructor(
 ) {
     companion object {
         const val HEADER_LAST_MODIFIED = "last-modified"
+        private const val PRIMARY_DOWNLOADED_PERCENT = .34f
+        //Currently calculated because we are downloading only 3 endpoints
+        private const val PER_OBJECT_PERCENT = .33f
+        private const val MAX_SECONDARY_DOWNLOADS = 2
     }
 
+
+    /**
+     * @return an observable that will show how close to completion we are and a Done if fully complete
+     */
     fun loadData(): Observable<ProgressDataState> {
-
-        //First load app data. if empty is returned, do nothing, otherwise download everything else.
         return Observable.create<ProgressDataState> { observer ->
+            //First load app data, once app data is successfully loaded
             getBlob().subscribe({
-                when (it) {
-
-                    is ProgressDataState.Done<*> -> {
-                        loadPostAppData()
-                                .subscribe({ amountDownload ->
-                                    Log.d("AppDataManager", "Amount downloaded $amountDownload")
-                                    ProgressDataState.Downloading(.34f + amountDownload * .33f)
-                                    if (amountDownload == 2) {
-                                        observer.onNext(ProgressDataState.Done(true))
-                                    }
-                                }, {
-                                    observer.onError(it)
-                                }, {
-                                    observer.onComplete()
-                                })
-                    }
-                    is ProgressDataState.Empty -> {
-                        loadPostAppData()
-                                .subscribe({ amountDownload ->
-                                    Log.d("AppDataManager", "Amount downloaded $amountDownload")
-                                    ProgressDataState.Downloading(.34f + amountDownload * .33f)
-                                    if (amountDownload == 2) {
-                                        observer.onNext(ProgressDataState.Done(true))
-                                    }
-                                }, {
-                                    observer.onError(it)
-                                }, {
-                                    observer.onComplete()
-                                })
-                    }
-                    is ProgressDataState.Downloading -> {
-                        observer.onNext(ProgressDataState.Downloading(it.progress * .33f))
-                    }
+                if (it is ProgressDataState.Done<*> || it === ProgressDataState.Empty) {
+                    loadSecondaryData()
+                            .subscribe({ amountDownload ->
+                                observer.onNext(
+                                        ProgressDataState.Downloading(
+                                                progress = PRIMARY_DOWNLOADED_PERCENT
+                                                        + (amountDownload * PER_OBJECT_PERCENT))
+                                )
+                                if (amountDownload == MAX_SECONDARY_DOWNLOADS) {
+                                    observer.onNext(ProgressDataState.Done(true))
+                                }
+                            }, {
+                                observer.onError(it)
+                            }, {
+                                observer.onComplete()
+                            })
+                } else if (it is ProgressDataState.Downloading) {
+                    observer.onNext(ProgressDataState.Downloading(it.progress * PER_OBJECT_PERCENT))
                 }
 
             }, {
                 observer.onError(it)
             }, {
-
-            }
-            )
+                //Don't care about on complete here
+            })
         }
     }
 
@@ -149,9 +137,8 @@ class AppDataManager @Inject constructor(
                 }
     }
 
-    private fun loadPostAppData(): Observable<Int> {
+    private fun loadSecondaryData(): Observable<Int> {
         return Observable.create { observer ->
-            val maxDownloads = 2
             var currentDownloads = 0
             observer.onNext(currentDownloads)
             getExhibitions().subscribe({
@@ -162,7 +149,7 @@ class AppDataManager @Inject constructor(
             }, {
                 observer.onError(it)
             }, {
-                if (currentDownloads == maxDownloads) {
+                if (currentDownloads == MAX_SECONDARY_DOWNLOADS) {
                     observer.onComplete()
                 }
             })
@@ -174,7 +161,7 @@ class AppDataManager @Inject constructor(
             }, {
                 observer.onError(it)
             }, {
-                if (currentDownloads == maxDownloads) {
+                if (currentDownloads == MAX_SECONDARY_DOWNLOADS) {
                     observer.onComplete()
                 }
             })
