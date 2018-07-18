@@ -5,6 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import edu.artic.db.models.ArticTour
+import io.reactivex.Flowable
 
 @Dao
 interface ArticTourDao {
@@ -14,4 +15,7 @@ interface ArticTourDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addTours(tours: List<ArticTour>)
+
+    @Query("select * from ArticTour order by title limit 4")
+    fun getTourSummary(): Flowable<List<ArticTour>>
 }

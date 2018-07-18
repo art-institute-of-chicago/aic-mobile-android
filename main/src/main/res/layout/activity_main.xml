@@ -22,7 +22,7 @@
         app:itemBackground="@color/white"
         app:itemTextColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@id/container"
-        app:menu="@menu/navigation_menu"
-        tools:background="#fa2" />
+        android:clickable="true"
+        app:menu="@menu/navigation_menu" />
 
 </android.support.constraint.ConstraintLayout>
