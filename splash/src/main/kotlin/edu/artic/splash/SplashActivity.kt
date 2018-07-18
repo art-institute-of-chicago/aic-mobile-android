@@ -1,9 +1,15 @@
 package edu.artic.splash
 
 import android.content.Intent
-import android.os.Handler
+import android.os.Bundle
+import android.os.PersistableBundle
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.widget.text
 import edu.artic.main.MainActivity
 import edu.artic.viewmodel.BaseViewModelActivity
+import edu.artic.viewmodel.Navigate
+import kotlinx.android.synthetic.main.activity_splash.*
 import kotlin.reflect.KClass
 
 class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
@@ -13,16 +19,41 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override val viewModelClass: KClass<SplashViewModel>
         get() = SplashViewModel::class
 
-    override fun onViewModelCreated(viewModel: SplashViewModel) {
-        super.onViewModelCreated(viewModel)
-        val handler = Handler()
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        viewModel.percentage
+                .map { "Percentage : ${it * 100}" }
+                .bindToMain(percentText.text())
+                .disposedBy(disposeBag)
+    }
 
-        /**
-         * TODO:: Remove the post delay once splash is functional.
-         */
-        handler.postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }, 1000)
+    override fun onStart() {
+        super.onStart()
+        viewModel.navigateTo
+                .subscribe {
+                    when (it) {
+                        is Navigate.Forward -> {
+                            when (it.endpoint) {
+                                is SplashViewModel.NavigationEndpoint.Welcome -> {
+                                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                                    finish()
+                                }
+                            }
+                        }
+                        is Navigate.Back -> {
+
+                        }
+                    }
+                }.disposedBy(navDisposeBag)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        navDisposeBag.clear()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposeBag.clear()
     }
 }

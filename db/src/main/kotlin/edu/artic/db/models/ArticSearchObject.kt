@@ -1,6 +1,10 @@
 package edu.artic.db.models
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class ArticSearchObject(
-        val search_strings: Map<String, String>,
-        val search_objects: List<Int>
+        @Json(name = "search_strings") val searchStrings: Map<String, String>,
+        @Json(name = "search_objects") val searchObjects: List<Int>
 )
