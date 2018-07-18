@@ -5,6 +5,7 @@ import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 
 class AppDataManager @Inject constructor(
@@ -108,34 +109,19 @@ class AppDataManager @Inject constructor(
     }
 
     private fun loadSecondaryData(): Observable<Int> {
-        return Observable.create { observer ->
-            var currentDownloads = 0
-            observer.onNext(currentDownloads)
-            getExhibitions().subscribe({
-                if (it is ProgressDataState.Done<*>) {
-                    currentDownloads++
-                    observer.onNext(currentDownloads)
-                }
-            }, {
-                observer.onError(it)
-            }, {
-                if (currentDownloads == MAX_SECONDARY_DOWNLOADS) {
-                    observer.onComplete()
-                }
-            })
-            getEvents().subscribe({
-                if (it is ProgressDataState.Done<*>) {
-                    currentDownloads++
-                    observer.onNext(currentDownloads)
-                }
-            }, {
-                observer.onError(it)
-            }, {
-                if (currentDownloads == MAX_SECONDARY_DOWNLOADS) {
-                    observer.onComplete()
-                }
-            })
-        }
+        return Observable.zip(
+                getExhibitions(),
+                getEvents(),
+                BiFunction<ProgressDataState, ProgressDataState, Int> { exhibitions, events ->
+                    var currentDownloads = 0
+                    if (exhibitions is ProgressDataState.Done<*>) {
+                        currentDownloads++
+                    }
+                    if (events is ProgressDataState.Done<*>) {
+                        currentDownloads++
+                    }
+                    return@BiFunction currentDownloads
+                })
 
     }
 
