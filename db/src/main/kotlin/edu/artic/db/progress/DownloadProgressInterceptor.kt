@@ -1,7 +1,7 @@
 package edu.artic.db.progress
 
 
-import edu.artic.db.progress.Constants.Companion.DOWNLOAD_IDENTIFIER_HEADER
+import edu.artic.db.progress.ApiConstants.Companion.DOWNLOAD_IDENTIFIER_HEADER
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
