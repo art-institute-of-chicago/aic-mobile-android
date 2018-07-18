@@ -128,13 +128,6 @@ class RetrofitAppDataServiceProvider(
                 }
             }
 
-            val disposable = progressEventBus.observable()
-                    .subscribe {
-                        if (it.downloadIdentifier == EXHIBITIONS_HEADER_ID) {
-                            observer.onNext(ProgressDataState.Downloading(it.progress / 100f))
-                        }
-                    }
-
             service.getExhibitions(EXHIBITIONS_HEADER_ID, url, postParams)
                     .subscribe({
                         if (!it.isError) {
@@ -147,13 +140,13 @@ class RetrofitAppDataServiceProvider(
                         } else {
                             observer.onError(it.error())
                         }
-                        disposable.dispose()
+
                     }, {
                         observer.onError(it)
-                        disposable.dispose()
+
                     }, {
                         observer.onComplete()
-                        disposable.dispose()
+
                     }
 
                     )
@@ -207,13 +200,6 @@ class RetrofitAppDataServiceProvider(
                 }
             }
 
-            val disposable = progressEventBus.observable()
-                    .subscribe {
-                        if (it.downloadIdentifier == EVENT_HEADER_ID) {
-                            observer.onNext(ProgressDataState.Downloading(it.progress / 100f))
-                        }
-                    }
-
             service.getEvents(EVENT_HEADER_ID, url, postParams)
                     .subscribe({
                         if (!it.isError) {
@@ -226,13 +212,10 @@ class RetrofitAppDataServiceProvider(
                         } else {
                             observer.onError(it.error())
                         }
-                        disposable.dispose()
                     }, {
                         observer.onError(it)
-                        disposable.dispose()
                     }, {
                         observer.onComplete()
-                        disposable.dispose()
                     }
 
                     )
