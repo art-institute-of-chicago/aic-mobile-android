@@ -139,7 +139,7 @@ class AppConverters {
     }
 
     private inline fun <T> safeList(data: String?, adapterGetter: JsonAdapter<List<T>>): List<T> {
-        return data?.let { adapterGetter.fromJson("") } ?: emptyList()
+        return data?.let { adapterGetter.fromJson(data) } ?: emptyList()
     }
 
 }
