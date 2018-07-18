@@ -18,4 +18,7 @@ interface ArticTourDao {
 
     @Query("select * from ArticTour order by title limit 4")
     fun getTourSummary(): Flowable<List<ArticTour>>
+
+    @Query("select * from ArticTour order by title")
+    fun getTours() : Flowable<List<ArticTour>>
 }
