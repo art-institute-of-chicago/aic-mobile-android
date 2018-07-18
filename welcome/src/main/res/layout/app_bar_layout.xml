@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:showIn="@layout/fragment_welcome">
+    tools:showIn="@layout/fragment_welcome"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.CollapsingToolbarLayout
         android:id="@+id/collapsing_toolbar"
@@ -12,17 +13,19 @@
         android:layout_height="match_parent"
         app:contentScrim="?attr/colorPrimary"
         app:expandedTitleGravity="bottom|center_horizontal"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        android:fitsSystemWindows="true"
+        app:statusBarScrim="@android:color/transparent"
+        >
 
 
         <ImageView
             android:id="@+id/expandedImage"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/collapsibleImageHeight"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/dummy"
-            app:layout_collapseMode="parallax"
-            app:layout_collapseParallaxMultiplier="0.7" />
+            android:fitsSystemWindows="true" />
 
 
         <ImageView
