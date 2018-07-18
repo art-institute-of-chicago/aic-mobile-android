@@ -1,18 +1,20 @@
 package edu.artic.db.models
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 
-/**
- * @author Sameer Dhakal (Fuzz)
- */
-
+@Entity
 data class ArticEvent(
-        @Json(name = "id") val eventId: Int,
+        @Json(name = "short_description") val short_description: String?,
+        @Json(name = "image") val image: String?,
+        @Json(name = "end_at") val end_at: String,
+        @Json(name = "button_url") val button_url: String?,
+        @Json(name = "description") val description: String?,
+        @Json(name = "location") val location: String?,
+        @Json(name = "id") @PrimaryKey val id: Int,
+        @Json(name = "button_text") val button_text: String?,
         @Json(name = "title") val title: String,
-        @Json(name = "short_description") val shortDescription: String?,
-        @Json(name = "description") val longDescription: String?,
-        @Json(name = "image") val imageUrl: String?,
-        @Json(name = "location") val locationText: String?,
-        @Json(name = "start_at") val startDate: String,
-        @Json(name = "end_at") val endDate: String?,
-        @Json(name = "button_text") val buttonText: String?)
+        @Json(name = "start_at") val start_at: String
+
+)

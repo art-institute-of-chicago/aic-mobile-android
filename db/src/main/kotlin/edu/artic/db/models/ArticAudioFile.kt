@@ -1,28 +1,36 @@
 package edu.artic.db.models
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
+@Entity
 data class ArticAudioFile(
-        val title: String,
-        val status: String,
-        val nid: String,
-        val type: String,
-        val translations: List<Translation>,
-        val audio_filename: String,
-        val audio_file_url: String,
-        val audio_filemime: String,
-        val audio_filesize: String,
-        val audio_transcript: String,
-        val credits: String,
-        val track_title: String
+        @Json(name = "title") val title: String?,
+        @Json(name = "status") val status: String?,
+        @Json(name = "nid") @PrimaryKey val nid: String,
+        @Json(name = "type") val type: String?,
+        @Json(name = "translations") val translations: List<Translation>,
+        @Json(name = "audio_filename") val fileName: String?,
+        @Json(name = "audio_file_url") val fileUrl: String?,
+        @Json(name = "audio_filemime") val fileMime: String?,
+        @Json(name = "audio_filesize") val fileSize: String?,
+        @Json(name = "audio_transcript") val transcript: String?,
+        @Json(name = "credits") val credits: String?,
+        @Json(name = "track_title") val trackTitle: String?
 ) {
+    @JsonClass(generateAdapter = true)
     data class Translation(
-            val language: String,
-            val title: String,
-            val track_title: String,
-            val audio_filename: String,
-            val audio_file_url: String,
-            val audio_filemime: String,
-            val audio_filesize: String,
-            val audio_transcript: String,
-            val credits: String
+            @Json(name = "language") val language: String?,
+            @Json(name = "title") val title: String?,
+            @Json(name = "track_title") val trackTitle: String?,
+            @Json(name = "audio_filename") val fileName: String?,
+            @Json(name = "audio_file_url") val fileUrl: String?,
+            @Json(name = "audio_filemime") val fileMime: String?,
+            @Json(name = "audio_filesize") val fileSize: String?,
+            @Json(name = "audio_transcript") val transcript: String?,
+            @Json(name = "credits") val credits: String?
     )
 }
