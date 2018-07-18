@@ -3,7 +3,7 @@ package edu.artic.main
 
 import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
-import edu.artic.base.disableShiftMode
+import edu.artic.base.utils.disableShiftMode
 
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.welcome.WelcomeFragment

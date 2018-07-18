@@ -5,6 +5,7 @@ dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
 
+    implementation libs.threeten
     api libs.kotlin
     api libs.design_support
     api libs.dagger

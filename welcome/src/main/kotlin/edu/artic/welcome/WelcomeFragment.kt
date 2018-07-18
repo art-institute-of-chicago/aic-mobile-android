@@ -10,7 +10,9 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import edu.artic.adapter.itemChanges
-import edu.artic.base.fileAsString
+import edu.artic.base.utils.fileAsString
+import edu.artic.db.models.ArticEvent
+import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.Observable
@@ -49,15 +51,28 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             }
         }
 
-        val list = getTours()
-
         context?.let {
-            viewModel.addTours(getTours())
-            tourSummaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            val adapter = ToursAdapter()
-            tourSummaryRecyclerView.adapter = adapter
 
-            viewModel.tours.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
+            /* Build tour summary list*/
+            val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            tourSummaryRecyclerView.layoutManager = layoutManager
+            val tourSummaryAdapter = WelcomeToursAdapter()
+            tourSummaryRecyclerView.adapter = tourSummaryAdapter
+            viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
+
+            /* Build on view list*/
+            val adapter = OnViewAdapter()
+            val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            onViewRecyclerView.layoutManager = exhibitionLayoutManager
+            onViewRecyclerView.adapter = adapter
+            viewModel.exhibitions.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
+
+            /* Build event summary list*/
+            val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            eventsRecyclerView.layoutManager = eventsLayoutManager
+            val eventsAdapter = WelcomeEventsAdapter()
+            eventsRecyclerView.adapter = eventsAdapter
+            viewModel.events.bindToMain(eventsAdapter.itemChanges()).disposedBy(disposeBag)
         }
 
 
@@ -89,6 +104,9 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
     }
 
+    /**
+     * TODO:: remove this once ToursDao is ready
+     */
     private fun getTours(): List<ArticTour> {
 
         return activity.let {
@@ -102,6 +120,39 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
         }
     }
+
+    /**
+     * TODO:: remove this once ExhibitionDao is ready
+     */
+    private fun getExhibitions(): List<ArticExhibition> {
+        return activity.let {
+            if (it == null) {
+                emptyList()
+            } else {
+                val exhibitionJson = it.assets.fileAsString("json", "exhibitions.json")
+                val adapter: JsonAdapter<List<ArticExhibition>> = moshi.adapter(Types.newParameterizedType(List::class.java, ArticExhibition::class.java))
+                return@let adapter.fromJson(exhibitionJson) as List<ArticExhibition>
+            }
+
+        }
+    }
+
+    /**
+     * TODO:: remove this once ExhibitionDao is ready
+     */
+    private fun getEvents(): List<ArticEvent> {
+        return activity.let {
+            if (it == null) {
+                emptyList()
+            } else {
+                val exhibitionJson = it.assets.fileAsString("json", "events.json")
+                val adapter: JsonAdapter<List<ArticEvent>> = moshi.adapter(Types.newParameterizedType(List::class.java, ArticEvent::class.java))
+                return@let adapter.fromJson(exhibitionJson) as List<ArticEvent>
+            }
+
+        }
+    }
+
 
 }
 

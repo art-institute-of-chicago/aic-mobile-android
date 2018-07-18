@@ -29,8 +29,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val galleryDao: ArticGalleryDao
     abstract val objectDao: ArticObjectDao
     abstract val audioFileDao: ArticAudioFileDao
-    abstract val articTourDao: ArticTourDao
-    abstract val articMapAnnotationDao: ArticMapAnnotationDao
+    abstract val tourDao: ArticTourDao
+    abstract val mapAnnotationDao: ArticMapAnnotationDao
     abstract val dataObjectDao: ArticDataObjectDao
     abstract val exhibitionDao : ArticExhibitionDao
     abstract val eventDao: ArticEventDao

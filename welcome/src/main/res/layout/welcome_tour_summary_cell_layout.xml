@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/tourTileWidth"
+    android:layout_height="@dimen/tourTileHeight"
+    android:layout_marginEnd="@dimen/marginTwenty">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tourSummaryImageHeight"
+            android:scaleType="centerCrop"
+            tools:background="#fab" />
+
+        <View
+            android:id="@+id/infoBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tourSummaryInfoBarHeight"
+            android:background="@color/transparentInfoBarColor"
+            app:layout_constraintBottom_toBottomOf="@id/image" />
+
+
+        <TextView
+            android:id="@+id/stops"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginStandard"
+            android:drawableStart="@drawable/ic_map"
+            android:drawableTint="@color/white"
+            android:gravity="center"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toStartOf="@id/image"
+            tools:text="5 stops" />
+
+
+        <TextView
+            android:id="@+id/tourTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginStandard"
+            android:drawableStart="@drawable/ic_clock"
+            android:drawableTint="@color/white"
+            android:gravity="center"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toEndOf="@id/stops"
+            tools:text="42 mins" />
+
+        <TextView
+            android:id="@+id/tourTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginStandard"
+            android:textColor="@color/darkGrey"
+            android:textSize="@dimen/textLarge"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/infoBar"
+            tools:text="The Essential Tour" />
+
+
+        <TextView
+            android:id="@+id/tourDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/marginStandard"
+            android:layout_margin="@dimen/marginStandard"
+            android:textColor="@color/greyText"
+            android:textSize="@dimen/textSmall"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tourTitle"
+            tools:text="Tour description details  " />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</FrameLayout>
