@@ -19,8 +19,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override val viewModelClass: KClass<SplashViewModel>
         get() = SplashViewModel::class
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         viewModel.percentage
                 .map { "Percentage : ${it * 100}" }
                 .bindToMain(percentText.text())
