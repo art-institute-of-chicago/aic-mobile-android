@@ -16,6 +16,6 @@ interface ArticEventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateEvents(exhibitions: List<ArticEvent>)
 
-    @Query("select * from ArticEvent order by title limit 4")
-    fun getEventSummary(): Flowable<List<ArticEvent>>
+    @Query("select * from ArticEvent where start_at > :earliestTime order by start_at limit 6 ")
+    fun getEventSummary(earliestTime: Long = System.currentTimeMillis()): Flowable<List<ArticEvent>>
 }
