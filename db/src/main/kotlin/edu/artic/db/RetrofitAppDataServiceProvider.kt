@@ -77,7 +77,6 @@ class RetrofitAppDataServiceProvider(
     override fun getExhibitions(): Observable<ProgressDataState> {
         return Observable.create { observer ->
             var url = dataObject.dataApiUrl + dataObject.exhibitionsEndpoint
-            Log.d("AppDataServiceProvider", "url: $url")
             if (!url.contains("/search")) {
                 url += "/search"
             }
@@ -165,7 +164,6 @@ class RetrofitAppDataServiceProvider(
     override fun getEvents(): Observable<ProgressDataState> {
         return Observable.create { observer ->
             var url = dataObject.dataApiUrl + dataObject.eventsEndpoint
-            Log.d("AppDataServiceProvider", "url: $url")
             if (!url.contains("/search")) {
                 url += "/search"
             }

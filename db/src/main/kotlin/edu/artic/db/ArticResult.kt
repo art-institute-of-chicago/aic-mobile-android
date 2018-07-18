@@ -10,6 +10,7 @@ data class ArticResult<T>(
         @Json(name = "data") val data : List<T>
 )
 
+@JsonClass(generateAdapter = true)
 data class ResultPagination(
         var total: Int,
         var limit: Int,
