@@ -3,7 +3,13 @@ package edu.artic.db
 import android.arch.persistence.room.TypeConverter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
+import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.models.*
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.DateTimeFormatterBuilder
 import java.util.Collections.emptyList
 
 class AppConverters {
@@ -64,6 +70,10 @@ class AppConverters {
                         ArticTourCategory::class.java
                 )
         )
+    }
+
+    private val dateTimeFormatte : DateTimeFormatter by lazy {
+        DateTimeHelper.DEFAULT_FORMATTER
     }
 
     @TypeConverter
@@ -137,6 +147,14 @@ class AppConverters {
     fun stringToTourCategoryList(json: String?): List<ArticTourCategory> {
         return safeList(json, tourCategoryListAdapter)
     }
+
+    @TypeConverter
+    fun fromDateTime(localDateTime: LocalDateTime?): Long? = localDateTime?.let {
+        it.toInstant(ZoneId.systemDefault().rules.getOffset(it)).toEpochMilli()
+    }
+
+    @TypeConverter
+    fun toDateTime(time: Long?): LocalDateTime? = time?.let { LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
 
     private inline fun <T> safeList(data: String?, adapterGetter: JsonAdapter<List<T>>): List<T> {
         return data?.let { adapterGetter.fromJson(data) } ?: emptyList()

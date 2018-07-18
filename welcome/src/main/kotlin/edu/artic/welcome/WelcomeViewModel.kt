@@ -115,8 +115,7 @@ class WelcomeEventCellViewModel(event: ArticEvent) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description
             ?: "")
-    private val throughDate: LocalDateTime = LocalDateTime.parse(event.start_at, DateTimeHelper.DEFAULT_FORMATTER)
-    private val eventDate = throughDate.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
+    private val eventDate = event.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
             .toString()
     val eventTime: Subject<String> = BehaviorSubject.createDefault(eventDate)
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image ?: "")
