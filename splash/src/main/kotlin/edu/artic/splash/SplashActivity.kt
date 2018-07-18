@@ -1,6 +1,8 @@
 package edu.artic.splash
 
 import android.content.Intent
+import android.os.Bundle
+import android.os.PersistableBundle
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
@@ -17,13 +19,16 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override val viewModelClass: KClass<SplashViewModel>
         get() = SplashViewModel::class
 
-    override fun onResume() {
-        super.onResume()
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
         viewModel.percentage
                 .map { "Percentage : ${it * 100}" }
                 .bindToMain(percentText.text())
                 .disposedBy(disposeBag)
+    }
 
+    override fun onStart() {
+        super.onStart()
         viewModel.navigateTo
                 .subscribe {
                     when (it) {
@@ -39,11 +44,16 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
                         }
                     }
-                }.disposedBy(disposeBag)
+                }.disposedBy(navDisposeBag)
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
+        navDisposeBag.clear()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         disposeBag.clear()
     }
 }
