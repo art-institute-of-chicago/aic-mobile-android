@@ -68,12 +68,10 @@
 
                 <TextView
                     android:id="@+id/toursSeeAllLink"
+                    style="@style/SeeAll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="@string/seeAll"
-                    android:textColor="@color/keppel"
-                    android:textSize="@dimen/textLink"
                     tools:text="See All" />
 
             </LinearLayout>
@@ -110,12 +108,10 @@
 
                 <TextView
                     android:id="@+id/onViewLink"
+                    style="@style/SeeAll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
                     android:text="@string/seeAll"
-                    android:textColor="@color/keppel"
-                    android:textSize="@dimen/textLink"
                     tools:text="See All" />
 
             </LinearLayout>
@@ -136,14 +132,40 @@
                 android:layout_marginEnd="@dimen/marginStandard"
                 android:background="@color/warmGrey" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginDouble"
+                android:orientation="horizontal">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="@dimen/marginStandard"
-            android:layout_marginEnd="@dimen/marginStandard"
-            android:background="@color/warmGrey" />
+                <TextView
+                    android:id="@+id/eventLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/events"
+                    android:textColor="@color/greyText"
+                    android:textSize="@dimen/textLarge" />
+
+                <TextView
+                    android:id="@+id/eventsLink"
+                    style="@style/SeeAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/seeAll"
+                    tools:text="See All" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/eventsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginDouble"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

@@ -3,6 +3,7 @@ package edu.artic.welcome
 import android.arch.lifecycle.LifecycleOwner
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
@@ -17,8 +18,9 @@ import javax.inject.Inject
 class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager: WelcomePreferencesManager) : BaseViewModel() {
 
     val shouldPeekTourSummary: Subject<Boolean> = BehaviorSubject.create()
-    val tours: Subject<List<TourCellViewModel>> = BehaviorSubject.create()
-    val exhibitions: Subject<List<OnViewViewModel>> = BehaviorSubject.create()
+    val tours: Subject<List<WelcomeTourCellViewModel>> = BehaviorSubject.create()
+    val exhibitions: Subject<List<WelcomeExhibitionCellViewModel>> = BehaviorSubject.create()
+    val events: Subject<List<WelcomeEventCellViewModel>> = BehaviorSubject.create()
 
     init {
         shouldPeekTourSummary.distinctUntilChanged()
@@ -41,23 +43,71 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
     /**
      * Temp method until dao is ready
+     * TODO:: fetch first 6 tours from db.
      */
     fun addTours(tours: List<ArticTour>) {
-        val viewModelList = ArrayList<TourCellViewModel>()
+        val viewModelList = ArrayList<WelcomeTourCellViewModel>()
         tours.forEach {
-            viewModelList.add(TourCellViewModel(it))
+            viewModelList.add(WelcomeTourCellViewModel(it))
         }
         this.tours.onNext(viewModelList)
     }
 
     /**
      * Temp method to until dao is ready
+     * TODO:: fetch first 6 exhibitions from db.
      */
     fun addExhibitions(exhibitions: List<ArticExhibition>) {
-        val viewModelList = ArrayList<OnViewViewModel>()
+        val viewModelList = ArrayList<WelcomeExhibitionCellViewModel>()
         exhibitions.forEach {
-            viewModelList.add(OnViewViewModel(it))
+            viewModelList.add(WelcomeExhibitionCellViewModel(it))
         }
         this.exhibitions.onNext(viewModelList)
     }
+
+    /**
+     * Temp method to until dao is ready
+     * TODO:: fetch first 6 events from db.
+     */
+    fun addEvents(events: List<ArticEvent>) {
+        val viewModelList = ArrayList<WelcomeEventCellViewModel>()
+        events.forEach {
+            viewModelList.add(WelcomeEventCellViewModel(it))
+        }
+        this.events.onNext(viewModelList)
+    }
+}
+
+/**
+ * ViewModel responsible for building the tour summary list.
+ */
+class WelcomeTourCellViewModel(tour: ArticTour) : BaseViewModel() {
+
+    val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
+    val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
+    private val tourStopCount = tour.tourStops?.count() ?: 0
+    val tourStops: Subject<String> = BehaviorSubject.createDefault(tourStopCount.toString())
+    val tourDuration: Subject<String> = BehaviorSubject.createDefault(tour.tourDuration)
+    val tourImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.imageUrl)
+}
+
+/**
+ * ViewModel responsible for building the `On View` list (i.e. list of exhibition).
+ */
+class WelcomeExhibitionCellViewModel(exhibition: ArticExhibition) : BaseViewModel() {
+    val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
+    val exhibitionDate: Subject<String> = BehaviorSubject.createDefault("2017 August 9")
+    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.image_url
+            ?: "")
+}
+
+/**
+ * ViewModel responsible for building the tour summary list.
+ */
+class WelcomeEventCellViewModel(event: ArticEvent) : BaseViewModel() {
+    val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
+    val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.shortDescription
+            ?: "")
+    val eventTime: Subject<String> = BehaviorSubject.createDefault(event.startDate)
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageUrl ?: "")
 }
