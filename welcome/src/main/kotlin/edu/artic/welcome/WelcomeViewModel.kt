@@ -97,7 +97,7 @@ class WelcomeTourCellViewModel(tour: ArticTour) : BaseViewModel() {
 class WelcomeExhibitionCellViewModel(exhibition: ArticExhibition) : BaseViewModel() {
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionDate: Subject<String> = BehaviorSubject.createDefault("2017 August 9")
-    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.image_url
+    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url
             ?: "")
 }
 
@@ -106,8 +106,8 @@ class WelcomeExhibitionCellViewModel(exhibition: ArticExhibition) : BaseViewMode
  */
 class WelcomeEventCellViewModel(event: ArticEvent) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
-    val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.shortDescription
+    val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description
             ?: "")
-    val eventTime: Subject<String> = BehaviorSubject.createDefault(event.startDate)
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageUrl ?: "")
+    val eventTime: Subject<String> = BehaviorSubject.createDefault(event.start_at)
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image ?: "")
 }
