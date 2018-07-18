@@ -7,7 +7,12 @@ import edu.artic.db.models.ArticExhibition
 import edu.artic.db.progress.Constants
 import io.reactivex.Observable
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.HEAD
+import retrofit2.http.POST
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Url
+import retrofit2.http.Body
 
 interface AppDataApi {
 
