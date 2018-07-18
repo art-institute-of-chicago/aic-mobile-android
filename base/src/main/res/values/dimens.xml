@@ -15,7 +15,7 @@
     <dimen name="tourTileWidth">285dp</dimen>
     <dimen name="tourTileHeight">300dp</dimen>
     <dimen name="exhibitionTileWidth">240dp</dimen>
-    <dimen name="exhibitionTileHeight">373dp</dimen>
+    <dimen name="exhibitionTileHeight">300dp</dimen>
     <dimen name="tourSummaryImageHeight">177dp</dimen>
     <dimen name="tourSummaryInfoBarHeight">36dp</dimen>
 

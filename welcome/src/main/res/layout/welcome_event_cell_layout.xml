@@ -28,34 +28,18 @@
 
 
         <TextView
-            android:id="@+id/stops"
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginStandard"
-            android:drawableStart="@drawable/ic_map"
-            android:drawableTint="@color/white"
             android:gravity="center"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"
             tools:text="5 stops" />
 
-
         <TextView
-            android:id="@+id/tourTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginStandard"
-            android:drawableStart="@drawable/ic_clock"
-            android:drawableTint="@color/white"
-            android:gravity="center"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintStart_toEndOf="@id/stops"
-            tools:text="42 mins" />
-
-        <TextView
-            android:id="@+id/tourTitle"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginStandard"
@@ -67,15 +51,15 @@
 
 
         <TextView
-            android:id="@+id/tourDescription"
+            android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginStandard"
             android:textColor="@color/greyText"
             android:textSize="@dimen/textSmall"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tourTitle"
-            tools:text="Tour description details  " />
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="Event description details  " />
 
     </android.support.constraint.ConstraintLayout>
 
