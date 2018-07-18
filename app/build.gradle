@@ -34,6 +34,7 @@ dependencies {
     implementation libs.kotlin
     //Dagger
     implementation libs.dagger
+    implementation libs.threeten
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler
