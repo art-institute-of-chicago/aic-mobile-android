@@ -127,10 +127,10 @@ class AppDataManager @Inject constructor(
 
     private fun getExhibitions(): Observable<ProgressDataState> {
         return serviceProvider.getExhibitions()
-                .flatMap {
-                    when (it) {
+                .flatMap { progressDataState ->
+                    when (progressDataState) {
                         is ProgressDataState.Done<*> -> {
-                            val result = it.result as ArticResult<*>
+                            val result = progressDataState.result as ArticResult<*>
                             if (result.data.isNotEmpty() && result.data[0] is ArticExhibition) {
                                 appDatabase.exhibitionDao.clear()
                                 @Suppress("UNCHECKED_CAST")
@@ -140,17 +140,17 @@ class AppDataManager @Inject constructor(
                         }
                     }
 
-                    it.asObservable()
+                    progressDataState.asObservable()
                 }
     }
 
 
     private fun getEvents(): Observable<ProgressDataState> {
         return serviceProvider.getEvents()
-                .flatMap {
-                    when (it) {
+                .flatMap { progressDataState ->
+                    when (progressDataState) {
                         is ProgressDataState.Done<*> -> {
-                            val result = it.result as ArticResult<*>
+                            val result = progressDataState.result as ArticResult<*>
                             if (result.data.isNotEmpty() && result.data[0] is ArticEvent) {
                                 appDatabase.eventDao.clear()
                                 @Suppress("UNCHECKED_CAST")
@@ -160,7 +160,7 @@ class AppDataManager @Inject constructor(
                         }
                     }
 
-                    it.asObservable()
+                    progressDataState.asObservable()
                 }
     }
 }
