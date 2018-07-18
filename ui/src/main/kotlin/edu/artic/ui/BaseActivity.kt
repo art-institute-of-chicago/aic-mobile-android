@@ -19,6 +19,7 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     protected abstract val layoutResId: Int
 
     val disposeBag = DisposeBag()
+    val navDisposeBag = DisposeBag()
 
     open val useInjection: Boolean
         get() = true
