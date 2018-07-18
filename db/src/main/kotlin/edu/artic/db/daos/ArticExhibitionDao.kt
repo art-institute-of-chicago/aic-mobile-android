@@ -16,6 +16,9 @@ interface ArticExhibitionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateExhibitions(exhibitions: List<ArticExhibition>)
 
-    @Query("select * from ArticExhibition order by title limit 4")
+    @Query("select * from ArticExhibition")
+    fun getAllExhibitions(): Flowable<List<ArticExhibition>>
+
+    @Query("select * from ArticExhibition order by `order` limit 6")
     fun getExhibitionSummary(): Flowable<List<ArticExhibition>>
 }
