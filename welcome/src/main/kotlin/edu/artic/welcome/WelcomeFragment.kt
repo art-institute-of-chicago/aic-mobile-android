@@ -10,7 +10,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import edu.artic.adapter.itemChanges
-import edu.artic.base.fileAsString
+import edu.artic.base.utils.fileAsString
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
@@ -54,7 +54,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         context?.let {
 
             /* Build tour summary list*/
-            viewModel.addTours(getTours())
             val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             tourSummaryRecyclerView.layoutManager = layoutManager
             val tourSummaryAdapter = WelcomeToursAdapter()
@@ -62,7 +61,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
 
             /* Build on view list*/
-            viewModel.addExhibitions(getExhibitions())
             val adapter = OnViewAdapter()
             val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             onViewRecyclerView.layoutManager = exhibitionLayoutManager
@@ -70,7 +68,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             viewModel.exhibitions.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
 
             /* Build event summary list*/
-            viewModel.addEvents(getEvents())
             val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             eventsRecyclerView.layoutManager = eventsLayoutManager
             val eventsAdapter = WelcomeEventsAdapter()

@@ -1,4 +1,4 @@
-package edu.artic.base
+package edu.artic.base.utils
 
 import android.content.res.AssetManager
 import java.nio.charset.Charset

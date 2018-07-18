@@ -4,7 +4,6 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import edu.artic.db.models.ArticDataObject
 import edu.artic.db.models.ArticExhibition
 import io.reactivex.Flowable
 
@@ -16,4 +15,7 @@ interface ArticExhibitionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateExhibitions(exhibitions: List<ArticExhibition>)
+
+    @Query("select * from ArticExhibition order by title limit 4")
+    fun getExhibitionSummary(): Flowable<List<ArticExhibition>>
 }

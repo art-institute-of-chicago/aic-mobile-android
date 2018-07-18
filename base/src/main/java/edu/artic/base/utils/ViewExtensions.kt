@@ -1,4 +1,4 @@
-package edu.artic.base
+package edu.artic.base.utils
 
 import android.annotation.SuppressLint
 import android.support.design.internal.BottomNavigationItemView

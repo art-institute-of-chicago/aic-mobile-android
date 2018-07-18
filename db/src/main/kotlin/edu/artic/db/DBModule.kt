@@ -32,10 +32,10 @@ class DBModule {
     fun provideAudioFileDao(appDatabase: AppDatabase) = appDatabase.audioFileDao
 
     @Provides
-    fun provideTourDao(appDatabase: AppDatabase) = appDatabase.articTourDao
+    fun provideTourDao(appDatabase: AppDatabase) = appDatabase.tourDao
 
     @Provides
-    fun provideMapAnnotationDao(appDatabase: AppDatabase) = appDatabase.articMapAnnotationDao
+    fun provideMapAnnotationDao(appDatabase: AppDatabase) = appDatabase.mapAnnotationDao
 
     @Provides
     fun provideDataObjectDao(appDatabase: AppDatabase) = appDatabase.dataObjectDao
