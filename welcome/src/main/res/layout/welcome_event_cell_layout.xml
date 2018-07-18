@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/tourTileWidth"
-    android:layout_height="@dimen/tourTileHeight"
+    android:layout_width="@dimen/eventTileWidth"
+    android:layout_height="@dimen/eventTileHeight"
     android:layout_marginEnd="@dimen/marginTwenty">
 
 

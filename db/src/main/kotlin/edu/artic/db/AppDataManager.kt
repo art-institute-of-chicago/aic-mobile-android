@@ -93,12 +93,12 @@ class AppDataManager @Inject constructor(
 
                         val tours = result.tours
                         if (tours?.isNotEmpty() == true) {
-                            appDatabase.articTourDao.addTours(tours)
+                            appDatabase.tourDao.addTours(tours)
                         }
 
                         val mapAnnotations = result.mapAnnotations
                         if (mapAnnotations?.isNotEmpty() == true) {
-                            appDatabase.articMapAnnotationDao.addAnnotations(mapAnnotations.values.toList())
+                            appDatabase.mapAnnotationDao.addAnnotations(mapAnnotations.values.toList())
                         }
 
                         appDatabase.dataObjectDao.setDataObject(result.data)

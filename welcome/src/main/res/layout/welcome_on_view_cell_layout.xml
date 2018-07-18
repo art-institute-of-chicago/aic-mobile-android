@@ -28,7 +28,7 @@
             android:textSize="@dimen/textLarge"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image"
-            tools:text="The Essential Tour" />
+            tools:text="The Essential Event" />
 
 
         <TextView
@@ -41,7 +41,7 @@
             android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/exhibitionTitle"
-            tools:text="Tour description details  " />
+            tools:text="Event description details  " />
 
     </android.support.constraint.ConstraintLayout>
 
