@@ -27,8 +27,8 @@ class AppDataManager @Inject constructor(
     fun loadData(): Observable<ProgressDataState> {
         return Observable.create<ProgressDataState> { observer ->
             //First load app data, once app data is successfully loaded
-            getBlob().subscribe({
-                if (it is ProgressDataState.Done<*> || it === ProgressDataState.Empty) {
+            getBlob().subscribe({ appDataState ->
+                if (appDataState is ProgressDataState.Done<*> || appDataState === ProgressDataState.Empty) {
                     loadSecondaryData()
                             .subscribe({ amountDownload ->
                                 observer.onNext(
@@ -44,12 +44,12 @@ class AppDataManager @Inject constructor(
                             }, {
                                 observer.onComplete()
                             })
-                } else if (it is ProgressDataState.Downloading) {
-                    observer.onNext(ProgressDataState.Downloading(it.progress * PER_OBJECT_PERCENT))
+                } else if (appDataState is ProgressDataState.Downloading) {
+                    observer.onNext(ProgressDataState.Downloading(appDataState.progress * PER_OBJECT_PERCENT))
                 }
 
-            }, {
-                observer.onError(it)
+            }, { appDataState ->
+                observer.onError(appDataState)
             }, {
                 //Don't care about on complete here
             })
@@ -74,64 +74,34 @@ class AppDataManager @Inject constructor(
 
                         val result = appDataState.result as ArticAppData
 
-                        try {
-                            appDatabase.dashboardDao.setDashBoard(result.dashboard)
-                        } catch (e: Throwable) {
-                            e.printStackTrace()
-                        }
-                        try {
-                            appDatabase.generalInfoDao.setGeneralInfo(result.generalInfo)
-                        } catch (e: Throwable) {
-                            e.printStackTrace()
-                        }
+                        appDatabase.dashboardDao.setDashBoard(result.dashboard)
+                        appDatabase.generalInfoDao.setGeneralInfo(result.generalInfo)
+
                         val galleries = result.galleries
                         if (galleries?.isNotEmpty() == true) {
-                            try {
-                                appDatabase.galleryDao.addGalleries(galleries.values.toList())
-                            } catch (e: Throwable) {
-                                e.printStackTrace()
-                            }
+                            appDatabase.galleryDao.addGalleries(galleries.values.toList())
                         }
                         val objects = result.objects
                         if (objects?.isNotEmpty() == true) {
-                            try {
-                                appDatabase.objectDao.addObjects(objects.values.toList())
-                            } catch (e: Throwable) {
-                                e.printStackTrace()
-                            }
+                            appDatabase.objectDao.addObjects(objects.values.toList())
                         }
                         val audioFiles = result.audioFiles
                         if (audioFiles?.isNotEmpty() == true) {
-                            try {
-                                appDatabase.audioFileDao.addAudioFiles(audioFiles.values.toList())
-                            } catch (e: Throwable) {
-                                e.printStackTrace()
-                            }
+                            appDatabase.audioFileDao.addAudioFiles(audioFiles.values.toList())
                         }
 
                         val tours = result.tours
                         if (tours?.isNotEmpty() == true) {
-                            try {
-                                appDatabase.articTourDao.addTours(tours)
-                            } catch (e: Throwable) {
-                                e.printStackTrace()
-                            }
+                            appDatabase.articTourDao.addTours(tours)
                         }
 
                         val mapAnnotations = result.mapAnnotations
                         if (mapAnnotations?.isNotEmpty() == true) {
-                            try {
-                                appDatabase.articMapAnnotationDao.addAnnotations(mapAnnotations.values.toList())
-                            } catch (e: Throwable) {
-                                e.printStackTrace()
-                            }
+                            appDatabase.articMapAnnotationDao.addAnnotations(mapAnnotations.values.toList())
                         }
 
-                        try {
-                            appDatabase.dataObjectDao.setDataObject(result.data)
-                        } catch (e: Throwable) {
-                            e.printStackTrace()
-                        }
+                        appDatabase.dataObjectDao.setDataObject(result.data)
+
                     }
                     return@flatMap appDataState.asObservable()
                 }
