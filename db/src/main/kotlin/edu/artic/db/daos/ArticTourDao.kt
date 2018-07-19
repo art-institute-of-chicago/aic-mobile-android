@@ -16,9 +16,12 @@ interface ArticTourDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addTours(tours: List<ArticTour>)
 
-    @Query("select * from ArticTour order by title limit 4")
+    @Query("select * from ArticTour limit 6")
     fun getTourSummary(): Flowable<List<ArticTour>>
 
     @Query("select * from ArticTour order by title")
     fun getTours() : Flowable<List<ArticTour>>
+
+    @Query("delete from ArticTour")
+    fun clear()
 }

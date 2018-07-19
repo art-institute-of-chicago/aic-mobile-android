@@ -10,7 +10,7 @@ import io.reactivex.Flowable
 @Dao
 interface ArticEventDao {
 
-    @Query("DELETE FROM ArticEvent")
+    @Query("delete from ArticEvent")
     fun clear()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

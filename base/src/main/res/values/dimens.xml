@@ -11,7 +11,7 @@
     <dimen name="marginTriple">24dp</dimen>
     <dimen name="marginQuad">32dp</dimen>
 
-    <dimen name="collapsibleImageHeight">200dp</dimen>
+    <dimen name="collapsibleImageHeight">240dp</dimen>
     <dimen name="tourTileWidth">285dp</dimen>
     <dimen name="tourTileHeight">300dp</dimen>
     <dimen name="exhibitionTileWidth">240dp</dimen>
