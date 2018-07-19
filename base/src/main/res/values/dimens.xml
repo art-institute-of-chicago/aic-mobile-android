@@ -11,7 +11,7 @@
     <dimen name="marginTriple">24dp</dimen>
     <dimen name="marginQuad">32dp</dimen>
 
-    <dimen name="collapsibleImageHeight">200dp</dimen>
+    <dimen name="collapsibleImageHeight">240dp</dimen>
     <dimen name="tourTileWidth">285dp</dimen>
     <dimen name="tourTileHeight">300dp</dimen>
     <dimen name="exhibitionTileWidth">240dp</dimen>
@@ -20,6 +20,8 @@
     <dimen name="eventTileHeight">320dp</dimen>
     <dimen name="tourSummaryImageHeight">177dp</dimen>
     <dimen name="tourSummaryInfoBarHeight">36dp</dimen>
+
+    <dimen name="bottomNavigationBarHeight">56dp</dimen>
 
     <dimen name="textMedium">17sp</dimen>
     <dimen name="textLarge">21sp</dimen>
