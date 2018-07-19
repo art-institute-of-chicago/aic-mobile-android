@@ -9,7 +9,7 @@ import javax.inject.Inject
 import kotlin.reflect.KClass
 
 /**
- * Description: Provides common [ParentViewModel] methods for subclasses, so duplicate code doesn't
+ * Description: Provides common ParentViewModel methods for subclasses, so duplicate code doesn't
  * happen.
  */
 abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment() {
@@ -24,7 +24,7 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
     protected open fun useFragmentForProvider(): Boolean = true
 
     /**
-     * If true we resolve our [ViewModel] instances via our [ViewModelFactory] class.
+     * If true we resolve our [BaseViewModel] instances via our [ViewModelFactory] class.
      */
     open val useFactory: Boolean
         get() = true
@@ -60,12 +60,15 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
             viewModel.register(this)
             onRegisterViewModel(viewModel)
         }
+        setupBindings(viewModel)
     }
 
     /**
      * Called when viewmodel is first initialized. Call initial setup methods on the [TViewModel] here.
      */
     protected open fun onRegisterViewModel(viewModel: TViewModel) = Unit
+
+    protected open fun setupBindings(viewModel: TViewModel) = Unit
 
     override fun onDestroyView() {
         // attempt cleanup. if activity destroyed we will ignore this call here.
