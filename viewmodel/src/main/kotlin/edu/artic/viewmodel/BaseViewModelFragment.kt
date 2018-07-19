@@ -63,12 +63,17 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
         setupBindings(viewModel)
     }
 
-    /**
-     * Called when viewmodel is first initialized. Call initial setup methods on the [TViewModel] here.
-     */
-    protected open fun onRegisterViewModel(viewModel: TViewModel) = Unit
+    override fun onResume() {
+        super.onResume()
+        setupNavigationBindings(viewModel)
+    }
 
-    protected open fun setupBindings(viewModel: TViewModel) = Unit
+
+    override fun onPause() {
+        super.onPause()
+        navigationDisposeBag.clear()
+    }
+
 
     override fun onDestroyView() {
         // attempt cleanup. if activity destroyed we will ignore this call here.
@@ -88,4 +93,13 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
         }
         viewModelLazy.invalidate()
     }
+
+    /**
+     * Called when viewmodel is first initialized. Call initial setup methods on the [TViewModel] here.
+     */
+    protected open fun onRegisterViewModel(viewModel: TViewModel) = Unit
+
+    protected open fun setupBindings(viewModel: TViewModel) = Unit
+
+    protected open fun setupNavigationBindings(viewModel: TViewModel) = Unit
 }
