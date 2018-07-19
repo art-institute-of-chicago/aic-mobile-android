@@ -1,19 +1,35 @@
 package edu.artic.tours
 
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.bumptech.glide.Glide
+import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import edu.artic.adapter.BaseViewHolder
+import io.reactivex.subjects.Subject
+import kotlinx.android.synthetic.main.cell_all_tours_intro.view.*
 import kotlinx.android.synthetic.main.cell_all_tours_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllToursAdapter : AutoHolderRecyclerViewAdapter<AllToursCellViewModel>() {
+class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>, viewDisposeBag: DisposeBag) : AutoHolderRecyclerViewAdapter<AllToursCellViewModel>() {
 
+    private val introHolder = BaseViewHolder(recyclerView, R.layout.cell_all_tours_intro)
+
+
+    init {
+        addHeaderHolder(introHolder)
+        introHolder.itemView.apply {
+            introSubject
+                    .bindToMain(intro.text())
+                    .disposedBy(viewDisposeBag)
+        }
+    }
 
     override fun View.onBindView(item: AllToursCellViewModel, position: Int) {
 
