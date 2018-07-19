@@ -10,7 +10,7 @@ import io.reactivex.Flowable
 @Dao
 interface ArticExhibitionCMSDao {
 
-    @Query("DELETE FROM ArticExhibitionCMS")
+    @Query("delete from ArticExhibitionCMS")
     fun clear()
 
     @Query("select * from ArticExhibitionCMS")

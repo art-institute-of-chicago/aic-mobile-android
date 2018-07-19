@@ -99,6 +99,7 @@ class AppDataManager @Inject constructor(
 
                         val exhibitionsCMS = result.exhibitions
                         if (exhibitionsCMS?.isNotEmpty() == true) {
+                            appDatabase.exhibitionCMSDao.clear()
                             appDatabase.exhibitionCMSDao.addCMSExhibitions(exhibitionsCMS)
                         }
 
@@ -144,16 +145,11 @@ class AppDataManager @Inject constructor(
                                  */
                                 appDatabase.exhibitionCMSDao
                                         .getAllCMSExhibitions()
-                                        .subscribe {
+                                        .subscribe { cmsExhibitionList ->
                                             @Suppress("UNCHECKED_CAST")
                                             val list = (result as ArticResult<ArticExhibition>).data
-                                            val mapExhibitionByID = HashMap<String, ArticExhibition>()
-
-                                            list.forEach {
-                                                mapExhibitionByID[it.id.toString()] = it
-                                            }
-
-                                            it.forEach {
+                                            val mapExhibitionByID = list.associateBy { it.id.toString() }
+                                            cmsExhibitionList.forEach {
                                                 mapExhibitionByID[it.id]?.order = it.sort
                                             }
                                             appDatabase.exhibitionDao.updateExhibitions(list)
