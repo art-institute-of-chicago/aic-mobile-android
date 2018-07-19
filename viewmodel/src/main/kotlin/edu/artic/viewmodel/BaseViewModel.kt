@@ -35,7 +35,7 @@ open class BaseViewModel : ViewModel() {
 
     /**
      * Called when view is expected to be destroyed. this is not always the case. Also
-     * can be called when [onCleared] is invoked in a [ViewModelFragment]
+     * can be called when [onCleared] is invoked in a [BaseViewModelFragment]
      */
     open fun cleanup() {
         viewDisposeBag.clear()
