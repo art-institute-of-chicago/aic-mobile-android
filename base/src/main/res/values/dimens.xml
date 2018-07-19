@@ -21,8 +21,6 @@
     <dimen name="tourSummaryImageHeight">177dp</dimen>
     <dimen name="tourSummaryInfoBarHeight">36dp</dimen>
 
-    <dimen name="bottomNavigationBarHeight">56dp</dimen>
-
     <dimen name="textMedium">17sp</dimen>
     <dimen name="textLarge">21sp</dimen>
     <dimen name="textSmall">14sp</dimen>
