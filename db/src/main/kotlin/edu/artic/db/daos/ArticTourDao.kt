@@ -19,6 +19,6 @@ interface ArticTourDao {
     @Query("select * from ArticTour limit 6")
     fun getTourSummary(): Flowable<List<ArticTour>>
 
-    @Query("DELETE FROM ArticTour")
+    @Query("delete from ArticTour")
     fun clear()
 }
