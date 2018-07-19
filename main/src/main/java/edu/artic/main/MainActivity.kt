@@ -32,14 +32,12 @@ class MainActivity : BaseViewModelActivity<MainViewModel>() {
      * Loads the provided @containerFragment into container
      */
     private fun loadContainerFragment(containerFragment: WelcomeFragment) {
-        val fragmentName: String = containerFragment.javaClass.simpleName
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         if (container.childCount > 1) {
             transaction.replace(R.id.container, containerFragment)
         } else {
             transaction.add(R.id.container, containerFragment)
         }
-        transaction.addToBackStack(fragmentName)
-                .commit()
+        transaction.commit()
     }
 }
