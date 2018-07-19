@@ -5,6 +5,7 @@
     <string name="tours">Tours</string>
     <string name="onView">On View</string>
     <string name="seeAll">See All</string>
-    <string name="stops">Stops</string>
+    <string name="stops">%s Stops</string>
     <string name="events" tools:ignore="ExtraTranslation">Events</string>
+    <string name="through">Through %s</string>
 </resources>
