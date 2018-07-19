@@ -47,24 +47,27 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
     }
 
     val viewModel: TViewModel by viewModelLazy
-
+    var isViewJustCreated : Boolean = true
     protected open fun getViewModelForClass(viewModelProvider: ViewModelProvider,
                                             kClass: KClass<TViewModel>): TViewModel =
             viewModelProvider.get(kClass.java)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isViewJustCreated = true
         if (!viewModelExists) {
             val viewModel = viewModel
             viewModel.onClearedListener = this::onCleared
             viewModel.register(this)
             onRegisterViewModel(viewModel)
         }
-        setupBindings(viewModel)
     }
 
     override fun onResume() {
         super.onResume()
+        if(isViewJustCreated) {
+            setupBindings(viewModel)
+        }
         setupNavigationBindings(viewModel)
     }
 
