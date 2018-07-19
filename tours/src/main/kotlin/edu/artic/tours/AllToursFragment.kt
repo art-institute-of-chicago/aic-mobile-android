@@ -2,6 +2,8 @@ package edu.artic.tours
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -20,6 +22,10 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
     override val title: String
         get() = "Tours" // TODO: add to strings or figure out language stuff
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,5 +49,10 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         viewModel.tours
                 .bindToMain((recyclerView.adapter as AllToursAdapter).itemChanges())
                 .disposedBy(disposeBag)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_all_tours, menu)
     }
 }
