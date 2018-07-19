@@ -2,6 +2,7 @@ package edu.artic.db
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.verify
 import edu.artic.db.daos.*
 import io.reactivex.Observable
@@ -21,6 +22,7 @@ class AppDataManagerTest {
     lateinit var galleryDao: ArticGalleryDao
     lateinit var objectDao: ArticObjectDao
     lateinit var audioFileDao: ArticAudioFileDao
+    lateinit var appDataPrefManager: AppDataPreferencesManager
 
     @Before
     fun setup() {
@@ -30,6 +32,7 @@ class AppDataManagerTest {
         galleryDao = mock()
         objectDao = mock()
         audioFileDao = mock()
+        appDataPrefManager = mock()
 
         database = mock()
         doReturn(dashboardDao).`when`(database).dashboardDao
@@ -39,7 +42,7 @@ class AppDataManagerTest {
         doReturn(audioFileDao).`when`(database).audioFileDao
 
         appDataProvider = mock()
-        appDataManager = AppDataManager(appDataProvider, database)
+        appDataManager = AppDataManager(appDataProvider, appDataPrefManager, database)
     }
 
     @After
@@ -49,12 +52,12 @@ class AppDataManagerTest {
     @Test
     fun testGetBlobMissingLastModifiedRequestsBlob() {
 
-        val mockedAppData: AppDataState = mock()
+        val mockedAppData: ProgressDataState = mock()
 
         doReturn(Observable.just(HashMap<String, List<String>>())).`when`(appDataProvider).getBlobHeaders()
         doReturn(Observable.just(mockedAppData)).`when`(appDataProvider).getBlob()
 
-        val testObserver = TestObserver<AppDataState>()
+        val testObserver = TestObserver<ProgressDataState>()
 
         appDataManager.getBlob().subscribe(testObserver)
 
