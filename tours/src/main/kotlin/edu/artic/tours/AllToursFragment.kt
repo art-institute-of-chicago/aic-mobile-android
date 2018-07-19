@@ -15,7 +15,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
     override val viewModelClass: KClass<AllToursViewModel>
         get() = AllToursViewModel::class
     override val layoutResId: Int
-        get() = 0
+        get() = R.layout.fragment_all_tours
     override val title: String
         get() = "Tours" // TODO: add to strings or figure out language stuff
 
@@ -24,7 +24,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         /* Build tour summary list*/
-        val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
+        val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
 
         val toursAdapter = AllToursAdapter()

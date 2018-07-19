@@ -5,9 +5,13 @@ import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
+import edu.artic.tours.AllToursFragment
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
@@ -70,6 +74,39 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
 
     }
+
+    override fun setupBindings(viewModel: WelcomeViewModel) {
+        toursSeeAllLink.clicks()
+                .defaultThrottle()
+                .subscribe { viewModel.onClickSeeAllTours() }
+                .disposedBy(disposeBag)
+    }
+
+    override fun setupNavigationBindings(viewModel: WelcomeViewModel) {
+        viewModel.navigateTo
+                .subscribe {navigation ->
+                    when(navigation) {
+                        is Navigate.Forward -> {
+                            when(navigation.endpoint) {
+                                is WelcomeViewModel.NavigationEndpoint.SeeAllTours -> {
+                                    fragmentManager?.let {fm ->
+                                        val ft = fm.beginTransaction()
+                                        ft.replace(R.id.container, AllToursFragment())
+                                        ft.addToBackStack("AllToursFragment")
+                                        ft.commit()
+                                    }
+                                }
+                            }
+                        }
+                        is Navigate.Back -> {
+
+                        }
+                    }
+
+                }
+                .disposedBy(navigationDisposeBag)
+    }
+
 
     /**
      * Peek Animation.
