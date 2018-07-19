@@ -14,7 +14,6 @@ import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
-import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import org.threeten.bp.LocalDateTime
@@ -28,7 +27,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                                            private val eventsDao: ArticEventDao,
                                            private val exhibitionDao: ArticExhibitionDao) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
 
-    sealed class NavigationEndpoint{
+    sealed class NavigationEndpoint {
         class SeeAllTours : NavigationEndpoint()
     }
 
@@ -84,16 +83,13 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
 
     fun onPeekedTour() {
-        Observable.just(false)
+        false.asObservable()
                 .bindTo(this.shouldPeekTourSummary)
                 .disposedBy(disposeBag)
     }
 
     fun onClickSeeAllTours() {
-        Navigate.Forward(NavigationEndpoint.SeeAllTours())
-                .asObservable()
-                .bindTo(navigateTo)
-                .disposedBy(disposeBag)
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours()))
     }
 }
 

@@ -15,6 +15,7 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -83,6 +84,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     }
 
     override fun setupNavigationBindings(viewModel: WelcomeViewModel) {
+        Timber.d("NavigationDisposeBagSize pre setup: ${navigationDisposeBag.size()}")
         viewModel.navigateTo
                 .subscribe {navigation ->
                     when(navigation) {
@@ -105,6 +107,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
                 }
                 .disposedBy(navigationDisposeBag)
+        Timber.d("NavigationDisposeBagSize post setup: ${navigationDisposeBag.size()}")
     }
 
 
