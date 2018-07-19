@@ -2,7 +2,6 @@ package edu.artic.db.models
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import com.squareup.moshi.FromJson
 import com.squareup.moshi.Json
 import org.threeten.bp.LocalDateTime
 

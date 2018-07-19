@@ -14,5 +14,6 @@ data class ArticExhibition(
         @Json(name = "gallery_id") val gallery_id: String?,
         @Json(name = "id") @PrimaryKey val id: Int,
         @Json(name = "aic_end_at") val aic_end_at: String,
-        @Json(name = "title") val title: String
+        @Json(name = "title") val title: String,
+        var order: Int = -1
 )

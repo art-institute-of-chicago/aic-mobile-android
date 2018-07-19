@@ -93,7 +93,14 @@ class AppDataManager @Inject constructor(
 
                         val tours = result.tours
                         if (tours?.isNotEmpty() == true) {
+                            appDatabase.tourDao.clear()
                             appDatabase.tourDao.addTours(tours)
+                        }
+
+                        val exhibitionsCMS = result.exhibitions
+                        if (exhibitionsCMS?.isNotEmpty() == true) {
+                            appDatabase.exhibitionCMSDao.clear()
+                            appDatabase.exhibitionCMSDao.addCMSExhibitions(exhibitionsCMS)
                         }
 
                         val mapAnnotations = result.mapAnnotations
@@ -133,9 +140,20 @@ class AppDataManager @Inject constructor(
                             val result = progressDataState.result as ArticResult<*>
                             if (result.data.isNotEmpty() && result.data[0] is ArticExhibition) {
                                 appDatabase.exhibitionDao.clear()
-                                @Suppress("UNCHECKED_CAST")
-                                appDatabase.exhibitionDao.updateExhibitions((result as ArticResult<ArticExhibition>).data)
-
+                                /**
+                                 * Update the sort order of the exhibitions according to the ArticExhibitionCMS
+                                 */
+                                appDatabase.exhibitionCMSDao
+                                        .getAllCMSExhibitions()
+                                        .subscribe { cmsExhibitionList ->
+                                            @Suppress("UNCHECKED_CAST")
+                                            val list = (result as ArticResult<ArticExhibition>).data
+                                            val mapExhibitionByID = list.associateBy { it.id.toString() }
+                                            cmsExhibitionList.forEach {
+                                                mapExhibitionByID[it.id]?.order = it.sort
+                                            }
+                                            appDatabase.exhibitionDao.updateExhibitions(list)
+                                        }
                             }
                         }
                     }
