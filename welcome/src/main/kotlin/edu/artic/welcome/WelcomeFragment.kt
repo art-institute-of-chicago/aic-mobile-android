@@ -1,7 +1,12 @@
 package edu.artic.welcome
 
+import android.graphics.Color
+import android.graphics.drawable.ClipDrawable.VERTICAL
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
@@ -21,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_welcome.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.reflect.KClass
+
 
 class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     override val title: String
@@ -56,8 +62,15 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             /* Build tour summary list*/
             val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             tourSummaryRecyclerView.layoutManager = layoutManager
+
+            val decoration = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
+            decoration.setDrawable(ContextCompat.getDrawable(it, R.drawable.space_decorator)!!)
+            tourSummaryRecyclerView.addItemDecoration(decoration)
+
             val tourSummaryAdapter = WelcomeToursAdapter()
             tourSummaryRecyclerView.adapter = tourSummaryAdapter
+
+
             viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
 
             /* Build on view list*/
@@ -152,7 +165,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
         }
     }
-
 
 }
 
