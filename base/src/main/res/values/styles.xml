@@ -46,6 +46,12 @@
         <item name="android:minLines">1</item>
     </style>
 
+    <style name="CardTitleMediumBlack">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/darkGrey</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+    </style>
+
     <style name="CardTitleSmallBlack">
         <item name="android:textSize">@dimen/textSixteen</item>
         <item name="android:textColor">@color/black</item>

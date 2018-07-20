@@ -20,7 +20,7 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
     override val layoutResId: Int
         get() = R.layout.fragment_all_exhibitions
     override val title: String
-        get() = "Tours" // TODO: add to strings or figure out language stuff
+        get() = "On View" // TODO: add to strings or figure out language stuff
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -20,32 +20,30 @@
 
 
     <TextView
+        style="@style/CardTitleMediumBlack"
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
         android:ellipsize="end"
-        android:lines="2"
-        android:textColor="@color/darkGrey"
-        android:textSize="18sp"
+        android:maxLines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image"
         tools:text="test" />
 
     <TextView
+        style="@style/CardBodyLargeItalic"
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
         android:ellipsize="end"
-        android:lines="4"
-        android:textColor="#343434"
-        android:textSize="16sp"
+        android:lines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
-        tools:text="Some testing text that will be tested here yadayadaydada" />
+        tools:text="Through xyz" />
 
 
 </android.support.constraint.ConstraintLayout>
