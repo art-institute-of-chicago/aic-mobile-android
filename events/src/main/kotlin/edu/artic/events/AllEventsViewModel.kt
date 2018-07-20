@@ -30,10 +30,10 @@ class AllEventsViewModel @Inject constructor(
 
 }
 
-class AllEventsCellViewModel(tour: ArticEvent) : BaseViewModel() {
-    val eventTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
-    val eventDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.image?: "")
+class AllEventsCellViewModel(event: ArticEvent) : BaseViewModel() {
+    val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
+    val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description ?: "")
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image?: "")
     //TODO: possible split this into 2 fields
-    val eventDateTime: Subject<String> = BehaviorSubject.createDefault(tour.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER))
+    val eventDateTime: Subject<String> = BehaviorSubject.createDefault(event.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER))
 }

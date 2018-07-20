@@ -32,12 +32,6 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
         /* Build tour summary list*/
         val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (position == 0) 2 else 1
-            }
-
-        }
         recyclerView.layoutManager = layoutManager
         val toursAdapter = AllEventsAdapter()
         recyclerView.adapter = toursAdapter

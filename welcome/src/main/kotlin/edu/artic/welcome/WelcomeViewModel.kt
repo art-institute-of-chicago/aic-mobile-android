@@ -16,7 +16,6 @@ import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
 /**
@@ -30,6 +29,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     sealed class NavigationEndpoint {
         class SeeAllTours : NavigationEndpoint()
         class SeeAllOnView : NavigationEndpoint()
+        class SeeAllEvents : NavigationEndpoint()
     }
 
 
@@ -95,6 +95,10 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
     fun onClickSeeAllOnView() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllOnView()))
+    }
+
+    fun onClickSeeAllEvents() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllEvents()))
     }
 }
 

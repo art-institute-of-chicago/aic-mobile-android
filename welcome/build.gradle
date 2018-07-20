@@ -18,4 +18,5 @@ dependencies {
     implementation project(':adapter')
     implementation project(':tours')
     implementation project(':exhibitions')
+    implementation project(':events')
 }
