@@ -14,6 +14,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
+import edu.artic.exhibitions.AllExhibitionsFragment
 import edu.artic.tours.AllToursFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -96,10 +97,13 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllTours() }
                 .disposedBy(disposeBag)
+        onViewLink.clicks()
+                .defaultThrottle()
+                .subscribe { viewModel.onClickSeeAllOnView() }
+                .disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: WelcomeViewModel) {
-        Timber.d("NavigationDisposeBagSize pre setup: ${navigationDisposeBag.size()}")
         viewModel.navigateTo
                 .subscribe {navigation ->
                     when(navigation) {
@@ -113,6 +117,14 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                         ft.commit()
                                     }
                                 }
+                                is WelcomeViewModel.NavigationEndpoint.SeeAllOnView -> {
+                                    fragmentManager?.let {fm ->
+                                        val ft = fm.beginTransaction()
+                                        ft.replace(R.id.container, AllExhibitionsFragment())
+                                        ft.addToBackStack("AllExhibitionsFragment")
+                                        ft.commit()
+                                    }
+                                }
                             }
                         }
                         is Navigate.Back -> {
@@ -122,7 +134,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
                 }
                 .disposedBy(navigationDisposeBag)
-        Timber.d("NavigationDisposeBagSize post setup: ${navigationDisposeBag.size()}")
     }
 
 

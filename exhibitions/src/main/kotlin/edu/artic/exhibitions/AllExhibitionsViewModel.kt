@@ -2,6 +2,7 @@ package edu.artic.exhibitions
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.BaseViewModel
@@ -30,6 +31,12 @@ class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitio
 
 class AllExhibitionsCellViewModel(exhibition: ArticExhibition) : BaseViewModel() {
     val exhibitionTitle: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-    val exhibitionDescription: Subject<String> = BehaviorSubject.createDefault("")
-    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url)
+    val exhibitionDescription: Subject<String> = BehaviorSubject.createDefault(
+            "Through ${exhibition.aic_end_at.format(
+                    DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER
+            )
+            }"
+    )
+    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url
+            ?: "")
 }

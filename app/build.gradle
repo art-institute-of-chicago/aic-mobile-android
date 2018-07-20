@@ -30,6 +30,7 @@ dependencies {
     implementation project(':splash')
     implementation project(':welcome')
     implementation project(':tours')
+    implementation project(':exhibitions')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
