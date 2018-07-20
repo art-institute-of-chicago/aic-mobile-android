@@ -58,6 +58,12 @@
         <item name="android:fontFamily">@font/amiri_italic</item>
     </style>
 
+    <style name="CardBodyLargeItalic">
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:fontFamily">@font/amiri_italic</item>
+    </style>
+
     <style name="CardBodySerifGray">
         <item name="android:textSize">@dimen/textMedium</item>
         <item name="android:textColor">@color/greyText</item>
