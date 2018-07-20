@@ -10,23 +10,19 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
-import edu.artic.base.utils.fileAsString
-import edu.artic.db.models.ArticEvent
-import edu.artic.db.models.ArticExhibition
-import edu.artic.db.models.ArticTour
+import edu.artic.tours.AllToursFragment
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import kotlin.reflect.KClass
-
 
 class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     override val title: String
@@ -37,9 +33,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override val layoutResId: Int
         get() = R.layout.fragment_welcome
-
-    @Inject
-    lateinit var moshi: Moshi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,7 +51,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         }
 
         context?.let {
-
             /* Build tour summary list*/
             val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             tourSummaryRecyclerView.layoutManager = layoutManager
@@ -72,21 +64,22 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
 
             viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
-
-            /* Build on view list*/
-            val adapter = OnViewAdapter()
-            val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            onViewRecyclerView.layoutManager = exhibitionLayoutManager
-            onViewRecyclerView.adapter = adapter
-            viewModel.exhibitions.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
-
-            /* Build event summary list*/
-            val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            eventsRecyclerView.layoutManager = eventsLayoutManager
-            val eventsAdapter = WelcomeEventsAdapter()
-            eventsRecyclerView.adapter = eventsAdapter
-            viewModel.events.bindToMain(eventsAdapter.itemChanges()).disposedBy(disposeBag)
         }
+
+
+        /* Build on view list*/
+        val adapter = OnViewAdapter()
+        val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        onViewRecyclerView.layoutManager = exhibitionLayoutManager
+        onViewRecyclerView.adapter = adapter
+        viewModel.exhibitions.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
+
+        /* Build event summary list*/
+        val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        eventsRecyclerView.layoutManager = eventsLayoutManager
+        val eventsAdapter = WelcomeEventsAdapter()
+        eventsRecyclerView.adapter = eventsAdapter
+        viewModel.events.bindToMain(eventsAdapter.itemChanges()).disposedBy(disposeBag)
 
 
         viewModel.shouldPeekTourSummary
@@ -97,6 +90,41 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
 
     }
+
+    override fun setupBindings(viewModel: WelcomeViewModel) {
+        toursSeeAllLink.clicks()
+                .defaultThrottle()
+                .subscribe { viewModel.onClickSeeAllTours() }
+                .disposedBy(disposeBag)
+    }
+
+    override fun setupNavigationBindings(viewModel: WelcomeViewModel) {
+        Timber.d("NavigationDisposeBagSize pre setup: ${navigationDisposeBag.size()}")
+        viewModel.navigateTo
+                .subscribe {navigation ->
+                    when(navigation) {
+                        is Navigate.Forward -> {
+                            when(navigation.endpoint) {
+                                is WelcomeViewModel.NavigationEndpoint.SeeAllTours -> {
+                                    fragmentManager?.let {fm ->
+                                        val ft = fm.beginTransaction()
+                                        ft.replace(R.id.container, AllToursFragment())
+                                        ft.addToBackStack("AllToursFragment")
+                                        ft.commit()
+                                    }
+                                }
+                            }
+                        }
+                        is Navigate.Back -> {
+
+                        }
+                    }
+
+                }
+                .disposedBy(navigationDisposeBag)
+        Timber.d("NavigationDisposeBagSize post setup: ${navigationDisposeBag.size()}")
+    }
+
 
     /**
      * Peek Animation.
@@ -117,54 +145,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
     }
 
-    /**
-     * TODO:: remove this once ToursDao is ready
-     */
-    private fun getTours(): List<ArticTour> {
-
-        return activity.let {
-            if (it == null) {
-                emptyList()
-            } else {
-                val toursJson = it.assets.fileAsString("json", "tours.json")
-                val adapter: JsonAdapter<List<ArticTour>> = moshi.adapter(Types.newParameterizedType(List::class.java, ArticTour::class.java))
-                return@let adapter.fromJson(toursJson) as List<ArticTour>
-            }
-
-        }
-    }
-
-    /**
-     * TODO:: remove this once ExhibitionDao is ready
-     */
-    private fun getExhibitions(): List<ArticExhibition> {
-        return activity.let {
-            if (it == null) {
-                emptyList()
-            } else {
-                val exhibitionJson = it.assets.fileAsString("json", "exhibitions.json")
-                val adapter: JsonAdapter<List<ArticExhibition>> = moshi.adapter(Types.newParameterizedType(List::class.java, ArticExhibition::class.java))
-                return@let adapter.fromJson(exhibitionJson) as List<ArticExhibition>
-            }
-
-        }
-    }
-
-    /**
-     * TODO:: remove this once ExhibitionDao is ready
-     */
-    private fun getEvents(): List<ArticEvent> {
-        return activity.let {
-            if (it == null) {
-                emptyList()
-            } else {
-                val exhibitionJson = it.assets.fileAsString("json", "events.json")
-                val adapter: JsonAdapter<List<ArticEvent>> = moshi.adapter(Types.newParameterizedType(List::class.java, ArticEvent::class.java))
-                return@let adapter.fromJson(exhibitionJson) as List<ArticEvent>
-            }
-
-        }
-    }
 
 }
 

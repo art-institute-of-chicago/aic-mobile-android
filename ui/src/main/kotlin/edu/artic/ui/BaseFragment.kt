@@ -14,6 +14,8 @@ abstract class BaseFragment : Fragment() {
 
     var toolbar: Toolbar? = null
 
+    protected abstract val title: String
+
     @get:LayoutRes
     protected abstract val layoutResId: Int
 
@@ -21,7 +23,12 @@ abstract class BaseFragment : Fragment() {
         get() = activity as BaseActivity
 
     val disposeBag = DisposeBag()
+    val navigationDisposeBag = DisposeBag()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layoutResId, container, false)
@@ -40,12 +47,10 @@ abstract class BaseFragment : Fragment() {
 
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
-        super.onCreate(savedInstanceState)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposeBag.clear()
     }
-
-    protected abstract val title: String
 
     override fun onDestroy() {
         // fix for bug where viewmodel store is not cleared on 27.1.0, might be fixed later.
@@ -58,8 +63,5 @@ abstract class BaseFragment : Fragment() {
         super.onDestroy()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        disposeBag.clear()
-    }
+
 }

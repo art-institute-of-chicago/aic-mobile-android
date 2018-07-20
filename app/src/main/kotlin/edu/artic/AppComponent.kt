@@ -7,6 +7,7 @@ import edu.artic.main.MainModule
 import edu.artic.db.ApiModule
 import edu.artic.db.DBModule
 import edu.artic.splash.SplashModule
+import edu.artic.tours.ToursModule
 import edu.artic.viewmodel.ViewModelModule
 import edu.artic.welcome.WelcomeModule
 import javax.inject.Singleton
@@ -16,6 +17,7 @@ import javax.inject.Singleton
     AppModule::class,
     SplashModule::class,
     WelcomeModule::class,
+    ToursModule::class,
     MainModule::class,
     ViewModelModule::class,
     ApiModule::class,

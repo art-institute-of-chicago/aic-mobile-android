@@ -8,7 +8,6 @@ dependencies {
 
     api libs.design_support
     implementation libs.glide
-    implementation libs.threeten
     implementation project(':base')
     implementation libs.constraint_layout
     implementation project(':ui')
@@ -16,5 +15,4 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':base')
     implementation project(':adapter')
-    implementation project(':tours')
 }
