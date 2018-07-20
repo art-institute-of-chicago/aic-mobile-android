@@ -1,1 +1,11 @@
-include ':app', ':ui', ':viewmodel', ':base', ':splash', ':db', ':welcome', ':main', ':adapter', ':tours'
+include ':app',
+        ':ui',
+        ':viewmodel',
+        ':base',
+        ':splash',
+        ':db',
+        ':welcome',
+        ':main',
+        ':adapter',
+        ':tours',
+        ':exhibitions'
