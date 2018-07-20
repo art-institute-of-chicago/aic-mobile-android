@@ -2,6 +2,7 @@ package edu.artic.welcome
 
 import android.arch.lifecycle.LifecycleOwner
 import com.fuzz.rx.asObservable
+import android.support.v4.content.ContextCompat
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.DateTimeHelper
@@ -100,8 +101,7 @@ class WelcomeTourCellViewModel(tour: ArticTour) : BaseViewModel() {
 
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
-    private val tourStopCount = tour.tourStops.count() ?: 0
-    val tourStops: Subject<String> = BehaviorSubject.createDefault(tourStopCount.toString())
+    val tourStops: Subject<String> = BehaviorSubject.createDefault(tour.tourStops.count().toString())
     val tourDuration: Subject<String> = BehaviorSubject.createDefault(tour.tourDuration)
     val tourImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.imageUrl)
 }
