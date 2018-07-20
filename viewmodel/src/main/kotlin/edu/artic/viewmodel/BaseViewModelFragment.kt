@@ -9,7 +9,7 @@ import javax.inject.Inject
 import kotlin.reflect.KClass
 
 /**
- * Description: Provides common [ParentViewModel] methods for subclasses, so duplicate code doesn't
+ * Description: Provides common ParentViewModel methods for subclasses, so duplicate code doesn't
  * happen.
  */
 abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment() {
@@ -24,7 +24,7 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
     protected open fun useFragmentForProvider(): Boolean = true
 
     /**
-     * If true we resolve our [ViewModel] instances via our [ViewModelFactory] class.
+     * If true we resolve our [BaseViewModel] instances via our [ViewModelFactory] class.
      */
     open val useFactory: Boolean
         get() = true
@@ -47,13 +47,14 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
     }
 
     val viewModel: TViewModel by viewModelLazy
-
+    var isViewJustCreated : Boolean = true
     protected open fun getViewModelForClass(viewModelProvider: ViewModelProvider,
                                             kClass: KClass<TViewModel>): TViewModel =
             viewModelProvider.get(kClass.java)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isViewJustCreated = true
         if (!viewModelExists) {
             val viewModel = viewModel
             viewModel.onClearedListener = this::onCleared
@@ -62,10 +63,20 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
         }
     }
 
-    /**
-     * Called when viewmodel is first initialized. Call initial setup methods on the [TViewModel] here.
-     */
-    protected open fun onRegisterViewModel(viewModel: TViewModel) = Unit
+    override fun onResume() {
+        super.onResume()
+        if(isViewJustCreated) {
+            setupBindings(viewModel)
+        }
+        setupNavigationBindings(viewModel)
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        navigationDisposeBag.clear()
+    }
+
 
     override fun onDestroyView() {
         // attempt cleanup. if activity destroyed we will ignore this call here.
@@ -85,4 +96,13 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
         }
         viewModelLazy.invalidate()
     }
+
+    /**
+     * Called when viewmodel is first initialized. Call initial setup methods on the [TViewModel] here.
+     */
+    protected open fun onRegisterViewModel(viewModel: TViewModel) = Unit
+
+    protected open fun setupBindings(viewModel: TViewModel) = Unit
+
+    protected open fun setupNavigationBindings(viewModel: TViewModel) = Unit
 }

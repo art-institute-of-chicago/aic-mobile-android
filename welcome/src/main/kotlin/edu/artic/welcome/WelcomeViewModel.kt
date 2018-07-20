@@ -1,6 +1,7 @@
 package edu.artic.welcome
 
 import android.arch.lifecycle.LifecycleOwner
+import com.fuzz.rx.asObservable
 import android.support.v4.content.ContextCompat
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
@@ -12,7 +13,8 @@ import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
-import io.reactivex.Observable
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import org.threeten.bp.LocalDateTime
@@ -24,7 +26,12 @@ import javax.inject.Inject
 class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager: WelcomePreferencesManager,
                                            private val toursDao: ArticTourDao,
                                            private val eventsDao: ArticEventDao,
-                                           private val exhibitionDao: ArticExhibitionDao) : BaseViewModel() {
+                                           private val exhibitionDao: ArticExhibitionDao) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint {
+        class SeeAllTours : NavigationEndpoint()
+    }
+
 
     val shouldPeekTourSummary: Subject<Boolean> = BehaviorSubject.create()
     val tours: Subject<List<WelcomeTourCellViewModel>> = BehaviorSubject.create()
@@ -77,9 +84,13 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
 
     fun onPeekedTour() {
-        Observable.just(false)
+        false.asObservable()
                 .bindTo(this.shouldPeekTourSummary)
                 .disposedBy(disposeBag)
+    }
+
+    fun onClickSeeAllTours() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours()))
     }
 }
 
