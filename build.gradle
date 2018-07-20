@@ -15,7 +15,7 @@ buildscript {
         moshi_version = '1.6.0'
         room_version = '1.1.1'
         glide_version = '4.4.0'
-        
+
         libs = [
                 kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
                 rxHelper               : "com.github.fuzz-productions:rx-helpers:${latest_helper}",
@@ -30,6 +30,8 @@ buildscript {
                 arch_extensions        : "android.arch.lifecycle:extensions:${arch_version}",
                 arch_paging            : "android.arch.paging:runtime:${paging_version}",
                 arch_common            : "android.arch.paging:common:${arch_version}",
+                arch_navigation        : "android.arch.navigation:navigation-fragment-ktx:${arch_version}",
+                arch_navigation_ui     : "android.arch.navigation:navigation-ui-ktx:${arch_version}",
                 arch_rx                : "android.arch.lifecycle:reactivestreams:${arch_version}",
                 retrofit               : 'com.squareup.retrofit2:retrofit:2.3.0',
                 retrofit_rx            : 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0',
@@ -43,10 +45,10 @@ buildscript {
                 room_rx                : "android.arch.persistence.room:rxjava2:${room_version}",
                 timber                 : 'com.jakewharton.timber:timber:4.5.1',
                 threeten               : 'com.jakewharton.threetenabp:threetenabp:1.0.5',
-                design_support            : "com.android.support:design:${support_version}",
-                constraint_layout         : "com.android.support.constraint:constraint-layout:1.1.2",
-                glide                     : "com.github.bumptech.glide:glide:${glide_version}",
-                glide_compiler: "com.github.bumptech.glide:compiler:${glide_version}"
+                design_support         : "com.android.support:design:${support_version}",
+                constraint_layout      : "com.android.support.constraint:constraint-layout:1.1.2",
+                glide                  : "com.github.bumptech.glide:glide:${glide_version}",
+                glide_compiler         : "com.github.bumptech.glide:compiler:${glide_version}"
         ]
 
     }

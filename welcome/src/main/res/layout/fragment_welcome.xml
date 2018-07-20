@@ -31,24 +31,19 @@
 
                 <TextView
                     android:id="@+id/welcomeMessage"
+                    style="@style/BodySansSerifBlackCentered"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif"
-                    android:gravity="center"
-                    android:text="@string/welcomePrompt"
-                    android:textColor="@color/greyText"
-                    android:textSize="@dimen/textMedium" />
+                    android:text="@string/welcomePrompt" />
 
                 <TextView
                     android:id="@+id/memberCardLink"
+                    style="@style/BodyCtaTurquoise"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center"
-                    android:text="@string/accessYourMemberCard"
-                    android:textColor="@color/keppel"
-                    android:textSize="@dimen/textLink" />
+                    android:layout_marginBottom="@dimen/marginStandard"
+                    android:layout_marginTop="@dimen/marginDouble"
+                    android:text="@string/accessYourMemberCard" />
 
 
             </LinearLayout>
@@ -61,11 +56,10 @@
 
                 <TextView
                     android:id="@+id/tourSummaryLabel"
+                    style="@style/SectionTitleBlack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tours"
-                    android:textColor="@color/greyText"
-                    android:textSize="@dimen/textLarge" />
+                    android:text="@string/tours" />
 
                 <TextView
                     android:id="@+id/toursSeeAllLink"
@@ -81,17 +75,14 @@
                 android:id="@+id/tourSummaryRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginBottom="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false" />
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/marginStandard"
-                android:layout_marginEnd="@dimen/marginStandard"
-                android:background="@color/warmGrey" />
+                style="@style/divider"
+                android:layout_width="match_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -101,11 +92,10 @@
 
                 <TextView
                     android:id="@+id/onViewLabel"
+                    style="@style/SectionTitleBlack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/onView"
-                    android:textColor="@color/greyText"
-                    android:textSize="@dimen/textLarge" />
+                    android:text="@string/onView" />
 
                 <TextView
                     android:id="@+id/onViewLink"
@@ -121,17 +111,14 @@
                 android:id="@+id/onViewRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginBottom="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false" />
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/marginStandard"
-                android:layout_marginEnd="@dimen/marginStandard"
-                android:background="@color/warmGrey" />
+                style="@style/divider"
+                android:layout_width="match_parent" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -141,11 +128,10 @@
 
                 <TextView
                     android:id="@+id/eventLabel"
+                    style="@style/SectionTitleBlack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/events"
-                    android:textColor="@color/greyText"
-                    android:textSize="@dimen/textLarge" />
+                    android:text="@string/events" />
 
                 <TextView
                     android:id="@+id/eventsLink"
@@ -161,9 +147,9 @@
                 android:id="@+id/eventsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginBottom="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>

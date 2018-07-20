@@ -19,7 +19,9 @@ class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewMod
                 .disposedBy(item.viewDisposeBag)
 
         item.exhibitionDate
-                .bindToMain(exhibitionDate.text())
+                .subscribe {
+                    exhibitionDate.text = context.getString(R.string.through, it)
+                }
                 .disposedBy(item.viewDisposeBag)
 
         item.exhibitionImageUrl
