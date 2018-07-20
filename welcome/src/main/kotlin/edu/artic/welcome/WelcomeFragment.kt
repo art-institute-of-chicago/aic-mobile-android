@@ -50,6 +50,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             }
         }
 
+        context?.let {
             /* Build tour summary list*/
             val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             tourSummaryRecyclerView.layoutManager = layoutManager
@@ -63,6 +64,8 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
 
             viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
+        }
+
 
         /* Build on view list*/
         val adapter = OnViewAdapter()
