@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PageTitleLargeWhite" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:letterSpacing">1.4</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="BodySansSerifBlackCentered" parent="TextAppearance.AppCompat.Large">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:textSize">@dimen/textMedium</item>
+    </style>
+
+    <style name="BodyCtaTurquoise">
+        <item name="android:fontFamily">@font/ideal_sans_semibold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/keppel</item>
+        <item name="android:textSize">@dimen/textLink</item>
+    </style>
+
+    <style name="SectionTitleBlack">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:textSize">@dimen/textLarge</item>
+    </style>
+
+    <style name="SeeAll" parent="BodyCtaTurquoise">
+        <item name="android:gravity">end</item>
+    </style>
+
+    <style name="MetadataSmallWhite">
+        <item name="android:textSize">@dimen/textThirteen</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+    </style>
+
+    <style name="CardTitleLargeBlack">
+        <item name="android:textSize">@dimen/textLarge</item>
+        <item name="android:textColor">@color/darkGrey</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:minLines">1</item>
+    </style>
+
+    <style name="CardTitleSmallBlack">
+        <item name="android:textSize">@dimen/textSixteen</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+    </style>
+
+    <style name="CardBodySmallItalic">
+        <item name="android:textSize">@dimen/textSmallest</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:fontFamily">@font/amiri_italic</item>
+    </style>
+
+    <style name="CardBodySerifGray">
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:fontFamily">@font/amiri_regular</item>
+    </style>
+
+    <style name="divider">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginStart">@dimen/marginDouble</item>
+        <item name="android:layout_marginEnd">@dimen/marginStandard</item>
+        <item name="android:background">@color/warmGrey</item>
+    </style>
+
+</resources>

@@ -34,6 +34,7 @@
             android:layout_margin="@dimen/marginStandard"
             android:gravity="center"
             android:textColor="@color/white"
+            style="@style/MetadataSmallWhite"
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"
             tools:text="5 stops" />
@@ -42,9 +43,8 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginStandard"
-            android:textColor="@color/darkGrey"
-            android:textSize="@dimen/textLarge"
+            android:layout_marginTop="@dimen/marginStandard"
+            style="@style/CardTitleLargeBlack"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/infoBar"
             tools:text="The Essential Tour" />
@@ -54,10 +54,9 @@
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginStandard"
-            android:textColor="@color/greyText"
-            android:textSize="@dimen/textSmall"
+            style="@style/CardBodySerifGray"
             app:layout_constraintStart_toStartOf="parent"
+            android:lineSpacingMultiplier="0.8"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="Event description details  " />
 

@@ -32,9 +32,7 @@ class WelcomeToursAdapter : AutoHolderRecyclerViewAdapter<WelcomeTourCellViewMod
                 .disposedBy(item.viewDisposeBag)
 
         item.tourStops
-                .map {
-                    "$it ${context.getString(R.string.stops)}"
-                }.subscribe { stops.text = it.toString() }
+                .subscribe { stops.text = context.getString(R.string.stops, it) }
                 .disposedBy(item.viewDisposeBag)
 
         item.tourDuration.bindToMain(tourTime.text()).disposedBy(item.viewDisposeBag)

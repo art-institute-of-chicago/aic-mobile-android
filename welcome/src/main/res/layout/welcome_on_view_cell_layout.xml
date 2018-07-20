@@ -21,11 +21,11 @@
 
         <TextView
             android:id="@+id/exhibitionTitle"
+            style="@style/CardTitleLargeBlack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginStandard"
-            android:textColor="@color/darkGrey"
-            android:textSize="@dimen/textLarge"
+            android:layout_marginTop="@dimen/marginStandard"
+            android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image"
             tools:text="The Essential Event" />
@@ -33,12 +33,9 @@
 
         <TextView
             android:id="@+id/exhibitionDate"
+            style="@style/CardBodySmallItalic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginStandard"
-            android:textColor="@color/greyText"
-            android:textSize="@dimen/textSmallest"
-            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/exhibitionTitle"
             tools:text="Event description details  " />
