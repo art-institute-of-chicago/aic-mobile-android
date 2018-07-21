@@ -7,10 +7,12 @@ dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
     api libs.design_support
+    api libs.arch_navigation
+    api libs.arch_navigation_ui
 
     api libs.constraint_layout
     implementation project(':ui')
     implementation project(':base')
-    implementation project(':viewmodel')
     implementation project(':welcome')
+    implementation project(':viewmodel')
 }
