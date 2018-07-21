@@ -2,7 +2,6 @@ package edu.artic.welcome
 
 import android.arch.lifecycle.LifecycleOwner
 import com.fuzz.rx.asObservable
-import android.support.v4.content.ContextCompat
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.DateTimeHelper
@@ -30,6 +29,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
     sealed class NavigationEndpoint {
         class SeeAllTours : NavigationEndpoint()
+        class SeeAllOnView : NavigationEndpoint()
     }
 
 
@@ -92,6 +92,10 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     fun onClickSeeAllTours() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours()))
     }
+
+    fun onClickSeeAllOnView() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllOnView()))
+    }
 }
 
 /**
@@ -111,8 +115,7 @@ class WelcomeTourCellViewModel(tour: ArticTour) : BaseViewModel() {
  */
 class WelcomeExhibitionCellViewModel(exhibition: ArticExhibition) : BaseViewModel() {
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-    private val throughDate: LocalDateTime = LocalDateTime.parse(exhibition.aic_end_at, DateTimeHelper.DEFAULT_FORMATTER)
-    private val throughDateString = throughDate.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)
+    private val throughDateString = exhibition.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)
             .toString()
     val exhibitionDate: Subject<String> = BehaviorSubject.createDefault(throughDateString)
     val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url
