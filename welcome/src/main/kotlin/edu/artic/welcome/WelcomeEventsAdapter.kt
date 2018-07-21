@@ -14,26 +14,26 @@ import kotlinx.android.synthetic.main.welcome_event_cell_layout.view.*
  */
 
 class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewModel>() {
-    override fun View.onBindView(event: WelcomeEventCellViewModel, position: Int) {
-        event.eventTitle
+    override fun View.onBindView(item: WelcomeEventCellViewModel, position: Int) {
+        item.eventTitle
                 .bindToMain(title.text())
-                .disposedBy(event.viewDisposeBag)
+                .disposedBy(item.viewDisposeBag)
 
-        event.eventShortDescription
+        item.eventShortDescription
                 .bindToMain(description.text())
-                .disposedBy(event.viewDisposeBag)
+                .disposedBy(item.viewDisposeBag)
 
-        event.eventTime
+        item.eventTime
                 .bindToMain(date.text())
-                .disposedBy(event.viewDisposeBag)
+                .disposedBy(item.viewDisposeBag)
 
-        event.eventImageUrl
+        item.eventImageUrl
                 .filter { it.isNotEmpty() }
                 .subscribe {
                     Glide.with(context)
                             .load(it)
                             .into(image)
-                }.disposedBy(event.viewDisposeBag)
+                }.disposedBy(item.viewDisposeBag)
 
     }
 
