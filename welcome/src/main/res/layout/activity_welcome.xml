@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".WelcomeActivity">
 
     <fragment
         android:id="@+id/container"
@@ -12,18 +12,17 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/app_navigation_graph"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/welcome_navigation_graph"
         tools:background="#fab" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:clickable="true"
         app:itemBackground="@color/white"
         app:itemTextColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"

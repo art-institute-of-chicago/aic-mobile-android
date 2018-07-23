@@ -25,6 +25,9 @@ abstract class WelcomeModule {
     @get:ContributesAndroidInjector
     abstract val welcomeFragment: WelcomeFragment
 
+    @get:ContributesAndroidInjector
+    abstract val welcomeActivity: WelcomeActivity
+
     @Module
     companion object {
 
@@ -34,7 +37,4 @@ abstract class WelcomeModule {
                 = WelcomePreferencesManager(context)
 
     }
-
-
-
 }

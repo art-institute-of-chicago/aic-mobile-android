@@ -9,5 +9,12 @@
         <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
 
-
+    <style name="AppTheme.CustomToolbar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 </resources>

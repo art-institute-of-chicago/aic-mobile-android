@@ -3,7 +3,6 @@ package edu.artic
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
-import edu.artic.main.MainModule
 import edu.artic.db.ApiModule
 import edu.artic.db.DBModule
 import edu.artic.events.EventsModule
@@ -22,7 +21,6 @@ import javax.inject.Singleton
     ToursModule::class,
     ExhibitionsModule::class,
     EventsModule::class,
-    MainModule::class,
     ViewModelModule::class,
     ApiModule::class,
     DBModule::class,

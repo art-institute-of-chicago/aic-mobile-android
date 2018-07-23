@@ -25,7 +25,6 @@ dependencies {
     implementation project(':ui')
     implementation project(':db')
     implementation project(':viewmodel')
-    implementation project(':main')
     implementation project(':base')
     implementation project(':splash')
     implementation project(':welcome')
