@@ -2,6 +2,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
     kapt libs.glide_compiler

@@ -2,13 +2,12 @@ package edu.artic.splash
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.main.MainActivity
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
+import edu.artic.welcome.WelcomeActivity
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlin.reflect.KClass
 
@@ -35,7 +34,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                         is Navigate.Forward -> {
                             when (it.endpoint) {
                                 is SplashViewModel.NavigationEndpoint.Welcome -> {
-                                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                                    startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
                                     finish()
                                 }
                             }

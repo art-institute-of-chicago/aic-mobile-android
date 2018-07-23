@@ -7,7 +7,7 @@ dependencies {
     kapt libs.dagger_android_compiler
     implementation project(':ui')
     implementation project(':viewmodel')
-    implementation project(':main')
+    implementation project(':welcome')
     implementation project(':db')
 
     api libs.arch_runtime
