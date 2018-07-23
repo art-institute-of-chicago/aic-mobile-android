@@ -24,6 +24,7 @@ constructor(
         class BuyTickets(val url: String) : NavigationEndpoint()
     }
 
+    val imageUrl: Subject<String> = BehaviorSubject.create()
     val title: Subject<String> = BehaviorSubject.createDefault("")
     val metaData: Subject<String> = BehaviorSubject.createDefault("")
     val showOnMapButtonText: Subject<String> = BehaviorSubject.createDefault("Show on Map") // TODO: replace when special localizer is done
@@ -42,27 +43,35 @@ constructor(
                 }.disposedBy(disposeBag)
     }
 
-    fun setExhibitionId(exhibition: ArticExhibition) {
+    fun setExhibitionExhibition(exhibition: ArticExhibition) {
         this.exhibition = exhibition
 
         val exhibitionObservable = this.exhibition.asObservable()
+
         exhibitionObservable
-                .subscribe {
-                    this.exhibition = it
-                }
+                .filter { exhibition.legacy_image_mobile_url != null }
+                .map { exhibition.legacy_image_mobile_url!! }
+                .bindTo(imageUrl)
                 .disposedBy(disposeBag)
+
         exhibitionObservable
                 .map { it.title }
                 .bindTo(title)
                 .disposedBy(disposeBag)
-//        exhibition.map { it.}.bindTo(title).disposedBy(disposeBag) // Meta
+
+        exhibitionObservable
+                .map { it.aic_start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
+                .bindTo(metaData)
+                .disposedBy(disposeBag)
+
         exhibitionObservable
                 .filter { it.short_description != null }
                 .map { it.short_description!! }
                 .bindTo(description)
                 .disposedBy(disposeBag)
+
         exhibitionObservable
-                .map { it.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER) }
+                .map { "Through ${it.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
                 .bindTo(throughDate)
                 .disposedBy(disposeBag)
     }

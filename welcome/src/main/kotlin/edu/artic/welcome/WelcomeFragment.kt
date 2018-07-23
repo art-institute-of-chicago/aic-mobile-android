@@ -16,6 +16,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.events.AllEventsFragment
 import edu.artic.exhibitions.AllExhibitionsFragment
+import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.tours.AllToursFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -52,25 +53,21 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             }
         }
 
-        context?.let {
-            /* Build tour summary list*/
-            val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            tourSummaryRecyclerView.layoutManager = layoutManager
+        /* Build tour summary list*/
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        tourSummaryRecyclerView.layoutManager = layoutManager
 
-            val decoration = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
-            decoration.setDrawable(ContextCompat.getDrawable(it, R.drawable.space_decorator)!!)
-            tourSummaryRecyclerView.addItemDecoration(decoration)
+        val decoration = DividerItemDecoration(view.context, DividerItemDecoration.HORIZONTAL)
+        decoration.setDrawable(ContextCompat.getDrawable(view.context, R.drawable.space_decorator)!!)
+        tourSummaryRecyclerView.addItemDecoration(decoration)
 
-            val tourSummaryAdapter = WelcomeToursAdapter()
-            tourSummaryRecyclerView.adapter = tourSummaryAdapter
+        val tourSummaryAdapter = WelcomeToursAdapter()
+        tourSummaryRecyclerView.adapter = tourSummaryAdapter
 
-
-            viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
-        }
-
+        viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
 
         /* Build on view list*/
-        val adapter = OnViewAdapter()
+        val adapter = OnViewAdapter(viewModel)
         val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         onViewRecyclerView.layoutManager = exhibitionLayoutManager
         onViewRecyclerView.adapter = adapter
@@ -98,10 +95,12 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllTours() }
                 .disposedBy(disposeBag)
+
         onViewLink.clicks()
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllOnView() }
                 .disposedBy(disposeBag)
+
         eventsLink.clicks()
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllEvents() }
@@ -135,6 +134,19 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                         val ft = fm.beginTransaction()
                                         ft.replace(R.id.container, AllEventsFragment())
                                         ft.addToBackStack("AllEventsFragment")
+                                        ft.commit()
+                                    }
+                                }
+                                is WelcomeViewModel.NavigationEndpoint.TourDetail ->{
+
+                                }
+                                is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
+                                    val endpoint
+                                            = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
+                                    fragmentManager?.let {fm ->
+                                        val ft = fm.beginTransaction()
+                                        ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
+                                        ft.addToBackStack("ExhibitionDetail")
                                         ft.commit()
                                     }
                                 }

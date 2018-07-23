@@ -30,6 +30,8 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         class SeeAllTours : NavigationEndpoint()
         class SeeAllOnView : NavigationEndpoint()
         class SeeAllEvents : NavigationEndpoint()
+        class TourDetail(val tour: ArticTour) : NavigationEndpoint()
+        class ExhibitionDetail(val exhibition: ArticExhibition) : NavigationEndpoint()
     }
 
 
@@ -100,6 +102,10 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     fun onClickSeeAllEvents() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllEvents()))
     }
+
+    fun onClickExhibition(exhibition: ArticExhibition) {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ExhibitionDetail(exhibition)))
+    }
 }
 
 /**
@@ -117,7 +123,7 @@ class WelcomeTourCellViewModel(tour: ArticTour) : BaseViewModel() {
 /**
  * ViewModel responsible for building the `On View` list (i.e. list of exhibition).
  */
-class WelcomeExhibitionCellViewModel(exhibition: ArticExhibition) : BaseViewModel() {
+class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition) : BaseViewModel() {
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     private val throughDateString = exhibition.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)
             .toString()
