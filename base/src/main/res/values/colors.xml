@@ -10,5 +10,5 @@
     <color name="darkGrey">#333333</color>
     <color name="cloudyBlue">#cee0df</color>
     <color name="transparentInfoBarColor">#73000000</color>
-
+    <color name="colorPrimary">#118084</color>
 </resources>

@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.fuzz.rx.DisposeBag
 import dagger.android.support.AndroidSupportInjection
 
@@ -30,8 +28,18 @@ abstract class BaseFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        view!!.post { updateToolbar(view!!) }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(layoutResId, container, false)
+        return inflater.inflate(layoutResId, container, false)
+
+    }
+
+    private fun updateToolbar(view: View) {
         toolbar = view.findViewById(R.id.toolbar)
         if (toolbar != null) {
             baseActivity.setSupportActionBar(toolbar)
@@ -43,8 +51,11 @@ abstract class BaseFragment : Fragment() {
 
             baseActivity.title = title
         }
-        return view
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        baseActivity.title = title
     }
 
     override fun onDestroyView() {

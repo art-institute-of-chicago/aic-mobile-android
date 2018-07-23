@@ -34,6 +34,8 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_welcome
 
+    override fun hasTransparentStatusBar(): Boolean = true
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
