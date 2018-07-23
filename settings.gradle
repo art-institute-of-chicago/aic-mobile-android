@@ -8,4 +8,5 @@ include ':app',
         ':adapter',
         ':tours',
         ':exhibitions',
-        ':events'
+        ':events',
+        ':info'

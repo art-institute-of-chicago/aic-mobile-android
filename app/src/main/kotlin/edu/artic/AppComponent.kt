@@ -5,6 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import edu.artic.db.ApiModule
 import edu.artic.db.DBModule
+import edu.artic.info.InfoModule
 import edu.artic.events.EventsModule
 import edu.artic.splash.SplashModule
 import edu.artic.tours.ExhibitionsModule
@@ -24,6 +25,7 @@ import javax.inject.Singleton
     ViewModelModule::class,
     ApiModule::class,
     DBModule::class,
+    InfoModule::class,
     AndroidSupportInjectionModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {

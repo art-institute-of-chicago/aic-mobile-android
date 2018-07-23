@@ -24,7 +24,6 @@ class ArticApp : DaggerApplication() {
         return component
     }
 
-
     companion object {
 
         @JvmStatic

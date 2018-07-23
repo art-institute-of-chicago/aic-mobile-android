@@ -29,6 +29,7 @@ dependencies {
     implementation project(':splash')
     implementation project(':welcome')
     implementation project(':tours')
+    implementation project(':info')
     implementation project(':exhibitions')
     implementation project(':events')
 
