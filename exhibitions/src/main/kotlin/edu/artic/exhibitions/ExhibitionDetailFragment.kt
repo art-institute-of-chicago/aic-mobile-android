@@ -1,8 +1,8 @@
 package edu.artic.exhibitions
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_exhibition_details.*
 import kotlinx.android.synthetic.main.fragment_exhibition_details.view.*
 import timber.log.Timber
 import kotlin.reflect.KClass
+
 
 class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel>() {
 
@@ -33,10 +34,10 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val progress: Double = 1 - Math.abs(verticalOffset) / appBarLayout.totalScrollRange.toDouble()
             Timber.d("progress: $progress")
-            if(progress <= .5) {
+            if (progress <= .5) {
                 val diff = .5f - progress.toFloat()
                 Timber.d("difference: $diff")
-                if(diff <= .25f) {
+                if (diff <= .25f) {
                     appBarLayout.toolbarTitle.alpha = 0f
                     appBarLayout.expandedTitle.alpha = 1 - (diff / .25f)
                 } else {
@@ -105,15 +106,20 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     override fun setupNavigationBindings(viewModel: ExhibitionDetailViewModel) {
         viewModel.navigateTo
                 .subscribe {
-                    when(it) {
+                    when (it) {
                         is Navigate.Forward -> {
-                            when(it.endpoint) {
+                            when (it.endpoint) {
                                 is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
                                     Timber.d("Show on map")
                                 }
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
-                                    Timber.d("Buy Tickets")
+                                    val endpoint = it.endpoint as ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets
+                                    var url = endpoint.url
+                                    if (!url.startsWith("http://") && !url.startsWith("https://"))
+                                        url = "https://$url"
+                                    val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    startActivity(myIntent)
                                 }
                             }
                         }
