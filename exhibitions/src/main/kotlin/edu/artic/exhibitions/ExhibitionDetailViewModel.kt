@@ -1,11 +1,9 @@
 package edu.artic.exhibitions
 
-import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticDataObjectDao
-import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -15,9 +13,7 @@ import javax.inject.Inject
 
 class ExhibitionDetailViewModel
 @Inject
-constructor(
-        private val exhibitionDao: ArticExhibitionDao,
-        dataObjectDao: ArticDataObjectDao)
+constructor(dataObjectDao: ArticDataObjectDao)
     : NavViewViewModel<ExhibitionDetailViewModel.NavigationEndpoint>() {
     sealed class NavigationEndpoint {
         class ShowOnMap(val exhibition: ArticExhibition) : NavigationEndpoint()
@@ -25,10 +21,10 @@ constructor(
     }
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
-    val title: Subject<String> = BehaviorSubject.createDefault("")
+    val title: Subject<String> = BehaviorSubject.createDefault("test")
     val metaData: Subject<String> = BehaviorSubject.createDefault("")
     val showOnMapButtonText: Subject<String> = BehaviorSubject.createDefault("Show on Map") // TODO: replace when special localizer is done
-    val BuyTicketsButtonText: Subject<String> = BehaviorSubject.createDefault("Buy Tickets")// TODO: replace when special localizer is done
+    val buyTicketsButtonText: Subject<String> = BehaviorSubject.createDefault("Buy Tickets")// TODO: replace when special localizer is done
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
 
@@ -45,14 +41,7 @@ constructor(
 
     fun setExhibitionExhibition(exhibition: ArticExhibition) {
         this.exhibition = exhibition
-
-        val exhibitionObservable = this.exhibition.asObservable()
-
-        exhibitionObservable
-                .filter { exhibition.legacy_image_mobile_url != null }
-                .map { exhibition.legacy_image_mobile_url!! }
-                .bindTo(imageUrl)
-                .disposedBy(disposeBag)
+        val exhibitionObservable = BehaviorSubject.createDefault(exhibition)
 
         exhibitionObservable
                 .map { it.title }
@@ -60,6 +49,16 @@ constructor(
                 .disposedBy(disposeBag)
 
         exhibitionObservable
+                .filter { exhibition.legacy_image_mobile_url != null }
+                .map { exhibition.legacy_image_mobile_url!! }
+
+                .bindTo(imageUrl)
+                .disposedBy(disposeBag)
+
+        exhibitionObservable
+                .doOnError {
+                    it.printStackTrace()
+                }
                 .map { it.aic_start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
                 .bindTo(metaData)
                 .disposedBy(disposeBag)
@@ -74,6 +73,7 @@ constructor(
                 .map { "Through ${it.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
                 .bindTo(throughDate)
                 .disposedBy(disposeBag)
+
     }
 
     fun onClickShowOnMap() {
