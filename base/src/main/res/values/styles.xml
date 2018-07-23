@@ -18,7 +18,7 @@
     <style name="BodyCtaTurquoise">
         <item name="android:fontFamily">@font/ideal_sans_semibold</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/keppel</item>
+        <item name="android:textColor">@color/sea</item>
         <item name="android:textSize">@dimen/textLink</item>
     </style>
 
@@ -32,7 +32,20 @@
         <item name="android:gravity">end</item>
     </style>
 
+    <style name="DetailTitle">
+        <item name="android:textSize">@dimen/textLarge</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:minLines">1</item>
+    </style>
+
     <style name="MetadataSmallWhite">
+        <item name="android:textSize">@dimen/textThirteen</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+    </style>
+
+    <style name="MetaDataFifteenWhite">
         <item name="android:textSize">@dimen/textThirteen</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">@font/ideal_sans_book</item>
