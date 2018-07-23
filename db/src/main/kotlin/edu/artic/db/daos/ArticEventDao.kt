@@ -18,4 +18,7 @@ interface ArticEventDao {
 
     @Query("select * from ArticEvent where start_at > :earliestTime order by start_at limit 6 ")
     fun getEventSummary(earliestTime: Long = System.currentTimeMillis()): Flowable<List<ArticEvent>>
+
+    @Query("select * from ArticEvent order by title")
+    fun getAllEvents(): Flowable<List<ArticEvent>>
 }

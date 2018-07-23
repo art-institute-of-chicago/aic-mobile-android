@@ -14,6 +14,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
+import edu.artic.events.AllEventsFragment
 import edu.artic.exhibitions.AllExhibitionsFragment
 import edu.artic.tours.AllToursFragment
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -101,6 +102,10 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllOnView() }
                 .disposedBy(disposeBag)
+        eventsLink.clicks()
+                .defaultThrottle()
+                .subscribe { viewModel.onClickSeeAllEvents() }
+                .disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: WelcomeViewModel) {
@@ -122,6 +127,14 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                         val ft = fm.beginTransaction()
                                         ft.replace(R.id.container, AllExhibitionsFragment())
                                         ft.addToBackStack("AllExhibitionsFragment")
+                                        ft.commit()
+                                    }
+                                }
+                                is WelcomeViewModel.NavigationEndpoint.SeeAllEvents -> {
+                                    fragmentManager?.let {fm ->
+                                        val ft = fm.beginTransaction()
+                                        ft.replace(R.id.container, AllEventsFragment())
+                                        ft.addToBackStack("AllEventsFragment")
                                         ft.commit()
                                     }
                                 }
