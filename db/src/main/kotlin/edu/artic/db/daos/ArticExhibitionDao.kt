@@ -21,4 +21,7 @@ interface ArticExhibitionDao {
 
     @Query("select * from ArticExhibition order by `order` limit 6")
     fun getExhibitionSummary(): Flowable<List<ArticExhibition>>
+
+    @Query("select * from ArticExhibition where id = :id")
+    fun getExhibitionById(id: Int) : Flowable<ArticExhibition>
 }
