@@ -1,8 +1,5 @@
 package edu.artic.welcome
 
-import android.graphics.Color
-import android.graphics.drawable.ClipDrawable.VERTICAL
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
@@ -23,7 +20,6 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -109,12 +105,12 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun setupNavigationBindings(viewModel: WelcomeViewModel) {
         viewModel.navigateTo
-                .subscribe {navigation ->
-                    when(navigation) {
+                .subscribe { navigation ->
+                    when (navigation) {
                         is Navigate.Forward -> {
-                            when(navigation.endpoint) {
+                            when (navigation.endpoint) {
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllTours -> {
-                                    fragmentManager?.let {fm ->
+                                    fragmentManager?.let { fm ->
                                         val ft = fm.beginTransaction()
                                         ft.replace(R.id.container, AllToursFragment())
                                         ft.addToBackStack("AllToursFragment")
@@ -122,7 +118,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                     }
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllOnView -> {
-                                    fragmentManager?.let {fm ->
+                                    fragmentManager?.let { fm ->
                                         val ft = fm.beginTransaction()
                                         ft.replace(R.id.container, AllExhibitionsFragment())
                                         ft.addToBackStack("AllExhibitionsFragment")
@@ -130,20 +126,19 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                     }
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllEvents -> {
-                                    fragmentManager?.let {fm ->
+                                    fragmentManager?.let { fm ->
                                         val ft = fm.beginTransaction()
                                         ft.replace(R.id.container, AllEventsFragment())
                                         ft.addToBackStack("AllEventsFragment")
                                         ft.commit()
                                     }
                                 }
-                                is WelcomeViewModel.NavigationEndpoint.TourDetail ->{
+                                is WelcomeViewModel.NavigationEndpoint.TourDetail -> {
 
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
-                                    val endpoint
-                                            = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
-                                    fragmentManager?.let {fm ->
+                                    val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
+                                    fragmentManager?.let { fm ->
                                         val ft = fm.beginTransaction()
                                         ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
                                         ft.addToBackStack("ExhibitionDetail")

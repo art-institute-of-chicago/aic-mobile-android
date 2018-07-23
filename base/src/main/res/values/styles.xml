@@ -8,6 +8,13 @@
         <item name="android:textSize">40sp</item>
     </style>
 
+    <style name="DetailToolbarExpandedTextAppearance" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@android:color/transparent</item>
+    </style>
+
     <style name="BodySansSerifBlackCentered" parent="TextAppearance.AppCompat.Large">
         <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:gravity">center</item>

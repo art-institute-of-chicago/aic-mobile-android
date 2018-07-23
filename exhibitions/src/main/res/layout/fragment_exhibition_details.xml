@@ -1,49 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greyText"
     android:fitsSystemWindows="true"
-    >
+    app:statusBarBackground="@android:color/transparent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleTextAppearance="@style/PageTitleLargeWhite"
-            app:expandedTitleGravity="bottom|center_horizontal"
+            app:titleEnabled="false"
+            app:expandedTitleTextAppearance="@style/DetailToolbarExpandedTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <ImageView
-                android:id="@+id/exhibitionImage"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="@null"
-                android:scaleType="centerInside"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/exhibitionName"
-                style="@style/DetailTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="@dimen/marginDouble"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/exhibitionImage"
-                tools:text="Flesh: Ivan Albright at the Art Institute of Chicago" />
+                <ImageView
+                    android:id="@+id/exhibitionImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter" />
+
+                <TextView
+                    android:id="@+id/expandedTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ideal_sans_book"
+                    android:layout_marginTop="@dimen/marginDouble"
+                    android:layout_marginStart="@dimen/marginDouble"
+                    android:layout_marginEnd="@dimen/marginDouble"
+                    android:textSize="21sp"
+                    android:maxLines="3"
+                    android:textColor="@color/white"
+                    />
+            </LinearLayout>
 
 
             <android.support.v7.widget.Toolbar
@@ -51,7 +56,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:titleTextColor="@color/white"/>
+                tools:title="test">
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="21sp"
+                    android:fontFamily="@font/ideal_sans_medium"
+                    android:alpha="0"
+                    android:lines="1"
+                    android:ellipsize="end"/>
+
+            </android.support.v7.widget.Toolbar>
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -59,14 +77,17 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        >
+        android:background="@color/greyText"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/greyText">
+
             <TextView
                 android:id="@+id/metaData"
                 style="@style/MetaDataFifteenWhite"
@@ -150,12 +171,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"
-                tools:text="Through August 5, 2018"
-                />
+                tools:text="Through August 5, 2018" />
         </android.support.constraint.ConstraintLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
 
-
-
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>
