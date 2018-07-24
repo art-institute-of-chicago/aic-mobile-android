@@ -9,7 +9,8 @@ dependencies {
     implementation project(':base')
     implementation project(':viewmodel')
     implementation project(':db')
-
+    implementation project(':navigation')
+    
     api libs.arch_runtime
     api libs.arch_extensions
     api libs.arch_rx

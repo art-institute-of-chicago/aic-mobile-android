@@ -1,10 +1,12 @@
-package edu.artic.base.utils
+package edu.artic.navigation
 
 import android.content.Context
 import android.content.Intent
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
 import edu.artic.base.R
+import edu.artic.base.utils.asDeepLinkIntent
+
 
 /**
  * {@link BottomNavigationView.OnNavigationItemSelectedListener} Implementation for app.
@@ -14,7 +16,7 @@ class NavigationSelectListener(val context: Context) : BottomNavigationView.OnNa
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_home -> {
-                val intent = Intent().fromUriString("edu.artic.home")
+                val intent = NavigationConstants.HOME.asDeepLinkIntent()
                 intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 context.startActivity(intent)
                 false
@@ -26,7 +28,7 @@ class NavigationSelectListener(val context: Context) : BottomNavigationView.OnNa
                 false
             }
             R.id.action_info -> {
-                val intent = Intent().fromUriString("edu.artic.info")
+                val intent = NavigationConstants.INFO.asDeepLinkIntent()
                 intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 context.startActivity(intent)
                 false

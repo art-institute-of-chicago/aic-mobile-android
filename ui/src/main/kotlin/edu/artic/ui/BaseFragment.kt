@@ -28,10 +28,11 @@ abstract class BaseFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    fun requireView() = view?: throw IllegalStateException("Fragment " + this + " view is not created yet.")
 
     override fun onResume() {
         super.onResume()
-        view!!.post { updateToolbar(view!!) }
+        requireView().post { updateToolbar(requireView()) }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

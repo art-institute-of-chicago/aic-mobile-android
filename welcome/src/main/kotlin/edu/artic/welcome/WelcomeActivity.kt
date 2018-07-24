@@ -2,9 +2,11 @@ package edu.artic.welcome
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Process
+import android.util.Log
 import androidx.navigation.Navigation
-import edu.artic.base.utils.NavigationSelectListener
 import edu.artic.base.utils.disableShiftMode
+import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
 
@@ -19,6 +21,7 @@ class WelcomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("pid", "${Process.myPid()}")
         if (intent?.extras?.getBoolean(EXRTA_QUIT) == true) {
             finish()
             return
@@ -35,6 +38,7 @@ class WelcomeActivity : BaseActivity() {
                 val intent = Intent(this, WelcomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.putExtra(EXRTA_QUIT, true)
+                Log.d("pid", "${Process.myPid()}")
                 startActivity(intent)
                 finish()
                 return
