@@ -80,7 +80,6 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                             .dontAnimate()
                             .dontTransform()
                     Glide.with(this)
-//                            .asBitmap()
                             .load(it)
                             .apply(options)
                             .listenerAnimateSharedTransaction(this, exhibitionImage)

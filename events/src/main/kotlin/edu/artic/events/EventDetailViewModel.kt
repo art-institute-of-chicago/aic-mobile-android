@@ -7,8 +7,9 @@ import edu.artic.db.models.ArticEvent
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import javax.inject.Inject
 
-class EventDetailViewModel : BaseViewModel() {
+class EventDetailViewModel @Inject constructor(): BaseViewModel() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val title: Subject<String> = BehaviorSubject.createDefault("test")
