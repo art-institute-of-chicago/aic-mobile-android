@@ -5,7 +5,7 @@
     <application>
         <activity
             android:name=".InfoActivity"
-            android:theme="@style/AppTheme.CustomToolbar">
+            android:theme="@style/AppTheme.CustomToolbar.Info">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
