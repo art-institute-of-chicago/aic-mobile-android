@@ -21,7 +21,6 @@ class WelcomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("pid", "${Process.myPid()}")
         if (intent?.extras?.getBoolean(EXRTA_QUIT) == true) {
             finish()
             return
@@ -38,7 +37,6 @@ class WelcomeActivity : BaseActivity() {
                 val intent = Intent(this, WelcomeActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.putExtra(EXRTA_QUIT, true)
-                Log.d("pid", "${Process.myPid()}")
                 startActivity(intent)
                 finish()
                 return
