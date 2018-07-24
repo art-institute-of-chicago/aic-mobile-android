@@ -20,36 +20,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="?attr/colorPrimary"
-            app:titleEnabled="false"
             app:expandedTitleTextAppearance="@style/DetailToolbarExpandedTextAppearance"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
 
-            <LinearLayout
+
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:animateLayoutChanges="true">
 
                 <ImageView
                     android:id="@+id/exhibitionImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:contentDescription="@null"
-                    android:scaleType="fitCenter" />
-
+                    app:layout_constraintDimensionRatio="H,1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
                 <TextView
                     android:id="@+id/expandedTitle"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/ideal_sans_book"
-                    android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginStart="@dimen/marginDouble"
+                    android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginEnd="@dimen/marginDouble"
-                    android:textSize="21sp"
+                    android:fontFamily="@font/ideal_sans_book"
                     android:maxLines="3"
                     android:textColor="@color/white"
+                    android:textSize="21sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/exhibitionImage"
                     />
-            </LinearLayout>
 
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -62,12 +68,12 @@
                     android:id="@+id/toolbarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="21sp"
-                    android:fontFamily="@font/ideal_sans_medium"
                     android:alpha="0"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/ideal_sans_medium"
                     android:lines="1"
-                    android:ellipsize="end"/>
+                    android:textColor="@color/white"
+                    android:textSize="21sp" />
 
             </android.support.v7.widget.Toolbar>
 
