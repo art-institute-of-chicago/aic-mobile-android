@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.CustomToolbar.Info">
+        <item name="colorPrimary">@color/brownishOrange</item>
+        <item name="colorPrimaryDark">@color/brownishOrange</item>
+        <item name="android:statusBarColor">@color/brownishOrange</item>
+    </style>
+</resources>

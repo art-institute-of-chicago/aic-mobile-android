@@ -12,14 +12,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:fitsSystemWindows="true"
         >
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:titleTextColor="@color/white"
-            android:fitsSystemWindows="true"
             />
 
     </android.support.design.widget.AppBarLayout>

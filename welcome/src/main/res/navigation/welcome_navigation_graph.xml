@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/welcome_navigation_graph"
+    app:startDestination="@id/welcomeFragment">
+
+    <include app:graph="@navigation/tour_navigation_graph" />
+    <include app:graph="@navigation/events_navigation_graph" />
+    <include app:graph="@navigation/exhibition_navigation_graph" />
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="edu.artic.welcome.WelcomeFragment"
+        android:label="WelcomeFragment">
+        <action
+            android:id="@+id/gotToAllToursAction"
+            app:destination="@id/tour_navigation_graph" />
+        <action
+            android:id="@+id/goToAllEventsAction"
+            app:destination="@id/events_navigation_graph" />
+        <action
+            android:id="@+id/goToAllExhibitionsAction"
+            app:destination="@id/exhibition_navigation_graph" />
+    </fragment>
+
+
+</navigation>
