@@ -21,9 +21,3 @@ fun Activity.setWindowFlag(bits: Int, on: Boolean) {
     }
     win.attributes = winParams
 }
-
-fun Activity.quitIntent(recipient: Class<*>): Intent {
-    val intent = Intent(this, recipient)
-    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-    return intent
-}
