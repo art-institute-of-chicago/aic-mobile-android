@@ -31,7 +31,7 @@
                 android:animateLayoutChanges="true">
 
                 <ImageView
-                    android:id="@+id/exhibitionImage"
+                    android:id="@+id/eventImage"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@null"
@@ -52,7 +52,7 @@
                     android:textSize="21sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/exhibitionImage" />
+                    app:layout_constraintTop_toBottomOf="@id/eventImage" />
 
             </android.support.constraint.ConstraintLayout>
 
