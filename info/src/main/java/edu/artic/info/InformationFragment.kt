@@ -21,12 +21,4 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_information
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        //TODO:: follow navigation pattern
-        goToMemberCard.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.toToFragment2))
-    }
-
-
 }

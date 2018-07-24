@@ -13,7 +13,7 @@ class InfoActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bottomNavigation.disableShiftMode(R.color.menu_color_list)
+        bottomNavigation.disableShiftMode(R.color.info_menu_color_list)
         bottomNavigation.selectedItemId = R.id.action_info
         bottomNavigation.setOnNavigationItemSelectedListener(NavigationSelectListener(this))
     }
