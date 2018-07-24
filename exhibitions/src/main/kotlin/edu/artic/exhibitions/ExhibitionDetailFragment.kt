@@ -17,7 +17,6 @@ import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_exhibition_details.*
-import kotlinx.android.synthetic.main.fragment_exhibition_details.view.*
 import timber.log.Timber
 import kotlin.reflect.KClass
 
