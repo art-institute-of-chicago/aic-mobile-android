@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyText"
+    android:fitsSystemWindows="true"
+    app:statusBarBackground="@android:color/transparent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleTextAppearance="@style/DetailToolbarExpandedTextAppearance"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
+
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true">
+
+                <ImageView
+                    android:id="@+id/exhibitionImage"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@null"
+                    app:layout_constraintDimensionRatio="H,1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/expandedTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginDouble"
+                    android:layout_marginTop="@dimen/marginDouble"
+                    android:layout_marginEnd="@dimen/marginDouble"
+                    android:fontFamily="@font/ideal_sans_book"
+                    android:maxLines="3"
+                    android:textColor="@color/white"
+                    android:textSize="21sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/exhibitionImage" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                tools:title="test">
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/ideal_sans_medium"
+                    android:lines="1"
+                    android:textColor="@color/white"
+                    android:textSize="21sp" />
+
+            </android.support.v7.widget.Toolbar>
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyText"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/greyText">
+
+            <TextView
+                android:id="@+id/metaData"
+                style="@style/MetaDataFifteenWhite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="June 30, 1:00pm" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:layout_marginRight="@dimen/marginDouble"
+                android:fontFamily="@font/amiri_regular"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/metaData"
+                tools:text="What’s in store to explore? Studio art-making, visits by a guest artist, or a gallery activity station? Where will the Artist’s Studio pop up next? Visit the Family Room on the day of your visit to discover what’s planned." />
+
+            <TextView
+                android:id="@+id/throughDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="@dimen/marginDouble"
+                android:fontFamily="@font/amiri_italic"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description"
+                tools:text="Through August 5, 2018" />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginRight="@dimen/marginDouble"
+                android:fontFamily="@font/amiri_italic"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/throughDate"
+                tools:text="Ryan learning center" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>
