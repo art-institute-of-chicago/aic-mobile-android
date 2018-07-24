@@ -1,11 +1,6 @@
 package edu.artic.info
 
-
-import android.os.Bundle
-import android.view.View
-import androidx.navigation.Navigation
 import edu.artic.viewmodel.BaseViewModelFragment
-import kotlinx.android.synthetic.main.fragment_information.*
 import kotlin.reflect.KClass
 
 
