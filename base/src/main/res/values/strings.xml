@@ -8,4 +8,6 @@
     <string name="stops">%s Stops</string>
     <string name="events" tools:ignore="ExtraTranslation">Events</string>
     <string name="through">Through %s</string>
+    <string name="infoPrompt">Access your memeber card, see museum hours, or update your app settings.</string>
+    <string name="accessMemberCard">Access Memeber Card</string>
 </resources>

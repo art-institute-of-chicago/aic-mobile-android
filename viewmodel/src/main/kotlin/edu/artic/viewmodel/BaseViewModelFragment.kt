@@ -1,8 +1,13 @@
 package edu.artic.viewmodel
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
+import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.view.View
+import android.view.WindowManager
+import edu.artic.base.utils.setWindowFlag
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.BaseFragment
 import javax.inject.Inject
@@ -15,8 +20,6 @@ import kotlin.reflect.KClass
 abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment() {
 
     protected abstract val viewModelClass: KClass<TViewModel>
-
-
     /**
      * @return True by default if we use fragment for view model provider. Otherwise we use the [BaseActivity]
      * * as where the [TViewModel] lives.
@@ -47,7 +50,7 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
     }
 
     val viewModel: TViewModel by viewModelLazy
-    var isViewJustCreated : Boolean = true
+    var isViewJustCreated: Boolean = true
     protected open fun getViewModelForClass(viewModelProvider: ViewModelProvider,
                                             kClass: KClass<TViewModel>): TViewModel =
             viewModelProvider.get(kClass.java)
@@ -61,11 +64,26 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
             viewModel.register(this)
             onRegisterViewModel(viewModel)
         }
+        if (hasTransparentStatusBar()) {
+            activity?.let {
+
+            }
+            activity?.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+            activity?.window?.statusBarColor = Color.TRANSPARENT
+        } else {
+            activity?.let {
+                it.window?.statusBarColor = ContextCompat.getColor(it, R.color.colorPrimary)
+            }
+        }
     }
+
+
+
+    protected open fun hasTransparentStatusBar(): Boolean = false
 
     override fun onResume() {
         super.onResume()
-        if(isViewJustCreated) {
+        if (isViewJustCreated) {
             setupBindings(viewModel)
         }
         setupNavigationBindings(viewModel)

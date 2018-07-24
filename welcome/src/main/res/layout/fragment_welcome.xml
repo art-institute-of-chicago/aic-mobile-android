@@ -41,8 +41,8 @@
                     style="@style/BodyCtaTurquoise"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/marginStandard"
                     android:layout_marginTop="@dimen/marginDouble"
+                    android:layout_marginBottom="@dimen/marginStandard"
                     android:text="@string/accessYourMemberCard" />
 
 
@@ -75,9 +75,9 @@
                 android:id="@+id/tourSummaryRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false" />
 
             <View
@@ -111,9 +111,9 @@
                 android:id="@+id/onViewRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false" />
 
             <View
@@ -147,9 +147,9 @@
                 android:id="@+id/eventsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
