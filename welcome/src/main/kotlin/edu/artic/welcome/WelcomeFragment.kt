@@ -115,22 +115,16 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                         Navigation.findNavController(it).navigate(R.id.gotToAllToursAction)
                                     }
                                 }
-//                                is WelcomeViewModel.NavigationEndpoint.SeeAllOnView -> {
-//                                    fragmentManager?.let {fm ->
-//                                        val ft = fm.beginTransaction()
-//                                        ft.replace(R.id.container, AllExhibitionsFragment())
-//                                        ft.addToBackStack("AllExhibitionsFragment")
-//                                        ft.commit()
-//                                    }
-//                                }
-//                                is WelcomeViewModel.NavigationEndpoint.SeeAllEvents -> {
-//                                    fragmentManager?.let {fm ->
-//                                        val ft = fm.beginTransaction()
-//                                        ft.replace(R.id.container, AllEventsFragment())
-//                                        ft.addToBackStack("AllEventsFragment")
-//                                        ft.commit()
-//                                    }
-//                                }
+                                is WelcomeViewModel.NavigationEndpoint.SeeAllOnView -> {
+                                    this.view?.let {
+                                        Navigation.findNavController(it).navigate(R.id.goToAllExhibitionsAction)
+                                    }
+                                }
+                                is WelcomeViewModel.NavigationEndpoint.SeeAllEvents -> {
+                                    this.view?.let {
+                                        Navigation.findNavController(it).navigate(R.id.goToAllEventsAction)
+                                    }
+                                }
                             }
                         }
                         is Navigate.Back -> {
