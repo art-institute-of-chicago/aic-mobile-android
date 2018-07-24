@@ -20,6 +20,8 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
+import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -138,9 +140,11 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
+                                    val view = onViewRecyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
                                     fragmentManager?.let { fm ->
                                         val ft = fm.beginTransaction()
                                         ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
+                                        ft.addSharedElement(view, view.transitionName)
                                         ft.addToBackStack("ExhibitionDetail")
                                         ft.commit()
                                     }

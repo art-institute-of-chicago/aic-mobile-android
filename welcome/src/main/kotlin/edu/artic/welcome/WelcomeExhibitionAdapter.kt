@@ -1,5 +1,6 @@
 package edu.artic.welcome
 
+import android.support.v4.view.ViewCompat
 import android.view.View
 import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
@@ -20,7 +21,7 @@ class OnViewAdapter(val welcomeViewModel: WelcomeViewModel) : AutoHolderRecycler
 
         clicks()
                 .defaultThrottle()
-                .subscribe { welcomeViewModel.onClickExhibition(item.exhibition) }
+                .subscribe { welcomeViewModel.onClickExhibition(position, item.exhibition) }
                 .disposedBy(item.viewDisposeBag)
 
         item.exhibitionTitleStream
@@ -40,6 +41,8 @@ class OnViewAdapter(val welcomeViewModel: WelcomeViewModel) : AutoHolderRecycler
                             .load(it)
                             .into(image)
                 }.disposedBy(item.viewDisposeBag)
+
+        this.image.transitionName = item.exhibition.title
     }
 
     override fun getLayoutResId(position: Int): Int {
