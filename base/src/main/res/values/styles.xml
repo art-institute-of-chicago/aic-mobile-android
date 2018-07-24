@@ -37,6 +37,7 @@
 
     <style name="SeeAll" parent="BodyCtaTurquoise">
         <item name="android:gravity">end</item>
+        <item name="android:padding">4dp</item>
     </style>
 
     <style name="DetailTitle">

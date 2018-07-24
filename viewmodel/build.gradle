@@ -3,6 +3,7 @@ apply plugin: 'kotlin-kapt'
 
 dependencies {
     implementation project(':ui')
+    implementation project(':base')
 
     implementation libs.rxHelper
 

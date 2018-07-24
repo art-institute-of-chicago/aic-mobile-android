@@ -8,6 +8,8 @@ dependencies {
 
     api libs.design_support
     implementation libs.glide
+    implementation libs.arch_navigation
+    implementation libs.arch_navigation_ui
     implementation project(':base')
     implementation libs.constraint_layout
     implementation project(':ui')

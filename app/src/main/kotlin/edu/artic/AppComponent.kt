@@ -7,7 +7,7 @@ import edu.artic.db.ApiModule
 import edu.artic.db.DBModule
 import edu.artic.events.EventsModule
 import edu.artic.exhibitions.ExhibitionsModule
-import edu.artic.main.MainModule
+import edu.artic.info.InfoModule
 import edu.artic.splash.SplashModule
 import edu.artic.tours.ToursModule
 import edu.artic.viewmodel.ViewModelModule
@@ -22,10 +22,10 @@ import javax.inject.Singleton
     ToursModule::class,
     ExhibitionsModule::class,
     EventsModule::class,
-    MainModule::class,
     ViewModelModule::class,
     ApiModule::class,
     DBModule::class,
+    InfoModule::class,
     AndroidSupportInjectionModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {
