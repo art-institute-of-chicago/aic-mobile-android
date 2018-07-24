@@ -29,18 +29,10 @@ constructor(dataObjectDao: ArticDataObjectDao)
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
 
     var ticketsUrl: String? = null
+
     var exhibition: ArticExhibition? = null
-
-    init {
-        dataObjectDao.getDataObject()
-                .filter { it.ticketsUrl != null }
-                .subscribe {
-                    ticketsUrl = it.ticketsUrl!!
-                }.disposedBy(disposeBag)
-    }
-
-    fun setExhibitionExhibition(exhibition: ArticExhibition) {
-        this.exhibition = exhibition
+    set(value) {
+        field = value
         val exhibitionObservable = BehaviorSubject.createDefault(exhibition)
 
         exhibitionObservable
@@ -49,8 +41,8 @@ constructor(dataObjectDao: ArticDataObjectDao)
                 .disposedBy(disposeBag)
 
         exhibitionObservable
-                .filter { exhibition.legacy_image_mobile_url != null }
-                .map { exhibition.legacy_image_mobile_url!! }
+                .filter { it.legacy_image_mobile_url != null }
+                .map { it.legacy_image_mobile_url!! }
 
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
@@ -73,7 +65,14 @@ constructor(dataObjectDao: ArticDataObjectDao)
                 .map { "Through ${it.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
                 .bindTo(throughDate)
                 .disposedBy(disposeBag)
+    }
 
+    init {
+        dataObjectDao.getDataObject()
+                .filter { it.ticketsUrl != null }
+                .subscribe {
+                    ticketsUrl = it.ticketsUrl!!
+                }.disposedBy(disposeBag)
     }
 
     fun onClickShowOnMap() {

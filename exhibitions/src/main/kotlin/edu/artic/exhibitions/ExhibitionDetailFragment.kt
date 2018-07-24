@@ -68,7 +68,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     }
 
     override fun onRegisterViewModel(viewModel: ExhibitionDetailViewModel) {
-        viewModel.setExhibitionExhibition(exhibition)
+        viewModel.exhibition = exhibition
     }
 
     override fun setupBindings(viewModel: ExhibitionDetailViewModel) {
