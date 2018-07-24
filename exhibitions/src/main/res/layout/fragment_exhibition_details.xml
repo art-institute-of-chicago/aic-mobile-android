@@ -114,42 +114,34 @@
                 app:layout_constraintGuide_percent=".5" />
 
             <Button
+                style="@style/DetailButton"
                 android:id="@+id/showOnMap"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginStandard"
-                android:background="@color/sea"
-                android:fontFamily="@font/ideal_sans_medium"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/centerGuide"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/metaData"
                 tools:text="Show on Map"
-
                 />
 
             <Button
+                style="@style/DetailButton"
                 android:id="@+id/buyTickets"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginStandard"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:background="@color/sea"
-                android:fontFamily="@font/ideal_sans_medium"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/centerGuide"
                 app:layout_constraintTop_toBottomOf="@id/metaData"
                 tools:text="Buy Tickets" />
 
             <TextView
+                style=""
                 android:id="@+id/description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
