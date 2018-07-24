@@ -1,22 +1,17 @@
 package edu.artic.exhibitions
 
-import android.animation.ValueAnimator
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.transition.TransitionInflater
 import android.view.View
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
+import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -88,48 +83,8 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 //                            .asBitmap()
                             .load(it)
                             .apply(options)
-                            .listener(object : RequestListener<Drawable> {
-                                override fun onLoadFailed(e: GlideException?,
-                                                          model: Any?,
-                                                          target: Target<Drawable>?,
-                                                          isFirstResource: Boolean)
-                                        : Boolean {
-                                    startPostponedEnterTransition()
-                                    return false
-                                }
-
-                                override fun onResourceReady(
-                                        resource: Drawable?,
-                                        model: Any?,
-                                        target: Target<Drawable>?,
-                                        dataSource: DataSource?,
-                                        isFirstResource: Boolean): Boolean {
-                                    resource?.let {
-                                        // Adds a nice animator to scale the container down to proper aspect ratio
-                                        val parentWidth = (exhibitionImage.parent as View).width
-                                        val newHeight = if (it.intrinsicWidth > it.intrinsicHeight) {
-                                            ((it.intrinsicHeight.toFloat() / it.intrinsicWidth.toFloat()) * parentWidth).toInt()
-                                        } else {
-                                            parentWidth
-                                        }
-                                        if (newHeight != parentWidth) {
-                                            val animator = ValueAnimator.ofInt(parentWidth, newHeight)
-                                            animator.addUpdateListener {
-                                                val params = exhibitionImage.layoutParams
-                                                params.width = parentWidth
-                                                params.height = it.animatedValue as Int
-                                                exhibitionImage.layoutParams = params
-                                            }
-                                            animator.duration = 500
-                                            animator.start()
-                                        }
-
-                                    }
-                                    startPostponedEnterTransition()
-                                    return false
-                                }
-
-                            }).into(exhibitionImage)
+                            .listenerAnimateSharedTransaction(this, exhibitionImage)
+                            .into(exhibitionImage)
                 }
                 .disposedBy(disposeBag)
 
