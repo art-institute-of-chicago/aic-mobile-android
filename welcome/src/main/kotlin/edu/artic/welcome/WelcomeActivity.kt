@@ -1,27 +1,25 @@
 package edu.artic.welcome
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.Process
-import android.util.Log
 import androidx.navigation.Navigation
 import edu.artic.base.utils.disableShiftMode
+import edu.artic.base.utils.quitIntent
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
 
 class WelcomeActivity : BaseActivity() {
 
+    companion object {
+        val EXTRA_QUIT: String = "EXTRA_QUIT"
+    }
+
     override val layoutResId: Int
         get() = R.layout.activity_welcome
 
-    companion object {
-        val EXRTA_QUIT: String = "Quit"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (intent?.extras?.getBoolean(EXRTA_QUIT) == true) {
+        if (intent?.extras?.getBoolean(EXTRA_QUIT) == true) {
             finish()
             return
         }
@@ -34,9 +32,8 @@ class WelcomeActivity : BaseActivity() {
         if (!isTaskRoot && supportFragmentManager.backStackEntryCount == 0) {
             val navigationController = Navigation.findNavController(this, R.id.container)
             if (navigationController.currentDestination.id == R.id.welcomeFragment) {
-                val intent = Intent(this, WelcomeActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                intent.putExtra(EXRTA_QUIT, true)
+                val intent = quitIntent(recipient = WelcomeActivity::class.java)
+                intent.putExtra(EXTRA_QUIT, true)
                 startActivity(intent)
                 finish()
                 return
