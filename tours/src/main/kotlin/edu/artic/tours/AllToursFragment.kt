@@ -26,9 +26,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        activity?.let {
-            it.window?.statusBarColor = ContextCompat.getColor(it, R.color.colorPrimary)
-        }
+        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,6 +36,10 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
+                /**
+                 * Since the ui requires the first item to be full screen width, and we are using a
+                 * grid layout manager, we need to add this span size for position
+                 */
                 return if (position == 0) 2 else 1
             }
 

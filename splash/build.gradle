@@ -6,6 +6,7 @@ dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
     implementation project(':ui')
+    implementation project(':base')
     implementation project(':viewmodel')
     implementation project(':db')
 
