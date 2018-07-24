@@ -24,4 +24,8 @@
     <color name="dark_grey">#333333</color>
     <color name="brownish_grey">#666666</color>
     <color name="greeny_blue">#37a8ab</color>
+    <color name="colorPrimary">#118084</color>
+    <color name="colorPrimaryDark">#118084</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="brownishOrange">#ce6b27</color>
 </resources>

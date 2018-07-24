@@ -1,12 +1,12 @@
-include ':app',
+include ':app', ':navigation',
         ':ui',
         ':viewmodel',
         ':base',
         ':splash',
         ':db',
         ':welcome',
-        ':main',
         ':adapter',
         ':tours',
         ':exhibitions',
-        ':events'
+        ':events',
+        ':info'

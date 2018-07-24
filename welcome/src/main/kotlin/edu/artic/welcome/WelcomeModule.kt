@@ -2,12 +2,14 @@ package edu.artic.welcome
 
 import android.arch.lifecycle.ViewModel
 import android.content.Context
+import android.content.Intent
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.viewmodel.ViewModelKey
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -25,6 +27,9 @@ abstract class WelcomeModule {
     @get:ContributesAndroidInjector
     abstract val welcomeFragment: WelcomeFragment
 
+    @get:ContributesAndroidInjector
+    abstract val welcomeActivity: WelcomeActivity
+
     @Module
     companion object {
 
@@ -34,7 +39,4 @@ abstract class WelcomeModule {
                 = WelcomePreferencesManager(context)
 
     }
-
-
-
 }

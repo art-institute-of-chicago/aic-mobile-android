@@ -11,11 +11,11 @@
         android:id="@+id/collapsing_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         app:contentScrim="?attr/colorPrimary"
-        app:expandedTitleTextAppearance="@style/PageTitleLargeWhite"
         app:expandedTitleGravity="bottom|center_horizontal"
+        app:expandedTitleTextAppearance="@style/PageTitleLargeWhite"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
 
         <ImageView
             android:id="@+id/expandedImage"
