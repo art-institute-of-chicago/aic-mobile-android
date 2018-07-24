@@ -1,6 +1,7 @@
 package edu.artic.tours
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
@@ -25,6 +26,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +36,11 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if(position == 0) 2 else 1
+                /**
+                 * Since the ui requires the first item to be full screen width, and we are using a
+                 * grid layout manager, we need to add this span size for position
+                 */
+                return if (position == 0) 2 else 1
             }
 
         }
