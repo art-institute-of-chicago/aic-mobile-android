@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="AppTheme.CustomToolbar">

@@ -3,7 +3,9 @@
     package="edu.artic.info">
 
     <application>
-        <activity android:name=".InfoActivity">
+        <activity
+            android:name=".InfoActivity"
+            android:theme="@style/AppTheme.CustomToolbar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -11,8 +13,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="artic"
-                    android:host="com.artic.info" />
+                    android:host="edu.artic.info"
+                    android:scheme="artic" />
             </intent-filter>
         </activity>
     </application>

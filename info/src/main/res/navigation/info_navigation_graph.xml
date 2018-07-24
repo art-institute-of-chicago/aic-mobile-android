@@ -9,5 +9,14 @@
         android:id="@+id/informationFragment"
         android:name="edu.artic.info.InformationFragment"
         android:label="fragment_information"
-        tools:layout="@layout/fragment_information" />
+        tools:layout="@layout/fragment_information" >
+        <action
+            android:id="@+id/toToFragment2"
+            app:destination="@id/infoFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/infoFragment2"
+        android:name="edu.artic.info.InfoFragment2"
+        android:label="fragment_info_fragment2"
+        tools:layout="@layout/fragment_info_fragment2" />
 </navigation>

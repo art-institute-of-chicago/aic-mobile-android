@@ -2,18 +2,30 @@ package edu.artic.info
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.navigation.Navigation
+import edu.artic.viewmodel.BaseViewModelFragment
+import kotlinx.android.synthetic.main.fragment_information.*
+import kotlin.reflect.KClass
 
 
-class InformationFragment : Fragment() {
+class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
+    override val viewModelClass: KClass<InformationViewModel>
+        get() = InformationViewModel::class
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_information, container, false)
+    override val title: String
+        get() = "Information"
+
+    override fun hasTransparentStatusBar(): Boolean = true
+
+    override val layoutResId: Int
+        get() = R.layout.fragment_information
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //TODO:: follow navigation pattern
+        goToMemberCard.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.toToFragment2))
     }
 
 
