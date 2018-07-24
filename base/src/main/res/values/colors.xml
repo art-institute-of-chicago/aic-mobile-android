@@ -11,5 +11,7 @@
     <color name="cloudyBlue">#cee0df</color>
     <color name="transparentInfoBarColor">#73000000</color>
     <color name="colorPrimary">#118084</color>
+    <color name="colorPrimaryDark">#118084</color>
+    <color name="colorAccent">#FF4081</color>
     <color name="brownishOrange">#ce6b27</color>
 </resources>
