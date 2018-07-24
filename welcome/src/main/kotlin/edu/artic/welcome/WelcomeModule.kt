@@ -38,10 +38,5 @@ abstract class WelcomeModule {
         fun provideWelcomePreferenceManager(context : Context) : WelcomePreferencesManager
                 = WelcomePreferencesManager(context)
 
-//        @JvmStatic
-//        @Provides @Named("welcome")
-//        fun welcomeIntent(context: Context): Intent {
-//            return Intent(context, WelcomeActivity::class.java)
-//        }
     }
 }
