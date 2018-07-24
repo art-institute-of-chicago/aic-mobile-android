@@ -8,6 +8,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
+import edu.artic.base.utils.AppBarHelper
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.db.models.ArticEvent
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -38,21 +39,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            val progress: Double = 1 - Math.abs(verticalOffset) / appBarLayout.totalScrollRange.toDouble()
-            if (progress <= .5) {
-                val diff = .5f - progress.toFloat()
-                if (diff <= .25f) {
-                    appBarLayout.toolbarTitle.alpha = 0f
-                    appBarLayout.expandedTitle.alpha = 1 - (diff / .25f)
-                } else {
-                    appBarLayout.expandedTitle.alpha = 0f
-                    appBarLayout.toolbarTitle.alpha = (diff / .25f) - 1f
-                }
-            } else {
-                appBarLayout.expandedTitle.alpha = 0f
-                appBarLayout.expandedTitle.alpha = 1f
-            }
-
+            AppBarHelper.updateDetailTitle(appBarLayout, verticalOffset, expandedTitle, toolbarTitle)
         }
         eventImage.transitionName = event.title
     }
