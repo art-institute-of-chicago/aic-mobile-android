@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
+import edu.artic.base.utils.setWindowFlag
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.BaseFragment
 import javax.inject.Inject
@@ -65,9 +66,10 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
         }
         if (hasTransparentStatusBar()) {
             activity?.let {
-                setWindowFlag(it, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-                it.window.statusBarColor = Color.TRANSPARENT
+
             }
+            activity?.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+            activity?.window?.statusBarColor = Color.TRANSPARENT
         } else {
             activity?.let {
                 it.window?.statusBarColor = ContextCompat.getColor(it, R.color.colorPrimary)
@@ -78,17 +80,6 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
 
 
     protected open fun hasTransparentStatusBar(): Boolean = false
-
-    private fun setWindowFlag(activity: Activity, bits: Int, on: Boolean) {
-        val win = activity.window
-        val winParams = win.attributes
-        if (on) {
-            winParams.flags = winParams.flags or bits
-        } else {
-            winParams.flags = winParams.flags and bits.inv()
-        }
-        win.attributes = winParams
-    }
 
     override fun onResume() {
         super.onResume()

@@ -17,4 +17,5 @@ dependencies {
     implementation libs.constraint_layout
     implementation project(':ui')
     implementation project(':viewmodel')
+    implementation project(':navigation')
 }

@@ -1,12 +1,11 @@
 package edu.artic.splash
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.base.utils.fromUriString
+import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -35,7 +34,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                         is Navigate.Forward -> {
                             when (it.endpoint) {
                                 is SplashViewModel.NavigationEndpoint.Welcome -> {
-                                    val intent = Intent().fromUriString("edu.artic.home")
+                                    val intent = NavigationConstants.HOME.asDeepLinkIntent()
                                     startActivity(intent)
                                     finish()
                                 }
