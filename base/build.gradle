@@ -6,9 +6,10 @@ dependencies {
     kapt libs.dagger_android_compiler
 
     implementation libs.glide
-    api libs.threeten
+    implementation libs.threeten
+    implementation libs.design_support
+
     api libs.kotlin
-    api libs.design_support
     api libs.dagger
     api libs.dagger_android
     api 'javax.annotation:jsr250-api:1.0'
