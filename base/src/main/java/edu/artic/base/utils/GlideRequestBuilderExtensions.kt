@@ -55,7 +55,7 @@ fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(fragment: Fragment
                 }
                 image.layoutParams = params
             }
-            animator.duration = 500
+            animator.duration = 750
             animator.start()
         }
 

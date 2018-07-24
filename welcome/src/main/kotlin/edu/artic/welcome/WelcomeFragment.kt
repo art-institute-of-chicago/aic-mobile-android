@@ -12,6 +12,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.events.AllEventsFragment
+import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.AllExhibitionsFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.tours.AllToursFragment
@@ -74,7 +75,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         /* Build event summary list*/
         val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         eventsRecyclerView.layoutManager = eventsLayoutManager
-        val eventsAdapter = WelcomeEventsAdapter()
+        val eventsAdapter = WelcomeEventsAdapter(viewModel)
         eventsRecyclerView.adapter = eventsAdapter
         viewModel.events.bindToMain(eventsAdapter.itemChanges()).disposedBy(disposeBag)
 
@@ -146,6 +147,17 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                         ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
                                         ft.addSharedElement(view, view.transitionName)
                                         ft.addToBackStack("ExhibitionDetail")
+                                        ft.commit()
+                                    }
+                                }
+                                is WelcomeViewModel.NavigationEndpoint.EventDetail -> {
+                                    val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.EventDetail
+                                    val view = eventsRecyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
+                                    fragmentManager?.let { fm ->
+                                        val ft = fm.beginTransaction()
+                                        ft.replace(R.id.container, EventDetailFragment.newInstance(endpoint.event))
+                                        ft.addSharedElement(view, view.transitionName)
+                                        ft.addToBackStack("EventDetail")
                                         ft.commit()
                                     }
                                 }
