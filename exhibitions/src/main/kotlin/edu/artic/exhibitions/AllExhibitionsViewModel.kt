@@ -6,11 +6,17 @@ import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitionDao) : BaseViewModel() {
+class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitionDao) : NavViewViewModel<AllExhibitionsViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint {
+        class ExhibitionDetails(val pos: Int, val exhibition: ArticExhibition) : NavigationEndpoint()
+    }
 
     val exhibitions: Subject<List<AllExhibitionsCellViewModel>> = BehaviorSubject.create()
 
@@ -27,9 +33,13 @@ class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitio
                 .disposedBy(disposeBag)
     }
 
+    fun onClickExhibition(position: Int, exhibition: ArticExhibition) {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ExhibitionDetails(position, exhibition)))
+    }
+
 }
 
-class AllExhibitionsCellViewModel(exhibition: ArticExhibition) : BaseViewModel() {
+class AllExhibitionsCellViewModel(val exhibition: ArticExhibition) : BaseViewModel() {
     val exhibitionTitle: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionDescription: Subject<String> = BehaviorSubject.createDefault(
             "Through ${exhibition.aic_end_at.format(
