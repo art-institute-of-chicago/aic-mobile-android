@@ -13,7 +13,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="com.artic.home"
+                    android:host="edu.artic.home"
                     android:scheme="artic" />
             </intent-filter>
         </activity>

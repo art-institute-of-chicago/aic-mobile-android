@@ -1,30 +1,28 @@
 package edu.artic.info
 
-import android.content.Context
-import android.content.Intent
+import android.arch.lifecycle.ViewModel
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import javax.inject.Named
+import dagger.multibindings.IntoMap
+import edu.artic.viewmodel.ViewModelKey
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 @Module
 abstract class InfoModule {
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(InformationViewModel::class)
+    abstract fun informationViewModel(informationViewModel: InformationViewModel): ViewModel
+
+    @get:ContributesAndroidInjector
     abstract val informationFragment: InformationFragment
 
     @get:ContributesAndroidInjector
     abstract val infoActivity: InfoActivity
 
-    @Module
-    companion object {
-
-//        @JvmStatic
-//        @Provides
-//        @Named(value = "info")
-//        fun infoIntent(context: Context): Intent {
-//            return Intent(context, InfoActivity::class.java)
-//        }
-    }
 }
