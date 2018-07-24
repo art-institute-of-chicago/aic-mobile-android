@@ -12,15 +12,11 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
-import edu.artic.events.AllEventsFragment
-import edu.artic.exhibitions.AllExhibitionsFragment
-import edu.artic.tours.AllToursFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -119,22 +115,22 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                         Navigation.findNavController(it).navigate(R.id.gotToAllToursAction)
                                     }
                                 }
-                                is WelcomeViewModel.NavigationEndpoint.SeeAllOnView -> {
-                                    fragmentManager?.let {fm ->
-                                        val ft = fm.beginTransaction()
-                                        ft.replace(R.id.container, AllExhibitionsFragment())
-                                        ft.addToBackStack("AllExhibitionsFragment")
-                                        ft.commit()
-                                    }
-                                }
-                                is WelcomeViewModel.NavigationEndpoint.SeeAllEvents -> {
-                                    fragmentManager?.let {fm ->
-                                        val ft = fm.beginTransaction()
-                                        ft.replace(R.id.container, AllEventsFragment())
-                                        ft.addToBackStack("AllEventsFragment")
-                                        ft.commit()
-                                    }
-                                }
+//                                is WelcomeViewModel.NavigationEndpoint.SeeAllOnView -> {
+//                                    fragmentManager?.let {fm ->
+//                                        val ft = fm.beginTransaction()
+//                                        ft.replace(R.id.container, AllExhibitionsFragment())
+//                                        ft.addToBackStack("AllExhibitionsFragment")
+//                                        ft.commit()
+//                                    }
+//                                }
+//                                is WelcomeViewModel.NavigationEndpoint.SeeAllEvents -> {
+//                                    fragmentManager?.let {fm ->
+//                                        val ft = fm.beginTransaction()
+//                                        ft.replace(R.id.container, AllEventsFragment())
+//                                        ft.addToBackStack("AllEventsFragment")
+//                                        ft.commit()
+//                                    }
+//                                }
                             }
                         }
                         is Navigate.Back -> {
