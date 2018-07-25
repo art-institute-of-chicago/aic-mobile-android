@@ -11,7 +11,10 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import com.fuzz.rx.DisposeBag
 import dagger.android.support.AndroidSupportInjection
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.setWindowFlag
+import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {
 
@@ -23,6 +26,11 @@ abstract class BaseFragment : Fragment() {
     @get:LayoutRes
     protected abstract val layoutResId: Int
 
+    abstract val screenCategory: ScreenCategoryName
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     val baseActivity: BaseActivity
         get() = activity as BaseActivity
 
@@ -32,6 +40,11 @@ abstract class BaseFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        analyticsTracker.reportScreenView(screenCategory)
     }
 
     private fun requireView() = view

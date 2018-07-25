@@ -8,6 +8,7 @@ dependencies {
     api libs.dagger
     api libs.dagger_android
     implementation project(":base")
+    api project(":analytics")
     api "com.android.support:appcompat-v7:${support_version}"
     api "com.android.support:support-v4:${support_version}"
     api "com.android.support:design:${support_version}"
