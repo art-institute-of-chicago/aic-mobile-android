@@ -31,7 +31,7 @@ inline fun RequestBuilder<Drawable>.listenerClean(
     })
 }
 
-fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(fragment: Fragment, image: ImageView) : RequestBuilder<Drawable> {
+fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(fragment: Fragment, image: ImageView): RequestBuilder<Drawable> {
     return listenerClean({
         fragment.startPostponedEnterTransition()
         return@listenerClean false
@@ -60,6 +60,29 @@ fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(fragment: Fragment
         }
 
         fragment.startPostponedEnterTransition()
+        return@listenerClean false
+    })
+}
+
+fun RequestBuilder<Drawable>.listenerSetHeight(image: ImageView): RequestBuilder<Drawable> {
+    return listenerClean({
+        return@listenerClean false
+
+    }, { resource: Drawable ->
+
+        // Adds a nice animator to scale the container down to proper aspect ratio
+        val parentWidth = (image.parent as View).width
+        val newHeight = if (resource.intrinsicWidth > resource.intrinsicHeight) {
+            ((resource.intrinsicHeight.toFloat() / resource.intrinsicWidth.toFloat()) * parentWidth).toInt()
+        } else {
+            parentWidth
+        }
+        val params = image.layoutParams
+        params.apply {
+            width = parentWidth
+            height = newHeight
+        }
+        image.layoutParams = params
         return@listenerClean false
     })
 }
