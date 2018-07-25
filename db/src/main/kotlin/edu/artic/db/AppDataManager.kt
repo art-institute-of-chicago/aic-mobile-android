@@ -149,8 +149,13 @@ class AppDataManager @Inject constructor(
                                             @Suppress("UNCHECKED_CAST")
                                             val list = (result as ArticResult<ArticExhibition>).data
                                             val mapExhibitionByID = list.associateBy { it.id.toString() }
-                                            cmsExhibitionList.forEach {
-                                                mapExhibitionByID[it.id]?.order = it.sort
+                                            cmsExhibitionList.forEach { exhibitionCMS ->
+                                                mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
+                                                // Override with exhibitions optional images from CMS, if available
+                                                exhibitionCMS.imageUrl?.let{
+                                                    mapExhibitionByID[exhibitionCMS.id]?.legacy_image_mobile_url = it
+                                                }
+                                                mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                             }
                                             appDatabase.exhibitionDao.updateExhibitions(list)
                                         }
