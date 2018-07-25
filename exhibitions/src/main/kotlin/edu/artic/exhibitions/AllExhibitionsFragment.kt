@@ -59,7 +59,7 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
                             view?.let {
                                 Navigation.findNavController(it)
                                         .navigate(
-                                                R.id.goToExhibitionDetails,
+                                                R.id.goToExhibitionDetailsAction,
                                                 ExhibitionDetailFragment.argBundle(
                                                         endpoint.exhibition
                                                 )

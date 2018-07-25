@@ -11,7 +11,7 @@
         android:name="edu.artic.exhibitions.AllExhibitionsFragment"
         android:label="AllExhibitionsFragment" >
         <action
-            android:id="@+id/goToExhibitionDetails"
+            android:id="@+id/goToExhibitionDetailsAction"
             app:destination="@id/exhibition_details_navigation_graph" />
     </fragment>
 </navigation>

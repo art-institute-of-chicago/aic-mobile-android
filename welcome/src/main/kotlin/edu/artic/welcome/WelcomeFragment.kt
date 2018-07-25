@@ -12,16 +12,13 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
-import edu.artic.events.AllEventsFragment
 import edu.artic.events.EventDetailFragment
-import edu.artic.exhibitions.AllExhibitionsFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
-import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -139,7 +136,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                     this.view?.let {
                                         Navigation.findNavController(it)
                                                 .navigate(
-                                                        R.id.goToExhibitionDetails,
+                                                        R.id.goToExhibitionDetailsAction,
                                                         ExhibitionDetailFragment.argBundle(
                                                                 endpoint.exhibition
                                                         )
@@ -151,7 +148,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                     this.view?.let {
                                         Navigation.findNavController(it)
                                                 .navigate(
-                                                        R.id.goToEventDetails,
+                                                        R.id.goToEventDetailsAction,
                                                         EventDetailFragment.argBundle(
                                                                 endpoint.event
                                                         )
