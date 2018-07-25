@@ -10,9 +10,8 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.base.utils.AppBarHelper
-import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.listenerSetHeight
+import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -35,7 +34,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            AppBarHelper.updateDetailTitle(appBarLayout, verticalOffset, expandedTitle, toolbarTitle)
+            appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
         }
     }
 
