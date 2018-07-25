@@ -5,11 +5,13 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.events.recyclerview.AllEventsItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_all_events.*
 import kotlin.reflect.KClass
 
@@ -33,7 +35,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         /* Build tour summary list*/
         val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
-        val toursAdapter = AllEventsAdapter()
+        val toursAdapter = AllEventsAdapter(viewModel)
         recyclerView.adapter = toursAdapter
         recyclerView.addItemDecoration(AllEventsItemDecoration(view.context, 2))
     }
@@ -42,6 +44,30 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         viewModel.events
                 .bindToMain((recyclerView.adapter as AllEventsAdapter).itemChanges())
                 .disposedBy(disposeBag)
+    }
+
+    override fun setupNavigationBindings(viewModel: AllEventsViewModel) {
+        viewModel.navigateTo.subscribe { navigation ->
+            when(navigation) {
+                is Navigate.Forward -> {
+                    val endpoint = navigation.endpoint
+                    when(endpoint) {
+                        is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
+                            view?.let {
+                                Navigation.findNavController(it)
+                                        .navigate(
+                                                R.id.goToEventDetails,
+                                                EventDetailFragment.argBundle(endpoint.event)
+                                        )
+                            }
+                        }
+                    }
+                }
+                is Navigate.Back -> {
+                    //Nothing in vm requires back
+                }
+            }
+        }.disposedBy(disposeBag)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
