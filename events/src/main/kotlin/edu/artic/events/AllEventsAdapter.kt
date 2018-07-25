@@ -14,14 +14,9 @@ import kotlinx.android.synthetic.main.cell_all_events_layout.view.*
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllEventsAdapter(val viewModel: AllEventsViewModel) : AutoHolderRecyclerViewAdapter<AllEventsCellViewModel>() {
+class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellViewModel>() {
 
     override fun View.onBindView(item: AllEventsCellViewModel, position: Int) {
-
-        clicks()
-                .defaultThrottle()
-                .subscribe { viewModel.onClickEvent(position, item.event) }
-                .disposedBy(item.viewDisposeBag)
 
         item.eventImageUrl.subscribe {
             Glide.with(context)

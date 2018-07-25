@@ -12,6 +12,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
+import edu.artic.adapter.itemSelectionsWithPosition
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -67,7 +68,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
 
         /* Build on view list*/
-        val adapter = OnViewAdapter(viewModel)
+        val adapter = OnViewAdapter()
         val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         onViewRecyclerView.layoutManager = exhibitionLayoutManager
         onViewRecyclerView.adapter = adapter
@@ -104,6 +105,20 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         eventsLink.clicks()
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllEvents() }
+                .disposedBy(disposeBag)
+
+        val eventsAdapter = eventsRecyclerView.adapter as WelcomeEventsAdapter
+        eventsAdapter.itemSelectionsWithPosition()
+                .subscribe { (pos, model) ->
+                    viewModel.onClickEvent(pos, model.event)
+                }
+                .disposedBy(disposeBag)
+
+        val onViewAdapter = onViewRecyclerView.adapter as OnViewAdapter
+        onViewAdapter.itemSelectionsWithPosition()
+                .subscribe { (pos, model) ->
+                    viewModel.onClickExhibition(pos, model.exhibition)
+                }
                 .disposedBy(disposeBag)
     }
 
