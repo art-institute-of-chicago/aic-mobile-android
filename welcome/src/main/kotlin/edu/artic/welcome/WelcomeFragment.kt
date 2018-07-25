@@ -12,6 +12,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -23,8 +24,12 @@ import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
+
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.Home
+
     override val title: String
-        get() = "Welcome"
+        get() = "Home"
 
     override val viewModelClass: KClass<WelcomeViewModel>
         get() = WelcomeViewModel::class
@@ -34,7 +39,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun hasTransparentStatusBar(): Boolean = true
 
-    override fun hasHomeAsUpEnabled(): Boolean  = false
+    override fun hasHomeAsUpEnabled(): Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

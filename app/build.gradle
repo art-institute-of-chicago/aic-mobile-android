@@ -32,6 +32,7 @@ dependencies {
     implementation project(':info')
     implementation project(':exhibitions')
     implementation project(':events')
+    implementation project(':analytics')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
