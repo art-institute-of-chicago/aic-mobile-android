@@ -12,5 +12,6 @@ import com.squareup.moshi.Json
 data class ArticExhibitionCMS(
         @Json(name = "exhibition_id") @PrimaryKey val id: String,
         @Json(name = "sort") val sort: Int,
-        @Json(name = "title") val title: String
+        @Json(name = "title") val title: String,
+        @Json(name = "image_url") val imageUrl: String?
 )
