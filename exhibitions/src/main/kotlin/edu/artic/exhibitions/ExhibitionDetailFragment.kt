@@ -12,6 +12,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.base.utils.AppBarHelper
 import edu.artic.base.utils.listenerAnimateSharedTransaction
+import edu.artic.base.utils.listenerSetHeight
 import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -31,20 +32,11 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     private val exhibition by lazy { arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION) }
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-////        postponeEnterTransition()
-////        sharedElementEnterTransition =
-////                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-//
-//    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             AppBarHelper.updateDetailTitle(appBarLayout, verticalOffset, expandedTitle, toolbarTitle)
         }
-//        exhibitionImage.transitionName = exhibition.title
     }
 
     override fun onRegisterViewModel(viewModel: ExhibitionDetailViewModel) {
@@ -67,7 +59,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                     Glide.with(this)
                             .load(it)
                             .apply(options)
-                            .listenerAnimateSharedTransaction(this, exhibitionImage)
+                            .listenerSetHeight(exhibitionImage)
                             .into(exhibitionImage)
                 }
                 .disposedBy(disposeBag)

@@ -24,6 +24,22 @@
                   <option name="y" value="12" />
                 </Point>
               </option>
+              <option name="myPositions">
+                <map>
+                  <entry key="exhibitionDetailFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                </map>
+              </option>
             </LayoutPositions>
           </value>
         </entry>
@@ -34,7 +50,26 @@
                 <map>
                   <entry key="allExhibitionsFragment">
                     <value>
-                      <LayoutPositions />
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="exhibition_details_navigation_graph">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-765" />
+                            <option name="y" value="-302" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
                     </value>
                   </entry>
                 </map>
@@ -47,44 +82,63 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
-                  <entry key="action_global_exhibitionDetailFragment">
-                    <value>
-                      <LayoutPositions />
-                    </value>
-                  </entry>
                   <entry key="events_navigation_graph">
                     <value>
-                      <LayoutPositions />
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="265" />
+                            <option name="y" value="426" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="exhibition_details_navigation_graph">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="265" />
+                            <option name="y" value="150" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
                     </value>
                   </entry>
                   <entry key="exhibition_navigation_graph">
                     <value>
-                      <LayoutPositions />
-                    </value>
-                  </entry>
-                  <entry key="navigation">
-                    <value>
                       <LayoutPositions>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="exhibitionDetailFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="265" />
+                            <option name="y" value="12" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>
                   </entry>
                   <entry key="tour_navigation_graph">
                     <value>
-                      <LayoutPositions />
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="265" />
+                            <option name="y" value="288" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
                     </value>
                   </entry>
                   <entry key="welcomeFragment">
                     <value>
                       <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="66" />
+                          </Point>
+                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="goToAllEventsAction">
@@ -93,6 +147,11 @@
                               </value>
                             </entry>
                             <entry key="goToAllExhibitionsAction">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="goToExhibitionDetails">
                               <value>
                                 <LayoutPositions />
                               </value>

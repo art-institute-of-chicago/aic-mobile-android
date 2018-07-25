@@ -5,6 +5,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
@@ -53,17 +54,17 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
 
                 is Navigate.Forward -> {
                     when(it.endpoint) {
-
                         is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {
-//                            val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
-//                            val view = recyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
-//                            fragmentManager?.let { fm ->
-//                                val ft = fm.beginTransaction()
-//                                ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
-//                                ft.addSharedElement(view, view.transitionName)
-//                                ft.addToBackStack("ExhibitionDetail")
-//                                ft.commit()
-//                            }
+                            val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
+                            view?.let {
+                                Navigation.findNavController(it)
+                                        .navigate(
+                                                R.id.goToExhibitionDetails,
+                                                ExhibitionDetailFragment.argBundle(
+                                                        endpoint.exhibition
+                                                )
+                                        )
+                            }
                         }
                     }
                 }

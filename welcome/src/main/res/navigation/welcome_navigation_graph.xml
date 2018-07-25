@@ -21,7 +21,7 @@
             app:destination="@id/events_navigation_graph" />
         <action
             android:id="@+id/goToAllExhibitionsAction"
-            app:destination="@id/exhibition_navigation_graph" />
+            app:destination="@id/all_exhibitions_navigation_graph" />
         <action
             android:id="@+id/goToExhibitionDetails"
             app:destination="@id/exhibition_details_navigation_graph" />
