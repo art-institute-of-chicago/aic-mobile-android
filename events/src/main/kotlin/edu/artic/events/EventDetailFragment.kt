@@ -2,7 +2,6 @@ package edu.artic.events
 
 import android.os.Build
 import android.os.Bundle
-import android.support.transition.TransitionInflater
 import android.text.Html
 import android.view.View
 import com.bumptech.glide.Glide
@@ -10,8 +9,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.base.utils.AppBarHelper
 import edu.artic.base.utils.listenerAnimateSharedTransaction
+import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticEvent
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_event_details.*
@@ -33,7 +32,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            AppBarHelper.updateDetailTitle(appBarLayout, verticalOffset, expandedTitle, toolbarTitle)
+            appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
         }
         eventImage.transitionName = event.title
     }
