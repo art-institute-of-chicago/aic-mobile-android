@@ -1,20 +1,32 @@
 package edu.artic
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
+import android.arch.lifecycle.ProcessLifecycleOwner
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.DaggerApplication
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import timber.log.Timber
+import javax.inject.Inject
 
-class ArticApp : DaggerApplication() {
+class ArticApp : DaggerApplication(), LifecycleObserver {
 
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
 
     override fun onCreate() {
         app = this
         super.onCreate()
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
         AndroidThreeTen.init(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
+
     override fun applicationInjector() = seedBuilder(DaggerAppComponent.builder())
 
     fun seedBuilder(builder: AppComponent.Builder): AppComponent {
@@ -23,6 +35,22 @@ class ArticApp : DaggerApplication() {
         ArticComponent.setInternalAppComponent(component)
         return component
     }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onAppOpened() {
+        analyticsTracker.reportEvent(ScreenCategoryName.App, AnalyticsAction.APP_OPENED)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun onAppBackgrounded() {
+        analyticsTracker.reportEvent(ScreenCategoryName.App, AnalyticsAction.APP_BACKGROUNDED)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun onAppForegrounded() {
+        analyticsTracker.reportEvent(ScreenCategoryName.App, AnalyticsAction.APP_FOREGROUNDED)
+    }
+
 
     companion object {
 
