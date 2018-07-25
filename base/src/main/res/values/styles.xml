@@ -139,40 +139,9 @@
         <item name="android:textColor">#ffffff</item>
     </style>
 
-    <style name="CardBodySerifGray">
-        <item name="android:textSize">14sp</item>
-        <item name="android:lineSpacingExtra">3sp</item>
-        <item name="android:textColor">#343434</item>
-    </style>
-
     <style name="BodySansSerifBlackLeft">
         <item name="android:textSize">17sp</item>
         <item name="android:lineSpacingExtra">7sp</item>
-        <item name="android:textColor">#343434</item>
-    </style>
-
-    <style name="CardBodyLargeItalic">
-        <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingExtra">0sp</item>
-        <item name="android:textColor">#343434</item>
-    </style>
-
-    <style name="CardTitleMediumBlack">
-        <item name="android:textSize">18sp</item>
-        <item name="android:lineSpacingExtra">2sp</item>
-        <item name="android:textColor">@color/dark_grey</item>
-    </style>
-
-    <style name="BodySansSerifBlackCentered">
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:textSize">17sp</item>
-        <item name="android:lineSpacingExtra">7sp</item>
-        <item name="android:textColor">#343434</item>
-    </style>
-
-    <style name="CardBodySmallItalic">
-        <item name="android:textSize">12sp</item>
-        <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:textColor">#343434</item>
     </style>
 
@@ -184,7 +153,7 @@
 
     <style name="SearchSectionHeadingGray">
         <item name="android:textSize">13sp</item>
-        <item name="android:textColor">@color/warm_grey</item>
+        <item name="android:textColor">@color/warmGrey</item>
     </style>
 
     <style name="SectionTitleWhite">

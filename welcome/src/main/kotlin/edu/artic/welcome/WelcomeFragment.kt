@@ -133,14 +133,17 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
-                                    val view = onViewRecyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
-                                    fragmentManager?.let { fm ->
-                                        val ft = fm.beginTransaction()
-                                        ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
-                                        ft.addSharedElement(view, view.transitionName)
-                                        ft.addToBackStack("ExhibitionDetail")
-                                        ft.commit()
+                                    this.view?.let {
+                                        Navigation.findNavController(it).navigate(R.id.goToExhibitionDetails, ExhibitionDetailFragment.argBundle(endpoint.exhibition))
                                     }
+//                                    val view = onViewRecyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
+//                                    fragmentManager?.let { fm ->
+//                                        val ft = fm.beginTransaction()
+//                                        ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
+//                                        ft.addSharedElement(view, view.transitionName)
+//                                        ft.addToBackStack("ExhibitionDetail")
+//                                        ft.commit()
+//                                    }
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.EventDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.EventDetail
