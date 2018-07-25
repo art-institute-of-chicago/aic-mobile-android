@@ -21,6 +21,15 @@
         <action
             android:id="@+id/goToAllExhibitionsAction"
             app:destination="@id/exhibition_navigation_graph" />
+        <action
+            android:id="@+id/goToExhibitionDetails"
+            app:destination="@id/exhibitionDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/exhibitionDetailFragment"
+        android:name="edu.artic.exhibitions.ExhibitionDetailFragment"
+        android:label="ExhibitionDetailFragment" >
+        <argument android:name="exhibition" />
     </fragment>
 
 

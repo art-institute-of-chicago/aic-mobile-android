@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/greyText"
+    android:fitsSystemWindows="true"
+    app:statusBarBackground="@android:color/transparent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleTextAppearance="@style/DetailToolbarExpandedTextAppearance"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
+
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true">
+
+                <ImageView
+                    android:id="@+id/exhibitionImage"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@null"
+                    app:layout_constraintDimensionRatio="H,1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    />
+                <TextView
+                    android:id="@+id/expandedTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginDouble"
+                    android:layout_marginTop="@dimen/marginDouble"
+                    android:layout_marginEnd="@dimen/marginDouble"
+                    android:fontFamily="@font/ideal_sans_book"
+                    android:maxLines="3"
+                    android:textColor="@color/white"
+                    android:textSize="21sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/exhibitionImage"
+                    />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                tools:title="test">
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/ideal_sans_medium"
+                    android:lines="1"
+                    android:textColor="@color/white"
+                    android:textSize="21sp" />
+
+            </android.support.v7.widget.Toolbar>
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyText"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/greyText">
+
+            <TextView
+                android:id="@+id/metaData"
+                style="@style/MetaDataFifteenWhite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="June 30, 1:00pm" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/centerGuide"
+                android:layout_width="@dimen/marginDouble"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent=".5" />
+
+            <Button
+                android:id="@+id/showOnMap"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="@dimen/marginStandard"
+                android:background="@color/sea"
+                android:fontFamily="@font/ideal_sans_medium"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@id/centerGuide"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/metaData"
+                tools:text="Show on Map"
+
+                />
+
+            <Button
+                android:id="@+id/buyTickets"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="@dimen/marginStandard"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:background="@color/sea"
+                android:fontFamily="@font/ideal_sans_medium"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/centerGuide"
+                app:layout_constraintTop_toBottomOf="@id/metaData"
+                tools:text="Buy Tickets" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="19dp"
+                android:layout_marginRight="@dimen/marginDouble"
+                android:fontFamily="@font/amiri_regular"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/showOnMap"
+                tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate." />
+
+            <TextView
+                android:id="@+id/throughDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="@dimen/marginDouble"
+                android:fontFamily="@font/amiri_regular"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description"
+                tools:text="Through August 5, 2018" />
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>

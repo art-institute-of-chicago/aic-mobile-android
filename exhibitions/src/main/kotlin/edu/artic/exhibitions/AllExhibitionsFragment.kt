@@ -10,6 +10,8 @@ import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.tours.recyclerview.AllExhibitionsItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
+import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 import kotlinx.android.synthetic.main.fragment_all_exhibitions.*
 import kotlin.reflect.KClass
 
@@ -33,8 +35,8 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
         /* Build tour summary list*/
         val layoutManager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
-        val toursAdapter = AllExhibitionsAdapter()
-        recyclerView.adapter = toursAdapter
+        val exhibitionsAdapter = AllExhibitionsAdapter(viewModel)
+        recyclerView.adapter = exhibitionsAdapter
         recyclerView.addItemDecoration(AllExhibitionsItemDecoration(view.context, 1))
 
     }
@@ -43,6 +45,33 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
         viewModel.exhibitions
                 .bindToMain((recyclerView.adapter as AllExhibitionsAdapter).itemChanges())
                 .disposedBy(disposeBag)
+    }
+
+    override fun setupNavigationBindings(viewModel: AllExhibitionsViewModel) {
+        viewModel.navigateTo.subscribe {
+            when (it) {
+
+                is Navigate.Forward -> {
+                    when(it.endpoint) {
+
+                        is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {
+                            val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
+                            val view = recyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
+                            fragmentManager?.let { fm ->
+                                val ft = fm.beginTransaction()
+                                ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
+                                ft.addSharedElement(view, view.transitionName)
+                                ft.addToBackStack("ExhibitionDetail")
+                                ft.commit()
+                            }
+                        }
+                    }
+                }
+                else -> {
+
+                }
+            }
+        }.disposedBy(disposeBag)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
