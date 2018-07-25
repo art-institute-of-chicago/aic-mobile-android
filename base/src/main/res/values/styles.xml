@@ -189,8 +189,9 @@
 
     <style name="BodySerifWhiteLeft">
         <item name="android:textSize">17sp</item>
-        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:lineSpacingExtra">-8sp</item>
         <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/amiri_regular</item>
     </style>
 
     <style name="ListItemTitle2White">
@@ -234,6 +235,7 @@
     <style name="MetadataMediumWhite">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
     </style>
 
 </resources>
