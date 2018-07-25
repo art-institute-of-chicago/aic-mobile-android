@@ -34,6 +34,8 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun hasTransparentStatusBar(): Boolean = true
 
+    override fun hasHomeAsUpEnabled(): Boolean  = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

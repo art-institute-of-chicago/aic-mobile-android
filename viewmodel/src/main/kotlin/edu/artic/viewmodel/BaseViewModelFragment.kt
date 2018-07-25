@@ -64,22 +64,7 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
             viewModel.register(this)
             onRegisterViewModel(viewModel)
         }
-        if (hasTransparentStatusBar()) {
-            activity?.let {
-
-            }
-            activity?.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-            activity?.window?.statusBarColor = Color.TRANSPARENT
-        } else {
-            activity?.let {
-                it.window?.statusBarColor = ContextCompat.getColor(it, R.color.colorPrimary)
-            }
-        }
     }
-
-
-
-    protected open fun hasTransparentStatusBar(): Boolean = false
 
     override fun onResume() {
         super.onResume()
