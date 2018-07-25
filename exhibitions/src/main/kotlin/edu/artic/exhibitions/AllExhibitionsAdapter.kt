@@ -13,14 +13,9 @@ import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllExhibitionsAdapter(private val viewModel: AllExhibitionsViewModel) : AutoHolderRecyclerViewAdapter<AllExhibitionsCellViewModel>() {
+class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellViewModel>() {
 
     override fun View.onBindView(item: AllExhibitionsCellViewModel, position: Int) {
-
-        clicks().subscribe{
-            viewModel.onClickExhibition(position, item.exhibition)
-        }.disposedBy(viewModel.viewDisposeBag)
-
         item.exhibitionImageUrl.subscribe {
             Glide.with(context)
                     .load(it)

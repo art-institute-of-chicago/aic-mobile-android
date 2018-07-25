@@ -9,6 +9,8 @@ import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
+import edu.artic.adapter.itemSelections
+import edu.artic.adapter.itemSelectionsWithPosition
 import edu.artic.tours.recyclerview.AllExhibitionsItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -36,16 +38,24 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
         /* Build tour summary list*/
         val layoutManager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
-        val exhibitionsAdapter = AllExhibitionsAdapter(viewModel)
+        val exhibitionsAdapter = AllExhibitionsAdapter()
         recyclerView.adapter = exhibitionsAdapter
         recyclerView.addItemDecoration(AllExhibitionsItemDecoration(view.context, 1))
 
     }
 
     override fun setupBindings(viewModel: AllExhibitionsViewModel) {
+        val adapter = (recyclerView.adapter as AllExhibitionsAdapter)
         viewModel.exhibitions
-                .bindToMain((recyclerView.adapter as AllExhibitionsAdapter).itemChanges())
+                .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
+
+        adapter.itemSelectionsWithPosition()
+                .subscribe {(pos, model) ->
+                    viewModel.onClickExhibition(pos, model.exhibition)
+                }.disposedBy(disposeBag)
+
+
     }
 
     override fun setupNavigationBindings(viewModel: AllExhibitionsViewModel) {
