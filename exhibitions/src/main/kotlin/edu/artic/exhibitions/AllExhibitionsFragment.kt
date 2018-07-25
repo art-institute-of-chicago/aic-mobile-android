@@ -55,15 +55,15 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
                     when(it.endpoint) {
 
                         is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {
-                            val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
-                            val view = recyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
-                            fragmentManager?.let { fm ->
-                                val ft = fm.beginTransaction()
-                                ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
-                                ft.addSharedElement(view, view.transitionName)
-                                ft.addToBackStack("ExhibitionDetail")
-                                ft.commit()
-                            }
+//                            val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
+//                            val view = recyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
+//                            fragmentManager?.let { fm ->
+//                                val ft = fm.beginTransaction()
+//                                ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
+//                                ft.addSharedElement(view, view.transitionName)
+//                                ft.addToBackStack("ExhibitionDetail")
+//                                ft.commit()
+//                            }
                         }
                     }
                 }

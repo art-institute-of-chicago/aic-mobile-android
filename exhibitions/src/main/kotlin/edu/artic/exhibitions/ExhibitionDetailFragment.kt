@@ -3,7 +3,6 @@ package edu.artic.exhibitions
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.transition.TransitionInflater
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -32,20 +31,20 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     private val exhibition by lazy { arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        postponeEnterTransition()
-        sharedElementEnterTransition =
-                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
-
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+////        postponeEnterTransition()
+////        sharedElementEnterTransition =
+////                TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+//
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             AppBarHelper.updateDetailTitle(appBarLayout, verticalOffset, expandedTitle, toolbarTitle)
         }
-        exhibitionImage.transitionName = exhibition.title
+//        exhibitionImage.transitionName = exhibition.title
     }
 
     override fun onRegisterViewModel(viewModel: ExhibitionDetailViewModel) {
@@ -131,12 +130,10 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     }
 
     companion object {
-        private val ARG_EXHIBITION = "${ExhibitionDetailFragment::class.java.simpleName}: exhibition"
+        private const val ARG_EXHIBITION = "exhibition"
 
-        fun newInstance(exhibition: ArticExhibition) = ExhibitionDetailFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(ARG_EXHIBITION, exhibition)
-            }
+        fun argBundle(exhibition: ArticExhibition) = Bundle().apply {
+            putParcelable(ARG_EXHIBITION, exhibition)
         }
     }
 }
