@@ -20,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleTextAppearance="@style/DetailToolbarExpandedTextAppearance"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
@@ -36,23 +35,17 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@null"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    />
+                    app:layout_constraintStart_toStartOf="parent" />
+
                 <TextView
                     android:id="@+id/expandedTitle"
+                    style="@style/DetailToolbarExpandedText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/marginDouble"
-                    android:layout_marginTop="@dimen/marginDouble"
-                    android:layout_marginEnd="@dimen/marginDouble"
-                    android:fontFamily="@font/ideal_sans_book"
                     android:maxLines="3"
-                    android:textColor="@color/white"
-                    android:textSize="21sp"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/exhibitionImage"
-                    />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/exhibitionImage" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -65,14 +58,11 @@
 
                 <TextView
                     android:id="@+id/toolbarTitle"
+                    style="@style/DetailToolbarText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:alpha="0"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/ideal_sans_medium"
-                    android:lines="1"
-                    android:textColor="@color/white"
-                    android:textSize="21sp" />
+                    android:lines="1" />
 
             </android.support.v7.widget.Toolbar>
 
@@ -113,8 +103,8 @@
                 app:layout_constraintGuide_percent=".5" />
 
             <Button
-                style="@style/DetailButton"
                 android:id="@+id/showOnMap"
+                style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
@@ -123,12 +113,11 @@
                 app:layout_constraintEnd_toStartOf="@id/centerGuide"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/metaData"
-                tools:text="Show on Map"
-                />
+                tools:text="Show on Map" />
 
             <Button
-                style="@style/DetailButton"
                 android:id="@+id/buyTickets"
+                style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginStandard"
@@ -140,31 +129,26 @@
                 tools:text="Buy Tickets" />
 
             <TextView
-                style=""
                 android:id="@+id/description"
+                style="@style/DetailsDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
                 android:layout_marginTop="19dp"
                 android:layout_marginRight="@dimen/marginDouble"
-                android:fontFamily="@font/amiri_regular"
-                android:textColor="@color/white"
-                android:textSize="17sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/showOnMap"
                 tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate." />
 
             <TextView
+                style="@style/DetailsDescription"
                 android:id="@+id/throughDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="@dimen/marginDouble"
-                android:fontFamily="@font/amiri_regular"
-                android:textColor="@color/white"
-                android:textSize="17sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"

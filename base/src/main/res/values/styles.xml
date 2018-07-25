@@ -27,11 +27,20 @@
         <item name="android:textSize">40sp</item>
     </style>
 
-    <style name="DetailToolbarExpandedTextAppearance" parent="TextAppearance.AppCompat.Title">
+    <style name="DetailToolbarExpandedText" >
         <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:gravity">start</item>
         <item name="android:textSize">21sp</item>
-        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginStart"> @dimen/marginDouble</item>
+        <item name="android:layout_marginTop"> @dimen/marginDouble</item>
+        <item name="android:layout_marginEnd"> @dimen/marginDouble</item>
+    </style>
+    <style name="DetailToolbarText" >
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="BodySansSerifBlackCentered" parent="TextAppearance.AppCompat.Large">
@@ -114,6 +123,10 @@
         <item name="android:textSize">@dimen/textMedium</item>
         <item name="android:textColor">@color/greyText</item>
         <item name="android:fontFamily">@font/amiri_regular</item>
+    </style>
+    
+    <style name="DetailsDescription" parent="CardBodySerifGray">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="divider">
