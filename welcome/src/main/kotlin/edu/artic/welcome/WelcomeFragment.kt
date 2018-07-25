@@ -37,6 +37,8 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun hasTransparentStatusBar(): Boolean = true
 
+    override fun hasHomeAsUpEnabled(): Boolean  = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -50,6 +52,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 val progress: Double = 1 - Math.abs(verticalOffset) / aBarLayout.totalScrollRange.toDouble()
                 appBar.searchIcon.background.alpha = (progress * 255).toInt()
                 appBar.flagIcon.drawable.alpha = (progress * 255).toInt()
+                appBar.expandedImage.background.alpha = (progress * 255).toInt()
             }
         }
 

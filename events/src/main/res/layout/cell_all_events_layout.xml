@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"
+        android:scaleType="matrix"
         tools:background="@color/sea" />
 
 
@@ -64,10 +64,11 @@
         android:layout_marginTop="9dp"
         android:ellipsize="end"
         android:lines="4"
+        android:lineSpacingMultiplier="0.8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spacerLine"
-        tools:text="Some testing text that will be tested here yadayadaydada" />
+        tools:text="The Art Institute of Chicago is delighted to present the upcoming symposium UNFIXED: Material Challenges in Contemporary Art. Bringing together internationally renowned scholars, museum professionals, and artists, this symposium stages an interdisciplinary ex" />
 
 
 </android.support.constraint.ConstraintLayout>

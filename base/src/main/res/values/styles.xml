@@ -18,13 +18,14 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="colorControlNormal">@color/white</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="PageTitleLargeWhite" parent="TextAppearance.AppCompat.Title">
-        <item name="android:fontFamily">@font/ideal_sans_medium</item>
-        <item name="android:letterSpacing">1.4</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">40sp</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:lineSpacingExtra">0sp</item>
     </style>
 
     <style name="DetailToolbarExpandedText" >
