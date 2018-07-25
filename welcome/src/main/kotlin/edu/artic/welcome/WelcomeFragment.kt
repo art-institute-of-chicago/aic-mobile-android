@@ -12,11 +12,13 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
+import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
+import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -48,25 +50,21 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             }
         }
 
-        context?.let {
-            /* Build tour summary list*/
-            val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-            tourSummaryRecyclerView.layoutManager = layoutManager
+        /* Build tour summary list*/
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        tourSummaryRecyclerView.layoutManager = layoutManager
 
-            val decoration = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
-            decoration.setDrawable(ContextCompat.getDrawable(it, R.drawable.space_decorator)!!)
-            tourSummaryRecyclerView.addItemDecoration(decoration)
+        val decoration = DividerItemDecoration(view.context, DividerItemDecoration.HORIZONTAL)
+        decoration.setDrawable(ContextCompat.getDrawable(view.context, R.drawable.space_decorator)!!)
+        tourSummaryRecyclerView.addItemDecoration(decoration)
 
-            val tourSummaryAdapter = WelcomeToursAdapter()
-            tourSummaryRecyclerView.adapter = tourSummaryAdapter
+        val tourSummaryAdapter = WelcomeToursAdapter()
+        tourSummaryRecyclerView.adapter = tourSummaryAdapter
 
-
-            viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
-        }
-
+        viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
 
         /* Build on view list*/
-        val adapter = OnViewAdapter()
+        val adapter = OnViewAdapter(viewModel)
         val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         onViewRecyclerView.layoutManager = exhibitionLayoutManager
         onViewRecyclerView.adapter = adapter
@@ -94,10 +92,12 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllTours() }
                 .disposedBy(disposeBag)
+
         onViewLink.clicks()
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllOnView() }
                 .disposedBy(disposeBag)
+
         eventsLink.clicks()
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllEvents() }
@@ -125,13 +125,26 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                         Navigation.findNavController(it).navigate(R.id.goToAllEventsAction)
                                     }
                                 }
+                                is WelcomeViewModel.NavigationEndpoint.TourDetail -> {
+
+                                }
+                                is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
+                                    val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
+                                    val view = onViewRecyclerView.findViewHolderForAdapterPosition(endpoint.pos).itemView.image
+                                    fragmentManager?.let { fm ->
+                                        val ft = fm.beginTransaction()
+                                        ft.replace(R.id.container, ExhibitionDetailFragment.newInstance(endpoint.exhibition))
+                                        ft.addSharedElement(view, view.transitionName)
+                                        ft.addToBackStack("ExhibitionDetail")
+                                        ft.commit()
+                                    }
+                                }
                             }
                         }
                         is Navigate.Back -> {
 
                         }
                     }
-
                 }
                 .disposedBy(navigationDisposeBag)
     }

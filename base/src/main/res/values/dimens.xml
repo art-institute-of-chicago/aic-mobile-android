@@ -29,5 +29,6 @@
 
     <dimen name="textThirteen">13sp</dimen>
     <dimen name="textSixteen">16sp</dimen>
+    <dimen name="textFifteen">15sp</dimen>
     <dimen name="textPrompt">24sp</dimen>
 </resources>

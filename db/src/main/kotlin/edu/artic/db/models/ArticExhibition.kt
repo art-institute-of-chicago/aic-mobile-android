@@ -2,10 +2,13 @@ package edu.artic.db.models
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.LocalDateTime
 
 @Entity
+@Parcelize
 data class ArticExhibition(
         @Json(name = "short_description") val short_description: String?,
         @Json(name = "aic_start_at") val aic_start_at: LocalDateTime,
@@ -17,4 +20,4 @@ data class ArticExhibition(
         @Json(name = "aic_end_at") val aic_end_at: LocalDateTime,
         @Json(name = "title") val title: String,
         var order: Int = -1
-)
+) : Parcelable

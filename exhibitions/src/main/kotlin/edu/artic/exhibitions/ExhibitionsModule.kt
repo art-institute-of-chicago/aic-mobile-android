@@ -1,4 +1,4 @@
-package edu.artic.tours
+package edu.artic.exhibitions
 
 import android.arch.lifecycle.ViewModel
 import dagger.Binds
@@ -7,6 +7,8 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.exhibitions.AllExhibitionsFragment
 import edu.artic.exhibitions.AllExhibitionsViewModel
+import edu.artic.exhibitions.ExhibitionDetailFragment
+import edu.artic.exhibitions.ExhibitionDetailViewModel
 import edu.artic.viewmodel.ViewModelKey
 
 /**
@@ -23,5 +25,15 @@ abstract class ExhibitionsModule {
 
     @get:ContributesAndroidInjector
     abstract val allExhibitionsFragment: AllExhibitionsFragment
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ExhibitionDetailViewModel::class)
+    abstract fun exhibitionDetailsViewModel(exhibitionDetailViewModel: ExhibitionDetailViewModel): ViewModel
+
+
+    @get:ContributesAndroidInjector
+    abstract val exhibitionDetailFragment: ExhibitionDetailFragment
 
 }

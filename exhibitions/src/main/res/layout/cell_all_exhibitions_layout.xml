@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:scaleType="centerCrop"
-        tools:background="@color/keppel" />
+        tools:background="@color/sea" />
 
 
     <TextView
