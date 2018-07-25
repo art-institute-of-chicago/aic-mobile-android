@@ -49,6 +49,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 val progress: Double = 1 - Math.abs(verticalOffset) / aBarLayout.totalScrollRange.toDouble()
                 appBar.searchIcon.background.alpha = (progress * 255).toInt()
                 appBar.flagIcon.drawable.alpha = (progress * 255).toInt()
+                appBar.expandedImage.background.alpha = (progress * 255).toInt()
             }
         }
 
