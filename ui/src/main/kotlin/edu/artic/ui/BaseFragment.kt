@@ -64,10 +64,10 @@ abstract class BaseFragment : Fragment() {
         }
 
         collapsingToolbar = view.findViewById(R.id.collapsingToolbar)
-        collapsingToolbar?.let {
+        collapsingToolbar?.apply {
             val toolbarTextTypeFace = ResourcesCompat.getFont(requireContext(), R.font.ideal_sans_medium)
-            it.setCollapsedTitleTypeface(toolbarTextTypeFace)
-            it.setExpandedTitleTypeface(toolbarTextTypeFace)
+            setCollapsedTitleTypeface(toolbarTextTypeFace)
+            setExpandedTitleTypeface(toolbarTextTypeFace)
         }
 
         if (hasTransparentStatusBar()) {
