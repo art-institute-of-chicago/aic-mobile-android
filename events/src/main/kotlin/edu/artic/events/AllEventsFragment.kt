@@ -56,7 +56,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
                             view?.let {
                                 Navigation.findNavController(it)
                                         .navigate(
-                                                R.id.goToEventDetails,
+                                                R.id.goToEventDetailsAction,
                                                 EventDetailFragment.argBundle(endpoint.event)
                                         )
                             }
