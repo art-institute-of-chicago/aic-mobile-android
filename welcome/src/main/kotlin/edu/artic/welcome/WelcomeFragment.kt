@@ -76,7 +76,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         /* Build event summary list*/
         val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         eventsRecyclerView.layoutManager = eventsLayoutManager
-        val eventsAdapter = WelcomeEventsAdapter(viewModel)
+        val eventsAdapter = WelcomeEventsAdapter()
         eventsRecyclerView.adapter = eventsAdapter
         viewModel.events.bindToMain(eventsAdapter.itemChanges()).disposedBy(disposeBag)
 
