@@ -29,7 +29,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         get() = ScreenCategoryName.Home
 
     override val title: String
-        get() = "Home"
+        get() = "Welcome"
 
     override val viewModelClass: KClass<WelcomeViewModel>
         get() = WelcomeViewModel::class
