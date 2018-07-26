@@ -188,7 +188,6 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:id="@+id/introCellBottomDivider"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/marginQuad"
                 android:background="@drawable/tour_detail_tour_stop_divider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
