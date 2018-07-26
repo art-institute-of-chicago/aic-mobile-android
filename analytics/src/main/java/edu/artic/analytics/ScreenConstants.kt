@@ -13,6 +13,7 @@ sealed class ScreenCategoryName(val screenName: String) {
     object LocationSettings : ScreenCategoryName("Location Settings")
     object Events : ScreenCategoryName("Events")
     object OnView : ScreenCategoryName("On View")
+    object Exhibition : ScreenCategoryName("Exhibition")
     object Tours : ScreenCategoryName("Tours")
     object Search : ScreenCategoryName("Search")
     object AudioPlayer : ScreenCategoryName("Audio Player")
@@ -53,7 +54,7 @@ object AnalyticsAction {
     const val tourStarted = "started"
     const val tourLeft = "left"
 
-    const val opened = "opened"            // tour, exhibition and event Categories
+    const val OPENED = "opened"            // tour, exhibition and event Categories
     const val linkPressed = "link_pressed"    // exhibition and event Categories
 
     const val mapShowExhibition = "show_exhibition"
@@ -81,6 +82,5 @@ object AnalyticsAction {
 }
 
 object AnalyticsLabel {
-    const val Chat = "Chat"
-    const val FirstMessage = "First Message"
+    const val Empty = ""
 }
