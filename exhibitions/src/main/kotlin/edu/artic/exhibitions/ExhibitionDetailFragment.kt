@@ -11,6 +11,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.getIntent
 import edu.artic.base.utils.listenerSetHeight
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticExhibition
@@ -107,10 +108,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
                                     val endpoint = it.endpoint as ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets
-                                    var url = endpoint.url
-                                    if (!url.startsWith("http://") && !url.startsWith("https://"))
-                                        url = "https://$url"
-                                    val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    val myIntent = endpoint.url.getIntent()
                                     startActivity(myIntent)
                                 }
                             }
