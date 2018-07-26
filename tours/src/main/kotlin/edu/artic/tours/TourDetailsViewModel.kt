@@ -69,7 +69,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                 .bindTo(intro)
                 .disposedBy(disposeBag)
 
-
+// TODO figure out how iOS does introductory object
 //        tourObservable
 //                .filter { it.selectorNumber != null }
 //                .map { it.selectorNumber!! }
