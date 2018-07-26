@@ -30,7 +30,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         class SeeAllTours : NavigationEndpoint()
         class SeeAllOnView : NavigationEndpoint()
         class SeeAllEvents : NavigationEndpoint()
-        class TourDetail(val tour: ArticTour) : NavigationEndpoint()
+        class TourDetail(val post: Int, val tour: ArticTour) : NavigationEndpoint()
         class ExhibitionDetail(val pos : Int, val exhibition: ArticExhibition) : NavigationEndpoint()
         class EventDetail(val pos : Int, val event: ArticEvent) : NavigationEndpoint()
     }
@@ -102,6 +102,10 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
     fun onClickSeeAllEvents() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllEvents()))
+    }
+
+    fun onClickTour(pos: Int, tour: ArticTour) {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.TourDetail(pos, tour)))
     }
 
     fun onClickExhibition(pos: Int, exhibition: ArticExhibition) {

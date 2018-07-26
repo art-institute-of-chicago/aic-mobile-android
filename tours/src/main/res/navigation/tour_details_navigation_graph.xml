@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tour_details_navigation_graph"
+    app:startDestination="@id/tourDetailsFragment">
+
+    <fragment
+        android:id="@+id/tourDetailsFragment"
+        android:name="edu.artic.tours.TourDetailsFragment"
+        android:label="TourDetailsFragment" >
+        <argument
+            android:name="tour"
+            app:argType="edu.artic.db.models.ArticTour"/>
+    </fragment>
+
+</navigation>
