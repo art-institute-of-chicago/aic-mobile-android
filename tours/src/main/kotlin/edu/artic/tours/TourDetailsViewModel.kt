@@ -89,7 +89,7 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
-    val stopNumber: Subject<String> = BehaviorSubject.create()
+    val stopNumber: Subject<String> = BehaviorSubject.createDefault("${tourStop.order+1}.")
 
     private val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
 
@@ -109,8 +109,5 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
                 .filter { it.galleryLocation != null }
                 .map { it.galleryLocation!! }
                 .bindTo(galleryText)
-        if (tourStop.order > 0) {
-            stopNumber.onNext("${tourStop.order}.")
-        }
     }
 }
