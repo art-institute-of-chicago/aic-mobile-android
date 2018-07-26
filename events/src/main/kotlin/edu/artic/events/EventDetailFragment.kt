@@ -106,8 +106,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                     when (it.endpoint) {
                         is EventDetailViewModel.NavigationEndpoint.LoadUrl -> {
                             val endpoint = it.endpoint as EventDetailViewModel.NavigationEndpoint.LoadUrl
-                            val myIntent = endpoint.url.asUrlViewIntent()
-                            startActivity(myIntent)
+                            startActivity(endpoint.url.asUrlViewIntent())
                         }
                     }
                 }
