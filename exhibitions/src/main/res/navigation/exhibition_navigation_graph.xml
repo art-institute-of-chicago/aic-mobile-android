@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/exhibition_navigation_graph"
+    android:id="@+id/all_exhibitions_navigation_graph"
     app:startDestination="@id/allExhibitionsFragment">
+
+    <include app:graph="@navigation/exhibition_details_navigation_graph" />
 
     <fragment
         android:id="@+id/allExhibitionsFragment"
         android:name="edu.artic.exhibitions.AllExhibitionsFragment"
-        android:label="AllExhibitionsFragment" />
+        android:label="AllExhibitionsFragment" >
+        <action
+            android:id="@+id/goToExhibitionDetailsAction"
+            app:destination="@id/exhibition_details_navigation_graph" />
+    </fragment>
 </navigation>

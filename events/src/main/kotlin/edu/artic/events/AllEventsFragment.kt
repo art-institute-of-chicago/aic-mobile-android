@@ -8,8 +8,10 @@ import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
+import edu.artic.adapter.itemSelectionsWithPosition
 import edu.artic.events.recyclerview.AllEventsItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_all_events.*
 import kotlin.reflect.KClass
 
@@ -39,9 +41,37 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
     }
 
     override fun setupBindings(viewModel: AllEventsViewModel) {
+        val adapter = recyclerView.adapter as AllEventsAdapter
         viewModel.events
-                .bindToMain((recyclerView.adapter as AllEventsAdapter).itemChanges())
+                .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
+        adapter.itemSelectionsWithPosition()
+                .subscribe { (pos, model) ->
+                    viewModel.onClickEvent(pos, model.event)
+                }
+                .disposedBy(disposeBag)
+
+    }
+
+    override fun setupNavigationBindings(viewModel: AllEventsViewModel) {
+        viewModel.navigateTo.subscribe { navigation ->
+            when (navigation) {
+                is Navigate.Forward -> {
+                    val endpoint = navigation.endpoint
+                    when (endpoint) {
+                        is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
+                            navController.navigate(
+                                    R.id.goToEventDetailsAction,
+                                    EventDetailFragment.argBundle(endpoint.event)
+                            )
+                        }
+                    }
+                }
+                is Navigate.Back -> {
+                    //Nothing in vm requires back
+                }
+            }
+        }.disposedBy(disposeBag)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
