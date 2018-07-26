@@ -28,7 +28,6 @@ class AnalyticsTrackerImpl(context: Context,
     override fun reportEvent(category: String, action: String, label: String) {
         tracker.send(HitBuilders.EventBuilder()
                 .setCategory(category)
-                .setCustomDimension(1, analyticsConfig.screenDimen)
                 .setAction(action)
                 .setLabel(label).build())
     }
@@ -38,7 +37,6 @@ class AnalyticsTrackerImpl(context: Context,
         tracker.apply {
             setScreenName(name)
             send(HitBuilders.ScreenViewBuilder()
-                    .setCustomDimension(1, analyticsConfig.screenDimen)
                     .build())
         }
     }
