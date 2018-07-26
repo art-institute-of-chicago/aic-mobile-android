@@ -1,11 +1,11 @@
 package edu.artic.tours
 
+import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -69,30 +69,24 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                 .bindTo(intro)
                 .disposedBy(disposeBag)
 
-// TODO figure out how iOS does introductory object
-//        tourObservable
-//                .filter { it.selectorNumber != null }
-//                .map { it.selectorNumber!! }
-//                .flatMapSingle { objectDao.getObjectBySelectorNumber(it) }
-//                .subscribe { }
-//
-//        Observables
-//                .combineLatest(
-//                        tourObservable.map { it.tourStops },
-//                        tourObservable
-//                                .filter { it.selectorNumber != null }
-//                                .map { it.selectorNumber!! }
-//                                .flatMapSingle { objectDao.getObjectBySelectorNumber(it) }
-//                ).map { (l, o) ->
-//
-//                }
-//                .map {
-//                    val list = mutableListOf<TourDetailsStopCellViewModel>()
-//                    it.forEach { tourStop ->
-//                        list.add(TourDetailsStopCellViewModel(tourStop, objectDao))
-//                    }
-//                    return@map list
-//                }
+        tourObservable
+                .map { it.title }
+                .bindTo(introductionTitleText)
+                .disposedBy(disposeBag)
+
+        tourObservable
+                .map { it.tourStops }
+                .map { it.first() }
+                .filter { it.objectId != null }
+                .map { it.objectId!! }
+                .subscribe {
+                    objectDao.getObjectById(it)
+                            .filter { it.galleryLocation != null }
+                            .map { it.galleryLocation!! }
+                            .bindTo(location)
+                            .disposedBy(disposeBag)
+                }.disposedBy(disposeBag)
+
 
         tourObservable
                 .map { it.tourStops }
