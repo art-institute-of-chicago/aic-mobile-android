@@ -48,9 +48,7 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
                 .disposedBy(item.viewDisposeBag)
 
         item.tourStops
-                .map {
-                    "$it ${context.getString(R.string.stops)}"
-                }.subscribe { stops.text = it.toString() }
+                .subscribe { stops.text = context.getString(R.string.stops, it) }
                 .disposedBy(item.viewDisposeBag)
 
         item.tourDuration
