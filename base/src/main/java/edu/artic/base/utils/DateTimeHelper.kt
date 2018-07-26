@@ -20,7 +20,7 @@ class DateTimeHelper {
                 .toFormatter()
 
         val HOME_EVENT_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
-                .appendPattern("MMMM dd,   hh:mm a")
+                .appendPattern("MMMM d   h:mm a")
                 .toFormatter()
     }
 }
