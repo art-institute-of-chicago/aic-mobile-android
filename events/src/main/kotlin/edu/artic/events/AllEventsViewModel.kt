@@ -2,6 +2,9 @@ package edu.artic.events
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.models.ArticEvent
@@ -13,7 +16,8 @@ import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 class AllEventsViewModel @Inject constructor(
-        eventsDao: ArticEventDao) : NavViewViewModel<AllEventsViewModel.NavigationEndpoint>() {
+        eventsDao: ArticEventDao, val analyticsTracker: AnalyticsTracker)
+    : NavViewViewModel<AllEventsViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         class EventDetail(val pos: Int, val event: ArticEvent) : NavigationEndpoint()
@@ -34,7 +38,8 @@ class AllEventsViewModel @Inject constructor(
                 .disposedBy(disposeBag)
     }
 
-    fun onClickEvent(pos : Int, event: ArticEvent) {
+    fun onClickEvent(pos: Int, event: ArticEvent) {
+        analyticsTracker.reportEvent(ScreenCategoryName.Events, AnalyticsAction.OPENED, event.title)
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.EventDetail(pos, event)))
     }
 
@@ -42,8 +47,9 @@ class AllEventsViewModel @Inject constructor(
 
 class AllEventsCellViewModel(val event: ArticEvent) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
-    val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description ?: "")
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image?: "")
+    val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description
+            ?: "")
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image ?: "")
     //TODO: possible split this into 2 fields
     val eventDateTime: Subject<String> = BehaviorSubject.createDefault(event.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER))
 }

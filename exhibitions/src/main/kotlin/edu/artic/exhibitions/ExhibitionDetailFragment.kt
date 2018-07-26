@@ -10,6 +10,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.listenerSetHeight
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticExhibition
@@ -21,6 +22,9 @@ import kotlin.reflect.KClass
 
 
 class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel>() {
+
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.OnViewDetails
 
     override val viewModelClass: KClass<ExhibitionDetailViewModel>
         get() = ExhibitionDetailViewModel::class

@@ -1,10 +1,15 @@
 package edu.artic.info
 
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlin.reflect.KClass
 
 
 class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
+
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.Information
+
     override val viewModelClass: KClass<InformationViewModel>
         get() = InformationViewModel::class
 
