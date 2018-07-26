@@ -12,6 +12,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fromHtml
+import edu.artic.base.utils.getIntent
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticEvent
@@ -107,10 +108,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                     when (it.endpoint) {
                         is EventDetailViewModel.NavigationEndpoint.LoadUrl -> {
                             val endpoint = it.endpoint as EventDetailViewModel.NavigationEndpoint.LoadUrl
-                            var url = endpoint.url
-                            if (!url.startsWith("http://") && !url.startsWith("https://"))
-                                url = "https://$url"
-                            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            val myIntent = endpoint.url.getIntent()
                             startActivity(myIntent)
                         }
                     }
