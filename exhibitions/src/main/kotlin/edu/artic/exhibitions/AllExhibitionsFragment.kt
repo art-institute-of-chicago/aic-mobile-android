@@ -8,6 +8,7 @@ import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.adapter.itemSelectionsWithPosition
 import edu.artic.tours.recyclerview.AllExhibitionsItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -16,6 +17,9 @@ import kotlinx.android.synthetic.main.fragment_all_exhibitions.*
 import kotlin.reflect.KClass
 
 class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() {
+
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.OnView
 
     override val viewModelClass: KClass<AllExhibitionsViewModel>
         get() = AllExhibitionsViewModel::class
