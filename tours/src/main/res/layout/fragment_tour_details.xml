@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/greyText"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -18,23 +20,25 @@
             android:layout_height="wrap_content"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:fitsSystemWindows="true"
             app:titleEnabled="false">
 
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true">
+                android:fitsSystemWindows="true">
 
                 <ImageView
-                    android:id="@+id/exhibitionImage"
+                    android:id="@+id/tourImage"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:contentDescription="@null"
                     android:scaleType="matrix"
                     app:layout_constraintDimensionRatio="H, 375:220"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:fitsSystemWindows="true"/>
 
                 <TextView
                     android:id="@+id/expandedTitle"
@@ -44,7 +48,7 @@
                     android:maxLines="3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/exhibitionImage" />
+                    app:layout_constraintTop_toBottomOf="@id/tourImage" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -73,7 +77,9 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/darkGrey">
+        android:background="@color/darkGrey"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -126,8 +132,8 @@
                 app:layout_constraintTop_toBottomOf="@id/languageSelector">
 
                 <TextView
-                    style="@style/DetailButton"
                     android:id="@+id/startTourButtonText"
+                    style="@style/DetailButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -136,7 +142,6 @@
                     tools:text="Start Tour" />
 
             </FrameLayout>
-
 
             <TextView
                 android:id="@+id/description"
@@ -149,16 +154,35 @@
                 app:layout_constraintTop_toBottomOf="@id/startTourButton"
                 tools:text="Discover the stories behind some of the museum's most iconic artworks.
 Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La Grande Jatte" />
+            <TextView
+                android:id="@+id/intro"
+                style="@style/BodySerifWhiteLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginStandard"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description"
+                tools:text="Discover the stories behind some of the museum's most iconic artworks.
+Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La Grande Jatte" />
+
+            <View
+                android:id="@+id/tourStopsTopDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/marginQuad"
+                android:background="@drawable/tour_detail_tour_stop_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description"
-                android:layout_marginTop="@dimen/marginQuad"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tourStopsTopDivider" />
 
         </android.support.constraint.ConstraintLayout>
 

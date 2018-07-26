@@ -29,6 +29,8 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     override val title: String
         get() = ""
 
+    override fun hasTransparentStatusBar() = true
+
     private val exhibition by lazy { arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
