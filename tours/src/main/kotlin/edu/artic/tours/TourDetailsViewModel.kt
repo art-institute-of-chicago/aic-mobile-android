@@ -19,6 +19,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
     //TODO: langaugeSelection
     val startTourButtonText: Subject<String> = BehaviorSubject.createDefault("Start Tour")
     val description: Subject<String> = BehaviorSubject.create()
+    val intro: Subject<String> = BehaviorSubject.create()
     val stops: Subject<List<TourDetailsStopCellViewModel>> = BehaviorSubject.create()
 
     private val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
@@ -53,9 +54,16 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                 .disposedBy(disposeBag)
 
         tourObservable
-                .filter { it.descriptionHtml != null }
-                .map { it.descriptionHtml!! }
+                .filter { it.description != null }
+                .map { it.description!! }
                 .bindTo(description)
+                .disposedBy(disposeBag)
+
+        tourObservable
+                .filter { it.intro != null }
+                .map { it.intro!! }
+                .bindTo(intro)
+                .disposedBy(disposeBag)
 
 
         tourObservable
@@ -81,7 +89,7 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
-    val stopNumber: Subject<String> = BehaviorSubject.createDefault(tourStop.order.toString())
+    val stopNumber: Subject<String> = BehaviorSubject.create()
 
     private val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
 
@@ -101,5 +109,8 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
                 .filter { it.galleryLocation != null }
                 .map { it.galleryLocation!! }
                 .bindTo(galleryText)
+        if (tourStop.order > 0) {
+            stopNumber.onNext("${tourStop.order}.")
+        }
     }
 }
