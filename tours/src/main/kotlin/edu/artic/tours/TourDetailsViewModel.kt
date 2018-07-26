@@ -5,6 +5,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -59,6 +60,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
 
         tourObservable
                 .map { it.tourStops }
+                .observeOn(Schedulers.io())
                 .map {
                     val list = mutableListOf<TourDetailsStopCellViewModel>()
                     it.forEach { tourStop ->

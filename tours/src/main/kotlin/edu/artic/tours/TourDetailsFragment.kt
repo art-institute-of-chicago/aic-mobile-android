@@ -41,8 +41,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         /* Build tour summary list*/
         val layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
-        val toursAdapter = TourDetailsStopAdapter()
-        recyclerView.adapter = toursAdapter
+        val tourStopAdapter = TourDetailsStopAdapter()
+        recyclerView.adapter = tourStopAdapter
         val decoration = DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL)
         ContextCompat.getDrawable(view.context, R.drawable.tour_detail_tour_stop_divider)?.let {
             decoration.setDrawable(it)
@@ -70,8 +70,13 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .bindToMain(startTourButtonText.text())
                 .disposedBy(disposeBag)
 
-
         startTourButton.clicks().subscribe { viewModel.onClickStartTour() }.disposedBy(disposeBag)
+
+        val adapter = recyclerView.adapter as TourDetailsStopAdapter
+
+        viewModel.stops
+                .bindToMain(adapter.itemChanges())
+                .disposedBy(disposeBag)
 
     }
 

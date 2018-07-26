@@ -14,6 +14,7 @@ import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemSelectionsWithPosition
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
+import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
@@ -119,6 +120,14 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     viewModel.onClickExhibition(pos, model.exhibition)
                 }
                 .disposedBy(disposeBag)
+
+
+        val toursAdapter = tourSummaryRecyclerView.adapter as WelcomeToursAdapter
+        toursAdapter.itemSelectionsWithPosition()
+                .subscribe { (pos, model) ->
+                    viewModel.onClickTour(pos, model.tour)
+                }
+                .disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: WelcomeViewModel) {
@@ -128,7 +137,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                         is Navigate.Forward -> {
                             when (navigation.endpoint) {
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllTours -> {
-                                    navController.navigate(R.id.gotToAllToursAction)
+                                    navController.navigate(R.id.goToAllToursAction)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllOnView -> {
                                     navController.navigate(R.id.goToAllExhibitionsAction)
@@ -137,14 +146,21 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                     navController.navigate(R.id.goToAllEventsAction)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.TourDetail -> {
-
+                                    val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.TourDetail
+                                    navController
+                                            .navigate(
+                                                    R.id.goToTourDetailsAction,
+                                                    TourDetailsFragment.argsBundle(
+                                                            endpoint.tour
+                                                    )
+                                            )
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
                                     navController
                                             .navigate(
                                                     R.id.goToExhibitionDetailsAction,
-                                                    ExhibitionDetailFragment.argBundle(
+                                                    ExhibitionDetailFragment.argsBundle(
                                                             endpoint.exhibition
                                                     )
                                             )
@@ -154,7 +170,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                     navController
                                             .navigate(
                                                     R.id.goToEventDetailsAction,
-                                                    EventDetailFragment.argBundle(
+                                                    EventDetailFragment.argsBundle(
                                                             endpoint.event
                                                     )
                                             )
