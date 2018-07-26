@@ -15,12 +15,8 @@ import kotlinx.android.synthetic.main.welcome_event_cell_layout.view.*
  * @author Sameer Dhakal (Fuzz)
  */
 
-class WelcomeEventsAdapter(private val viewModel: WelcomeViewModel) : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewModel>() {
+class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewModel>() {
     override fun View.onBindView(item: WelcomeEventCellViewModel, position: Int) {
-        clicks()
-                .defaultThrottle()
-                .subscribe { viewModel.onClickEvent(position, item.event) }
-                .disposedBy(item.viewDisposeBag)
 
         item.eventTitle
                 .bindToMain(title.text())
