@@ -81,6 +81,10 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
         viewModel.location
                 .bindToMain(location.text())
                 .disposedBy(disposeBag)
+
+        viewModel.registerTodayText
+                .bindToMain(registerToday.text())
+                .disposedBy(disposeBag)
     }
 
     companion object {

@@ -95,6 +95,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="June 30, 1:00pm" />
 
+            <Button
+                android:id="@+id/registerToday"
+                style="@style/DetailButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/marginStandard"
+                android:padding="@dimen/marginStandard"
+                android:drawableStart="@drawable/ic_ticket"
+                android:layout_marginStart="@dimen/marginStandard"
+                android:layout_marginTop="@dimen/marginStandard"
+                android:layout_marginEnd="@dimen/marginDouble"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/metaData"
+                tools:text="Buy Tickets" />
+
             <TextView
                 android:id="@+id/description"
                 style="@style/DetailsDescription"
@@ -105,12 +121,12 @@
                 android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/metaData"
+                app:layout_constraintTop_toBottomOf="@id/registerToday"
                 tools:text="What’s in store to explore? Studio art-making, visits by a guest artist, or a gallery activity station? Where will the Artist’s Studio pop up next? Visit the Family Room on the day of your visit to discover what’s planned." />
 
             <TextView
                 android:id="@+id/throughDate"
-                style="@style/DetailsDescription"
+                style="@style/DescriptionDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
@@ -123,7 +139,6 @@
 
             <TextView
                 android:id="@+id/location"
-
                 style="@style/DetailsDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
