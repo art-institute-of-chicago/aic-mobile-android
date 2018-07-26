@@ -69,10 +69,6 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 }
                 .disposedBy(disposeBag)
 
-        viewModel.metaData
-                .bindToMain(metaData.text())
-                .disposedBy(disposeBag)
-
         viewModel.description
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)

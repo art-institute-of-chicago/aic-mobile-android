@@ -9,7 +9,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center">
 
         <ImageView
@@ -29,22 +29,24 @@
 
         <TextView
             android:id="@+id/date"
+            style="@style/MetadataSmallWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/marginStandard"
             android:gravity="center"
             android:textColor="@color/white"
-            style="@style/MetadataSmallWhite"
             app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"
             tools:text="5 stops" />
 
         <TextView
             android:id="@+id/title"
+            style="@style/CardTitleLargeBlack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginStandard"
-            style="@style/CardTitleLargeBlack"
+            android:ellipsize="end"
+            android:maxLines="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/infoBar"
             tools:text="The Essential Tour" />
@@ -52,13 +54,15 @@
 
         <TextView
             android:id="@+id/description"
+            style="@style/CardBodySerifGray"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/CardBodySerifGray"
-            app:layout_constraintStart_toStartOf="parent"
+            android:ellipsize="end"
             android:lineSpacingMultiplier="0.8"
+            android:lines="3"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="Event description details  " />
+            tools:text="Event description details  Event description details  Event description details  Event description details  Event description details  Event description details  " />
 
     </android.support.constraint.ConstraintLayout>
 
