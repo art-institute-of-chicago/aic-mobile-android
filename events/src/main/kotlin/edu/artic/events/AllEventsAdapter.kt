@@ -8,6 +8,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import edu.artic.adapter.BaseViewHolder
 import kotlinx.android.synthetic.main.cell_all_events_layout.view.*
 
 /**
@@ -36,6 +37,14 @@ class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellViewModel>()
                 .bindToMain(dateTime.text())
                 .disposedBy(item.viewDisposeBag)
 
+    }
+
+    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
+        super.onItemViewDetachedFromWindow(holder, position)
+        getItem(position).apply {
+            cleanup()
+            onCleared()
+        }
     }
 
     override fun getLayoutResId(position: Int): Int {
