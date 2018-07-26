@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -35,7 +34,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun hasTransparentStatusBar(): Boolean = true
 
-    override fun hasHomeAsUpEnabled(): Boolean  = false
+    override fun hasHomeAsUpEnabled(): Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -129,46 +128,36 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                         is Navigate.Forward -> {
                             when (navigation.endpoint) {
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllTours -> {
-                                    this.view?.let {
-                                        Navigation.findNavController(it).navigate(R.id.gotToAllToursAction)
-                                    }
+                                    navController.navigate(R.id.gotToAllToursAction)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllOnView -> {
-                                    this.view?.let {
-                                        Navigation.findNavController(it).navigate(R.id.goToAllExhibitionsAction)
-                                    }
+                                    navController.navigate(R.id.goToAllExhibitionsAction)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllEvents -> {
-                                    this.view?.let {
-                                        Navigation.findNavController(it).navigate(R.id.goToAllEventsAction)
-                                    }
+                                    navController.navigate(R.id.goToAllEventsAction)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.TourDetail -> {
 
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
-                                    this.view?.let {
-                                        Navigation.findNavController(it)
-                                                .navigate(
-                                                        R.id.goToExhibitionDetailsAction,
-                                                        ExhibitionDetailFragment.argBundle(
-                                                                endpoint.exhibition
-                                                        )
-                                                )
-                                    }
+                                    navController
+                                            .navigate(
+                                                    R.id.goToExhibitionDetailsAction,
+                                                    ExhibitionDetailFragment.argBundle(
+                                                            endpoint.exhibition
+                                                    )
+                                            )
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.EventDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.EventDetail
-                                    this.view?.let {
-                                        Navigation.findNavController(it)
-                                                .navigate(
-                                                        R.id.goToEventDetailsAction,
-                                                        EventDetailFragment.argBundle(
-                                                                endpoint.event
-                                                        )
-                                                )
-                                    }
+                                    navController
+                                            .navigate(
+                                                    R.id.goToEventDetailsAction,
+                                                    EventDetailFragment.argBundle(
+                                                            endpoint.event
+                                                    )
+                                            )
                                 }
                             }
                         }
