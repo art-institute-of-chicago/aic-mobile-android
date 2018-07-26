@@ -21,6 +21,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
     val description: Subject<String> = BehaviorSubject.create()
     val intro: Subject<String> = BehaviorSubject.create()
     val stops: Subject<List<TourDetailsStopCellViewModel>> = BehaviorSubject.create()
+    val location: Subject<String> = BehaviorSubject.create()
 
     private val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
 
@@ -77,6 +78,10 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                     return@map list
                 }.bindTo(stops)
                 .disposedBy(disposeBag)
+        tourObservable
+                .filter { it.location != null }
+                .map { it.location!! }
+                .bindTo(location).disposedBy(disposeBag)
 
     }
 

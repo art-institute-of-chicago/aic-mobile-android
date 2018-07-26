@@ -167,7 +167,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
 Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La Grande Jatte" />
 
             <View
-                android:id="@+id/tourStopsTopDivider"
+                android:id="@+id/introCellTopDivider"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/marginQuad"
@@ -175,6 +175,24 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/intro" />
+            <include
+                android:id="@+id/tourDetailIntroCell"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                layout="@layout/cell_tour_details_stop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/introCellTopDivider"/>
+
+            <View
+                android:id="@+id/introCellBottomDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/marginQuad"
+                android:background="@drawable/tour_detail_tour_stop_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tourDetailIntroCell" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -182,7 +200,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tourStopsTopDivider" />
+                app:layout_constraintTop_toBottomOf="@id/introCellBottomDivider" />
 
         </android.support.constraint.ConstraintLayout>
 

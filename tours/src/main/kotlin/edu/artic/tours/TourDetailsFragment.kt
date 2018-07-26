@@ -12,12 +12,11 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.base.utils.fromHtml
-import edu.artic.base.utils.listenerClean
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModelFragment
+import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
 import kotlinx.android.synthetic.main.fragment_tour_details.*
-import timber.log.Timber
 import kotlin.reflect.KClass
 
 class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
@@ -62,13 +61,10 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .subscribe {
                     Glide.with(this)
                             .load(it)
-                            .listenerClean({
-                                false
-                            }, {
-                                Timber.d("${it.bounds}")
-                                false
-                            })
                             .into(tourImage)
+                    Glide.with(this)
+                            .load(it)
+                            .into(tourDetailIntroCell.image)
                 }.disposedBy(disposeBag)
 
         viewModel.titleText
@@ -76,6 +72,11 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                     expandedTitle.text = it
                     toolbarTitle.text = it
                 }.disposedBy(disposeBag)
+
+        viewModel.titleText
+                .bindToMain(tourDetailIntroCell.tourStopTitle.text())
+                .disposedBy(disposeBag)
+
         viewModel.stopsText
                 .bindToMain(tourStops.text())
                 .disposedBy(disposeBag)
@@ -92,6 +93,10 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         viewModel.intro
                 .map { it.fromHtml() }
                 .bindToMain(intro.text())
+                .disposedBy(disposeBag)
+
+        viewModel.location
+                .bindToMain(tourDetailIntroCell.tourStopGallery.text())
                 .disposedBy(disposeBag)
 
         startTourButton.clicks()
