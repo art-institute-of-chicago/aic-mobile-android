@@ -5,6 +5,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -14,6 +15,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
+    val introductionTitleText: Subject<String> = BehaviorSubject.create()
     val stopsText: Subject<String> = BehaviorSubject.create()
     val timeText: Subject<String> = BehaviorSubject.create()
     //TODO: langaugeSelection
@@ -35,6 +37,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                 .map { it.title }
                 .bindTo(titleText)
                 .disposedBy(disposeBag)
+
 
         tourObservable
                 .filter { it.imageUrl != null }
@@ -67,6 +70,30 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                 .disposedBy(disposeBag)
 
 
+//        tourObservable
+//                .filter { it.selectorNumber != null }
+//                .map { it.selectorNumber!! }
+//                .flatMapSingle { objectDao.getObjectBySelectorNumber(it) }
+//                .subscribe { }
+//
+//        Observables
+//                .combineLatest(
+//                        tourObservable.map { it.tourStops },
+//                        tourObservable
+//                                .filter { it.selectorNumber != null }
+//                                .map { it.selectorNumber!! }
+//                                .flatMapSingle { objectDao.getObjectBySelectorNumber(it) }
+//                ).map { (l, o) ->
+//
+//                }
+//                .map {
+//                    val list = mutableListOf<TourDetailsStopCellViewModel>()
+//                    it.forEach { tourStop ->
+//                        list.add(TourDetailsStopCellViewModel(tourStop, objectDao))
+//                    }
+//                    return@map list
+//                }
+
         tourObservable
                 .map { it.tourStops }
                 .observeOn(Schedulers.io())
@@ -78,10 +105,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                     return@map list
                 }.bindTo(stops)
                 .disposedBy(disposeBag)
-        tourObservable
-                .filter { it.location != null }
-                .map { it.location!! }
-                .bindTo(location).disposedBy(disposeBag)
+
 
     }
 
@@ -94,7 +118,7 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
-    val stopNumber: Subject<String> = BehaviorSubject.createDefault("${tourStop.order+1}.")
+    val stopNumber: Subject<String> = BehaviorSubject.createDefault("${tourStop.order + 1}.")
 
     private val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
 

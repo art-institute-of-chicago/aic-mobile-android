@@ -5,7 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import edu.artic.db.models.ArticObject
-import io.reactivex.Observable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -18,6 +18,9 @@ interface ArticObjectDao {
     fun addObjects(objects: List<ArticObject>)
 
     @Query("select * from ArticObject where nid = :id")
-    fun getObjectById(id: String) : Single<ArticObject>
+    fun getObjectById(id: String): Single<ArticObject>
+
+    @Query("select * from ArticObject where objectSelectorNumber = :selectorNumber")
+    fun getObjectBySelectorNumber(selectorNumber: String): Single<ArticObject>
 
 }
