@@ -155,7 +155,7 @@
 
             <TextView
                 android:id="@+id/location"
-                style="@style/DetailsDescription"
+                style="@style/DescriptionDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
