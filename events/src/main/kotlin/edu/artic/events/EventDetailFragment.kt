@@ -87,8 +87,11 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .bindToMain(location.text())
                 .disposedBy(disposeBag)
 
-        viewModel.registerTodayText
-                .bindToMain(registerToday.text())
+        viewModel.eventButtonText
+                .subscribe {
+                    registerToday.visibility = View.VISIBLE
+                    registerToday.text = it
+                }
                 .disposedBy(disposeBag)
 
         registerToday.clicks()
@@ -102,8 +105,8 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
             when (it) {
                 is Navigate.Forward -> {
                     when (it.endpoint) {
-                        is EventDetailViewModel.NavigationEndpoint.RegisterToday -> {
-                            val endpoint = it.endpoint as EventDetailViewModel.NavigationEndpoint.RegisterToday
+                        is EventDetailViewModel.NavigationEndpoint.LoadUrl -> {
+                            val endpoint = it.endpoint as EventDetailViewModel.NavigationEndpoint.LoadUrl
                             var url = endpoint.url
                             if (!url.startsWith("http://") && !url.startsWith("https://"))
                                 url = "https://$url"
