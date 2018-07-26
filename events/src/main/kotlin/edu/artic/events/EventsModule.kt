@@ -25,7 +25,7 @@ abstract class EventsModule {
     @Binds
     @IntoMap
     @ViewModelKey(EventDetailViewModel::class)
-    abstract fun allEveentsViewModel(eventDetailViewModel: EventDetailViewModel): ViewModel
+    abstract fun eventDetailViewModel(eventDetailViewModel: EventDetailViewModel): ViewModel
 
 
     @get:ContributesAndroidInjector

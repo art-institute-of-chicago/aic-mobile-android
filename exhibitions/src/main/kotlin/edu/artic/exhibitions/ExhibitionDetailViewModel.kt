@@ -2,6 +2,10 @@ package edu.artic.exhibitions
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsLabel
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticExhibition
@@ -13,7 +17,7 @@ import javax.inject.Inject
 
 class ExhibitionDetailViewModel
 @Inject
-constructor(dataObjectDao: ArticDataObjectDao)
+constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTracker)
     : NavViewViewModel<ExhibitionDetailViewModel.NavigationEndpoint>() {
     sealed class NavigationEndpoint {
         class ShowOnMap(val exhibition: ArticExhibition) : NavigationEndpoint()
@@ -27,15 +31,15 @@ constructor(dataObjectDao: ArticDataObjectDao)
     val buyTicketsButtonText: Subject<String> = BehaviorSubject.createDefault("Buy Tickets")// TODO: replace when special localizer is done
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
-    private val exhibitionObservable : Subject<ArticExhibition> = BehaviorSubject.create()
+    private val exhibitionObservable: Subject<ArticExhibition> = BehaviorSubject.create()
 
 
     var ticketsUrl: String? = null
 
     var exhibition: ArticExhibition? = null
-    set(value) {
-        value?.let { exhibitionObservable.onNext(it) }
-    }
+        set(value) {
+            value?.let { exhibitionObservable.onNext(it) }
+        }
 
     init {
         dataObjectDao.getDataObject()
@@ -83,6 +87,8 @@ constructor(dataObjectDao: ArticDataObjectDao)
 
     fun onClickBuyTickets() {
         ticketsUrl?.let { url ->
+            analyticsTracker.reportEvent(ScreenCategoryName.Exhibition, AnalyticsAction.linkPressed, exhibition?.title
+                    ?: AnalyticsLabel.Empty)
             navigateTo.onNext(Navigate.Forward(NavigationEndpoint.BuyTickets(url)))
         }
     }
