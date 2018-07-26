@@ -106,8 +106,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
                                     val endpoint = it.endpoint as ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets
-                                    val myIntent = endpoint.url.asUrlViewIntent()
-                                    startActivity(myIntent)
+                                    startActivity(endpoint.url.asUrlViewIntent())
                                 }
                             }
                         }
