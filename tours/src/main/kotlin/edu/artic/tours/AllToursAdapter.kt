@@ -48,9 +48,7 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
                 .disposedBy(item.viewDisposeBag)
 
         item.tourStops
-                .map {
-                    "$it ${context.getString(R.string.stops)}"
-                }.subscribe { stops.text = it.toString() }
+                .subscribe { stops.text = context.getString(R.string.stops, it) }
                 .disposedBy(item.viewDisposeBag)
 
         item.tourDuration
@@ -60,7 +58,7 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
 
     override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
         super.onItemViewDetachedFromWindow(holder, position)
-        getItem(position).apply {
+        getItemOrNull(position)?.apply {
             cleanup()
             onCleared()
         }

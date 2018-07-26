@@ -124,9 +124,15 @@
         <item name="android:textSize">@dimen/textMedium</item>
         <item name="android:textColor">@color/greyText</item>
         <item name="android:fontFamily">@font/amiri_regular</item>
+        <item name="android:lineSpacingExtra">3sp</item>
     </style>
     
     <style name="DetailsDescription" parent="CardBodySerifGray">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DescriptionDate" parent="CardBodySerifGray">
+        <item name="android:textStyle">italic</item>
         <item name="android:textColor">@color/white</item>
     </style>
 

@@ -60,14 +60,6 @@ constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         exhibitionObservable
-                .doOnError {
-                    it.printStackTrace()
-                }
-                .map { it.aic_start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
-                .bindTo(metaData)
-                .disposedBy(disposeBag)
-
-        exhibitionObservable
                 .filter { it.short_description != null }
                 .map { it.short_description!! }
                 .bindTo(description)
