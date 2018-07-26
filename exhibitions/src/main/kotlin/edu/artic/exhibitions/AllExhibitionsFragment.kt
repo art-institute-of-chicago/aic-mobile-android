@@ -65,7 +65,7 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
                             val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
                             navController.navigate(
                                     R.id.goToExhibitionDetailsAction,
-                                    ExhibitionDetailFragment.argBundle(
+                                    ExhibitionDetailFragment.argsBundle(
                                             endpoint.exhibition
                                     )
                             )

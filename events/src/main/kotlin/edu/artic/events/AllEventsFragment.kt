@@ -62,7 +62,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
                         is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
                             navController.navigate(
                                     R.id.goToEventDetailsAction,
-                                    EventDetailFragment.argBundle(endpoint.event)
+                                    EventDetailFragment.argsBundle(endpoint.event)
                             )
                         }
                     }

@@ -54,7 +54,7 @@ data class ArticTour(
             @Json(name = "object") val objectId: String?,
             @Json(name = "audio_id" ) val audioId: String?,
             @Json(name = "audio_bumper" ) val audioBumper: String?,
-            @Json(name = "order") val order: Int
+            @Json(name = "sort") val order: Int
     ) : Parcelable
 
     @JsonClass(generateAdapter = true)

@@ -86,7 +86,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     companion object {
         private val ARG_EVENT = "${EventDetailFragment::class.java.simpleName}: event"
 
-        fun argBundle(event: ArticEvent) = Bundle().apply {
+        fun argsBundle(event: ArticEvent) = Bundle().apply {
             putParcelable(ARG_EVENT, event)
         }
 

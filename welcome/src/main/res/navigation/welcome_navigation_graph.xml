@@ -4,7 +4,8 @@
     android:id="@+id/welcome_navigation_graph"
     app:startDestination="@id/welcomeFragment">
 
-    <include app:graph="@navigation/tour_navigation_graph" />
+    <include app:graph="@navigation/all_tours_navigation_graph" />
+    <include app:graph="@navigation/tour_details_navigation_graph" />
     <include app:graph="@navigation/all_events_navigation_graph" />
     <include app:graph="@navigation/event_details_navigation_graph" />
     <include app:graph="@navigation/exhibition_navigation_graph" />
@@ -15,8 +16,11 @@
         android:name="edu.artic.welcome.WelcomeFragment"
         android:label="WelcomeFragment">
         <action
-            android:id="@+id/gotToAllToursAction"
-            app:destination="@id/tour_navigation_graph" />
+            android:id="@+id/goToAllToursAction"
+            app:destination="@id/all_tours_navigation_graph" />
+        <action
+            android:id="@+id/goToTourDetailsAction"
+            app:destination="@id/tour_details_navigation_graph" />
         <action
             android:id="@+id/goToAllEventsAction"
             app:destination="@id/all_events_navigation_graph" />
