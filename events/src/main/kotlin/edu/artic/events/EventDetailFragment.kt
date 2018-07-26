@@ -9,6 +9,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
+import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticEvent
@@ -68,11 +69,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
         viewModel.description
                 .map {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY)
-                    } else {
-                        Html.fromHtml(it)
-                    }
+                    it.fromHtml()
                 }
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)
