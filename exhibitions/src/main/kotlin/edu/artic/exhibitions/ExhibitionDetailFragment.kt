@@ -1,7 +1,5 @@
 package edu.artic.exhibitions
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
@@ -11,6 +9,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.listenerSetHeight
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticExhibition
@@ -107,11 +106,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
                                     val endpoint = it.endpoint as ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets
-                                    var url = endpoint.url
-                                    if (!url.startsWith("http://") && !url.startsWith("https://"))
-                                        url = "https://$url"
-                                    val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                    startActivity(myIntent)
+                                    startActivity(endpoint.url.asUrlViewIntent())
                                 }
                             }
                         }

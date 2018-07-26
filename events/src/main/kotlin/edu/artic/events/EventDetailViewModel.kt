@@ -20,7 +20,7 @@ class EventDetailViewModel @Inject constructor(dataObjectDao: ArticDataObjectDao
     : NavViewViewModel<EventDetailViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
-        class RegisterToday(val url: String) : NavigationEndpoint()
+        class LoadUrl(val url: String) : NavigationEndpoint()
     }
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
@@ -29,25 +29,27 @@ class EventDetailViewModel @Inject constructor(dataObjectDao: ArticDataObjectDao
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     val location: Subject<String> = BehaviorSubject.createDefault("")
-    val registerTodayText: Subject<String> = BehaviorSubject.createDefault("Register Today")// TODO: replace when special localizer is done
+    val eventButtonText: Subject<String> = BehaviorSubject.create()
     private val eventObservable: Subject<ArticEvent> = BehaviorSubject.create()
+
 
     var event: ArticEvent? = null
         set(value) {
+            field = value
             value?.let {
                 eventObservable.onNext(it)
             }
         }
 
-    var membershipUrl: String? = null
-
     init {
-        dataObjectDao.getDataObject()
-                .filter { it.membershipUrl != null }
-                .map { it.membershipUrl!! }
-                .subscribe {
-                    membershipUrl = it
-                }.disposedBy(disposeBag)
+
+        eventObservable
+                .filter { it.button_text != null }
+                .map {
+                    it.button_text!!
+                }
+                .bindTo(eventButtonText)
+                .disposedBy(disposeBag)
 
         eventObservable
                 .map { it.title }
@@ -84,10 +86,10 @@ class EventDetailViewModel @Inject constructor(dataObjectDao: ArticDataObjectDao
     }
 
     fun onClickRegisterToday() {
-        membershipUrl?.let { url ->
+        event?.button_url?.let { url ->
             analyticsTracker.reportEvent(ScreenCategoryName.Events, AnalyticsAction.linkPressed, event?.title
                     ?: AnalyticsLabel.Empty)
-            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.RegisterToday(url)))
+            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LoadUrl(url)))
         }
     }
 }

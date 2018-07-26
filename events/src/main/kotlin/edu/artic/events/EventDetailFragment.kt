@@ -1,7 +1,5 @@
 package edu.artic.events
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
@@ -12,6 +10,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fromHtml
+import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticEvent
@@ -87,8 +86,11 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .bindToMain(location.text())
                 .disposedBy(disposeBag)
 
-        viewModel.registerTodayText
-                .bindToMain(registerToday.text())
+        viewModel.eventButtonText
+                .subscribe {
+                    registerToday.visibility = View.VISIBLE
+                    registerToday.text = it
+                }
                 .disposedBy(disposeBag)
 
         registerToday.clicks()
@@ -102,13 +104,9 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
             when (it) {
                 is Navigate.Forward -> {
                     when (it.endpoint) {
-                        is EventDetailViewModel.NavigationEndpoint.RegisterToday -> {
-                            val endpoint = it.endpoint as EventDetailViewModel.NavigationEndpoint.RegisterToday
-                            var url = endpoint.url
-                            if (!url.startsWith("http://") && !url.startsWith("https://"))
-                                url = "https://$url"
-                            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            startActivity(myIntent)
+                        is EventDetailViewModel.NavigationEndpoint.LoadUrl -> {
+                            val endpoint = it.endpoint as EventDetailViewModel.NavigationEndpoint.LoadUrl
+                            startActivity(endpoint.url.asUrlViewIntent())
                         }
                     }
                 }
