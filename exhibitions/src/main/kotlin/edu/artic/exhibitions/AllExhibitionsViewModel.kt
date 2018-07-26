@@ -2,6 +2,9 @@ package edu.artic.exhibitions
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
@@ -12,7 +15,9 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitionDao) : NavViewViewModel<AllExhibitionsViewModel.NavigationEndpoint>() {
+class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitionDao,
+                                                  val analyticsTracker: AnalyticsTracker)
+    : NavViewViewModel<AllExhibitionsViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         class ExhibitionDetails(val pos: Int, val exhibition: ArticExhibition) : NavigationEndpoint()
@@ -34,6 +39,7 @@ class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitio
     }
 
     fun onClickExhibition(position: Int, exhibition: ArticExhibition) {
+        analyticsTracker.reportEvent(ScreenCategoryName.Exhibition, AnalyticsAction.OPENED, exhibition.title)
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ExhibitionDetails(position, exhibition)))
     }
 

@@ -9,6 +9,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
@@ -19,7 +20,8 @@ import kotlin.reflect.KClass
 
 
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
-
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.EventDetails
     override val viewModelClass: KClass<EventDetailViewModel>
         get() = EventDetailViewModel::class
     override val layoutResId: Int

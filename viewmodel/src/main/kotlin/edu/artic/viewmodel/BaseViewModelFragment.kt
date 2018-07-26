@@ -1,13 +1,8 @@
 package edu.artic.viewmodel
 
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
-import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.view.View
-import android.view.WindowManager
-import edu.artic.base.utils.setWindowFlag
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.BaseFragment
 import javax.inject.Inject
