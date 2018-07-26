@@ -517,6 +517,12 @@ inline fun <T> onItemClickListener(crossinline function: (T) -> Unit) = object :
     }
 }
 
+inline fun <T> onItemClickListenerWithPosition(crossinline function: (pos : Int, T) -> Unit) = object : BaseRecyclerViewAdapter.OnItemClickListener<T> {
+    override fun onItemClick(position: Int, item: T, viewHolder: BaseViewHolder) {
+        function(position, item)
+    }
+}
+
 /**
  * Convenience call that utilizes just the viewmodel
  */
