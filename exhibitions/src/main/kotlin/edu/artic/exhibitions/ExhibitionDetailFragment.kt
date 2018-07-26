@@ -1,7 +1,5 @@
 package edu.artic.exhibitions
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
@@ -11,7 +9,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.getIntent
+import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.listenerSetHeight
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticExhibition
@@ -108,7 +106,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
                                     val endpoint = it.endpoint as ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets
-                                    val myIntent = endpoint.url.getIntent()
+                                    val myIntent = endpoint.url.asUrlViewIntent()
                                     startActivity(myIntent)
                                 }
                             }
