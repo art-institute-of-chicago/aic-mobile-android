@@ -33,6 +33,8 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     override val title: String
         get() = ""
 
+    override fun hasTransparentStatusBar() = true
+
     private val exhibition by lazy { arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -127,7 +129,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     companion object {
         private const val ARG_EXHIBITION = "exhibition"
 
-        fun argBundle(exhibition: ArticExhibition) = Bundle().apply {
+        fun argsBundle(exhibition: ArticExhibition) = Bundle().apply {
             putParcelable(ARG_EXHIBITION, exhibition)
         }
     }

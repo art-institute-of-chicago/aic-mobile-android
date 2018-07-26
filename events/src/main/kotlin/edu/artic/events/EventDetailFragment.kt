@@ -1,8 +1,6 @@
 package edu.artic.events
 
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -31,6 +29,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     private val event by lazy { arguments!!.getParcelable<ArticEvent>(ARG_EVENT) }
 
+    override fun hasTransparentStatusBar() = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -88,7 +87,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     companion object {
         private val ARG_EVENT = "${EventDetailFragment::class.java.simpleName}: event"
 
-        fun argBundle(event: ArticEvent) = Bundle().apply {
+        fun argsBundle(event: ArticEvent) = Bundle().apply {
             putParcelable(ARG_EVENT, event)
         }
 

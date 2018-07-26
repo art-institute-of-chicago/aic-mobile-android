@@ -7,6 +7,7 @@
     <color name="geyser">#CEE0DF</color>
     <color name="greyText">#343434</color>
     <color name="warmGrey">#a1a1a1</color>
+    <color name="warmGrey20Alpha">#33a1a1a1</color>
     <color name="darkGrey">#333333</color>
     <color name="cloudyBlue">#cee0df</color>
     <color name="transparentInfoBarColor">#73000000</color>
