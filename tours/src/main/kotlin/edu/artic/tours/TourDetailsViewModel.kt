@@ -2,14 +2,14 @@ package edu.artic.tours
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
-import edu.artic.base.utils.fromHtml
+import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class TourDetailsViewModel @Inject constructor() : BaseViewModel() {
+class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjectDao) : BaseViewModel() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
@@ -20,7 +20,7 @@ class TourDetailsViewModel @Inject constructor() : BaseViewModel() {
     val description: Subject<String> = BehaviorSubject.create()
     val stops: Subject<List<TourDetailsStopCellViewModel>> = BehaviorSubject.create()
 
-    val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
+    private val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
 
     var tour: ArticTour? = null
         set(value) {
@@ -41,7 +41,7 @@ class TourDetailsViewModel @Inject constructor() : BaseViewModel() {
 
         //TODO: replace Stops with localized string when localizer is created
         tourObservable
-                .map { "${it.tourStops.count()} Stops"  }
+                .map { "${it.tourStops.count()} Stops" }
                 .bindTo(stopsText)
                 .disposedBy(disposeBag)
 
@@ -52,12 +52,21 @@ class TourDetailsViewModel @Inject constructor() : BaseViewModel() {
                 .disposedBy(disposeBag)
 
         tourObservable
-                . filter { it.descriptionHtml != null}
+                .filter { it.descriptionHtml != null }
                 .map { it.descriptionHtml!! }
                 .bindTo(description)
 
-        //TODO: add stops view model
 
+        tourObservable
+                .map { it.tourStops }
+                .map {
+                    val list = mutableListOf<TourDetailsStopCellViewModel>()
+                    it.forEach { tourStop ->
+                        list.add(TourDetailsStopCellViewModel(tourStop, objectDao))
+                    }
+                    return@map list
+                }.bindTo(stops)
+                .disposedBy(disposeBag)
 
     }
 
@@ -66,9 +75,29 @@ class TourDetailsViewModel @Inject constructor() : BaseViewModel() {
     }
 }
 
-class TourDetailsStopCellViewModel() : BaseViewModel() {
+class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : BaseViewModel() {
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
-    val stopNumber: Subject<String> = BehaviorSubject.create()
+    val stopNumber: Subject<String> = BehaviorSubject.createDefault(tourStop.order.toString())
+
+    private val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
+
+    init {
+        articObjectObservable
+                .filter { it.image_url != null }
+                .map {
+                    it.image_url!!
+                }
+                .bindTo(imageUrl)
+                .disposedBy(disposeBag)
+        articObjectObservable
+                .map { it.title }
+                .bindTo(titleText)
+                .disposedBy(disposeBag)
+        articObjectObservable
+                .filter { it.galleryLocation != null }
+                .map { it.galleryLocation!! }
+                .bindTo(galleryText)
+    }
 }
