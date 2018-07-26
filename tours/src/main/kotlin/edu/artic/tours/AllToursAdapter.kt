@@ -58,6 +58,14 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
                 .disposedBy(item.viewDisposeBag)
     }
 
+    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
+        super.onItemViewDetachedFromWindow(holder, position)
+        getItem(position).apply {
+            cleanup()
+            onCleared()
+        }
+    }
+
     override fun getLayoutResId(position: Int): Int {
         return R.layout.cell_all_tours_layout
     }

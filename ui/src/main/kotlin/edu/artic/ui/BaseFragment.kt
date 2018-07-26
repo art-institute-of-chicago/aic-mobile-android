@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.Toolbar
 import android.view.*
+import androidx.navigation.Navigation
 import com.fuzz.rx.DisposeBag
 import dagger.android.support.AndroidSupportInjection
 import edu.artic.analytics.AnalyticsTracker
@@ -37,6 +38,12 @@ abstract class BaseFragment : Fragment() {
     val disposeBag = DisposeBag()
     val navigationDisposeBag = DisposeBag()
 
+    protected fun requireView() = view
+            ?: throw IllegalStateException("Fragment " + this + " view is not created yet.")
+
+    protected val navController
+    get() = Navigation.findNavController(requireView())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -46,9 +53,6 @@ abstract class BaseFragment : Fragment() {
         super.onStart()
         analyticsTracker.reportScreenView(screenCategory)
     }
-
-    private fun requireView() = view
-            ?: throw IllegalStateException("Fragment " + this + " view is not created yet.")
 
     override fun onResume() {
         super.onResume()

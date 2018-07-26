@@ -32,6 +32,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         class SeeAllEvents : NavigationEndpoint()
         class TourDetail(val tour: ArticTour) : NavigationEndpoint()
         class ExhibitionDetail(val pos : Int, val exhibition: ArticExhibition) : NavigationEndpoint()
+        class EventDetail(val pos : Int, val event: ArticEvent) : NavigationEndpoint()
     }
 
 
@@ -106,12 +107,16 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     fun onClickExhibition(pos: Int, exhibition: ArticExhibition) {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ExhibitionDetail(pos, exhibition)))
     }
+
+    fun onClickEvent(pos: Int, event: ArticEvent) {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.EventDetail(pos, event)))
+    }
 }
 
 /**
  * ViewModel responsible for building the tour summary list.
  */
-class WelcomeTourCellViewModel(tour: ArticTour) : BaseViewModel() {
+class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
 
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
@@ -135,7 +140,7 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition) : BaseView
 /**
  * ViewModel responsible for building the tour summary list.
  */
-class WelcomeEventCellViewModel(event: ArticEvent) : BaseViewModel() {
+class WelcomeEventCellViewModel(val event: ArticEvent) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description
             ?: "")
