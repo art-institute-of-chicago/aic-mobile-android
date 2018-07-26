@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fromHtml
@@ -87,10 +89,12 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.eventButtonText
-                .subscribe {
-                    registerToday.visibility = View.VISIBLE
-                    registerToday.text = it
-                }
+                .map{ it.isNotEmpty()}
+                .bindToMain(registerToday.visibility())
+
+
+        viewModel.eventButtonText
+                .bindToMain(registerToday.text())
                 .disposedBy(disposeBag)
 
         registerToday.clicks()
