@@ -4,9 +4,15 @@
     android:id="@+id/all_tours_navigation_graph"
     app:startDestination="@id/allToursFragment">
 
+    <include app:graph="@navigation/tour_details_navigation_graph" />
+
     <fragment
         android:id="@+id/allToursFragment"
         android:name="edu.artic.tours.AllToursFragment"
-        android:label="AllToursFragment" />
+        android:label="AllToursFragment">
+        <action
+            android:id="@+id/goToTourDetailsAction"
+            app:destination="@id/tour_details_navigation_graph" />
+    </fragment>
 
 </navigation>
