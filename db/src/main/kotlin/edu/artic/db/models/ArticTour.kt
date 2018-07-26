@@ -3,11 +3,14 @@ package edu.artic.db.models
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.Parcelize
 
 @JsonClass(generateAdapter = true)
 @Entity
+@Parcelize
 data class ArticTour(
         @Json(name = "title") val title: String,
         @Json(name = "status") val status: String?,
@@ -39,27 +42,30 @@ data class ArticTour(
         @Json(name = "weight") val weight: Int,
         @Json(name = "tour_stops") val tourStops: List<TourStop>
 
-) {
+) : Parcelable {
 
     data class TourDate(
             @Json(name = "start_date") val startDate: String?,
             @Json(name = "end_date") val endDate: String?
     )
     @JsonClass(generateAdapter = true)
+    @Parcelize
     data class TourStop(
             @Json(name = "object") val objectId: String?,
             @Json(name = "audio_id" ) val audioId: String?,
             @Json(name = "audio_bumper" ) val audioBumper: String?,
-            val sort: Int
-    )
+            @Json(name = "order") val order: Int
+    ) : Parcelable
 
     @JsonClass(generateAdapter = true)
+    @Parcelize
     data class TourCategory(
             val id : String?,
             val title: String?
-    )
+    ) : Parcelable
 
     @JsonClass(generateAdapter = true)
+    @Parcelize
     data class Translation(
             @Json(name = "language") val language: String?,
             @Json(name = "title") val title: String?,
@@ -68,5 +74,5 @@ data class ArticTour(
             @Json(name = "intro") val intro: String?,
             @Json(name = "intro_html") val intro_html: String?,
             @Json(name = "tour_duration") val tour_duration: String?
-    )
+    ) : Parcelable
 }
