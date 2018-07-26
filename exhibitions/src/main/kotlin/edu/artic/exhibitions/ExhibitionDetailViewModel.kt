@@ -27,14 +27,23 @@ constructor(dataObjectDao: ArticDataObjectDao)
     val buyTicketsButtonText: Subject<String> = BehaviorSubject.createDefault("Buy Tickets")// TODO: replace when special localizer is done
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
+    private val exhibitionObservable : Subject<ArticExhibition> = BehaviorSubject.create()
+
 
     var ticketsUrl: String? = null
 
     var exhibition: ArticExhibition? = null
     set(value) {
-        field = value
-        val exhibitionObservable = BehaviorSubject.createDefault(exhibition)
+        value?.let { exhibitionObservable.onNext(it) }
+    }
 
+    init {
+        dataObjectDao.getDataObject()
+                .filter { it.ticketsUrl != null }
+                .map { it.ticketsUrl!! }
+                .subscribe {
+                    ticketsUrl = it
+                }.disposedBy(disposeBag)
         exhibitionObservable
                 .map { it.title }
                 .bindTo(title)
@@ -64,15 +73,6 @@ constructor(dataObjectDao: ArticDataObjectDao)
                 .map { "Through ${it.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
                 .bindTo(throughDate)
                 .disposedBy(disposeBag)
-    }
-
-    init {
-        dataObjectDao.getDataObject()
-                .filter { it.ticketsUrl != null }
-                .map { it.ticketsUrl!! }
-                .subscribe {
-                    ticketsUrl = it
-                }.disposedBy(disposeBag)
     }
 
     fun onClickShowOnMap() {

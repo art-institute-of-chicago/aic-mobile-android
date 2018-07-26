@@ -1,5 +1,6 @@
 package edu.artic.events
 
+import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.DateTimeHelper
@@ -17,43 +18,46 @@ class EventDetailViewModel @Inject constructor(): BaseViewModel() {
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     val location: Subject<String> = BehaviorSubject.createDefault("")
+    private val eventObservable : Subject<ArticEvent> = BehaviorSubject.create()
 
     var event: ArticEvent? = null
         set(value) {
-            field = value
-            val eventObservable = BehaviorSubject.createDefault(value)
-
-            eventObservable
-                    .map { it.title }
-                    .bindTo(title)
-                    .disposedBy(disposeBag)
-
-            eventObservable
-                    .filter { it.image != null }
-                    .map { it.image!! }
-                    .bindTo(imageUrl)
-                    .disposedBy(disposeBag)
-
-            eventObservable
-                    .map { it.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
-                    .bindTo(metaData)
-                    .disposedBy(disposeBag)
-
-            eventObservable
-                    .filter { it.description != null }
-                    .map { it.description!! }
-                    .bindTo(description)
-                    .disposedBy(disposeBag)
-
-            eventObservable
-                    .map { "Through ${it.end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
-                    .bindTo(throughDate)
-                    .disposedBy(disposeBag)
-
-            eventObservable
-                    .filter { it.location != null }
-                    .map { it.location!! }
-                    .bindTo(location)
-                    .disposedBy(disposeBag)
+            value?.let {
+                eventObservable.onNext(it)
+            }
         }
+    init {
+        eventObservable
+                .map { it.title }
+                .bindTo(title)
+                .disposedBy(disposeBag)
+
+        eventObservable
+                .filter { it.image != null }
+                .map { it.image!! }
+                .bindTo(imageUrl)
+                .disposedBy(disposeBag)
+
+        eventObservable
+                .map { it.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
+                .bindTo(metaData)
+                .disposedBy(disposeBag)
+
+        eventObservable
+                .filter { it.description != null }
+                .map { it.description!! }
+                .bindTo(description)
+                .disposedBy(disposeBag)
+
+        eventObservable
+                .map { "Through ${it.end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
+                .bindTo(throughDate)
+                .disposedBy(disposeBag)
+
+        eventObservable
+                .filter { it.location != null }
+                .map { it.location!! }
+                .bindTo(location)
+                .disposedBy(disposeBag)
+    }
 }
