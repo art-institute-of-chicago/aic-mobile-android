@@ -29,7 +29,7 @@ class EventDetailViewModel @Inject constructor(dataObjectDao: ArticDataObjectDao
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     val location: Subject<String> = BehaviorSubject.createDefault("")
-    val eventButtonText: Subject<String> = BehaviorSubject.create()
+    val eventButtonText: Subject<String> = BehaviorSubject.createDefault("")
     private val eventObservable: Subject<ArticEvent> = BehaviorSubject.create()
 
 
@@ -44,9 +44,8 @@ class EventDetailViewModel @Inject constructor(dataObjectDao: ArticDataObjectDao
     init {
 
         eventObservable
-                .filter { it.button_text != null }
                 .map {
-                    it.button_text!!
+                    it.button_text ?: ""
                 }
                 .bindTo(eventButtonText)
                 .disposedBy(disposeBag)
