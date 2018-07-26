@@ -16,10 +16,19 @@ abstract class EventsModule {
     @Binds
     @IntoMap
     @ViewModelKey(AllEventsViewModel::class)
-    abstract fun allEveentsViewModel(allToursViewModel: AllEventsViewModel): ViewModel
+    abstract fun allEventsViewModel(allEventsViewModel: AllEventsViewModel): ViewModel
 
 
     @get:ContributesAndroidInjector
     abstract val allEventsFragment: AllEventsFragment
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EventDetailViewModel::class)
+    abstract fun allEveentsViewModel(eventDetailViewModel: EventDetailViewModel): ViewModel
+
+
+    @get:ContributesAndroidInjector
+    abstract val eventDetailFragment: EventDetailFragment
 
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/event_details_navigation_graph"
+    app:startDestination="@id/eventDetailsFragment">
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="edu.artic.events.EventDetailFragment"
+        android:label="EventDetailsFragment">
+        <argument
+            android:name="event"
+            app:argType="edu.artic.db.models.ArticEvent" />
+    </fragment>
+</navigation>

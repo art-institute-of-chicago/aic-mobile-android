@@ -3,10 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/greyText"
-    android:fitsSystemWindows="true"
-    app:statusBarBackground="@android:color/transparent">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -34,6 +31,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:contentDescription="@null"
+                    android:scaleType="matrix"
+                    app:layout_constraintDimensionRatio="H, 375:220"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -74,86 +73,94 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/greyText"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:background="@color/darkGrey">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/greyText">
+            android:paddingStart="@dimen/marginDouble"
+            android:paddingTop="@dimen/marginDouble"
+            android:paddingEnd="@dimen/marginDouble">
+
+            <Spinner
+                android:id="@+id/languageSelector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
-                android:id="@+id/metaData"
-                style="@style/MetaDataFifteenWhite"
+                android:id="@+id/tourStops"
+                style="@style/MetadataMediumWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_map_white"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingEnd="@dimen/marginOneHalf"
+                app:layout_constraintBottom_toBottomOf="@id/languageSelector"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/languageSelector"
+                tools:text="16 stops" />
+
+
+            <TextView
+                android:id="@+id/tourTime"
+                style="@style/MetadataMediumWhite"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="@dimen/marginDouble"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="June 30, 1:00pm" />
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="@id/tourStops"
+                app:layout_constraintEnd_toStartOf="@id/languageSelector"
+                app:layout_constraintStart_toEndOf="@id/tourStops"
+                app:layout_constraintTop_toTopOf="@id/tourStops"
+                tools:text="34min" />
 
-            <android.support.constraint.Guideline
-                android:id="@+id/centerGuide"
-                android:layout_width="@dimen/marginDouble"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent=".5" />
-
-            <Button
-                android:id="@+id/showOnMap"
+            <FrameLayout
+                android:id="@+id/startTourButton"
                 style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="21dp"
-                android:layout_marginEnd="@dimen/marginStandard"
-                app:layout_constraintEnd_toStartOf="@id/centerGuide"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/metaData"
-                tools:text="Show on Map" />
-
-            <Button
-                android:id="@+id/buyTickets"
-                style="@style/DetailButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginStandard"
-                android:layout_marginTop="21dp"
-                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginTriple"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/centerGuide"
-                app:layout_constraintTop_toBottomOf="@id/metaData"
-                tools:text="Buy Tickets" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/languageSelector">
+
+                <TextView
+                    style="@style/DetailButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:minHeight="0dp"
+                    tools:text="Start Tour" />
+
+            </FrameLayout>
+
 
             <TextView
                 android:id="@+id/description"
-                style="@style/DetailsDescription"
+                style="@style/BodySerifWhiteLeft"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginTop="19dp"
-                android:layout_marginRight="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginTwenty"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/showOnMap"
-                tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate." />
+                app:layout_constraintTop_toBottomOf="@id/startTourButton"
+                tools:text="Discover the stories behind some of the museum's most iconic artworks.
+Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La Grande Jatte" />
 
-            <TextView
-                style="@style/DetailsDescription"
-                android:id="@+id/throughDate"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="@dimen/marginDouble"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"
-                tools:text="Through August 5, 2018" />
+                android:layout_marginTop="@dimen/marginQuad"
+                />
+
         </android.support.constraint.ConstraintLayout>
+
 
     </android.support.v4.widget.NestedScrollView>
 

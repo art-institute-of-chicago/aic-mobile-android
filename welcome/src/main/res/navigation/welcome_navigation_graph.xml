@@ -5,8 +5,10 @@
     app:startDestination="@id/welcomeFragment">
 
     <include app:graph="@navigation/tour_navigation_graph" />
-    <include app:graph="@navigation/events_navigation_graph" />
+    <include app:graph="@navigation/all_events_navigation_graph" />
+    <include app:graph="@navigation/event_details_navigation_graph" />
     <include app:graph="@navigation/exhibition_navigation_graph" />
+    <include app:graph="@navigation/exhibition_details_navigation_graph" />
 
     <fragment
         android:id="@+id/welcomeFragment"
@@ -17,20 +19,19 @@
             app:destination="@id/tour_navigation_graph" />
         <action
             android:id="@+id/goToAllEventsAction"
-            app:destination="@id/events_navigation_graph" />
+            app:destination="@id/all_events_navigation_graph" />
         <action
             android:id="@+id/goToAllExhibitionsAction"
-            app:destination="@id/exhibition_navigation_graph" />
+            app:destination="@id/all_exhibitions_navigation_graph" />
         <action
-            android:id="@+id/goToExhibitionDetails"
-            app:destination="@id/exhibitionDetailFragment" />
+            android:id="@+id/goToExhibitionDetailsAction"
+            app:destination="@id/exhibition_details_navigation_graph" />
+        <action
+            android:id="@+id/goToEventDetailsAction"
+            app:destination="@id/event_details_navigation_graph" />
     </fragment>
-    <fragment
-        android:id="@+id/exhibitionDetailFragment"
-        android:name="edu.artic.exhibitions.ExhibitionDetailFragment"
-        android:label="ExhibitionDetailFragment" >
-        <argument android:name="exhibition" />
-    </fragment>
+
+
 
 
 </navigation>
