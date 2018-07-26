@@ -8,6 +8,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import edu.artic.adapter.BaseViewHolder
 import kotlinx.android.synthetic.main.welcome_event_cell_layout.view.*
 
 
@@ -42,6 +43,14 @@ class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewM
                             .into(image)
                 }.disposedBy(item.viewDisposeBag)
 
+    }
+
+    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
+        super.onItemViewDetachedFromWindow(holder, position)
+        getItem(position).apply {
+            cleanup()
+            onCleared()
+        }
     }
 
     override fun getLayoutResId(position: Int): Int = R.layout.welcome_event_cell_layout
