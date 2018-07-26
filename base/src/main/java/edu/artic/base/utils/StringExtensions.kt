@@ -20,10 +20,19 @@ fun String.asDeepLinkIntent(action: String = Intent.ACTION_VIEW, schema: String 
     return Intent(action, Uri.parse("$schema://${this}"))
 }
 
-fun String.fromHtml() : CharSequence {
+fun String.fromHtml(): CharSequence {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
     } else {
         Html.fromHtml(this)
     }
+}
+
+fun String.asUrlViewIntent(action: String = Intent.ACTION_VIEW): Intent {
+    val fullUrl: String = if (!this.startsWith("http://") && !this.startsWith("https://")) {
+        "https://$this"
+    } else {
+        this
+    }
+    return Intent(action, Uri.parse(fullUrl))
 }

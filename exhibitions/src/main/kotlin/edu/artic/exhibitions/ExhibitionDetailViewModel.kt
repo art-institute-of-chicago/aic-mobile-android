@@ -38,6 +38,7 @@ constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTr
 
     var exhibition: ArticExhibition? = null
         set(value) {
+            field = value
             value?.let { exhibitionObservable.onNext(it) }
         }
 
