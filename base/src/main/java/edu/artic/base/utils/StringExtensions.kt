@@ -28,7 +28,7 @@ fun String.fromHtml(): CharSequence {
     }
 }
 
-fun String.getIntent(action: String = Intent.ACTION_VIEW): Intent {
+fun String.asUrlViewIntent(action: String = Intent.ACTION_VIEW): Intent {
     val fullUrl: String = if (!this.startsWith("http://") && !this.startsWith("https://")) {
         "https://$this"
     } else {
