@@ -39,16 +39,17 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
             appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
         }
 
-        val layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
-        val tourStopAdapter = TourDetailsStopAdapter()
-        recyclerView.adapter = tourStopAdapter
-        val decoration = DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(view.context, R.drawable.tour_detail_tour_stop_divider)?.let {
-            decoration.setDrawable(it)
+
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+            adapter = TourDetailsStopAdapter()
+            val decoration = DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL)
+            ContextCompat.getDrawable(view.context, R.drawable.tour_detail_tour_stop_divider)?.let {
+                decoration.setDrawable(it)
+            }
+            addItemDecoration(decoration)
+            isNestedScrollingEnabled = true
         }
-        recyclerView.addItemDecoration(decoration)
-        recyclerView.isNestedScrollingEnabled = true
 
     }
 
@@ -73,7 +74,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                     toolbarTitle.text = it
                 }.disposedBy(disposeBag)
 
-        viewModel.titleText
+        viewModel.introductionTitleText
                 .bindToMain(tourDetailIntroCell.tourStopTitle.text())
                 .disposedBy(disposeBag)
 
