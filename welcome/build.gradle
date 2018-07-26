@@ -6,8 +6,6 @@ dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
     kapt libs.glide_compiler
-    implementation libs.arch_navigation
-    implementation libs.arch_navigation_ui
     api libs.design_support
     implementation libs.glide
     implementation libs.threeten
