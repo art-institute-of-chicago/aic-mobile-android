@@ -11,6 +11,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticTour
@@ -27,6 +28,9 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         get() = R.layout.fragment_tour_details
     override val title: String
         get() = ""
+
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.TourDetails
 
     override fun hasTransparentStatusBar() = true
 
