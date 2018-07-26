@@ -5,7 +5,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
@@ -56,18 +55,15 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
     override fun setupNavigationBindings(viewModel: AllEventsViewModel) {
         viewModel.navigateTo.subscribe { navigation ->
-            when(navigation) {
+            when (navigation) {
                 is Navigate.Forward -> {
                     val endpoint = navigation.endpoint
-                    when(endpoint) {
+                    when (endpoint) {
                         is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
-                            view?.let {
-                                Navigation.findNavController(it)
-                                        .navigate(
-                                                R.id.goToEventDetailsAction,
-                                                EventDetailFragment.argBundle(endpoint.event)
-                                        )
-                            }
+                            navController.navigate(
+                                    R.id.goToEventDetailsAction,
+                                    EventDetailFragment.argBundle(endpoint.event)
+                            )
                         }
                     }
                 }
