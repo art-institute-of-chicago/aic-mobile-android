@@ -3,7 +3,9 @@ package edu.artic
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import edu.artic.analytics.AnalyticsConfig
 import javax.inject.Named
+import javax.inject.Singleton
 
 /**
  * Description:
@@ -18,6 +20,13 @@ class AppModule {
     @Named(VERSION)
     fun getBuildVersion(): String = BuildConfig.VERSION_NAME
 
+    @Provides
+    @Named(DISPLAY_CONFIG)
+    fun getDisplayConfig(): String = BuildConfig.BUILD_TYPE
+
+    @Provides
+    @Singleton
+    fun provideAnalyticsConfig(): AnalyticsConfig = AnalyticsConfigImpl()
     @Module
     companion object {
 

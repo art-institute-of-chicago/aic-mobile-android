@@ -9,6 +9,7 @@ dependencies {
     api libs.dagger
     api libs.dagger_android
     implementation project(":base")
+    api project(":analytics")
     api libs.arch_navigation
     api libs.arch_navigation_ui
     api "com.android.support:appcompat-v7:${support_version}"

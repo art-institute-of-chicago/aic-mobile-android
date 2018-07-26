@@ -11,6 +11,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.adapter.itemSelectionsWithPosition
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
@@ -23,6 +24,10 @@ import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
+
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.Home
+
     override val title: String
         get() = "Welcome"
 
