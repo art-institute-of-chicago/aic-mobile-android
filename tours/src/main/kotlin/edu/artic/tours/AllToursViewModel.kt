@@ -6,12 +6,18 @@ import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 class AllToursViewModel @Inject constructor(generalInfoDao: GeneralInfoDao,
-        toursDao : ArticTourDao)  : BaseViewModel() {
+        toursDao : ArticTourDao)  : NavViewViewModel<AllToursViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint {
+        data class TourDetails(val pos: Int, val tour: ArticTour) : NavigationEndpoint()
+    }
 
     val tours : Subject<List<AllToursCellViewModel>> = BehaviorSubject.create()
     val intro : Subject<String> = BehaviorSubject.createDefault("")
@@ -35,9 +41,12 @@ class AllToursViewModel @Inject constructor(generalInfoDao: GeneralInfoDao,
                 .disposedBy(disposeBag)
     }
 
+    fun onClickTour(pos: Int, tour: ArticTour) {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.TourDetails(pos, tour)))
+    }
 }
 
-class AllToursCellViewModel(tour : ArticTour) : BaseViewModel() {
+class AllToursCellViewModel(val tour : ArticTour) : BaseViewModel() {
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
     val tourStops: Subject<String> = BehaviorSubject.createDefault("${tour.tourStops.count()}")
