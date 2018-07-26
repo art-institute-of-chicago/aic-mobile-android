@@ -60,7 +60,7 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
 
     override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
         super.onItemViewDetachedFromWindow(holder, position)
-        getItem(position).apply {
+        getItemOrNull(position)?.apply {
             cleanup()
             onCleared()
         }
