@@ -5,16 +5,13 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
-import edu.artic.adapter.itemSelections
 import edu.artic.adapter.itemSelectionsWithPosition
 import edu.artic.tours.recyclerview.AllExhibitionsItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
-import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 import kotlinx.android.synthetic.main.fragment_all_exhibitions.*
 import kotlin.reflect.KClass
 
@@ -51,7 +48,7 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
                 .disposedBy(disposeBag)
 
         adapter.itemSelectionsWithPosition()
-                .subscribe {(pos, model) ->
+                .subscribe { (pos, model) ->
                     viewModel.onClickExhibition(pos, model.exhibition)
                 }.disposedBy(disposeBag)
 
@@ -63,18 +60,15 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
             when (it) {
 
                 is Navigate.Forward -> {
-                    when(it.endpoint) {
+                    when (it.endpoint) {
                         is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {
                             val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
-                            view?.let {
-                                Navigation.findNavController(it)
-                                        .navigate(
-                                                R.id.goToExhibitionDetailsAction,
-                                                ExhibitionDetailFragment.argBundle(
-                                                        endpoint.exhibition
-                                                )
-                                        )
-                            }
+                            navController.navigate(
+                                    R.id.goToExhibitionDetailsAction,
+                                    ExhibitionDetailFragment.argBundle(
+                                            endpoint.exhibition
+                                    )
+                            )
                         }
                     }
                 }
