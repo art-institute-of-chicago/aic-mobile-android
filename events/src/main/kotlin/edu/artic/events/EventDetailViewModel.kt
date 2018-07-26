@@ -18,6 +18,7 @@ class EventDetailViewModel @Inject constructor(): BaseViewModel() {
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     val location: Subject<String> = BehaviorSubject.createDefault("")
+    val registerTodayText: Subject<String> = BehaviorSubject.createDefault("Register Today")// TODO: replace when special localizer is done
     private val eventObservable : Subject<ArticEvent> = BehaviorSubject.create()
 
     var event: ArticEvent? = null
