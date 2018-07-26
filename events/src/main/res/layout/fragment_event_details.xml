@@ -19,6 +19,7 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
@@ -27,14 +28,17 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:animateLayoutChanges="true">
+                android:animateLayoutChanges="true"
+                android:fitsSystemWindows="true">
 
                 <ImageView
                     android:id="@+id/eventImage"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:contentDescription="@null"
-                    app:layout_constraintDimensionRatio="H,1:1"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="matrix"
+                    app:layout_constraintDimensionRatio="H,375:220"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 

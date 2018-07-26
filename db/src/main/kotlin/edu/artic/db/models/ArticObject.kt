@@ -9,7 +9,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 @Entity
 data class ArticObject(
-        @Json(name = "title") val title: String?,
+        @Json(name = "title") val title: String,
         @Json(name = "status") val status: String?,
         @Json(name = "nid") @PrimaryKey val nid: String,
         @Json(name = "type") val type: String?,

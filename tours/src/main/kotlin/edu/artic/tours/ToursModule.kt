@@ -22,4 +22,13 @@ abstract class ToursModule {
     @get:ContributesAndroidInjector
     abstract val allToursFragment: AllToursFragment
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(TourDetailsViewModel::class)
+    abstract fun tourDetailsViewModel(allToursViewModel: TourDetailsViewModel): ViewModel
+
+
+    @get:ContributesAndroidInjector
+    abstract val tourDetailsFragment: TourDetailsFragment
+
 }
