@@ -1,6 +1,5 @@
 package edu.artic.tours
 
-import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
@@ -118,10 +117,8 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
 
     init {
         articObjectObservable
-                .filter { it.image_url != null }
-                .map {
-                    it.image_url!!
-                }
+                .filter { it.thumbnailFullPath != null }
+                .map { it.thumbnailFullPath!! }
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
         articObjectObservable
