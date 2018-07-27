@@ -16,7 +16,7 @@ class DateTimeHelper {
                 .appendPattern(DEFAULT_FORMAT)
                 .toFormatter()
         val HOME_EXHIBITION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
-                .appendPattern("MMMM dd, yyyy")
+                .appendPattern("MMMM d, yyyy")
                 .toFormatter()
 
         val HOME_EVENT_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
