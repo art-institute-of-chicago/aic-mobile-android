@@ -33,7 +33,8 @@
         tools:text="test" />
 
     <TextView
-        style="@style/CardBodyLargeItalic"
+        style="@style/DescriptionDate"
+        android:textColor="@color/greyText"
         android:id="@+id/description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
