@@ -9,8 +9,8 @@ android {
         minSdkVersion minSdk
         targetSdkVersion sdk
         multiDexEnabled true
-        versionCode 1
-        versionName "1.0"
+        versionCode 1000
+        versionName "0.1.000"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
