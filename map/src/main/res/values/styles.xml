@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.CustomToolbar.MapTheme">
+        <item name="colorPrimary">@color/marine</item>
+        <item name="colorPrimaryDark">@color/marine</item>
+        <item name="android:statusBarColor">@color/marine</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>
