@@ -1,0 +1,52 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.android.library'
+
+android {
+    defaultConfig {
+        buildConfigField("String", "BLOB_URL", "\"http://aic-mobile-tours.artic.edu/sites/default/files/\"")
+    }
+}
+
+dependencies {
+    implementation project(':base')
+    api libs.rxHelper
+    api libs.retrofit_rx
+
+    api libs.retrofit
+    api libs.retrofit_scalars
+
+    api libs.moshi
+    api libs.moshi_kotlin
+    kapt libs.moshi_kotlin_compiler
+
+    api libs.retrofit_moshi
+    api libs.moshi_kotlin
+
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+
+    implementation libs.threeten
+
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+
+    api libs.kotlin
+    api libs.arch_runtime
+    api libs.arch_paging
+
+    api libs.room
+    kapt libs.room_compiler
+
+    api libs.dagger
+    kapt libs.dagger_compiler
+
+    api libs.rx_kotlin
+    api libs.rx
+    api libs.rx_android
+    api libs.room_rx
+}
+
+androidExtensions {
+    experimental = true
+}
