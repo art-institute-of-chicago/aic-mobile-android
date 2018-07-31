@@ -9,6 +9,7 @@ import edu.artic.db.DBModule
 import edu.artic.events.EventsModule
 import edu.artic.exhibitions.ExhibitionsModule
 import edu.artic.info.InfoModule
+import edu.artic.map.MapModule
 import edu.artic.splash.SplashModule
 import edu.artic.tours.ToursModule
 import edu.artic.viewmodel.ViewModelModule
@@ -27,6 +28,7 @@ import javax.inject.Singleton
     ApiModule::class,
     DBModule::class,
     InfoModule::class,
+    MapModule::class,
     AnalyticsModule::class,
     AndroidSupportInjectionModule::class
 ])
