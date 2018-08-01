@@ -4,7 +4,7 @@ buildscript {
     ext {
         sdk = 27
         minSdk = 21
-        kotlin_version = '1.2.50'
+        kotlin_version = '1.2.51'
         latest_helper = '7f1d88469155cedd57df87682806736437088abc'
         dagger_version = '2.15'
         support_version = '27.1.1'
