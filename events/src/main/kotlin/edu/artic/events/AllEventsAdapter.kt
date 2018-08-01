@@ -3,9 +3,7 @@ package edu.artic.events
 import android.view.View
 import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
-import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
-import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
@@ -15,27 +13,49 @@ import kotlinx.android.synthetic.main.cell_all_events_layout.view.*
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellViewModel>() {
+class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellBaseViewModel>() {
 
-    override fun View.onBindView(item: AllEventsCellViewModel, position: Int) {
+    override fun View.onBindView(item: AllEventsCellBaseViewModel, position: Int) {
 
-        item.eventImageUrl.subscribe {
-            Glide.with(context)
-                    .load(it)
-                    .into(image)
-        }.disposedBy(item.viewDisposeBag)
+        if (item is AllEventsCellViewModel) {
 
-        item.eventTitle
-                .bindToMain(title.text())
-                .disposedBy(item.viewDisposeBag)
+            image.visibility = View.VISIBLE
+            title.visibility = View.VISIBLE
+            description.visibility = View.VISIBLE
+            dateTime.visibility = View.VISIBLE
+            spacerLine.visibility = View.VISIBLE
+            headerText.visibility = View.GONE
 
-        item.eventDescription
-                .bindToMain(description.text())
-                .disposedBy(item.viewDisposeBag)
+            item.eventImageUrl.subscribe {
+                Glide.with(context)
+                        .load(it)
+                        .into(image)
+            }.disposedBy(item.viewDisposeBag)
 
-        item.eventDateTime
-                .bindToMain(dateTime.text())
-                .disposedBy(item.viewDisposeBag)
+            item.eventTitle
+                    .bindToMain(title.text())
+                    .disposedBy(item.viewDisposeBag)
+
+            item.eventDescription
+                    .bindToMain(description.text())
+                    .disposedBy(item.viewDisposeBag)
+
+            item.eventDateTime
+                    .bindToMain(dateTime.text())
+                    .disposedBy(item.viewDisposeBag)
+        } else if (item is AllEventsCellHeaderViewModel) {
+            image.visibility = View.GONE
+            title.visibility = View.GONE
+            description.visibility = View.GONE
+            dateTime.visibility = View.GONE
+            spacerLine.visibility = View.GONE
+            headerText.visibility = View.VISIBLE
+
+            item.text
+                    .bindToMain(headerText.text())
+                    .disposedBy(item.viewDisposeBag)
+        }
+
 
     }
 
