@@ -23,14 +23,23 @@ class AllEventsViewModel @Inject constructor(
         class EventDetail(val pos: Int, val event: ArticEvent) : NavigationEndpoint()
     }
 
-    val events: Subject<List<AllEventsCellViewModel>> = BehaviorSubject.create()
+    val events: Subject<List<AllEventsCellBaseViewModel>> = BehaviorSubject.create()
 
     init {
         eventsDao.getAllEvents()
                 .map { list ->
-                    val viewModelList = ArrayList<AllEventsCellViewModel>()
+                    val viewModelList = ArrayList<AllEventsCellBaseViewModel>()
+                    var prevDayOfMonth: Int = -1
+                    var prevMonth: Int = -1
+                    var lastHeaderPosition = 0
                     list.forEach { tour ->
-                        viewModelList.add(AllEventsCellViewModel(tour))
+                        if (prevMonth != tour.start_at.monthValue || prevDayOfMonth != tour.start_at.dayOfMonth) {
+                            prevDayOfMonth = tour.start_at.dayOfMonth
+                            prevMonth = tour.start_at.monthValue
+                            viewModelList.add(AllEventsCellHeaderViewModel(tour))
+                            lastHeaderPosition = viewModelList.size - 1
+                        }
+                        viewModelList.add(AllEventsCellViewModel(tour, lastHeaderPosition))
                     }
                     return@map viewModelList
                 }
@@ -45,7 +54,13 @@ class AllEventsViewModel @Inject constructor(
 
 }
 
-class AllEventsCellViewModel(val event: ArticEvent) : BaseViewModel() {
+open class AllEventsCellBaseViewModel(val event: ArticEvent) : BaseViewModel()
+
+class AllEventsCellHeaderViewModel(event: ArticEvent) : AllEventsCellBaseViewModel(event) {
+    val text: Subject<String> = BehaviorSubject.createDefault(event.start_at.format(DateTimeHelper.MONTH_DAY_FORMATTER))
+}
+
+class AllEventsCellViewModel(event: ArticEvent, val headerPosition: Int) : AllEventsCellBaseViewModel(event) {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description
             ?: "")

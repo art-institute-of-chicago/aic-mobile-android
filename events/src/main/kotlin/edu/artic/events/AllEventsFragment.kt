@@ -36,12 +36,27 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /* Build tour summary list*/
+        val eventsAdapter = AllEventsAdapter()
         val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                /**
+                 * this is specifically for handling tours with a header
+                 */
+                return when(eventsAdapter.getItemOrNull(position)) {
+                    is AllEventsCellHeaderViewModel -> {
+                        2
+                    }
+                    else -> {
+                        1
+                    }
+                }
+            }
+
+        }
         recyclerView.layoutManager = layoutManager
-        val toursAdapter = AllEventsAdapter()
-        recyclerView.adapter = toursAdapter
-        recyclerView.addItemDecoration(AllEventsItemDecoration(view.context, 2))
+        recyclerView.adapter = eventsAdapter
+        recyclerView.addItemDecoration(AllEventsItemDecoration(view.context, 2, eventsAdapter))
     }
 
     override fun setupBindings(viewModel: AllEventsViewModel) {
