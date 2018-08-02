@@ -15,8 +15,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/map_navigation_graph"
         tools:background="#fab" />
-    <!--app:navGraph="@navigation/info_navigation_graph"-->
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigation"
