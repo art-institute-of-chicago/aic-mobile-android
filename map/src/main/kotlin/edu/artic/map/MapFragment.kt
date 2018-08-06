@@ -1,20 +1,25 @@
 package edu.artic.map
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.disposedBy
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.models.ArticMapAnnotation
+import edu.artic.db.models.ArticMapFloor
+import edu.artic.map.util.ArticObjectMarkerGenerator
+import edu.artic.map.util.DepartmentMarkerGenerator
+import edu.artic.map.util.GalleryNumberMarkerGenerator
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_map.*
-import timber.log.Timber
 import kotlin.reflect.KClass
 
 class MapFragment : BaseViewModelFragment<MapViewModel>() {
@@ -30,10 +35,21 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     lateinit var destroyableMapView: MapView
     lateinit var map: GoogleMap
 
+    val markerMap = mutableMapOf<Marker, MapItem<*>>()
+    val mapItemMarkerMap = mutableMapOf<MapItem<*>, Marker>()
+
     val currentMarkers = mutableListOf<Marker>()
+
+    lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
+    lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
+    lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
+        galleryNumberGenerator = GalleryNumberMarkerGenerator(view.context)
+        departmentMarkerGenerator = DepartmentMarkerGenerator(view.context)
+
         destroyableMapView = mapView
         mapView.onCreate(savedInstanceState)
         MapsInitializer.initialize(view.context)
@@ -50,7 +66,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             )
             map.setOnCameraIdleListener {
                 val zoom = map.cameraPosition.zoom
-                Timber.d("MapZoomLevel: $zoom")
                 when {
                     zoom < 18.5 -> {
                         viewModel.zoomLevelChangedTo(MapZoomLevel.One)
@@ -77,20 +92,76 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                     it.forEach { mapItem ->
                         when (mapItem) {
-                            is MapItem.MapAnnotation -> {
-                                val annotation = mapItem.annotation
-                                currentMarkers.add(
-                                        map.addMarker(
-                                                MarkerOptions()
-                                                        .title(annotation.label)
+                            is MapItem.Annotation -> {
+                                val annotation = mapItem.item
+                                when (annotation.annotationType) {
+                                    "Department" -> {
+                                        loadDepartment(annotation, mapItem.floor)
+                                    }
+                                    else -> {
+                                        currentMarkers.add(
+                                                map.addMarker(MarkerOptions()
                                                         .position(
                                                                 LatLng(
                                                                         annotation.latitude!!.toDouble(),
                                                                         annotation.longitude!!.toDouble()
                                                                 )
                                                         )
+                                                )
                                         )
-                                )
+                                    }
+                                }
+                            }
+                            is MapItem.Gallery -> {
+                                val gallery = mapItem.item
+                                gallery.number?.let {
+                                    currentMarkers.add(
+                                            map.addMarker(MarkerOptions()
+                                                    .position(
+                                                            LatLng(
+                                                                    gallery.latitude,
+                                                                    gallery.longitude
+                                                            )
+                                                    )
+                                                    .icon(BitmapDescriptorFactory
+                                                            .fromBitmap(
+                                                                    galleryNumberGenerator
+                                                                            .makeIcon(
+                                                                                    it
+                                                                            )
+                                                            )
+                                                    )
+                                                    .anchor(.5f, 0f)
+                                            )
+                                    )
+                                }
+
+                            }
+                            is MapItem.Object -> {
+                                val articObject = mapItem.item
+                                Glide.with(this)
+                                        .asBitmap()
+                                        .load(articObject.thumbnailFullPath)
+                                        .into(object : SimpleTarget<Bitmap>() {
+                                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                                if (viewModel.currentZoomLevel === MapZoomLevel.Three && viewModel.currentFloor == mapItem.floor) {
+                                                    currentMarkers.add(
+                                                            map.addMarker(
+                                                                    MarkerOptions()
+                                                                            .position(
+                                                                                    LatLng(
+                                                                                            articObject.latitude,
+                                                                                            articObject.longitude
+                                                                                    )
+                                                                            )
+                                                                            .icon(BitmapDescriptorFactory.fromBitmap(objectMarkerGenerator.makeIcon(resource)))
+                                                            )
+                                                    )
+                                                }
+                                            }
+                                        })
+
+
                             }
                         }
 
@@ -133,5 +204,33 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
+    }
+
+    fun loadDepartment(department: ArticMapAnnotation, floor: Int) {
+        Glide.with(this)
+                .asBitmap()
+                .load(department.imageUrl)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        if (viewModel.currentZoomLevel === MapZoomLevel.Two && viewModel.currentFloor == floor) {
+                            currentMarkers.add(
+                                    map.addMarker(
+                                            MarkerOptions()
+                                                    .position(
+                                                            LatLng(
+                                                                    department.latitude!!.toDouble(),
+                                                                    department.longitude!!.toDouble()
+                                                            )
+                                                    )
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(
+                                                            departmentMarkerGenerator.makeIcon(
+                                                                    resource,
+                                                                    department.label!!)
+                                                    ))
+                                    )
+                            )
+                        }
+                    }
+                })
     }
 }

@@ -3,71 +3,189 @@ package edu.artic.map
 import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
-import edu.artic.db.models.ArticMapAnnotation
+import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.models.ArticGallery
+import edu.artic.db.models.ArticObject
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
+import io.reactivex.functions.Function4
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import javax.inject.Inject
 
-class MapViewModel @Inject constructor(private val mapAnnotationDao: ArticMapAnnotationDao) : BaseViewModel() {
+class MapViewModel @Inject constructor(
+        private val mapAnnotationDao: ArticMapAnnotationDao,
+        private val galleryDao: ArticGalleryDao,
+        private val objectDao: ArticObjectDao
+) : BaseViewModel() {
 
-    val mapAnnotations: Subject<List<MapItem>> = BehaviorSubject.create()
+    val mapAnnotations: Subject<List<MapItem<*>>> = BehaviorSubject.create()
 
-    val allAmenities: Subject<List<MapItem.MapAnnotation>> = BehaviorSubject.create()
-    val allBuildingNames: Subject<List<MapItem.MapAnnotation>> = BehaviorSubject.create()
+    val alwaysVisibleAnnotations: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
 
     val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     val zoomLevel: Subject<MapZoomLevel> = BehaviorSubject.create()
 
-    init {
+    val currentFloor: Int
+        get() {
+            val castFloor = (floor as BehaviorSubject)
+            return if (castFloor.hasValue()) {
+                castFloor.value
+            } else {
+                1
+            }
+        }
 
-        mapAnnotationDao
+    val currentZoomLevel: MapZoomLevel
+        get() {
+            val castLevel = (zoomLevel as BehaviorSubject)
+            return if (castLevel.hasValue()) {
+                castLevel.value
+            } else {
+                MapZoomLevel.One
+            }
+        }
+
+    init {
+        val allAmenities = mapAnnotationDao
                 .getAmenitiesOnMap()
                 .map { annotationList ->
-                    val list = mutableListOf<MapItem.MapAnnotation>()
+                    val list = mutableListOf<MapItem.Annotation>()
                     annotationList.forEach { annotation ->
-                        list.add(MapItem.MapAnnotation(annotation))
+                        val floor = annotation.floor
+                                .let {
+                                    it?.toInt() ?: 1
+                                }
+                        list.add(MapItem.Annotation(annotation, floor))
                     }
                     return@map list
 
                 }
-                .bindTo(allAmenities)
-                .disposedBy(disposeBag)
 
-        mapAnnotationDao
+        val allBuildingNames = mapAnnotationDao
                 .getBuildingNamesOnMap()
                 .map { annotationList ->
-                    val list = mutableListOf<MapItem.MapAnnotation>()
+                    val list = mutableListOf<MapItem.Annotation>()
                     annotationList.forEach { annotation ->
-                        list.add(MapItem.MapAnnotation(annotation))
+                        val floor = annotation.floor
+                                .let {
+                                    it?.toInt() ?: 1
+                                }
+                        list.add(MapItem.Annotation(annotation, floor))
                     }
                     return@map list
 
-                }.bindTo(allBuildingNames)
+                }
 
-        Observable.combineLatest<Int, MapZoomLevel, Pair<Int, MapZoomLevel>>(
+        Observable.combineLatest(
+                allAmenities.asObservable(),
+                allBuildingNames.asObservable(),
+                BiFunction<List<MapItem.Annotation>, List<MapItem.Annotation>, List<MapItem.Annotation>>
+                { amenities, buildingNames ->
+                    val list = mutableListOf<MapItem.Annotation>()
+                    list.addAll(amenities)
+                    list.addAll(buildingNames)
+                    return@BiFunction list
+                }).bindTo(alwaysVisibleAnnotations)
+                .disposedBy(disposeBag)
+
+
+        setupZoomLevelOneBinds()
+        setupZoomLevelTwoBinds()
+        setupZoomLevelThreeBinds()
+
+    }
+
+
+    fun setupZoomLevelOneBinds() {
+        Observable.combineLatest(
+                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.One },
                 floor.distinctUntilChanged(),
-                zoomLevel.distinctUntilChanged(),
-                BiFunction<Int, MapZoomLevel, Pair<Int, MapZoomLevel>> { floor, zoomLevel ->
-                    Pair(floor, zoomLevel)
+                alwaysVisibleAnnotations,
+                Function3<MapZoomLevel, Int, List<MapItem.Annotation>, List<MapItem<*>>>
+                { _: MapZoomLevel, floor: Int, annotations: List<MapItem.Annotation> ->
+                    annotations.filter { it.item.floor?.toInt() == floor }
+                }).bindTo(mapAnnotations)
+                .disposedBy(disposeBag)
+    }
+
+    fun setupZoomLevelTwoBinds() {
+        Observable.combineLatest(
+                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Two },
+                floor.distinctUntilChanged(),
+                alwaysVisibleAnnotations,
+                mapAnnotationDao
+                        .getDepartmentOnMap()
+                        .asObservable()
+                        .map { departmentList ->
+                            val list = mutableListOf<MapItem.Annotation>()
+                            departmentList.forEach { department ->
+                                val floor = department.floor
+                                        .let {
+                                            it?.toInt() ?: 1
+                                        }
+                                list.add(MapItem.Annotation(department, floor))
+                            }
+                            return@map list
+
+                        },
+                Function4<MapZoomLevel, Int, List<MapItem.Annotation>, List<MapItem.Annotation>, List<MapItem<*>>>
+                { _, floor, annotations, deparments ->
+                    val list = mutableListOf<MapItem<*>>()
+                    list.addAll(annotations.filter { it.item.floor?.toInt() == floor })
+                    list.addAll(deparments.filter { it.item.floor?.toInt() == floor })
+                    return@Function4 list
+                }).bindTo(mapAnnotations)
+                .disposedBy(disposeBag)
+    }
+
+
+    fun setupZoomLevelThreeBinds() {
+        val galleries = Observable.combineLatest(
+                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Three },
+                floor.distinctUntilChanged(),
+                BiFunction<MapZoomLevel, Int, Int> { _, floor ->
+                    return@BiFunction floor
+                })
+                .flatMap {
+                    return@flatMap galleryDao.getGalleriesForFloor(it.toString()).asObservable()
                 }
-        ).subscribe { (floor, zoomLevel) ->
-            when (zoomLevel) {
-                MapZoomLevel.One -> {
-                    loadZoomLevelOneForFloor(floor)
+        val objects = galleries
+                .map {
+                    it.filter { it.titleT != null }.map { it.titleT!! }
+                }.flatMap {
+                    objectDao.getObjectsInGalleries(it).asObservable()
                 }
-                MapZoomLevel.Two -> {
-                    loadZoomLevelTwoForFloor(floor)
-                }
-                MapZoomLevel.Three -> {
-                    loadZoomLevelThreeForFloor(floor)
-                }
-            }
+
+        objects.subscribe {
+            Timber.d("galleries count : ${it.size}")
         }.disposedBy(disposeBag)
+
+
+        Observable.combineLatest(
+                floor,
+                galleries,
+                objects,
+                alwaysVisibleAnnotations,
+                Function4<Int, List<ArticGallery>, List<ArticObject>, List<MapItem<*>>, List<MapItem<*>>>
+                { floor, galleryList, objectList, annotations ->
+                    val list = mutableListOf<MapItem<*>>()
+                    list.addAll(annotations)
+                    galleryList.forEach { gallery ->
+                        list.add(MapItem.Gallery(gallery, floor))
+                    }
+                    objectList.forEach { articObject ->
+                        list.add(MapItem.Object(articObject, floor))
+                    }
+                    return@Function4 list
+                })
+                .bindTo(mapAnnotations)
+                .disposedBy(disposeBag)
     }
 
     fun zoomLevelChangedTo(zoomLevel: MapZoomLevel) {
@@ -78,70 +196,5 @@ class MapViewModel @Inject constructor(private val mapAnnotationDao: ArticMapAnn
         this.floor.onNext(floor)
     }
 
-    fun loadZoomLevelOneForFloor(floor: Int) {
-        Observable.combineLatest(
-                allBuildingNames
-                        .map { it.filter { it.annotation.floor?.toInt() == floor } },
-                allAmenities
-                        .map { it.filter { it.annotation.floor?.toInt() == floor } },
-                BiFunction<List<MapItem.MapAnnotation>, List<MapItem.MapAnnotation>, List<MapItem>>
-                { buildingList, mapItemList ->
-                    val list = mutableListOf<MapItem>()
-                    list.addAll(mapItemList)
-                    list.addAll(buildingList)
-                    return@BiFunction list
-                })
-                .bindTo(mapAnnotations)
-                .disposedBy(disposeBag)
-    }
 
-    fun loadZoomLevelTwoForFloor(floor: Int) {
-        Observable.combineLatest(
-                allBuildingNames
-                        .map { buildingList ->
-                            buildingList.filter { building ->
-                                building.annotation.floor?.toInt() == floor
-                            }
-                        },
-                allAmenities
-                        .map { amenitiesList ->
-                            amenitiesList.filter { amenity ->
-                                amenity.annotation.floor?.toInt() == floor
-                            }
-                        },
-                mapAnnotationDao
-                        .getDepartmentOnMap()
-                        .asObservable()
-                        .map { departmentList ->
-                            departmentList.filter { deparment ->
-                                deparment.floor?.toInt() == floor
-                            }
-                        }.map {annotationList ->
-                            val list = mutableListOf<MapItem.MapAnnotation>()
-                            annotationList.forEach { annotation ->
-                                list.add(MapItem.MapAnnotation(annotation))
-                            }
-                            return@map list
-                        },
-                Function3<List<MapItem>, List<MapItem>, List<MapItem>, List<MapItem>>
-                { buildingList, amenityList, departmentList ->
-                    val list = mutableListOf<MapItem>()
-                    list.addAll(buildingList)
-                    list.addAll(amenityList)
-                    list.addAll(departmentList)
-
-                    return@Function3 list
-                })
-                .bindTo(mapAnnotations)
-                .disposedBy(disposeBag)
-    }
-
-    fun loadZoomLevelThreeForFloor(floor: Int) {
-        mapAnnotations.onNext(listOf())
-    }
-
-}
-
-sealed class MapItem {
-    class MapAnnotation(val annotation: ArticMapAnnotation) : MapItem()
 }

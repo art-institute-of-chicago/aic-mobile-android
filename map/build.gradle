@@ -5,6 +5,8 @@ dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
 
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
     api libs.design_support
     implementation project(':base')
     implementation project(':ui')
@@ -15,5 +17,6 @@ dependencies {
     api libs.maps
     implementation libs.arch_navigation
     implementation libs.arch_navigation_ui
+    implementation libs.glide
 
 }
