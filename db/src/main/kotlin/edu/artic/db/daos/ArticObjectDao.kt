@@ -24,4 +24,8 @@ interface ArticObjectDao {
     @Query("select * from ArticObject where objectSelectorNumber = :selectorNumber")
     fun getObjectBySelectorNumber(selectorNumber: String): Single<ArticObject>
 
+    @Query("select * from ArticObject where galleryLocation in (:galleryTitleList)")
+    fun getObjectsInGalleries(galleryTitleList: List<String>) : Flowable<List<ArticObject>>
+
+
 }
