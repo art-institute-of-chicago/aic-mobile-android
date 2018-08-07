@@ -8,14 +8,16 @@ import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticObject
+import edu.artic.map.helpers.mapToMapItem
+import edu.artic.map.helpers.toMapItem
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function3
 import io.reactivex.functions.Function4
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import timber.log.Timber
 import javax.inject.Inject
 
 class MapViewModel @Inject constructor(
@@ -55,45 +57,20 @@ class MapViewModel @Inject constructor(
         val allAmenities = mapAnnotationDao
                 .getAmenitiesOnMap()
                 .map { annotationList ->
-                    val list = mutableListOf<MapItem.Annotation>()
-                    annotationList.forEach { annotation ->
-                        val floor = annotation.floor
-                                .let {
-                                    it?.toInt() ?: -1
-                                }
-                        list.add(MapItem.Annotation(annotation, floor))
-                    }
-                    return@map list
-
+                    annotationList.mapToMapItem()
                 }
 
         val allBuildingNames = mapAnnotationDao
                 .getBuildingNamesOnMap()
                 .map { annotationList ->
-                    val list = mutableListOf<MapItem.Annotation>()
-                    annotationList.forEach { annotation ->
-                        val floor = annotation.floor
-                                .let {
-                                    it?.toInt() ?: -1
-                                }
-                        list.add(MapItem.Annotation(annotation, floor))
-                    }
-                    return@map list
-
+                    annotationList.mapToMapItem()
                 }
 
-        Observable.combineLatest(
-                allAmenities.asObservable(),
-                allBuildingNames.asObservable(),
-                BiFunction<List<MapItem.Annotation>, List<MapItem.Annotation>, List<MapItem.Annotation>>
-                { amenities, buildingNames ->
-                    val list = mutableListOf<MapItem.Annotation>()
-                    list.addAll(amenities)
-                    list.addAll(buildingNames)
-                    return@BiFunction list
-                }).bindTo(alwaysVisibleAnnotations)
+        Observables.combineLatest(allAmenities.asObservable(), allBuildingNames.asObservable())
+        { amenities, buildingNames ->
+            return@combineLatest amenities.toMutableList() + buildingNames
+        }.bindTo(alwaysVisibleAnnotations)
                 .disposedBy(disposeBag)
-
 
         setupZoomLevelOneBinds()
         setupZoomLevelTwoBinds()
@@ -103,23 +80,23 @@ class MapViewModel @Inject constructor(
 
 
     fun setupZoomLevelOneBinds() {
-        Observable.combineLatest(
+        Observables.combineLatest(
                 zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.One },
                 floor.distinctUntilChanged(),
-                alwaysVisibleAnnotations.map{ annotationList ->
+                alwaysVisibleAnnotations.map { annotationList ->
                     annotationList.filter { item ->
                         item.item.annotationType == "Amenity" ||
                                 (item.item.annotationType == "Text" && item.item.textType == "Landmark")
                     }
-                },
-                Function3<MapZoomLevel, Int, List<MapItem.Annotation>, List<MapItem<*>>>
-                { _: MapZoomLevel, floor: Int, annotations: List<MapItem.Annotation> ->
-                    annotations.filter { item ->
-                        (item.item.annotationType == "Amenity" && item.floor == floor)
-                                || item.item.annotationType == "Text"
+                }
+        ) {
+            _: MapZoomLevel, floor: Int, annotations: List<MapItem.Annotation> ->
+            annotations.filter { item ->
+                (item.item.annotationType == "Amenity" && item.floor == floor)
+                        || item.item.annotationType == "Text"
 
-                    }
-                }).bindTo(mapAnnotations)
+            }
+        }.bindTo(mapAnnotations)
                 .disposedBy(disposeBag)
     }
 
@@ -127,8 +104,8 @@ class MapViewModel @Inject constructor(
         Observable.combineLatest(
                 zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Two },
                 floor.distinctUntilChanged(),
-                alwaysVisibleAnnotations.map{itemList ->
-                    itemList.filter {item ->
+                alwaysVisibleAnnotations.map { itemList ->
+                    itemList.filter { item ->
                         item.item.annotationType == "Amenity" ||
                                 (item.item.annotationType == "Text" && item.item.textType == "Space")
                     }
@@ -151,7 +128,7 @@ class MapViewModel @Inject constructor(
                 Function4<MapZoomLevel, Int, List<MapItem.Annotation>, List<MapItem.Annotation>, List<MapItem<*>>>
                 { _, floor, annotations, deparments ->
                     val list = mutableListOf<MapItem<*>>()
-                    list.addAll(annotations.filter { it.floor == floor})
+                    list.addAll(annotations.filter { it.floor == floor })
                     list.addAll(deparments.filter { it.item.floor?.toInt() == floor })
                     return@Function4 list
                 }).bindTo(mapAnnotations)
@@ -180,8 +157,8 @@ class MapViewModel @Inject constructor(
                 floor,
                 galleries,
                 objects,
-                alwaysVisibleAnnotations.map{itemList ->
-                    itemList.filter {item ->
+                alwaysVisibleAnnotations.map { itemList ->
+                    itemList.filter { item ->
                         item.item.annotationType == "Amenity" ||
                                 (item.item.annotationType == "Text" && item.item.textType == "Space")
                     }
