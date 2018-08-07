@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import edu.artic.base.utils.isServiceRunningInForeground
+import edu.artic.db.models.ArticAudioFile
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -30,7 +31,7 @@ class AudioPlayerService : Service() {
 
     private val binder: Binder = AudioPlayerServiceBinder()
     private lateinit var playerNotificationManager: PlayerNotificationManager
-    private var audioStreamUrl: String? = null
+    var audioObject: ArticAudioFile? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -130,12 +131,13 @@ class AudioPlayerService : Service() {
         }
     }
 
-    fun setAudioUrl(url: String, resetPosition: Boolean = false) {
-        if (audioStreamUrl != url) {
-            audioStreamUrl = url
-            val uri = Uri.parse(url)
+    fun setAudioObject(_audioObject: ArticAudioFile, resetPosition: Boolean = false) {
+        if (audioObject != _audioObject) {
+            audioObject = _audioObject
+            val uri = Uri.parse(audioObject?.fileUrl)
             val mediaSource = buildMediaSource(uri)
             player.prepare(mediaSource, resetPosition, false)
+            player.playWhenReady = true
         }
     }
 

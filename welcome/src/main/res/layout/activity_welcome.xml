@@ -19,6 +19,23 @@
         app:navGraph="@navigation/welcome_navigation_graph"
         tools:background="#fab" />
 
+
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/audioPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:auto_show="true"
+        app:controller_layout_id="@layout/minimal_exo_playback_control_view"
+        app:hide_on_touch="false"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:show_timeout="0"
+        app:use_artwork="false"
+        android:background="#B3343434"
+        android:visibility="gone"
+        app:use_controller="true" />
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
