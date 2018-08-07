@@ -15,6 +15,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticObject
+import edu.artic.map.helpers.toLatLng
 import edu.artic.map.util.ArticObjectMarkerGenerator
 import edu.artic.map.util.DepartmentMarkerGenerator
 import edu.artic.map.util.GalleryNumberMarkerGenerator
@@ -33,11 +34,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = R.layout.fragment_map
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Map
-    lateinit var destroyableMapView: MapView
+    // This class is due to the fact that kotlinx will return null in ondestroy if used to get
+    // the proper view
+    private lateinit var destroyableMapView: MapView
     lateinit var map: GoogleMap
-
-    val markerMap = mutableMapOf<Marker, MapItem<*>>()
-    val mapItemMarkerMap = mutableMapOf<MapItem<*>, Marker>()
 
     val currentMarkers = mutableListOf<Marker>()
 
@@ -173,12 +173,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         gallery.number?.let {
             currentMarkers.add(
                     map.addMarker(MarkerOptions()
-                            .position(
-                                    LatLng(
-                                            gallery.latitude,
-                                            gallery.longitude
-                                    )
-                            )
+                            .position(gallery.toLatLng())
                             .icon(BitmapDescriptorFactory
                                     .fromBitmap(
                                             galleryNumberGenerator
@@ -203,12 +198,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             currentMarkers.add(
                                     map.addMarker(
                                             MarkerOptions()
-                                                    .position(
-                                                            LatLng(
-                                                                    department.latitude!!.toDouble(),
-                                                                    department.longitude!!.toDouble()
-                                                            )
-                                                    )
+                                                    .position(department.toLatLng())
                                                     .icon(BitmapDescriptorFactory.fromBitmap(
                                                             departmentMarkerGenerator.makeIcon(
                                                                     resource,
@@ -231,12 +221,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             currentMarkers.add(
                                     map.addMarker(
                                             MarkerOptions()
-                                                    .position(
-                                                            LatLng(
-                                                                    articObject.latitude,
-                                                                    articObject.longitude
-                                                            )
-                                                    )
+                                                    .position(articObject.toLatLng())
                                                     .icon(BitmapDescriptorFactory.fromBitmap(
                                                             objectMarkerGenerator.makeIcon(resource)
                                                     ))
@@ -252,12 +237,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     fun loadLandmark(annotation: ArticMapAnnotation) {
         currentMarkers.add(
                 map.addMarker(MarkerOptions()
-                        .position(
-                                LatLng(
-                                        annotation.latitude!!.toDouble(),
-                                        annotation.longitude!!.toDouble()
-                                )
-                        )
+                        .position(annotation.toLatLng())
                         .icon(BitmapDescriptorFactory.fromBitmap(
                                 galleryNumberGenerator.makeIcon(annotation.label!!))
                         )
@@ -268,12 +248,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     fun loadGenericAnnotation(annotation: ArticMapAnnotation) {
         currentMarkers.add(
                 map.addMarker(MarkerOptions()
-                        .position(
-                                LatLng(
-                                        annotation.latitude!!.toDouble(),
-                                        annotation.longitude!!.toDouble()
-                                )
-                        )
+                        .position(annotation.toLatLng())
                 )
         )
     }
