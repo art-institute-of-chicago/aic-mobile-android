@@ -18,6 +18,10 @@
                     android:scheme="artic" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".AudioPlayerService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
