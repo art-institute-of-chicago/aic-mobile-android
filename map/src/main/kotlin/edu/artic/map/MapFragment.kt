@@ -32,9 +32,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = R.layout.fragment_map
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Map
-    // This class is due to the fact that kotlinx will return null in ondestroy if used to get
-    // the proper view
-    private lateinit var destroyableMapView: MapView
+
     lateinit var map: GoogleMap
 
     val currentMarkers = mutableListOf<Marker>()
@@ -48,14 +46,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
         galleryNumberGenerator = GalleryNumberMarkerGenerator(view.context)
         departmentMarkerGenerator = DepartmentMarkerGenerator(view.context)
-
-        destroyableMapView = mapView
         mapView.onCreate(savedInstanceState)
         MapsInitializer.initialize(view.context)
         mapView.getMapAsync { map ->
             this.map = map
             map.setMinZoomPreference(18f)
             map.setMaxZoomPreference(21f)
+            /**
+             * We are setting the bounds here as they are roughly the bounds of the museum,
+             * locks us into just that area
+             */
             map.setLatLngBoundsForCameraTarget(
                     LatLngBounds(
 
@@ -152,9 +152,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         mapView.onStop()
     }
 
-    override fun onDestroy() {
-        destroyableMapView.onDestroy()
-        super.onDestroy()
+    override fun onDestroyView() {
+        mapView.onDestroy()
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
