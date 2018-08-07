@@ -24,4 +24,5 @@ dependencies {
     implementation project(':ui')
     implementation project(':viewmodel')
     implementation project(':navigation')
+    implementation project(':db')
 }
