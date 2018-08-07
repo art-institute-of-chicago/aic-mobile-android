@@ -29,3 +29,18 @@ data class ArticMapAnnotation(
         @Json(name = "image_width") val imageWidth: String?,
         @Json(name = "image_height") val imageHeight: String?
 )
+
+class ArticMapAnnotationType {
+    companion object {
+        const val TEXT = "Text"
+        const val AMENITY = "Amenity"
+        const val DEPARTMENT = "Department"
+    }
+}
+
+class ArticMapTextType {
+    companion object {
+        const val LANDMARK = "Landmark"
+        const val SPACE = "Space"
+    }
+}
