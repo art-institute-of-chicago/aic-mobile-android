@@ -8,9 +8,9 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.disposedBy
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.*
 import edu.artic.map.helpers.toLatLng
@@ -37,15 +37,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     val currentMarkers = mutableListOf<Marker>()
 
-    lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
-    lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
-    lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
+    private lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
+    private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
+    private lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
         galleryNumberGenerator = GalleryNumberMarkerGenerator(view.context)
         departmentMarkerGenerator = DepartmentMarkerGenerator(view.context)
+
         mapView.onCreate(savedInstanceState)
         MapsInitializer.initialize(view.context)
         mapView.getMapAsync { map ->
@@ -63,6 +64,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             LatLng(41.880712, -87.621100)
                     )
             )
+            map.isIndoorEnabled = false
             map.setOnCameraIdleListener {
                 val zoom = map.cameraPosition.zoom
                 when {
@@ -81,11 +83,53 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     override fun setupBindings(viewModel: MapViewModel) {
+        lowerLevel.clicks()
+                .subscribe { viewModel.floorChangedTo(0) }
+                .disposedBy(disposeBag)
+        floorOne.clicks()
+                .subscribe { viewModel.floorChangedTo(1) }
+                .disposedBy(disposeBag)
+        floorTwo.clicks()
+                .subscribe { viewModel.floorChangedTo(2) }
+                .disposedBy(disposeBag)
+        floorThree.clicks()
+                .subscribe { viewModel.floorChangedTo(3) }
+                .disposedBy(disposeBag)
+
+        viewModel.floor
+                .subscribe {
+                    lowerLevel.setBackgroundResource(
+                            if(it == 0)
+                                R.drawable.map_floor_background_selected
+                            else
+                                R.drawable.map_floor_background_default
+                    )
+                    floorOne.setBackgroundResource(
+                            if(it == 1)
+                                R.drawable.map_floor_background_selected
+                            else
+                                R.drawable.map_floor_background_default
+                    )
+                    floorTwo.setBackgroundResource(
+                            if(it == 2)
+                                R.drawable.map_floor_background_selected
+                            else
+                                R.drawable.map_floor_background_default
+                    )
+                    floorThree.setBackgroundResource(
+                            if(it == 3)
+                                R.drawable.map_floor_background_selected
+                            else
+                                R.drawable.map_floor_background_default
+                    )
+                }
+                .disposedBy(disposeBag)
+
         viewModel.mapAnnotations
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    currentMarkers.forEach {
-                        it.remove()
+                    currentMarkers.forEach { marker ->
+                        marker.remove()
                     }
                     currentMarkers.clear()
 
@@ -97,12 +141,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     ArticMapAnnotationType.DEPARTMENT -> {
                                         loadDepartment(annotation, mapItem.floor)
                                     }
-                                    ArticMapAnnotationType.TEXT  -> {
+                                    ArticMapAnnotationType.TEXT -> {
                                         when (annotation.textType) {
-                                            ArticMapTextType.LANDMARK-> {
+                                            ArticMapTextType.LANDMARK -> {
                                                 loadLandmark(annotation)
                                             }
-                                            ArticMapTextType.SPACE-> {
+                                            ArticMapTextType.SPACE -> {
                                                 loadLandmark(annotation)
                                             }
                                             else -> {
@@ -167,7 +211,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         mapView.onLowMemory()
     }
 
-    fun loadGalleryNumber(gallery: ArticGallery) {
+    private fun loadGalleryNumber(gallery: ArticGallery) {
         gallery.number?.let {
             currentMarkers.add(
                     map.addMarker(MarkerOptions()
@@ -186,7 +230,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
-    fun loadDepartment(department: ArticMapAnnotation, floor: Int) {
+    private fun loadDepartment(department: ArticMapAnnotation, floor: Int) {
         Glide.with(this)
                 .asBitmap()
                 .load(department.imageUrl)
@@ -209,7 +253,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 })
     }
 
-    fun loadObject(articObject: ArticObject, floor: Int) {
+    private fun loadObject(articObject: ArticObject, floor: Int) {
         Glide.with(this)
                 .asBitmap()
                 .load(articObject.thumbnailFullPath)
@@ -232,7 +276,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     }
 
-    fun loadLandmark(annotation: ArticMapAnnotation) {
+    private fun loadLandmark(annotation: ArticMapAnnotation) {
         currentMarkers.add(
                 map.addMarker(MarkerOptions()
                         .position(annotation.toLatLng())
@@ -243,7 +287,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         )
     }
 
-    fun loadGenericAnnotation(annotation: ArticMapAnnotation) {
+    private fun loadGenericAnnotation(annotation: ArticMapAnnotation) {
         currentMarkers.add(
                 map.addMarker(MarkerOptions()
                         .position(annotation.toLatLng())

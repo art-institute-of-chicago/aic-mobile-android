@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="white">#FFFFFF</color>
+    <color name="white50alpha">#80FFFFFF</color>
     <color name="black">#000000</color>
     <color name="gray">#979797</color>
     <color name="sea">#37a2a5</color>
@@ -29,4 +30,5 @@
     <color name="colorPrimaryDark">#118084</color>
     <color name="colorAccent">#FF4081</color>
     <color name="brownishOrange">#ce6b27</color>
+    <color name="mapFloorBlue">#083f6e</color>
 </resources>
