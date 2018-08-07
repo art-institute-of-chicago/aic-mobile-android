@@ -6,4 +6,16 @@
         <item name="android:statusBarColor">@color/marine</item>
         <item name="android:windowAnimationStyle">@null</item>
     </style>
+
+    <style name="MapFloor">
+        <item name="android:layout_marginStart">@dimen/marginDouble</item>
+        <item name="android:layout_marginEnd">@dimen/marginDouble</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">34dp</item>
+        <item name="android:minHeight">34dp</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:textColor">@color/mapFloorBlue</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@drawable/map_floor_background_default</item>
+    </style>
 </resources>
