@@ -177,6 +177,7 @@ class MapViewModel @Inject constructor(
         this.cameraMovementRequested.onNext(
                 Optional(Pair(department.toLatLng(), MapZoomLevel.Three))
         )
+        this.cameraMovementRequested.onNext(Optional(null))
     }
 
 }
