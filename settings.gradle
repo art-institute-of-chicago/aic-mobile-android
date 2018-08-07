@@ -9,4 +9,5 @@ include ':app', ':navigation', ':analytics',
         ':tours',
         ':exhibitions',
         ':events',
-        ':info'
+        ':info',
+        ':map'

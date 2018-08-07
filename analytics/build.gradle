@@ -5,5 +5,5 @@ dependencies {
     implementation libs.dagger
 
     api libs.kotlin
-    implementation libs.ga
+    api libs.ga
 }
