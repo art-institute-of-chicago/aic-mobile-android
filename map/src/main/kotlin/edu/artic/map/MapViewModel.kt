@@ -72,11 +72,7 @@ class MapViewModel @Inject constructor(
                 .map { annotationList ->
                     val list = mutableListOf<MapItem.Annotation>()
                     annotationList.forEach { annotation ->
-                        val floor = annotation.floor
-                                .let {
-                                    it?.toInt() ?: 1
-                                }
-                        list.add(MapItem.Annotation(annotation, floor))
+                        list.add(MapItem.Annotation(annotation, 0))
                     }
                     return@map list
 
@@ -109,7 +105,7 @@ class MapViewModel @Inject constructor(
                 alwaysVisibleAnnotations,
                 Function3<MapZoomLevel, Int, List<MapItem.Annotation>, List<MapItem<*>>>
                 { _: MapZoomLevel, floor: Int, annotations: List<MapItem.Annotation> ->
-                    annotations.filter { it.item.floor?.toInt() == floor }
+                    annotations.filter { it.item.floor?.toInt() == floor || it.item.textType == "Landmark"}
                 }).bindTo(mapAnnotations)
                 .disposedBy(disposeBag)
     }
@@ -137,7 +133,7 @@ class MapViewModel @Inject constructor(
                 Function4<MapZoomLevel, Int, List<MapItem.Annotation>, List<MapItem.Annotation>, List<MapItem<*>>>
                 { _, floor, annotations, deparments ->
                     val list = mutableListOf<MapItem<*>>()
-                    list.addAll(annotations.filter { it.item.floor?.toInt() == floor })
+                    list.addAll(annotations.filter { it.item.floor?.toInt() == floor || it.item.textType == "Landmark"})
                     list.addAll(deparments.filter { it.item.floor?.toInt() == floor })
                     return@Function4 list
                 }).bindTo(mapAnnotations)
@@ -172,10 +168,10 @@ class MapViewModel @Inject constructor(
                 galleries,
                 objects,
                 alwaysVisibleAnnotations,
-                Function4<Int, List<ArticGallery>, List<ArticObject>, List<MapItem<*>>, List<MapItem<*>>>
+                Function4<Int, List<ArticGallery>, List<ArticObject>, List<MapItem.Annotation>, List<MapItem<*>>>
                 { floor, galleryList, objectList, annotations ->
                     val list = mutableListOf<MapItem<*>>()
-                    list.addAll(annotations)
+                    list.addAll(annotations.filter { it.item.floor?.toInt() == floor || it.item.textType == "Landmark"})
                     galleryList.forEach { gallery ->
                         list.add(MapItem.Gallery(gallery, floor))
                     }

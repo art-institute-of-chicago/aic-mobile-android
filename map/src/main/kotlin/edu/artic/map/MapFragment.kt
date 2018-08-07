@@ -99,17 +99,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     "Department" -> {
                                         loadDepartment(annotation, mapItem.floor)
                                     }
+                                    "Text" -> {
+                                        when (annotation.textType) {
+                                            "Landmark" -> {
+                                                loadLandmark(annotation)
+                                            }
+                                            else -> {
+                                                loadGenericAnnotation(annotation)
+                                            }
+                                        }
+                                    }
                                     else -> {
-                                        currentMarkers.add(
-                                                map.addMarker(MarkerOptions()
-                                                        .position(
-                                                                LatLng(
-                                                                        annotation.latitude!!.toDouble(),
-                                                                        annotation.longitude!!.toDouble()
-                                                                )
-                                                        )
-                                                )
-                                        )
+                                        loadGenericAnnotation(annotation)
                                     }
                                 }
                             }
@@ -243,6 +244,35 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 })
 
 
+    }
+
+    fun loadLandmark(annotation: ArticMapAnnotation) {
+        currentMarkers.add(
+                map.addMarker(MarkerOptions()
+                        .position(
+                                LatLng(
+                                        annotation.latitude!!.toDouble(),
+                                        annotation.longitude!!.toDouble()
+                                )
+                        )
+                        .icon(BitmapDescriptorFactory.fromBitmap(
+                                galleryNumberGenerator.makeIcon(annotation.label!!))
+                        )
+                )
+        )
+    }
+
+    fun loadGenericAnnotation(annotation: ArticMapAnnotation) {
+        currentMarkers.add(
+                map.addMarker(MarkerOptions()
+                        .position(
+                                LatLng(
+                                        annotation.latitude!!.toDouble(),
+                                        annotation.longitude!!.toDouble()
+                                )
+                        )
+                )
+        )
     }
 
 }
