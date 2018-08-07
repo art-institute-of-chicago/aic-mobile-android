@@ -2,13 +2,13 @@ package edu.artic.audio
 
 
 import android.content.ComponentName
+import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.isMyServiceRunning
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -35,7 +35,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override fun hasTransparentStatusBar(): Boolean = true
 
     var boundService: AudioPlayerService? = null
-    var audioIntent: Intent? = null
+    private var audioIntent: Intent? = null
 
     private val audioFile: ArticAudioFile = getAudio()
 
@@ -51,7 +51,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 audioPlayer.player = it.player
                 it.player.refreshPlayBackState()
             }
-            boundService?.setAudioUrl("http://aic-mobile-tours.artic.edu/sites/default/files/audio/881.mp3")
+            boundService?.setAudioObject(audioFile)
         }
     }
 
@@ -59,12 +59,8 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         audioIntent = Intent(context, AudioPlayerService::class.java)
-        if (activity?.isMyServiceRunning(AudioPlayerService::class.java) != true) {
-            audioIntent?.action = MusicConstants.ACTION.PLAY_ACTION
-            activity?.startService(audioIntent)
-        }
-
-        activity?.bindService(audioIntent, serviceConnection, 0)
+        audioIntent?.action = MusicConstants.ACTION.PLAY_ACTION
+        activity?.bindService(audioIntent, serviceConnection, BIND_AUTO_CREATE)
 
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
