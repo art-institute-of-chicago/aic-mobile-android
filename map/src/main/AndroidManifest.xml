@@ -1,0 +1,23 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.artic.map">
+
+    <application>
+        <activity
+            android:name=".MapActivity"
+            android:theme="@style/AppTheme.CustomToolbar.MapTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="edu.artic.map"
+                    android:scheme="artic" />
+            </intent-filter>
+        </activity>
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBkVSSCgtMTxKwJsp9thR2IbEbM9WZ9Pvg"/>
+    </application>
+</manifest>
