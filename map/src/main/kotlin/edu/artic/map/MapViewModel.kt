@@ -131,20 +131,12 @@ class MapViewModel @Inject constructor(
             galleryDao.getGalleriesForFloor(it.toString()).asObservable()
         }
 
-        galleries.subscribe {
-            Timber.d("galleriesListSize: ${it.size}" )
-        }.disposedBy(disposeBag)
-
         val objects = galleries
                 .map { galleryList ->
-                    galleryList.filter { it.titleT != null }.map { it.titleT!! }
+                    galleryList.filter { it.titleT != null }.map { it.titleT.orEmpty() }
                 }.flatMap {
                     objectDao.getObjectsInGalleries(it).asObservable()
                 }
-
-        objects.subscribe {
-            Timber.d("objectsSize: ${it.size}" )
-        }.disposedBy(disposeBag)
 
         Observables.combineLatest(
                 floor,

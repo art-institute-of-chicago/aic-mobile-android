@@ -200,7 +200,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                                     .icon(BitmapDescriptorFactory.fromBitmap(
                                                             departmentMarkerGenerator.makeIcon(
                                                                     resource,
-                                                                    department.label!!)
+                                                                    department.label.orEmpty())
                                                     ))
                                     )
                             )
@@ -237,7 +237,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 map.addMarker(MarkerOptions()
                         .position(annotation.toLatLng())
                         .icon(BitmapDescriptorFactory.fromBitmap(
-                                galleryNumberGenerator.makeIcon(annotation.label!!))
+                                galleryNumberGenerator.makeIcon(annotation.label.orEmpty()))
                         )
                 )
         )
