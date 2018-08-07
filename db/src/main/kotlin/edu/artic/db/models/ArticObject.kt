@@ -51,10 +51,4 @@ data class ArticObject(
         @Json(name = "audio_transcript") val audioTranscript: String?,
         @Json(name = "object_selector_number") val objectSelectorNumber: String?,
         @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?>
-) {
-
-//    data class AudioObject(
-//            @Json(name = "object_selector_number") val object_selector_number: String,
-//            @Json(name = "audio") val audio: String
-//    )
-}
+)
