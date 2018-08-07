@@ -8,7 +8,7 @@ class NavigationConstants {
     companion object {
         const val HOME: String = "edu.artic.home"
         const val MAP: String = ""
-        const val AUDIO: String = ""
+        const val AUDIO: String = "edu.artic.audio"
         const val INFO: String = "edu.artic.info"
     }
 }
