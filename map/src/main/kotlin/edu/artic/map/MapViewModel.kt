@@ -59,7 +59,7 @@ class MapViewModel @Inject constructor(
                     annotationList.forEach { annotation ->
                         val floor = annotation.floor
                                 .let {
-                                    it?.toInt() ?: 1
+                                    it?.toInt() ?: -1
                                 }
                         list.add(MapItem.Annotation(annotation, floor))
                     }
@@ -72,7 +72,11 @@ class MapViewModel @Inject constructor(
                 .map { annotationList ->
                     val list = mutableListOf<MapItem.Annotation>()
                     annotationList.forEach { annotation ->
-                        list.add(MapItem.Annotation(annotation, 0))
+                        val floor = annotation.floor
+                                .let {
+                                    it?.toInt() ?: -1
+                                }
+                        list.add(MapItem.Annotation(annotation, floor))
                     }
                     return@map list
 
@@ -102,10 +106,19 @@ class MapViewModel @Inject constructor(
         Observable.combineLatest(
                 zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.One },
                 floor.distinctUntilChanged(),
-                alwaysVisibleAnnotations,
+                alwaysVisibleAnnotations.map{ annotationList ->
+                    annotationList.filter { item ->
+                        item.item.annotationType == "Amenity" ||
+                                (item.item.annotationType == "Text" && item.item.textType == "Landmark")
+                    }
+                },
                 Function3<MapZoomLevel, Int, List<MapItem.Annotation>, List<MapItem<*>>>
                 { _: MapZoomLevel, floor: Int, annotations: List<MapItem.Annotation> ->
-                    annotations.filter { it.item.floor?.toInt() == floor || it.item.textType == "Landmark"}
+                    annotations.filter { item ->
+                        (item.item.annotationType == "Amenity" && item.floor == floor)
+                                || item.item.annotationType == "Text"
+
+                    }
                 }).bindTo(mapAnnotations)
                 .disposedBy(disposeBag)
     }
@@ -114,7 +127,12 @@ class MapViewModel @Inject constructor(
         Observable.combineLatest(
                 zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Two },
                 floor.distinctUntilChanged(),
-                alwaysVisibleAnnotations,
+                alwaysVisibleAnnotations.map{itemList ->
+                    itemList.filter {item ->
+                        item.item.annotationType == "Amenity" ||
+                                (item.item.annotationType == "Text" && item.item.textType == "Space")
+                    }
+                },
                 mapAnnotationDao
                         .getDepartmentOnMap()
                         .asObservable()
@@ -133,7 +151,7 @@ class MapViewModel @Inject constructor(
                 Function4<MapZoomLevel, Int, List<MapItem.Annotation>, List<MapItem.Annotation>, List<MapItem<*>>>
                 { _, floor, annotations, deparments ->
                     val list = mutableListOf<MapItem<*>>()
-                    list.addAll(annotations.filter { it.item.floor?.toInt() == floor || it.item.textType == "Landmark"})
+                    list.addAll(annotations.filter { it.floor == floor})
                     list.addAll(deparments.filter { it.item.floor?.toInt() == floor })
                     return@Function4 list
                 }).bindTo(mapAnnotations)
@@ -158,20 +176,20 @@ class MapViewModel @Inject constructor(
                     objectDao.getObjectsInGalleries(it).asObservable()
                 }
 
-        objects.subscribe {
-            Timber.d("galleries count : ${it.size}")
-        }.disposedBy(disposeBag)
-
-
         Observable.combineLatest(
                 floor,
                 galleries,
                 objects,
-                alwaysVisibleAnnotations,
+                alwaysVisibleAnnotations.map{itemList ->
+                    itemList.filter {item ->
+                        item.item.annotationType == "Amenity" ||
+                                (item.item.annotationType == "Text" && item.item.textType == "Space")
+                    }
+                },
                 Function4<Int, List<ArticGallery>, List<ArticObject>, List<MapItem.Annotation>, List<MapItem<*>>>
                 { floor, galleryList, objectList, annotations ->
                     val list = mutableListOf<MapItem<*>>()
-                    list.addAll(annotations.filter { it.item.floor?.toInt() == floor || it.item.textType == "Landmark"})
+                    list.addAll(annotations.filter { it.floor == floor })
                     galleryList.forEach { gallery ->
                         list.add(MapItem.Gallery(gallery, floor))
                     }

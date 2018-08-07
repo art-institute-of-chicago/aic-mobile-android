@@ -104,6 +104,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             "Landmark" -> {
                                                 loadLandmark(annotation)
                                             }
+                                            "Space" -> {
+                                                loadLandmark(annotation)
+                                            }
                                             else -> {
                                                 loadGenericAnnotation(annotation)
                                             }
