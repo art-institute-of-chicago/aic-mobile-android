@@ -12,9 +12,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.db.models.ArticGallery
-import edu.artic.db.models.ArticMapAnnotation
-import edu.artic.db.models.ArticObject
+import edu.artic.db.models.*
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.util.ArticObjectMarkerGenerator
 import edu.artic.map.util.DepartmentMarkerGenerator
@@ -96,15 +94,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             is MapItem.Annotation -> {
                                 val annotation = mapItem.item
                                 when (annotation.annotationType) {
-                                    "Department" -> {
+                                    ArticMapAnnotationType.DEPARTMENT -> {
                                         loadDepartment(annotation, mapItem.floor)
                                     }
-                                    "Text" -> {
+                                    ArticMapAnnotationType.TEXT  -> {
                                         when (annotation.textType) {
-                                            "Landmark" -> {
+                                            ArticMapTextType.LANDMARK-> {
                                                 loadLandmark(annotation)
                                             }
-                                            "Space" -> {
+                                            ArticMapTextType.SPACE-> {
                                                 loadLandmark(annotation)
                                             }
                                             else -> {
