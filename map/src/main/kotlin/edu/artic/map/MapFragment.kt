@@ -12,8 +12,9 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAnnotation
-import edu.artic.db.models.ArticMapFloor
+import edu.artic.db.models.ArticObject
 import edu.artic.map.util.ArticObjectMarkerGenerator
 import edu.artic.map.util.DepartmentMarkerGenerator
 import edu.artic.map.util.GalleryNumberMarkerGenerator
@@ -114,54 +115,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             }
                             is MapItem.Gallery -> {
                                 val gallery = mapItem.item
-                                gallery.number?.let {
-                                    currentMarkers.add(
-                                            map.addMarker(MarkerOptions()
-                                                    .position(
-                                                            LatLng(
-                                                                    gallery.latitude,
-                                                                    gallery.longitude
-                                                            )
-                                                    )
-                                                    .icon(BitmapDescriptorFactory
-                                                            .fromBitmap(
-                                                                    galleryNumberGenerator
-                                                                            .makeIcon(
-                                                                                    it
-                                                                            )
-                                                            )
-                                                    )
-                                                    .anchor(.5f, 0f)
-                                            )
-                                    )
-                                }
+                                loadGalleryNumber(gallery)
 
                             }
                             is MapItem.Object -> {
                                 val articObject = mapItem.item
-                                Glide.with(this)
-                                        .asBitmap()
-                                        .load(articObject.thumbnailFullPath)
-                                        .into(object : SimpleTarget<Bitmap>() {
-                                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                                if (viewModel.currentZoomLevel === MapZoomLevel.Three && viewModel.currentFloor == mapItem.floor) {
-                                                    currentMarkers.add(
-                                                            map.addMarker(
-                                                                    MarkerOptions()
-                                                                            .position(
-                                                                                    LatLng(
-                                                                                            articObject.latitude,
-                                                                                            articObject.longitude
-                                                                                    )
-                                                                            )
-                                                                            .icon(BitmapDescriptorFactory.fromBitmap(objectMarkerGenerator.makeIcon(resource)))
-                                                            )
-                                                    )
-                                                }
-                                            }
-                                        })
-
-
+                                loadObject(articObject, mapItem.floor)
                             }
                         }
 
@@ -206,6 +165,30 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         mapView.onLowMemory()
     }
 
+    fun loadGalleryNumber(gallery: ArticGallery) {
+        gallery.number?.let {
+            currentMarkers.add(
+                    map.addMarker(MarkerOptions()
+                            .position(
+                                    LatLng(
+                                            gallery.latitude,
+                                            gallery.longitude
+                                    )
+                            )
+                            .icon(BitmapDescriptorFactory
+                                    .fromBitmap(
+                                            galleryNumberGenerator
+                                                    .makeIcon(
+                                                            it
+                                                    )
+                                    )
+                            )
+                            .anchor(.5f, 0f)
+                    )
+            )
+        }
+    }
+
     fun loadDepartment(department: ArticMapAnnotation, floor: Int) {
         Glide.with(this)
                 .asBitmap()
@@ -233,4 +216,33 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 })
     }
+
+    fun loadObject(articObject: ArticObject, floor: Int) {
+        Glide.with(this)
+                .asBitmap()
+                .load(articObject.thumbnailFullPath)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        if (viewModel.currentZoomLevel === MapZoomLevel.Three && viewModel.currentFloor == floor) {
+                            currentMarkers.add(
+                                    map.addMarker(
+                                            MarkerOptions()
+                                                    .position(
+                                                            LatLng(
+                                                                    articObject.latitude,
+                                                                    articObject.longitude
+                                                            )
+                                                    )
+                                                    .icon(BitmapDescriptorFactory.fromBitmap(
+                                                            objectMarkerGenerator.makeIcon(resource)
+                                                    ))
+                                    )
+                            )
+                        }
+                    }
+                })
+
+
+    }
+
 }
