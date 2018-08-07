@@ -1,21 +1,25 @@
 package edu.artic.audio
 
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import edu.artic.analytics.ScreenCategoryName
+import edu.artic.viewmodel.BaseViewModelFragment
+import kotlin.reflect.KClass
 
 /**
- *
+ * @author Sameer Dhakal (Fuzz)
  */
-class AudioDetailsFragment : Fragment() {
+class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
+    override val viewModelClass: KClass<AudioDetailsViewModel>
+        get() = AudioDetailsViewModel::class
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_audio_detais, container, false)
-    }
+    override val title: String
+        get() = "Audio"
 
+    override val layoutResId: Int
+        get() = R.layout.fragment_audio_detais
 
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.AudioPlayer
+
+    override fun hasTransparentStatusBar(): Boolean = true
 }

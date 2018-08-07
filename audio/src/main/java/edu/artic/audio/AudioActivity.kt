@@ -14,8 +14,8 @@ class AudioActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bottomNavigation.apply {
-            disableShiftMode(R.color.info_menu_color_list)
-            selectedItemId = R.id.action_info
+            disableShiftMode(R.color.audio_menu_color_list)
+            selectedItemId = R.id.action_audio
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
     }
