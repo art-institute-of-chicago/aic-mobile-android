@@ -102,8 +102,8 @@
             <com.google.android.exoplayer2.ui.PlayerView
                 android:id="@+id/audioPlayer"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_margin="16dp"
+                android:layout_height="120dp"
+                android:layout_margin="@dimen/marginDouble"
                 app:auto_show="true"
                 app:controller_layout_id="@layout/exo_playback_control_view"
                 app:hide_on_touch="false"

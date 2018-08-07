@@ -47,7 +47,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 audioPlayer.player = it.player
                 it.player.refreshPlayBackState()
             }
-            boundService?.setAudioUrl("http://cms.stream.publicradio.org/cms.mp3")
+            boundService?.setAudioUrl("http://aic-mobile-tours.artic.edu/sites/default/files/audio/881.mp3")
         }
     }
 
