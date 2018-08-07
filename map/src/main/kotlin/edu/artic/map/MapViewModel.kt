@@ -151,12 +151,8 @@ class MapViewModel @Inject constructor(
         ) { floor, galleryList, objectList, annotations ->
             val list = mutableListOf<MapItem<*>>()
             list.addAll(annotations.filter { it.floor == floor })
-            galleryList.forEach { gallery ->
-                list.add(MapItem.Gallery(gallery, floor))
-            }
-            objectList.forEach { articObject ->
-                list.add(MapItem.Object(articObject, floor))
-            }
+            list.addAll(galleryList.map { gallery -> MapItem.Gallery(gallery, floor) })
+            list.addAll(objectList.map{ articObject -> MapItem.Object(articObject, floor) })
             return@combineLatest list
         }.bindTo(mapAnnotations)
                 .disposedBy(disposeBag)
