@@ -13,6 +13,7 @@ import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import javax.inject.Inject
 
 class MapViewModel @Inject constructor(
@@ -130,12 +131,20 @@ class MapViewModel @Inject constructor(
             galleryDao.getGalleriesForFloor(it.toString()).asObservable()
         }
 
+        galleries.subscribe {
+            Timber.d("galleriesListSize: ${it.size}" )
+        }.disposedBy(disposeBag)
+
         val objects = galleries
                 .map { galleryList ->
                     galleryList.filter { it.titleT != null }.map { it.titleT!! }
                 }.flatMap {
                     objectDao.getObjectsInGalleries(it).asObservable()
                 }
+
+        objects.subscribe {
+            Timber.d("objectsSize: ${it.size}" )
+        }.disposedBy(disposeBag)
 
         Observables.combineLatest(
                 floor,
