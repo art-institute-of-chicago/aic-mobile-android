@@ -9,14 +9,18 @@ import org.threeten.bp.format.DateTimeFormatterBuilder
 
 class DateTimeHelper {
     companion object {
-        val DEFAULT_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        const val DEFAULT_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
 
-        val v: DateTimeFormatter = DateTimeFormatter.BASIC_ISO_DATE
         val DEFAULT_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
                 .appendPattern(DEFAULT_FORMAT)
                 .toFormatter()
+
+        val MONTH_DAY_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
+                .appendPattern("MMMM d")
+                .toFormatter()
+
         val HOME_EXHIBITION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
-                .appendPattern("MMMM dd, yyyy")
+                .appendPattern("MMMM d, yyyy")
                 .toFormatter()
 
         val HOME_EVENT_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
