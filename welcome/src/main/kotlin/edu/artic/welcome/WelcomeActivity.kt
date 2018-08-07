@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.View
 import androidx.navigation.Navigation
+import edu.artic.audio.AudioActivity
 import edu.artic.audio.AudioPlayerService
 import edu.artic.audio.refreshPlayBackState
 import edu.artic.base.utils.disableShiftMode
@@ -75,6 +76,10 @@ class WelcomeActivity : BaseActivity() {
                     }
                     .start()
 
+        }
+
+        audioPlayer.trackTitle.setOnClickListener {
+            startActivity(Intent(this, AudioActivity::class.java))
         }
     }
 
