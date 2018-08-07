@@ -51,23 +51,4 @@ data class ArticObject(
         @Json(name = "audio_transcript") val audioTranscript: String?,
         @Json(name = "object_selector_number") val objectSelectorNumber: String?,
         @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?>
-) {
-
-    val latitude: Double
-        get() {
-            return location.let {
-                it?.split(",")?.first()?.toDouble() ?: 0.0
-            }
-        }
-
-    val longitude: Double
-        get() {
-            return location.let {
-                it?.split(",")?.last()?.toDouble() ?: 0.0
-            }
-        }
-//    data class AudioObject(
-//            @Json(name = "object_selector_number") val object_selector_number: String,
-//            @Json(name = "audio") val audio: String
-//    )
-}
+)
