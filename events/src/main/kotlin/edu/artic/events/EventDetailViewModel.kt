@@ -7,7 +7,6 @@ import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
-import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticEvent
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -15,8 +14,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class EventDetailViewModel @Inject constructor(dataObjectDao: ArticDataObjectDao,
-                                               val analyticsTracker: AnalyticsTracker)
+class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker)
     : NavViewViewModel<EventDetailViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {

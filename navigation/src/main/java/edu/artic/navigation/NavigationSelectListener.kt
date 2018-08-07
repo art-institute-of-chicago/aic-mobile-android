@@ -22,6 +22,9 @@ class NavigationSelectListener(val context: Context) : BottomNavigationView.OnNa
                 false
             }
             R.id.action_map -> {
+                val intent = NavigationConstants.MAP.asDeepLinkIntent()
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                context.startActivity(intent)
                 false
             }
             R.id.action_audio -> {

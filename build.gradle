@@ -4,7 +4,7 @@ buildscript {
     ext {
         sdk = 27
         minSdk = 21
-        kotlin_version = '1.2.50'
+        kotlin_version = '1.2.51'
         latest_helper = '7f1d88469155cedd57df87682806736437088abc'
         dagger_version = '2.15'
         support_version = '27.1.1'
@@ -16,7 +16,7 @@ buildscript {
         moshi_version = '1.6.0'
         room_version = '1.1.1'
         glide_version = '4.4.0'
-        firebase_version = '11.8.0'
+        firebase_version = '16.0.1'
 
         libs = [
                 kotlin                 : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
@@ -52,6 +52,7 @@ buildscript {
                 glide                  : "com.github.bumptech.glide:glide:${glide_version}",
                 glide_compiler         : "com.github.bumptech.glide:compiler:${glide_version}",
                 ga                     : "com.google.android.gms:play-services-analytics:${firebase_version}",
+                maps                   : "com.google.android.gms:play-services-maps:15.0.1",
         ]
 
     }
@@ -63,6 +64,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.3.0-alpha03'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
+        classpath 'com.google.gms:google-services:4.0.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
