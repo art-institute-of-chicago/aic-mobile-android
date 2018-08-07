@@ -4,11 +4,9 @@
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/MarkerGalleryText"
         android:id="@+id/text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ideal_sans_medium"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:layout_height="wrap_content" />
 
 </FrameLayout>
