@@ -1,14 +1,18 @@
 package edu.artic.map
 
+import com.fuzz.rx.Optional
 import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticMapTextType
 import edu.artic.map.helpers.mapToMapItem
+import edu.artic.map.helpers.toLatLng
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -28,6 +32,8 @@ class MapViewModel @Inject constructor(
 
     val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     val zoomLevel: Subject<MapZoomLevel> = BehaviorSubject.create()
+
+    val cameraMovementRequested: Subject<Optional<Pair<LatLng, MapZoomLevel>>> = BehaviorSubject.create()
 
     val currentFloor: Int
         get() {
@@ -167,5 +173,10 @@ class MapViewModel @Inject constructor(
         this.floor.onNext(floor)
     }
 
+    fun departmentMarkerSelected(department: ArticMapAnnotation){
+        this.cameraMovementRequested.onNext(
+                Optional(Pair(department.toLatLng(), MapZoomLevel.Three))
+        )
+    }
 
 }

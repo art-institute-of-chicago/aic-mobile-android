@@ -7,6 +7,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterValue
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
@@ -79,6 +81,22 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 }
             }
+
+            map.setOnMarkerClickListener { marker ->
+                var handled = false
+                when(marker.tag) {
+                    is MapItem.Annotation -> {
+                        val annotation = marker.tag as MapItem.Annotation
+                        when(annotation.item.annotationType) {
+                            ArticMapAnnotationType.DEPARTMENT -> {
+                                viewModel.departmentMarkerSelected(annotation.item)
+                                handled = true
+                            }
+                        }
+                    }
+                }
+                return@setOnMarkerClickListener handled
+            }
         }
     }
 
@@ -96,28 +114,49 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe { viewModel.floorChangedTo(3) }
                 .disposedBy(disposeBag)
 
+        viewModel.cameraMovementRequested
+                .filterValue()
+                .subscribe {(newPostition, zoomLevel) ->
+                    map.animateCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                    newPostition,
+                                    when(zoomLevel) {
+                                        MapZoomLevel.One -> {
+                                            18.0f
+                                        }
+                                        MapZoomLevel.Two -> {
+                                            19.0f
+                                        }
+                                        MapZoomLevel.Three -> {
+                                            20.0f
+                                        }
+                                    }
+                            )
+                    )
+                }.disposedBy(disposeBag)
+
         viewModel.floor
                 .subscribe {
                     lowerLevel.setBackgroundResource(
-                            if(it == 0)
+                            if (it == 0)
                                 R.drawable.map_floor_background_selected
                             else
                                 R.drawable.map_floor_background_default
                     )
                     floorOne.setBackgroundResource(
-                            if(it == 1)
+                            if (it == 1)
                                 R.drawable.map_floor_background_selected
                             else
                                 R.drawable.map_floor_background_default
                     )
                     floorTwo.setBackgroundResource(
-                            if(it == 2)
+                            if (it == 2)
                                 R.drawable.map_floor_background_selected
                             else
                                 R.drawable.map_floor_background_default
                     )
                     floorThree.setBackgroundResource(
-                            if(it == 3)
+                            if (it == 3)
                                 R.drawable.map_floor_background_selected
                             else
                                 R.drawable.map_floor_background_default
@@ -139,7 +178,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                 val annotation = mapItem.item
                                 when (annotation.annotationType) {
                                     ArticMapAnnotationType.DEPARTMENT -> {
-                                        loadDepartment(annotation, mapItem.floor)
+                                        loadDepartment(mapItem)
                                     }
                                     ArticMapAnnotationType.TEXT -> {
                                         when (annotation.textType) {
@@ -230,24 +269,26 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
-    private fun loadDepartment(department: ArticMapAnnotation, floor: Int) {
+    private fun loadDepartment(annotation: MapItem.Annotation) {
+        val department = annotation.item
+        val floor = annotation.floor
         Glide.with(this)
                 .asBitmap()
                 .load(department.imageUrl)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (viewModel.currentZoomLevel === MapZoomLevel.Two && viewModel.currentFloor == floor) {
-                            currentMarkers.add(
-                                    map.addMarker(
-                                            MarkerOptions()
-                                                    .position(department.toLatLng())
-                                                    .icon(BitmapDescriptorFactory.fromBitmap(
-                                                            departmentMarkerGenerator.makeIcon(
-                                                                    resource,
-                                                                    department.label.orEmpty())
-                                                    ))
-                                    )
+                            val marker = map.addMarker(
+                                    MarkerOptions()
+                                            .position(department.toLatLng())
+                                            .icon(BitmapDescriptorFactory.fromBitmap(
+                                                    departmentMarkerGenerator.makeIcon(
+                                                            resource,
+                                                            department.label.orEmpty())
+                                            ))
                             )
+                            marker.tag = annotation
+                            currentMarkers.add(marker)
                         }
                     }
                 })
