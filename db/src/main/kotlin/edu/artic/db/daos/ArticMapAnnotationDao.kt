@@ -20,7 +20,7 @@ abstract class ArticMapAnnotationDao {
     abstract fun getTextAnnotationByType(type: String): Flowable<List<ArticMapAnnotation>>
 
     fun getBuildingNamesOnMap(): Flowable<List<ArticMapAnnotation>> {
-        return getTextAnnotationByType("Space")
+        return getTextAnnotationByType("Landmark")
     }
     fun getAmenitiesOnMap() : Flowable<List<ArticMapAnnotation>> {
         return getAnnotationByType("Amenity")
