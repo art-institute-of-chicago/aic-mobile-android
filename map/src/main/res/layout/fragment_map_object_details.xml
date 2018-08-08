@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="134dp"
+    android:background="@color/mapObjectWindowBlue"
     android:clickable="true"
-    android:focusable="true"
-    android:background="@color/mapObjectWindowBlue">
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/image"

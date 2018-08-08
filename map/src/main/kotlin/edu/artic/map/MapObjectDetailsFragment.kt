@@ -5,12 +5,14 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import com.bumptech.glide.Glide
 import edu.artic.db.models.ArticObject
 import kotlinx.android.synthetic.main.fragment_map_object_details.*
 
 /**
-@author Sameer Dhakal (Fuzz)
+ * @author Sameer Dhakal (Fuzz)
  */
 class MapObjectDetailsFragment : Fragment() {
 
