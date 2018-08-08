@@ -7,10 +7,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterValue
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.*
 import edu.artic.map.helpers.toLatLng
@@ -37,15 +39,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     val currentMarkers = mutableListOf<Marker>()
 
-    lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
-    lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
-    lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
+    private lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
+    private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
+    private lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
         galleryNumberGenerator = GalleryNumberMarkerGenerator(view.context)
         departmentMarkerGenerator = DepartmentMarkerGenerator(view.context)
+
         mapView.onCreate(savedInstanceState)
         MapsInitializer.initialize(view.context)
         mapView.getMapAsync { map ->
@@ -63,6 +66,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             LatLng(41.880712, -87.621100)
                     )
             )
+            map.isIndoorEnabled = false
             map.setOnCameraIdleListener {
                 val zoom = map.cameraPosition.zoom
                 when {
@@ -77,15 +81,94 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 }
             }
+
+            map.setOnMarkerClickListener { marker ->
+                var handled = false
+                when(marker.tag) {
+                    is MapItem.Annotation -> {
+                        val annotation = marker.tag as MapItem.Annotation
+                        when(annotation.item.annotationType) {
+                            ArticMapAnnotationType.DEPARTMENT -> {
+                                viewModel.departmentMarkerSelected(annotation.item)
+                                handled = true
+                            }
+                        }
+                    }
+                }
+                return@setOnMarkerClickListener handled
+            }
         }
     }
 
     override fun setupBindings(viewModel: MapViewModel) {
+        lowerLevel.clicks()
+                .subscribe { viewModel.floorChangedTo(0) }
+                .disposedBy(disposeBag)
+        floorOne.clicks()
+                .subscribe { viewModel.floorChangedTo(1) }
+                .disposedBy(disposeBag)
+        floorTwo.clicks()
+                .subscribe { viewModel.floorChangedTo(2) }
+                .disposedBy(disposeBag)
+        floorThree.clicks()
+                .subscribe { viewModel.floorChangedTo(3) }
+                .disposedBy(disposeBag)
+
+        viewModel.cameraMovementRequested
+                .filterValue()
+                .subscribe {(newPostition, zoomLevel) ->
+                    map.animateCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                    newPostition,
+                                    when(zoomLevel) {
+                                        MapZoomLevel.One -> {
+                                            18.0f
+                                        }
+                                        MapZoomLevel.Two -> {
+                                            19.0f
+                                        }
+                                        MapZoomLevel.Three -> {
+                                            20.0f
+                                        }
+                                    }
+                            )
+                    )
+                }.disposedBy(disposeBag)
+
+        viewModel.floor
+                .subscribe {
+                    lowerLevel.setBackgroundResource(
+                            if (it == 0)
+                                R.drawable.map_floor_background_selected
+                            else
+                                R.drawable.map_floor_background_default
+                    )
+                    floorOne.setBackgroundResource(
+                            if (it == 1)
+                                R.drawable.map_floor_background_selected
+                            else
+                                R.drawable.map_floor_background_default
+                    )
+                    floorTwo.setBackgroundResource(
+                            if (it == 2)
+                                R.drawable.map_floor_background_selected
+                            else
+                                R.drawable.map_floor_background_default
+                    )
+                    floorThree.setBackgroundResource(
+                            if (it == 3)
+                                R.drawable.map_floor_background_selected
+                            else
+                                R.drawable.map_floor_background_default
+                    )
+                }
+                .disposedBy(disposeBag)
+
         viewModel.mapAnnotations
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    currentMarkers.forEach {
-                        it.remove()
+                    currentMarkers.forEach { marker ->
+                        marker.remove()
                     }
                     currentMarkers.clear()
 
@@ -95,14 +178,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                 val annotation = mapItem.item
                                 when (annotation.annotationType) {
                                     ArticMapAnnotationType.DEPARTMENT -> {
-                                        loadDepartment(annotation, mapItem.floor)
+                                        loadDepartment(mapItem)
                                     }
-                                    ArticMapAnnotationType.TEXT  -> {
+                                    ArticMapAnnotationType.TEXT -> {
                                         when (annotation.textType) {
-                                            ArticMapTextType.LANDMARK-> {
+                                            ArticMapTextType.LANDMARK -> {
                                                 loadLandmark(annotation)
                                             }
-                                            ArticMapTextType.SPACE-> {
+                                            ArticMapTextType.SPACE -> {
                                                 loadLandmark(annotation)
                                             }
                                             else -> {
@@ -167,7 +250,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         mapView.onLowMemory()
     }
 
-    fun loadGalleryNumber(gallery: ArticGallery) {
+    private fun loadGalleryNumber(gallery: ArticGallery) {
         gallery.number?.let {
             currentMarkers.add(
                     map.addMarker(MarkerOptions()
@@ -186,30 +269,32 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
-    fun loadDepartment(department: ArticMapAnnotation, floor: Int) {
+    private fun loadDepartment(annotation: MapItem.Annotation) {
+        val department = annotation.item
+        val floor = annotation.floor
         Glide.with(this)
                 .asBitmap()
                 .load(department.imageUrl)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (viewModel.currentZoomLevel === MapZoomLevel.Two && viewModel.currentFloor == floor) {
-                            currentMarkers.add(
-                                    map.addMarker(
-                                            MarkerOptions()
-                                                    .position(department.toLatLng())
-                                                    .icon(BitmapDescriptorFactory.fromBitmap(
-                                                            departmentMarkerGenerator.makeIcon(
-                                                                    resource,
-                                                                    department.label.orEmpty())
-                                                    ))
-                                    )
+                            val marker = map.addMarker(
+                                    MarkerOptions()
+                                            .position(department.toLatLng())
+                                            .icon(BitmapDescriptorFactory.fromBitmap(
+                                                    departmentMarkerGenerator.makeIcon(
+                                                            resource,
+                                                            department.label.orEmpty())
+                                            ))
                             )
+                            marker.tag = annotation
+                            currentMarkers.add(marker)
                         }
                     }
                 })
     }
 
-    fun loadObject(articObject: ArticObject, floor: Int) {
+    private fun loadObject(articObject: ArticObject, floor: Int) {
         Glide.with(this)
                 .asBitmap()
                 .load(articObject.thumbnailFullPath)
@@ -232,7 +317,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     }
 
-    fun loadLandmark(annotation: ArticMapAnnotation) {
+    private fun loadLandmark(annotation: ArticMapAnnotation) {
         currentMarkers.add(
                 map.addMarker(MarkerOptions()
                         .position(annotation.toLatLng())
@@ -243,7 +328,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         )
     }
 
-    fun loadGenericAnnotation(annotation: ArticMapAnnotation) {
+    private fun loadGenericAnnotation(annotation: ArticMapAnnotation) {
         currentMarkers.add(
                 map.addMarker(MarkerOptions()
                         .position(annotation.toLatLng())
