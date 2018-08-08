@@ -25,5 +25,7 @@ abstract class MapModule {
     @get:ContributesAndroidInjector
     abstract val mapFragment: MapFragment
 
+    @get:ContributesAndroidInjector
+    abstract val mapObjectDetailsFragment: MapObjectDetailsFragment
 
 }

@@ -137,5 +137,20 @@ class AudioPlayerService : Service() {
         player.release()
     }
 
+    fun getCurrentAudio(): ArticAudioFile? {
+        return audioObject
+    }
+
+    fun resumeCurrentAudio(requestedAudioFile: ArticAudioFile) {
+        if (audioObject?.nid != requestedAudioFile.nid) {
+            setAudioObject(requestedAudioFile, true)
+        }
+        player.playWhenReady = true
+    }
+
+    fun pauseCurrentAudio() {
+        player.playWhenReady = false
+    }
+
 }
 

@@ -86,10 +86,6 @@ class AppDataManager @Inject constructor(
                         if (objects?.isNotEmpty() == true) {
                             appDatabase.objectDao.addObjects(objects.values.toList())
                         }
-                        val audioFiles = result.audioFiles
-                        if (audioFiles?.isNotEmpty() == true) {
-                            appDatabase.audioFileDao.addAudioFiles(audioFiles.values.toList())
-                        }
 
                         val tours = result.tours
                         if (tours?.isNotEmpty() == true) {
@@ -152,7 +148,7 @@ class AppDataManager @Inject constructor(
                                             cmsExhibitionList.forEach { exhibitionCMS ->
                                                 mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                                 // Override with exhibitions optional images from CMS, if available
-                                                exhibitionCMS.imageUrl?.let{
+                                                exhibitionCMS.imageUrl?.let {
                                                     mapExhibitionByID[exhibitionCMS.id]?.legacy_image_mobile_url = it
                                                 }
                                                 mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort

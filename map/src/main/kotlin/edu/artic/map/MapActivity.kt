@@ -70,6 +70,7 @@ class MapActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        startService(audioIntent)
         bindService(audioIntent, serviceConnection, 0)
     }
 

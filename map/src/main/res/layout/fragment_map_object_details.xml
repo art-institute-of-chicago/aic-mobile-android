@@ -34,7 +34,6 @@
         android:layout_marginStart="40dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@id/playerContainer"
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toTopOf="@+id/reference">
 
@@ -57,21 +56,26 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/playerContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <ImageButton
+        android:id="@+id/playCurrent"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginEnd="@dimen/marginDouble"
-        app:layout_constraintBottom_toBottomOf="@id/image"
+        android:background="@drawable/ic_play"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/infoBlock"
-        app:layout_constraintTop_toTopOf="@+id/reference">
+        app:layout_constraintTop_toTopOf="@+id/image" />
 
-        <include
-            android:id="@+id/audioPlayer"
-            layout="@layout/exo_player_control_view_play_pause" />
-
-    </FrameLayout>
+    <ImageButton
+        android:id="@+id/pauseCurrent"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_pause"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/image" />
 
 
 </android.support.constraint.ConstraintLayout>
