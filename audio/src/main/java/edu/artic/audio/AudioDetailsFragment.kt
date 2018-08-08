@@ -11,6 +11,8 @@ import android.view.View
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticAudioFile
+import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_audio_details.*
 import kotlin.reflect.KClass

@@ -20,9 +20,7 @@ dependencies {
     implementation project(':exhibitions')
     implementation project(':events')
     implementation project(':navigation')
-    implementation project(':audio')
+    implementation project(':media')
     implementation libs.exo_player_core
-    implementation libs.exo_player_dash
     implementation libs.exo_player_ui
-    implementation libs.exo_player_media_session
 }

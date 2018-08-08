@@ -1,4 +1,4 @@
-package edu.artic.audio
+package edu.artic.media.audio
 
 /**
  *@author Sameer Dhakal (Fuzz)

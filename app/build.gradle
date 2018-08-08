@@ -35,7 +35,8 @@ dependencies {
     implementation project(':exhibitions')
     implementation project(':events')
     implementation project(':analytics')
-
+    implementation project(':media')
+    
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
     //Dagger
