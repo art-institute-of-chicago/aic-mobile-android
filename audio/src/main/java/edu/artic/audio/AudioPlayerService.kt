@@ -1,5 +1,6 @@
 package edu.artic.audio
 
+import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
@@ -10,14 +11,12 @@ import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.AudioAttributesCompat
-import android.util.Log
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import edu.artic.base.utils.isServiceRunningInForeground
 import edu.artic.db.models.ArticAudioFile
 
 /**
@@ -46,25 +45,32 @@ class AudioPlayerService : Service() {
                     }
 
                     override fun getCurrentContentText(player: Player?): String? {
-                        val window = player?.currentWindowIndex
                         return "test title"
                     }
 
                     override fun getCurrentContentTitle(player: Player?): String {
-                        val window = player?.currentWindowIndex
                         return "description"
                     }
 
                     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
                         return null
                     }
-
                 })
+
+        playerNotificationManager.setNotificationListener(object : PlayerNotificationManager.NotificationListener {
+            override fun onNotificationCancelled(notificationId: Int) {
+
+            }
+
+            override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
+                startForeground(notificationId, notification)
+            }
+        })
+
         playerNotificationManager.setUseNavigationActions(false)
         playerNotificationManager.setStopAction(null)
         playerNotificationManager.setFastForwardIncrementMs(0)
         playerNotificationManager.setRewindIncrementMs(0)
-        initializePlayer()
         playerNotificationManager.setPlayer(player)
     }
 
@@ -72,52 +78,13 @@ class AudioPlayerService : Service() {
         return binder
     }
 
-    private fun onPause() {
-        player.playWhenReady = false
-        stopForeground(false)
-    }
-
-    private fun onPlay() {
-        player.playWhenReady = true
-    }
-
-    //TODO recheck logic
-    private fun onStop() {
-        if (!isServiceRunningInForeground(this, AudioPlayerService::class.java)) {
-            stopSelf()
-        }
-    }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        /**
-         * Handles null condition.
-         */
-        if (intent == null) {
-            stopSelf()
-            return START_NOT_STICKY
-        }
-
-        when (intent.action) {
-            MusicConstants.ACTION.PAUSE_ACTION -> {
-                onPause()
-            }
-
-            MusicConstants.ACTION.PLAY_ACTION -> {
-                onPlay()
-            }
-
-            MusicConstants.ACTION.STOP_ACTION -> {
-                onStop()
-            }
-            else -> {
-                player.stop()
-                stopForeground(true)
-                stopSelf()
-            }
-        }
-
         return Service.START_NOT_STICKY
+    }
+
+    fun stopPlayerService() {
+        player.seekTo(0)
+        stopSelf()
     }
 
     /**
@@ -137,23 +104,7 @@ class AudioPlayerService : Service() {
             val uri = Uri.parse(audioObject?.fileUrl)
             val mediaSource = buildMediaSource(uri)
             player.prepare(mediaSource, resetPosition, false)
-            player.playWhenReady = true
         }
-    }
-
-    private fun initializePlayer() {
-        player.addListener(object : Player.DefaultEventListener() {
-            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                super.onPlayerStateChanged(playWhenReady, playbackState)
-                if (playWhenReady && playbackState == Player.STATE_READY) {
-                    onPlay()
-                } else if (playWhenReady) {
-                    Log.d("music", "playing")
-                } else {
-                    onPause()
-                }
-            }
-        })
     }
 
     private val audioAttributes = AudioAttributesCompat.Builder()

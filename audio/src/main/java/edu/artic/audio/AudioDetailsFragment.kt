@@ -33,10 +33,8 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         get() = ScreenCategoryName.AudioPlayer
 
     override fun hasTransparentStatusBar(): Boolean = true
-
     var boundService: AudioPlayerService? = null
     private var audioIntent: Intent? = null
-
     private val audioFile: ArticAudioFile = getAudio()
 
     private val serviceConnection = object : ServiceConnection {
@@ -55,13 +53,15 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        audioIntent = Intent(context, AudioPlayerService::class.java)
+        activity?.startService(audioIntent)
+        activity?.bindService(audioIntent, serviceConnection, BIND_AUTO_CREATE)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        audioIntent = Intent(context, AudioPlayerService::class.java)
-        audioIntent?.action = MusicConstants.ACTION.PLAY_ACTION
-        activity?.bindService(audioIntent, serviceConnection, BIND_AUTO_CREATE)
-
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
         }
@@ -72,5 +72,10 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
     fun getAudio(): ArticAudioFile {
         return ArticAudioFile("Justus Sustermans", null, "1", null, emptyList(), null, "http://aic-mobile-tours.artic.edu/sites/default/files/audio/882.mp3", null, null, null, null, "Justus Sustermans")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.unbindService(serviceConnection)
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.View
 import androidx.navigation.Navigation
 import edu.artic.audio.AudioActivity
@@ -64,15 +65,16 @@ class WelcomeActivity : BaseActivity() {
         bottomNavigation.disableShiftMode(R.color.menu_color_list)
         bottomNavigation.selectedItemId = R.id.action_home
         bottomNavigation.setOnNavigationItemSelectedListener(NavigationSelectListener(this))
-        bindService(audioIntent, serviceConnection, 0)
+        Log.d("animation", "${audioPlayer.measuredHeight}")
 
         audioPlayer.closePlayer.setOnClickListener {
             audioPlayer.animate()
-                    .translationY(audioPlayer.height.toFloat())
+                    .yBy(200f)
                     .setDuration(600)
                     .withEndAction {
-                        audioPlayer.visibility = View.GONE
-                        boundService?.player?.stop()
+                        boundService?.stopPlayerService()
+                        audioPlayer.visibility = View.INVISIBLE
+                        audioPlayer.y = audioPlayer.y - 200f
                     }
                     .start()
 
@@ -81,6 +83,16 @@ class WelcomeActivity : BaseActivity() {
         audioPlayer.trackTitle.setOnClickListener {
             startActivity(Intent(this, AudioActivity::class.java))
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bindService(audioIntent, serviceConnection, 0)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unbindService(serviceConnection)
     }
 
     override fun onBackPressed() {
