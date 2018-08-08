@@ -31,6 +31,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="brownishOrange">#ce6b27</color>
     <color name="audioBackground">#1e1e1e</color>
-
+    <color name="mapObjectWindowBlue">#7789a7</color>
     <color name="mapFloorBlue">#083f6e</color>
 </resources>
