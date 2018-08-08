@@ -1,7 +1,11 @@
 package edu.artic.map
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.support.transition.Fade
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -96,16 +100,33 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                     is ArticObject -> {
                         val mapObject = marker.tag as ArticObject
-                        val isMapObjectVisible = objectDetailsContainer.childCount > 0
+                        val isMapObjectVisible = objectDetailsContainer.childCount != 0
                         activity?.let {
                             val fragmentManager = it.supportFragmentManager
-                            if (isMapObjectVisible) {
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), mapObject.title)
-                                        .commit()
+                            if (!isMapObjectVisible) {
+                                val anim = ValueAnimator.ofFloat(0f, -objectDetailsContainer.height.toFloat())
+                                anim.duration = 1000
+                                anim.addUpdateListener {
+                                    val translateBy = it.animatedValue as Float
+                                    lowerLevel.translationY = translateBy
+                                    floorOne.translationY = translateBy
+                                    floorTwo.translationY = translateBy
+                                    floorThree.translationY = translateBy
+
+                                }
+                                anim.addListener(object : AnimatorListenerAdapter() {
+                                    override fun onAnimationEnd(animation: Animator?) {
+                                        val fragment = MapObjectDetailsFragment.create(mapObject)
+                                        fragmentManager.beginTransaction()
+                                                .add(R.id.objectDetailsContainer, fragment, mapObject.title)
+                                                .commit()
+                                    }
+                                })
+                                anim.start()
+
                             } else {
                                 fragmentManager.beginTransaction()
-                                        .add(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), mapObject.title)
+                                        .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), mapObject.title)
                                         .commit()
                             }
                         }
