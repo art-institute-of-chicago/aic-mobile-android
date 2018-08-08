@@ -16,12 +16,19 @@ abstract class ArticMapAnnotationDao {
     @Query("select * from ArticMapAnnotation where annotationType = :type")
     abstract fun getAnnotationByType(type: String): Flowable<List<ArticMapAnnotation>>
 
-    @Query("select * from ArticMapAnnotation where annotationType = \"Text\" and textType = :type")
+    @Query("select * from ArticMapAnnotation where annotationType = \"Amenity\" and floor = :floor")
+    abstract fun getAmenitiesOnMapForFloor(floor : String): Flowable<List<ArticMapAnnotation>>
+
+    @Query("select * from ArticMapAnnotation where annotationType = \"Text\" and textType = :type ")
     abstract fun getTextAnnotationByType(type: String): Flowable<List<ArticMapAnnotation>>
+
+    @Query("select * from ArticMapAnnotation where annotationType = \"Text\" and textType = :type and floor = :floor")
+    abstract fun getTextAnnotationByTypeAndFloor(type: String, floor: String): Flowable<List<ArticMapAnnotation>>
 
     fun getBuildingNamesOnMap(): Flowable<List<ArticMapAnnotation>> {
         return getAnnotationByType("Text")
     }
+
     fun getAmenitiesOnMap() : Flowable<List<ArticMapAnnotation>> {
         return getAnnotationByType("Amenity")
     }
