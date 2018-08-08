@@ -3,11 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/audio_navigation_graph"
-    app:startDestination="@id/audioDetailsFragment">
+    app:startDestination="@id/audioSelectFragment">
 
     <fragment
         android:id="@+id/audioDetailsFragment"
         android:name="edu.artic.audio.AudioDetailsFragment"
         android:label="fragment_audio_details"
         tools:layout="@layout/fragment_audio_details" />
+
+    <fragment
+        android:id="@+id/audioSelectFragment"
+        android:name="edu.artic.audio.AudioSelectFragment"
+        android:label="fragment_audio_select"
+        tools:layout="@layout/fragment_audio_select" />
+
 </navigation>
