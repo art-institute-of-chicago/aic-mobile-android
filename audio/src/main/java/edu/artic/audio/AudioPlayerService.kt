@@ -69,8 +69,8 @@ class AudioPlayerService : Service() {
 
         playerNotificationManager.setUseNavigationActions(false)
         playerNotificationManager.setStopAction(null)
-        playerNotificationManager.setFastForwardIncrementMs(0)
-        playerNotificationManager.setRewindIncrementMs(0)
+        playerNotificationManager.setFastForwardIncrementMs(10 * 1000)
+        playerNotificationManager.setRewindIncrementMs(10 * 1000)
         playerNotificationManager.setPlayer(player)
     }
 
@@ -79,11 +79,12 @@ class AudioPlayerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return Service.START_NOT_STICKY
+        return Service.START_STICKY
     }
 
     fun stopPlayerService() {
         player.seekTo(0)
+        stopForeground(true)
         stopSelf()
     }
 
@@ -128,6 +129,7 @@ class AudioPlayerService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        playerNotificationManager.setPlayer(null)
         player.release()
     }
 
