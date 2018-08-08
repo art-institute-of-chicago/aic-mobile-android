@@ -73,6 +73,7 @@ class AudioPlayerService : Service() {
         playerNotificationManager.setStopAction(null)
         playerNotificationManager.setFastForwardIncrementMs(10 * 1000)
         playerNotificationManager.setRewindIncrementMs(10 * 1000)
+        playerNotificationManager.setOngoing(false)
         playerNotificationManager.setPlayer(player)
         playerNotificationManager.setSmallIcon(R.drawable.icn_notification)
     }
