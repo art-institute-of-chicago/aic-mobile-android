@@ -26,6 +26,9 @@ abstract class ArticMapAnnotationDao {
     @Query("select * from ArticMapAnnotation where annotationType = \"Text\" and textType = :type and floor = :floor")
     abstract fun getTextAnnotationByTypeAndFloor(type: String, floor: String): Flowable<List<ArticMapAnnotation>>
 
+    @Query("select * from ArticMapAnnotation where annotationType = :annotationType and textType = :type ")
+    abstract fun getTextAnnotationByType(type: String, annotationType: String = ArticMapAnnotationType.TEXT): Flowable<List<ArticMapAnnotation>>
+
     fun getBuildingNamesOnMap(): Flowable<List<ArticMapAnnotation>> {
         return getAnnotationByType("Text")
     }
