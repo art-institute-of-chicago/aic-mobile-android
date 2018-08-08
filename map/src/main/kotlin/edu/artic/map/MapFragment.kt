@@ -176,15 +176,31 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.amenities
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    loadAmenities(it)
+                .subscribe { annotationList ->
+                    loadMarkersForAnnotation(
+                            annotationList,
+                            amenitiesMarkerList
+                    ) { mapItem ->
+                        MarkerOptions()
+                                .position(mapItem.item.toLatLng())
+                                .zIndex(0f)
+                    }
                 }
                 .disposedBy(disposeBag)
 
         viewModel.spacesAndLandmarks
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    loadSpaceOrLandmarks(it)
+                .subscribe { annotationList ->
+                    loadMarkersForAnnotation(
+                            annotationList,
+                            amenitiesMarkerList
+                    ) { mapItem ->
+                        MarkerOptions()
+                                .position(mapItem.item.toLatLng())
+                                .icon(BitmapDescriptorFactory.fromBitmap(
+                                        galleryNumberGenerator.makeIcon(mapItem.item.label.orEmpty()))
+                                ).zIndex(1f)
+                    }
                 }.disposedBy(disposeBag)
 
 
@@ -194,15 +210,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     departmentMakers.forEach { marker ->
                         marker.remove()
                     }
+                    departmentMakers.clear()
                     galleryMarkers.forEach { marker ->
                         marker.remove()
                     }
+                    galleryMarkers.clear()
                     dotObjectMarkers.forEach { marker ->
                         marker.remove()
                     }
+                    dotObjectMarkers.clear()
                     fullObjectMarkers.forEach { marker ->
                         marker.remove()
                     }
+                    fullObjectMarkers.clear()
 
                     itemList.forEach { mapItem ->
                         when (mapItem) {
@@ -263,37 +283,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
-    }
-
-    private fun loadAmenities(amenitiesList: List<MapItem.Annotation>) {
-        amenitiesMarkerList
-                .forEach { marker -> marker.remove() }
-
-        amenitiesList.forEach { mapItem ->
-            amenitiesMarkerList.add(
-                    map.addMarker(MarkerOptions()
-                            .position(mapItem.item.toLatLng())
-                            .zIndex(0f)
-                    )
-
-            )
-        }
-    }
-
-    private fun loadSpaceOrLandmarks(spaceOrLandmarkList: List<MapItem.Annotation>) {
-        spaceOrLandmarkMarkerList
-                .forEach { marker -> marker.remove() }
-
-        spaceOrLandmarkList.forEach { mapItem ->
-            spaceOrLandmarkMarkerList.add(
-                    map.addMarker(MarkerOptions()
-                            .position(mapItem.item.toLatLng())
-                            .icon(BitmapDescriptorFactory.fromBitmap(
-                                    galleryNumberGenerator.makeIcon(mapItem.item.label.orEmpty()))
-                            ).zIndex(1f)
-                    )
-            )
-        }
     }
 
     private fun loadGalleryNumber(gallery: ArticGallery) {
@@ -372,6 +361,20 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 })
 
 
+    }
+
+    private inline fun loadMarkersForAnnotation(annotationList: List<MapItem.Annotation>, list: MutableList<Marker>, markerBuilder: (MapItem.Annotation) -> MarkerOptions) {
+        list.forEach {
+            it.remove()
+        }
+        list.clear()
+        annotationList.forEach {
+            list.add(
+                    map.addMarker(
+                            markerBuilder(it)
+                    )
+            )
+        }
     }
 
 }
