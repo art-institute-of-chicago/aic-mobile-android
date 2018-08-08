@@ -34,9 +34,10 @@ class AudioPlayerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        playerNotificationManager = PlayerNotificationManager(
+        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
                 this,
                 Constants.FOREGROUND_CHANNEL_ID,
+                R.string.channel_name,
                 22,
                 object : PlayerNotificationManager.MediaDescriptionAdapter {
                     override fun createCurrentContentIntent(player: Player?): PendingIntent? {
@@ -45,11 +46,11 @@ class AudioPlayerService : Service() {
                     }
 
                     override fun getCurrentContentText(player: Player?): String? {
-                        return "test title"
+                        return null
                     }
 
                     override fun getCurrentContentTitle(player: Player?): String {
-                        return "description"
+                        return audioObject?.title ?: ""
                     }
 
                     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
@@ -59,7 +60,6 @@ class AudioPlayerService : Service() {
 
         playerNotificationManager.setNotificationListener(object : PlayerNotificationManager.NotificationListener {
             override fun onNotificationCancelled(notificationId: Int) {
-
             }
 
             override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
@@ -72,6 +72,7 @@ class AudioPlayerService : Service() {
         playerNotificationManager.setFastForwardIncrementMs(10 * 1000)
         playerNotificationManager.setRewindIncrementMs(10 * 1000)
         playerNotificationManager.setPlayer(player)
+        playerNotificationManager.setSmallIcon(R.drawable.icn_notification)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
