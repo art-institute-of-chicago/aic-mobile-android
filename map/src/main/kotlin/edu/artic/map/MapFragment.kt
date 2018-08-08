@@ -14,9 +14,7 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.db.models.ArticGallery
-import edu.artic.db.models.ArticMapAnnotationType
-import edu.artic.db.models.ArticObject
+import edu.artic.db.models.*
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.util.ArticObjectDotMarkerGenerator
 import edu.artic.map.util.ArticObjectMarkerGenerator
@@ -25,6 +23,7 @@ import edu.artic.map.util.GalleryNumberMarkerGenerator
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_map.*
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 class MapFragment : BaseViewModelFragment<MapViewModel>() {
@@ -181,9 +180,54 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             annotationList,
                             amenitiesMarkerList
                     ) { mapItem ->
-                        MarkerOptions()
+                        val icon  = when(mapItem.item.amenityType) {
+                            ArticMapAmenityType.WOMANS_ROOM -> {
+                                R.drawable.icon_amenity_map_womens_room_blue
+                            }
+                            ArticMapAmenityType.MENS_ROOM -> {
+                                R.drawable.icon_amenity_map_mens_room_blue
+                            }
+                            ArticMapAmenityType.ELEVATOR -> {
+                                R.drawable.icon_amenity_map_elevator_blue
+                            }
+                            ArticMapAmenityType.GIFT_SHOP -> {
+                                R.drawable.icon_amenity_map_shop_blue
+                            }
+                            ArticMapAmenityType.TICKETS -> {
+                                R.drawable.icon_amenity_map_tickets_blue
+                            }
+                            ArticMapAmenityType.INFORMATION -> {
+                                R.drawable.icon_amenity_map_information_blue
+                            }
+                            ArticMapAmenityType.CHECK_ROOM -> {
+                                R.drawable.icon_amenity_map_check_room_blue
+                            }
+                            ArticMapAmenityType.AUDIO_GUIDE -> {
+                                R.drawable.icon_amenity_map_audio_guide_blue
+                            }
+                            ArticMapAmenityType.WHEELCHAIR_RAMP -> {
+                                R.drawable.icon_amenity_map_wheelchair_ramp_blue
+                            }
+                            ArticMapAmenityType.DINING -> {
+                                R.drawable.icon_amenity_map_cafe_blue
+                            }
+                            ArticMapAmenityType.FAMILY_RESTROOM -> {
+                                R.drawable.icon_amenity_map_family_restroom_blue
+                            }
+                            else ->{
+                                Timber.d("unknownAmenityType: ${mapItem.item.amenityType}")
+                                0
+                            }
+
+                        }
+
+                        var options = MarkerOptions()
                                 .position(mapItem.item.toLatLng())
                                 .zIndex(0f)
+                        if(icon != 0) {
+                            options = options.icon(BitmapDescriptorFactory.fromResource(icon))
+                        }
+                        options
                     }
                 }
                 .disposedBy(disposeBag)
@@ -193,7 +237,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe { annotationList ->
                     loadMarkersForAnnotation(
                             annotationList,
-                            amenitiesMarkerList
+                            spaceOrLandmarkMarkerList
                     ) { mapItem ->
                         MarkerOptions()
                                 .position(mapItem.item.toLatLng())
