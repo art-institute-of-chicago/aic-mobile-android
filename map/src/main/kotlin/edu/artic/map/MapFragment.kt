@@ -273,7 +273,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             amenitiesMarkerList.add(
                     map.addMarker(MarkerOptions()
                             .position(mapItem.item.toLatLng())
+                            .zIndex(0f)
                     )
+
             )
         }
     }
@@ -288,7 +290,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             .position(mapItem.item.toLatLng())
                             .icon(BitmapDescriptorFactory.fromBitmap(
                                     galleryNumberGenerator.makeIcon(mapItem.item.label.orEmpty()))
-                            )
+                            ).zIndex(1f)
                     )
             )
         }
@@ -308,6 +310,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     )
                             )
                             .anchor(.5f, 0f)
+                            .zIndex(1f)
                     )
             )
         }
@@ -330,6 +333,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                                             resource,
                                                             department.label.orEmpty())
                                             ))
+                                            .zIndex(2f)
                             )
                             marker.tag = annotation
                             departmentMakers.add(marker)
@@ -351,6 +355,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .icon(BitmapDescriptorFactory.fromBitmap(
                                                     objectMarkerGenerator.makeIcon(resource)
                                             ))
+                                            .zIndex(2f)
                                             .visible(true)
                             )
                             fullObjectMarkers.add(fullMaker)
@@ -359,6 +364,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     .icon(BitmapDescriptorFactory.fromBitmap(
                                             objectDotMarkerGenerator.makeIcon()
                                     ))
+                                    .zIndex(2f)
                                     .visible(false))
                             dotObjectMarkers.add(dotMaker)
                         }
