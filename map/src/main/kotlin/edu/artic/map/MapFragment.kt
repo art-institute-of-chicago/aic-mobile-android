@@ -84,13 +84,29 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
             map.setOnMarkerClickListener { marker ->
                 var handled = false
-                when(marker.tag) {
+                when (marker.tag) {
                     is MapItem.Annotation -> {
                         val annotation = marker.tag as MapItem.Annotation
-                        when(annotation.item.annotationType) {
+                        when (annotation.item.annotationType) {
                             ArticMapAnnotationType.DEPARTMENT -> {
                                 viewModel.departmentMarkerSelected(annotation.item)
                                 handled = true
+                            }
+                        }
+                    }
+                    is ArticObject -> {
+                        val mapObject = marker.tag as ArticObject
+                        val isMapObjectVisible = objectDetailsContainer.childCount > 0
+                        activity?.let {
+                            val fragmentManager = it.supportFragmentManager
+                            if (isMapObjectVisible) {
+                                fragmentManager.beginTransaction()
+                                        .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), mapObject.title)
+                                        .commit()
+                            } else {
+                                fragmentManager.beginTransaction()
+                                        .add(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), mapObject.title)
+                                        .commit()
                             }
                         }
                     }
@@ -116,11 +132,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.cameraMovementRequested
                 .filterValue()
-                .subscribe {(newPostition, zoomLevel) ->
+                .subscribe { (newPostition, zoomLevel) ->
                     map.animateCamera(
                             CameraUpdateFactory.newLatLngZoom(
                                     newPostition,
-                                    when(zoomLevel) {
+                                    when (zoomLevel) {
                                         MapZoomLevel.One -> {
                                             18.0f
                                         }
@@ -301,15 +317,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (viewModel.currentZoomLevel === MapZoomLevel.Three && viewModel.currentFloor == floor) {
-                            currentMarkers.add(
-                                    map.addMarker(
-                                            MarkerOptions()
-                                                    .position(articObject.toLatLng())
-                                                    .icon(BitmapDescriptorFactory.fromBitmap(
-                                                            objectMarkerGenerator.makeIcon(resource)
-                                                    ))
-                                    )
+
+                            val marker = map.addMarker(
+                                    MarkerOptions()
+                                            .position(articObject.toLatLng())
+                                            .icon(BitmapDescriptorFactory.fromBitmap(
+                                                    objectMarkerGenerator.makeIcon(resource)
+                                            ))
                             )
+                            marker.tag = articObject
+                            currentMarkers.add(marker)
                         }
                     }
                 })

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="134dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@color/mapObjectWindowBlue">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="72dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:contentDescription="@null"
+        android:scaleType="matrix"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@color/brownishOrange" />
+
+    <LinearLayout
+        android:id="@+id/infoBlock"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="0dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/playerContainer"
+        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tourStopTitle"
+            style="@style/ListItemTitle1White"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            tools:text="Introduction" />
+
+        <TextView
+            android:id="@+id/tourStopGallery"
+            style="@style/ListItemTitle2White"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            tools:text="Gallery 201" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/playerContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/marginDouble"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/infoBlock"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/audioPlayer"
+            layout="@layout/exo_player_control_view_play_pause" />
+
+    </FrameLayout>
+
+
+</android.support.constraint.ConstraintLayout>
