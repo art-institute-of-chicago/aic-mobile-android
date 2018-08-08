@@ -14,9 +14,7 @@ dependencies {
     implementation libs.design_support
 
     implementation libs.exo_player_core
-    implementation libs.exo_player_dash
     implementation libs.exo_player_ui
-    implementation libs.exo_player_media_session
 
     implementation libs.glide
     implementation project(':base')
@@ -25,4 +23,5 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':navigation')
     implementation project(':db')
+    implementation project(':media')
 }

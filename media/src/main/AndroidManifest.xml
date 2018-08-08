@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.artic.media">
+
+    <application>
+        <service
+            android:name=".audio.AudioPlayerService"
+            android:enabled="true"
+            android:exported="true" />
+    </application>
+</manifest>

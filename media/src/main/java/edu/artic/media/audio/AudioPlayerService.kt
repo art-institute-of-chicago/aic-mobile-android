@@ -1,4 +1,4 @@
-package edu.artic.audio
+package edu.artic.media.audio
 
 import android.app.Notification
 import android.app.PendingIntent
@@ -17,7 +17,9 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticAudioFile
+import edu.artic.media.R
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -41,7 +43,7 @@ class AudioPlayerService : Service() {
                 22,
                 object : PlayerNotificationManager.MediaDescriptionAdapter {
                     override fun createCurrentContentIntent(player: Player?): PendingIntent? {
-                        val notificationIntent = Intent(this@AudioPlayerService, AudioActivity::class.java)
+                        val notificationIntent = "edu.artic.audio".asDeepLinkIntent()
                         return PendingIntent.getActivity(this@AudioPlayerService, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
                     }
 

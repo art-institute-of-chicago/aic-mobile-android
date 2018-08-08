@@ -1,4 +1,4 @@
-package edu.artic.audio
+package edu.artic.media
 
 import com.google.android.exoplayer2.ExoPlayer
 

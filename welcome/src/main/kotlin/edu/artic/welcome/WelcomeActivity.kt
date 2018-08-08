@@ -9,10 +9,10 @@ import android.os.IBinder
 import android.util.Log
 import android.view.View
 import androidx.navigation.Navigation
-import edu.artic.audio.AudioActivity
-import edu.artic.audio.AudioPlayerService
-import edu.artic.audio.refreshPlayBackState
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
+import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.refreshPlayBackState
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
@@ -81,7 +81,7 @@ class WelcomeActivity : BaseActivity() {
         }
 
         audioPlayer.trackTitle.setOnClickListener {
-            startActivity(Intent(this, AudioActivity::class.java))
+            startActivity("edu.artic.audio".asDeepLinkIntent())
         }
     }
 

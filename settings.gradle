@@ -1,4 +1,4 @@
-include ':app', ':navigation', ':analytics', ':audio',
+include ':app', ':navigation', ':analytics', ':audio', ':media',
         ':ui',
         ':viewmodel',
         ':base',
