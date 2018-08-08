@@ -26,7 +26,9 @@ class MapViewModel @Inject constructor(
 
     val amenities: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val spacesAndLandmarks: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
-    val departments: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
+
+    //This stores all the map items that change at every zoom level and every floor change
+    val veryDynamicMapItems: Subject<List<MapItem<*>>> = BehaviorSubject.create()
 
 
     val floor: Subject<Int> = BehaviorSubject.createDefault(1)
@@ -95,80 +97,73 @@ class MapViewModel @Inject constructor(
 
     fun setupZoomLevelOneBinds() {
 
-
         /**
          * upon reaching zoom level one load up landmarks
          */
-        zoomLevel.distinctUntilChanged()
+        val zoomLevelOneObservable = zoomLevel.distinctUntilChanged()
                 .filter { zoomLevel -> zoomLevel === MapZoomLevel.One }
+
+
+        zoomLevelOneObservable
                 .flatMap {
                     mapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK).asObservable()
                 }.map { landmarkList -> landmarkList.mapToMapItem() }
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
+        zoomLevelOneObservable
+                .map {
+                    listOf<MapItem<*>>()
+                }
+                .bindTo(veryDynamicMapItems)
+                .disposedBy(disposeBag)
     }
 
     fun setupZoomLevelTwoBinds() {
-//        Observables.combineLatest(
-//                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Two },
-//                floor.distinctUntilChanged(),
-//                alwaysVisibleAnnotations.map { itemList ->
-//                    itemList.filter { item ->
-//                        item.item.annotationType == ArticMapAnnotationType.AMENITY ||
-//                                (item.item.annotationType == ArticMapAnnotationType.TEXT &&
-//                                        item.item.textType == ArticMapTextType.SPACE)
-//                    }
-//                },
-//                mapAnnotationDao
-//                        .getDepartmentOnMap()
-//                        .asObservable()
-//                        .map { departmentList ->
-//                            departmentList.mapToMapItem()
-//                        }
-//        ) { _, floor, annotations, deparments ->
-//            annotations.filter { it.floor == floor }.toMutableList() +
-//                    deparments.filter { it.item.floor?.toInt() == floor }
-//        }.bindTo(mapAnnotations)
-//                .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Two },
+                floor.distinctUntilChanged()
+        ) { _, floor ->
+            mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString())
+                    .asObservable()
+                    .map { it.mapToMapItem() }
+        }
+                .flatMap { it }
+                .bindTo(veryDynamicMapItems)
+                .disposedBy(disposeBag)
+
     }
 
 
     fun setupZoomLevelThreeBinds() {
-//        val galleries = Observables.combineLatest(
-//                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Three },
-//                floor.distinctUntilChanged())
-//        { _, floor ->
-//            floor
-//        }.flatMap {
-//            galleryDao.getGalleriesForFloor(it.toString()).asObservable()
-//        }
-//
-//        val objects = galleries
-//                .map { galleryList ->
-//                    galleryList.filter { it.titleT != null }.map { it.titleT.orEmpty() }
-//                }.flatMap {
-//                    objectDao.getObjectsInGalleries(it).asObservable()
-//                }
-//
-//        Observables.combineLatest(
-//                floor,
-//                galleries,
-//                objects,
-//                alwaysVisibleAnnotations.map { itemList ->
-//                    itemList.filter { item ->
-//                        item.item.annotationType == ArticMapAnnotationType.AMENITY ||
-//                                (item.item.annotationType == ArticMapAnnotationType.TEXT &&
-//                                        item.item.textType == ArticMapTextType.SPACE)
-//                    }
-//                }
-//        ) { floor, galleryList, objectList, annotations ->
-//            val list = mutableListOf<MapItem<*>>()
-//            list.addAll(annotations.filter { it.floor == floor })
-//            list.addAll(galleryList.map { gallery -> MapItem.Gallery(gallery, floor) })
-//            list.addAll(objectList.map { articObject -> MapItem.Object(articObject, floor) })
-//            return@combineLatest list
-//        }.bindTo(mapAnnotations)
-//                .disposedBy(disposeBag)
+        val galleries = Observables.combineLatest(
+                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Three },
+                floor.distinctUntilChanged())
+        { _, floor ->
+            floor
+        }.flatMap {
+            galleryDao.getGalleriesForFloor(it.toString()).asObservable()
+        }
+
+        val objects = galleries
+                .map { galleryList ->
+                    galleryList.filter { it.titleT != null }.map { it.titleT.orEmpty() }
+                }.flatMap {
+                    objectDao.getObjectsInGalleries(it).asObservable()
+                }
+
+        Observables.combineLatest(
+                floor,
+                galleries,
+                objects
+        ) { floor, galleryList, objectList ->
+            val list = mutableListOf<MapItem<*>>()
+            list.addAll(galleryList.map { gallery -> MapItem.Gallery(gallery, floor) })
+            list.addAll(objectList.map { articObject -> MapItem.Object(articObject, floor) })
+            return@combineLatest list
+        }
+                .bindTo(veryDynamicMapItems)
+                .disposedBy(disposeBag)
     }
 
     fun zoomLevelChangedTo(zoomLevel: MapZoomLevel) {

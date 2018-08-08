@@ -15,10 +15,10 @@ import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticGallery
-import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticObject
 import edu.artic.map.helpers.toLatLng
+import edu.artic.map.util.ArticObjectDotMarkerGenerator
 import edu.artic.map.util.ArticObjectMarkerGenerator
 import edu.artic.map.util.DepartmentMarkerGenerator
 import edu.artic.map.util.GalleryNumberMarkerGenerator
@@ -40,18 +40,22 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     lateinit var map: GoogleMap
 
-    val amenitiesMarkerList = mutableListOf<Marker>()
-    val spaceOrLandmarkMarkerList = mutableListOf<Marker>()
-
-    val currentMarkers = mutableListOf<Marker>()
+    private val amenitiesMarkerList = mutableListOf<Marker>()
+    private val spaceOrLandmarkMarkerList = mutableListOf<Marker>()
+    private val departmentMakers = mutableListOf<Marker>()
+    private val galleryMarkers = mutableListOf<Marker>()
+    private val fullObjectMarkers = mutableListOf<Marker>()
+    private val dotObjectMarkers = mutableListOf<Marker>()
 
     private lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
+    private lateinit var objectDotMarkerGenerator: ArticObjectDotMarkerGenerator
     private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
     private lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
+        objectDotMarkerGenerator = ArticObjectDotMarkerGenerator(view.context)
         galleryNumberGenerator = GalleryNumberMarkerGenerator(view.context)
         departmentMarkerGenerator = DepartmentMarkerGenerator(view.context)
 
@@ -183,54 +187,46 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     loadSpaceOrLandmarks(it)
                 }.disposedBy(disposeBag)
 
-//        viewModel.mapAnnotations
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe {
-//                    currentMarkers.forEach { marker ->
-//                        marker.remove()
-//                    }
-//                    currentMarkers.clear()
-//
-//                    it.forEach { mapItem ->
-//                        when (mapItem) {
-//                            is MapItem.Annotation -> {
-//                                val annotation = mapItem.item
-//                                when (annotation.annotationType) {
-//                                    ArticMapAnnotationType.DEPARTMENT -> {
-//                                        loadDepartment(mapItem)
-//                                    }
-//                                    ArticMapAnnotationType.TEXT -> {
-//                                        when (annotation.textType) {
-//                                            ArticMapTextType.LANDMARK -> {
-//                                                loadLandmark(annotation)
-//                                            }
-//                                            ArticMapTextType.SPACE -> {
-//                                                loadLandmark(annotation)
-//                                            }
-//                                            else -> {
-//                                                loadGenericAnnotation(annotation)
-//                                            }
-//                                        }
-//                                    }
-//                                    else -> {
-//                                        loadGenericAnnotation(annotation)
-//                                    }
-//                                }
-//                            }
-//                            is MapItem.Gallery -> {
-//                                val gallery = mapItem.item
-//                                loadGalleryNumber(gallery)
-//
-//                            }
-//                            is MapItem.Object -> {
-//                                val articObject = mapItem.item
-//                                loadObject(articObject, mapItem.floor)
-//                            }
-//                        }
-//
-//
-//                    }
-//                }.disposedBy(disposeBag)
+
+        viewModel.veryDynamicMapItems
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { itemList ->
+                    departmentMakers.forEach { marker ->
+                        marker.remove()
+                    }
+                    galleryMarkers.forEach { marker ->
+                        marker.remove()
+                    }
+                    dotObjectMarkers.forEach { marker ->
+                        marker.remove()
+                    }
+                    fullObjectMarkers.forEach { marker ->
+                        marker.remove()
+                    }
+
+                    itemList.forEach { mapItem ->
+                        when (mapItem) {
+                            is MapItem.Annotation -> {
+                                val annotation = mapItem.item
+                                when (annotation.annotationType) {
+                                    ArticMapAnnotationType.DEPARTMENT -> {
+                                        loadDepartment(mapItem)
+                                    }
+                                }
+                            }
+                            is MapItem.Gallery -> {
+                                val gallery = mapItem.item
+                                loadGalleryNumber(gallery)
+
+                            }
+                            is MapItem.Object -> {
+                                val articObject = mapItem.item
+                                loadObject(articObject, mapItem.floor)
+                            }
+
+                        }
+                    }
+                }.disposedBy(disposeBag)
     }
 
 
@@ -300,7 +296,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     private fun loadGalleryNumber(gallery: ArticGallery) {
         gallery.number?.let {
-            currentMarkers.add(
+            galleryMarkers.add(
                     map.addMarker(MarkerOptions()
                             .position(gallery.toLatLng())
                             .icon(BitmapDescriptorFactory
@@ -336,7 +332,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             ))
                             )
                             marker.tag = annotation
-                            currentMarkers.add(marker)
+                            departmentMakers.add(marker)
                         }
                     }
                 })
@@ -349,39 +345,27 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (viewModel.currentZoomLevel === MapZoomLevel.Three && viewModel.currentFloor == floor) {
-                            currentMarkers.add(
-                                    map.addMarker(
-                                            MarkerOptions()
-                                                    .position(articObject.toLatLng())
-                                                    .icon(BitmapDescriptorFactory.fromBitmap(
-                                                            objectMarkerGenerator.makeIcon(resource)
-                                                    ))
-                                    )
+                            val fullMaker = map.addMarker(
+                                    MarkerOptions()
+                                            .position(articObject.toLatLng())
+                                            .icon(BitmapDescriptorFactory.fromBitmap(
+                                                    objectMarkerGenerator.makeIcon(resource)
+                                            ))
+                                            .visible(true)
                             )
+                            fullObjectMarkers.add(fullMaker)
+                            val dotMaker = map.addMarker(MarkerOptions()
+                                    .position(articObject.toLatLng())
+                                    .icon(BitmapDescriptorFactory.fromBitmap(
+                                            objectDotMarkerGenerator.makeIcon()
+                                    ))
+                                    .visible(false))
+                            dotObjectMarkers.add(dotMaker)
                         }
                     }
                 })
 
 
-    }
-
-    private fun loadLandmark(annotation: ArticMapAnnotation) {
-        currentMarkers.add(
-                map.addMarker(MarkerOptions()
-                        .position(annotation.toLatLng())
-                        .icon(BitmapDescriptorFactory.fromBitmap(
-                                galleryNumberGenerator.makeIcon(annotation.label.orEmpty()))
-                        )
-                )
-        )
-    }
-
-    private fun loadGenericAnnotation(annotation: ArticMapAnnotation) {
-        currentMarkers.add(
-                map.addMarker(MarkerOptions()
-                        .position(annotation.toLatLng())
-                )
-        )
     }
 
 }
