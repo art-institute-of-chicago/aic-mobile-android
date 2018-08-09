@@ -1,90 +1,103 @@
 package edu.artic.map
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
-import dagger.android.support.AndroidSupportInjection
-import edu.artic.db.models.ArticAudioFile
+import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.widget.text
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_map_object_details.*
+import kotlin.reflect.KClass
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class MapObjectDetailsFragment : Fragment() {
+class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel>() {
+
+    override val viewModelClass: KClass<MapObjectDetailsViewModel>
+        get() = MapObjectDetailsViewModel::class
+
+    override val title: String
+        get() = ""
+
+    override val layoutResId: Int
+        get() = R.layout.fragment_map_object_details
+
+    //TODO figure out correct analytics category
+    override val screenCategory: ScreenCategoryName
+        get() = ScreenCategoryName.OnViewDetails
 
     private val mapObject: ArticObject? by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_map_object_details, container, false)
+    override fun onRegisterViewModel(viewModel: MapObjectDetailsViewModel) {
+        viewModel.articObject = mapObject
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
-        super.onCreate(savedInstanceState)
-    }
+    override fun setupBindings(viewModel: MapObjectDetailsViewModel) {
 
-    val disposeBag = DisposeBag()
+        viewModel.title
+                .bindToMain(tourStopTitle.text())
+                .disposedBy(disposeBag)
+
+        viewModel.galleryLocation
+                .bindToMain(tourStopGallery.text())
+                .disposedBy(disposeBag)
+
+        viewModel.image.subscribe {
+            Glide.with(this)
+                    .load(it)
+                    .into(image)
+        }.disposedBy(disposeBag)
+
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tourStopTitle.text = mapObject?.title
-        tourStopGallery.text = mapObject?.galleryLocation
-
-        Glide.with(this)
-                .load(mapObject?.largeImageFullPath)
-                .into(image)
-
         val mapActivity = context as MapActivity
         val boundService = mapActivity.boundService
-        val mapAudioObject: ArticAudioFile? = mapObject?.audioCommentary?.first()?.audioFile
+        viewModel.setService(boundService)
+
+        playCurrent
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.playAudioTrack()
+                }.disposedBy(disposeBag)
 
         playCurrent.setOnClickListener {
-            if (mapObject != null) {
-                boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Play(mapObject as ArticObject))
-            }
+            viewModel.playAudioTrack()
         }
 
         pauseCurrent.setOnClickListener {
-            boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Pause())
+            viewModel.pauseAudioTrack()
         }
+
         /**
          * if the current track and selected map object's track are same
          */
         displayPlayButton()
 
-        boundService?.audioPlayBackStatus
-                ?.subscribe { playBackState ->
-
-                    if (playBackState.articAudioFile == mapAudioObject) {
-
-                        when (playBackState) {
-
-                            is AudioPlayerService.PlayBackState.Playing -> {
-                                displayPause()
-                            }
-
-                            is AudioPlayerService.PlayBackState.Paused -> {
-                                displayPlayButton()
-                            }
-
-                            is AudioPlayerService.PlayBackState.Stopped -> {
-                                displayPlayButton()
-                            }
-                        }
-                    } else {
-                        displayPlayButton()
-                    }
-
+        viewModel.playState.subscribe { playBackState ->
+            when (playBackState) {
+                is AudioPlayerService.PlayBackState.Playing -> {
+                    displayPause()
                 }
-                ?.disposedBy(disposeBag)
+                is AudioPlayerService.PlayBackState.Paused -> {
+                    displayPlayButton()
+                }
+                is AudioPlayerService.PlayBackState.Stopped -> {
+                    displayPlayButton()
+                }
+            }
+        }.disposedBy(disposeBag)
 
     }
 

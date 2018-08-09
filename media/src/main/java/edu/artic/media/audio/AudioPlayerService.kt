@@ -232,5 +232,14 @@ class AudioPlayerService : Service() {
         disposeBag.dispose()
     }
 
+    fun pausePlayer() {
+        audioControl.onNext(PlayBackAction.Pause())
+    }
+
+    fun playPlayer(audioFile: ArticObject?) {
+        audioFile?.let{
+            audioControl.onNext(PlayBackAction.Play(it))
+        }
+    }
 }
 

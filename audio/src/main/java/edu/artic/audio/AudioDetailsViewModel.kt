@@ -3,6 +3,7 @@ package edu.artic.audio
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.models.ArticObject
+import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -27,6 +28,18 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
                 objectObservable.onNext(it)
             }
         }
+
+    private var audioService: AudioPlayerService? = null
+
+    fun setService(service: AudioPlayerService?) {
+        audioService = service
+        audioObject = audioService?.articObject
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        audioService = null
+    }
 
     init {
         objectObservable
