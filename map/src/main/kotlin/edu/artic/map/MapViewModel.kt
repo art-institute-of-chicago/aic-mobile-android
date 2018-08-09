@@ -12,6 +12,7 @@ import edu.artic.db.models.ArticMapTextType
 import edu.artic.map.helpers.mapToMapItem
 import edu.artic.map.helpers.toLatLng
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -30,7 +31,10 @@ class MapViewModel @Inject constructor(
     val veryDynamicMapItems: Subject<List<MapItem<*>>> = BehaviorSubject.create()
 
 
-    val floor: Subject<Int> = BehaviorSubject.createDefault(1)
+    private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
+    val distinctFloor: Observable<Int>
+        get() = floor.distinctUntilChanged()
+
     val zoomLevel: Subject<MapZoomLevel> = BehaviorSubject.create()
 
     val cameraMovementRequested: Subject<Optional<Pair<LatLng, MapZoomLevel>>> = BehaviorSubject.create()
@@ -58,7 +62,7 @@ class MapViewModel @Inject constructor(
     init {
 
         // Each time the floor changes update the current amenities for that floor this is explore mode
-        floor.distinctUntilChanged()
+        distinctFloor
                 .flatMap { floor ->
                     mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).toObservable()
                 }.map { amenitiesList -> amenitiesList.mapToMapItem() }
@@ -73,7 +77,7 @@ class MapViewModel @Inject constructor(
         Observables.combineLatest(
                 zoomLevel.distinctUntilChanged()
                         .filter { zoomLevel -> zoomLevel !== MapZoomLevel.One },
-                floor.distinctUntilChanged()
+                distinctFloor
         ) { _, floor ->
             mapAnnotationDao.getTextAnnotationByTypeAndFloor(
                     ArticMapTextType.SPACE,
@@ -118,7 +122,7 @@ class MapViewModel @Inject constructor(
 
         Observables.combineLatest(
                 zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Two },
-                floor.distinctUntilChanged()
+                distinctFloor
         ) { _, floor ->
             mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString())
                     .toObservable()
@@ -134,7 +138,7 @@ class MapViewModel @Inject constructor(
     fun setupZoomLevelThreeBinds() {
         val galleries = Observables.combineLatest(
                 zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Three },
-                floor.distinctUntilChanged())
+                distinctFloor)
         { _, floor ->
             floor
         }.flatMap {
@@ -149,7 +153,7 @@ class MapViewModel @Inject constructor(
                 }
 
         Observables.combineLatest(
-                floor,
+                distinctFloor,
                 galleries,
                 objects
         ) { floor, galleryList, objectList ->
