@@ -119,16 +119,15 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         activity?.bindService(audioIntent, serviceConnection, BIND_AUTO_CREATE)
     }
 
+    override fun onPause() {
+        super.onPause()
+        activity?.unbindService(serviceConnection)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
         }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        activity?.unbindService(serviceConnection)
-    }
-
 }
