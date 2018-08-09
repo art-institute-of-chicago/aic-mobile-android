@@ -6,9 +6,11 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.media.audio.AudioPlayerService
-import edu.artic.media.refreshPlayBackState
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_map.*
@@ -20,7 +22,7 @@ class MapActivity : BaseActivity() {
         get() = R.layout.activity_map
 
     var boundService: AudioPlayerService? = null
-    var audioIntent: Intent? = null
+    private var audioIntent: Intent? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -30,13 +32,43 @@ class MapActivity : BaseActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as AudioPlayerService.AudioPlayerServiceBinder
             boundService = binder.getService()
-            boundService?.let {
-                audioPlayer.player = it.player
-                it.player.refreshPlayBackState()
-                audioPlayer.trackTitle.text = boundService?.articObject?.title
-                audioPlayer.visibility = View.VISIBLE
-            }
+            setUpAudioServiceBindings()
         }
+    }
+
+    private fun setUpAudioServiceBindings() {
+        boundService?.let { audioService ->
+            audioService.currentTrack.subscribe { audioFile ->
+                audioPlayer.trackTitle.text = audioFile.title
+            }.disposedBy(disposeBag)
+
+            audioService.audioPlayBackStatus
+                    .map { it is AudioPlayerService.PlayBackState.Playing }
+                    .bindToMain(audioPlayer.exo_pause.visibility())
+                    .disposedBy(disposeBag)
+
+            audioService.audioPlayBackStatus
+                    .map { it is AudioPlayerService.PlayBackState.Paused }
+                    .bindToMain(audioPlayer.exo_play.visibility())
+                    .disposedBy(disposeBag)
+
+            audioService.audioPlayBackStatus
+                    .map { it is AudioPlayerService.PlayBackState.Paused || it is AudioPlayerService.PlayBackState.Playing }
+                    .bindToMain(audioPlayer.visibility())
+                    .disposedBy(disposeBag)
+        }
+    }
+
+    private fun closeAudioPlayer() {
+        audioPlayer.animate()
+                .yBy(200f)
+                .setDuration(600)
+                .withEndAction {
+                    boundService?.stopPlayerService()
+                    audioPlayer.visibility = View.INVISIBLE
+                    audioPlayer.y = audioPlayer.y - 200f
+                }
+                .start()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,16 +81,7 @@ class MapActivity : BaseActivity() {
         }
 
         audioPlayer.closePlayer.setOnClickListener {
-            audioPlayer.animate()
-                    .yBy(200f)
-                    .setDuration(600)
-                    .withEndAction {
-                        boundService?.stopPlayerService()
-                        audioPlayer.visibility = View.INVISIBLE
-                        audioPlayer.y = audioPlayer.y - 200f
-                    }
-                    .start()
-
+            closeAudioPlayer()
         }
 
         audioPlayer.trackTitle.setOnClickListener {
