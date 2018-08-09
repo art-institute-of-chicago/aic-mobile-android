@@ -92,15 +92,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }
             }
 
-            map.animateCamera(
-                    CameraUpdateFactory.newCameraPosition(
-                            CameraPosition.Builder()
-                                    .target(LatLng(41.879592, -87.622491))
-                                    .bearing(90f)
-                                    .tilt(0f)
-                                    .build()
-                    )
-            )
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(
+                    CameraPosition.Builder()
+                            .target(LatLng(41.879592, -87.622491))
+                            .bearing(90f)
+                            .tilt(0f)
+                            .build()
+            ))
 
             map.setOnMarkerClickListener { marker ->
                 var handled = false
