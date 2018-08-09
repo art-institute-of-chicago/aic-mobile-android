@@ -153,7 +153,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     )
                 }.disposedBy(disposeBag)
 
-        viewModel.floor
+        viewModel.distinctFloor
                 .subscribe {
                     lowerLevel.setBackgroundResource(
                             if (it == 0)
@@ -264,6 +264,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         marker.remove()
                     }
                     departmentMakers.clear()
+                    Timber.d("DepartmentMarker list cleared")
                     galleryMarkers.forEach { marker ->
                         marker.remove()
                     }
@@ -299,6 +300,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                         }
                     }
+                    Timber.d("DepartmentMarker list size after itemList for each ${departmentMakers.size}")
                 }.disposedBy(disposeBag)
     }
 
