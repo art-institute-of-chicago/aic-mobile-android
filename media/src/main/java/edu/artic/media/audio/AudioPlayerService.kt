@@ -112,6 +112,7 @@ class AudioPlayerService : Service() {
                     articAudioFile?.let {
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
                     }
+                    player.seekTo(0)
                     player.stop()
                 }
 
