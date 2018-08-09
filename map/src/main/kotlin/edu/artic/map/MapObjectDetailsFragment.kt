@@ -45,7 +45,6 @@ class MapObjectDetailsFragment : Fragment() {
         val mapActivity = context as MapActivity
         val boundService = mapActivity.boundService
         val currentArticObject = boundService?.getCurrentObject()
-        val currentAudioObject: ArticAudioFile? = currentArticObject?.audioCommentary?.first()?.audioFile
         val mapAudioObject: ArticAudioFile? = mapObject?.audioCommentary?.first()?.audioFile
 
         playCurrent.setOnClickListener {

@@ -64,7 +64,7 @@ class MapActivity : BaseActivity() {
                 .yBy(200f)
                 .setDuration(600)
                 .withEndAction {
-                    boundService?.stopPlayerService()
+                    boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Stop())
                     audioPlayer.visibility = View.INVISIBLE
                     audioPlayer.y = audioPlayer.y - 200f
                 }
@@ -84,9 +84,18 @@ class MapActivity : BaseActivity() {
             closeAudioPlayer()
         }
 
+        audioPlayer.exo_play.setOnClickListener {
+            boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Resume())
+        }
+
+        audioPlayer.exo_pause.setOnClickListener {
+            boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Pause())
+        }
+
         audioPlayer.trackTitle.setOnClickListener {
             startActivity(boundService?.getIntent())
         }
+
     }
 
 
