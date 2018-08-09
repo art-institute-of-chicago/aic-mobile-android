@@ -14,7 +14,10 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.db.models.*
+import edu.artic.db.models.ArticGallery
+import edu.artic.db.models.ArticMapAmenityType
+import edu.artic.db.models.ArticMapAnnotationType
+import edu.artic.db.models.ArticObject
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.util.ArticObjectDotMarkerGenerator
 import edu.artic.map.util.ArticObjectMarkerGenerator
@@ -22,6 +25,9 @@ import edu.artic.map.util.DepartmentMarkerGenerator
 import edu.artic.map.util.GalleryNumberMarkerGenerator
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
 import kotlin.reflect.KClass
@@ -51,6 +57,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
     private lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
+    private lateinit var baseGroundOverlay: GroundOverlay
+    private lateinit var buildingGroundOverlay: GroundOverlay
+    private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
@@ -62,6 +72,79 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         MapsInitializer.initialize(view.context)
         mapView.getMapAsync { map ->
             this.map = map
+            map.isBuildingsEnabled = false
+            map.isIndoorEnabled = false
+            map.isTrafficEnabled = false
+            map.setMapStyle(
+                    MapStyleOptions("[\n" +
+                            "  {\n" +
+                            "    \"elementType\": \"labels\",\n" +
+                            "    \"stylers\": [\n" +
+                            "      {\n" +
+                            "        \"visibility\": \"off\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  },\n" +
+                            "  {\n" +
+                            "    \"featureType\": \"administrative\",\n" +
+                            "    \"elementType\": \"geometry\",\n" +
+                            "    \"stylers\": [\n" +
+                            "      {\n" +
+                            "        \"visibility\": \"off\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  },\n" +
+                            "  {\n" +
+                            "    \"featureType\": \"administrative.land_parcel\",\n" +
+                            "    \"stylers\": [\n" +
+                            "      {\n" +
+                            "        \"visibility\": \"off\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  },\n" +
+                            "  {\n" +
+                            "    \"featureType\": \"administrative.neighborhood\",\n" +
+                            "    \"stylers\": [\n" +
+                            "      {\n" +
+                            "        \"visibility\": \"off\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  },\n" +
+                            "  {\n" +
+                            "    \"featureType\": \"poi\",\n" +
+                            "    \"stylers\": [\n" +
+                            "      {\n" +
+                            "        \"visibility\": \"off\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  },\n" +
+                            "  {\n" +
+                            "    \"featureType\": \"road\",\n" +
+                            "    \"stylers\": [\n" +
+                            "      {\n" +
+                            "        \"visibility\": \"off\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  },\n" +
+                            "  {\n" +
+                            "    \"featureType\": \"road\",\n" +
+                            "    \"elementType\": \"labels.icon\",\n" +
+                            "    \"stylers\": [\n" +
+                            "      {\n" +
+                            "        \"visibility\": \"off\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  },\n" +
+                            "  {\n" +
+                            "    \"featureType\": \"transit\",\n" +
+                            "    \"stylers\": [\n" +
+                            "      {\n" +
+                            "        \"visibility\": \"off\"\n" +
+                            "      }\n" +
+                            "    ]\n" +
+                            "  }\n" +
+                            "]")
+            )
             map.setMinZoomPreference(17f)
             map.setMaxZoomPreference(22f)
             /**
@@ -70,10 +153,31 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              */
             map.setLatLngBoundsForCameraTarget(
                     LatLngBounds(
-
                             LatLng(41.878523, -87.623689),
                             LatLng(41.880712, -87.621100)
                     )
+            )
+
+            baseGroundOverlay = map.addGroundOverlay(
+                    GroundOverlayOptions()
+                            .positionFromBounds(
+                                    LatLngBounds(
+                                            LatLng(41.875813, -87.630674),
+                                            LatLng(41.883422, -87.617514)
+                                    )
+                            ).image(BitmapDescriptorFactory.fromAsset("AIC_MapBG.jpg"))
+                            .zIndex(0.1f)
+                    //TODO: Load image
+            )
+            buildingGroundOverlay = map.addGroundOverlay(
+                    GroundOverlayOptions()
+                            .positionFromBounds(
+                                    LatLngBounds(
+                                            LatLng(41.878466, -87.623966),
+                                            LatLng(41.880707, -87.621081)
+                                    )
+                            ).zIndex(.2f)
+                            .image(BitmapDescriptorFactory.fromAsset("AIC_Floor1.png"))
             )
 
             map.isIndoorEnabled = false
@@ -115,6 +219,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }
                 return@setOnMarkerClickListener handled
             }
+            groundOverlayGenerated.onNext(true)
         }
     }
 
@@ -182,6 +287,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
+        Observables.combineLatest(
+                viewModel.distinctFloor,
+                groundOverlayGenerated.filter { it }
+        ) { floor, _ ->
+            floor
+        }.subscribe {
+            buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$it.png"))
+        }.disposedBy(disposeBag)
+
         viewModel.amenities
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { annotationList ->
@@ -189,7 +303,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             annotationList,
                             amenitiesMarkerList
                     ) { mapItem ->
-                        val icon  = when(mapItem.item.amenityType) {
+                        val icon = when (mapItem.item.amenityType) {
                             ArticMapAmenityType.WOMANS_ROOM -> {
                                 R.drawable.icon_amenity_map_womens_room_blue
                             }
@@ -223,7 +337,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             ArticMapAmenityType.FAMILY_RESTROOM -> {
                                 R.drawable.icon_amenity_map_family_restroom_blue
                             }
-                            else ->{
+                            ArticMapAmenityType.MEMBERS_LOUNGE -> {
+                                R.drawable.icon_amenity_map_cafe_blue
+                            }
+                            else -> {
                                 Timber.d("unknownAmenityType: ${mapItem.item.amenityType}")
                                 0
                             }
@@ -233,7 +350,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         var options = MarkerOptions()
                                 .position(mapItem.item.toLatLng())
                                 .zIndex(0f)
-                        if(icon != 0) {
+                        if (icon != 0) {
                             options = options.icon(BitmapDescriptorFactory.fromResource(icon))
                         }
                         options
@@ -327,6 +444,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override fun onDestroyView() {
         mapView.onDestroy()
+        groundOverlayGenerated.onNext(false)
         super.onDestroyView()
     }
 
