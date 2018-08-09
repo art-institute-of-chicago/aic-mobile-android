@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.AudioAttributesCompat
+import com.bumptech.glide.Glide
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
@@ -29,6 +30,7 @@ import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import io.reactivex.subjects.BehaviorSubject
+
 
 /**
  * The app's global background audio player.
@@ -151,10 +153,6 @@ class AudioPlayerService : Service() {
                 articAudioFile?.let {
                     if (playWhenReady && playbackState == Player.STATE_READY) {
                         audioPlayBackStatus.onNext(PlayBackState.Playing(it))
-                    } else if (playWhenReady) {
-                        // might be idle (plays after prepare()),
-                        // buffering (plays when data available)
-                        // or ended (plays when seek away from end)
                     } else if (playbackState == Player.STATE_ENDED) {
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
                     } else {
@@ -217,7 +215,16 @@ class AudioPlayerService : Service() {
                     }
 
                     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
-                        return null
+                        val audioFile = articObject?.fullImageFullPath
+                        var bitmap: Bitmap? = null
+                        audioFile?.let {
+                            bitmap = Glide.with(this@AudioPlayerService)
+                                    .asBitmap()
+                                    .load(audioFile)
+                                    .submit(50, 50)
+                                    .get()
+                        }
+                        return bitmap
                     }
                 })
 
