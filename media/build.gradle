@@ -9,6 +9,7 @@ dependencies {
     implementation libs.exo_player_core
     implementation libs.exo_player_dash
     implementation libs.exo_player_ui
+    implementation libs.glide
     implementation libs.exo_player_media_session
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation project(':base')
