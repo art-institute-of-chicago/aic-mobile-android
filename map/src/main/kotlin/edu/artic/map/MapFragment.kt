@@ -155,8 +155,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              */
             map.setLatLngBoundsForCameraTarget(
                     LatLngBounds(
-                            LatLng(41.878523, -87.623689),
-                            LatLng(41.880712, -87.621100)
+                            LatLng(41.878423, -87.624189),
+                            LatLng(41.881612, -87.621000)
                     )
             )
 
