@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.util.Log
 import android.view.View
 import androidx.navigation.Navigation
-import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
@@ -46,7 +45,7 @@ class WelcomeActivity : BaseActivity() {
             boundService?.let {
                 audioPlayer.player = it.player
                 it.player.refreshPlayBackState()
-                audioPlayer.trackTitle.text = boundService?.audioObject?.title
+                audioPlayer.trackTitle.text = boundService?.articObject?.title
                 audioPlayer.visibility = View.VISIBLE
             }
         }
@@ -81,8 +80,9 @@ class WelcomeActivity : BaseActivity() {
         }
 
         audioPlayer.trackTitle.setOnClickListener {
-            startActivity("edu.artic.audio".asDeepLinkIntent())
+            startActivity(boundService?.getIntent())
         }
+
     }
 
     override fun onResume() {
