@@ -58,5 +58,6 @@ class ArticMapAmenityType {
         const val WHEELCHAIR_RAMP = "Wheelchair Ramp"
         const val DINING = "Dining"
         const val FAMILY_RESTROOM = "Family Restroom"
+        const val MEMBERS_LOUNGE = "Members Lounge"
     }
 }
