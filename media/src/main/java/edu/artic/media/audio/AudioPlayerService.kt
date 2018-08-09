@@ -174,12 +174,6 @@ class AudioPlayerService : Service() {
         return Service.START_STICKY
     }
 
-    fun stopPlayerService() {
-        player.seekTo(0)
-        stopForeground(true)
-        stopSelf()
-    }
-
     /**
      * Class for clients to access.  Because we know this service always
      * runs in the same process as its clients, we don't need to deal with
