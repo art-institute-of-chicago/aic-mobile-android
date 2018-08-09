@@ -8,7 +8,10 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
@@ -62,6 +65,37 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         expandedTitle.text = audioFile?.title
         toolbarTitle.text = audioFile?.title
+
+        if (!articObject?.artistCulturePlaceDelim.isNullOrBlank()) {
+            artistCulturePlaceDenim.visibility = View.VISIBLE
+            artistCulturePlaceDenim.text = articObject?.artistCulturePlaceDelim?.replace("\r","\n")
+        } else {
+            artistCulturePlaceDenim.visibility = View.GONE
+        }
+
+        if (!audioFile?.transcript.isNullOrBlank()) {
+            transcript.visibility = View.VISIBLE
+            transcript.setContentText(audioFile?.transcript)
+        } else {
+            transcript.visibility = View.GONE
+        }
+
+        if (!audioFile?.credits.isNullOrBlank()) {
+            credit.visibility = View.VISIBLE
+            credit.setContentText(audioFile?.credits)
+        } else {
+            credit.visibility = View.GONE
+        }
+
+        val options = RequestOptions()
+                .dontAnimate()
+                .dontTransform()
+
+        Glide.with(this)
+                .load(articObject?.largeImageFullPath)
+                .apply(options)
+                .listenerAnimateSharedTransaction(this, audioImage)
+                .into(audioImage)
     }
 
     override fun onResume() {

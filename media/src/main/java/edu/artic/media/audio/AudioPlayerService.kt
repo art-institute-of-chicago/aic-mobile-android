@@ -7,11 +7,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.AudioManager
+import android.media.AudioManager.STREAM_VOICE_CALL
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.AudioAttributesCompat
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -135,7 +137,12 @@ class AudioPlayerService : Service() {
                 audioManager,
                 ExoPlayerFactory.newSimpleInstance(DefaultRenderersFactory(this),
                         DefaultTrackSelector(),
-                        DefaultLoadControl()))
+                        DefaultLoadControl()).apply {
+                    audioAttributes = AudioAttributes
+                            .Builder()
+                            .setFlags(STREAM_VOICE_CALL)
+                            .build()
+                })
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
