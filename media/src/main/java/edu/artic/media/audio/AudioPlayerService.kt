@@ -39,6 +39,7 @@ class AudioPlayerService : Service() {
     sealed class PlayBackAction {
         class Play(val audioFile: ArticObject) : PlayBackAction()
         class Pause : PlayBackAction()
+        class Resume : PlayBackAction()
         class Stop : PlayBackAction()
         class Seek(val time: Long) : PlayBackAction()
     }
@@ -92,6 +93,10 @@ class AudioPlayerService : Service() {
             when (it) {
                 is PlayBackAction.Play -> {
                     setArticObject(it.audioFile)
+                    player.playWhenReady = true
+                }
+
+                is PlayBackAction.Resume -> {
                     player.playWhenReady = true
                 }
 
