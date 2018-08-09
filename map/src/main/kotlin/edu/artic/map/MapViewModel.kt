@@ -1,7 +1,6 @@
 package edu.artic.map
 
 import com.fuzz.rx.Optional
-import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.google.android.gms.maps.model.LatLng
@@ -61,7 +60,7 @@ class MapViewModel @Inject constructor(
         // Each time the floor changes update the current amenities for that floor this is explore mode
         floor.distinctUntilChanged()
                 .flatMap { floor ->
-                    mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).asObservable()
+                    mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).toObservable()
                 }.map { amenitiesList -> amenitiesList.mapToMapItem() }
                 .bindTo(amenities)
                 .disposedBy(disposeBag)
@@ -79,12 +78,9 @@ class MapViewModel @Inject constructor(
             mapAnnotationDao.getTextAnnotationByTypeAndFloor(
                     ArticMapTextType.SPACE,
                     floor.toString())
-                    .asObservable()
+                    .toObservable()
                     .map { it.mapToMapItem() }
-        }
-                .flatMap {
-                    it
-                }
+        }.flatMap { it }
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
 
@@ -106,7 +102,7 @@ class MapViewModel @Inject constructor(
 
         zoomLevelOneObservable
                 .flatMap {
-                    mapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK).asObservable()
+                    mapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK).toObservable()
                 }.map { landmarkList -> landmarkList.mapToMapItem() }
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
@@ -125,7 +121,7 @@ class MapViewModel @Inject constructor(
                 floor.distinctUntilChanged()
         ) { _, floor ->
             mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString())
-                    .asObservable()
+                    .toObservable()
                     .map { it.mapToMapItem() }
         }
                 .flatMap { it }
@@ -142,14 +138,14 @@ class MapViewModel @Inject constructor(
         { _, floor ->
             floor
         }.flatMap {
-            galleryDao.getGalleriesForFloor(it.toString()).asObservable()
+            galleryDao.getGalleriesForFloor(it.toString()).toObservable()
         }
 
         val objects = galleries
                 .map { galleryList ->
                     galleryList.filter { it.titleT != null }.map { it.titleT.orEmpty() }
                 }.flatMap {
-                    objectDao.getObjectsInGalleries(it).asObservable()
+                    objectDao.getObjectsInGalleries(it).toObservable()
                 }
 
         Observables.combineLatest(
