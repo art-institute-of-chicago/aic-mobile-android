@@ -364,7 +364,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                 R.drawable.icon_amenity_map_wheelchair_ramp_blue
                             }
                             ArticMapAmenityType.DINING -> {
-                                R.drawable.icon_amenity_map_cafe_blue
+                                R.drawable.icon_amenity_map_restaurant_blue
                             }
                             ArticMapAmenityType.FAMILY_RESTROOM -> {
                                 R.drawable.icon_amenity_map_family_restroom_blue
