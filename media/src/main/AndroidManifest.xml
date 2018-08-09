@@ -5,6 +5,6 @@
         <service
             android:name=".audio.AudioPlayerService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 </manifest>
