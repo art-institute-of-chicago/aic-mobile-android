@@ -164,8 +164,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     GroundOverlayOptions()
                             .positionFromBounds(
                                     LatLngBounds(
-                                            LatLng(41.875813, -87.630674),
-                                            LatLng(41.883422, -87.617514)
+                                            LatLng(41.874670, -87.629191),
+                                            LatLng(41.884803, -87.615779)
                                     )
                             ).image(BitmapDescriptorFactory.fromAsset("AIC_MapBG.jpg"))
                             .zIndex(0.1f)
@@ -175,10 +175,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     GroundOverlayOptions()
                             .positionFromBounds(
                                     LatLngBounds(
-                                            LatLng(41.878466, -87.623966),
-                                            LatLng(41.880707, -87.621081)
+                                            LatLng(41.878517, -87.624065),
+                                            LatLng(41.880780, -87.620965)
                                     )
-                            ).zIndex(.2f)
+                            ).zIndex(.11f)
                             .image(BitmapDescriptorFactory.fromAsset("AIC_Floor1.png"))
             )
 
