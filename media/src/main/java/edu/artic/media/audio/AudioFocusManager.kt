@@ -1,8 +1,21 @@
+/*
+ * Copyright 2018 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package edu.artic.media.audio
 
-/**
- *@author Sameer Dhakal (Fuzz)
- */
 import android.annotation.TargetApi
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
@@ -19,6 +32,10 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
  * Wrapper around a [SimpleExoPlayer] simplifies playback by automatically handling
  * audio focus using [AudioFocusRequest] on Oreo+ devices, and an
  * [AudioManager.OnAudioFocusChangeListener] on previous versions.
+ *
+ * This file was copied directly from Google's 'Universal Media Player'
+ * example; the original can be found
+ * [in their GitHub repository](https://github.com/googlesamples/android-UniversalMusicPlayer/blob/d369f82/media/src/main/java/com/example/android/uamp/media/audiofocus/AudioFocusExoPlayerDecorator.kt).
  */
 class AudioFocusExoPlayerDecorator(private val audioAttributes: AudioAttributesCompat,
                                    private val audioManager: AudioManager,
