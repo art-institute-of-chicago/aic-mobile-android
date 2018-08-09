@@ -34,6 +34,7 @@ class AudioPlayerService : Service() {
 
     object Constants {
         const val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
+        const val NOTIFICATION_ID = 200
     }
 
     sealed class PlayBackAction {
@@ -54,7 +55,7 @@ class AudioPlayerService : Service() {
     private lateinit var playerNotificationManager: PlayerNotificationManager
     var articObject: ArticObject? = null
 
-    val audioControl = BehaviorSubject.create<AudioPlayerService.PlayBackAction>()
+    private val audioControl = BehaviorSubject.create<AudioPlayerService.PlayBackAction>()
     val audioPlayBackStatus = BehaviorSubject.create<AudioPlayerService.PlayBackState>()
     val currentTrack = BehaviorSubject.create<ArticAudioFile>()
 
@@ -126,7 +127,7 @@ class AudioPlayerService : Service() {
                 this,
                 Constants.FOREGROUND_CHANNEL_ID,
                 R.string.channel_name,
-                22,
+                Constants.NOTIFICATION_ID,
                 object : PlayerNotificationManager.MediaDescriptionAdapter {
                     override fun createCurrentContentIntent(player: Player?): PendingIntent? {
                         //TODO make it dynamic so that activity that started the audio stream will be the destination of Intent
@@ -237,9 +238,17 @@ class AudioPlayerService : Service() {
     }
 
     fun playPlayer(audioFile: ArticObject?) {
-        audioFile?.let{
+        audioFile?.let {
             audioControl.onNext(PlayBackAction.Play(it))
         }
+    }
+
+    fun resumePlayer() {
+        audioControl?.onNext(AudioPlayerService.PlayBackAction.Resume())
+    }
+
+    fun stopPlayer() {
+        audioControl?.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 }
 

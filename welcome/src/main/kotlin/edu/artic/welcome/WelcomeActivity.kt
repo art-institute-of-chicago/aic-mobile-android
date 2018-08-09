@@ -92,11 +92,11 @@ class WelcomeActivity : BaseActivity() {
         }
 
         audioPlayer.exo_play.setOnClickListener {
-            boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Resume())
+            boundService?.resumePlayer()
         }
 
         audioPlayer.exo_pause.setOnClickListener {
-            boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Pause())
+            boundService?.pausePlayer()
         }
 
         audioPlayer.trackTitle.setOnClickListener {
@@ -110,7 +110,7 @@ class WelcomeActivity : BaseActivity() {
                 .yBy(200f)
                 .setDuration(600)
                 .withEndAction {
-                    boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Stop())
+                    boundService?.stopPlayer()
                     audioPlayer.visibility = View.INVISIBLE
                     audioPlayer.y = audioPlayer.y - 200f
                 }
