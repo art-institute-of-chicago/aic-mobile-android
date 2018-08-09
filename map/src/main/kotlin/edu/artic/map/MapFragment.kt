@@ -1,7 +1,5 @@
 package edu.artic.map
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -46,6 +44,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
     private lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
+    val OBJECT_DETILAS = "object-details"
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
@@ -85,6 +85,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }
             }
 
+            map.setOnMapClickListener {
+                val objectDetailsFragment = activity?.supportFragmentManager?.findFragmentByTag(OBJECT_DETILAS)
+                objectDetailsFragment?.let { fragment ->
+                    activity?.supportFragmentManager
+                            ?.beginTransaction()
+                            ?.remove(fragment)
+                            ?.commit()
+                }
+            }
+
             map.setOnMarkerClickListener { marker ->
                 var handled = false
                 when (marker.tag) {
@@ -103,29 +113,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         activity?.let {
                             val fragmentManager = it.supportFragmentManager
                             if (!isMapObjectVisible) {
-                                val anim = ValueAnimator.ofFloat(0f, -objectDetailsContainer.height.toFloat())
-                                anim.duration = 1000
-                                anim.addUpdateListener {
-                                    val translateBy = it.animatedValue as Float
-                                    lowerLevel.translationY = translateBy
-                                    floorOne.translationY = translateBy
-                                    floorTwo.translationY = translateBy
-                                    floorThree.translationY = translateBy
-
-                                }
-                                anim.addListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationEnd(animation: Animator?) {
-                                        val fragment = MapObjectDetailsFragment.create(mapObject)
-                                        fragmentManager.beginTransaction()
-                                                .add(R.id.objectDetailsContainer, fragment, mapObject.title)
-                                                .commit()
-                                    }
-                                })
-                                anim.start()
-
+                                val fragment = MapObjectDetailsFragment.create(mapObject)
+                                fragmentManager.beginTransaction()
+                                        .add(R.id.objectDetailsContainer, fragment, OBJECT_DETILAS)
+                                        .commit()
                             } else {
                                 fragmentManager.beginTransaction()
-                                        .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), mapObject.title)
+                                        .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), OBJECT_DETILAS)
                                         .commit()
                             }
                         }
