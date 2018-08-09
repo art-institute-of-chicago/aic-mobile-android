@@ -68,7 +68,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         if (!articObject?.artistCulturePlaceDelim.isNullOrBlank()) {
             artistCulturePlaceDenim.visibility = View.VISIBLE
-            artistCulturePlaceDenim.text = articObject?.artistCulturePlaceDelim?.replace("\r","\n")
+            artistCulturePlaceDenim.text = articObject?.artistCulturePlaceDelim?.replace("\r", "\n")
         } else {
             artistCulturePlaceDenim.visibility = View.GONE
         }
@@ -91,11 +91,14 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .dontAnimate()
                 .dontTransform()
 
-        Glide.with(this)
-                .load(articObject?.largeImageFullPath)
-                .apply(options)
-                .listenerAnimateSharedTransaction(this, audioImage)
-                .into(audioImage)
+        if (articObject?.largeImageFullPath != null) {
+            Glide.with(this)
+                    .load(articObject?.largeImageFullPath)
+                    .apply(options)
+                    .listenerAnimateSharedTransaction(this, audioImage)
+                    .into(audioImage)
+        }
+
     }
 
     override fun onResume() {

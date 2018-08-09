@@ -6,8 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.disposedBy
 import dagger.android.support.AndroidSupportInjection
+import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
+import edu.artic.media.audio.AudioPlayerService
 import kotlinx.android.synthetic.main.fragment_map_object_details.*
 
 /**
@@ -15,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_map_object_details.*
  */
 class MapObjectDetailsFragment : Fragment() {
 
-    private val mapObject by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+    private val mapObject : ArticObject? by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_map_object_details, container, false)
@@ -25,6 +29,8 @@ class MapObjectDetailsFragment : Fragment() {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
     }
+
+    val disposeBag = DisposeBag()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,35 +45,67 @@ class MapObjectDetailsFragment : Fragment() {
         val mapActivity = context as MapActivity
         val boundService = mapActivity.boundService
         val currentArticObject = boundService?.getCurrentObject()
+        val currentAudioObject: ArticAudioFile? = currentArticObject?.audioCommentary?.first()?.audioFile
+        val mapAudioObject: ArticAudioFile? = mapObject?.audioCommentary?.first()?.audioFile
 
-        if (currentArticObject?.nid == mapObject?.nid) {
-            displayPlayButton()
-        } else {
-            displayPause()
-        }
-        
-        mapObject?.let { mapObj ->
-
-            playCurrent.setOnClickListener {
-                boundService?.resumeCurrentAudio(mapObj)
+        playCurrent.setOnClickListener {
+            if (mapObject != null) {
+                boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Play(mapObject as ArticObject))
             }
-
-            pauseCurrent.setOnClickListener {
-                boundService?.pauseCurrentAudio()
-            }
-
         }
+
+        pauseCurrent.setOnClickListener {
+            if (currentArticObject != null) {
+                boundService.audioControl?.onNext(AudioPlayerService.PlayBackAction.Pause())
+            }
+        }
+        /**
+         * if the current track and selected map object's track are same
+         */
+        displayPlayButton()
+
+        boundService?.audioPlayBackStatus
+                ?.subscribe { playBackState ->
+
+                    if (playBackState.articAudioFile == mapAudioObject) {
+
+                        when (playBackState) {
+
+                            is AudioPlayerService.PlayBackState.Playing -> {
+                                displayPause()
+                            }
+
+                            is AudioPlayerService.PlayBackState.Paused -> {
+                                displayPlayButton()
+                            }
+
+                            is AudioPlayerService.PlayBackState.Stopped -> {
+                                displayPlayButton()
+                            }
+                        }
+                    } else {
+                        displayPlayButton()
+                    }
+
+                }
+                ?.disposedBy(disposeBag)
 
     }
 
     private fun displayPause() {
+        playCurrent.visibility = View.INVISIBLE
+        pauseCurrent.visibility = View.VISIBLE
+
+    }
+
+    private fun displayPlayButton() {
         playCurrent.visibility = View.VISIBLE
         pauseCurrent.visibility = View.INVISIBLE
     }
 
-    private fun displayPlayButton() {
-        playCurrent.visibility = View.INVISIBLE
-        pauseCurrent.visibility = View.VISIBLE
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposeBag.clear()
     }
 
     companion object {

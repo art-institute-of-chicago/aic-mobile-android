@@ -12,6 +12,8 @@ import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.AudioAttributesCompat
+import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -20,8 +22,10 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.media.R
+import io.reactivex.subjects.BehaviorSubject
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -32,9 +36,28 @@ class AudioPlayerService : Service() {
         const val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
     }
 
+    sealed class PlayBackAction {
+        class Play(val audioFile: ArticObject) : PlayBackAction()
+        class Pause : PlayBackAction()
+        class Stop : PlayBackAction()
+        class Seek(val time: Long) : PlayBackAction()
+    }
+
+    sealed class PlayBackState(val articAudioFile: ArticAudioFile) {
+        class Playing(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
+        class Paused(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
+        class Stopped(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
+    }
+
     private val binder: Binder = AudioPlayerServiceBinder()
     private lateinit var playerNotificationManager: PlayerNotificationManager
     var articObject: ArticObject? = null
+
+    val audioControl = BehaviorSubject.create<AudioPlayerService.PlayBackAction>()
+    val audioPlayBackStatus = BehaviorSubject.create<AudioPlayerService.PlayBackState>()
+    val currentTrack = BehaviorSubject.create<ArticAudioFile>()
+
+    val disposeBag = DisposeBag()
 
     /**
      * Returns the intent to load the details of currently playing audio file.
@@ -47,6 +70,47 @@ class AudioPlayerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        setUpNotificationManager()
+        player.addListener(object : Player.DefaultEventListener() {
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                val articAudioFile = articObject?.audioCommentary?.first()?.audioFile
+                articAudioFile?.let {
+                    if (playWhenReady && playbackState == Player.STATE_READY) {
+                        audioPlayBackStatus.onNext(PlayBackState.Playing(it))
+                    } else if (playWhenReady) {
+                        // might be idle (plays after prepare()),
+                        // buffering (plays when data available)
+                        // or ended (plays when seek away from end)
+                    } else {
+                        audioPlayBackStatus.onNext(PlayBackState.Paused(it))
+                    }
+                }
+            }
+        })
+
+        audioControl.subscribe {
+            when (it) {
+                is PlayBackAction.Play -> {
+                    setArticObject(it.audioFile)
+                    player.playWhenReady = true
+                }
+
+                is PlayBackAction.Pause -> {
+                    player.playWhenReady = false
+                }
+
+                is PlayBackAction.Stop -> {
+                    player.stop()
+                }
+
+                is PlayBackAction.Seek -> {
+                    player.seekTo(it.time)
+                }
+            }
+        }.disposedBy(disposeBag)
+    }
+
+    private fun setUpNotificationManager() {
         playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
                 this,
                 Constants.FOREGROUND_CHANNEL_ID,
@@ -54,6 +118,7 @@ class AudioPlayerService : Service() {
                 22,
                 object : PlayerNotificationManager.MediaDescriptionAdapter {
                     override fun createCurrentContentIntent(player: Player?): PendingIntent? {
+                        //TODO make it dynamic so that activity that started the audio stream will be the destination of Intent
                         val notificationIntent = "edu.artic.audio".asDeepLinkIntent()
                         return PendingIntent.getActivity(this@AudioPlayerService, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
                     }
@@ -87,6 +152,7 @@ class AudioPlayerService : Service() {
         playerNotificationManager.setOngoing(false)
         playerNotificationManager.setPlayer(player)
         playerNotificationManager.setSmallIcon(R.drawable.icn_notification)
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -117,11 +183,15 @@ class AudioPlayerService : Service() {
     fun setArticObject(_articObject: ArticObject, resetPosition: Boolean = false) {
         if (articObject != _articObject) {
             articObject = _articObject
-            val fileUrl = articObject?.audioCommentary?.first()?.audioFile?.fileUrl
-            fileUrl?.let { url ->
-                val uri = Uri.parse(url)
-                val mediaSource = buildMediaSource(uri)
-                player.prepare(mediaSource, resetPosition, false)
+            val audioFile = articObject?.audioCommentary?.first()?.audioFile
+            audioFile?.let {
+                val fileUrl = audioFile.fileUrl
+                fileUrl?.let { url ->
+                    val uri = Uri.parse(url)
+                    val mediaSource = buildMediaSource(uri)
+                    player.prepare(mediaSource, resetPosition, false)
+                }
+                currentTrack.onNext(audioFile)
             }
         }
     }
@@ -154,6 +224,7 @@ class AudioPlayerService : Service() {
         super.onDestroy()
         playerNotificationManager.setPlayer(null)
         player.release()
+        disposeBag.dispose()
     }
 
     fun getCurrentObject(): ArticObject? {
