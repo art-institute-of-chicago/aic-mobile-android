@@ -25,9 +25,27 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.media.R
+import edu.artic.media.audio.AudioPlayerService.PlayBackAction
+import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
+import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import io.reactivex.subjects.BehaviorSubject
 
 /**
+ * The app's global background audio player.
+ *
+ * The audio itself is played by [an ExoPlayer][player], and it controls a system notification
+ * for changing/viewing the audio player's state via [PlayerNotificationManager].
+ *
+ * Audio files are streamed from URLs defined in the AppData blob. To play a track,
+ * you'll need to submit a new ['Play' action][PlayBackAction.Play] to the [audioControl]
+ * subject. You can pause or seek to a specific timestamp with [PlayBackAction.Pause] and
+ * [PlayBackAction.Seek]. For convenience, we offer prebuilt [playPlayer] and [pausePlayer]
+ * functions directly on the service.
+ *
+ * In general you should [bind to this service][android.app.Activity.bindService] in your
+ * [BaseActivity's onResume() function][android.app.Activity.onResume] and [unbind from it]
+ * [android.app.Activity.unbindService] in [onPause()][android.app.Activity.onPause].
+ *
  * @author Sameer Dhakal (Fuzz)
  */
 class AudioPlayerService : Service() {
@@ -37,14 +55,68 @@ class AudioPlayerService : Service() {
         const val NOTIFICATION_ID = 200
     }
 
+    /**
+     * These are the inputs callers can use to change which [PlayBackState] should be
+     * active. Currently supported actions are as follows:
+     *
+     * * [Play] - start playing a new track
+     * * [Pause] - pause current track
+     * * [Stop] - stop current track
+     * * [Seek] - change player position to a particular timestamp
+     */
     sealed class PlayBackAction {
+        /**
+         * Play the track associated with the given [ArticObject].
+         *
+         * Currently, we only support tracks defined in [ArticObject.audioCommentary].
+         *
+         * @see [ExoPlayer.prepare]
+         * @see [Player.setPlayWhenReady]
+         */
         class Play(val audioFile: ArticObject) : PlayBackAction()
+
+        /**
+         * Pause the current track.
+         *
+         * You can continue where you left off with [Resume].
+         *
+         * @see [Player.setPlayWhenReady]
+         */
         class Pause : PlayBackAction()
+
+        /**
+         * Resume the current track.
+         *
+         * You can also resume (without resetting the stream) by sending a subsequent [Play]
+         * action backed by the same [ArticObject].
+         *
+         * @see [Player.setPlayWhenReady]
+         */
         class Resume : PlayBackAction()
+
+        /**
+         * Stop playback, seek back to the start of the file, and move this service into the background.
+         *
+         * @see [Player.stop]
+         */
         class Stop : PlayBackAction()
+
+        /**
+         * Move playback to a specific temporal position.
+         *
+         * @param time number of milliseconds from the start of the track
+         */
         class Seek(val time: Long) : PlayBackAction()
     }
 
+    /**
+     * Current 'state' of [the ExoPlayer][player].
+     *
+     * We enforce the following states:
+     * * [Playing]
+     * * [Paused]
+     * * [Stopped]
+     */
     sealed class PlayBackState(val articAudioFile: ArticAudioFile) {
         class Playing(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
         class Paused(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
@@ -62,7 +134,7 @@ class AudioPlayerService : Service() {
     val disposeBag = DisposeBag()
 
     /**
-     * Returns the intent to load the details of currently playing audio file.
+     * Returns an intent including the details of currently playing audio file.
      */
     fun getIntent(): Intent {
         val audioIntent = "edu.artic.audio".asDeepLinkIntent()
