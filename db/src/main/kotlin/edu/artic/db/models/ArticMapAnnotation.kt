@@ -44,3 +44,20 @@ class ArticMapTextType {
         const val SPACE = "Space"
     }
 }
+
+class ArticMapAmenityType {
+    companion object {
+        const val WOMANS_ROOM = "Women's Room"
+        const val MENS_ROOM = "Men's Room"
+        const val ELEVATOR = "Elevator"
+        const val GIFT_SHOP= "Gift Shop"
+        const val TICKETS = "Tickets"
+        const val INFORMATION = "Information"
+        const val CHECK_ROOM = "Check Room"
+        const val AUDIO_GUIDE = "Audio Guide"
+        const val WHEELCHAIR_RAMP = "Wheelchair Ramp"
+        const val DINING = "Dining"
+        const val FAMILY_RESTROOM = "Family Restroom"
+        const val MEMBERS_LOUNGE = "Members Lounge"
+    }
+}

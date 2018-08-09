@@ -2,16 +2,13 @@ package edu.artic.map.util
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import de.hdodenhof.circleimageview.CircleImageView
 import edu.artic.map.R
 
 
-class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context){
+class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context) {
 
     init {
         container = LayoutInflater.from(context)
