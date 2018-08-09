@@ -76,6 +76,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             map.isIndoorEnabled = false
             map.isTrafficEnabled = false
             map.setMapStyle(
+                    //Leaving this here for now will pull from raw resource folder or assets folder
+                    // at a later time. or possibly just move it into it's own helper constant
                     MapStyleOptions("[\n" +
                             "  {\n" +
                             "    \"elementType\": \"labels\",\n" +
