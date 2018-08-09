@@ -17,14 +17,19 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/tourSummaryImageHeight"
             android:scaleType="matrix"
-            tools:background="#fab" />
+            tools:background="#fab"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <View
             android:id="@+id/infoBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tourSummaryInfoBarHeight"
             android:background="@color/transparentInfoBarColor"
-            app:layout_constraintBottom_toBottomOf="@id/image" />
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toStartOf="@id/image"
+            app:layout_constraintEnd_toEndOf="@id/image"
+            />
 
 
         <TextView
