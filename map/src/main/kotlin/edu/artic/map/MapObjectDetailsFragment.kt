@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_map_object_details.*
  */
 class MapObjectDetailsFragment : Fragment() {
 
-    private val mapObject : ArticObject? by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+    private val mapObject: ArticObject? by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_map_object_details, container, false)
@@ -44,7 +44,6 @@ class MapObjectDetailsFragment : Fragment() {
 
         val mapActivity = context as MapActivity
         val boundService = mapActivity.boundService
-        val currentArticObject = boundService?.getCurrentObject()
         val mapAudioObject: ArticAudioFile? = mapObject?.audioCommentary?.first()?.audioFile
 
         playCurrent.setOnClickListener {
@@ -54,9 +53,7 @@ class MapObjectDetailsFragment : Fragment() {
         }
 
         pauseCurrent.setOnClickListener {
-            if (currentArticObject != null) {
-                boundService.audioControl?.onNext(AudioPlayerService.PlayBackAction.Pause())
-            }
+            boundService?.audioControl?.onNext(AudioPlayerService.PlayBackAction.Pause())
         }
         /**
          * if the current track and selected map object's track are same

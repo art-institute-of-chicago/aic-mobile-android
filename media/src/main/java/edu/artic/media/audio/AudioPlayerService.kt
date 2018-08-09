@@ -82,6 +82,8 @@ class AudioPlayerService : Service() {
                         // might be idle (plays after prepare()),
                         // buffering (plays when data available)
                         // or ended (plays when seek away from end)
+                    } else if (playbackState == Player.STATE_ENDED) {
+                        audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
                     } else {
                         audioPlayBackStatus.onNext(PlayBackState.Paused(it))
                     }
@@ -105,6 +107,10 @@ class AudioPlayerService : Service() {
                 }
 
                 is PlayBackAction.Stop -> {
+                    val articAudioFile = articObject?.audioCommentary?.first()?.audioFile
+                    articAudioFile?.let {
+                        audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
+                    }
                     player.stop()
                 }
 
@@ -186,7 +192,7 @@ class AudioPlayerService : Service() {
     }
 
     fun setArticObject(_articObject: ArticObject, resetPosition: Boolean = false) {
-        if (articObject != _articObject) {
+        if (articObject != _articObject || articObject == null || player.playbackState == Player.STATE_ENDED) {
             articObject = _articObject
             val audioFile = articObject?.audioCommentary?.first()?.audioFile
             audioFile?.let {
@@ -230,21 +236,6 @@ class AudioPlayerService : Service() {
         playerNotificationManager.setPlayer(null)
         player.release()
         disposeBag.dispose()
-    }
-
-    fun getCurrentObject(): ArticObject? {
-        return articObject
-    }
-
-    fun resumeCurrentAudio(requestedAudioObject: ArticObject) {
-        if (articObject?.nid != requestedAudioObject.nid) {
-            setArticObject(requestedAudioObject, true)
-        }
-        player.playWhenReady = true
-    }
-
-    fun pauseCurrentAudio() {
-        player.playWhenReady = false
     }
 
 }
