@@ -7,7 +7,8 @@ dependencies {
 
     implementation libs.glide
     implementation libs.threeten
-    implementation libs.design_support
+    // This is now marked as API because other modules need this to be that version
+    api libs.design_support
 
     api libs.kotlin
     api libs.dagger

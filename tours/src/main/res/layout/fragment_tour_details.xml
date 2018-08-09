@@ -38,6 +38,7 @@
                     app:layout_constraintDimensionRatio="H, 375:220"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:fitsSystemWindows="true"/>
 
                 <TextView
@@ -102,7 +103,8 @@
                 android:id="@+id/languageSelector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/tourStops"
