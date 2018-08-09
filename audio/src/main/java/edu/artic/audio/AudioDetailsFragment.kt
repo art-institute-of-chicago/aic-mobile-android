@@ -10,7 +10,7 @@ import android.os.IBinder
 import android.view.View
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.updateDetailTitle
-import edu.artic.db.models.ArticAudioFile
+import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -37,7 +37,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override fun hasTransparentStatusBar(): Boolean = true
     var boundService: AudioPlayerService? = null
     private var audioIntent: Intent? = null
-    private val audioFile: ArticAudioFile = getAudio()
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -51,14 +50,23 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 audioPlayer.player = it.player
                 it.player.refreshPlayBackState()
             }
-            boundService?.setAudioObject(audioFile)
+            updateView(boundService?.articObject)
         }
+    }
+
+    fun updateView(articObject: ArticObject?) {
+        /**
+         * Get the first audio commentary file
+         */
+        val audioFile = articObject?.audioCommentary?.first()?.audioFile
+
+        expandedTitle.text = audioFile?.title
+        toolbarTitle.text = audioFile?.title
     }
 
     override fun onResume() {
         super.onResume()
         audioIntent = Intent(context, AudioPlayerService::class.java)
-        activity?.startService(audioIntent)
         activity?.bindService(audioIntent, serviceConnection, BIND_AUTO_CREATE)
     }
 
@@ -67,17 +75,11 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
         }
-
-        expandedTitle.text = audioFile.title
-        toolbarTitle.text = audioFile.title
     }
 
-    fun getAudio(): ArticAudioFile {
-        return ArticAudioFile("Justus Sustermans", null, "1", null, emptyList(), null, "http://aic-mobile-tours.artic.edu/sites/default/files/audio/882.mp3", null, null, null, null, "Justus Sustermans")
-    }
-
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroyView() {
+        super.onDestroyView()
         activity?.unbindService(serviceConnection)
     }
+
 }

@@ -18,7 +18,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import edu.artic.base.utils.asDeepLinkIntent
-import edu.artic.db.models.ArticAudioFile
+import edu.artic.db.models.ArticObject
 import edu.artic.media.R
 
 /**
@@ -32,7 +32,16 @@ class AudioPlayerService : Service() {
 
     private val binder: Binder = AudioPlayerServiceBinder()
     private lateinit var playerNotificationManager: PlayerNotificationManager
-    var audioObject: ArticAudioFile? = null
+    var articObject: ArticObject? = null
+
+    /**
+     * Returns the intent to load the details of currently playing audio file.
+     */
+    fun getIntent(): Intent {
+        val audioIntent = "edu.artic.audio".asDeepLinkIntent()
+        audioIntent.putExtra("artic_object", articObject)
+        return audioIntent
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -52,7 +61,7 @@ class AudioPlayerService : Service() {
                     }
 
                     override fun getCurrentContentTitle(player: Player?): String {
-                        return audioObject?.title ?: ""
+                        return articObject?.title ?: ""
                     }
 
                     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
@@ -103,12 +112,15 @@ class AudioPlayerService : Service() {
         }
     }
 
-    fun setAudioObject(_audioObject: ArticAudioFile, resetPosition: Boolean = false) {
-        if (audioObject != _audioObject) {
-            audioObject = _audioObject
-            val uri = Uri.parse(audioObject?.fileUrl)
-            val mediaSource = buildMediaSource(uri)
-            player.prepare(mediaSource, resetPosition, false)
+    fun setArticObject(_articObject: ArticObject, resetPosition: Boolean = false) {
+        if (articObject != _articObject) {
+            articObject = _articObject
+            val fileUrl = articObject?.audioCommentary?.first()?.audioFile?.fileUrl
+            fileUrl?.let { url ->
+                val uri = Uri.parse(url)
+                val mediaSource = buildMediaSource(uri)
+                player.prepare(mediaSource, resetPosition, false)
+            }
         }
     }
 
@@ -137,13 +149,13 @@ class AudioPlayerService : Service() {
         player.release()
     }
 
-    fun getCurrentAudio(): ArticAudioFile? {
-        return audioObject
+    fun getCurrentObject(): ArticObject? {
+        return articObject
     }
 
-    fun resumeCurrentAudio(requestedAudioFile: ArticAudioFile) {
-        if (audioObject?.nid != requestedAudioFile.nid) {
-            setAudioObject(requestedAudioFile, true)
+    fun resumeCurrentAudio(requestedAudioObject: ArticObject) {
+        if (articObject?.nid != requestedAudioObject.nid) {
+            setArticObject(requestedAudioObject, true)
         }
         player.playWhenReady = true
     }

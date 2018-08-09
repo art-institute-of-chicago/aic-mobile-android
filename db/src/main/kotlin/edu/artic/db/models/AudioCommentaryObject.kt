@@ -9,5 +9,6 @@ import kotlinx.android.parcel.Parcelize
 @JsonClass(generateAdapter = true)
 data class AudioCommentaryObject(
         @Json(name = "object_selector_number") val objectSelectorNumber: String?,
-        @Json(name = "audio") val audio: String?
+        @Json(name = "audio") val audio: String?,
+        var audioFile: ArticAudioFile?
 ) : Parcelable

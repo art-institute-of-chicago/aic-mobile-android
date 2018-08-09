@@ -16,7 +16,8 @@ dependencies {
     implementation libs.exo_player_core
     implementation libs.exo_player_ui
     implementation project(':media')
-    
+    implementation project(':audio')
+
     implementation libs.constraint_layout
     api libs.maps
     implementation libs.arch_navigation

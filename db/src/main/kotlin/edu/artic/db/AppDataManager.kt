@@ -82,8 +82,21 @@ class AppDataManager @Inject constructor(
                         if (galleries?.isNotEmpty() == true) {
                             appDatabase.galleryDao.addGalleries(galleries.values.toList())
                         }
+
+                        val audioFiles = result.audioFiles
+                        if (audioFiles?.isNotEmpty() == true) {
+                            appDatabase.audioFileDao.addAudioFiles(audioFiles.values.toList())
+                        }
+
                         val objects = result.objects
                         if (objects?.isNotEmpty() == true) {
+                            objects.values.forEach { articObject ->
+                                articObject.audioCommentary.forEach { audioCommentaryObject ->
+                                    audioCommentaryObject.audio?.let {
+                                        audioCommentaryObject.audioFile = appDatabase.audioFileDao.getAudioById(it)
+                                    }
+                                }
+                            }
                             appDatabase.objectDao.addObjects(objects.values.toList())
                         }
 
