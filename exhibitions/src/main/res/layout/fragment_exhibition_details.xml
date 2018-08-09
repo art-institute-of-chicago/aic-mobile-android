@@ -37,7 +37,8 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@null"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/expandedTitle"
@@ -54,12 +55,11 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:src="@drawable/detail_header_gradient"
                 android:contentDescription="@null"
                 android:fitsSystemWindows="true"
+                android:src="@drawable/detail_header_gradient"
                 app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="1"
-                />
+                app:layout_collapseParallaxMultiplier="1" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -108,13 +108,14 @@
                 style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/marginStandard"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginStandard"
                 android:drawableLeft="@drawable/ic_show_on_map"
+                android:padding="@dimen/marginStandard"
                 app:layout_constraintEnd_toStartOf="@id/centerGuide"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Show on Map" />
 
             <Button
@@ -122,14 +123,15 @@
                 style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/marginStandard"
-                android:drawablePadding="@dimen/marginStandard"
-                android:drawableStart="@drawable/ic_ticket"
                 android:layout_marginStart="@dimen/marginStandard"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginDouble"
+                android:drawableStart="@drawable/ic_ticket"
+                android:drawablePadding="@dimen/marginStandard"
+                android:padding="@dimen/marginStandard"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/centerGuide"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Buy Tickets" />
 
             <TextView
@@ -146,8 +148,8 @@
                 tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate." />
 
             <TextView
-                style="@style/DescriptionDate"
                 android:id="@+id/throughDate"
+                style="@style/DescriptionDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
