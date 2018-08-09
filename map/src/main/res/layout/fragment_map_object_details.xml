@@ -22,60 +22,64 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:contentDescription="@null"
         android:scaleType="matrix"
-        app:layout_constraintBottom_toBottomOf="@+id/infoBlock"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/infoBlock"
+        app:layout_constraintTop_toTopOf="@+id/reference"
         tools:background="@color/brownishOrange" />
 
-    <LinearLayout
-        android:id="@+id/infoBlock"
+    <TextView
+        android:id="@+id/tourStopTitle"
+        style="@style/ListItemTitle1White"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/controlBox"
         app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toTopOf="@+id/reference">
+        app:layout_constraintTop_toTopOf="@+id/reference"
+        tools:text="Introduction IntroductionIntroductionIntroductionIntroductionIntroduction" />
 
-        <TextView
-            android:id="@+id/tourStopTitle"
-            style="@style/ListItemTitle1White"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            tools:text="Introduction" />
+    <TextView
+        android:id="@+id/tourStopGallery"
+        style="@style/ListItemTitle2White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/controlBox"
+        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintTop_toBottomOf="@+id/tourStopTitle"
+        tools:text="Gallery 201" />
 
-        <TextView
-            android:id="@+id/tourStopGallery"
-            style="@style/ListItemTitle2White"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            tools:text="Gallery 201" />
-
-    </LinearLayout>
-
-
-    <ImageButton
-        android:id="@+id/playCurrent"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="@dimen/marginDouble"
-        android:background="@drawable/ic_play"
+    <FrameLayout
+        android:id="@+id/controlBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/image" />
-
-    <ImageButton
-        android:id="@+id/pauseCurrent"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="@dimen/marginDouble"
-        android:background="@drawable/ic_pause"
-        app:layout_constraintBottom_toBottomOf="@+id/image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/image" />
+        app:layout_constraintTop_toTopOf="@+id/image">
 
 
+        <ImageButton
+            android:id="@+id/playCurrent"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="@dimen/marginDouble"
+            android:background="@drawable/ic_play" />
+
+        <ImageButton
+            android:id="@+id/pauseCurrent"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="@dimen/marginDouble"
+            android:background="@drawable/ic_pause"
+            app:layout_constraintBottom_toBottomOf="@+id/image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/image" />
+
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>
