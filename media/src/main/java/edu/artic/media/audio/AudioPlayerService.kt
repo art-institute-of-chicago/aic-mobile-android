@@ -192,7 +192,7 @@ class AudioPlayerService : Service() {
     }
 
     fun setArticObject(_articObject: ArticObject, resetPosition: Boolean = false) {
-        if (articObject != _articObject || articObject == null || player.playbackState == Player.STATE_ENDED) {
+        if (articObject != _articObject || player.playbackState == Player.STATE_IDLE) {
             articObject = _articObject
             val audioFile = articObject?.audioCommentary?.first()?.audioFile
             audioFile?.let {

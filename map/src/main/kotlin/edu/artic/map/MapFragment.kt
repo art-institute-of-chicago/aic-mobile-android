@@ -552,6 +552,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .zIndex(2f)
                                             .visible(true)
                             )
+
+                            fullMaker.tag = articObject
+
                             fullObjectMarkers.add(fullMaker)
                             val dotMaker = map.addMarker(MarkerOptions()
                                     .position(articObject.toLatLng())
