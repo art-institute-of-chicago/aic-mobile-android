@@ -10,10 +10,13 @@ import android.os.IBinder
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.view.visibility
+import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
-import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -49,57 +52,66 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as AudioPlayerService.AudioPlayerServiceBinder
             boundService = binder.getService()
+
             boundService?.let {
                 audioPlayer.player = it.player
                 it.player.refreshPlayBackState()
             }
-            updateView(boundService?.articObject)
+            viewModel.audioObject = boundService?.articObject
         }
     }
 
-    fun updateView(articObject: ArticObject?) {
-        /**
-         * Get the first audio commentary file
-         */
-        val audioFile = articObject?.audioCommentary?.first()?.audioFile
+    override fun setupBindings(viewModel: AudioDetailsViewModel) {
 
-        expandedTitle.text = audioFile?.title
-        toolbarTitle.text = audioFile?.title
-
-        if (!articObject?.artistCulturePlaceDelim.isNullOrBlank()) {
-            artistCulturePlaceDenim.visibility = View.VISIBLE
-            artistCulturePlaceDenim.text = articObject?.artistCulturePlaceDelim?.replace("\r", "\n")
-        } else {
-            artistCulturePlaceDenim.visibility = View.GONE
-        }
-
-        if (!audioFile?.transcript.isNullOrBlank()) {
-            transcript.visibility = View.VISIBLE
-            transcript.setContentText(audioFile?.transcript)
-        } else {
-            transcript.visibility = View.GONE
-        }
-
-        if (!audioFile?.credits.isNullOrBlank()) {
-            credit.visibility = View.VISIBLE
-            credit.setContentText(audioFile?.credits)
-        } else {
-            credit.visibility = View.GONE
-        }
+        viewModel.title.subscribe {
+            expandedTitle.text = it
+            toolbarTitle.text = it
+        }.disposedBy(disposeBag)
 
         val options = RequestOptions()
                 .dontAnimate()
                 .dontTransform()
 
-        if (articObject?.largeImageFullPath != null) {
+        viewModel.image
+                .map { it.isNotEmpty() }
+                .bindToMain(audioImage.visibility())
+
+        viewModel.image.subscribe {
             Glide.with(this)
-                    .load(articObject?.largeImageFullPath)
+                    .load(it)
                     .apply(options)
                     .listenerAnimateSharedTransaction(this, audioImage)
                     .into(audioImage)
-        }
+        }.disposedBy(disposeBag)
 
+        viewModel.authorCulturalPlace
+                .map { it.isNotEmpty() }
+                .bindToMain(artistCulturePlaceDenim.visibility())
+
+        viewModel.authorCulturalPlace
+                .bindToMain(artistCulturePlaceDenim.text())
+                .disposedBy(disposeBag)
+
+        viewModel.transcript
+                .map { it.isNotEmpty() }
+                .bindToMain(transcript.visibility())
+
+        viewModel.transcript
+                .subscribe {
+                    transcript.setContentText(it)
+                }.disposedBy(disposeBag)
+
+        viewModel.credits
+                .map { it.isNotEmpty() }
+                .bindToMain(credit.visibility())
+
+
+        viewModel.credits
+                .subscribe {
+                    credit.setContentText(it)
+                }.disposedBy(disposeBag)
     }
+
 
     override fun onResume() {
         super.onResume()
