@@ -62,8 +62,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         MapsInitializer.initialize(view.context)
         mapView.getMapAsync { map ->
             this.map = map
-            map.setMinZoomPreference(18f)
-            map.setMaxZoomPreference(21f)
+            map.setMinZoomPreference(17f)
+            map.setMaxZoomPreference(22f)
             /**
              * We are setting the bounds here as they are roughly the bounds of the museum,
              * locks us into just that area
@@ -75,11 +75,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             LatLng(41.880712, -87.621100)
                     )
             )
+
             map.isIndoorEnabled = false
             map.setOnCameraIdleListener {
                 val zoom = map.cameraPosition.zoom
                 when {
-                    zoom < 18.5 -> {
+                    zoom < 18 -> {
                         viewModel.zoomLevelChangedTo(MapZoomLevel.One)
                     }
                     zoom < 20 -> {
@@ -90,6 +91,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 }
             }
+
+            map.animateCamera(
+                    CameraUpdateFactory.newCameraPosition(
+                            CameraPosition.Builder()
+                                    .target(LatLng(41.879592, -87.622491))
+                                    .bearing(90f)
+                                    .tilt(0f)
+                                    .build()
+                    )
+            )
 
             map.setOnMarkerClickListener { marker ->
                 var handled = false
