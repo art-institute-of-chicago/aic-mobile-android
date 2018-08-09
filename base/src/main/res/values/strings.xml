@@ -11,4 +11,6 @@
     <string name="infoPrompt">Access your memeber card, see museum hours, or update your app settings.</string>
     <string name="accessMemberCard">Access Memeber Card</string>
     <string name="channel_name">art institute of chicago</string>
+    <string name="transcript">Transcript</string>
+    <string name="credits">Credits</string>
 </resources>

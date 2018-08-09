@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyText"
+    android:background="#1E1E1E"
     android:fitsSystemWindows="true"
     app:statusBarBackground="@android:color/transparent">
 
@@ -50,7 +50,7 @@
                     android:id="@+id/audioImage"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:background="@color/greyText"
+                    android:background="@color/audioBackground"
                     android:contentDescription="@null"
                     android:fitsSystemWindows="true"
                     android:src="@color/audioBackground"
@@ -103,7 +103,8 @@
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/greyText">
@@ -112,21 +113,47 @@
                 android:id="@+id/audioPlayer"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginStandard"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:layout_marginBottom="@dimen/marginDouble"
                 app:auto_show="true"
                 app:controller_layout_id="@layout/exo_playback_control_view"
                 app:hide_on_touch="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:show_timeout="0"
                 app:use_artwork="false"
                 app:use_controller="true" />
 
-        </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/artistCulturePlaceDenim"
+                style="@style/BodySerifWhiteLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginDouble"
+                tools:text="Edward hooper" />
+            <View
+                style="@style/divider"
+                android:layout_width="match_parent" />
+
+            <edu.artic.view.DropdownTextView
+                android:id="@+id/transcript"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyText"
+                app:content_text_color="@color/white"
+                app:title_text="@string/transcript"
+                app:title_text_color="@color/white" />
+
+            <View
+                style="@style/divider"
+                android:layout_width="match_parent" />
+
+            <edu.artic.view.DropdownTextView
+                android:id="@+id/credit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/greyText"
+                app:content_text_color="@color/white"
+                app:title_text="@string/credits"
+                app:title_text_color="@color/white" />
+
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
