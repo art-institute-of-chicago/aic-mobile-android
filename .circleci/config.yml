@@ -30,5 +30,7 @@ jobs:
           path: app/build/test-result
       - run:
           name: Build debug APK and release APK
-          command: |
-            ./gradlew :app:assembleDebug
+          command: ./gradlew :app:assembleDebug
+      - store_artifacts:
+	  path: app/build/outputs/apk/debug
+          destination: apks
