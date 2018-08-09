@@ -13,6 +13,8 @@ import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.AudioAttributesCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
@@ -63,6 +65,7 @@ class AudioPlayerService : Service() {
      *
      * * [Play] - start playing a new track
      * * [Pause] - pause current track
+     * * [Resume] - resumes current track
      * * [Stop] - stop current track
      * * [Seek] - change player position to a particular timestamp
      */
@@ -215,16 +218,7 @@ class AudioPlayerService : Service() {
                     }
 
                     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
-                        val audioFile = articObject?.fullImageFullPath
-                        var bitmap: Bitmap? = null
-                        audioFile?.let {
-                            bitmap = Glide.with(this@AudioPlayerService)
-                                    .asBitmap()
-                                    .load(audioFile)
-                                    .submit(50, 50)
-                                    .get()
-                        }
-                        return bitmap
+                        return null
                     }
                 })
 
