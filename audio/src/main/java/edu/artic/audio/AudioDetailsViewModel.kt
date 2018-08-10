@@ -44,33 +44,33 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
     init {
         objectObservable
                 .map {
-                    it.artistCulturePlaceDelim?.replace("\r", "\n") ?: ""
+                    it.artistCulturePlaceDelim?.replace("\r", "\n").orEmpty()
                 }.bindTo(authorCulturalPlace)
                 .disposedBy(disposeBag)
 
         objectObservable
                 .map {
-                    it.title ?: ""
+                    it.title
                 }.bindTo(title)
                 .disposedBy(disposeBag)
 
 
         objectObservable
                 .map {
-                    it.largeImageFullPath ?: ""
+                    it.largeImageFullPath.orEmpty()
                 }.bindTo(image)
                 .disposedBy(disposeBag)
 
 
         objectObservable
                 .map {
-                    it.audioCommentary.first().audioFile?.transcript ?: ""
+                    it.audioCommentary.first().audioFile?.transcript.orEmpty()
                 }.bindTo(transcript)
                 .disposedBy(disposeBag)
 
         objectObservable
                 .map {
-                    it.audioCommentary.first().audioFile?.credits ?: ""
+                    it.audioCommentary.first().audioFile?.credits.orEmpty()
                 }.bindTo(credits)
                 .disposedBy(disposeBag)
 

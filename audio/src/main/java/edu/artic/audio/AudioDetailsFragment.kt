@@ -75,6 +75,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.image
                 .map { it.isNotEmpty() }
                 .bindToMain(audioImage.visibility())
+                .disposedBy(disposeBag)
 
         viewModel.image.subscribe {
             Glide.with(this)
@@ -87,6 +88,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.authorCulturalPlace
                 .map { it.isNotEmpty() }
                 .bindToMain(artistCulturePlaceDenim.visibility())
+                .disposedBy(disposeBag)
 
         viewModel.authorCulturalPlace
                 .bindToMain(artistCulturePlaceDenim.text())
@@ -104,6 +106,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.credits
                 .map { it.isNotEmpty() }
                 .bindToMain(credit.visibility())
+                .disposedBy(disposeBag)
 
 
         viewModel.credits
@@ -116,12 +119,12 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override fun onResume() {
         super.onResume()
         audioIntent = Intent(context, AudioPlayerService::class.java)
-        activity?.bindService(audioIntent, serviceConnection, BIND_AUTO_CREATE)
+        requireActivity().bindService(audioIntent, serviceConnection, BIND_AUTO_CREATE)
     }
 
     override fun onPause() {
         super.onPause()
-        activity?.unbindService(serviceConnection)
+        requireActivity().unbindService(serviceConnection)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
