@@ -27,7 +27,7 @@ abstract class BaseFragment : Fragment() {
     @get:LayoutRes
     protected abstract val layoutResId: Int
 
-    abstract val screenCategory: ScreenCategoryName
+    abstract val screenCategory: ScreenCategoryName?
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
@@ -51,7 +51,9 @@ abstract class BaseFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        analyticsTracker.reportScreenView(screenCategory)
+        screenCategory?.let {
+            analyticsTracker.reportScreenView(it)
+        }
     }
 
     override fun onResume() {

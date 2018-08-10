@@ -10,6 +10,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.audioui.BottomAudioPlayerFragment
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -30,11 +31,12 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override val layoutResId: Int
         get() = R.layout.fragment_map_object_details
 
-    //TODO figure out correct analytics category
+
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.OnViewDetails
 
     private val mapObject: ArticObject? by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+
 
     override fun onRegisterViewModel(viewModel: MapObjectDetailsViewModel) {
         viewModel.articObject = mapObject
@@ -62,11 +64,12 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mapActivity = context as MapActivity
-        val boundService = mapActivity.boundService
+        val audioFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.newPlayer) as BottomAudioPlayerFragment
+        val audioService = audioFragment.boundService
 
-        boundService
-                ?.audioPlayBackStatus
+
+
+        audioService?.audioPlayBackStatus
                 ?.bindTo(viewModel.audioPlayBackStatus)
                 ?.disposedBy(disposeBag)
 
@@ -74,15 +77,17 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
                 .clicks()
                 .defaultThrottle()
                 .subscribe {
-                    boundService?.playPlayer(mapObject)
+                    audioService?.playPlayer(mapObject)
                 }.disposedBy(disposeBag)
 
         pauseCurrent
                 .clicks()
                 .defaultThrottle()
                 .subscribe {
-                    boundService?.pausePlayer()
+                    audioService?.pausePlayer()
                 }.disposedBy(disposeBag)
+
+
 
         viewModel.playState.subscribe { playBackState ->
             when (playBackState) {
