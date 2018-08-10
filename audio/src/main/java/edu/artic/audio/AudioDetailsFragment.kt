@@ -47,17 +47,19 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
             boundService = null
-            viewModel.setService(null)
+            viewModel.audioObject = null
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as AudioPlayerService.AudioPlayerServiceBinder
             boundService = binder.getService()
-            viewModel.setService(boundService)
+            viewModel.audioObject = boundService?.articObject
+
             boundService?.let {
                 audioPlayer.player = it.player
                 it.player.refreshPlayBackState()
             }
+
         }
     }
 

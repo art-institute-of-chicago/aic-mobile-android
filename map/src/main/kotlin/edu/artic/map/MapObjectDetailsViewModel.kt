@@ -52,21 +52,21 @@ class MapObjectDetailsViewModel @Inject constructor() : BaseViewModel() {
 
         objectObservable
                 .map {
-                    it.title ?: ""
+                    it.title
                 }.bindTo(title)
                 .disposedBy(disposeBag)
 
 
         objectObservable
                 .map {
-                    it.galleryLocation ?: ""
+                    it.galleryLocation.orEmpty()
                 }.bindTo(galleryLocation)
                 .disposedBy(disposeBag)
 
 
         objectObservable
                 .map {
-                    it.largeImageFullPath ?: ""
+                    it.largeImageFullPath.orEmpty()
                 }.bindTo(image)
                 .disposedBy(disposeBag)
     }

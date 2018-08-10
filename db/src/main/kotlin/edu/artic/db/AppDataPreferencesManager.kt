@@ -7,5 +7,5 @@ class AppDataPreferencesManager(context: Context) : BasePreferencesManager(conte
 
     var lastModified: String
         set(value) = putString("last_modified", value)
-        get() = getString("last_modified", "") ?: ""
+        get() = getString("last_modified", "").orEmpty()
 }

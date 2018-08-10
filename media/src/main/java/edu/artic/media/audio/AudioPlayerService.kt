@@ -212,7 +212,7 @@ class AudioPlayerService : Service() {
                     }
 
                     override fun getCurrentContentTitle(player: Player?): String {
-                        return articObject?.title ?: ""
+                        return articObject?.title.orEmpty()
                     }
 
                     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {

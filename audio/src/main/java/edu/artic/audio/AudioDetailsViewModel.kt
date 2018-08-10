@@ -29,18 +29,6 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
             }
         }
 
-    private var audioService: AudioPlayerService? = null
-
-    fun setService(service: AudioPlayerService?) {
-        audioService = service
-        audioObject = audioService?.articObject
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        audioService = null
-    }
-
     init {
         objectObservable
                 .map {
