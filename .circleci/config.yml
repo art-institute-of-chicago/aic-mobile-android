@@ -27,7 +27,7 @@ jobs:
           path: app/build/reports
           destination: reports
       - store_test_results:
-          path: app/build/test-result
+          path: app/build/test-results
       - run:
           name: Build debug APK and release APK
           command: ./gradlew :app:assembleDebug
