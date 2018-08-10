@@ -209,9 +209,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             ))
 
             map.setOnMapClickListener {
-                val objectDetailsFragment = activity?.supportFragmentManager?.findFragmentByTag(OBJECT_DETILAS)
+                val objectDetailsFragment = requireActivity().supportFragmentManager?.findFragmentByTag(OBJECT_DETILAS)
                 objectDetailsFragment?.let { fragment ->
-                    activity?.supportFragmentManager
+                    requireActivity().supportFragmentManager
                             ?.beginTransaction()
                             ?.remove(fragment)
                             ?.commit()
