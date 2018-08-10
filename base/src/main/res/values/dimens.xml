@@ -10,6 +10,7 @@
     <dimen name="marginNinety">90dp</dimen>
     <dimen name="marginTriple">24dp</dimen>
     <dimen name="marginQuad">32dp</dimen>
+    <dimen name="marginTwo">2dp</dimen>
 
     <dimen name="collapsibleImageHeight">240dp</dimen>
     <dimen name="tourTileWidth">285dp</dimen>
@@ -32,6 +33,8 @@
     <dimen name="textFifteen">15sp</dimen>
     <dimen name="textPrompt">24sp</dimen>
 
+
     <dimen name="bottom_audio_player_height">50dp</dimen>
     <dimen name="bottom_audio_control_icon_size">32dp</dimen>
+    <dimen name="large_icon_size">42dp</dimen>
 </resources>
