@@ -3,6 +3,7 @@ package edu.artic.map
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
+import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -63,20 +64,24 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
 
         val mapActivity = context as MapActivity
         val boundService = mapActivity.boundService
-        viewModel.setService(boundService)
+
+        boundService
+                ?.audioPlayBackStatus
+                ?.bindTo(viewModel.audioPlayBackStatus)
+                ?.disposedBy(disposeBag)
 
         playCurrent
                 .clicks()
                 .defaultThrottle()
                 .subscribe {
-                    viewModel.playAudioTrack()
+                    boundService?.playPlayer(mapObject)
                 }.disposedBy(disposeBag)
 
         pauseCurrent
                 .clicks()
                 .defaultThrottle()
                 .subscribe {
-                    viewModel.pauseAudioTrack()
+                    boundService?.pausePlayer()
                 }.disposedBy(disposeBag)
 
         viewModel.playState.subscribe { playBackState ->
@@ -106,10 +111,6 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
         pauseCurrent.visibility = View.INVISIBLE
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        disposeBag.clear()
-    }
 
     companion object {
         private val ARG_MAP_OBJECT = MapObjectDetailsFragment::class.java.simpleName

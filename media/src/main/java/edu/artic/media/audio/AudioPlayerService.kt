@@ -29,6 +29,7 @@ import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 
 
 /**
@@ -129,9 +130,9 @@ class AudioPlayerService : Service() {
     private lateinit var playerNotificationManager: PlayerNotificationManager
     var articObject: ArticObject? = null
 
-    private val audioControl = BehaviorSubject.create<AudioPlayerService.PlayBackAction>()
-    val audioPlayBackStatus = BehaviorSubject.create<AudioPlayerService.PlayBackState>()
-    val currentTrack = BehaviorSubject.create<ArticAudioFile>()
+    private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
+    val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
+    val currentTrack: Subject<ArticAudioFile> = BehaviorSubject.create()
 
     val disposeBag = DisposeBag()
 
@@ -317,11 +318,11 @@ class AudioPlayerService : Service() {
     }
 
     fun resumePlayer() {
-        audioControl?.onNext(AudioPlayerService.PlayBackAction.Resume())
+        audioControl.onNext(AudioPlayerService.PlayBackAction.Resume())
     }
 
     fun stopPlayer() {
-        audioControl?.onNext(AudioPlayerService.PlayBackAction.Stop())
+        audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 }
 
