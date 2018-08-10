@@ -14,31 +14,14 @@ import javax.inject.Inject
  */
 class MapObjectDetailsViewModel @Inject constructor() : BaseViewModel() {
 
-    private var audioService: AudioPlayerService? = null
-
     val title: Subject<String> = BehaviorSubject.create()
     val image: Subject<String> = BehaviorSubject.create()
     val galleryLocation: Subject<String> = BehaviorSubject.create()
 
     private val objectObservable: Subject<ArticObject> = BehaviorSubject.create()
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
+    val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
 
-
-    fun setService(service: AudioPlayerService?) {
-        audioService = service
-        audioService?.audioPlayBackStatus
-                ?.filter { playBackState ->
-                    playBackState.articAudioFile == articObject?.audioCommentary?.first()?.audioFile
-                }
-                ?.bindTo(playState)
-                ?.disposedBy(disposeBag)
-    }
-
-
-    override fun cleanup() {
-        super.cleanup()
-        audioService = null
-    }
 
     var articObject: ArticObject? = null
         set(value) {
@@ -49,6 +32,13 @@ class MapObjectDetailsViewModel @Inject constructor() : BaseViewModel() {
         }
 
     init {
+
+        audioPlayBackStatus
+                .filter { playBackState ->
+                    playBackState.articAudioFile == articObject?.audioCommentary?.first()?.audioFile
+                }.bindTo(playState)
+                .disposedBy(disposeBag)
+
 
         objectObservable
                 .map {
@@ -70,14 +60,5 @@ class MapObjectDetailsViewModel @Inject constructor() : BaseViewModel() {
                 }.bindTo(image)
                 .disposedBy(disposeBag)
     }
-
-    fun playAudioTrack() {
-        audioService?.playPlayer(articObject)
-    }
-
-    fun pauseAudioTrack() {
-        audioService?.pausePlayer()
-    }
-
 
 }
