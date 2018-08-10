@@ -18,9 +18,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/audioBackground"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="26dp">
+    android:paddingStart="@dimen/marginDouble"
+    android:paddingEnd="@dimen/marginDouble"
+    android:paddingBottom="@dimen/marginTriple">
 
     <TextView
         android:id="@id/exo_position"
@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ideal_sans_book"
         android:includeFontPadding="false"
-        android:paddingEnd="2dp"
-        android:textSize="14sp"
+        android:paddingEnd="@dimen/marginTwo"
+        android:textSize="@dimen/textMedium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="0:15" />
@@ -55,10 +55,10 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ideal_sans_book"
         android:includeFontPadding="false"
-        android:paddingStart="2dp"
-        android:paddingRight="4dp"
-        android:textColor="#FFBEBEBE"
-        android:textSize="14sp"
+        android:paddingStart="@dimen/marginTwo"
+        android:paddingRight="@dimen/marginTwo"
+        android:textColor="@color/audioDurationTextColor"
+        android:textSize="@dimen/textFifteen"
         app:layout_constraintStart_toEndOf="@id/divider"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1:30" />
@@ -66,37 +66,37 @@
 
     <FrameLayout
         android:id="@+id/playPause"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="@dimen/large_icon_size"
+        android:layout_height="@dimen/large_icon_size"
+        android:layout_marginTop="@dimen/marginTwenty"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/exo_position">
 
         <ImageButton
             android:id="@id/exo_play"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/large_icon_size"
+            android:layout_height="@dimen/large_icon_size"
             android:background="@drawable/ic_play" />
 
         <ImageButton
             android:id="@id/exo_pause"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/large_icon_size"
+            android:layout_height="@dimen/large_icon_size"
             android:background="@drawable/ic_pause" />
     </FrameLayout>
 
     <com.google.android.exoplayer2.ui.DefaultTimeBar
         android:id="@id/exo_progress"
         android:layout_width="0dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="20dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        app:bar_height="2dp"
-        app:buffered_color="#868686"
+        android:layout_height="@dimen/large_icon_size"
+        android:layout_marginTop="@dimen/marginTwenty"
+        android:paddingStart="@dimen/marginStandard"
+        android:paddingEnd="@dimen/marginStandard"
+        app:bar_height="@dimen/marginTwo"
+        app:buffered_color="@color/audioBufferingColor"
         app:layout_constraintStart_toEndOf="@id/playPause"
         app:layout_constraintTop_toBottomOf="@id/exo_position"
-        app:played_color="#37a2a5"
+        app:played_color="@color/audioPlayedColor"
         app:scrubber_drawable="@drawable/exo_scrubber" />
 
 </android.support.constraint.ConstraintLayout>
