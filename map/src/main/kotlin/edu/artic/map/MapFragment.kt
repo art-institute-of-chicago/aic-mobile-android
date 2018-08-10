@@ -219,14 +219,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             }
 
             map.setOnMarkerClickListener { marker ->
-                var handled = false
                 when (marker.tag) {
                     is MapItem.Annotation -> {
                         val annotation = marker.tag as MapItem.Annotation
                         when (annotation.item.annotationType) {
                             ArticMapAnnotationType.DEPARTMENT -> {
                                 viewModel.departmentMarkerSelected(annotation.item)
-                                handled = true
                             }
                         }
                     }
@@ -247,8 +245,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         }
 
                     }
+                    else -> {
+                        map.animateCamera(
+                                CameraUpdateFactory.newLatLng(marker.position)
+                        )
+                    }
                 }
-                return@setOnMarkerClickListener handled
+                return@setOnMarkerClickListener true
             }
             groundOverlayGenerated.onNext(true)
         }

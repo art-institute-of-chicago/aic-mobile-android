@@ -121,14 +121,14 @@ class MapViewModel @Inject constructor(
     fun setupZoomLevelTwoBinds() {
 
         Observables.combineLatest(
-                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Two },
+                zoomLevel,
                 distinctFloor
-        ) { _, floor ->
-            mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString())
-                    .toObservable()
-                    .map { it.mapToMapItem() }
-        }
-                .flatMap { it }
+        ) { zoomLevel, floor ->
+            return@combineLatest if (zoomLevel === MapZoomLevel.Two) floor else Int.MIN_VALUE
+        }.filter { floor -> floor >= 0 }
+                .flatMap { floor ->
+                    mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString()).toObservable()
+                }.map { it.mapToMapItem() }
                 .bindTo(veryDynamicMapItems)
                 .disposedBy(disposeBag)
 
@@ -137,13 +137,14 @@ class MapViewModel @Inject constructor(
 
     fun setupZoomLevelThreeBinds() {
         val galleries = Observables.combineLatest(
-                zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Three },
-                distinctFloor)
-        { _, floor ->
-            floor
-        }.flatMap {
-            galleryDao.getGalleriesForFloor(it.toString()).toObservable()
-        }
+                zoomLevel,
+                distinctFloor
+        ) { zoomLevel, floor ->
+            return@combineLatest if (zoomLevel === MapZoomLevel.Three) floor else Int.MIN_VALUE
+        }.filter { floor -> floor >= 0 }
+                .flatMap {
+                    galleryDao.getGalleriesForFloor(it.toString()).toObservable()
+                }
 
         val objects = galleries
                 .map { galleryList ->
@@ -154,14 +155,27 @@ class MapViewModel @Inject constructor(
 
         Observables.combineLatest(
                 distinctFloor,
+                zoomLevel,
                 galleries,
                 objects
-        ) { floor, galleryList, objectList ->
-            val list = mutableListOf<MapItem<*>>()
-            list.addAll(galleryList.map { gallery -> MapItem.Gallery(gallery, floor) })
-            list.addAll(objectList.map { articObject -> MapItem.Object(articObject, floor) })
-            return@combineLatest list
-        }
+        ) { floor, zoomLevel, galleryList, objectList ->
+            return@combineLatest if (zoomLevel == MapZoomLevel.Three && floor == currentFloor) {
+                val list = mutableListOf<MapItem<*>>()
+                list.addAll(
+                        galleryList.map { gallery ->
+                            MapItem.Gallery(gallery, floor)
+                        }
+                )
+                list.addAll(
+                        objectList.map { articObject ->
+                            MapItem.Object(articObject, floor)
+                        }
+                )
+                list
+            } else {
+                emptyList<MapItem<*>>()
+            }
+        }.filter { it.isNotEmpty() }
                 .bindTo(veryDynamicMapItems)
                 .disposedBy(disposeBag)
     }
