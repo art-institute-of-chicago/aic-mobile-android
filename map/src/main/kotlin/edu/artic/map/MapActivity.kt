@@ -15,7 +15,6 @@ import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_map.*
 import kotlinx.android.synthetic.main.minimal_exo_playback_control_view.view.*
-import timber.log.Timber
 
 /**
  * One of the four primary sections of the app. This Activity always hosts a [MapFragment].
@@ -62,10 +61,7 @@ class MapActivity : BaseActivity() {
 
             audioService.audioPlayBackStatus
                     .map { state ->
-
-                        val visibility = state is AudioPlayerService.PlayBackState.Paused || state is AudioPlayerService.PlayBackState.Playing
-                        Timber.d(visibility.toString())
-                        visibility
+                        state is AudioPlayerService.PlayBackState.Paused || state is AudioPlayerService.PlayBackState.Playing
                     }
                     .bindToMain(audioPlayer.visibility())
                     .disposedBy(disposeBag)
