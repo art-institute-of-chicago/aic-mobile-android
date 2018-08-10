@@ -69,7 +69,8 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="@dimen/marginDouble"
-            android:background="@drawable/ic_play" />
+            android:background="@drawable/ic_play"
+            android:visibility="visible" />
 
         <ImageButton
             android:id="@+id/pauseCurrent"
@@ -77,6 +78,7 @@
             android:layout_height="32dp"
             android:layout_marginEnd="@dimen/marginDouble"
             android:background="@drawable/ic_pause"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/image" />

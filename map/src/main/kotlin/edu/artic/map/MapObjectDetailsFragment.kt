@@ -72,18 +72,12 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
                     viewModel.playAudioTrack()
                 }.disposedBy(disposeBag)
 
-        playCurrent.setOnClickListener {
-            viewModel.playAudioTrack()
-        }
-
-        pauseCurrent.setOnClickListener {
-            viewModel.pauseAudioTrack()
-        }
-
-        /**
-         * if the current track and selected map object's track are same
-         */
-        displayPlayButton()
+        pauseCurrent
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.pauseAudioTrack()
+                }.disposedBy(disposeBag)
 
         viewModel.playState.subscribe { playBackState ->
             when (playBackState) {
