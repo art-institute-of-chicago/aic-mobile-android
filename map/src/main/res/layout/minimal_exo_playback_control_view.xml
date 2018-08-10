@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="@dimen/bottom_audio_player_height"
     android:background="@color/greyText">
 
     <FrameLayout
         android:id="@+id/playPause"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/bottom_audio_control_icon_size"
+        android:layout_height="@dimen/bottom_audio_control_icon_size"
         android:layout_marginStart="@dimen/marginStandard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,8 +17,8 @@
 
         <ImageButton
             android:id="@id/exo_play"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="@dimen/bottom_audio_control_icon_size"
+            android:layout_height="@dimen/bottom_audio_control_icon_size"
             android:background="@drawable/ic_play" />
 
         <ImageButton
@@ -45,8 +45,8 @@
 
     <ImageButton
         android:id="@+id/closePlayer"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/bottom_audio_control_icon_size"
+        android:layout_height="@dimen/bottom_audio_control_icon_size"
         android:layout_marginEnd="@dimen/marginStandard"
         android:background="@drawable/ic_close_circle"
         app:layout_constraintBottom_toBottomOf="parent"
