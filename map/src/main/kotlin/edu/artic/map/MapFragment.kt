@@ -1,6 +1,5 @@
 package edu.artic.map
 
-import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
@@ -234,19 +233,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     is ArticObject -> {
                         val mapObject = marker.tag as ArticObject
                         val isMapObjectVisible = objectDetailsContainer.childCount != 0
-                        activity?.let {
-                            val fragmentManager = it.supportFragmentManager
-                            if (!isMapObjectVisible) {
-                                val fragment = MapObjectDetailsFragment.create(mapObject)
-                                fragmentManager.beginTransaction()
-                                        .add(R.id.objectDetailsContainer, fragment, OBJECT_DETILAS)
-                                        .commit()
-                            } else {
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), OBJECT_DETILAS)
-                                        .commit()
-                            }
+
+                        val fragmentManager = requireActivity().supportFragmentManager
+                        if (!isMapObjectVisible) {
+                            val fragment = MapObjectDetailsFragment.create(mapObject)
+                            fragmentManager.beginTransaction()
+                                    .add(R.id.objectDetailsContainer, fragment, OBJECT_DETILAS)
+                                    .commit()
+                        } else {
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), OBJECT_DETILAS)
+                                    .commit()
                         }
+
                     }
                 }
                 return@setOnMarkerClickListener handled
