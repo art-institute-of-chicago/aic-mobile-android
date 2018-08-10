@@ -13,6 +13,9 @@
         android:layout_height="45dp"
         android:contentDescription="@null"
         android:scaleType="matrix"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <TextView
@@ -21,6 +24,7 @@
         android:layout_width="20dp"
         android:layout_height="22dp"
         app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="@dimen/marginOneHalf"
         android:layout_marginTop="3dp"
         android:gravity="end"
