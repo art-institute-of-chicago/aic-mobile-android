@@ -35,8 +35,8 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         class SeeAllOnView : NavigationEndpoint()
         class SeeAllEvents : NavigationEndpoint()
         class TourDetail(val post: Int, val tour: ArticTour) : NavigationEndpoint()
-        class ExhibitionDetail(val pos : Int, val exhibition: ArticExhibition) : NavigationEndpoint()
-        class EventDetail(val pos : Int, val event: ArticEvent) : NavigationEndpoint()
+        class ExhibitionDetail(val pos: Int, val exhibition: ArticExhibition) : NavigationEndpoint()
+        class EventDetail(val pos: Int, val event: ArticEvent) : NavigationEndpoint()
     }
 
 
@@ -142,8 +142,7 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition) : BaseView
     private val throughDateString = exhibition.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)
             .toString()
     val exhibitionDate: Subject<String> = BehaviorSubject.createDefault(throughDateString)
-    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url
-            ?: "")
+    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url.orEmpty())
 }
 
 /**
@@ -151,10 +150,9 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition) : BaseView
  */
 class WelcomeEventCellViewModel(val event: ArticEvent) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
-    val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description
-            ?: "")
+    val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
     private val eventDate = event.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
             .toString()
     val eventTime: Subject<String> = BehaviorSubject.createDefault(eventDate)
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image ?: "")
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
 }
