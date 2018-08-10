@@ -230,19 +230,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                     is ArticObject -> {
                         val mapObject = marker.tag as ArticObject
-                        val isMapObjectVisible = objectDetailsContainer.childCount != 0
-
-                        val fragmentManager = requireActivity().supportFragmentManager
-                        if (!isMapObjectVisible) {
-                            val fragment = MapObjectDetailsFragment.create(mapObject)
-                            fragmentManager.beginTransaction()
-                                    .add(R.id.objectDetailsContainer, fragment, OBJECT_DETILAS)
-                                    .commit()
-                        } else {
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(mapObject), OBJECT_DETILAS)
-                                    .commit()
-                        }
+                        viewModel.articObjectSelected(mapObject)
 
                     }
                     else -> {
@@ -452,6 +440,22 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         }
                     }
                     Timber.d("DepartmentMarker list size after itemList for each ${departmentMakers.size}")
+                }.disposedBy(disposeBag)
+
+        viewModel.selectedArticObject
+                .subscribe { selectedArticObject ->
+                    val isMapObjectVisible = objectDetailsContainer.childCount != 0
+                    val fragmentManager = requireActivity().supportFragmentManager
+                    if (!isMapObjectVisible) {
+                        val fragment = MapObjectDetailsFragment.create(selectedArticObject)
+                        fragmentManager.beginTransaction()
+                                .add(R.id.objectDetailsContainer, fragment, OBJECT_DETILAS)
+                                .commit()
+                    } else {
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETILAS)
+                                .commit()
+                    }
                 }.disposedBy(disposeBag)
     }
 
