@@ -40,7 +40,8 @@
                     android:scaleType="matrix"
                     app:layout_constraintDimensionRatio="H,375:220"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <TextView
                     android:id="@+id/expandedTitle"
@@ -107,6 +108,7 @@
                 android:layout_marginEnd="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="June 30, 1:00pm" />
 
             <Button
