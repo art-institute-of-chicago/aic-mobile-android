@@ -70,7 +70,7 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
 
         objectObservable
                 .map {
-                    it.audioCommentary.first().audioFile?.credits.orEmpty()
+                    it.creditLine.orEmpty()
                 }.bindTo(credits)
                 .disposedBy(disposeBag)
 
