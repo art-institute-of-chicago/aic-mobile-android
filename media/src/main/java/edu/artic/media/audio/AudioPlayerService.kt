@@ -12,9 +12,6 @@ import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.AudioAttributesCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
@@ -158,6 +155,8 @@ class AudioPlayerService : Service() {
                         audioPlayBackStatus.onNext(PlayBackState.Playing(it))
                     } else if (playbackState == Player.STATE_ENDED) {
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
+                    } else if (playbackState == Player.STATE_IDLE) {
+                        audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
                     } else {
                         audioPlayBackStatus.onNext(PlayBackState.Paused(it))
                     }
@@ -185,7 +184,6 @@ class AudioPlayerService : Service() {
                     articAudioFile?.let {
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
                     }
-                    player.seekTo(0)
                     player.stop()
                 }
 
@@ -270,6 +268,7 @@ class AudioPlayerService : Service() {
                     val uri = Uri.parse(url)
                     val mediaSource = buildMediaSource(uri)
                     player.prepare(mediaSource, resetPosition, false)
+                    player.seekTo(0)
                 }
                 currentTrack.onNext(audioFile)
             }
