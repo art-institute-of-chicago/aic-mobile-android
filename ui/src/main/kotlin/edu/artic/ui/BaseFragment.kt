@@ -88,10 +88,10 @@ abstract class BaseFragment : Fragment() {
         }
 
         if (hasTransparentStatusBar()) {
-            activity?.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-            activity?.window?.statusBarColor = Color.TRANSPARENT
+            requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+            requireActivity().window?.statusBarColor = Color.TRANSPARENT
         } else {
-            activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            requireActivity().window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
         }
     }
 
