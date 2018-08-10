@@ -123,10 +123,14 @@ class MapViewModel @Inject constructor(
         Observables.combineLatest(
                 zoomLevel.distinctUntilChanged().filter { it === MapZoomLevel.Two },
                 distinctFloor
-        ) { _, floor ->
-            mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString())
-                    .toObservable()
-                    .map { it.mapToMapItem() }
+        ) { zoomLevel, floor ->
+            return@combineLatest if(zoomLevel == currentZoomLevel && floor == currentFloor) {
+                mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString())
+                        .toObservable()
+                        .map { it.mapToMapItem() }
+            } else {
+                Observable.just(emptyList<MapItem<*>>())
+            }
         }
                 .flatMap { it }
                 .bindTo(veryDynamicMapItems)
@@ -157,11 +161,23 @@ class MapViewModel @Inject constructor(
                 galleries,
                 objects
         ) { floor, galleryList, objectList ->
-            val list = mutableListOf<MapItem<*>>()
-            list.addAll(galleryList.map { gallery -> MapItem.Gallery(gallery, floor) })
-            list.addAll(objectList.map { articObject -> MapItem.Object(articObject, floor) })
-            return@combineLatest list
-        }
+            return@combineLatest if(currentZoomLevel == MapZoomLevel.Three && floor == currentFloor) {
+                val list = mutableListOf<MapItem<*>>()
+                list.addAll(
+                        galleryList.map {
+                            gallery -> MapItem.Gallery(gallery, floor)
+                        }
+                )
+                list.addAll(
+                        objectList.map {
+                            articObject -> MapItem.Object(articObject, floor)
+                        }
+                )
+                list
+            } else {
+                emptyList<MapItem<*>>()
+            }
+        }.filter { it.isNotEmpty() }
                 .bindTo(veryDynamicMapItems)
                 .disposedBy(disposeBag)
     }
