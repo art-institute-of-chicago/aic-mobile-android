@@ -9,6 +9,7 @@ import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapTextType
+import edu.artic.db.models.ArticObject
 import edu.artic.map.helpers.mapToMapItem
 import edu.artic.map.helpers.toLatLng
 import edu.artic.viewmodel.BaseViewModel
@@ -26,6 +27,7 @@ class MapViewModel @Inject constructor(
 
     val amenities: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val spacesAndLandmarks: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
+    val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
 
     //This stores all the map items that change at every zoom level and every floor change
     val veryDynamicMapItems: Subject<List<MapItem<*>>> = BehaviorSubject.create()
@@ -193,6 +195,10 @@ class MapViewModel @Inject constructor(
                 Optional(Pair(department.toLatLng(), MapZoomLevel.Three))
         )
         this.cameraMovementRequested.onNext(Optional(null))
+    }
+
+    fun articObjectSelected(articObject: ArticObject) {
+        selectedArticObject.onNext(articObject)
     }
 
 }

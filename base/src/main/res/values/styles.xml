@@ -191,6 +191,7 @@
     <style name="MetadataMediumGray">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/warmGrey</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
     </style>
 
     <style name="BodySerifWhiteLeft">

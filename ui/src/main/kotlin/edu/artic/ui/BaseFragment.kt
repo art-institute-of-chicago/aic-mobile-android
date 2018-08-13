@@ -27,7 +27,7 @@ abstract class BaseFragment : Fragment() {
     @get:LayoutRes
     protected abstract val layoutResId: Int
 
-    abstract val screenCategory: ScreenCategoryName
+    abstract val screenCategory: ScreenCategoryName?
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
@@ -42,7 +42,7 @@ abstract class BaseFragment : Fragment() {
             ?: throw IllegalStateException("Fragment " + this + " view is not created yet.")
 
     protected val navController
-    get() = Navigation.findNavController(requireView())
+        get() = Navigation.findNavController(requireView())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -51,12 +51,18 @@ abstract class BaseFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        analyticsTracker.reportScreenView(screenCategory)
+        screenCategory?.let {
+            analyticsTracker.reportScreenView(it)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        requireView().post { updateToolbar(requireView()) }
+        requireView().post {
+            view?.let {
+                updateToolbar(it)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -88,10 +94,10 @@ abstract class BaseFragment : Fragment() {
         }
 
         if (hasTransparentStatusBar()) {
-            activity?.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-            activity?.window?.statusBarColor = Color.TRANSPARENT
+            requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+            requireActivity().window?.statusBarColor = Color.TRANSPARENT
         } else {
-            activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            requireActivity().window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
         }
     }
 
