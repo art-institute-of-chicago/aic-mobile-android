@@ -35,10 +35,12 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.OnViewDetails
 
-    private val mapObject: ArticObject? by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+    private val mapObject: ArticObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+
 
 
     override fun onRegisterViewModel(viewModel: MapObjectDetailsViewModel) {
+        requireActivity()
         viewModel.articObject = mapObject
     }
 

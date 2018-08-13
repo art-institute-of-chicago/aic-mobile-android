@@ -42,7 +42,7 @@ abstract class BaseFragment : Fragment() {
             ?: throw IllegalStateException("Fragment " + this + " view is not created yet.")
 
     protected val navController
-    get() = Navigation.findNavController(requireView())
+        get() = Navigation.findNavController(requireView())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
@@ -58,7 +58,11 @@ abstract class BaseFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireView().post { updateToolbar(requireView()) }
+        requireView().post {
+            view?.let {
+                updateToolbar(it)
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

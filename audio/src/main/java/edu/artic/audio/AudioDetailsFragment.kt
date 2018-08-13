@@ -121,7 +121,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        audioIntent = Intent(context, AudioPlayerService::class.java)
+        audioIntent = AudioPlayerService.getLaunchIntent(requireContext())
         requireActivity().bindService(audioIntent, serviceConnection, BIND_AUTO_CREATE)
     }
 

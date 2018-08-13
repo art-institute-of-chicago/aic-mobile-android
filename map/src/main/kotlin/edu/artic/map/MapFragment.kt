@@ -61,7 +61,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
-    val OBJECT_DETILAS = "object-details"
+    companion object {
+        const val OBJECT_DETAILS = "object-details"
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -209,7 +211,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             ))
 
             map.setOnMapClickListener {
-                val objectDetailsFragment = requireActivity().supportFragmentManager?.findFragmentByTag(OBJECT_DETILAS)
+                val objectDetailsFragment = requireActivity().supportFragmentManager?.findFragmentByTag(OBJECT_DETAILS)
                 objectDetailsFragment?.let { fragment ->
                     requireActivity().supportFragmentManager
                             ?.beginTransaction()
@@ -449,11 +451,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     if (!isMapObjectVisible) {
                         val fragment = MapObjectDetailsFragment.create(selectedArticObject)
                         fragmentManager.beginTransaction()
-                                .add(R.id.objectDetailsContainer, fragment, OBJECT_DETILAS)
+                                .add(R.id.objectDetailsContainer, fragment, OBJECT_DETAILS)
                                 .commit()
                     } else {
                         fragmentManager.beginTransaction()
-                                .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETILAS)
+                                .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
                                 .commit()
                     }
                 }.disposedBy(disposeBag)
