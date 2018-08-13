@@ -47,7 +47,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     private val amenitiesMarkerList = mutableListOf<Marker>()
     private val spaceOrLandmarkMarkerList = mutableListOf<Marker>()
-    private val departmentMakers = mutableListOf<Marker>()
+    private val departmentMarkers = mutableListOf<Marker>()
     private val galleryMarkers = mutableListOf<Marker>()
     private val fullObjectMarkers = mutableListOf<Marker>()
     private val dotObjectMarkers = mutableListOf<Marker>()
@@ -80,8 +80,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             map.isIndoorEnabled = false
             map.isTrafficEnabled = false
             map.setMapStyle(
-                    //Leaving this here for now will pull from raw resource folder or assets folder
-                    // at a later time. or possibly just move it into it's own helper constant
+                    //Leaving this here for now; we will pull from raw resource folder or assets
+                    // folder at a later time. Or possibly just turn it into a helper constant
                     MapStyleOptions("[\n" +
                             "  {\n" +
                             "    \"elementType\": \"labels\",\n" +
@@ -263,10 +263,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.cameraMovementRequested
                 .filterValue()
-                .subscribe { (newPostition, zoomLevel) ->
+                .subscribe { (newPosition, zoomLevel) ->
                     map.animateCamera(
                             CameraUpdateFactory.newLatLngZoom(
-                                    newPostition,
+                                    newPosition,
                                     when (zoomLevel) {
                                         MapZoomLevel.One -> {
                                             18.0f
@@ -401,10 +401,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.veryDynamicMapItems
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { itemList ->
-                    departmentMakers.forEach { marker ->
+                    departmentMarkers.forEach { marker ->
                         marker.remove()
                     }
-                    departmentMakers.clear()
+                    departmentMarkers.clear()
                     Timber.d("DepartmentMarker list cleared")
                     galleryMarkers.forEach { marker ->
                         marker.remove()
@@ -441,7 +441,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                         }
                     }
-                    Timber.d("DepartmentMarker list size after itemList for each ${departmentMakers.size}")
+                    Timber.d("DepartmentMarker list size after 'itemList.forEach{}': ${departmentMarkers.size}")
                 }.disposedBy(disposeBag)
 
         viewModel.selectedArticObject
@@ -537,7 +537,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .zIndex(2f)
                             )
                             marker.tag = annotation
-                            departmentMakers.add(marker)
+                            departmentMarkers.add(marker)
                         }
                     }
                 })
