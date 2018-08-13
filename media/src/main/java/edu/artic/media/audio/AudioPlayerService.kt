@@ -52,9 +52,9 @@ import io.reactivex.subjects.Subject
  */
 class AudioPlayerService : Service() {
 
-    companion object Constants {
-        const val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
-        const val NOTIFICATION_ID = 200
+    companion object {
+        val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
+        val NOTIFICATION_ID = 200
 
         fun getLaunchIntent(context: Context): Intent {
             return Intent(context, AudioPlayerService::class.java)
@@ -174,8 +174,8 @@ class AudioPlayerService : Service() {
 
                 is PlayBackAction.Stop -> {
                     val articAudioFile = articObject?.audioCommentary?.first()?.audioFile
-                    articAudioFile?.let { it ->
-                        audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
+                    articAudioFile?.let { audioFile ->
+                        audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                     }
                     player.stop()
                 }
