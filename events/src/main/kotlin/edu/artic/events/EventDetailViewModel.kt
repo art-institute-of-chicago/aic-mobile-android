@@ -43,7 +43,7 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
 
         eventObservable
                 .map {
-                    it.button_text ?: ""
+                    it.button_text.orEmpty()
                 }
                 .bindTo(eventButtonText)
                 .disposedBy(disposeBag)
