@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.CustomToolbar.AudioTheme">
+        <item name="colorPrimary">@color/grape</item>
+        <item name="colorPrimaryDark">@color/grape</item>
+        <item name="android:statusBarColor">@color/grape</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>

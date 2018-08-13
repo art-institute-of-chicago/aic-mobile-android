@@ -61,6 +61,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
+    companion object {
+        const val OBJECT_DETAILS = "object-details"
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
@@ -206,6 +210,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             .build()
             ))
 
+            map.setOnMapClickListener {
+                val objectDetailsFragment = requireActivity().supportFragmentManager?.findFragmentByTag(OBJECT_DETAILS)
+                objectDetailsFragment?.let { fragment ->
+                    requireActivity().supportFragmentManager
+                            ?.beginTransaction()
+                            ?.remove(fragment)
+                            ?.commit()
+                }
+            }
+
             map.setOnMarkerClickListener { marker ->
                 when (marker.tag) {
                     is MapItem.Annotation -> {
@@ -215,6 +229,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                 viewModel.departmentMarkerSelected(annotation.item)
                             }
                         }
+                    }
+                    is ArticObject -> {
+                        val mapObject = marker.tag as ArticObject
+                        viewModel.articObjectSelected(mapObject)
+
                     }
                     else -> {
                         map.animateCamera(
@@ -424,6 +443,22 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                     Timber.d("DepartmentMarker list size after itemList for each ${departmentMakers.size}")
                 }.disposedBy(disposeBag)
+
+        viewModel.selectedArticObject
+                .subscribe { selectedArticObject ->
+                    val isMapObjectVisible = objectDetailsContainer.childCount != 0
+                    val fragmentManager = requireActivity().supportFragmentManager
+                    if (!isMapObjectVisible) {
+                        val fragment = MapObjectDetailsFragment.create(selectedArticObject)
+                        fragmentManager.beginTransaction()
+                                .add(R.id.objectDetailsContainer, fragment, OBJECT_DETAILS)
+                                .commit()
+                    } else {
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
+                                .commit()
+                    }
+                }.disposedBy(disposeBag)
     }
 
 
@@ -524,6 +559,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .zIndex(2f)
                                             .visible(true)
                             )
+
+                            fullMaker.tag = articObject
+
                             fullObjectMarkers.add(fullMaker)
                             val dotMaker = map.addMarker(MarkerOptions()
                                     .position(articObject.toLatLng())

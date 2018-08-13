@@ -8,6 +8,7 @@ dependencies {
     kapt libs.dagger_android_compiler
     api libs.dagger
     api libs.dagger_android
+    implementation libs.constraint_layout
     implementation project(":base")
     api project(":analytics")
     api libs.arch_navigation

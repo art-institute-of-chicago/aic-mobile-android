@@ -2,7 +2,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation libs.constraint_layout
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
     kapt libs.glide_compiler
@@ -15,9 +15,13 @@ dependencies {
     implementation project(':db')
     implementation project(':viewmodel')
     implementation project(':base')
+    implementation project(':audio_ui')
     implementation project(':adapter')
     implementation project(':tours')
     implementation project(':exhibitions')
     implementation project(':events')
     implementation project(':navigation')
+    implementation project(':media')
+    implementation libs.exo_player_core
+    implementation libs.exo_player_ui
 }

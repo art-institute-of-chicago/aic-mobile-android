@@ -82,13 +82,22 @@ class AppDataManager @Inject constructor(
                         if (galleries?.isNotEmpty() == true) {
                             appDatabase.galleryDao.addGalleries(galleries.values.toList())
                         }
-                        val objects = result.objects
-                        if (objects?.isNotEmpty() == true) {
-                            appDatabase.objectDao.addObjects(objects.values.toList())
-                        }
+
                         val audioFiles = result.audioFiles
                         if (audioFiles?.isNotEmpty() == true) {
                             appDatabase.audioFileDao.addAudioFiles(audioFiles.values.toList())
+                        }
+
+                        val objects = result.objects
+                        if (objects?.isNotEmpty() == true) {
+                            objects.values.forEach { articObject ->
+                                articObject.audioCommentary.forEach { audioCommentaryObject ->
+                                    audioCommentaryObject.audio?.let {
+                                        audioCommentaryObject.audioFile = appDatabase.audioFileDao.getAudioById(it)
+                                    }
+                                }
+                            }
+                            appDatabase.objectDao.addObjects(objects.values.toList())
                         }
 
                         val tours = result.tours
@@ -152,7 +161,7 @@ class AppDataManager @Inject constructor(
                                             cmsExhibitionList.forEach { exhibitionCMS ->
                                                 mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                                 // Override with exhibitions optional images from CMS, if available
-                                                exhibitionCMS.imageUrl?.let{
+                                                exhibitionCMS.imageUrl?.let {
                                                     mapExhibitionByID[exhibitionCMS.id]?.legacy_image_mobile_url = it
                                                 }
                                                 mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
