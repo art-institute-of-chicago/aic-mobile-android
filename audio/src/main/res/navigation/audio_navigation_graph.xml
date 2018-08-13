@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/audio_navigation_graph"
+    app:startDestination="@id/audioDetailsFragment">
+
+    <fragment
+        android:id="@+id/audioDetailsFragment"
+        android:name="edu.artic.audio.AudioDetailsFragment"
+        android:label="audioDetailsFragment" />
+
+</navigation>

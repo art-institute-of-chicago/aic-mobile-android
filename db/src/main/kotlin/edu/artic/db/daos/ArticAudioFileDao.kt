@@ -13,4 +13,7 @@ interface ArticAudioFileDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addAudioFiles(files: List<ArticAudioFile>)
+
+    @Query("select * from ArticAudioFile where nid = :id")
+    fun getAudioById(id: String): ArticAudioFile
 }

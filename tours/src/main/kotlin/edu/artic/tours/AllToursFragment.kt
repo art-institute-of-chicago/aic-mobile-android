@@ -32,7 +32,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+        requireActivity().window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

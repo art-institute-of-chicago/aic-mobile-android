@@ -1,10 +1,6 @@
 package edu.artic.base.utils
 
 import android.app.Activity
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.os.IBinder
 
 /**
  * @author Sameer Dhakal (Fuzz)

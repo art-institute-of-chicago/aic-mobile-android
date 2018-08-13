@@ -19,11 +19,18 @@ abstract class MapModule {
     @ViewModelKey(MapViewModel::class)
     abstract fun mapViewModel(mapViewModel: MapViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(MapObjectDetailsViewModel::class)
+    abstract fun mapObjectDetailsViewModel(mapViewModel: MapObjectDetailsViewModel): ViewModel
+
     @get:ContributesAndroidInjector
     abstract val mapActivity: MapActivity
 
     @get:ContributesAndroidInjector
     abstract val mapFragment: MapFragment
 
+    @get:ContributesAndroidInjector
+    abstract val mapObjectDetailsFragment: MapObjectDetailsFragment
 
 }

@@ -4,6 +4,7 @@ import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import edu.artic.analytics.AnalyticsModule
+import edu.artic.audio.AudioModule
 import edu.artic.db.ApiModule
 import edu.artic.db.DBModule
 import edu.artic.events.EventsModule
@@ -14,6 +15,7 @@ import edu.artic.splash.SplashModule
 import edu.artic.tours.ToursModule
 import edu.artic.viewmodel.ViewModelModule
 import edu.artic.welcome.WelcomeModule
+import edu.artic.audioui.AudioUiModule
 import javax.inject.Singleton
 
 @Singleton
@@ -29,8 +31,10 @@ import javax.inject.Singleton
     DBModule::class,
     InfoModule::class,
     MapModule::class,
+    AudioModule::class,
     AnalyticsModule::class,
-    AndroidSupportInjectionModule::class
+    AndroidSupportInjectionModule::class,
+    AudioUiModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {
 

@@ -53,6 +53,5 @@ class AllExhibitionsCellViewModel(val exhibition: ArticExhibition) : BaseViewMod
             )
             }"
     )
-    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url
-            ?: "")
+    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url.orEmpty())
 }

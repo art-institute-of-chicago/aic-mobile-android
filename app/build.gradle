@@ -30,10 +30,13 @@ dependencies {
     implementation project(':welcome')
     implementation project(':tours')
     implementation project(':info')
+    implementation project(':audio')
     implementation project(':map')
     implementation project(':exhibitions')
     implementation project(':events')
     implementation project(':analytics')
+    implementation project(':media')
+    implementation project(':audio_ui')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
