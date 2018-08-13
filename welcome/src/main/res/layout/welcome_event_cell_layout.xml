@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/tourSummaryImageHeight"
             android:scaleType="matrix"
-            tools:background="#fab"
+            tools:background="#bef"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

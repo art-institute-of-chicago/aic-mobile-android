@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -78,7 +79,9 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginBottom="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="1"
+                tools:listitem="@layout/welcome_tour_summary_cell_layout"/>
 
             <View
                 style="@style/divider"
@@ -114,7 +117,9 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginBottom="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="1"
+                tools:listitem="@layout/welcome_on_view_cell_layout" />
 
             <View
                 style="@style/divider"
@@ -150,7 +155,9 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginBottom="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="1"
+                tools:listitem="@layout/welcome_event_cell_layout" />
 
         </LinearLayout>
 
