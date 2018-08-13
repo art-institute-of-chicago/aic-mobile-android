@@ -40,7 +40,6 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
 
 
     override fun onRegisterViewModel(viewModel: MapObjectDetailsViewModel) {
-        requireActivity()
         viewModel.articObject = mapObject
     }
 

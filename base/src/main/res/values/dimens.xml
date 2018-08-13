@@ -33,7 +33,6 @@
     <dimen name="textSixteen">16sp</dimen>
     <dimen name="textFifteen">15sp</dimen>
     <dimen name="textPrompt">24sp</dimen>
-    bottom_audio_control_icon_size
 
     <dimen name="bottom_audio_player_height">50dp</dimen>
     <dimen name="bottomAudioControlIconSize">32dp</dimen>
