@@ -11,6 +11,9 @@ import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.AudioAttributesCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
@@ -209,7 +212,15 @@ class AudioPlayerService : Service() {
                         return articObject?.title.orEmpty()
                     }
 
-                    override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
+
+                    override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
+                        articObject?.largeImageFullPath?.let {
+
+                            Glide.with(this@AudioPlayerService)
+                                    .asBitmap()
+                                    .load(it)
+                                    .into(BitmapCallbackTarget(callback))
+                        }
                         return null
                     }
                 })
@@ -274,8 +285,8 @@ class AudioPlayerService : Service() {
      * @see SimpleExoPlayer.setAudioStreamType
      */
     private val audioAttributes = AudioAttributesCompat.Builder()
-            .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
-            .setUsage(AudioAttributesCompat.USAGE_MEDIA)
+            .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
+            .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
             .build()
 
     val player: ExoPlayer by lazy {
@@ -325,3 +336,12 @@ class AudioPlayerService : Service() {
     }
 }
 
+/**
+ * Kotlin(version:1.2.51) was unable to resolve this class when it was defined anonymously,
+ * so had to create this class.
+ */
+class BitmapCallbackTarget(private val callback: PlayerNotificationManager.BitmapCallback?) : SimpleTarget<Bitmap>() {
+    override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
+        callback?.onBitmap(resource)
+    }
+}
