@@ -27,7 +27,6 @@
         style="@style/MetadataMediumGray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/ideal_sans_book"
         android:includeFontPadding="false"
         android:paddingEnd="@dimen/marginTwo"
         android:textSize="@dimen/textMedium"
@@ -40,10 +39,8 @@
         style="@style/MetadataMediumGray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/ideal_sans_book"
         android:includeFontPadding="false"
         android:text="/"
-        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@id/exo_position"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,7 +50,6 @@
         style="@style/MetadataMediumGray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/ideal_sans_book"
         android:includeFontPadding="false"
         android:paddingStart="@dimen/marginTwo"
         android:paddingRight="@dimen/marginTwo"
@@ -96,7 +92,7 @@
         app:buffered_color="@color/audioBufferingColor"
         app:layout_constraintStart_toEndOf="@id/playPause"
         app:layout_constraintTop_toBottomOf="@id/exo_position"
-        app:played_color="@color/audioPlayedColor"
+        app:played_color="@color/sea"
         app:scrubber_drawable="@drawable/exo_scrubber" />
 
 </android.support.constraint.ConstraintLayout>

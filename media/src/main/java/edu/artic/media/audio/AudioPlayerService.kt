@@ -52,9 +52,13 @@ import io.reactivex.subjects.Subject
  */
 class AudioPlayerService : Service() {
 
-    object Constants {
+    companion object Constants {
         const val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
         const val NOTIFICATION_ID = 200
+
+        fun getLaunchIntent(context: Context): Intent {
+            return Intent(context, AudioPlayerService::class.java)
+        }
     }
 
     /**
@@ -136,39 +140,27 @@ class AudioPlayerService : Service() {
 
     val disposeBag = DisposeBag()
 
-    /**
-     * Returns an intent including the details of currently playing audio file.
-     */
-    fun getIntent(): Intent {
-        val audioIntent = "edu.artic.audio".asDeepLinkIntent()
-        audioIntent.putExtra("artic_object", articObject)
-        return audioIntent
-    }
-
     override fun onCreate() {
         super.onCreate()
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 val articAudioFile = articObject?.audioCommentary?.first()?.audioFile
-                articAudioFile?.let {
-                    if (playWhenReady && playbackState == Player.STATE_READY) {
-                        audioPlayBackStatus.onNext(PlayBackState.Playing(it))
-                    } else if (playbackState == Player.STATE_ENDED) {
-                        audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
-                    } else if (playbackState == Player.STATE_IDLE) {
-                        audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
-                    } else {
-                        audioPlayBackStatus.onNext(PlayBackState.Paused(it))
+                articAudioFile?.let { audioFile ->
+                    when {
+                        playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(audioFile))
+                        playbackState == Player.STATE_ENDED -> audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                        else -> audioPlayBackStatus.onNext(PlayBackState.Paused(audioFile))
                     }
                 }
             }
         })
 
-        audioControl.subscribe {
-            when (it) {
+        audioControl.subscribe { playBackAction ->
+            when (playBackAction) {
                 is PlayBackAction.Play -> {
-                    setArticObject(it.audioFile)
+                    setArticObject(playBackAction.audioFile)
                     player.playWhenReady = true
                 }
 
@@ -182,14 +174,14 @@ class AudioPlayerService : Service() {
 
                 is PlayBackAction.Stop -> {
                     val articAudioFile = articObject?.audioCommentary?.first()?.audioFile
-                    articAudioFile?.let {
+                    articAudioFile?.let { it ->
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(it))
                     }
                     player.stop()
                 }
 
                 is PlayBackAction.Seek -> {
-                    player.seekTo(it.time)
+                    player.seekTo(playBackAction.time)
                 }
             }
         }.disposedBy(disposeBag)
@@ -198,9 +190,9 @@ class AudioPlayerService : Service() {
     private fun setUpNotificationManager() {
         playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
                 this,
-                Constants.FOREGROUND_CHANNEL_ID,
+                FOREGROUND_CHANNEL_ID,
                 R.string.channel_name,
-                Constants.NOTIFICATION_ID,
+                NOTIFICATION_ID,
                 object : PlayerNotificationManager.MediaDescriptionAdapter {
                     override fun createCurrentContentIntent(player: Player?): PendingIntent? {
                         //TODO make it dynamic so that activity that started the audio stream will be the destination of Intent
@@ -229,15 +221,15 @@ class AudioPlayerService : Service() {
                 startForeground(notificationId, notification)
             }
         })
-
-        playerNotificationManager.setUseNavigationActions(false)
-        playerNotificationManager.setStopAction(null)
-        playerNotificationManager.setFastForwardIncrementMs(10 * 1000)
-        playerNotificationManager.setRewindIncrementMs(10 * 1000)
-        playerNotificationManager.setOngoing(false)
-        playerNotificationManager.setPlayer(player)
-        playerNotificationManager.setSmallIcon(R.drawable.icn_notification)
-
+        playerNotificationManager.apply {
+            setUseNavigationActions(false)
+            setStopAction(null)
+            setFastForwardIncrementMs(10 * 1000)
+            setRewindIncrementMs(10 * 1000)
+            setOngoing(false)
+            setPlayer(player)
+            setSmallIcon(R.drawable.icn_notification)
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {

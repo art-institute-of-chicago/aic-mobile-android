@@ -6,29 +6,35 @@
     android:layout_height="wrap_content"
     android:background="@color/greyText">
 
-    <FrameLayout
-        android:id="@+id/playPause"
-        android:layout_width="@dimen/bottom_audio_control_icon_size"
-        android:layout_height="@dimen/bottom_audio_control_icon_size"
+
+    <ImageButton
+        android:id="@+id/exo_play"
+        android:layout_width="@dimen/bottomAudioControlIconSize"
+        android:layout_height="@dimen/bottomAudioControlIconSize"
         android:layout_marginStart="@dimen/marginStandard"
+        android:background="@drawable/ic_play"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/exo_play"
-            android:layout_width="@dimen/bottom_audio_control_icon_size"
-            android:layout_height="@dimen/bottom_audio_control_icon_size"
-            android:background="@drawable/ic_play"
-            android:visibility="visible" />
+    <ImageButton
+        android:id="@+id/exo_pause"
+        android:layout_width="@dimen/bottomAudioControlIconSize"
+        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:background="@drawable/ic_pause"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/exo_pause"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:background="@drawable/ic_pause"
-            android:visibility="gone" />
-    </FrameLayout>
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="exo_play,exo_pause" />
 
     <TextView
         android:id="@+id/trackTitle"
@@ -41,14 +47,14 @@
         android:textSize="@dimen/textMedium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/closePlayer"
-        app:layout_constraintStart_toEndOf="@id/playPause"
+        app:layout_constraintStart_toEndOf="@id/barrier"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Test track" />
 
     <ImageButton
         android:id="@+id/closePlayer"
-        android:layout_width="@dimen/bottom_audio_control_icon_size"
-        android:layout_height="@dimen/bottom_audio_control_icon_size"
+        android:layout_width="@dimen/bottomAudioControlIconSize"
+        android:layout_height="@dimen/bottomAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginStandard"
         android:background="@drawable/ic_close_circle"
         app:layout_constraintBottom_toBottomOf="parent"

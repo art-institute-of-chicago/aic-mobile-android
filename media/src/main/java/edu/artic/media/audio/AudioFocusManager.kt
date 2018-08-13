@@ -23,10 +23,10 @@ import android.media.AudioManager
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.media.AudioAttributesCompat
-import android.util.Log
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
+import timber.log.Timber
 
 /**
  * Wrapper around a [SimpleExoPlayer] simplifies playback by automatically handling
@@ -130,7 +130,7 @@ class AudioFocusExoPlayerDecorator(private val audioAttributes: AudioAttributesC
             shouldPlayWhenReady = true
             audioFocusListener.onAudioFocusChange(AudioManager.AUDIOFOCUS_GAIN)
         } else {
-            Log.i(TAG, "Playback not started: Audio focus request denied")
+            Timber.i(TAG, "Playback not started: Audio focus request denied")
         }
     }
 

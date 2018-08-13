@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="144dp"
+    android:layout_height="wrap_content"
     android:background="@color/mapObjectWindowBlue"
     android:clickable="true"
     android:focusable="true">
@@ -13,15 +13,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="24dp" />
+        app:layout_constraintGuide_begin="@dimen/marginTriple" />
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="72dp"
         android:layout_height="45dp"
         android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginBottom="@dimen/marginSixtyFour"
         android:contentDescription="@null"
         android:scaleType="matrix"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/reference"
         tools:background="@color/brownishOrange" />
@@ -36,7 +38,7 @@
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
-        app:layout_constraintEnd_toStartOf="@id/controlBox"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toTopOf="@+id/reference"
         tools:text="Introduction IntroductionIntroductionIntroductionIntroductionIntroduction" />
@@ -50,38 +52,39 @@
         android:layout_marginEnd="@dimen/marginStandard"
         android:gravity="start"
         android:lines="1"
-        app:layout_constraintEnd_toStartOf="@id/controlBox"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toBottomOf="@+id/tourStopTitle"
         tools:text="Gallery 201" />
 
-    <FrameLayout
-        android:id="@+id/controlBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/image"
+
+    <ImageButton
+        android:id="@+id/playCurrent"
+        android:layout_width="@dimen/bottomAudioControlIconSize"
+        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_play"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/image">
+        app:layout_constraintTop_toTopOf="@id/image" />
 
+    <ImageButton
+        android:id="@+id/pauseCurrent"
+        android:layout_width="@dimen/bottomAudioControlIconSize"
+        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_pause"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image" />
 
-        <ImageButton
-            android:id="@+id/playCurrent"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="@dimen/marginDouble"
-            android:background="@drawable/ic_play"
-            android:visibility="visible" />
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="playCurrent,pauseCurrent" />
 
-        <ImageButton
-            android:id="@+id/pauseCurrent"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="@dimen/marginDouble"
-            android:background="@drawable/ic_pause"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/image" />
-
-    </FrameLayout>
 </android.support.constraint.ConstraintLayout>
