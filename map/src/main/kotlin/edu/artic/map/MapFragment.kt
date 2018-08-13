@@ -32,6 +32,21 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
 import kotlin.reflect.KClass
 
+/**
+ * This Fragment contains a [GoogleMap] with a custom tileset and quite a few markers.
+ *
+ * We support 3 distinct zoom levels at the moment:
+ * * [MapZoomLevel.One] shows as much of the museum as possible, with markers for
+ * [Spaces and Landmarks][MapViewModel.spacesAndLandmarks]
+ * * [MapZoomLevel.Two] shows markers for [departments][DepartmentMarkerGenerator]
+ * * [MapZoomLevel.Three] shows markers for specific [Galleries][MapItem.Gallery] and
+ * [miscellaneous ArticObjects][MapItem.Object]s
+ *
+ * Note that (in keeping with our standard architecture) much of the complexity is
+ * delegated through [MapViewModel].
+ *
+ * @see [MapActivity]
+ */
 class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override val viewModelClass: KClass<MapViewModel>
