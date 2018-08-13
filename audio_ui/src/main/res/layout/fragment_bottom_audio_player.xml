@@ -34,7 +34,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="end"
-        app:constraint_referenced_ids="exo_play,exo_pause" />
+        app:constraint_referenced_ids="exo_play,exo_pause"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/trackTitle"
