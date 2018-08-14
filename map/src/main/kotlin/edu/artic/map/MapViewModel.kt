@@ -20,6 +20,17 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
+/**
+ * Backing logic for the markers we display in [MapFragment].
+ *
+ * What we display there is informed directly by the [zoomLevel] and
+ * the [floor]. Observables defined in this class will (as a rule)
+ * only emit an event if those properties change.
+ *
+ * Everything starts with `init`.
+ *
+ * @see MapItem
+ */
 class MapViewModel @Inject constructor(
         private val mapAnnotationDao: ArticMapAnnotationDao,
         private val galleryDao: ArticGalleryDao,
@@ -30,7 +41,9 @@ class MapViewModel @Inject constructor(
     val spacesAndLandmarks: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
 
-    //This stores all the map items that change at every zoom level and every floor change
+    /**
+     * This stores all the map items that change at every zoom level and every floor change
+     */
     val veryDynamicMapItems: Subject<List<MapItem<*>>> = BehaviorSubject.create()
 
 
@@ -170,6 +183,14 @@ class MapViewModel @Inject constructor(
                 .disposedBy(disposeBag)
     }
 
+    /**
+     * Observe the [ArticObject]s in the given list of galleries.
+     *
+     * One gallery may contain multiple objects; the returned observable
+     * returns all of the objects it finds as a single list. The mechanism
+     * we use to retrieve these objects precludes the possibility of
+     * duplicates.
+     */
     fun observeObjectsWithin(galleries: Observable<List<ArticGallery>>): Observable<List<ArticObject>> {
         return galleries
                 .map { galleryList ->
@@ -179,6 +200,13 @@ class MapViewModel @Inject constructor(
                 }
     }
 
+    /**
+     * Observe for the Galleries which we're interested in at the moment.
+     *
+     * The returned [Observable] only emits events if the [current zoom level][zoomLevel]
+     * is set to [MapZoomLevel.Three], as that is a pre-requisite for galleries to be
+     * displayed on the map.
+     */
     fun observeGalleriesAtFloor(): Observable<List<ArticGallery>> {
         return Observables.combineLatest(
                 zoomLevel,
