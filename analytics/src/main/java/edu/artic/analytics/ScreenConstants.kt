@@ -30,6 +30,7 @@ sealed class ScreenCategoryName(val screenName: String) {
 sealed class EventCategoryName(val eventCategoryName: String) {
     object App : EventCategoryName("App")
     object PlayAudio : EventCategoryName("play_audio")
+    object PlayBack : EventCategoryName("playback")
 }
 
 
