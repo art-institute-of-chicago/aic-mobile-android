@@ -25,6 +25,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import dagger.android.AndroidInjection
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
@@ -151,13 +152,14 @@ class AudioPlayerService : Service() {
 
     /**
      * Required Analytics events
-     * Audio Object interrupted (when replaced by other track or stopped)
+     *
      * Audio Object playback completed
      */
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
     override fun onCreate() {
+        AndroidInjection.inject(this)
         super.onCreate()
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
@@ -171,7 +173,9 @@ class AudioPlayerService : Service() {
                             analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, articAudioFile.title.orEmpty())
                             audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                         }
-                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                        playbackState == Player.STATE_IDLE -> {
+                            audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                        }
                         else -> audioPlayBackStatus.onNext(PlayBackState.Paused(audioFile))
                     }
                 }
@@ -285,7 +289,10 @@ class AudioPlayerService : Service() {
         if (articObject != _articObject || player.playbackState == Player.STATE_IDLE) {
 
             articObject?.let { articObject ->
-                /** Check if the current audio is being interrupted.**/
+                /**
+                 *  Check if the current audio is being interrupted.
+                 *  Audio Object interrupted (when replaced by other track or stopped)
+                 **/
                 if (_articObject != this.articObject) {
                     analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject.getAudio()?.title.orEmpty())
                 }
@@ -357,6 +364,8 @@ class AudioPlayerService : Service() {
     }
 
     fun stopPlayer() {
+        articObject = null
+        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject?.getAudio()?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 }
