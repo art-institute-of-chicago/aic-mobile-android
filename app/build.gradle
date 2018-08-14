@@ -1,4 +1,3 @@
-
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -69,6 +68,8 @@ dependencies {
     //Dagger
     implementation libs.dagger
     implementation libs.threeten
+    implementation libs.firebase_core
+
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler
@@ -79,4 +80,8 @@ dependencies {
     testImplementation('org.threeten:threetenbp:1.3.3') {
         exclude group: 'com.jakewharton.threetenabp', module: 'threetenabp'
     }
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+
 }
+
+apply plugin: 'com.google.gms.google-services'
