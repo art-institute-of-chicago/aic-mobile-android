@@ -1,7 +1,9 @@
 package edu.artic.map
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.support.annotation.AnyThread
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -14,6 +16,8 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.isResourceConstrained
+import edu.artic.base.utils.loadBitmap
 import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotationType
@@ -32,6 +36,21 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
 import kotlin.reflect.KClass
 
+/**
+ * This Fragment contains a [GoogleMap] with a custom tileset and quite a few markers.
+ *
+ * We support 3 distinct zoom levels at the moment:
+ * * [MapZoomLevel.One] shows as much of the museum as possible, with markers for
+ * [Spaces and Landmarks][MapViewModel.spacesAndLandmarks]
+ * * [MapZoomLevel.Two] shows markers for [departments][DepartmentMarkerGenerator]
+ * * [MapZoomLevel.Three] shows markers for specific [Galleries][MapItem.Gallery] and
+ * [miscellaneous ArticObjects][MapItem.Object]s
+ *
+ * Note that (in keeping with our standard architecture) much of the complexity is
+ * delegated through [MapViewModel].
+ *
+ * @see [MapActivity]
+ */
 class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override val viewModelClass: KClass<MapViewModel>
@@ -47,7 +66,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     private val amenitiesMarkerList = mutableListOf<Marker>()
     private val spaceOrLandmarkMarkerList = mutableListOf<Marker>()
-    private val departmentMakers = mutableListOf<Marker>()
+    private val departmentMarkers = mutableListOf<Marker>()
     private val galleryMarkers = mutableListOf<Marker>()
     private val fullObjectMarkers = mutableListOf<Marker>()
     private val dotObjectMarkers = mutableListOf<Marker>()
@@ -80,8 +99,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             map.isIndoorEnabled = false
             map.isTrafficEnabled = false
             map.setMapStyle(
-                    //Leaving this here for now will pull from raw resource folder or assets folder
-                    // at a later time. or possibly just move it into it's own helper constant
+                    //Leaving this here for now; we will pull from raw resource folder or assets
+                    // folder at a later time. Or possibly just turn it into a helper constant
                     MapStyleOptions("[\n" +
                             "  {\n" +
                             "    \"elementType\": \"labels\",\n" +
@@ -171,9 +190,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             LatLng(41.874620, -87.629243),
                                             LatLng(41.884753, -87.615841)
                                     )
-                            ).image(BitmapDescriptorFactory.fromAsset("AIC_MapBG.jpg"))
+                            ).image(deriveBaseOverlayDescriptor(requireActivity()))
                             .zIndex(0.1f)
-                    //TODO: Load image
+                    //TODO: Load image from network instead of from Assets
             )
             buildingGroundOverlay = map.addGroundOverlay(
                     GroundOverlayOptions()
@@ -247,6 +266,33 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
+    /**
+     * This method returns a simple accessor for the [baseGroundOverlay]'s [Bitmap].
+     * We implicitly pass this over to the Google maps part of Google Play Services
+     * via a [android.os.Binder] call, which is probably why the API doesn't support
+     * vector images or non-Bitmap images.
+     *
+     * On low-end devices, [GoogleMap] will run out of memory rendering all of
+     * its stuff. We can prevent that by loading the aforementioned Bitmap
+     * ourselves at a low sample size - the baseOverlay is by far the largest
+     * image (in terms of resolution) that we're displaying.
+     *
+     * @param host whatever is responsible for displaying this [MapFragment]
+     * @see [GroundOverlayOptions.image]
+     */
+    @AnyThread
+    protected fun deriveBaseOverlayDescriptor(host: Context): BitmapDescriptor {
+        val baseOverlayFilename = "AIC_MapBG.jpg"
+
+        return if (host.isResourceConstrained()) {
+            val baseOverlayBitmap : Bitmap = host.assets.loadBitmap(baseOverlayFilename, 4)
+
+            BitmapDescriptorFactory.fromBitmap(baseOverlayBitmap)
+        } else {
+            BitmapDescriptorFactory.fromAsset(baseOverlayFilename)
+        }
+    }
+
     override fun setupBindings(viewModel: MapViewModel) {
         lowerLevel.clicks()
                 .subscribe { viewModel.floorChangedTo(0) }
@@ -263,10 +309,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.cameraMovementRequested
                 .filterValue()
-                .subscribe { (newPostition, zoomLevel) ->
+                .subscribe { (newPosition, zoomLevel) ->
                     map.animateCamera(
                             CameraUpdateFactory.newLatLngZoom(
-                                    newPostition,
+                                    newPosition,
                                     when (zoomLevel) {
                                         MapZoomLevel.One -> {
                                             18.0f
@@ -401,10 +447,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.veryDynamicMapItems
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { itemList ->
-                    departmentMakers.forEach { marker ->
+                    departmentMarkers.forEach { marker ->
                         marker.remove()
                     }
-                    departmentMakers.clear()
+                    departmentMarkers.clear()
                     Timber.d("DepartmentMarker list cleared")
                     galleryMarkers.forEach { marker ->
                         marker.remove()
@@ -441,7 +487,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                         }
                     }
-                    Timber.d("DepartmentMarker list size after itemList for each ${departmentMakers.size}")
+                    Timber.d("DepartmentMarker list size after 'itemList.forEach{}': ${departmentMarkers.size}")
                 }.disposedBy(disposeBag)
 
         viewModel.selectedArticObject
@@ -537,7 +583,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .zIndex(2f)
                             )
                             marker.tag = annotation
-                            departmentMakers.add(marker)
+                            departmentMarkers.add(marker)
                         }
                     }
                 })
