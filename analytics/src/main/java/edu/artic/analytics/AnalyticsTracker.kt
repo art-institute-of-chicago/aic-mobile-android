@@ -14,6 +14,9 @@ interface AnalyticsTracker {
     fun reportEvent(categoryName: ScreenCategoryName, action: String = "", label: String = "") =
             reportEvent(categoryName.screenName, action, label)
 
+    fun reportEvent(categoryName: EventCategoryName, action: String = "", label: String = "") =
+            reportEvent(categoryName.eventCategoryName, action, label)
+
     fun reportScreenView(name: String)
 
     fun reportScreenView(categoryName: ScreenCategoryName) = reportScreenView(categoryName.screenName)

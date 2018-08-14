@@ -8,6 +8,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.DaggerApplication
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import timber.log.Timber
 import javax.inject.Inject
@@ -38,17 +39,17 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun onAppOpened() {
-        analyticsTracker.reportEvent(ScreenCategoryName.App, AnalyticsAction.APP_OPENED)
+        analyticsTracker.reportEvent(EventCategoryName.App, AnalyticsAction.APP_OPENED)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onAppBackgrounded() {
-        analyticsTracker.reportEvent(ScreenCategoryName.App, AnalyticsAction.APP_BACKGROUNDED)
+        analyticsTracker.reportEvent(EventCategoryName.App, AnalyticsAction.APP_BACKGROUNDED)
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onAppForegrounded() {
-        analyticsTracker.reportEvent(ScreenCategoryName.App, AnalyticsAction.APP_FOREGROUNDED)
+        analyticsTracker.reportEvent(EventCategoryName.App, AnalyticsAction.APP_FOREGROUNDED)
     }
 
 

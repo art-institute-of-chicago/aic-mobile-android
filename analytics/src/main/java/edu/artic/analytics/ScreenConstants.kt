@@ -21,12 +21,17 @@ sealed class ScreenCategoryName(val screenName: String) {
     object OnViewDetails : ScreenCategoryName("On View Details")
     object EventDetails : ScreenCategoryName("Event Details")
     object ArtworkSearchDetails : ScreenCategoryName("Artwork Search Details")
-    object App : ScreenCategoryName("App")
 
     override fun toString(): String {
         return "ScreenCategoryName(screenName='$screenName')"
     }
 }
+
+sealed class EventCategoryName(val eventCategoryName: String) {
+    object App : EventCategoryName("App")
+    object PlayAudio : EventCategoryName("play_audio")
+}
+
 
 object AnalyticsAction {
     const val APP_OPENED = "open"
