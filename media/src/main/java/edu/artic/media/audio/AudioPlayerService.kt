@@ -25,7 +25,6 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import dagger.android.AndroidInjection
 import dagger.android.DaggerService
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
@@ -33,7 +32,7 @@ import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
-import edu.artic.db.models.getAudio
+import edu.artic.db.models.audioFile
 import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
@@ -159,7 +158,8 @@ class AudioPlayerService : DaggerService() {
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                val articAudioFile = articObject?.getAudio()
+                val articAudioFile = articObject?.audioFile
+
                 articAudioFile?.let { audioFile ->
                     when {
                         playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(audioFile))
@@ -191,7 +191,7 @@ class AudioPlayerService : DaggerService() {
                 }
 
                 is PlayBackAction.Stop -> {
-                    articObject?.getAudio()?.let { audioFile ->
+                    articObject?.audioFile?.let { audioFile ->
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                     }
                     player.stop()
@@ -283,11 +283,11 @@ class AudioPlayerService : DaggerService() {
             /** Check if the current audio is being interrupted by other audio object.**/
             articObject?.let { articObject ->
                 if (player.playbackState != Player.STATE_IDLE) {
-                    analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject.getAudio()?.title.orEmpty())
+                    analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject.audioFile?.title.orEmpty())
                 }
             }
             articObject = _articObject
-            val audioFile = articObject?.getAudio()
+            val audioFile = articObject?.audioFile
             audioFile?.let {
                 val fileUrl = audioFile.fileUrl
                 fileUrl?.let { url ->
@@ -353,7 +353,7 @@ class AudioPlayerService : DaggerService() {
     }
 
     fun stopPlayer() {
-        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject?.getAudio()?.title.orEmpty())
+        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject?.audioFile?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 }
