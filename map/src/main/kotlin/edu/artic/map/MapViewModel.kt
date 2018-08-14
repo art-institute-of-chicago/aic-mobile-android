@@ -184,7 +184,8 @@ class MapViewModel @Inject constructor(
                         objectList
                 )
             }
-        }.filter { it.isNotEmpty() }
+        }
+                // We explicitly permit emission of empty lists, as that is a signal to clear the map.
                 .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
     }
