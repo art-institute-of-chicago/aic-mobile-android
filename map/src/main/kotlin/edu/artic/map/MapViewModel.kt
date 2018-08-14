@@ -174,9 +174,7 @@ class MapViewModel @Inject constructor(
                         }
                 )
                 list.addAll(
-                        objectList.map { articObject ->
-                            MapItem.Object(articObject, floor)
-                        }
+                        objectList
                 )
                 list
             } else {
@@ -194,14 +192,21 @@ class MapViewModel @Inject constructor(
      * returns all of the objects it finds as a single list. The mechanism
      * we use to retrieve these objects precludes the possibility of
      * duplicates.
+     *
+     * Each of the observed [MapItem.Object]s include info about the floor
+     * of the gallery where it is found.
      */
-    fun observeObjectsWithin(galleries: Observable<List<ArticGallery>>): Observable<List<ArticObject>> {
-        return galleries
-                .map { galleryList ->
-                    galleryList.filter { it.titleT != null }.map { it.titleT.orEmpty() }
-                }.flatMap {
-                    objectDao.getObjectsInGalleries(it).toObservable()
+    fun observeObjectsWithin(observed: Observable<List<ArticGallery>>): Observable<List<MapItem.Object>> {
+        return observed.map { galleries ->
+            galleries.filter { gallery ->
+                gallery.titleT != null
+            }.map { gallery ->
+                val title = gallery.titleT.orEmpty()
+                objectDao.getObjectsInGallery(title).map {
+                    MapItem.Object(it, gallery.floorAsInt)
                 }
+            }.flatten()
+        }
     }
 
     /**
@@ -220,7 +225,8 @@ class MapViewModel @Inject constructor(
         }.filter { floor -> floor >= 0 }
                 .flatMap {
                     galleryDao.getGalleriesForFloor(it.toString()).toObservable()
-                }
+                }.share()
+        // Note: if we don't share this, only one observer could listen to it (we want 2 to do that)
     }
 
     fun zoomLevelChangedTo(zoomLevel: MapZoomLevel) {

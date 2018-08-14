@@ -24,8 +24,16 @@ interface ArticObjectDao {
     @Query("select * from ArticObject where objectSelectorNumber = :selectorNumber")
     fun getObjectBySelectorNumber(selectorNumber: String): Single<ArticObject>
 
-    @Query("select * from ArticObject where galleryLocation in (:galleryTitleList)")
-    fun getObjectsInGalleries(galleryTitleList: List<String>) : Flowable<List<ArticObject>>
+    /**
+     * Retrieves all of the [ArticObject]s found in a specific
+     * gallery. May be an empty list if none claim to belong to
+     * the given gallery.
+     *
+     * @see ArticObject.galleryLocation
+     * @see edu.artic.db.models.ArticGallery.floor
+     */
+    @Query("select * from ArticObject where galleryLocation in (:galleryTitle)")
+    fun getObjectsInGallery(galleryTitle: String) : List<ArticObject>
 
 
 }
