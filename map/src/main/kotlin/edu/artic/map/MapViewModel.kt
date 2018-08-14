@@ -175,12 +175,12 @@ class MapViewModel @Inject constructor(
                 zoomLevel,
                 galleries,
                 objects
-        ) { floor, zoomLevel, galleryList, objectList ->
-            return@combineLatest if (zoomLevel == MapZoomLevel.Three && floor == currentFloor) {
+        ) { ourFloor, ourZoom, galleryList, objectList ->
+            return@combineLatest if (ourZoom == MapZoomLevel.Three && ourFloor == currentFloor) {
                 val list = mutableListOf<MapItem<*>>()
                 list.addAll(
                         galleryList.map { gallery ->
-                            MapItem.Gallery(gallery, floor)
+                            MapItem.Gallery(gallery, gallery.floorAsInt)
                         }
                 )
                 list.addAll(
