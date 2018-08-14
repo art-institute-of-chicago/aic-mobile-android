@@ -114,14 +114,29 @@ class MapViewModel @Inject constructor(
 
     }
 
+    /**
+     * Use this to listen to changes in [floor].
+     *
+     * The returned Observable only emits events if the current zoom is a specific value
+     *
+     * @param zoomRestriction the desired zoom level
+     */
+    private fun observeFloorsAtZoom(zoomRestriction: MapZoomLevel): Observable<Int> {
+        return Observables.combineLatest(
+                zoomLevel,
+                distinctFloor
+        ) { zoomLevel, floor ->
+            return@combineLatest if (zoomLevel === zoomRestriction) floor else Int.MIN_VALUE
+        }.filter { floor -> floor >= 0 }
+    }
+
 
     fun setupZoomLevelOneBinds() {
 
         /**
          * upon reaching zoom level one load up landmarks
          */
-        val zoomLevelOneObservable = zoomLevel.distinctUntilChanged()
-                .filter { zoomLevel -> zoomLevel === MapZoomLevel.One }
+        val zoomLevelOneObservable = observeFloorsAtZoom(MapZoomLevel.One)
 
 
         zoomLevelOneObservable
@@ -140,12 +155,7 @@ class MapViewModel @Inject constructor(
 
     fun setupZoomLevelTwoBinds() {
 
-        Observables.combineLatest(
-                zoomLevel,
-                distinctFloor
-        ) { zoomLevel, floor ->
-            return@combineLatest if (zoomLevel === MapZoomLevel.Two) floor else Int.MIN_VALUE
-        }.filter { floor -> floor >= 0 }
+        observeFloorsAtZoom(MapZoomLevel.Two)
                 .flatMap { floor ->
                     mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString()).toObservable()
                 }.map { it.mapToMapItem() }
@@ -217,12 +227,7 @@ class MapViewModel @Inject constructor(
      * displayed on the map.
      */
     fun observeGalleriesAtFloor(): Observable<List<ArticGallery>> {
-        return Observables.combineLatest(
-                zoomLevel,
-                distinctFloor
-        ) { zoomLevel, floor ->
-            return@combineLatest if (zoomLevel === MapZoomLevel.Three) floor else Int.MIN_VALUE
-        }.filter { floor -> floor >= 0 }
+        return observeFloorsAtZoom(MapZoomLevel.Three)
                 .flatMap {
                     galleryDao.getGalleriesForFloor(it.toString()).toObservable()
                 }.share()
