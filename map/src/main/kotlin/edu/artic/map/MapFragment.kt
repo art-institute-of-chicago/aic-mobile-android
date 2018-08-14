@@ -1,10 +1,9 @@
 package edu.artic.map
 
-import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.support.annotation.UiThread
+import android.support.annotation.AnyThread
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -18,6 +17,7 @@ import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.isResourceConstrained
+import edu.artic.base.utils.loadBitmap
 import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotationType
@@ -34,7 +34,6 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
-import java.io.InputStream
 import kotlin.reflect.KClass
 
 /**
@@ -267,21 +266,28 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
-    @UiThread
-    protected fun deriveBaseOverlayDescriptor(host: Activity): BitmapDescriptor {
+    /**
+     * This method returns a simple accessor for the [baseGroundOverlay]'s [Bitmap].
+     * We implicitly pass this over to the Google maps part of Google Play Services
+     * via a [android.os.Binder] call, which is probably why the API doesn't support
+     * vector images or non-Bitmap images.
+     *
+     * On low-end devices, [GoogleMap] will run out of memory rendering all of
+     * its stuff. We can prevent that by loading the aforementioned Bitmap
+     * ourselves at a low sample size - the baseOverlay is by far the largest
+     * image (in terms of resolution) that we're displaying.
+     *
+     * @param host whatever is responsible for displaying this [MapFragment]
+     * @see [GroundOverlayOptions.image]
+     */
+    @AnyThread
+    protected fun deriveBaseOverlayDescriptor(host: Context): BitmapDescriptor {
         val baseOverlayFilename = "AIC_MapBG.jpg"
 
         return if (host.isResourceConstrained()) {
-            val stream: InputStream = host.assets.open(baseOverlayFilename)
-            stream.use { imageStream ->
-                BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeStream(
-                        imageStream,
-                        null,
-                        BitmapFactory.Options().apply {
-                            inSampleSize = 4
-                        }
-                ))
-            }
+            val baseOverlayBitmap : Bitmap = host.assets.loadBitmap(baseOverlayFilename, 4)
+
+            BitmapDescriptorFactory.fromBitmap(baseOverlayBitmap)
         } else {
             BitmapDescriptorFactory.fromAsset(baseOverlayFilename)
         }
