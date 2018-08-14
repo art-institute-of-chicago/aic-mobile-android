@@ -42,9 +42,13 @@ class MapViewModel @Inject constructor(
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
 
     /**
-     * This stores all the map items that change at every zoom level and every floor change
+     * This stores all the map items, and changes at every zoom level and every floor.
+     *
+     * We strongly recommend familiarity with the [MapItem] type before using this field. This
+     * Observable is expected to emit events rather frequently, so for the best performance
+     * you'll probably want to minimize allocations in whatever you have observing it.
      */
-    val veryDynamicMapItems: Subject<List<MapItem<*>>> = BehaviorSubject.create()
+    val whatToDisplayOnMap: Subject<List<MapItem<*>>> = BehaviorSubject.create()
 
 
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
@@ -130,7 +134,7 @@ class MapViewModel @Inject constructor(
                 .map {
                     listOf<MapItem<*>>()
                 }
-                .bindTo(veryDynamicMapItems)
+                .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
     }
 
@@ -145,7 +149,7 @@ class MapViewModel @Inject constructor(
                 .flatMap { floor ->
                     mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString()).toObservable()
                 }.map { it.mapToMapItem() }
-                .bindTo(veryDynamicMapItems)
+                .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
 
     }
@@ -179,7 +183,7 @@ class MapViewModel @Inject constructor(
                 emptyList<MapItem<*>>()
             }
         }.filter { it.isNotEmpty() }
-                .bindTo(veryDynamicMapItems)
+                .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
     }
 
