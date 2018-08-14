@@ -25,15 +25,20 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.getAudio
 import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import javax.inject.Inject
 
 
 /**
@@ -144,16 +149,28 @@ class AudioPlayerService : Service() {
 
     val disposeBag = DisposeBag()
 
+    /**
+     * Required Analytics events
+     * Audio Object interrupted (when replaced by other track or stopped)
+     * Audio Object playback completed
+     */
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+
     override fun onCreate() {
         super.onCreate()
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                val articAudioFile = articObject?.audioCommentary?.first()?.audioFile
+                val articAudioFile = articObject?.getAudio()
                 articAudioFile?.let { audioFile ->
                     when {
                         playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(audioFile))
-                        playbackState == Player.STATE_ENDED -> audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                        playbackState == Player.STATE_ENDED -> {
+                            /*Play back completed*/
+                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, articAudioFile.title.orEmpty())
+                            audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                        }
                         playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                         else -> audioPlayBackStatus.onNext(PlayBackState.Paused(audioFile))
                     }
@@ -177,7 +194,7 @@ class AudioPlayerService : Service() {
                 }
 
                 is PlayBackAction.Stop -> {
-                    val articAudioFile = articObject?.audioCommentary?.first()?.audioFile
+                    val articAudioFile = articObject?.getAudio()
                     articAudioFile?.let { audioFile ->
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                     }
@@ -264,9 +281,17 @@ class AudioPlayerService : Service() {
     }
 
     fun setArticObject(_articObject: ArticObject, resetPosition: Boolean = false) {
+
         if (articObject != _articObject || player.playbackState == Player.STATE_IDLE) {
+
+            articObject?.let { articObject ->
+                /** Check if the current audio is being interrupted.**/
+                if (_articObject != this.articObject) {
+                    analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject.getAudio()?.title.orEmpty())
+                }
+            }
             articObject = _articObject
-            val audioFile = articObject?.audioCommentary?.first()?.audioFile
+            val audioFile = articObject?.getAudio()
             audioFile?.let {
                 val fileUrl = audioFile.fileUrl
                 fileUrl?.let { url ->
