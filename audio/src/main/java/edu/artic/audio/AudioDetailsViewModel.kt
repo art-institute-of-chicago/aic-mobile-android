@@ -3,8 +3,7 @@ package edu.artic.audio
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.models.ArticObject
-import edu.artic.db.models.getAudio
-import edu.artic.media.audio.AudioPlayerService
+import edu.artic.db.models.audioFile
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -53,7 +52,7 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
 
         objectObservable
                 .map {
-                    it.getAudio()?.transcript.orEmpty()
+                    it.audioFile?.transcript.orEmpty()
                 }.bindTo(transcript)
                 .disposedBy(disposeBag)
 

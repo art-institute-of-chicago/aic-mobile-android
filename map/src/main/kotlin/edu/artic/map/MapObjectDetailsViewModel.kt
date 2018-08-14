@@ -9,7 +9,7 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
-import edu.artic.db.models.getAudio
+import edu.artic.db.models.audioFile
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.rxkotlin.withLatestFrom
@@ -51,7 +51,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
         audioPlayBackStatus
                 .filter { playBackState ->
-                    playBackState.articAudioFile == articObject?.getAudio()
+                    playBackState.articAudioFile == articObject?.audioFile
                 }.bindTo(playState)
                 .disposedBy(disposeBag)
 
@@ -80,7 +80,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
         playerControl
                 .filterFlatMap({ it is PlayerAction.Play }, { it as PlayerAction.Play })
                 .withLatestFrom(currentTrack, objectObservable) { playerAction, currentTrack, articObject ->
-                    val requestedObject = playerAction.requestedObject.getAudio()
+                    val requestedObject = playerAction.requestedObject.audioFile
                     (currentTrack.value != requestedObject) to articObject
                 }
                 .filter { (newTrack, _) -> newTrack }
