@@ -150,11 +150,6 @@ class AudioPlayerService : Service() {
 
     val disposeBag = DisposeBag()
 
-    /**
-     * Required Analytics events
-     *
-     * Audio Object playback completed
-     */
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
@@ -173,9 +168,7 @@ class AudioPlayerService : Service() {
                             analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, articAudioFile.title.orEmpty())
                             audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                         }
-                        playbackState == Player.STATE_IDLE -> {
-                            audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
-                        }
+                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                         else -> audioPlayBackStatus.onNext(PlayBackState.Paused(audioFile))
                     }
                 }
@@ -198,8 +191,7 @@ class AudioPlayerService : Service() {
                 }
 
                 is PlayBackAction.Stop -> {
-                    val articAudioFile = articObject?.getAudio()
-                    articAudioFile?.let { audioFile ->
+                    articObject?.getAudio()?.let { audioFile ->
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                     }
                     player.stop()
@@ -288,12 +280,9 @@ class AudioPlayerService : Service() {
 
         if (articObject != _articObject || player.playbackState == Player.STATE_IDLE) {
 
+            /** Check if the current audio is being interrupted by other audio object.**/
             articObject?.let { articObject ->
-                /**
-                 *  Check if the current audio is being interrupted.
-                 *  Audio Object interrupted (when replaced by other track or stopped)
-                 **/
-                if (_articObject != this.articObject) {
+                if (player.playbackState != Player.STATE_IDLE) {
                     analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject.getAudio()?.title.orEmpty())
                 }
             }
@@ -364,7 +353,6 @@ class AudioPlayerService : Service() {
     }
 
     fun stopPlayer() {
-        articObject = null
         analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject?.getAudio()?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
