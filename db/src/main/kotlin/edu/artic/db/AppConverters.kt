@@ -6,10 +6,9 @@ import com.squareup.moshi.Types
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.models.*
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.DateTimeFormatterBuilder
 import java.util.Collections.emptyList
 
 class AppConverters {
@@ -72,7 +71,7 @@ class AppConverters {
         )
     }
 
-    private val dateTimeFormatte : DateTimeFormatter by lazy {
+    private val dateTimeFormatte: DateTimeFormatter by lazy {
         DateTimeHelper.DEFAULT_FORMATTER
     }
 
@@ -149,12 +148,12 @@ class AppConverters {
     }
 
     @TypeConverter
-    fun fromDateTime(localDateTime: LocalDateTime?): Long? = localDateTime?.let {
-        it.toInstant(ZoneId.systemDefault().rules.getOffset(it)).toEpochMilli()
+    fun fromDateTime(input: ZonedDateTime?): String? = input?.let {
+        it.toString()
     }
 
     @TypeConverter
-    fun toDateTime(time: Long?): LocalDateTime? = time?.let { LocalDateTime.ofInstant(Instant.ofEpochMilli(it), ZoneId.systemDefault()) }
+    fun toDateTime(time: String?): ZonedDateTime? = time?.let { DateTimeFormatter.ISO_DATE_TIME.parse(it, ZonedDateTime.FROM) }
 
     private inline fun <T> safeList(data: String?, adapterGetter: JsonAdapter<List<T>>): List<T> {
         return data?.let { adapterGetter.fromJson(data) } ?: emptyList()
