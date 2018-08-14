@@ -225,7 +225,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     CameraPosition.Builder()
                             .target(LatLng(41.879592, -87.622491))
                             .bearing(90f)
-                            .tilt(0f)
+                            .tilt(45f)
                             .build()
             ))
 
