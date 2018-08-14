@@ -5,9 +5,6 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import edu.artic.base.utils.DateTimeHelper
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatter.ISO_DATE_TIME
@@ -27,7 +24,7 @@ internal val apiErrorMoshi: Moshi = getMoshi()
 fun Moshi.Builder.registerAdapters() = apply {
     add(KotlinJsonAdapterFactory())
     add(NullPrimitiveAdapter())
-    add(LocalDateTimeAdapter())
+    add(ZonedDateTimeAdapter())
 }
 
 internal class NullPrimitiveAdapter {
@@ -56,7 +53,7 @@ internal class NullPrimitiveAdapter {
 /**
  * Api returns date in multiple formats. All of these must be UTC Zone across the application.
  */
-class LocalDateTimeAdapter {
+class ZonedDateTimeAdapter {
 
     var formatter = DateTimeFormatter.ISO_DATE_TIME
 

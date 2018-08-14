@@ -6,7 +6,6 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
-import edu.artic.base.utils.getLocalDateTime
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.BaseViewModel
@@ -49,7 +48,7 @@ class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitio
 class AllExhibitionsCellViewModel(val exhibition: ArticExhibition) : BaseViewModel() {
     val exhibitionTitle: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionDescription: Subject<String> = BehaviorSubject.createDefault(
-            "Through ${exhibition.aic_end_at.getLocalDateTime().format(
+            "Through ${exhibition.getEndTime().format(
                     DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER
             )
             }"

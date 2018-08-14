@@ -6,7 +6,6 @@ import com.squareup.moshi.Types
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.models.*
 import org.threeten.bp.Instant
-import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Collections.emptyList
