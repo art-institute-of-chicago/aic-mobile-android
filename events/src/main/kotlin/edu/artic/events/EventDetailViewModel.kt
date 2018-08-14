@@ -7,6 +7,7 @@ import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
+import edu.artic.base.utils.getLocalDateTime
 import edu.artic.db.models.ArticEvent
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -60,7 +61,7 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         eventObservable
-                .map { it.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
+                .map { it.start_at.getLocalDateTime().format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
                 .bindTo(metaData)
                 .disposedBy(disposeBag)
 
@@ -71,7 +72,7 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         eventObservable
-                .map { "Through ${it.end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
+                .map { "Through ${it.end_at.getLocalDateTime().format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
                 .bindTo(throughDate)
                 .disposedBy(disposeBag)
 

@@ -6,6 +6,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
+import edu.artic.base.utils.getLocalDateTime
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.models.ArticEvent
 import edu.artic.viewmodel.BaseViewModel
@@ -33,9 +34,10 @@ class AllEventsViewModel @Inject constructor(
                     var prevMonth: Int = -1
                     var lastHeaderPosition = 0
                     list.forEach { tour ->
-                        if (prevMonth != tour.start_at.monthValue || prevDayOfMonth != tour.start_at.dayOfMonth) {
-                            prevDayOfMonth = tour.start_at.dayOfMonth
-                            prevMonth = tour.start_at.monthValue
+                        val startsAt = tour.start_at.getLocalDateTime()
+                        if (prevMonth != startsAt.monthValue || prevDayOfMonth != startsAt.dayOfMonth) {
+                            prevDayOfMonth = startsAt.dayOfMonth
+                            prevMonth = startsAt.monthValue
                             viewModelList.add(AllEventsCellHeaderViewModel(tour))
                             lastHeaderPosition = viewModelList.size - 1
                         }
@@ -57,13 +59,18 @@ class AllEventsViewModel @Inject constructor(
 open class AllEventsCellBaseViewModel(val event: ArticEvent) : BaseViewModel()
 
 class AllEventsCellHeaderViewModel(event: ArticEvent) : AllEventsCellBaseViewModel(event) {
-    val text: Subject<String> = BehaviorSubject.createDefault(event.start_at.format(DateTimeHelper.MONTH_DAY_FORMATTER))
+    val text: Subject<String> = BehaviorSubject.createDefault(
+            event.start_at.getLocalDateTime()
+                    .format(DateTimeHelper.MONTH_DAY_FORMATTER)
+    )
 }
 
 class AllEventsCellViewModel(event: ArticEvent, val headerPosition: Int) : AllEventsCellBaseViewModel(event) {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
-    //TODO: possible split this into 2 fields
-    val eventDateTime: Subject<String> = BehaviorSubject.createDefault(event.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER))
+    val eventDateTime: Subject<String> = BehaviorSubject.createDefault(
+            event.start_at.getLocalDateTime()
+                    .format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
+    )
 }
