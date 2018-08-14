@@ -8,6 +8,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
+import edu.artic.base.utils.getLocalDateTime
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.daos.ArticTourDao
@@ -139,7 +140,7 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
  */
 class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition) : BaseViewModel() {
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-    private val throughDateString = exhibition.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)
+    private val throughDateString = exhibition.aic_end_at.getLocalDateTime().format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)
             .toString()
     val exhibitionDate: Subject<String> = BehaviorSubject.createDefault(throughDateString)
     val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url.orEmpty())
@@ -151,7 +152,7 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition) : BaseView
 class WelcomeEventCellViewModel(val event: ArticEvent) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
-    private val eventDate = event.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
+    private val eventDate = event.start_at.getLocalDateTime().format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
             .toString()
     val eventTime: Subject<String> = BehaviorSubject.createDefault(eventDate)
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
