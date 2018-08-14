@@ -23,4 +23,10 @@ data class ArticGallery(
         @Json(name = "closed" ) val closed: Boolean,
         @Json(name = "number" ) val number: String?,
         @Json(name = "category_titles" ) val categoryTitles: List<String>
-)
+) {
+    /**
+     * Returns [floor], parsed to an integer. We default to [Int.MIN_VALUE] as 0 is a valid floor.
+     */
+    val floorAsInt: Int
+        get() = floor?.toIntOrNull() ?: Int.MIN_VALUE
+}
