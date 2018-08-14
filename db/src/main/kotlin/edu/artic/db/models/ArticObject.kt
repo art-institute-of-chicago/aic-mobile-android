@@ -55,3 +55,7 @@ data class ArticObject(
         @Json(name = "object_selector_number") val objectSelectorNumber: String?,
         @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?>
 ) : Parcelable
+
+val ArticObject.audioFile: ArticAudioFile?
+    get() = this.audioCommentary.firstOrNull()?.audioFile
+
