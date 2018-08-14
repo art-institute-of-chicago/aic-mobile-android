@@ -7,20 +7,24 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.AudioManager
-import android.media.AudioManager.STREAM_VOICE_CALL
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.AudioAttributesCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C.STREAM_TYPE_VOICE_CALL
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.util.Util
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
@@ -208,7 +212,15 @@ class AudioPlayerService : Service() {
                         return articObject?.title.orEmpty()
                     }
 
-                    override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback?): Bitmap? {
+
+                    override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
+                        articObject?.largeImageFullPath?.let {
+
+                            Glide.with(this@AudioPlayerService)
+                                    .asBitmap()
+                                    .load(it)
+                                    .into(BitmapCallbackTarget(callback))
+                        }
                         return null
                     }
                 })
@@ -268,23 +280,29 @@ class AudioPlayerService : Service() {
         }
     }
 
+    /**
+     * AIC wants to play the music through the ear piece.
+     * @see SimpleExoPlayer.setAudioStreamType
+     */
     private val audioAttributes = AudioAttributesCompat.Builder()
-            .setContentType(AudioAttributesCompat.CONTENT_TYPE_MUSIC)
-            .setUsage(AudioAttributesCompat.USAGE_MEDIA)
+            .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
+            .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
             .build()
 
     val player: ExoPlayer by lazy {
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager.isSpeakerphoneOn = false
         AudioFocusExoPlayerDecorator(audioAttributes,
                 audioManager,
                 ExoPlayerFactory.newSimpleInstance(DefaultRenderersFactory(this),
                         DefaultTrackSelector(),
                         DefaultLoadControl()).apply {
-                    audioAttributes = AudioAttributes
-                            .Builder()
-                            .setFlags(STREAM_VOICE_CALL)
+                    audioAttributes = AudioAttributes.Builder()
+                            .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
+                            .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
                             .build()
-                })
+                }
+        )
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
@@ -318,3 +336,12 @@ class AudioPlayerService : Service() {
     }
 }
 
+/**
+ * Kotlin(version:1.2.51) was unable to resolve this class when it was defined anonymously,
+ * so had to create this class.
+ */
+class BitmapCallbackTarget(private val callback: PlayerNotificationManager.BitmapCallback?) : SimpleTarget<Bitmap>() {
+    override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
+        callback?.onBitmap(resource)
+    }
+}
