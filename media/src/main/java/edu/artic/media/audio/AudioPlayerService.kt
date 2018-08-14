@@ -26,6 +26,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import dagger.android.AndroidInjection
+import dagger.android.DaggerService
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
@@ -60,7 +61,7 @@ import javax.inject.Inject
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class AudioPlayerService : Service() {
+class AudioPlayerService : DaggerService() {
 
     companion object {
         val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
@@ -154,7 +155,6 @@ class AudioPlayerService : Service() {
     lateinit var analyticsTracker: AnalyticsTracker
 
     override fun onCreate() {
-        AndroidInjection.inject(this)
         super.onCreate()
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
