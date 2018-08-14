@@ -190,6 +190,21 @@ class MapViewModel @Inject constructor(
     }
 
     /**
+     * Observe for the Galleries which we're interested in at the moment.
+     *
+     * The returned [Observable] only emits events if the [current zoom level][zoomLevel]
+     * is set to [MapZoomLevel.Three], as that is a pre-requisite for galleries to be
+     * displayed on the map.
+     */
+    fun observeGalleriesAtFloor(): Observable<List<ArticGallery>> {
+        return observeFloorsAtZoom(MapZoomLevel.Three)
+                .flatMap {
+                    galleryDao.getGalleriesForFloor(it.toString()).toObservable()
+                }.share()
+        // Note: if we don't share this, only one observer could listen to it (we want 2 to do that)
+    }
+
+    /**
      * Observe the [ArticObject]s in the given list of galleries.
      *
      * One gallery may contain multiple objects; the returned observable
@@ -211,21 +226,6 @@ class MapViewModel @Inject constructor(
                 }
             }.flatten()
         }
-    }
-
-    /**
-     * Observe for the Galleries which we're interested in at the moment.
-     *
-     * The returned [Observable] only emits events if the [current zoom level][zoomLevel]
-     * is set to [MapZoomLevel.Three], as that is a pre-requisite for galleries to be
-     * displayed on the map.
-     */
-    fun observeGalleriesAtFloor(): Observable<List<ArticGallery>> {
-        return observeFloorsAtZoom(MapZoomLevel.Three)
-                .flatMap {
-                    galleryDao.getGalleriesForFloor(it.toString()).toObservable()
-                }.share()
-        // Note: if we don't share this, only one observer could listen to it (we want 2 to do that)
     }
 
     fun zoomLevelChangedTo(zoomLevel: MapZoomLevel) {
