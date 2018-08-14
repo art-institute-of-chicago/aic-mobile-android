@@ -1,7 +1,10 @@
 package edu.artic.map
 
+import android.app.Activity
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.support.annotation.UiThread
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -14,6 +17,7 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.isResourceConstrained
 import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotationType
@@ -30,6 +34,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
+import java.io.InputStream
 import kotlin.reflect.KClass
 
 /**
@@ -186,9 +191,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             LatLng(41.874620, -87.629243),
                                             LatLng(41.884753, -87.615841)
                                     )
-                            ).image(BitmapDescriptorFactory.fromAsset("AIC_MapBG.jpg"))
+                            ).image(deriveBaseOverlayDescriptor(requireActivity()))
                             .zIndex(0.1f)
-                    //TODO: Load image
+                    //TODO: Load image from network instead of from Assets
             )
             buildingGroundOverlay = map.addGroundOverlay(
                     GroundOverlayOptions()
@@ -259,6 +264,26 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 return@setOnMarkerClickListener true
             }
             groundOverlayGenerated.onNext(true)
+        }
+    }
+
+    @UiThread
+    protected fun deriveBaseOverlayDescriptor(host: Activity): BitmapDescriptor {
+        val baseOverlayFilename = "AIC_MapBG.jpg"
+
+        return if (host.isResourceConstrained()) {
+            val stream: InputStream = host.assets.open(baseOverlayFilename)
+            stream.use { imageStream ->
+                BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeStream(
+                        imageStream,
+                        null,
+                        BitmapFactory.Options().apply {
+                            inSampleSize = 4
+                        }
+                ))
+            }
+        } else {
+            BitmapDescriptorFactory.fromAsset(baseOverlayFilename)
         }
     }
 
