@@ -171,24 +171,18 @@ class MapViewModel @Inject constructor(
         val objects = observeObjectsWithin(galleries)
 
         Observables.combineLatest(
-                distinctFloor,
-                zoomLevel,
                 galleries,
                 objects
-        ) { ourFloor, ourZoom, galleryList, objectList ->
-            return@combineLatest if (ourZoom == MapZoomLevel.Three && ourFloor == currentFloor) {
-                val list = mutableListOf<MapItem<*>>()
-                list.addAll(
-                        galleryList.map { gallery ->
-                            MapItem.Gallery(gallery, gallery.floorAsInt)
-                        }
+        ) { galleryList, objectList ->
+            mutableListOf<MapItem<*>>().apply {
+                addAll(
+                    galleryList.map { gallery ->
+                        MapItem.Gallery(gallery, gallery.floorAsInt)
+                    }
                 )
-                list.addAll(
+                addAll(
                         objectList
                 )
-                list
-            } else {
-                emptyList<MapItem<*>>()
             }
         }.filter { it.isNotEmpty() }
                 .bindTo(whatToDisplayOnMap)
