@@ -19,6 +19,8 @@ dependencies {
     implementation project(':audio')
     implementation project(':audio_ui')
 
+    implementation libs.rx_kotlin
+
     implementation libs.constraint_layout
     api libs.maps
     implementation libs.arch_navigation
