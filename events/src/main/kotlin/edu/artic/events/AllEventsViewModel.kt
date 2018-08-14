@@ -6,7 +6,6 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
-import edu.artic.base.utils.getLocalDateTime
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.models.ArticEvent
 import edu.artic.viewmodel.BaseViewModel
@@ -34,7 +33,7 @@ class AllEventsViewModel @Inject constructor(
                     var prevMonth: Int = -1
                     var lastHeaderPosition = 0
                     list.forEach { tour ->
-                        val startsAt = tour.start_at.getLocalDateTime()
+                        val startsAt = tour.getStartTime()
                         if (prevMonth != startsAt.monthValue || prevDayOfMonth != startsAt.dayOfMonth) {
                             prevDayOfMonth = startsAt.dayOfMonth
                             prevMonth = startsAt.monthValue
@@ -60,8 +59,7 @@ open class AllEventsCellBaseViewModel(val event: ArticEvent) : BaseViewModel()
 
 class AllEventsCellHeaderViewModel(event: ArticEvent) : AllEventsCellBaseViewModel(event) {
     val text: Subject<String> = BehaviorSubject.createDefault(
-            event.start_at.getLocalDateTime()
-                    .format(DateTimeHelper.MONTH_DAY_FORMATTER)
+            event.getStartTime().format(DateTimeHelper.MONTH_DAY_FORMATTER)
     )
 }
 
@@ -70,7 +68,6 @@ class AllEventsCellViewModel(event: ArticEvent, val headerPosition: Int) : AllEv
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
     val eventDateTime: Subject<String> = BehaviorSubject.createDefault(
-            event.start_at.getLocalDateTime()
-                    .format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
+            event.getStartTime().format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
     )
 }
