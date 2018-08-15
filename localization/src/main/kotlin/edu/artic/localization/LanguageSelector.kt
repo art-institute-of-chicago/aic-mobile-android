@@ -2,6 +2,7 @@ package edu.artic.localization
 
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import java.util.*
 
 /**
  * This class hosts one or more [RX subjects][Subject] related to language.
@@ -10,11 +11,11 @@ import io.reactivex.subjects.Subject
  */
 class LanguageSelector(private val prefs: LocalizationPreferences) {
 
-    val appLanguage: Subject<String> = BehaviorSubject.createDefault(prefs.applicationLanguage)
+    val preferredAppLocale: Subject<Locale> = BehaviorSubject.createDefault(prefs.preferredAppLocale)
 
-    fun setDefaultLanguageForApplication(languageCode: String) {
-        prefs.applicationLanguage = languageCode
-        appLanguage.onNext(languageCode)
+    fun setDefaultLanguageForApplication(lang: Locale) {
+        prefs.preferredAppLocale = lang
+        preferredAppLocale.onNext(lang)
     }
 
 }
