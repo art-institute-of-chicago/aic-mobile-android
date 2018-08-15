@@ -33,7 +33,7 @@ class AllEventsViewModel @Inject constructor(
                     var prevMonth: Int = -1
                     var lastHeaderPosition = 0
                     list.forEach { tour ->
-                        val startsAt = tour.getStartTime()
+                        val startsAt = tour.startTime
                         if (prevMonth != startsAt.monthValue || prevDayOfMonth != startsAt.dayOfMonth) {
                             prevDayOfMonth = startsAt.dayOfMonth
                             prevMonth = startsAt.monthValue
@@ -59,7 +59,7 @@ open class AllEventsCellBaseViewModel(val event: ArticEvent) : BaseViewModel()
 
 class AllEventsCellHeaderViewModel(event: ArticEvent) : AllEventsCellBaseViewModel(event) {
     val text: Subject<String> = BehaviorSubject.createDefault(
-            event.getStartTime().format(DateTimeHelper.MONTH_DAY_FORMATTER)
+            event.startTime.format(DateTimeHelper.MONTH_DAY_FORMATTER)
     )
 }
 
@@ -68,6 +68,6 @@ class AllEventsCellViewModel(event: ArticEvent, val headerPosition: Int) : AllEv
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
     val eventDateTime: Subject<String> = BehaviorSubject.createDefault(
-            event.getStartTime().format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
+            event.startTime.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
     )
 }
