@@ -48,7 +48,7 @@ class AllExhibitionsViewModel @Inject constructor(exhibitionsDao: ArticExhibitio
 class AllExhibitionsCellViewModel(val exhibition: ArticExhibition) : BaseViewModel() {
     val exhibitionTitle: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionDescription: Subject<String> = BehaviorSubject.createDefault(
-            "Through ${exhibition.aic_end_at.format(
+            "Through ${exhibition.endTime.format(
                     DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER
             )
             }"

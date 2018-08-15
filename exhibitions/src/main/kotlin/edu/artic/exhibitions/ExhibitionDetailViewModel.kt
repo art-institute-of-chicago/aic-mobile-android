@@ -67,7 +67,7 @@ constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         exhibitionObservable
-                .map { "Through ${it.aic_end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
+                .map { "Through ${it.endTime.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
                 .bindTo(throughDate)
                 .disposedBy(disposeBag)
     }

@@ -60,7 +60,7 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         eventObservable
-                .map { it.start_at.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
+                .map { it.startTime.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
                 .bindTo(metaData)
                 .disposedBy(disposeBag)
 
@@ -71,7 +71,7 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         eventObservable
-                .map { "Through ${it.end_at.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
+                .map { "Through ${it.endTime.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
                 .bindTo(throughDate)
                 .disposedBy(disposeBag)
 

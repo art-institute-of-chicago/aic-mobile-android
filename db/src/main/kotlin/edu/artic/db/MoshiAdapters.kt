@@ -5,10 +5,9 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import edu.artic.base.utils.DateTimeHelper
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.*
+import org.threeten.bp.format.DateTimeFormatter.ISO_DATE_TIME
 
 
 inline fun getMoshi(configureBlock: (Moshi.Builder.() -> Unit) = {}): Moshi =
@@ -25,7 +24,7 @@ internal val apiErrorMoshi: Moshi = getMoshi()
 fun Moshi.Builder.registerAdapters() = apply {
     add(KotlinJsonAdapterFactory())
     add(NullPrimitiveAdapter())
-    add(LocalDateTimeAdapter())
+    add(ZonedDateTimeAdapter())
 }
 
 internal class NullPrimitiveAdapter {
@@ -52,20 +51,16 @@ internal class NullPrimitiveAdapter {
 }
 
 /**
- * Description:
+ * Api returns date in UTC format, so we use UTC Zone across the application.
+ *
  */
-class LocalDateTimeAdapter {
+class ZonedDateTimeAdapter {
 
-    var formatter = DateTimeFormatter.ofPattern(
-            "[${DateTimeHelper.DEFAULT_FORMAT}]" +
-                    "[yyyy/MM/dd HH:mm:ss.SSSSSS]" +
-                    "[yyyy-MM-dd HH:mm:ss[.SSS]]" +
-                    "[ddMMMyyyy:HH:mm:ss.SSS[ Z]]"
-    )
+    var formatter = DateTimeFormatter.ISO_DATE_TIME
 
     @ToJson
-    fun toText(dateTime: LocalDateTime): String = dateTime.format(formatter)
+    fun toText(dateTime: ZonedDateTime): String = dateTime.format(ISO_DATE_TIME)
 
     @FromJson
-    fun fromText(text: String): LocalDateTime = LocalDateTime.parse(text, formatter)
+    fun fromText(text: String): ZonedDateTime = ZonedDateTime.parse(text, formatter)
 }
