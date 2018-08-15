@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapTextType
 import edu.artic.db.models.ArticObject
@@ -19,6 +20,17 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
+/**
+ * Backing logic for the markers we display in [MapFragment].
+ *
+ * What we display there is informed directly by the [zoomLevel] and
+ * the [floor]. Observables defined in this class will (as a rule)
+ * only emit an event if those properties change.
+ *
+ * Everything starts with `init`.
+ *
+ * @see MapItem
+ */
 class MapViewModel @Inject constructor(
         private val mapAnnotationDao: ArticMapAnnotationDao,
         private val galleryDao: ArticGalleryDao,
@@ -29,8 +41,14 @@ class MapViewModel @Inject constructor(
     val spacesAndLandmarks: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
 
-    //This stores all the map items that change at every zoom level and every floor change
-    val veryDynamicMapItems: Subject<List<MapItem<*>>> = BehaviorSubject.create()
+    /**
+     * This stores all the map items, and changes at every zoom level and every floor.
+     *
+     * We strongly recommend familiarity with the [MapItem] type before using this field. This
+     * Observable is expected to emit events rather frequently, so for the best performance
+     * you'll probably want to minimize allocations in whatever you have observing it.
+     */
+    val whatToDisplayOnMap: Subject<List<MapItem<*>>> = BehaviorSubject.create()
 
 
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
@@ -96,14 +114,29 @@ class MapViewModel @Inject constructor(
 
     }
 
+    /**
+     * Use this to listen to changes in [floor].
+     *
+     * The returned Observable only emits events if the current zoom is a specific value
+     *
+     * @param zoomRestriction the desired zoom level
+     */
+    private fun observeFloorsAtZoom(zoomRestriction: MapZoomLevel): Observable<Int> {
+        return Observables.combineLatest(
+                zoomLevel,
+                distinctFloor
+        ) { zoomLevel, floor ->
+            return@combineLatest if (zoomLevel === zoomRestriction) floor else Int.MIN_VALUE
+        }.filter { floor -> floor >= 0 }
+    }
+
 
     fun setupZoomLevelOneBinds() {
 
         /**
          * upon reaching zoom level one load up landmarks
          */
-        val zoomLevelOneObservable = zoomLevel.distinctUntilChanged()
-                .filter { zoomLevel -> zoomLevel === MapZoomLevel.One }
+        val zoomLevelOneObservable = observeFloorsAtZoom(MapZoomLevel.One)
 
 
         zoomLevelOneObservable
@@ -116,70 +149,84 @@ class MapViewModel @Inject constructor(
                 .map {
                     listOf<MapItem<*>>()
                 }
-                .bindTo(veryDynamicMapItems)
+                .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
     }
 
     fun setupZoomLevelTwoBinds() {
 
-        Observables.combineLatest(
-                zoomLevel,
-                distinctFloor
-        ) { zoomLevel, floor ->
-            return@combineLatest if (zoomLevel === MapZoomLevel.Two) floor else Int.MIN_VALUE
-        }.filter { floor -> floor >= 0 }
+        observeFloorsAtZoom(MapZoomLevel.Two)
                 .flatMap { floor ->
                     mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString()).toObservable()
                 }.map { it.mapToMapItem() }
-                .bindTo(veryDynamicMapItems)
+                .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
 
     }
 
 
     fun setupZoomLevelThreeBinds() {
-        val galleries = Observables.combineLatest(
-                zoomLevel,
-                distinctFloor
-        ) { zoomLevel, floor ->
-            return@combineLatest if (zoomLevel === MapZoomLevel.Three) floor else Int.MIN_VALUE
-        }.filter { floor -> floor >= 0 }
-                .flatMap {
-                    galleryDao.getGalleriesForFloor(it.toString()).toObservable()
-                }
+        val galleries = observeGalleriesAtFloor()
 
-        val objects = galleries
-                .map { galleryList ->
-                    galleryList.filter { it.titleT != null }.map { it.titleT.orEmpty() }
-                }.flatMap {
-                    objectDao.getObjectsInGalleries(it).toObservable()
-                }
+        val objects = observeObjectsWithin(galleries)
 
         Observables.combineLatest(
-                distinctFloor,
-                zoomLevel,
                 galleries,
                 objects
-        ) { floor, zoomLevel, galleryList, objectList ->
-            return@combineLatest if (zoomLevel == MapZoomLevel.Three && floor == currentFloor) {
-                val list = mutableListOf<MapItem<*>>()
-                list.addAll(
-                        galleryList.map { gallery ->
-                            MapItem.Gallery(gallery, floor)
-                        }
+        ) { galleryList, objectList ->
+            mutableListOf<MapItem<*>>().apply {
+                addAll(
+                    galleryList.map { gallery ->
+                        MapItem.Gallery(gallery, gallery.floorAsInt)
+                    }
                 )
-                list.addAll(
-                        objectList.map { articObject ->
-                            MapItem.Object(articObject, floor)
-                        }
+                addAll(
+                        objectList
                 )
-                list
-            } else {
-                emptyList<MapItem<*>>()
             }
-        }.filter { it.isNotEmpty() }
-                .bindTo(veryDynamicMapItems)
+        }
+                // We explicitly permit emission of empty lists, as that is a signal to clear the map.
+                .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
+    }
+
+    /**
+     * Observe for the Galleries which we're interested in at the moment.
+     *
+     * The returned [Observable] only emits events if the [current zoom level][zoomLevel]
+     * is set to [MapZoomLevel.Three], as that is a pre-requisite for galleries to be
+     * displayed on the map.
+     */
+    fun observeGalleriesAtFloor(): Observable<List<ArticGallery>> {
+        return observeFloorsAtZoom(MapZoomLevel.Three)
+                .flatMap {
+                    galleryDao.getGalleriesForFloor(it.toString()).toObservable()
+                }.share()
+        // Note: if we don't share this, only one observer could listen to it (we want 2 to do that)
+    }
+
+    /**
+     * Observe the [ArticObject]s in the given list of galleries.
+     *
+     * One gallery may contain multiple objects; the returned observable
+     * returns all of the objects it finds as a single list. The mechanism
+     * we use to retrieve these objects precludes the possibility of
+     * duplicates.
+     *
+     * Each of the observed [MapItem.Object]s include info about the floor
+     * of the gallery where it is found.
+     */
+    fun observeObjectsWithin(observed: Observable<List<ArticGallery>>): Observable<List<MapItem.Object>> {
+        return observed.map { galleries ->
+            galleries.filter { gallery ->
+                gallery.title != null
+            }.map { gallery ->
+                val title = gallery.title.orEmpty()
+                objectDao.getObjectsInGallery(title).map {
+                    MapItem.Object(it, gallery.floorAsInt)
+                }
+            }.flatten()
+        }
     }
 
     fun zoomLevelChangedTo(zoomLevel: MapZoomLevel) {

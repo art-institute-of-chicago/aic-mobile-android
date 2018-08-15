@@ -444,7 +444,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }.disposedBy(disposeBag)
 
 
-        viewModel.veryDynamicMapItems
+        viewModel.whatToDisplayOnMap
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { itemList ->
                     departmentMarkers.forEach { marker ->
