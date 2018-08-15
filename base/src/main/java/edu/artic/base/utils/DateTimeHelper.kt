@@ -1,5 +1,7 @@
 package edu.artic.base.utils
 
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
 
@@ -27,4 +29,11 @@ class DateTimeHelper {
                 .appendPattern("MMMM d   h:mm a")
                 .toFormatter()
     }
+}
+
+/**
+ * Returns ZonedDateTime in current TimeZone.
+ */
+fun ZonedDateTime.toCurrentTimeZone(): ZonedDateTime {
+    return this.withZoneSameInstant(ZoneId.systemDefault())
 }
