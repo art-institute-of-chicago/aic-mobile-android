@@ -3,7 +3,6 @@ package edu.artic.audioui
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
@@ -21,7 +20,14 @@ import kotlin.reflect.KClass
 
 /**
  * Houses the bottom audio player functionality.
- * Adding the Fragment to activity directly will provide all the audio UI and playback feature.
+ *
+ * Adding this Fragment to an activity directly will provide all of our standard audio UI and
+ * playback features.
+ *
+ * NB: This binds and unbinds with the background [AudioPlayerService] in [onViewCreated] and
+ * [onDestroyView] (respectively speaking; see the linked audio player documentation for
+ * details). For that reason, it must be bound to an [Activity][android.app.Activity].
+ *
  * @author Sameer Dhakal (Fuzz)
  */
 class BottomAudioPlayerFragment : BaseViewModelFragment<BottomAudioPlayerViewModel>() {
