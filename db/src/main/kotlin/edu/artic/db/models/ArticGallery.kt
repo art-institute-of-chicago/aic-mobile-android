@@ -16,6 +16,12 @@ data class ArticGallery(
         @Json(name = "latitude" ) val latitude: Double,
         @Json(name = "longitude" ) val longitude: Double,
         @Json(name = "floor" ) val floor: String?,
+        /**
+         * NB: as established by the iOS codebase, please use [title] instead of this field.
+         *
+         * In the general sense we expect the two fields to be equivalent and this one may
+         * be removed from the dta model in a future commit.
+         */
         @Json(name = "title_t" ) val titleT: String?,
         @Json(name = "gallery_id" ) val galleryId: String?,
         @Json(name = "is_boosted" ) val isBoosted: Boolean,
