@@ -51,7 +51,8 @@ internal class NullPrimitiveAdapter {
 }
 
 /**
- * Api returns date in multiple formats. All of these must be UTC Zone across the application.
+ * Api returns date in UTC format, so we use UTC Zone across the application.
+ *
  */
 class ZonedDateTimeAdapter {
 
