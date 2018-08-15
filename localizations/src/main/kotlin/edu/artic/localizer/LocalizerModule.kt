@@ -15,7 +15,7 @@ abstract class LocalizerModule {
         @Provides
         @Singleton
         fun provideLocalizer(context: Context): Localizer {
-            return Localizer(context)
+            return Localizer(LocalizerPreferences(context))
         }
 
     }
