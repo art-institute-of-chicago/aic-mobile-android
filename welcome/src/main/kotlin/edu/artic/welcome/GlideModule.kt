@@ -25,9 +25,10 @@ import com.bumptech.glide.request.RequestOptions
 @Suppress("unused")
 class GlideModule : AppGlideModule() {
 
-    override fun applyOptions(context: Context?, builder: GlideBuilder?) {
-        super.applyOptions(context, builder)
-        builder?.setDefaultRequestOptions(RequestOptions().format(DecodeFormat.PREFER_ARGB_8888))
+    // NB: 'appcontext' and 'builder' are guaranteed non-null, based on analysis of sources for Glide 4.4.0
+    override fun applyOptions(appContext: Context, builder: GlideBuilder) {
+        super.applyOptions(appContext, builder)
+        builder.setDefaultRequestOptions(RequestOptions().format(DecodeFormat.PREFER_ARGB_8888))
 
     }
 
