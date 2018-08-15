@@ -1,4 +1,4 @@
-package edu.artic.localizer
+package edu.artic.localization
 
 import android.content.Context
 import dagger.Module
@@ -14,8 +14,8 @@ abstract class LocalizerModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideLocalizer(context: Context): Localizer {
-            return Localizer(LocalizerPreferences(context))
+        fun provideLanguageSelector(context: Context): LanguageSelector {
+            return LanguageSelector(LocalizationPreferences(context))
         }
 
     }
