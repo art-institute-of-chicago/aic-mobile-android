@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/newPlayer"
-        android:name="edu.artic.audioui.BottomAudioPlayerFragment"
+        android:name="edu.artic.audioui.NarrowAudioPlayerFragment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"

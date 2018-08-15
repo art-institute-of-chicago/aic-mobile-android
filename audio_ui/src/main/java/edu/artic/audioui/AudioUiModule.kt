@@ -16,10 +16,10 @@ abstract class AudioUiModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(BottomAudioPlayerViewModel::class)
-    abstract fun bottomAudioPlayerViewModel(bottomAudioPlayerViewModel: BottomAudioPlayerViewModel): ViewModel
+    @ViewModelKey(NarrowAudioPlayerViewModel::class)
+    abstract fun narrowAudioPlayerViewModel(narrowAudioPlayerViewModel: NarrowAudioPlayerViewModel): ViewModel
 
     @get:ContributesAndroidInjector
-    abstract val bottomAudioPlayerFragment: BottomAudioPlayerFragment
+    abstract val narrowAudioPlayerFragment: NarrowAudioPlayerFragment
 
 }

@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_map.*
  * One of the four primary sections of the app. This Activity always hosts a [MapFragment].
  *
  * As a primary section, this class always contains a
- * [BottomAudioPlayerFragment][edu.artic.audioui.BottomAudioPlayerFragment].
+ * [NarrowAudioPlayerFragment][edu.artic.audioui.NarrowAudioPlayerFragment].
  */
 class MapActivity : BaseActivity() {
 

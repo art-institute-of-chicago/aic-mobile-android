@@ -30,10 +30,10 @@ import kotlin.reflect.KClass
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class BottomAudioPlayerFragment : BaseViewModelFragment<BottomAudioPlayerViewModel>() {
+class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewModel>() {
 
-    override val viewModelClass: KClass<BottomAudioPlayerViewModel>
-        get() = BottomAudioPlayerViewModel::class
+    override val viewModelClass: KClass<NarrowAudioPlayerViewModel>
+        get() = NarrowAudioPlayerViewModel::class
 
     override val title: String
         get() = ""
