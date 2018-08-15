@@ -43,12 +43,13 @@ import javax.inject.Inject
 
 
 /**
- * The app's global background audio player. Please consider using [BottomAudioPlayerFragment][edu.artic.audioui.BottomAudioPlayerFragment]
- * directly.
+ * The app's global background audio player.
+ *
+ * Most parts of the app will find it easier to work with the `NarrowAudioPlayerFragment`
+ * wrapper class included in the `:audio_ui` module.
  *
  * The audio itself is played by [an ExoPlayer][player], and it controls a system notification
- * for changing/viewing the audio player's state via [PlayerNotificationManager]. Most parts
- * of the app will do just fine with the prebuilt BottomAudioPlayerFragment.
+ * for changing/viewing the audio player's state via [PlayerNotificationManager].
  *
  * Audio files are streamed from URLs defined in the AppData blob. To play a track,
  * you'll need to submit a new ['Play' action][PlayBackAction.Play] to the [audioControl]
