@@ -6,5 +6,5 @@ import javax.inject.Inject
 /**
 @author Sameer Dhakal (Fuzz)
  */
-class BottomAudioPlayerViewModel @Inject constructor() : BaseViewModel() {
+class NarrowAudioPlayerViewModel @Inject constructor() : BaseViewModel() {
 }

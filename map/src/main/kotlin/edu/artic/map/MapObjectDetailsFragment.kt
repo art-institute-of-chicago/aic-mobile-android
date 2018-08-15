@@ -7,7 +7,7 @@ import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.audioui.BottomAudioPlayerFragment
+import edu.artic.audioui.NarrowAudioPlayerFragment
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -61,7 +61,7 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val audioFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.newPlayer) as BottomAudioPlayerFragment
+        val audioFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.newPlayer) as NarrowAudioPlayerFragment
         val audioService = audioFragment.boundService
 
         audioService?.let { audioService ->
