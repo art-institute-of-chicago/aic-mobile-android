@@ -45,6 +45,9 @@ import javax.inject.Inject
 /**
  * The app's global background audio player.
  *
+ * Most parts of the app will find it easier to work with the `NarrowAudioPlayerFragment`
+ * wrapper class included in the `:audio_ui` module.
+ *
  * The audio itself is played by [an ExoPlayer][player], and it controls a system notification
  * for changing/viewing the audio player's state via [PlayerNotificationManager].
  *
