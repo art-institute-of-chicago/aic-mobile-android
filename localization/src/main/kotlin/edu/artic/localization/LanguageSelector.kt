@@ -11,11 +11,17 @@ import java.util.*
  */
 class LanguageSelector(private val prefs: LocalizationPreferences) {
 
-    val preferredAppLocale: Subject<Locale> = BehaviorSubject.createDefault(prefs.preferredAppLocale)
+    val appLocaleObservable: Subject<Locale> = BehaviorSubject.createDefault(prefs.preferredAppLocale)
 
     fun setDefaultLanguageForApplication(lang: Locale) {
-        prefs.preferredAppLocale = lang
-        preferredAppLocale.onNext(lang)
+        if (lang.hasNoLanguage()) {
+            if (BuildConfig.DEBUG) {
+                throw IllegalArgumentException("Please ensure your chosen locale (\"${lang.language}\") actually includes a language.")
+            }
+        } else {
+            prefs.preferredAppLocale = lang
+            appLocaleObservable.onNext(lang)
+        }
     }
 
 }
