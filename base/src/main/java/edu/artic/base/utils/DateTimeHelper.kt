@@ -31,6 +31,9 @@ class DateTimeHelper {
     }
 }
 
-fun ZonedDateTime.getLocalDateTime(): ZonedDateTime {
+/**
+ * Returns ZonedDateTime in current TimeZone.
+ */
+fun ZonedDateTime.toCurrentTimeZone(): ZonedDateTime {
     return this.withZoneSameInstant(ZoneId.systemDefault())
 }

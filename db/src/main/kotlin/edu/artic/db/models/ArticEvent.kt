@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
-import edu.artic.base.utils.getLocalDateTime
+import edu.artic.base.utils.toCurrentTimeZone
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
 
@@ -23,12 +23,14 @@ data class ArticEvent(
         @Json(name = "start_at") val start_at: ZonedDateTime
 
 ) : Parcelable {
-    fun getStartTime(): ZonedDateTime {
-        return start_at.getLocalDateTime()
-    }
+    val startTime: ZonedDateTime
+        get() {
+            return start_at.toCurrentTimeZone()
+        }
 
-    fun getEndTime(): ZonedDateTime {
-        return end_at.getLocalDateTime()
-    }
+    val endTime: ZonedDateTime
+        get() {
+            return end_at.toCurrentTimeZone()
+        }
 
 }
