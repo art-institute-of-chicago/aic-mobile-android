@@ -219,9 +219,9 @@ class MapViewModel @Inject constructor(
     fun observeObjectsWithin(observed: Observable<List<ArticGallery>>): Observable<List<MapItem.Object>> {
         return observed.map { galleries ->
             galleries.filter { gallery ->
-                gallery.titleT != null
+                gallery.title != null
             }.map { gallery ->
-                val title = gallery.titleT.orEmpty()
+                val title = gallery.title.orEmpty()
                 objectDao.getObjectsInGallery(title).map {
                     MapItem.Object(it, gallery.floorAsInt)
                 }
