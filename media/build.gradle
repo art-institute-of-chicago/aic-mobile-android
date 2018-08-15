@@ -13,4 +13,5 @@ dependencies {
     implementation libs.exo_player_media_session
     implementation project(':base')
     implementation project(':db')
+    implementation project(':analytics')
 }
