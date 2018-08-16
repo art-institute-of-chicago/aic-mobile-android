@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.annotation.AnyThread
 import android.view.View
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.*
@@ -628,6 +629,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private fun loadObject(articObject: ArticObject, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
+                // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
+                .apply(RequestOptions().disallowHardwareConfig())
                 .loadWithThumbnail(articObject.thumbnailFullPath, articObject.fullImageFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
