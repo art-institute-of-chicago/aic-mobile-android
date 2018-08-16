@@ -7,7 +7,7 @@ import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.audioui.NarrowAudioPlayerFragment
+import edu.artic.media.ui.NarrowAudioPlayerFragment
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModelFragment

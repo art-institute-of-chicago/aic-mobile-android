@@ -1,4 +1,4 @@
-package edu.artic.audioui
+package edu.artic.media.ui
 
 import android.arch.lifecycle.ViewModel
 import dagger.Binds
@@ -11,7 +11,7 @@ import edu.artic.viewmodel.ViewModelKey
  * @author Sameer Dhakal (Fuzz)
  */
 @Module
-abstract class AudioUiModule {
+abstract class MediaUiModule {
 
 
     @Binds
