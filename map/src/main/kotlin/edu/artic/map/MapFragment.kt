@@ -18,6 +18,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
+import edu.artic.base.utils.loadWithThumbnail
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.*
 import edu.artic.map.carousel.TourCarouselFragment
@@ -627,7 +628,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private fun loadObject(articObject: ArticObject, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
-                .load(articObject.thumbnailFullPath)
+                .loadWithThumbnail(articObject.thumbnailFullPath, articObject.fullImageFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         /**
