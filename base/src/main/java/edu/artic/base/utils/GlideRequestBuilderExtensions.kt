@@ -1,6 +1,7 @@
 package edu.artic.base.utils
 
 import android.animation.ValueAnimator
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.support.v4.app.Fragment
 import android.view.View
@@ -10,6 +11,24 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+
+/**
+ * Simple mechanism for loading a full image and a thumbnail image from separate urls.
+ *
+ * The thumbnail request will only take the options currently set on 'this'; future
+ * calls to e.g. [this.setListener()][RequestBuilder.listener] will not affect it.
+ *
+ * Note that this method accepts null parameters since the underlying library
+ * accepts them. There are few (if any) tangible benefits to passing in null.
+ *
+ * @see [RequestBuilder.load]
+ * @see [RequestBuilder.thumbnail]
+ */
+fun RequestBuilder<Bitmap>.loadWithThumbnail(thumbUrl: String?, fullUrl: String?): RequestBuilder<Bitmap> {
+    return this.thumbnail(
+            clone().load(thumbUrl)
+    ).load(fullUrl)
+}
 
 /**
  * Adds listener that only cares about returning the drawable on success, and notifying that there
