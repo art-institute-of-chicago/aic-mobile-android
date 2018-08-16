@@ -1,6 +1,7 @@
 package edu.artic.welcome
 
 import android.content.Context
+import android.util.Log
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.DecodeFormat
@@ -29,6 +30,12 @@ class GlideModule : AppGlideModule() {
 
     // NB: 'appcontext' and 'builder' are guaranteed non-null, based on analysis of sources for Glide 4.4.0
     override fun applyOptions(appContext: Context, builder: GlideBuilder) {
+        if (BuildConfig.DEBUG) {
+            // 'INFO' includes 'ASSERT', 'ERROR', 'WARN' (call failed), and 'INFO' (call stacktrace) messages
+            builder.setLogLevel(Log.INFO)
+        } else {
+            builder.setLogLevel(Log.ERROR)
+        }
         builder.setDefaultRequestOptions(
                 RequestOptions()
                         .format(DecodeFormat.PREFER_ARGB_8888)
