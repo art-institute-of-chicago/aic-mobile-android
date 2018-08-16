@@ -33,3 +33,13 @@ The following modules use proprietary APIs:
 * The `map` module includes Google's "`GoogleMap`" and "`LatLng`"
   classes.
 * The `analytics` module connects to Google Analytics
+
+## Project architecture
+
+The source code is organized into multiple
+[Gradle](https://docs.gradle.org) modules, each of which is contained
+within a top-level directory. A full list of such modules can be found
+in [the `settings.gradle` config file](settings.gradle).
+
+The project maintains an overview of the more interesting modules in
+[MODULES.md](MODULES.md).
