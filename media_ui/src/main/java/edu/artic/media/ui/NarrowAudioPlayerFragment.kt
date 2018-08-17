@@ -1,4 +1,4 @@
-package edu.artic.audioui
+package edu.artic.media.ui
 
 import android.content.ComponentName
 import android.content.Intent

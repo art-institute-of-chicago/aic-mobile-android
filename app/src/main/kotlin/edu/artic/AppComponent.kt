@@ -15,7 +15,7 @@ import edu.artic.splash.SplashModule
 import edu.artic.tours.ToursModule
 import edu.artic.viewmodel.ViewModelModule
 import edu.artic.welcome.WelcomeModule
-import edu.artic.audioui.AudioUiModule
+import edu.artic.media.ui.MediaUiModule
 import edu.artic.media.audio.MediaModule
 import javax.inject.Singleton
 
@@ -35,7 +35,7 @@ import javax.inject.Singleton
     AudioModule::class,
     AnalyticsModule::class,
     AndroidSupportInjectionModule::class,
-    AudioUiModule::class,
+    MediaUiModule::class,
     MediaModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {

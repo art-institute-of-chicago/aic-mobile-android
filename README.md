@@ -21,3 +21,25 @@ Note that the codebase is young, and under heavy development. It might
 change significantly before the first official release. Nevertheless, we
 welcome suggestions and contributions from outside parties.
 
+## License
+
+This codebase is licensed under the GNU Affero General Public License v3
+as defined in the [top-level LICENSE file](LICENSE). We make heavy use
+of the Android support libraries and the Kotlin programming language -
+our modifications to those, if any, are licensed under the AGPL as well
+License unless otherwise indicated.
+
+The following modules use proprietary APIs:
+* The `map` module includes Google's "`GoogleMap`" and "`LatLng`"
+  classes.
+* The `analytics` module connects to Google Analytics
+
+## Project architecture
+
+The source code is organized into multiple
+[Gradle](https://docs.gradle.org) modules, each of which is contained
+within a top-level directory. A full list of such modules can be found
+in [the `settings.gradle` config file](settings.gradle).
+
+The project maintains an overview of the more interesting modules in
+[MODULES.md](MODULES.md).
