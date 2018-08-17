@@ -2,6 +2,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
+    implementation 'com.android.support:support-v4:27.1.1'
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
 
@@ -18,7 +19,8 @@ dependencies {
     implementation project(':media')
     implementation project(':audio')
     implementation project(':media_ui')
-
+    implementation project(':adapter')
+    implementation project(':tours')
     implementation libs.rx_kotlin
 
     implementation libs.constraint_layout

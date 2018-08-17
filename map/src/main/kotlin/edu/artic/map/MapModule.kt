@@ -32,5 +32,4 @@ abstract class MapModule {
 
     @get:ContributesAndroidInjector
     abstract val mapObjectDetailsFragment: MapObjectDetailsFragment
-
 }

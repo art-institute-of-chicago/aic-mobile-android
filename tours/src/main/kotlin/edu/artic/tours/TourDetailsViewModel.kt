@@ -107,13 +107,13 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
     }
 }
 
-class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : BaseViewModel() {
+open class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : BaseViewModel() {
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
     val stopNumber: Subject<String> = BehaviorSubject.createDefault("${tourStop.order + 1}.")
 
-    private val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
+    val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
 
     init {
         articObjectObservable
