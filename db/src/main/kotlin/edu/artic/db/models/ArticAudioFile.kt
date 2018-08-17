@@ -5,6 +5,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.localization.BaseTranslation
 import kotlinx.android.parcel.Parcelize
 
 @JsonClass(generateAdapter = true)
@@ -36,5 +37,5 @@ data class ArticAudioFile(
             @Json(name = "audio_filesize") val fileSize: String?,
             @Json(name = "audio_transcript") val transcript: String?,
             @Json(name = "credits") val credits: String?
-    ) : Parcelable
+    ) : Parcelable, BaseTranslation
 }

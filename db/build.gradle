@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation project(':base')
+    implementation project(':localization')
     api libs.rxHelper
     api libs.retrofit_rx
 
