@@ -48,5 +48,9 @@ data class ArticGeneralInfo(
             @Json(name = "see_all_tours_intro") val seeAllToursIntro: String,
             @Json(name = "restrooms_title") val restroomsTitle: String,
             @Json(name = "restrooms_text") val restroomsText: String
-    ) : BaseTranslation
+    ) : BaseTranslation {
+        override fun underlyingLanguage(): String? {
+            return language
+        }
+    }
 }

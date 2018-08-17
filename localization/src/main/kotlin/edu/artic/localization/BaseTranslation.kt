@@ -12,7 +12,9 @@ import java.util.*
  */
 interface BaseTranslation {
 
-    fun languageAsLocale(language: String): Locale {
-        return Locale.forLanguageTag(language)
+    open fun underlyingLanguage() : String?
+
+    fun underlyingLocale(): Locale {
+        return Locale.forLanguageTag(underlyingLanguage())
     }
 }

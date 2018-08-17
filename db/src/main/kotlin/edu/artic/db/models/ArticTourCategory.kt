@@ -13,5 +13,9 @@ data class ArticTourCategory(
     data class Translation(
             @Json(name = "language") val language: String,
             @Json(name = "category") val category: String
-    ) : BaseTranslation
+    ) : BaseTranslation {
+        override fun underlyingLanguage(): String? {
+            return language
+        }
+    }
 }
