@@ -37,5 +37,9 @@ data class ArticAudioFile(
             @Json(name = "audio_filesize") val fileSize: String?,
             @Json(name = "audio_transcript") val transcript: String?,
             @Json(name = "credits") val credits: String?
-    ) : Parcelable, BaseTranslation
+    ) : Parcelable, BaseTranslation {
+        override fun underlyingLanguage(): String? {
+            return language
+        }
+    }
 }
