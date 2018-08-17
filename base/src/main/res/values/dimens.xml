@@ -38,4 +38,5 @@
     <dimen name="bottomAudioControlIconSize">32dp</dimen>
     <dimen name="large_icon_size">42dp</dimen>
     <dimen name="mapObjectDetailsViewHeight">135dp</dimen>
+    <dimen name="EightySix">86dp</dimen>
 </resources>
