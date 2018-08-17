@@ -15,7 +15,7 @@ dependencies {
     implementation project(':db')
     implementation project(':viewmodel')
     implementation project(':base')
-    implementation project(':audio_ui')
+    implementation project(':media_ui')
     implementation project(':adapter')
     implementation project(':tours')
     implementation project(':exhibitions')
