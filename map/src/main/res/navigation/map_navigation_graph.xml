@@ -11,10 +11,4 @@
         android:label="fragment_information"
         tools:layout="@layout/fragment_map" />
 
-    <fragment
-        android:id="@+id/testFragment"
-        android:name="edu.artic.map.TestFragment"
-        android:label="fragment_test"
-        tools:layout="@layout/fragment_test" />
-
 </navigation>
