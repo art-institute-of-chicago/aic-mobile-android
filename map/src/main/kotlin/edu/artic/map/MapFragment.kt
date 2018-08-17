@@ -297,12 +297,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         lowerLevel.clicks()
                 .subscribe { viewModel.floorChangedTo(0) }
                 .disposedBy(disposeBag)
+
         floorOne.clicks()
                 .subscribe { viewModel.floorChangedTo(1) }
                 .disposedBy(disposeBag)
+
         floorTwo.clicks()
                 .subscribe { viewModel.floorChangedTo(2) }
                 .disposedBy(disposeBag)
+
         floorThree.clicks()
                 .subscribe { viewModel.floorChangedTo(3) }
                 .disposedBy(disposeBag)
@@ -492,16 +495,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.selectedArticObject
                 .subscribe { selectedArticObject ->
-                    val isMapObjectVisible = objectDetailsContainer.childCount != 0
+                    val isMapObjectVisible = container.childCount != 0
                     val fragmentManager = requireActivity().supportFragmentManager
                     if (!isMapObjectVisible) {
                         val fragment = MapObjectDetailsFragment.create(selectedArticObject)
                         fragmentManager.beginTransaction()
-                                .add(R.id.objectDetailsContainer, fragment, OBJECT_DETAILS)
+                                .add(R.id.container, fragment, OBJECT_DETAILS)
                                 .commit()
                     } else {
                         fragmentManager.beginTransaction()
-                                .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
+                                .replace(R.id.container, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
                                 .commit()
                     }
                 }.disposedBy(disposeBag)
