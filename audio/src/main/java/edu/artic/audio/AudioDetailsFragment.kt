@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
@@ -154,6 +155,19 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 }.bindToMain(Consumer<LanguageAdapter<AudioTranslation>> { la: LanguageAdapter<AudioTranslation> ->
                     selectorView.apply {
                         this.adapter = la
+                        this.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                            override fun onNothingSelected(parent: AdapterView<*>) {
+                                // Nothing to be done. Perhaps we could reset our language selection?
+                            }
+
+                            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                                if (position >= 0) {
+                                    val translation = la.getItem(position)
+                                    viewModel.setTranslationOverride(translation)
+                                    // TODO: Get this translation into the 'boundService'
+                                }
+                            }
+                        }
                         this.setSelection(la.getPosition(viewModel.chosenTranslation.value))
                     }
                 })
