@@ -5,7 +5,6 @@ import com.fuzz.rx.disposedBy
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioTranslation
 import edu.artic.db.models.audioFile
-import edu.artic.localization.BaseTranslation
 import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
@@ -25,7 +24,7 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
     val title: Subject<String> = BehaviorSubject.create()
     val image: Subject<String> = BehaviorSubject.create()
     val availableTranslations: Subject<List<AudioTranslation>> = BehaviorSubject.create()
-    val chosenTranslation: Subject<BaseTranslation> = BehaviorSubject.create()
+    val chosenTranslation: BehaviorSubject<AudioTranslation> = BehaviorSubject.create()
     val transcript: Subject<String> = BehaviorSubject.create()
     val credits: Subject<String> = BehaviorSubject.create()
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
@@ -44,6 +43,10 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
         }
 
     init {
+
+        // Just bind all the properties that aren't specific to the translation so
+        // that we don't need to worry about them later
+
         objectObservable
                 .map {
                     it.artistCulturePlaceDelim?.replace("\r", "\n").orEmpty()
@@ -52,17 +55,22 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
 
         objectObservable
                 .map {
-                    it.title
-                }.bindTo(title)
-                .disposedBy(disposeBag)
-
-
-        objectObservable
-                .map {
                     it.largeImageFullPath.orEmpty()
                 }.bindTo(image)
                 .disposedBy(disposeBag)
 
+        // Note there is a 'credits' property on each AudioTranslation. We do not want that here.
+        objectObservable
+                .map {
+                    // This is a credit line for the object, _not_ translated on a per-language basis
+                    it.creditLine.orEmpty()
+                }.bindTo(credits)
+                .disposedBy(disposeBag)
+
+
+
+
+        // Retrieve a list of all translations we have available for this object
         val known = objectObservable
                 .map {
                     it.audioFile?.allTranslations().orEmpty()
@@ -78,16 +86,18 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
                 .disposedBy(disposeBag)
 
 
-        objectObservable
-                .map {
-                    it.audioFile?.transcript.orEmpty()
-                }.bindTo(transcript)
-                .disposedBy(disposeBag)
+        // Lastly, we need to attach the translatable audio properties. These come from 'chosenTranslation'.
 
-        objectObservable
+        chosenTranslation
                 .map {
-                    it.creditLine.orEmpty()
-                }.bindTo(credits)
+                    // TODO: default to articObject.title, perhaps?
+                    it.title.orEmpty()
+                }.bindTo(title)
+                .disposedBy(disposeBag)
+        chosenTranslation
+                .map {
+                    it.transcript.orEmpty()
+                }.bindTo(transcript)
                 .disposedBy(disposeBag)
 
 
@@ -98,7 +108,7 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
      * does not transfer to other objects in the tour or persist
      * into app- or system-settings.
      */
-    fun setLanguageOverride(translation: AudioTranslation) {
+    fun setTranslationOverride(translation: AudioTranslation) {
         chosenTranslation.onNext(translation)
     }
 

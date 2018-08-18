@@ -69,6 +69,7 @@ data class ArticAudioFile(
 fun ArticAudioFile.asAudioTranslation() : AudioTranslation {
     return AudioTranslation(
             "en-US",
+            title,
             fileName,
             fileUrl,
             fileMime,
@@ -81,6 +82,7 @@ fun ArticAudioFile.asAudioTranslation() : AudioTranslation {
 fun ArticAudioFile.Translation.asAudioTranslation() : AudioTranslation {
     return AudioTranslation(
             language,
+            title,
             fileName,
             fileUrl,
             fileMime,
@@ -100,6 +102,7 @@ fun ArticAudioFile.Translation.asAudioTranslation() : AudioTranslation {
  */
 data class AudioTranslation(
         val language: String?,
+        val title: String?,
         val fileName: String?,
         val fileUrl: String?,
         val fileMime: String?,
