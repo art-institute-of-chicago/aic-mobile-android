@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="edu.artic.welcome.WelcomeFragment">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:fitsSystemWindows="true"
+                                                 tools:context="edu.artic.welcome.WelcomeFragment">
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/app_bar_layout" />
+        layout="@layout/app_bar_layout"/>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -17,142 +17,173 @@
         android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <View
+                android:id="@+id/topBg"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="@color/geyser"
                 android:orientation="vertical"
-                android:padding="@dimen/marginDouble">
+                app:layout_constraintBottom_toBottomOf="@id/memberCardLink"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/welcomeMessage"
+                />
 
-                <TextView
-                    android:id="@+id/welcomeMessage"
-                    style="@style/BodySansSerifBlackCentered"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/welcomePrompt" />
+            <TextView
+                android:id="@+id/welcomeMessage"
+                style="@style/BodySansSerifBlackCentered"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:text="@string/welcomePrompt"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
-                <TextView
-                    android:id="@+id/memberCardLink"
-                    style="@style/BodyCtaTurquoise"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/marginDouble"
-                    android:layout_marginBottom="@dimen/marginStandard"
-                    android:text="@string/accessYourMemberCard" />
+            <TextView
+                android:id="@+id/memberCardLink"
+                style="@style/BodyCtaTurquoise"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/accessYourMemberCard"
+                app:layout_constraintBottom_toBottomOf="@id/topBg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/welcomeMessage"/>
 
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tourSummaryLabel"
+                style="@style/SectionTitleBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/tours"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/memberCardLink"/>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/toursSeeAllLink"
+                style="@style/SeeAll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginDouble"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tourSummaryLabel"
-                    style="@style/SectionTitleBlack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tours" />
-
-                <TextView
-                    android:id="@+id/toursSeeAllLink"
-                    style="@style/SeeAll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/seeAll"
-                    tools:text="See All" />
-
-            </LinearLayout>
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/seeAll"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tourSummaryLabel"
+                app:layout_constraintTop_toBottomOf="@id/memberCardLink"
+                tools:text="See All"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/tourSummaryRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false" />
-
-            <View
-                style="@style/divider"
-                android:layout_width="match_parent" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginDouble"
-                android:orientation="horizontal">
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toursSeeAllLink"/>
 
-                <TextView
-                    android:id="@+id/onViewLabel"
-                    style="@style/SectionTitleBlack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/onView" />
+            <View
+                android:id="@+id/tourDivider"
+                style="@style/divider"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintTop_toBottomOf="@id/tourSummaryRecyclerView"/>
 
-                <TextView
-                    android:id="@+id/onViewLink"
-                    style="@style/SeeAll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/seeAll"
-                    tools:text="See All" />
+            <TextView
+                android:id="@+id/onViewLabel"
+                style="@style/SectionTitleBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/onView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tourDivider"/>
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/onViewLink"
+                style="@style/SeeAll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/seeAll"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/onViewLabel"
+                app:layout_constraintTop_toBottomOf="@id/tourDivider"
+                tools:text="See All"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/onViewRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false" />
-
-            <View
-                style="@style/divider"
-                android:layout_width="match_parent" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginDouble"
-                android:orientation="horizontal">
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/onViewLink"/>
 
-                <TextView
-                    android:id="@+id/eventLabel"
-                    style="@style/SectionTitleBlack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/events" />
+            <View
+                android:id="@+id/onViewDivider"
+                style="@style/divider"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintTop_toBottomOf="@id/onViewRecyclerView"/>
 
-                <TextView
-                    android:id="@+id/eventsLink"
-                    style="@style/SeeAll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/seeAll"
-                    tools:text="See All" />
+            <TextView
+                android:id="@+id/eventLabel"
+                style="@style/SectionTitleBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/events"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/onViewDivider"/>
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/eventsLink"
+                style="@style/SeeAll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/seeAll"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/eventLabel"
+                app:layout_constraintTop_toBottomOf="@id/onViewDivider"
+                tools:text="See All"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/eventsRecyclerView"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false" />
+                android:layout_margin="@dimen/marginDouble"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/eventsLink"/>
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
