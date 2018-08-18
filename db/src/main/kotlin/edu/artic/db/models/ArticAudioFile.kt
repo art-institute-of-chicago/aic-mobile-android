@@ -8,6 +8,14 @@ import com.squareup.moshi.JsonClass
 import edu.artic.localization.BaseTranslation
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * Audio information for an [ArticObject].
+ *
+ * This includes the network url for that audio, as well as
+ * a transcript and [credits]. By default, this is only available
+ * in english; other translations for the same [ArticObject] are
+ * included under [ArticAudioFile.translations].
+ */
 @JsonClass(generateAdapter = true)
 @Entity
 @Parcelize
@@ -41,5 +49,65 @@ data class ArticAudioFile(
         override fun underlyingLanguage(): String? {
             return language
         }
+    }
+
+    /**
+     * Retrieve _all_ of the translations of this content, in one
+     * ordered list.
+     *
+     * Note that this uses the (safe) assumption that [ArticAudioFile]
+     * itself is an English translation of the content.
+     */
+    fun allTranslations() : List<AudioTranslation> {
+        return translations.mapTo(mutableListOf(asAudioTranslation())) {
+            it.asAudioTranslation()
+        }
+    }
+}
+
+
+fun ArticAudioFile.asAudioTranslation() : AudioTranslation {
+    return AudioTranslation(
+            "en-US",
+            fileName,
+            fileUrl,
+            fileMime,
+            fileSize,
+            transcript,
+            credits
+    )
+}
+
+fun ArticAudioFile.Translation.asAudioTranslation() : AudioTranslation {
+    return AudioTranslation(
+            language,
+            fileName,
+            fileUrl,
+            fileMime,
+            fileSize,
+            transcript,
+            credits
+    )
+}
+
+/**
+ * This object offers easy access to the common fields between [ArticAudioFile] and
+ * [ArticAudioFile.Translation].
+ *
+ * If this were a superclass of each of those two types, Moshi would get really
+ * confused. Perhaps in a later version the auto-generation will be able to
+ * handle that?
+ */
+data class AudioTranslation(
+        val language: String?,
+        val fileName: String?,
+        val fileUrl: String?,
+        val fileMime: String?,
+        val fileSize: String?,
+        val transcript: String?,
+        val credits: String?
+) : BaseTranslation {
+    override fun underlyingLanguage(): String? {
+        return language
     }
 }
