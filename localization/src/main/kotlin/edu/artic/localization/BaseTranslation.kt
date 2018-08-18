@@ -25,7 +25,8 @@ interface BaseTranslation {
 
         return forThisView.createConfigurationContext(
                 Configuration(current).apply {
-                    setLocale(underlyingLocale())
+                    // Locale retrieval on pre-Nougat is somewhat lacking
+                    setLocale(Locale.forLanguageTag(underlyingLocale().language))
                 }
         ).getText(R.string.name_of_this_language)
     }

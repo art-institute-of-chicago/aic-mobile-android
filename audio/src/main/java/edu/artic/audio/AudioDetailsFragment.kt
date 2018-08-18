@@ -2,12 +2,19 @@ package edu.artic.audio
 
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -17,13 +24,26 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
+import edu.artic.db.models.AudioTranslation
+import edu.artic.localization.BaseTranslation
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.functions.Consumer
+import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_audio_details.*
 import kotlin.reflect.KClass
 
 /**
+ * Extensive details about a specific [ArticObject][edu.artic.db.models.ArticObject].
+ *
+ * This object is expected (but as it stands, not *required* per se) to have a
+ * valid [audio file][edu.artic.db.models.ArticAudioFile], which is then used
+ * to fill out the interesting properties in a backing [AudioDetailsViewModel].
+ *
+ * This class maintains a strong connection to [AudioPlayerService] for playback
+ * and a minimal amount of caching.
+ *
  * @author Sameer Dhakal (Fuzz)
  */
 class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
@@ -87,6 +107,12 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                     .into(audioImage)
         }.disposedBy(disposeBag)
 
+
+
+        bindTranslationSelector(viewModel)
+
+
+
         viewModel.authorCulturalPlace
                 .map { it.isNotEmpty() }
                 .bindToMain(artistCulturePlaceDenim.visibility())
@@ -119,6 +145,31 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     }
 
 
+    private fun bindTranslationSelector(viewModel: AudioDetailsViewModel) {
+        // TODO: Consider replacing 'Spinner' with a more capable class; possibly one from a 3-party library
+        val selectorView: Spinner = exo_translation_selector
+        viewModel.availableTranslations
+                .map {
+                    LanguageAdapter(selectorView.context, it)
+                }.bindToMain(Consumer<LanguageAdapter<AudioTranslation>> { la: LanguageAdapter<AudioTranslation> ->
+                    selectorView.apply {
+                        this.adapter = la
+                        this.setSelection(la.getPosition(viewModel.chosenTranslation.value))
+                    }
+                })
+                .disposedBy(disposeBag)
+        viewModel.chosenTranslation
+                .map {
+                    it.userFriendlyLanguage(selectorView.context)
+                }.bindToMain(Consumer<CharSequence> { newText ->
+                    newText?.let {
+                        selectorView.prompt = newText
+                    }
+                })
+                .disposedBy(disposeBag)
+    }
+
+
     override fun onResume() {
         super.onResume()
         audioIntent = AudioPlayerService.getLaunchIntent(requireContext())
@@ -135,5 +186,54 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
         }
+    }
+}
+
+/**
+ * List adapter for the language-selection dropdown.
+ *
+ * This is also responsible for creating the view seen at the top
+ * of the list (i.e. the 'currently selected' language).
+ *
+ * TODO: combine the two internal methods, perhaps using different Themes
+ */
+class LanguageAdapter<T : BaseTranslation>(context: Context, translations: List<T>) : ArrayAdapter<T>(
+        context,
+        R.layout.view_language_box,
+        translations
+) {
+    // This is a view for use in the dropdown...
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val derived = if (convertView == null) {
+            LayoutInflater.from(parent.context)
+                    .inflate(R.layout.view_language_box, parent, false)
+        } else {
+            convertView
+        } as TextView
+
+        val item = getItem(position)
+
+        derived.text = item.userFriendlyLanguage(derived.context)
+
+        return derived
+    }
+
+    // ..and this is the one used to preview the current selection
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val derived = if (convertView == null) {
+            LayoutInflater.from(parent.context)
+                    .inflate(R.layout.view_language_box, parent, false)
+        } else {
+            convertView
+        } as TextView
+
+        derived.setBackgroundResource(R.drawable.translation_selection)
+        derived.setTextColor(Color.WHITE)
+
+        val item = getItem(position)
+
+        derived.text = item.userFriendlyLanguage(derived.context)
+
+        return derived
     }
 }
