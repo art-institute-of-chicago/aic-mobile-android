@@ -4,6 +4,8 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.audioFile
+import edu.artic.localization.BaseTranslation
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -20,6 +22,9 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
 
     private val objectObservable: Subject<ArticObject> = BehaviorSubject.create()
+
+    @Inject
+    lateinit var languageSelector: LanguageSelector
 
     var audioObject: ArticObject? = null
         set(value) {
