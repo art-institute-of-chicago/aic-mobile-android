@@ -1,5 +1,7 @@
 package edu.artic.localization;
 
+import android.content.Context
+import android.content.res.Configuration
 import java.util.*
 
 /**
@@ -12,9 +14,19 @@ import java.util.*
  */
 interface BaseTranslation {
 
-    open fun underlyingLanguage() : String?
+    fun underlyingLanguage() : String?
 
     fun underlyingLocale(): Locale {
         return Locale.forLanguageTag(underlyingLanguage())
+    }
+
+    fun userFriendlyLanguage(forThisView: Context): CharSequence {
+        val current = forThisView.resources.configuration
+
+        return forThisView.createConfigurationContext(
+                Configuration(current).apply {
+                    setLocale(underlyingLocale())
+                }
+        ).getText(R.string.name_of_this_language)
     }
 }
