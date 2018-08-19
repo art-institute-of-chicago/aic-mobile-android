@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:fitsSystemWindows="true"
-                                                 tools:context="edu.artic.welcome.WelcomeFragment">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="edu.artic.welcome.WelcomeFragment">
 
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/app_bar_layout"/>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -27,10 +29,11 @@
                 android:layout_height="0dp"
                 android:background="@color/geyser"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="@id/memberCardLink"
+                app:layout_constraintBottom_toTopOf="@id/tourSummaryLabel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/welcomeMessage"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread_inside"
                 />
 
             <TextView
@@ -40,16 +43,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
                 android:text="@string/welcomePrompt"
+                app:layout_constraintBottom_toTopOf="@id/memberCardLink"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="@id/topBg"/>
 
             <TextView
                 android:id="@+id/memberCardLink"
                 style="@style/BodyCtaTurquoise"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
@@ -65,42 +71,49 @@
                 style="@style/SectionTitleBlack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:text="@string/tours"
+                app:layout_constraintBottom_toTopOf="@id/tourSummaryRecyclerView"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/memberCardLink"/>
+                app:layout_constraintTop_toBottomOf="@id/topBg"/>
 
             <TextView
                 android:id="@+id/toursSeeAllLink"
                 style="@style/SeeAll"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
                 android:text="@string/seeAll"
+                app:layout_constraintBaseline_toBaselineOf="@id/tourSummaryLabel"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toEndOf="@id/tourSummaryLabel"
-                app:layout_constraintTop_toBottomOf="@id/memberCardLink"
+                app:layout_constraintWidth_default="wrap"
                 tools:text="See All"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/tourSummaryRecyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false"
+                android:paddingStart="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toursSeeAllLink"/>
+                app:layout_constraintTop_toBottomOf="@id/toursSeeAllLink"
+                tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                tools:listitem="@layout/welcome_event_cell_layout"
+                tools:orientation="horizontal"/>
 
             <View
                 android:id="@+id/tourDivider"
                 style="@style/divider"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tourSummaryRecyclerView"/>
 
             <TextView
@@ -122,28 +135,36 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
                 android:text="@string/seeAll"
+                app:layout_constraintBaseline_toBaselineOf="@id/onViewLabel"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toEndOf="@id/onViewLabel"
-                app:layout_constraintTop_toBottomOf="@id/tourDivider"
+                app:layout_constraintWidth_default="wrap"
                 tools:text="See All"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/onViewRecyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false"
+                android:paddingStart="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/onViewLink"/>
+                app:layout_constraintTop_toBottomOf="@id/onViewLink"
+                tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                tools:listitem="@layout/welcome_event_cell_layout"
+                tools:orientation="horizontal"/>
 
             <View
                 android:id="@+id/onViewDivider"
                 style="@style/divider"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/onViewRecyclerView"/>
 
             <TextView
@@ -167,21 +188,28 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:text="@string/seeAll"
+                app:layout_constraintBaseline_toBaselineOf="@id/eventLabel"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toEndOf="@id/eventLabel"
-                app:layout_constraintTop_toBottomOf="@id/onViewDivider"
+                app:layout_constraintWidth_default="wrap"
                 tools:text="See All"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/eventsRecyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false"
+                android:paddingStart="@dimen/marginDouble"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/eventsLink"/>
+                app:layout_constraintTop_toBottomOf="@id/eventsLink"
+                tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                tools:listitem="@layout/welcome_event_cell_layout"
+                tools:orientation="horizontal"/>
 
         </android.support.constraint.ConstraintLayout>
 

@@ -11,8 +11,8 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.adapter.itemSelectionsWithPosition
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.tours.TourDetailsFragment
@@ -54,7 +54,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
             addOnOffsetChangedListener { aBarLayout, verticalOffset ->
                 val progress: Double = 1 - Math.abs(verticalOffset) / aBarLayout.totalScrollRange.toDouble()
                 appBar.searchIcon.background.alpha = (progress * 255).toInt()
-                appBar.flagIcon.drawable.alpha = (progress * 255).toInt()
+                appBar.icon.drawable.alpha = (progress * 255).toInt()
                 appBar.expandedImage.background.alpha = (progress * 255).toInt()
             }
         }
