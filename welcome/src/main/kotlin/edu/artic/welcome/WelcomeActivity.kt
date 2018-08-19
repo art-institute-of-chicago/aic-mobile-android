@@ -9,7 +9,6 @@ import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
 
-
 class WelcomeActivity : BaseActivity() {
 
     companion object {
@@ -28,7 +27,6 @@ class WelcomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         if (intent?.extras?.getBoolean(EXTRA_QUIT) == true) {
             finish()
             return

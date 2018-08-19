@@ -1,12 +1,2 @@
 <resources>
-
-    <style name="AppBar" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="AppTheme.CustomToolbar.Welcome">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
 </resources>
