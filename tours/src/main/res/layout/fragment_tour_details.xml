@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,83 +8,10 @@
     android:background="@color/greyText"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.AppBarLayout
+    <edu.artic.view.ArticDetailsAppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="true">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:fitsSystemWindows="true"
-            app:titleEnabled="false">
-
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true">
-
-                <ImageView
-                    android:id="@+id/tourImage"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:contentDescription="@null"
-                    android:scaleType="matrix"
-                    app:layout_constraintDimensionRatio="H, 375:220"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:fitsSystemWindows="true"/>
-
-                <TextView
-                    android:id="@+id/expandedTitle"
-                    style="@style/DetailToolbarExpandedText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:maxLines="3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tourImage" />
-
-            </android.support.constraint.ConstraintLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:src="@drawable/detail_header_gradient"
-                android:contentDescription="@null"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="1"
-                />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                tools:title="test">
-
-                <TextView
-                    android:id="@+id/toolbarTitle"
-                    style="@style/DetailToolbarText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0"
-                    android:lines="1" />
-
-            </android.support.v7.widget.Toolbar>
-
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
+        android:layout_height="wrap_content"/>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -95,9 +23,9 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingEnd="@dimen/marginDouble"
             android:paddingStart="@dimen/marginDouble"
-            android:paddingTop="@dimen/marginDouble"
-            android:paddingEnd="@dimen/marginDouble">
+            android:paddingTop="@dimen/marginDouble">
 
             <Spinner
                 android:id="@+id/languageSelector"
@@ -113,12 +41,12 @@
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_map_white"
                 android:gravity="center_vertical"
-                android:paddingStart="0dp"
                 android:paddingEnd="@dimen/marginOneHalf"
+                android:paddingStart="0dp"
                 app:layout_constraintBottom_toBottomOf="@id/languageSelector"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/languageSelector"
-                tools:text="16 stops" />
+                tools:text="16 stops"/>
 
 
             <TextView
@@ -131,7 +59,7 @@
                 app:layout_constraintEnd_toStartOf="@id/languageSelector"
                 app:layout_constraintStart_toEndOf="@id/tourStops"
                 app:layout_constraintTop_toTopOf="@id/tourStops"
-                tools:text="34min" />
+                tools:text="34min"/>
 
             <FrameLayout
                 android:id="@+id/startTourButton"
@@ -151,7 +79,7 @@
                     android:layout_gravity="center"
                     android:background="@null"
                     android:minHeight="0dp"
-                    tools:text="Start Tour" />
+                    tools:text="Start Tour"/>
 
             </FrameLayout>
 
@@ -165,7 +93,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/startTourButton"
                 tools:text="Discover the stories behind some of the museum's most iconic artworks.
-Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La Grande Jatte" />
+Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La Grande Jatte"/>
+
             <TextView
                 android:id="@+id/intro"
                 style="@style/BodySerifWhiteLeft"
@@ -176,7 +105,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"
                 tools:text="Discover the stories behind some of the museum's most iconic artworks.
-Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La Grande Jatte" />
+Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La Grande Jatte"/>
 
             <View
                 android:id="@+id/introCellTopDivider"
@@ -186,12 +115,13 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:background="@drawable/tour_detail_tour_stop_divider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/intro" />
+                app:layout_constraintTop_toBottomOf="@id/intro"/>
+
             <include
                 android:id="@+id/tourDetailIntroCell"
+                layout="@layout/cell_tour_details_stop"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                layout="@layout/cell_tour_details_stop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/introCellTopDivider"/>
@@ -203,7 +133,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:background="@drawable/tour_detail_tour_stop_divider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tourDetailIntroCell" />
+                app:layout_constraintTop_toBottomOf="@id/tourDetailIntroCell"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -211,7 +141,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/introCellBottomDivider" />
+                app:layout_constraintTop_toBottomOf="@id/introCellBottomDivider"/>
 
         </android.support.constraint.ConstraintLayout>
 
