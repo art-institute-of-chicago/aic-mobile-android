@@ -1,7 +1,6 @@
 package edu.artic.welcome
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -19,7 +18,6 @@ import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -44,20 +42,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        /**
-         * TODO:: move this logic away into the app bar view class
-         * TODO:: Make a Custom AppBar view that dynamically switches the toolbar type (collapsible and non collapsible)
-         */
-        val appBar = appBarLayout as AppBarLayout
-        (appBarLayout as AppBarLayout).apply {
-            addOnOffsetChangedListener { aBarLayout, verticalOffset ->
-                val progress: Double = 1 - Math.abs(verticalOffset) / aBarLayout.totalScrollRange.toDouble()
-                appBar.searchIcon.background.alpha = (progress * 255).toInt()
-                appBar.icon.drawable.alpha = (progress * 255).toInt()
-                appBar.expandedImage.background.alpha = (progress * 255).toInt()
-            }
-        }
 
         /* Build tour summary list*/
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)

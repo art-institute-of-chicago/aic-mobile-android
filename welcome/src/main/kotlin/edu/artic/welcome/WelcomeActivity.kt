@@ -3,11 +3,13 @@ package edu.artic.welcome
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.navigation.Navigation
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
+
 
 class WelcomeActivity : BaseActivity() {
 
@@ -20,7 +22,6 @@ class WelcomeActivity : BaseActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             return intent
         }
-
     }
 
     override val layoutResId: Int
@@ -28,6 +29,7 @@ class WelcomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         if (intent?.extras?.getBoolean(EXTRA_QUIT) == true) {
             finish()
             return
