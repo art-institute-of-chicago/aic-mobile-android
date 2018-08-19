@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
  * Description: Wraps the layout and common functionality for the main collapsing [AppBarLayout] in
  * this app.
  */
-class ArticAppBarLayout(context: Context, attrs: AttributeSet? = null) : AppBarLayout(context, attrs) {
+class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : AppBarLayout(context, attrs) {
 
     init {
         View.inflate(context, R.layout.view_app_bar_layout, this)

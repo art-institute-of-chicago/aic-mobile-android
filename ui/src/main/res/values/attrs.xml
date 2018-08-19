@@ -18,7 +18,7 @@
         <attr name="content_padding" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="ArticAppBarLayout">
+    <declare-styleable name="ArticMainAppBarLayout">
         <attr name="icon" format="reference"/>
         <attr name="backgroundImage" format="reference"/>
     </declare-styleable>
