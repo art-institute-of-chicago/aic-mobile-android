@@ -3,7 +3,6 @@ package edu.artic.welcome
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.navigation.Navigation
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.navigation.NavigationSelectListener

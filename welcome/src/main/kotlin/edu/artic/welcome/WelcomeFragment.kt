@@ -54,22 +54,27 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         val tourSummaryAdapter = WelcomeToursAdapter()
         tourSummaryRecyclerView.adapter = tourSummaryAdapter
 
-        viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
+        viewModel.tours
+                .bindToMain(tourSummaryAdapter.itemChanges())
+                .disposedBy(disposeBag)
 
         /* Build on view list*/
         val adapter = OnViewAdapter()
         val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         onViewRecyclerView.layoutManager = exhibitionLayoutManager
         onViewRecyclerView.adapter = adapter
-        viewModel.exhibitions.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
+        viewModel.exhibitions
+                .bindToMain(adapter.itemChanges())
+                .disposedBy(disposeBag)
 
         /* Build event summary list*/
         val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         eventsRecyclerView.layoutManager = eventsLayoutManager
         val eventsAdapter = WelcomeEventsAdapter()
         eventsRecyclerView.adapter = eventsAdapter
-        viewModel.events.bindToMain(eventsAdapter.itemChanges()).disposedBy(disposeBag)
-
+        viewModel.events
+                .bindToMain(eventsAdapter.itemChanges())
+                .disposedBy(disposeBag)
 
         viewModel.shouldPeekTourSummary
                 .filter { it }
@@ -77,7 +82,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     animateRecyclerView()
                 }
                 .disposedBy(disposeBag)
-
     }
 
     override fun setupBindings(viewModel: WelcomeViewModel) {

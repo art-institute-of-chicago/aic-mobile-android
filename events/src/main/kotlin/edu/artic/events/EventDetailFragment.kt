@@ -21,7 +21,6 @@ import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlin.reflect.KClass
 
-
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.EventDetails
