@@ -8,9 +8,12 @@
     android:fitsSystemWindows="true"
     tools:context="edu.artic.welcome.WelcomeFragment">
 
-    <include
+    <edu.artic.view.ArticAppBarLayout
         android:id="@+id/appBarLayout"
-        layout="@layout/app_bar_layout"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:backgroundImage="@drawable/dashboard"
+        app:icon="@drawable/tours"/>
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/content"
