@@ -5,7 +5,7 @@
     <application>
         <activity
             android:name=".WelcomeActivity"
-            android:theme="@style/AppTheme.CustomToolbar.Welcome">
+            android:theme="@style/AppTheme.CustomToolbar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
