@@ -1,7 +1,6 @@
 package edu.artic.exhibitions
 
 import android.os.Bundle
-import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -11,7 +10,6 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.listenerSetHeight
-import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticExhibition
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -36,23 +34,13 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     private val exhibition by lazy { arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION) }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
-        }
-    }
-
     override fun onRegisterViewModel(viewModel: ExhibitionDetailViewModel) {
         viewModel.exhibition = exhibition
     }
 
     override fun setupBindings(viewModel: ExhibitionDetailViewModel) {
         viewModel.title
-                .subscribe {
-                    expandedTitle.text = it
-                    toolbarTitle.text = it
-                }
+                .subscribe { appBarLayout.setTitleText(it) }
                 .disposedBy(disposeBag)
 
         viewModel.imageUrl
@@ -63,8 +51,8 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                     Glide.with(this)
                             .load(it)
                             .apply(options)
-                            .listenerSetHeight(exhibitionImage)
-                            .into(exhibitionImage)
+                            .listenerSetHeight(appBarLayout.detailImage)
+                            .into(appBarLayout.detailImage)
                 }
                 .disposedBy(disposeBag)
 

@@ -21,11 +21,11 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
         if (attrs != null) {
             val a = context.theme.obtainStyledAttributes(
                     attrs,
-                    R.styleable.ArticAppBarLayout,
+                    R.styleable.ArticMainAppBarLayout,
                     0, 0
             )
-            setIcon(a.getResourceId(R.styleable.ArticAppBarLayout_icon, 0))
-            setBackgroundImage(a.getResourceId(R.styleable.ArticAppBarLayout_backgroundImage, 0))
+            setIcon(a.getResourceId(R.styleable.ArticMainAppBarLayout_icon, 0))
+            setBackgroundImage(a.getResourceId(R.styleable.ArticMainAppBarLayout_backgroundImage, 0))
         }
 
         // update our content when offset changes.

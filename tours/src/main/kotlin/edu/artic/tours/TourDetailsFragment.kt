@@ -13,7 +13,6 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fromHtml
-import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
@@ -39,11 +38,6 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
-        }
-
-
         recyclerView.apply {
             layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = TourDetailsStopAdapter()
@@ -66,17 +60,14 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .subscribe {
                     Glide.with(this)
                             .load(it)
-                            .into(tourImage)
+                            .into(appBarLayout.detailImage)
                     Glide.with(this)
                             .load(it)
                             .into(tourDetailIntroCell.image)
                 }.disposedBy(disposeBag)
 
         viewModel.titleText
-                .subscribe {
-                    expandedTitle.text = it
-                    toolbarTitle.text = it
-                }.disposedBy(disposeBag)
+                .subscribe { appBarLayout.setTitleText(it) }.disposedBy(disposeBag)
 
         viewModel.introductionTitleText
                 .bindToMain(tourDetailIntroCell.tourStopTitle.text())
