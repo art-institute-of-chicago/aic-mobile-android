@@ -7,11 +7,13 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.mapOptional
+import com.jakewharton.rxbinding2.support.v4.view.pageSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.audioui.getAudioServiceObservable
+import edu.artic.db.models.ArticTour
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.tours.R
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -43,6 +45,11 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
 
     private val adapter = TourCarouselAdapter()
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
+    private val tourObject: ArticTour by lazy { arguments!!.getParcelable<ArticTour>(ARG_TOUR_OBJECT) }
+
+    override fun onRegisterViewModel(viewModel: TourCarouselViewModel) {
+        viewModel.tourObject = tourObject
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -95,10 +102,34 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                 .bindTo(viewModel.currentTrack)
                 .disposedBy(disposeBag)
 
+        viewModel.currentPage
+                .distinctUntilChanged()
+                .subscribe { page ->
+                    tourCarousel.setCurrentItem(page, true)
+                }
+                .disposedBy(disposeBag)
+
+        tourCarousel.pageSelections()
+                .bindTo(viewModel.currentPage)
+                .disposedBy(disposeBag)
     }
+
+    companion object {
+        private val ARG_TOUR_OBJECT = "ARG_TOUR"
+
+        fun create(tourObject: ArticTour): TourCarouselFragment {
+            return TourCarouselFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ARG_TOUR_OBJECT, tourObject)
+                }
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         viewPagerIndicator.setViewPager(null)
     }
+
 }
