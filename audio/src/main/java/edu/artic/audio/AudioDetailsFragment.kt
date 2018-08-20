@@ -208,8 +208,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
  *
  * This is also responsible for creating the view seen at the top
  * of the list (i.e. the 'currently selected' language).
- *
- * TODO: combine the two internal methods, perhaps using different Themes
  */
 class LanguageAdapter<T : BaseTranslation>(context: Context, translations: List<T>) : ArrayAdapter<T>(
         context,
@@ -218,31 +216,35 @@ class LanguageAdapter<T : BaseTranslation>(context: Context, translations: List<
 ) {
     // This is a view for use in the dropdown...
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val derived = if (convertView == null) {
-            LayoutInflater.from(parent.context)
-                    .inflate(R.layout.view_language_box, parent, false)
-        } else {
-            convertView
-        } as TextView
+        return inflateAndBind(position, convertView, parent)
+    }
 
-        val item = getItem(position)
+    // ..and this is the one used to preview the current selection
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): TextView {
+        val derived = inflateAndBind(position, convertView, parent)
 
-        derived.text = item.userFriendlyLanguage(derived.context)
+        derived.setBackgroundResource(R.drawable.translation_selection)
+        derived.setTextColor(Color.WHITE)
 
         return derived
     }
 
-    // ..and this is the one used to preview the current selection
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+    /**
+     * Inflate and return a copy of `view_language_box.xml`.
+     *
+     * The inflated [TextView] will display the text of a [BaseTranslation] at the
+     * [provided index][position] within this adapter. Please refer to
+     * [BaseTranslation.userFriendlyLanguage] for the expected textual output.
+     *
+     * @see ArrayAdapter.getView
+     */
+    private fun inflateAndBind(position: Int, convertView: View?, parent: ViewGroup): TextView {
         val derived = if (convertView == null) {
             LayoutInflater.from(parent.context)
                     .inflate(R.layout.view_language_box, parent, false)
         } else {
             convertView
         } as TextView
-
-        derived.setBackgroundResource(R.drawable.translation_selection)
-        derived.setTextColor(Color.WHITE)
 
         val item = getItem(position)
 
