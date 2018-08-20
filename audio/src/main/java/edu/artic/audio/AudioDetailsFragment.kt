@@ -164,7 +164,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                                 if (position >= 0) {
                                     val translation = la.getItem(position)
                                     viewModel.setTranslationOverride(translation)
-                                    // TODO: Get this translation into the 'boundService'
+                                    boundService?.switchAudioTrack(translation)
                                 }
                             }
                         }
