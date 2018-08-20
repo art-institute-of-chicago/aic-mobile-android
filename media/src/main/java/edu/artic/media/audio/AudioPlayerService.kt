@@ -351,6 +351,19 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
         disposeBag.dispose()
     }
 
+    /**
+     * Pause current track, switch audio file, resume the new track at
+     * that same position.
+     *
+     * @see setArticObject
+     */
+    fun switchAudioTrack(alternative: AudioTranslation) {
+        articObject?.let {
+            pausePlayer()
+            playPlayer(it, alternative)
+        }
+    }
+
     fun pausePlayer() {
         audioControl.onNext(PlayBackAction.Pause())
     }
