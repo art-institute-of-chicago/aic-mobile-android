@@ -189,7 +189,7 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
                 is PlayBackAction.Play -> {
-                    setArticObject(playBackAction.audioFile)
+                    setArticObject(playBackAction.audioFile, playBackAction.translation)
                     player.playWhenReady = true
                 }
 
@@ -287,9 +287,9 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
         }
     }
 
-    fun setArticObject(_articObject: ArticObject, resetPosition: Boolean = false) {
+    fun setArticObject(_articObject: ArticObject, audio: AudioTranslation, resetPosition: Boolean = false) {
 
-        if (articObject != _articObject || player.playbackState == Player.STATE_IDLE) {
+        if (articObject != _articObject || preferredAudio != audio || player.playbackState == Player.STATE_IDLE) {
 
             /** Check if the current audio is being interrupted by other audio object.**/
             articObject?.let { articObject ->
@@ -299,6 +299,7 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
             }
             articObject = _articObject
             val audioFile = articObject?.audioFile
+
             audioFile?.let {
                 val fileUrl = audioFile.fileUrl
                 fileUrl?.let { url ->
