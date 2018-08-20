@@ -7,7 +7,6 @@ import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioTranslation
 import edu.artic.db.models.audioFile
@@ -35,7 +34,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
 
-    val currentTrack: Subject<Optional<ArticAudioFile>> = BehaviorSubject.createDefault(Optional(null))
+    val currentTrack: Subject<Optional<AudioTranslation>> = BehaviorSubject.createDefault(Optional(null))
     val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
 
     @Inject
@@ -94,7 +93,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
         audioPlayBackStatus
                 .filter { playBackState ->
-                    playBackState.articAudioFile == articObject?.audioFile
+                    playBackState.audio == audioTranslation
                 }.bindTo(playState)
                 .disposedBy(disposeBag)
 
@@ -123,10 +122,12 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
         playerControl
                 .filterFlatMap({ it is PlayerAction.Play }, { it as PlayerAction.Play })
                 .withLatestFrom(currentTrack, objectObservable) { playerAction, currentTrack, articObject ->
-                    val requestedObject = playerAction.requestedObject.audioFile
-                    (currentTrack.value != requestedObject) to articObject
+                    val requested = playerAction.translation
+                    val isNewTrack = currentTrack.value != requested
+
+                    return@withLatestFrom isNewTrack to articObject
                 }
-                .filter { (newTrack, _) -> newTrack }
+                .filter { (isNewTrack: Boolean, _) -> isNewTrack }
                 .subscribe { (_, articObject) ->
                     analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioMap, articObject.title)
                 }.disposedBy(disposeBag)

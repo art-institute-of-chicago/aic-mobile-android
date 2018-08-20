@@ -30,7 +30,6 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
-import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioTranslation
 import edu.artic.db.models.audioFile
@@ -138,11 +137,13 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
      * * [Playing]
      * * [Paused]
      * * [Stopped]
+     *
+     * To switch states, send a [PlayBackAction] to [audioControl].
      */
-    sealed class PlayBackState(val articAudioFile: ArticAudioFile) {
-        class Playing(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
-        class Paused(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
-        class Stopped(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
+    sealed class PlayBackState(val audio: AudioTranslation) {
+        class Playing(audio: AudioTranslation) : PlayBackState(audio)
+        class Paused(audio: AudioTranslation) : PlayBackState(audio)
+        class Stopped(audio: AudioTranslation) : PlayBackState(audio)
     }
 
     private val binder: Binder = AudioPlayerServiceBinder()
@@ -155,7 +156,7 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
 
     private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
     val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
-    val currentTrack: Subject<ArticAudioFile> = BehaviorSubject.create()
+    val currentTrack: Subject<AudioTranslation> = BehaviorSubject.create()
 
     val disposeBag = DisposeBag()
 
@@ -169,18 +170,18 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                val articAudioFile = articObject?.audioFile
+                val audio: AudioTranslation? = preferredAudio
 
-                articAudioFile?.let { audioFile ->
+                audio?.let { given ->
                     when {
-                        playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(audioFile))
+                        playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(given))
                         playbackState == Player.STATE_ENDED -> {
                             /*Play back completed*/
-                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, articAudioFile.title.orEmpty())
-                            audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, audio.title.orEmpty())
+                            audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
                         }
-                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
-                        else -> audioPlayBackStatus.onNext(PlayBackState.Paused(audioFile))
+                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
+                        else -> audioPlayBackStatus.onNext(PlayBackState.Paused(given))
                     }
                 }
             }
@@ -202,7 +203,7 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
                 }
 
                 is PlayBackAction.Stop -> {
-                    articObject?.audioFile?.let { audioFile ->
+                    preferredAudio?.let { audioFile ->
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                     }
                     player.stop()
@@ -298,17 +299,17 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
                 }
             }
             articObject = _articObject
-            val audioFile = articObject?.audioFile
+            preferredAudio = audio
 
-            audioFile?.let {
-                val fileUrl = audioFile.fileUrl
+            audio.let {
+                val fileUrl = audio.fileUrl
                 fileUrl?.let { url ->
                     val uri = Uri.parse(url)
                     val mediaSource = buildMediaSource(uri)
                     player.prepare(mediaSource, resetPosition, false)
                     player.seekTo(0)
                 }
-                currentTrack.onNext(audioFile)
+                currentTrack.onNext(audio)
             }
         }
     }
