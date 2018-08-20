@@ -32,6 +32,7 @@ import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.AudioTranslation
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.R
@@ -94,7 +95,7 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
          * @see [ExoPlayer.prepare]
          * @see [Player.setPlayWhenReady]
          */
-        class Play(val audioFile: ArticObject) : PlayBackAction()
+        class Play(val audioFile: ArticObject, val translation: AudioTranslation) : PlayBackAction()
 
         /**
          * Pause the current track.
@@ -146,8 +147,11 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
 
     private val binder: Binder = AudioPlayerServiceBinder()
     private lateinit var playerNotificationManager: PlayerNotificationManager
+
+
     var articObject: ArticObject? = null
         private set
+    var preferredAudio: AudioTranslation? = null
 
     private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
     val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
@@ -349,10 +353,17 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
         audioControl.onNext(PlayBackAction.Pause())
     }
 
-    fun playPlayer(audioFile: ArticObject?) {
-        audioFile?.let {
-            audioControl.onNext(PlayBackAction.Play(it))
+    fun playPlayer(given: ArticObject?) {
+        if (given != null) {
+            val audioFile = given.audioFile
+            if (audioFile != null) {
+                playPlayer(given, audioFile.preferredLanguage(languageSelector))
+            }
         }
+    }
+
+    fun playPlayer(audioFile: ArticObject, translation: AudioTranslation) {
+        audioControl.onNext(PlayBackAction.Play(audioFile, translation))
     }
 
     fun resumePlayer() {
@@ -360,7 +371,7 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
     }
 
     fun stopPlayer() {
-        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject?.audioFile?.title.orEmpty())
+        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, preferredAudio?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 }
