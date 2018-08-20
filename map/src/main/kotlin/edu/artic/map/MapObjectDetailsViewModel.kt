@@ -11,7 +11,9 @@ import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioTranslation
 import edu.artic.db.models.audioFile
+import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
@@ -35,6 +37,9 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
     val currentTrack: Subject<Optional<ArticAudioFile>> = BehaviorSubject.createDefault(Optional(null))
     val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
+
+    @Inject
+    lateinit var languageSelector: LanguageSelector
 
     /**
      * Use one of these to tell the [AudioPlayerService] to [start playing][Play]
@@ -71,9 +76,15 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
     var articObject: ArticObject? = null
         set(value) {
+            val isDifferent = (field != value)
+
             field = value
             value?.let {
                 objectObservable.onNext(it)
+            }
+
+            if (isDifferent) {
+                audioTranslation = value?.audioFile?.preferredLanguage(languageSelector)
             }
         }
 
