@@ -9,6 +9,7 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.AudioTranslation
 import edu.artic.db.models.audioFile
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModel
@@ -50,13 +51,16 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
          * Stop playing the current audio (if any) and start playing
          * [requestedObject]. If [requestedObject] has an associated
          * translation (i.e. because it was already registered
-         * with the [AudioPlayerService]), then use that translation.
+         * with the [AudioPlayerService]), please provide that
+         * translation.
          *
          * If it was not associated with a translation,
-         * [edu.artic.localization.LanguageSelector] will choose an
-         * appropriate value.
+         * [edu.artic.localization.LanguageSelector] can choose an
+         * appropriate value. Use-sites may wish to call
+         * [edu.artic.db.models.ArticAudioFile.preferredLanguage]
+         * to retrieve that value.
          */
-        class Play(val requestedObject: ArticObject) : PlayerAction()
+        class Play(val requestedObject: ArticObject, val translation: AudioTranslation) : PlayerAction()
 
         /**
          * Pause playback of the current audio track, if any.
@@ -72,6 +76,8 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
                 objectObservable.onNext(it)
             }
         }
+
+    var audioTranslation: AudioTranslation? = null
 
     init {
 
@@ -118,8 +124,10 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
 
     fun playCurrentObject() {
-        articObject?.let {
-            playerControl.onNext(PlayerAction.Play(it))
+        articObject?.let { source: ArticObject ->
+            audioTranslation?.let { translation ->
+                playerControl.onNext(PlayerAction.Play(source, translation))
+            }
         }
     }
 
