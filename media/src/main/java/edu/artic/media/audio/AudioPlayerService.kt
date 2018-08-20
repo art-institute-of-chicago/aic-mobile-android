@@ -146,6 +146,7 @@ class AudioPlayerService : DaggerService() {
     private val binder: Binder = AudioPlayerServiceBinder()
     private lateinit var playerNotificationManager: PlayerNotificationManager
     var articObject: ArticObject? = null
+        private set
 
     private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
     val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
