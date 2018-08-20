@@ -17,7 +17,6 @@ dependencies {
 
     implementation libs.glide
     implementation project(':base')
-    api project(':localization')
     implementation libs.constraint_layout
     implementation project(':ui')
     implementation project(':viewmodel')
