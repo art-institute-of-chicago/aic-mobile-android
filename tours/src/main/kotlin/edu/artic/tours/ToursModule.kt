@@ -3,11 +3,14 @@ package edu.artic.tours
 import android.arch.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.tours.carousel.TourCarouselFragment
 import edu.artic.tours.carousel.TourCarouselViewModel
+import edu.artic.tours.carousel.TourProgressManager
 import edu.artic.viewmodel.ViewModelKey
+import javax.inject.Singleton
 
 /**
  *@author Sameer Dhakal (Fuzz)
@@ -40,5 +43,15 @@ abstract class ToursModule {
     @IntoMap
     @ViewModelKey(TourCarouselViewModel::class)
     abstract fun tourCarouselViewModel(tourCarouselViewModel: TourCarouselViewModel): ViewModel
+
+    @Module
+    companion object {
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun tourProgressManager(): TourProgressManager = TourProgressManager()
+
+    }
 
 }

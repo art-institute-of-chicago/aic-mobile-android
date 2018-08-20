@@ -3,19 +3,20 @@ package edu.artic.map
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.models.ArticGallery
-import edu.artic.db.models.ArticMapAnnotation
-import edu.artic.db.models.ArticMapTextType
-import edu.artic.db.models.ArticObject
+import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.models.*
 import edu.artic.map.helpers.mapToMapItem
 import edu.artic.map.helpers.toLatLng
+import edu.artic.tours.carousel.TourProgressManager
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -34,12 +35,30 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
         private val mapAnnotationDao: ArticMapAnnotationDao,
         private val galleryDao: ArticGalleryDao,
-        private val objectDao: ArticObjectDao
+        private val objectDao: ArticObjectDao,
+        tourDao: ArticTourDao,
+        tourProgressManager: TourProgressManager
 ) : BaseViewModel() {
 
     val amenities: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val spacesAndLandmarks: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
+
+    val mapContext: Subject<MapContext> = BehaviorSubject.create()
+    val centerFullObjectMarker: Subject<String> = BehaviorSubject.create()
+
+    /**
+     * Class used to represent the context of map.
+     * Map view can be used with following different contexts
+     * <ul>
+     *     <li>General: Everything is displayed for selected floor </li>
+     *     <li>Tour   : Only the tour stops are displayed in the map.</li>
+     * </ul>
+     */
+    sealed class MapContext {
+        class General() : MapContext()
+        class Tour(val tour: ArticTour) : MapContext()
+    }
 
     /**
      * This stores all the map items, and changes at every zoom level and every floor.
@@ -80,11 +99,28 @@ class MapViewModel @Inject constructor(
         }
 
     init {
+        /**
+         * TODO:: once integrated to tour flow remove it.
+         * Maybe hold the last tour item in the tour commence manager in order to save last state.
+         */
+        tourDao.getAsyncFirstTour()
+                .toObservable()
+                .subscribe { tour ->
+                    tour?.let {
+                        mapContext.onNext(MapContext.Tour(tour))
+                        //mapContext.onNext(MapContext.General())
+                    }
+                }.disposedBy(disposeBag)
+
 
         // Each time the floor changes update the current amenities for that floor this is explore mode
         distinctFloor
-                .flatMap { floor ->
-                    mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).toObservable()
+                .withLatestFrom(mapContext) { floor, mapContext ->
+                    floor to mapContext
+                }.filter { floorToMapContext -> floorToMapContext.second is MapContext.General }
+                .flatMap { floorToMapContext ->
+                    val currentFloor = floorToMapContext.first
+                    mapAnnotationDao.getAmenitiesOnMapForFloor(currentFloor.toString()).toObservable()
                 }.map { amenitiesList -> amenitiesList.mapToMapItem() }
                 .bindTo(amenities)
                 .disposedBy(disposeBag)
@@ -108,10 +144,52 @@ class MapViewModel @Inject constructor(
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
 
-        setupZoomLevelOneBinds()
-        setupZoomLevelTwoBinds()
-        setupZoomLevelThreeBinds()
+        mapContext.filter { it is MapContext.General }
+                .subscribe {
+                    setupZoomLevelOneBinds()
+                    setupZoomLevelTwoBinds()
+                    setupZoomLevelThreeBinds()
+                }.disposedBy(disposeBag)
 
+
+        mapContext.filterFlatMap({ it is MapContext.Tour }, { it as MapContext.Tour })
+                .map { mapContext ->
+                    mapContext.tour.tourStops.mapNotNull { it.objectId } to mapContext.tour
+                }.flatMap { objectIdsWithFloor ->
+                    val ids = objectIdsWithFloor.first
+                    val tour = objectIdsWithFloor.second
+                    objectDao.getObjectsByIdList(ids).toObservable().map {
+                        convertToMapItem(it, tour.floorAsInt)
+                    }
+                }
+                .bindTo(whatToDisplayOnMap)
+                .disposedBy(disposeBag)
+
+        /**
+         * Sync the selected tour stop with the carousel.
+         */
+        selectedArticObject
+                .distinctUntilChanged()
+                .map { it.nid }
+                .bindTo(tourProgressManager.selectedStop)
+                .disposedBy(disposeBag)
+
+        /**
+         * Sync the carousel tour stop with map tour stop.
+         */
+        tourProgressManager.selectedStop
+                .distinctUntilChanged()
+                .bindTo(centerFullObjectMarker)
+                .disposedBy(disposeBag)
+
+    }
+
+    private fun convertToMapItem(it: List<ArticObject>, floor: Int): List<MapItem<ArticObject>> {
+        val mapList = mutableListOf<MapItem<ArticObject>>()
+        it.forEach { articObject ->
+            mapList.add(MapItem.Object(articObject, floor))
+        }
+        return mapList
     }
 
     /**
@@ -176,9 +254,9 @@ class MapViewModel @Inject constructor(
         ) { galleryList, objectList ->
             mutableListOf<MapItem<*>>().apply {
                 addAll(
-                    galleryList.map { gallery ->
-                        MapItem.Gallery(gallery, gallery.floorAsInt)
-                    }
+                        galleryList.map { gallery ->
+                            MapItem.Gallery(gallery, gallery.floorAsInt)
+                        }
                 )
                 addAll(
                         objectList

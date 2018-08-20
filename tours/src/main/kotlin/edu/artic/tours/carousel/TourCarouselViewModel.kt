@@ -5,7 +5,6 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
@@ -25,8 +24,8 @@ import javax.inject.Inject
  * @author Sameer Dhakal (Fuzz)
  */
 class TourCarouselViewModel @Inject constructor(private val analyticsTracker: AnalyticsTracker,
-                                                private val articTourDao: ArticTourDao,
-                                                private val objectDao: ArticObjectDao) : BaseViewModel() {
+                                                private val objectDao: ArticObjectDao,
+                                                tourProgressManager: TourProgressManager) : BaseViewModel() {
 
 
     val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
@@ -35,13 +34,19 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
     val currentTrack: Subject<Optional<ArticAudioFile>> = BehaviorSubject.createDefault(Optional(null))
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val playerControl: Subject<TourCarousalStopCellViewModel.PlayerAction> = PublishSubject.create()
+    val currentPage: Subject<Int> = BehaviorSubject.createDefault(0)
+
+    private val selectedStop: Subject<ArticObject> = BehaviorSubject.create()
+
+    var tourObject: ArticTour? = null
+        set(value) {
+            field = value
+            value?.let {
+                tourObservable.onNext(it)
+            }
+        }
 
     init {
-
-        articTourDao.getAsyncFirstTour()
-                .bindTo(tourObservable)
-                .disposedBy(disposeBag)
-
         tourObservable.map { it.title }
                 .bindTo(tourTitle)
                 .disposedBy(disposeBag)
@@ -71,6 +76,30 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
                     }
                     return@map list
                 }.bindTo(stops)
+                .disposedBy(disposeBag)
+
+        /**
+         * Get the object id of the tour and update the currentPage.
+         */
+        tourProgressManager
+                .selectedStop
+                .distinctUntilChanged()
+                .withLatestFrom(tourObservable.map { it.tourStops }) { objectId, tourStops ->
+                    tourStops.map { it.objectId }.indexOf(objectId)
+                }
+                .filter { it > -1 }
+                .bindTo(currentPage)
+                .disposedBy(disposeBag)
+
+        /**
+         * Get the object id from the tour stop and send it to TourProgressManager.
+         */
+        currentPage
+                .distinctUntilChanged()
+                .withLatestFrom(tourObservable.map { it.tourStops }) { page, tourStops ->
+                    tourStops[page].objectId.orEmpty()
+                }
+                .bindTo(tourProgressManager.selectedStop)
                 .disposedBy(disposeBag)
 
     }

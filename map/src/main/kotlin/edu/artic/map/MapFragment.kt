@@ -8,7 +8,9 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import com.fuzz.rx.filterValue
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -27,10 +29,13 @@ import edu.artic.map.util.ArticObjectDotMarkerGenerator
 import edu.artic.map.util.ArticObjectMarkerGenerator
 import edu.artic.map.util.DepartmentMarkerGenerator
 import edu.artic.map.util.GalleryNumberMarkerGenerator
+import edu.artic.tours.carousel.TourCarouselFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
@@ -79,6 +84,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var baseGroundOverlay: GroundOverlay
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
+    private var mapClicks: Subject<Boolean> = PublishSubject.create()
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
@@ -101,74 +107,75 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             map.setMapStyle(
                     //Leaving this here for now; we will pull from raw resource folder or assets
                     // folder at a later time. Or possibly just turn it into a helper constant
-                    MapStyleOptions("[\n" +
-                            "  {\n" +
-                            "    \"elementType\": \"labels\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"administrative\",\n" +
-                            "    \"elementType\": \"geometry\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"administrative.land_parcel\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"administrative.neighborhood\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"poi\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"road\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"road\",\n" +
-                            "    \"elementType\": \"labels.icon\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"transit\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  }\n" +
-                            "]")
+                    MapStyleOptions("""[
+                                          {
+                                            "elementType": "labels",
+                                            "stylers": [
+                                              {
+                                                "visibility": "off"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "featureType": "administrative",
+                                            "elementType": "geometry",
+                                            "stylers": [
+                                              {
+                                                "visibility": "off"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "featureType": "administrative.land_parcel",
+                                            "stylers": [
+                                              {
+                                                "visibility": "off"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "featureType": "administrative.neighborhood",
+                                            "stylers": [
+                                              {
+                                                "visibility": "off"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "featureType": "poi",
+                                            "stylers": [
+                                              {
+                                                "visibility": "off"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "featureType": "road",
+                                            "stylers": [
+                                              {
+                                                "visibility": "off"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "featureType": "road",
+                                            "elementType": "labels.icon",
+                                            "stylers": [
+                                              {
+                                                "visibility": "off"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "featureType": "transit",
+                                            "stylers": [
+                                              {
+                                                "visibility": "off"
+                                              }
+                                            ]
+                                          }
+                                        ]"""
+                    )
             )
             map.setMinZoomPreference(17f)
             map.setMaxZoomPreference(22f)
@@ -229,15 +236,44 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             .build()
             ))
 
+
+            /**
+             * Funneling map click event into the mapClicks Observer so that it could be combined
+             * with other Observable stream.
+             */
             map.setOnMapClickListener {
-                val objectDetailsFragment = requireActivity().supportFragmentManager?.findFragmentByTag(OBJECT_DETAILS)
-                objectDetailsFragment?.let { fragment ->
-                    requireActivity().supportFragmentManager
-                            ?.beginTransaction()
-                            ?.remove(fragment)
-                            ?.commit()
-                }
+                mapClicks.onNext(true)
             }
+
+
+            /**
+             * Remove the map object details fragment when user taps outside of object.
+             */
+            mapClicks
+                    .defaultThrottle()
+                    .withLatestFrom(viewModel.mapContext) { _, mapContext ->
+                        mapContext
+                    }.subscribe { mapContext ->
+                        when (mapContext) {
+                            is MapViewModel.MapContext.General -> {
+                                val supportFragmentManager = requireActivity().supportFragmentManager
+                                supportFragmentManager
+                                        .findFragmentByTag(OBJECT_DETAILS)
+                                        ?.let {
+                                            supportFragmentManager
+                                                    ?.beginTransaction()
+                                                    ?.remove(it)
+                                                    ?.commit()
+                                        }
+                            }
+
+                            is MapViewModel.MapContext.Tour -> {
+                                /*do nothing*/
+                            }
+                        }
+
+                    }.disposedBy(disposeBag)
+
 
             map.setOnMarkerClickListener { marker ->
                 when (marker.tag) {
@@ -252,7 +288,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     is ArticObject -> {
                         val mapObject = marker.tag as ArticObject
                         viewModel.articObjectSelected(mapObject)
-
+                        map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
                     }
                     else -> {
                         map.animateCamera(
@@ -285,7 +321,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         val baseOverlayFilename = "AIC_MapBG.jpg"
 
         return if (host.isResourceConstrained()) {
-            val baseOverlayBitmap : Bitmap = host.assets.loadBitmap(baseOverlayFilename, 4)
+            val baseOverlayBitmap: Bitmap = host.assets.loadBitmap(baseOverlayFilename, 4)
 
             BitmapDescriptorFactory.fromBitmap(baseOverlayBitmap)
         } else {
@@ -309,6 +345,17 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         floorThree.clicks()
                 .subscribe { viewModel.floorChangedTo(3) }
                 .disposedBy(disposeBag)
+
+        viewModel.mapContext
+                .filterFlatMap({ it is MapViewModel.MapContext.Tour }, { it as MapViewModel.MapContext.Tour })
+                .subscribe { mapContext ->
+                    val tour = mapContext.tour
+                    val fragmentManager = requireActivity().supportFragmentManager
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.infocontainer, TourCarouselFragment.create(tour), OBJECT_DETAILS)
+                            .commit()
+                }.disposedBy(disposeBag)
+
 
         viewModel.cameraMovementRequested
                 .filterValue()
@@ -484,6 +531,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                             }
                             is MapItem.Object -> {
+                                /**
+                                 * Here it needs context too.
+                                 * Add to MapItem or etc.
+                                 */
                                 val articObject = mapItem.item
                                 loadObject(articObject, mapItem.floor)
                             }
@@ -494,19 +545,41 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }.disposedBy(disposeBag)
 
         viewModel.selectedArticObject
-                .subscribe { selectedArticObject ->
-                    val isMapObjectVisible = container.childCount != 0
-                    val fragmentManager = requireActivity().supportFragmentManager
-                    if (!isMapObjectVisible) {
-                        val fragment = MapObjectDetailsFragment.create(selectedArticObject)
-                        fragmentManager.beginTransaction()
-                                .add(R.id.container, fragment, OBJECT_DETAILS)
-                                .commit()
-                    } else {
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.container, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
-                                .commit()
+                .withLatestFrom(viewModel.mapContext) { articObject, mapContext ->
+                    mapContext to articObject
+                }.subscribe { contextWithObject ->
+                    val selectedArticObject = contextWithObject.second
+                    val mapContext = contextWithObject.first
+
+                    when (mapContext) {
+                        is MapViewModel.MapContext.General -> {
+                            /**
+                             * Display the selected object details.
+                             */
+                            val fragmentManager = requireActivity().supportFragmentManager
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.infocontainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
+                                    .commit()
+                        }
+                        is MapViewModel.MapContext.Tour -> {
+                            /* do nothing */
+                        }
                     }
+                }.disposedBy(disposeBag)
+
+        /**
+         * Center the full object marker in the map.
+         */
+        viewModel
+                .centerFullObjectMarker
+                .subscribe { nid ->
+                    fullObjectMarkers.firstOrNull { marker ->
+                        val tag = marker.tag
+                        tag is ArticObject && tag.nid == nid
+                    }?.let { marker ->
+                        map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
+                    }
+
                 }.disposedBy(disposeBag)
     }
 
@@ -598,7 +671,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .load(articObject.thumbnailFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        if (viewModel.currentZoomLevel === MapZoomLevel.Three && viewModel.currentFloor == floor) {
+                        if (viewModel.currentFloor == floor) {
                             val fullMaker = map.addMarker(
                                     MarkerOptions()
                                             .position(articObject.toLatLng())
