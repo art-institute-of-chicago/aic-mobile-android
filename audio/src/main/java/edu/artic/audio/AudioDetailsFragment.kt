@@ -172,15 +172,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                     }
                 })
                 .disposedBy(disposeBag)
-        viewModel.chosenTranslation
-                .map {
-                    it.userFriendlyLanguage(selectorView.context)
-                }.bindToMain(Consumer<CharSequence> { newText ->
-                    newText?.let {
-                        selectorView.prompt = newText
-                    }
-                })
-                .disposedBy(disposeBag)
     }
 
 
