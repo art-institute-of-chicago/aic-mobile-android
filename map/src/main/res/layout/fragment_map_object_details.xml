@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
     android:background="@color/mapObjectWindowBlue"
     android:clickable="true"
     android:focusable="true">
@@ -85,7 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="start"
-        tools:ignore="MissingConstraints"
-        app:constraint_referenced_ids="playCurrent,pauseCurrent" />
+        app:constraint_referenced_ids="playCurrent,pauseCurrent"
+        tools:ignore="MissingConstraints" />
 
 </android.support.constraint.ConstraintLayout>

@@ -49,19 +49,20 @@ data class ArticTour(
             @Json(name = "start_date") val startDate: String?,
             @Json(name = "end_date") val endDate: String?
     )
+
     @JsonClass(generateAdapter = true)
     @Parcelize
     data class TourStop(
             @Json(name = "object") val objectId: String?,
-            @Json(name = "audio_id" ) val audioId: String?,
-            @Json(name = "audio_bumper" ) val audioBumper: String?,
+            @Json(name = "audio_id") val audioId: String?,
+            @Json(name = "audio_bumper") val audioBumper: String?,
             @Json(name = "sort") val order: Int
     ) : Parcelable
 
     @JsonClass(generateAdapter = true)
     @Parcelize
     data class TourCategory(
-            val id : String?,
+            val id: String?,
             val title: String?
     ) : Parcelable
 
@@ -80,4 +81,12 @@ data class ArticTour(
             return language
         }
     }
+
+
+    /**
+     * Returns [floor], parsed to an integer. We default to [Int.MIN_VALUE] as 0 is a valid floor.
+     */
+    val floorAsInt: Int
+        get() = floor?.toIntOrNull() ?: Int.MIN_VALUE
+
 }
