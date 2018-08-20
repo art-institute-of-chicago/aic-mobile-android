@@ -37,16 +37,17 @@
         tools:layout_width="40dp" />
 
     <TextView
+        android:id="@+id/order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/brownishOrange"
+        android:elevation="3dp"
         android:gravity="center"
+        android:text="1"
         android:textColor="@color/white"
-        android:visibility="gone"
+        android:textSize="@dimen/textFifteen"
         app:layout_constraintBottom_toBottomOf="@id/circularImage"
         app:layout_constraintEnd_toEndOf="@id/circularImage"
         app:layout_constraintStart_toStartOf="@id/circularImage"
-        app:layout_constraintTop_toTopOf="@id/circularImage"
-        tools:text="1" />
+        app:layout_constraintTop_toTopOf="@id/circularImage" />
 
 </android.support.constraint.ConstraintLayout>
