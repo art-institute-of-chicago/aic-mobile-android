@@ -33,6 +33,7 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.audioFile
+import edu.artic.localization.LanguageSelector
 import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
@@ -63,7 +64,7 @@ import javax.inject.Inject
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class AudioPlayerService : DaggerService() {
+class AudioPlayerService @Inject constructor() : DaggerService() {
 
     companion object {
         val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
@@ -156,6 +157,8 @@ class AudioPlayerService : DaggerService() {
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
+    @Inject
+    lateinit var languageSelector: LanguageSelector
 
     override fun onCreate() {
         super.onCreate()
