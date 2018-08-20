@@ -18,6 +18,8 @@ import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 /**
+ * Details about a single [ArticObject], usually with a linked audio track.
+ *
  * @author Sameer Dhakal (Fuzz)
  */
 class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker) : BaseViewModel() {
@@ -33,8 +35,32 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
     val currentTrack: Subject<Optional<ArticAudioFile>> = BehaviorSubject.createDefault(Optional(null))
     val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
 
+    /**
+     * Use one of these to tell the [AudioPlayerService] to [start playing][Play]
+     * a new track or to [pause playback][Pause] of the current audio.
+     *
+     * This works at a different level from
+     * [PlayBackAction][edu.artic.media.audio.AudioPlayerService.PlayBackAction] -
+     * where that class allows for selection of arbitrary translations and
+     * has low-level functionality like seek or stop, this class can only give two
+     * very specific commands. See docs on [Play] and [Pause] for details.
+     */
     sealed class PlayerAction {
+        /**
+         * Stop playing the current audio (if any) and start playing
+         * [requestedObject]. If [requestedObject] has an associated
+         * translation (i.e. because it was already registered
+         * with the [AudioPlayerService]), then use that translation.
+         *
+         * If it was not associated with a translation,
+         * [edu.artic.localization.LanguageSelector] will choose an
+         * appropriate value.
+         */
         class Play(val requestedObject: ArticObject) : PlayerAction()
+
+        /**
+         * Pause playback of the current audio track, if any.
+         */
         class Pause : PlayerAction()
     }
 
