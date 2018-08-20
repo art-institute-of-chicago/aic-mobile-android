@@ -495,8 +495,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
 
         viewModel.whatToDisplayOnMap
+                .withLatestFrom(viewModel.mapContext) { whatToDisplayOnMap, mapContext ->
+                    mapContext to whatToDisplayOnMap
+                }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { itemList ->
+                .subscribe { mapContextWithitemList ->
+                    val mapContext = mapContextWithitemList.first
+                    val itemList = mapContextWithitemList.second
+
                     departmentMarkers.forEach { marker ->
                         marker.remove()
                     }
@@ -536,7 +542,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                  * Add to MapItem or etc.
                                  */
                                 val articObject = mapItem.item
-                                loadObject(articObject, mapItem.floor)
+                                loadObject(articObject, mapItem.floor, mapContext)
                             }
 
                         }
@@ -665,18 +671,34 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 })
     }
 
-    private fun loadObject(articObject: ArticObject, floor: Int) {
+    private fun loadObject(articObject: ArticObject, floor: Int, mapContext: MapViewModel.MapContext) {
         Glide.with(this)
                 .asBitmap()
                 .load(articObject.thumbnailFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (viewModel.currentFloor == floor) {
+                            var order: String? = null
+
+                            /**
+                             * If map context is Tour, get the order number of the stop.
+                             */
+                            if (mapContext is MapViewModel.MapContext.Tour) {
+                                val index = mapContext.tour
+                                        .tourStops
+                                        .map { it.objectId }
+                                        .indexOf(articObject.nid)
+
+                                if (index > -1) {
+                                    order = (index + 1).toString()
+                                }
+                            }
+
                             val fullMaker = map.addMarker(
                                     MarkerOptions()
                                             .position(articObject.toLatLng())
                                             .icon(BitmapDescriptorFactory.fromBitmap(
-                                                    objectMarkerGenerator.makeIcon(resource)
+                                                    objectMarkerGenerator.makeIcon(resource, order)
                                             ))
                                             .zIndex(2f)
                                             .visible(true)
