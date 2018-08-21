@@ -62,15 +62,21 @@
 
     <Spinner
         android:id="@+id/exo_translation_selector"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginStandard"
         android:layout_marginEnd="@dimen/marginStandard"
         android:dropDownSelector="@drawable/ic_arrow"
         android:spinnerMode="dropdown"
         android:textColor="@android:color/white"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintStart_toEndOf="@id/exo_duration"
+        app:layout_constraintBottom_toTopOf="@id/exo_progress"
+        app:layout_constraintHorizontal_bias="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        tools:background="@drawable/exo_scrubber"
         />
 
 
