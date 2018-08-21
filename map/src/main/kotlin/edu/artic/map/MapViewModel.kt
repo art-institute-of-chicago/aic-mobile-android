@@ -17,6 +17,7 @@ import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -151,8 +152,11 @@ class MapViewModel @Inject constructor(
                     setupZoomLevelThreeBinds()
                 }.disposedBy(disposeBag)
 
-
-        mapContext.filterFlatMap({ it is MapContext.Tour }, { it as MapContext.Tour })
+        /**
+         * Emits list of tour stops without tour intro.
+         */
+        val tourObjects: Observable<List<MapItem<*>>> = mapContext
+                .filterFlatMap({ it is MapContext.Tour }, { it as MapContext.Tour })
                 .map { mapContext ->
                     mapContext.tour.tourStops.mapNotNull { it.objectId } to mapContext.tour
                 }.flatMap { objectIdsWithFloor ->
@@ -161,9 +165,21 @@ class MapViewModel @Inject constructor(
                     objectDao.getObjectsByIdList(ids).toObservable().map {
                         convertToMapItem(it, tour.floorAsInt)
                     }
-                    /**
-                     * TODO how to display tour intro as an artic object ?
-                     */
+                }
+
+        /**
+         * Combines tour intro and tour stops in order.
+         */
+        mapContext.filterFlatMap({ it is MapContext.Tour }, { it as MapContext.Tour })
+                .map { context ->
+                    /** Add tour intro**/
+                    listOf<MapItem<*>>(MapItem.TourIntro(context.tour, context.tour.floorAsInt))
+                }.zipWith(tourObjects) { introList, stopList ->
+                    /** Add tour stops**/
+                    mutableListOf<MapItem<*>>().apply {
+                        addAll(introList)
+                        addAll(stopList)
+                    }
                 }
                 .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
@@ -187,7 +203,7 @@ class MapViewModel @Inject constructor(
 
     }
 
-    private fun convertToMapItem(it: List<ArticObject>, floor: Int): List<MapItem<ArticObject>> {
+    private fun convertToMapItem(it: List<ArticObject>, floor: Int): MutableList<MapItem<ArticObject>> {
         val mapList = mutableListOf<MapItem<ArticObject>>()
         it.forEach { articObject ->
             mapList.add(MapItem.Object(articObject, floor))
