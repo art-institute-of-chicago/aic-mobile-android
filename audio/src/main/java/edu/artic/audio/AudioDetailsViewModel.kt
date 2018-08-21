@@ -24,7 +24,7 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
     val title: Subject<String> = BehaviorSubject.create()
     val image: Subject<String> = BehaviorSubject.create()
     val availableTranslations: Subject<List<AudioTranslation>> = BehaviorSubject.create()
-    val chosenTranslation: BehaviorSubject<AudioTranslation> = BehaviorSubject.create()
+    val chosenTranslation: Subject<AudioTranslation> = BehaviorSubject.create()
     val transcript: Subject<String> = BehaviorSubject.create()
     val credits: Subject<String> = BehaviorSubject.create()
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
