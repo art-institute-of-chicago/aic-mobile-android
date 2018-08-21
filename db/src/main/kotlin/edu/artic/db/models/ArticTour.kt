@@ -90,3 +90,7 @@ data class ArticTour(
         get() = floor?.toIntOrNull() ?: Int.MIN_VALUE
 
 }
+
+fun ArticTour.getIntroStop() : ArticTour.TourStop {
+    return ArticTour.TourStop("INTRO", this.tourAudio, null, -1)
+}
