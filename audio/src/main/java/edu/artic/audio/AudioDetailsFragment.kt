@@ -208,7 +208,6 @@ class LanguageAdapter<T : BaseTranslation>(context: Context, translations: List<
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): TextView {
         val derived = inflateAndBind(position, convertView, parent)
 
-        derived.setBackgroundResource(R.drawable.translation_selection)
         derived.setTextColor(Color.WHITE)
 
         return derived
