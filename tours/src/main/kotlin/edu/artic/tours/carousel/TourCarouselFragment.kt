@@ -12,9 +12,9 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.audioui.getAudioServiceObservable
 import edu.artic.db.models.ArticTour
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.tours.R
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
