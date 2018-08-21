@@ -30,7 +30,9 @@ import edu.artic.localization.BaseTranslation
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
-import io.reactivex.functions.Consumer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.withLatestFrom
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_audio_details.*
 import kotlin.reflect.KClass
@@ -147,24 +149,28 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
 
     private fun bindTranslationSelector(viewModel: AudioDetailsViewModel) {
-        // TODO: Consider replacing 'Spinner' with a more capable class; possibly one from a 3-party library
         val selectorView: Spinner = exo_translation_selector
         viewModel.availableTranslations
                 .map {
                     LanguageAdapter(selectorView.context, it)
-                }.bindToMain(Consumer<LanguageAdapter<AudioTranslation>> { la: LanguageAdapter<AudioTranslation> ->
+                }.withLatestFrom(viewModel.chosenTranslation) {
+                    adapter, which -> adapter to which
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    (adapter, which) ->
                     selectorView.apply {
-                        this.adapter = la
+                        this.adapter = adapter
                         this.itemSelections().subscribe { position ->
                             if (position >= 0) {
-                                val translation = la.getItem(position)
+                                val translation = adapter.getItem(position)
                                 viewModel.setTranslationOverride(translation)
                                 boundService?.switchAudioTrack(translation)
                             }
                         }.disposedBy(disposeBag)
-                        this.setSelection(la.getPosition(viewModel.chosenTranslation.value))
+                        this.setSelection(adapter.getPosition(which))
                     }
-                })
+                }
                 .disposedBy(disposeBag)
 
        LanguageSelectorViewBackground(selectorView)
@@ -198,7 +204,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
  * This is also responsible for creating the view seen at the top
  * of the list (i.e. the 'currently selected' language).
  */
-class LanguageAdapter<T : BaseTranslation>(context: Context, translations: List<T>) : ArrayAdapter<T>(
+class LanguageAdapter(context: Context, translations: List<AudioTranslation>) : ArrayAdapter<AudioTranslation>(
         context,
         R.layout.view_language_box,
         translations
