@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import edu.artic.localization.BaseTranslation
+import edu.artic.localization.SpecifiesLanguage
 import kotlinx.android.parcel.Parcelize
 
 @JsonClass(generateAdapter = true)
@@ -75,7 +75,7 @@ data class ArticTour(
             @Json(name = "intro") val intro: String?,
             @Json(name = "intro_html") val intro_html: String?,
             @Json(name = "tour_duration") val tour_duration: String?
-    ) : Parcelable, BaseTranslation {
+    ) : Parcelable, SpecifiesLanguage {
         override fun underlyingLanguage(): String? {
             return language
         }

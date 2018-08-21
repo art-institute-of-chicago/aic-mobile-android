@@ -5,14 +5,15 @@ import android.content.res.Configuration
 import java.util.*
 
 /**
- * Common interface for DAO models which can be treated like translations of some sort of media.
+ * Common interface for DAO models which can be treated like translations of
+ * some sort of media.
  *
  * This must be an `interface` and not a proper superclass due
  * to [limitations in Moshi][com.squareup.moshi.JsonClass].
  *
  * @author Philip Cohn-Cort (Fuzz)
  */
-interface BaseTranslation {
+interface SpecifiesLanguage {
 
     fun underlyingLanguage() : String?
 

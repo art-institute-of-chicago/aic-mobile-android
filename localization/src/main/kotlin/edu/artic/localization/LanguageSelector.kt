@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference
  *
  * Use this instead of going directly to [the default Locale][java.util.Locale.getDefault].
  *
- * @see BaseTranslation
+ * @see SpecifiesLanguage
  */
 class LanguageSelector(private val prefs: LocalizationPreferences) {
 
@@ -35,7 +35,7 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
      * languages that have been normalized through [Locale.forLanguageTag]. We
      * cannot necessarily trust the original Strings returned by the API.
      */
-    fun <T : BaseTranslation> selectFrom(languages: List<T>): T {
+    fun <T : SpecifiesLanguage> selectFrom(languages: List<T>): T {
         val appLocale: Locale = appLocaleRef.get()
 
         // TODO: Investigate possibility of replacing the list with a `LocaleList`
