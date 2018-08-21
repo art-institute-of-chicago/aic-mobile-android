@@ -73,3 +73,13 @@ fun Context.isResourceConstrained() : Boolean {
 
     return retVal
 }
+
+
+fun Activity.getStatusBarHeight(): Int {
+    var statusBarHeight = 0
+    val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+    if (resourceId > 0) {
+        statusBarHeight = resources.getDimensionPixelSize(resourceId)
+    }
+    return statusBarHeight
+}

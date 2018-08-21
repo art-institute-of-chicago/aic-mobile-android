@@ -18,6 +18,8 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.fileAsString
+import edu.artic.base.utils.getStatusBarHeight
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
 import edu.artic.db.models.*
@@ -104,81 +106,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             map.isBuildingsEnabled = false
             map.isIndoorEnabled = false
             map.isTrafficEnabled = false
-            map.setMapStyle(
-                    //Leaving this here for now; we will pull from raw resource folder or assets
-                    // folder at a later time. Or possibly just turn it into a helper constant
-                    MapStyleOptions("""[
-                                          {
-                                            "elementType": "labels",
-                                            "stylers": [
-                                              {
-                                                "visibility": "off"
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "featureType": "administrative",
-                                            "elementType": "geometry",
-                                            "stylers": [
-                                              {
-                                                "visibility": "off"
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "featureType": "administrative.land_parcel",
-                                            "stylers": [
-                                              {
-                                                "visibility": "off"
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "featureType": "administrative.neighborhood",
-                                            "stylers": [
-                                              {
-                                                "visibility": "off"
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "featureType": "poi",
-                                            "stylers": [
-                                              {
-                                                "visibility": "off"
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "featureType": "road",
-                                            "stylers": [
-                                              {
-                                                "visibility": "off"
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "featureType": "road",
-                                            "elementType": "labels.icon",
-                                            "stylers": [
-                                              {
-                                                "visibility": "off"
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "featureType": "transit",
-                                            "stylers": [
-                                              {
-                                                "visibility": "off"
-                                              }
-                                            ]
-                                          }
-                                        ]"""
-                    )
-            )
+            map.setMapStyle(MapStyleOptions(requireActivity().assets.fileAsString(filename = "google_map_config.json")))
             map.setMinZoomPreference(17f)
             map.setMaxZoomPreference(22f)
+            map.setPadding(0, requireActivity().getStatusBarHeight(), 0, 0)
             /**
              * We are setting the bounds here as they are roughly the bounds of the museum,
              * locks us into just that area
