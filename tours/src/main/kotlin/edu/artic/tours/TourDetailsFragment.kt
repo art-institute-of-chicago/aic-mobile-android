@@ -106,6 +106,19 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     }
 
+    override fun setupNavigationBindings(viewModel: TourDetailsViewModel) {
+        viewModel.navigateTo
+                .subscribe {
+                    /**
+                     * navigate to map using args
+                     */
+//                    navController.navigate(
+//                            R.id.goToEventDetailsAction,
+//                            EventDetailFragment.argsBundle(endpoint.event)
+//                    )
+                }.disposedBy(disposeBag)
+    }
+
     companion object {
         private val ARG_TOUR = "${TourDetailsFragment::class.java.simpleName}:TOUR"
 

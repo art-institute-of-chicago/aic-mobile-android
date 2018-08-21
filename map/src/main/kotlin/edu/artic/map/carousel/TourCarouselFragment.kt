@@ -1,4 +1,4 @@
-package edu.artic.tours.carousel
+package edu.artic.map.carousel
 
 import android.os.Bundle
 import android.view.View
@@ -13,9 +13,9 @@ import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticTour
+import edu.artic.map.R
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
-import edu.artic.tours.R
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.withLatestFrom
