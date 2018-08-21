@@ -19,8 +19,9 @@ import java.nio.charset.Charset
  *
  * @author Sameer Dhakal (Fuzz)
  */
-fun AssetManager.fileAsString(subdirectory: String, filename: String): String {
-    return open("$subdirectory/$filename").use {
+fun AssetManager.fileAsString(subdirectory: String? = null, filename: String): String {
+    val filePath = subdirectory?.let { "$it/$filename" } ?: filename
+    return open(filePath).use {
         it.readBytes().toString(Charset.defaultCharset())
     }
 }
