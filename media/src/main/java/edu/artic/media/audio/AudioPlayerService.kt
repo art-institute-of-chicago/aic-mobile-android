@@ -354,12 +354,20 @@ class AudioPlayerService : DaggerService() {
      * Pause current track, switch audio file, resume the new track at
      * that same position.
      *
+     * If nothing is [currently playing][audioPlayBackStatus], this skips
+     * the 'pause' and 'resume' operations.
+     *
      * @see setArticObject
      */
     fun switchAudioTrack(alternative: AudioFileModel) {
         articObject?.let {
-            pausePlayer()
-            playPlayer(it, alternative)
+            val playBackState = (audioPlayBackStatus as BehaviorSubject).value
+            if (playBackState is Playing) {
+                pausePlayer()
+                playPlayer(it, alternative)
+            } else {
+                currentTrack.onNext(alternative)
+            }
         }
     }
 
