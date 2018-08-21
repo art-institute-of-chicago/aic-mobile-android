@@ -24,7 +24,7 @@ import javax.inject.Inject
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker) : BaseViewModel() {
+class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker, val languageSelector: LanguageSelector) : BaseViewModel() {
 
     val title: Subject<String> = BehaviorSubject.create()
     val image: Subject<String> = BehaviorSubject.create()
@@ -37,8 +37,6 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
     val currentTrack: Subject<Optional<AudioTranslation>> = BehaviorSubject.createDefault(Optional(null))
     val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
 
-    @Inject
-    lateinit var languageSelector: LanguageSelector
 
     /**
      * Use one of these to tell the [AudioPlayerService] to [start playing][Play]

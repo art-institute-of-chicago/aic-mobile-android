@@ -64,7 +64,7 @@ import javax.inject.Inject
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class AudioPlayerService @Inject constructor() : DaggerService() {
+class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTracker, val languageSelector: LanguageSelector) : DaggerService() {
 
     companion object {
         val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
@@ -160,10 +160,6 @@ class AudioPlayerService @Inject constructor() : DaggerService() {
 
     val disposeBag = DisposeBag()
 
-    @Inject
-    lateinit var analyticsTracker: AnalyticsTracker
-    @Inject
-    lateinit var languageSelector: LanguageSelector
 
     override fun onCreate() {
         super.onCreate()
