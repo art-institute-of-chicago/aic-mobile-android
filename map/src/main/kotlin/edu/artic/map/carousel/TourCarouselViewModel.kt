@@ -29,7 +29,7 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
     val tourTitle: Subject<String> = BehaviorSubject.create()
     val tourStops: Subject<List<ArticTour.TourStop>> = BehaviorSubject.create()
     val tourStopViewModels: Subject<List<TourCarousalBaseViewModel>> = BehaviorSubject.create()
-    val currentTrack: Subject<Optional<ArticAudioFile>> = BehaviorSubject.createDefault(Optional(null))
+    val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val playerControl: Subject<TourCarousalStopCellViewModel.PlayerAction> = PublishSubject.create()
     val currentPage: Subject<Int> = BehaviorSubject.createDefault(0)
@@ -141,10 +141,9 @@ class TourCarousalIntroViewModel(tourStop: ArticTour.TourStop) : TourCarousalBas
          * if the current tracks audio id and the intro audio io are same display pause otherwise pause
          */
         audioPlayBackStatus.filterFlatMap({ it is AudioPlayerService.PlayBackState.Playing }, { it as AudioPlayerService.PlayBackState.Playing })
-                .map { it.articAudioFile.nid == tourStop.audioId }
+                .map { it.audio.nid == tourStop.audioId }
                 .bindTo(isPlaying)
                 .disposedBy(disposeBag)
-
     }
 
 
@@ -157,7 +156,7 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
     val playerControl: Subject<PlayerAction> = PublishSubject.create()
 
     val viewPlayBackState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
-    val currentAudioTrack: Subject<Optional<ArticAudioFile>> = BehaviorSubject.createDefault(Optional(null))
+    val currentAudioTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
@@ -194,7 +193,7 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
          */
         audioPlayBackStatus
                 .withLatestFrom(articObjectObservable.toObservable()) { mediaPlayBackState, articObject ->
-                    val currentlyPlaying = mediaPlayBackState?.articAudioFile == articObject.audioFile
+                    val currentlyPlaying = mediaPlayBackState?.audio?.nid == articObject.audioFile?.nid
                     mediaPlayBackState to currentlyPlaying
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -209,7 +208,7 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
                         /**
                          * Reset the view state when
                          */
-                        viewPlayBackState.onNext(AudioPlayerService.PlayBackState.Paused(currentPlayBackState.articAudioFile))
+                        viewPlayBackState.onNext(AudioPlayerService.PlayBackState.Paused(currentPlayBackState.audio))
                     }
 
                 }
