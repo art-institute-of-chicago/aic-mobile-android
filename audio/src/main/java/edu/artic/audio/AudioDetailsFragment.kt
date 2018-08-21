@@ -166,6 +166,10 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                     }
                 })
                 .disposedBy(disposeBag)
+
+       LanguageSelectorViewBackground(selectorView)
+               .listenToLayoutChanges()
+               .disposedBy(disposeBag)
     }
 
 

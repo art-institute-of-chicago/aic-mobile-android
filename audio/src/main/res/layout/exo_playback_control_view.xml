@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginStandard"
         android:layout_marginEnd="@dimen/marginStandard"
-        android:background="@drawable/translation_selection"
+        android:background="@null"
         android:clipToPadding="false"
         android:spinnerMode="dropdown"
         android:textColor="@android:color/white"
