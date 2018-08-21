@@ -1,6 +1,5 @@
-package edu.artic.tours.carousel
+package edu.artic.map.carousel
 
-import edu.artic.db.models.ArticObject
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 

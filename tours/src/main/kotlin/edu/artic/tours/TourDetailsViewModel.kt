@@ -5,12 +5,14 @@ import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjectDao) : BaseViewModel() {
+class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjectDao) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
@@ -30,6 +32,10 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
         set(value) {
             value?.let { tourObservable.onNext(it) }
         }
+
+    sealed class NavigationEndpoint {
+        class Map(tour: ArticTour) : NavigationEndpoint()
+    }
 
     init {
         tourObservable
@@ -102,12 +108,18 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
 
     }
 
+    /**
+     * Navigate user to the Map activity in Tour Context.
+     */
     fun onClickStartTour() {
+        tour?.let { tour ->
+            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour)))
+        }
 
     }
 }
 
-open class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : BaseViewModel() {
+class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : BaseViewModel() {
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()

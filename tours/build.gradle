@@ -19,5 +19,5 @@ dependencies {
     implementation project(':adapter')
     implementation project(':media')
     implementation project(':media_ui')
-    implementation libs.view_pager_indicator
+    implementation project(':map')
 }

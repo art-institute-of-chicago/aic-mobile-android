@@ -12,7 +12,7 @@ import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.*
 import edu.artic.map.helpers.mapToMapItem
 import edu.artic.map.helpers.toLatLng
-import edu.artic.tours.carousel.TourProgressManager
+import edu.artic.map.carousel.TourProgressManager
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -98,6 +98,17 @@ class MapViewModel @Inject constructor(
                 MapZoomLevel.One
             }
         }
+
+    var tour: ArticTour? = null
+        set(value) {
+            field = value
+            if (value == null) {
+                mapContext.onNext(MapContext.General())
+            } else {
+                mapContext.onNext(MapContext.Tour(value))
+            }
+        }
+
 
     init {
         /**

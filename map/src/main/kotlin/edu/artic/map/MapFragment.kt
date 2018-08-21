@@ -28,7 +28,7 @@ import edu.artic.map.util.ArticObjectDotMarkerGenerator
 import edu.artic.map.util.ArticObjectMarkerGenerator
 import edu.artic.map.util.DepartmentMarkerGenerator
 import edu.artic.map.util.GalleryNumberMarkerGenerator
-import edu.artic.tours.carousel.TourCarouselFragment
+import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
@@ -90,6 +90,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         const val ZOOM_LEVEL_ONE = 18.0f
         const val ZOOM_LEVEL_TWO = 19.0f
         const val ZOOM_LEVEL_THREE = 20.0f
+
+        private val ARG_TOUR = "${MapFragment::class.java.simpleName}: map"
+
+        fun argsBundle(tour: ArticTour) = Bundle().apply {
+            putParcelable(ARG_TOUR, tour)
+        }
+    }
+
+    private val tour by lazy { arguments!!.getParcelable<ArticTour>(ARG_TOUR) }
+
+    override fun onRegisterViewModel(viewModel: MapViewModel) {
+        viewModel.tour = tour
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

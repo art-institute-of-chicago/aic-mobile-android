@@ -20,7 +20,6 @@ dependencies {
     implementation project(':audio')
     implementation project(':media_ui')
     implementation project(':adapter')
-    implementation project(':tours')
     implementation libs.rx_kotlin
 
     implementation libs.constraint_layout
@@ -28,5 +27,5 @@ dependencies {
     implementation libs.arch_navigation
     implementation libs.arch_navigation_ui
     implementation libs.glide
-
+    implementation libs.view_pager_indicator
 }
