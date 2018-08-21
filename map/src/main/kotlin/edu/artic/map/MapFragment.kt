@@ -20,10 +20,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
-import edu.artic.db.models.ArticGallery
-import edu.artic.db.models.ArticMapAmenityType
-import edu.artic.db.models.ArticMapAnnotationType
-import edu.artic.db.models.ArticObject
+import edu.artic.db.models.*
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.util.ArticObjectDotMarkerGenerator
 import edu.artic.map.util.ArticObjectMarkerGenerator
@@ -544,6 +541,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                 val articObject = mapItem.item
                                 loadObject(articObject, mapItem.floor, mapContext)
                             }
+                            is MapItem.TourIntro -> {
+                                val articTour = mapItem.item
+                                loadTourObject(articTour, mapItem.floor, mapContext)
+                            }
 
                         }
                     }
@@ -719,6 +720,44 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 })
 
+
+    }
+
+    /**
+     * Loads the tour intro object as the marker in the map.
+     */
+    private fun loadTourObject(articTour: ArticTour, floor: Int, mapContext: MapViewModel.MapContext) {
+        Glide.with(this)
+                .asBitmap()
+                .load(articTour.thumbnailFullPath)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        if (viewModel.currentFloor == floor) {
+
+                            val fullMaker = map.addMarker(
+                                    MarkerOptions()
+                                            .position(articTour.toLatLng())
+                                            .icon(BitmapDescriptorFactory.fromBitmap(
+                                                    objectMarkerGenerator.makeIcon(resource)
+                                            ))
+                                            .zIndex(2f)
+                                            .visible(true)
+                            )
+
+                            fullMaker.tag = articTour
+
+                            fullObjectMarkers.add(fullMaker)
+                            val dotMaker = map.addMarker(MarkerOptions()
+                                    .position(articTour.toLatLng())
+                                    .icon(BitmapDescriptorFactory.fromBitmap(
+                                            objectDotMarkerGenerator.makeIcon()
+                                    ))
+                                    .zIndex(2f)
+                                    .visible(false))
+                            dotObjectMarkers.add(dotMaker)
+                        }
+                    }
+                })
 
     }
 
