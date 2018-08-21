@@ -301,8 +301,7 @@ class AudioPlayerService : DaggerService() {
             articObject = _articObject
 
             audio.let {
-                val fileUrl = audio.fileUrl
-                fileUrl?.let { url ->
+                audio.fileUrl?.let { url ->
                     val uri = Uri.parse(url)
                     val mediaSource = buildMediaSource(uri)
                     player.prepare(mediaSource, resetPosition, false)
