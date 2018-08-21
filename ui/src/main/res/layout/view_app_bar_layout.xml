@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    tools:showIn="@layout/fragment_welcome">
+    tools:parentTag="edu.artic.view.ArticMainAppBarLayout">
 
     <android.support.design.widget.CollapsingToolbarLayout
         android:id="@+id/collapsingToolbar"
@@ -22,21 +23,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:background="@drawable/dashboard"
+            android:scaleType="centerCrop"
             app:layout_collapseMode="parallax"
-            app:layout_collapseParallaxMultiplier="1" />
-
+            app:layout_collapseParallaxMultiplier="1"/>
 
         <ImageView
-            android:id="@+id/flagIcon"
+            android:id="@+id/icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/tours"
+            android:tint="@color/white"
             app:layout_collapseMode="parallax"
-            app:layout_collapseParallaxMultiplier="0.2" />
+            app:layout_collapseParallaxMultiplier="0.2"/>
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -53,10 +53,10 @@
                 android:layout_marginEnd="@dimen/marginTwenty"
                 android:background="@drawable/ic_search_background"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_search_24dp" />
+                android:src="@drawable/ic_search_24dp"/>
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.CollapsingToolbarLayout>
 
-</android.support.design.widget.AppBarLayout>
+</merge>

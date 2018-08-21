@@ -49,7 +49,7 @@ buildscript {
                 timber                  : 'com.jakewharton.timber:timber:4.5.1',
                 threeten                : 'com.jakewharton.threetenabp:threetenabp:1.0.5',
                 design_support          : "com.android.support:design:${support_version}",
-                constraint_layout       : "com.android.support.constraint:constraint-layout:1.1.2",
+                constraint_layout       : "com.android.support.constraint:constraint-layout:2.0.0-alpha2",
                 glide                   : "com.github.bumptech.glide:glide:${glide_version}",
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",
                 ga                      : "com.google.android.gms:play-services-analytics:${firebase_version}",
@@ -67,7 +67,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha03'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha06'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath 'com.google.gms:google-services:4.0.1'

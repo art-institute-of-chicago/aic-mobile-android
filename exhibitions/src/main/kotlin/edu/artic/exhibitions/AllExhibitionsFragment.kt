@@ -62,7 +62,6 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
     override fun setupNavigationBindings(viewModel: AllExhibitionsViewModel) {
         viewModel.navigateTo.subscribe {
             when (it) {
-
                 is Navigate.Forward -> {
                     when (it.endpoint) {
                         is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {

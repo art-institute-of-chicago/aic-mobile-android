@@ -20,7 +20,6 @@ class WelcomeActivity : BaseActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             return intent
         }
-
     }
 
     override val layoutResId: Int
