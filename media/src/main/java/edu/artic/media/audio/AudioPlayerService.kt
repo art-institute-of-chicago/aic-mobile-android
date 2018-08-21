@@ -64,7 +64,7 @@ import javax.inject.Inject
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTracker, val languageSelector: LanguageSelector) : DaggerService() {
+class AudioPlayerService : DaggerService() {
 
     companion object {
         val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
@@ -148,6 +148,13 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
 
     private val binder: Binder = AudioPlayerServiceBinder()
     private lateinit var playerNotificationManager: PlayerNotificationManager
+
+    // NB: As this is an Android Service, we _CANNOT_ define '@Inject' properties in the constructor
+
+    @Inject
+    lateinit var analyticsTracker: AnalyticsTracker
+    @Inject
+    lateinit var languageSelector: LanguageSelector
 
 
     var articObject: ArticObject? = null
