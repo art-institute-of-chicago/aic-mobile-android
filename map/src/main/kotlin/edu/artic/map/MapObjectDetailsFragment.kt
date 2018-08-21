@@ -2,15 +2,14 @@ package edu.artic.map
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.withLatestFrom

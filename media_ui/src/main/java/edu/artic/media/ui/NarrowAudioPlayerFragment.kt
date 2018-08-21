@@ -137,7 +137,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
 /**
  * Returns Observable AudioPlayerService.
  */
-fun BaseFragment.getAudioServiceObservable(): Subject<AudioPlayerService> {
-    val audioFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.newPlayer) as NarrowAudioPlayerFragment
+fun BaseFragment.getAudioServiceObservable(fragmentId: Int = R.id.newPlayer): Subject<AudioPlayerService> {
+    val audioFragment = requireActivity().supportFragmentManager.findFragmentById(fragmentId) as NarrowAudioPlayerFragment
     return audioFragment.observableAudioService
 }
