@@ -66,29 +66,29 @@ data class ArticAudioFile(
 }
 
 
-fun ArticAudioFile.asAudioTranslation() : AudioTranslation {
+fun ArticAudioFile.asAudioTranslation(): AudioTranslation {
     return AudioTranslation(
-            "en-US",
-            title,
-            fileName,
-            fileUrl,
-            fileMime,
-            fileSize,
-            transcript,
-            credits
+            language = "en-US",
+            title = title,
+            fileName = fileName,
+            fileUrl = fileUrl,
+            fileMime = fileMime,
+            fileSize = fileSize,
+            transcript = transcript,
+            credits = credits
     )
 }
 
-fun ArticAudioFile.Translation.asAudioTranslation() : AudioTranslation {
+fun ArticAudioFile.Translation.asAudioTranslation(): AudioTranslation {
     return AudioTranslation(
-            language,
-            title,
-            fileName,
-            fileUrl,
-            fileMime,
-            fileSize,
-            transcript,
-            credits
+            language = language,
+            title = title,
+            fileName = fileName,
+            fileUrl = fileUrl,
+            fileMime = fileMime,
+            fileSize = fileSize,
+            transcript = transcript,
+            credits = credits
     )
 }
 
