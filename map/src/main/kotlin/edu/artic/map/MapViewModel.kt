@@ -52,7 +52,7 @@ class MapViewModel @Inject constructor(
      * Map view can be used with following different contexts
      * <ul>
      *     <li>General: Everything is displayed for selected floor </li>
-     *     <li>Tour   : Only the tour stops are displayed in the map.</li>
+     *     <li>Tour   : Only the tour tourStopViewModels are displayed in the map.</li>
      * </ul>
      */
     sealed class MapContext {
@@ -161,6 +161,9 @@ class MapViewModel @Inject constructor(
                     objectDao.getObjectsByIdList(ids).toObservable().map {
                         convertToMapItem(it, tour.floorAsInt)
                     }
+                    /**
+                     * TODO how to display tour intro as an artic object ?
+                     */
                 }
                 .bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)

@@ -70,7 +70,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                 .bindToMain(tourTitle.text())
                 .disposedBy(disposeBag)
 
-        viewModel.stops
+        viewModel.tourStopViewModels
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
@@ -110,6 +110,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                 .disposedBy(disposeBag)
 
         tourCarousel.pageSelections()
+                .distinctUntilChanged()
                 .bindTo(viewModel.currentPage)
                 .disposedBy(disposeBag)
     }

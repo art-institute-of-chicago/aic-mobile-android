@@ -19,19 +19,35 @@
         tools:background="@color/brownishOrange" />
 
     <TextView
-        android:id="@+id/stopTitle"
+        android:id="@+id/tourNumber"
         style="@style/ListItemTitle1White"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginDouble"
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
-        android:text="A Sunday on La Grande A Sunday on La Grande A Sunday on La Grande"
-        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintEnd_toStartOf="@id/stopTitle"
         app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:text="1" />
+
+
+    <TextView
+        android:id="@+id/stopTitle"
+        style="@style/ListItemTitle1White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/tourNumber"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:text="A Sunday on La Grande A Sunday on La Grande A Sunday on La Grande" />
 
 
     <TextView
@@ -39,15 +55,15 @@
         style="@style/ListItemTitle2White"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginStart="@dimen/marginStandard"
         android:layout_marginTop="@dimen/marginHalf"
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
-        android:text="Regenstein Hall Regenstein Hall Regenstein Hall Regenstein Hall"
         app:layout_constraintEnd_toStartOf="@id/barrier"
-        app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@id/stopTitle" />
+        app:layout_constraintStart_toEndOf="@id/tourNumber"
+        app:layout_constraintTop_toBottomOf="@id/stopTitle"
+        tools:text="Regenstein Hall Regenstein Hall Regenstein Hall Regenstein Hall" />
 
 
     <ImageButton

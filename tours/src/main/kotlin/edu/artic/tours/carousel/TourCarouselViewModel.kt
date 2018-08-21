@@ -3,12 +3,10 @@ package edu.artic.tours.carousel
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.models.ArticAudioFile
-import edu.artic.db.models.ArticObject
-import edu.artic.db.models.ArticTour
-import edu.artic.db.models.audioFile
+import edu.artic.db.models.*
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.tours.TourDetailsStopCellViewModel
 import edu.artic.viewmodel.BaseViewModel
@@ -30,7 +28,8 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
 
     val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
     val tourTitle: Subject<String> = BehaviorSubject.create()
-    val stops: Subject<List<TourCarousalStopCellViewModel>> = BehaviorSubject.create()
+    val tourStops: Subject<List<ArticTour.TourStop>> = BehaviorSubject.create()
+    val tourStopViewModels: Subject<List<BaseViewModel>> = BehaviorSubject.create()
     val currentTrack: Subject<Optional<ArticAudioFile>> = BehaviorSubject.createDefault(Optional(null))
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val playerControl: Subject<TourCarousalStopCellViewModel.PlayerAction> = PublishSubject.create()
@@ -51,43 +50,60 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
                 .bindTo(tourTitle)
                 .disposedBy(disposeBag)
 
+
+        /**
+         * Build the list of tour stops including the tour introduction stop.
+         */
         tourObservable
-                .map { it.tourStops }
                 .observeOn(Schedulers.io())
-                .map {
-                    val list = mutableListOf<TourCarousalStopCellViewModel>()
-                    it.forEach { tourStop ->
+                .map { tour ->
+                    val list = mutableListOf<ArticTour.TourStop>()
+                    val tourIntro = tour.getIntroStop()
+                    list.add(tourIntro)
+                    list.addAll(tour.tourStops)
+                    list
+                }.bindTo(tourStops)
+                .disposedBy(disposeBag)
 
-                        val element = TourCarousalStopCellViewModel(tourStop, objectDao)
+        tourStops
+                .map { tourStops ->
+                    val list = mutableListOf<BaseViewModel>()
+                    tourStops.forEach { tourStop ->
+                        if (tourStop.objectId === "INTRO") {
+                            list.add(TourCarousalIntroViewModel(tourStop))
+                        } else {
+                            val element = TourCarousalStopCellViewModel(tourStop, objectDao)
 
-                        element.playerControl
-                                .bindTo(playerControl)
-                                .disposedBy(element.viewDisposeBag)
+                            element.playerControl
+                                    .bindTo(playerControl)
+                                    .disposedBy(element.viewDisposeBag)
 
-                        audioPlayBackStatus
-                                .bindTo(element.audioPlayBackStatus)
-                                .disposedBy(disposeBag)
+                            audioPlayBackStatus
+                                    .bindTo(element.audioPlayBackStatus)
+                                    .disposedBy(disposeBag)
 
-                        currentTrack
-                                .bindTo(element.currentAudioTrack)
-                                .disposedBy(disposeBag)
+                            currentTrack
+                                    .bindTo(element.currentAudioTrack)
+                                    .disposedBy(disposeBag)
 
-                        list.add(element)
+                            list.add(element)
+                        }
+
                     }
                     return@map list
-                }.bindTo(stops)
+                }.bindTo(tourStopViewModels)
                 .disposedBy(disposeBag)
 
         /**
-         * Get the object id of the tour and update the currentPage.
+         * Get index of the object using id and bind it to currentPage.
          */
         tourProgressManager
                 .selectedStop
-                .distinctUntilChanged()
-                .withLatestFrom(tourObservable.map { it.tourStops }) { objectId, tourStops ->
+                .withLatestFrom(tourStops) { objectId, tourStops ->
                     tourStops.map { it.objectId }.indexOf(objectId)
                 }
                 .filter { it > -1 }
+                .distinctUntilChanged()
                 .bindTo(currentPage)
                 .disposedBy(disposeBag)
 
@@ -95,10 +111,10 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
          * Get the object id from the tour stop and send it to TourProgressManager.
          */
         currentPage
-                .distinctUntilChanged()
-                .withLatestFrom(tourObservable.map { it.tourStops }) { page, tourStops ->
+                .withLatestFrom(tourStops) { page, tourStops ->
                     tourStops[page].objectId.orEmpty()
                 }
+                .distinctUntilChanged()
                 .bindTo(tourProgressManager.selectedStop)
                 .disposedBy(disposeBag)
 
@@ -167,5 +183,31 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
     fun pauseCurrentObject() {
         playerControl.onNext(PlayerAction.Pause())
     }
+
+}
+
+/**
+ * ViewModel for the tour intro layout.
+ * Play pause the tour introduction.
+ */
+class TourCarousalIntroViewModel(tourStop: ArticTour.TourStop) : BaseViewModel() {
+
+    //current track status
+    val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
+    val isPlaying: Subject<Boolean> = BehaviorSubject.createDefault(false)
+
+    init {
+
+        /**
+         * check if the current audio translation's id same as this one.
+         * if the current tracks audio id and the intro audio io are same display pause otherwise pause
+         */
+        audioPlayBackStatus.filterFlatMap({ it is AudioPlayerService.PlayBackState.Playing }, { it as AudioPlayerService.PlayBackState.Playing })
+                .map { it.articAudioFile.nid == tourStop.audioId }
+                .bindTo(isPlaying)
+                .disposedBy(disposeBag)
+
+    }
+
 
 }
