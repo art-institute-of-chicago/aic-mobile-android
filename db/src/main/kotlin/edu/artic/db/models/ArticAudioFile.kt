@@ -58,9 +58,10 @@ data class ArticAudioFile(
      * Note that this uses the (safe) assumption that [ArticAudioFile]
      * itself is an English translation of the content.
      */
-    fun allTranslations() : List<AudioFileModel> {
+    fun allTranslations(): List<AudioFileModel> {
+        val id = nid
         return translations.mapTo(mutableListOf(asAudioFileModel())) {
-            it.asAudioFileModel()
+            it.asAudioFileModel(id)
         }
     }
 }
@@ -68,6 +69,7 @@ data class ArticAudioFile(
 
 fun ArticAudioFile.asAudioFileModel(): AudioFileModel {
     return AudioFileModel(
+            nid = nid,
             language = "en-US",
             title = title,
             fileName = fileName,
@@ -79,8 +81,9 @@ fun ArticAudioFile.asAudioFileModel(): AudioFileModel {
     )
 }
 
-fun ArticAudioFile.Translation.asAudioFileModel(): AudioFileModel {
+fun ArticAudioFile.Translation.asAudioFileModel(nid: String): AudioFileModel {
     return AudioFileModel(
+            nid = nid,
             language = language,
             title = title,
             fileName = fileName,
@@ -101,6 +104,7 @@ fun ArticAudioFile.Translation.asAudioFileModel(): AudioFileModel {
  * handle that?
  */
 data class AudioFileModel(
+        val nid: String,
         val language: String?,
         val title: String?,
         val fileName: String?,
