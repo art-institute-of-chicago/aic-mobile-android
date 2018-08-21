@@ -20,7 +20,7 @@ import javax.inject.Inject
  * @author Sameer Dhakal (Fuzz)
  * @see AudioTranslation
  */
-class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
+class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSelector) : BaseViewModel() {
     val title: Subject<String> = BehaviorSubject.create()
     val image: Subject<String> = BehaviorSubject.create()
     val availableTranslations: Subject<List<AudioTranslation>> = BehaviorSubject.create()
@@ -31,8 +31,6 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
 
     private val objectObservable: Subject<ArticObject> = BehaviorSubject.create()
 
-    @Inject
-    lateinit var languageSelector: LanguageSelector
 
     var audioObject: ArticObject? = null
         set(value) {
@@ -76,7 +74,8 @@ class AudioDetailsViewModel @Inject constructor() : BaseViewModel() {
                     it.audioFile?.allTranslations().orEmpty()
                 }.share()
 
-        known.bindTo(availableTranslations).disposedBy(disposeBag)
+        known.bindTo(availableTranslations)
+                .disposedBy(disposeBag)
 
         // Set up the default language selection.
         known.map {
