@@ -58,16 +58,16 @@ data class ArticAudioFile(
      * Note that this uses the (safe) assumption that [ArticAudioFile]
      * itself is an English translation of the content.
      */
-    fun allTranslations() : List<AudioTranslation> {
-        return translations.mapTo(mutableListOf(asAudioTranslation())) {
-            it.asAudioTranslation()
+    fun allTranslations() : List<AudioFileModel> {
+        return translations.mapTo(mutableListOf(asAudioFileModel())) {
+            it.asAudioFileModel()
         }
     }
 }
 
 
-fun ArticAudioFile.asAudioTranslation(): AudioTranslation {
-    return AudioTranslation(
+fun ArticAudioFile.asAudioFileModel(): AudioFileModel {
+    return AudioFileModel(
             language = "en-US",
             title = title,
             fileName = fileName,
@@ -79,8 +79,8 @@ fun ArticAudioFile.asAudioTranslation(): AudioTranslation {
     )
 }
 
-fun ArticAudioFile.Translation.asAudioTranslation(): AudioTranslation {
-    return AudioTranslation(
+fun ArticAudioFile.Translation.asAudioFileModel(): AudioFileModel {
+    return AudioFileModel(
             language = language,
             title = title,
             fileName = fileName,
@@ -100,7 +100,7 @@ fun ArticAudioFile.Translation.asAudioTranslation(): AudioTranslation {
  * confused. Perhaps in a later version the auto-generation will be able to
  * handle that?
  */
-data class AudioTranslation(
+data class AudioFileModel(
         val language: String?,
         val title: String?,
         val fileName: String?,

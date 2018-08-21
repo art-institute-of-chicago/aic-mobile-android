@@ -117,7 +117,7 @@
 
             The aforementioned controller layout is where we
             define the play/pause button, seek controls, time
-            (i.e. progress through the track), and translation
+            (i.e. progress through the track), and audioFileModel
             selection.
 
             -->
