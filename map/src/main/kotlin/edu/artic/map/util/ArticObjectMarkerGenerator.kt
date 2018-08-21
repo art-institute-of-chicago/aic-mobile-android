@@ -12,14 +12,25 @@ import edu.artic.map.R
 
 class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context) {
 
+    private var imageView: CircleImageView
+
     init {
         container = LayoutInflater.from(context)
                 .inflate(R.layout.marker_artic_object, null) as ViewGroup
+         imageView = container.findViewById(R.id.circularImage)
     }
 
 
-    fun makeIcon(imageViewBitmap: Bitmap, order: String? = null): Bitmap {
-        container.findViewById<CircleImageView>(R.id.circularImage).setImageBitmap(imageViewBitmap)
+    fun makeIcon(imageViewBitmap: Bitmap, order: String? = null, semiTransparent: Boolean = false): Bitmap {
+
+        imageView.setImageBitmap(imageViewBitmap)
+
+        if (semiTransparent) {
+            imageView.alpha = 0.6f
+        } else {
+            imageView.alpha = 1f
+        }
+
         val orderTextView = container.findViewById<TextView>(R.id.order)
         if (order != null) {
             orderTextView.visibility = View.VISIBLE

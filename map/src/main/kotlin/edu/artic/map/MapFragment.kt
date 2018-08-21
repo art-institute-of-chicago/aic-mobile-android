@@ -496,9 +496,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     mapContext to whatToDisplayOnMap
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { mapContextWithitemList ->
-                    val mapContext = mapContextWithitemList.first
-                    val itemList = mapContextWithitemList.second
+                .subscribe { mapContextWithItemList ->
+                    val mapContext = mapContextWithItemList.first
+                    val itemList = mapContextWithItemList.second
 
                     departmentMarkers.forEach { marker ->
                         marker.remove()
@@ -534,10 +534,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                             }
                             is MapItem.Object -> {
-                                /**
-                                 * Here it needs context too.
-                                 * Add to MapItem or etc.
-                                 */
                                 val articObject = mapItem.item
                                 loadObject(articObject, mapItem.floor, mapContext)
                             }
@@ -678,13 +674,23 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .load(articObject.thumbnailFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        if (viewModel.currentFloor == floor) {
-                            var order: String? = null
-
+                        /**
+                         * If map context is Tour, get the order number of the stop.
+                         */
+                        if (viewModel.currentFloor == floor || mapContext is MapViewModel.MapContext.Tour) {
+                            var isSemiTransparentMarker = true
                             /**
-                             * If map context is Tour, get the order number of the stop.
+                             * If the tour is not in the current floor make the ui transparent
                              */
+                            if (viewModel.currentFloor == floor) {
+                                isSemiTransparentMarker = false
+                            }
+
+                            var order: String? = null
                             if (mapContext is MapViewModel.MapContext.Tour) {
+                                /**
+                                 * If map context is Tour, get the order number of the stop.
+                                 */
                                 val index = mapContext.tour
                                         .tourStops
                                         .map { it.objectId }
@@ -699,7 +705,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     MarkerOptions()
                                             .position(articObject.toLatLng())
                                             .icon(BitmapDescriptorFactory.fromBitmap(
-                                                    objectMarkerGenerator.makeIcon(resource, order)
+                                                    objectMarkerGenerator.makeIcon(resource, order, isSemiTransparentMarker)
                                             ))
                                             .zIndex(2f)
                                             .visible(true)
@@ -732,29 +738,25 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .load(articTour.thumbnailFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        if (viewModel.currentFloor == floor) {
+                        if (mapContext is MapViewModel.MapContext.Tour) {
+                            var isSemiTransparentMarker = true
+
+                            if (viewModel.currentFloor == floor) {
+                                isSemiTransparentMarker = false
+                            }
 
                             val fullMaker = map.addMarker(
                                     MarkerOptions()
                                             .position(articTour.toLatLng())
                                             .icon(BitmapDescriptorFactory.fromBitmap(
-                                                    objectMarkerGenerator.makeIcon(resource)
+                                                    objectMarkerGenerator.makeIcon(imageViewBitmap = resource,
+                                                            semiTransparent = isSemiTransparentMarker)
                                             ))
                                             .zIndex(2f)
                                             .visible(true)
                             )
 
                             fullMaker.tag = articTour
-
-                            fullObjectMarkers.add(fullMaker)
-                            val dotMaker = map.addMarker(MarkerOptions()
-                                    .position(articTour.toLatLng())
-                                    .icon(BitmapDescriptorFactory.fromBitmap(
-                                            objectDotMarkerGenerator.makeIcon()
-                                    ))
-                                    .zIndex(2f)
-                                    .visible(false))
-                            dotObjectMarkers.add(dotMaker)
                         }
                     }
                 })
