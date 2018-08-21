@@ -618,11 +618,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             /**
                              * If the tour is not in the current floor make the ui transparent
                              */
-                            val markerAlpha = if (viewModel.currentFloor == floor && mapContext is MapViewModel.MapContext.Tour) {
-                                1.0f
-                            } else {
-                                0.6f
+
+                            val markerAlpha = when (mapContext) {
+                                is MapViewModel.MapContext.General -> 1.0f
+                                is MapViewModel.MapContext.Tour -> {
+                                    if (viewModel.currentFloor == floor) {
+                                        1.0f
+                                    } else {
+                                        0.6f
+                                    }
+                                }
                             }
+
 
                             var order: String? = null
                             if (mapContext is MapViewModel.MapContext.Tour) {
