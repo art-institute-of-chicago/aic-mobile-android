@@ -4,6 +4,9 @@
     <style name="AudioTranslationSans">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">13.5sp</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:lineSpacingExtra">-4.5sp</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">@font/ideal_sans_book</item>
     </style>
 </resources>
