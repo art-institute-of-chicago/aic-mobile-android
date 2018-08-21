@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import edu.artic.localization.BaseTranslation
+import edu.artic.localization.SpecifiesLanguage
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -45,7 +45,7 @@ data class ArticAudioFile(
             @Json(name = "audio_filesize") val fileSize: String?,
             @Json(name = "audio_transcript") val transcript: String?,
             @Json(name = "credits") val credits: String?
-    ) : Parcelable, BaseTranslation {
+    ) : Parcelable, SpecifiesLanguage {
         override fun underlyingLanguage(): String? {
             return language
         }
@@ -109,7 +109,7 @@ data class AudioFileModel(
         val fileSize: String?,
         val transcript: String?,
         val credits: String?
-) : BaseTranslation {
+) : SpecifiesLanguage {
     override fun underlyingLanguage(): String? {
         return language
     }

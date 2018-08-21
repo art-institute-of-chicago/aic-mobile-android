@@ -26,7 +26,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.AudioFileModel
-import edu.artic.localization.BaseTranslation
+import edu.artic.localization.SpecifiesLanguage
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -226,9 +226,10 @@ class LanguageAdapter(context: Context, audioModels: List<AudioFileModel>) : Arr
     /**
      * Inflate and return a copy of `view_language_box.xml`.
      *
-     * The inflated [TextView] will display the text of a [BaseTranslation] at the
+     * The inflated [TextView] will display the text of an
+     * [object which specifies its own language][SpecifiesLanguage] at the
      * [provided index][position] within this adapter. Please refer to
-     * [BaseTranslation.userFriendlyLanguage] for the expected textual output.
+     * [SpecifiesLanguage.userFriendlyLanguage] for the expected textual output.
      *
      * @see ArrayAdapter.getView
      */
