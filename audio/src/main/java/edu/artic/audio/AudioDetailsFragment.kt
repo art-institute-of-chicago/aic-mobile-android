@@ -12,7 +12,6 @@ import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
@@ -21,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
+import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.listenerAnimateSharedTransaction
@@ -155,19 +155,13 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 }.bindToMain(Consumer<LanguageAdapter<AudioTranslation>> { la: LanguageAdapter<AudioTranslation> ->
                     selectorView.apply {
                         this.adapter = la
-                        this.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                            override fun onNothingSelected(parent: AdapterView<*>) {
-                                // Nothing to be done. Perhaps we could reset our language selection?
+                        this.itemSelections().subscribe { position ->
+                            if (position >= 0) {
+                                val translation = la.getItem(position)
+                                viewModel.setTranslationOverride(translation)
+                                boundService?.switchAudioTrack(translation)
                             }
-
-                            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                                if (position >= 0) {
-                                    val translation = la.getItem(position)
-                                    viewModel.setTranslationOverride(translation)
-                                    boundService?.switchAudioTrack(translation)
-                                }
-                            }
-                        }
+                        }.disposedBy(disposeBag)
                         this.setSelection(la.getPosition(viewModel.chosenTranslation.value))
                     }
                 })
