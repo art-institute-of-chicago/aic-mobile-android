@@ -25,7 +25,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
-import edu.artic.db.models.AudioTranslation
+import edu.artic.db.models.AudioFileModel
 import edu.artic.localization.BaseTranslation
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
@@ -153,7 +153,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.availableTranslations
                 .map {
                     LanguageAdapter(selectorView.context, it)
-                }.withLatestFrom(viewModel.chosenTranslation) {
+                }.withLatestFrom(viewModel.chosenAudioModel) {
                     adapter, which -> adapter to which
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -204,10 +204,10 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
  * This is also responsible for creating the view seen at the top
  * of the list (i.e. the 'currently selected' language).
  */
-class LanguageAdapter(context: Context, translations: List<AudioTranslation>) : ArrayAdapter<AudioTranslation>(
+class LanguageAdapter(context: Context, audioModels: List<AudioFileModel>) : ArrayAdapter<AudioFileModel>(
         context,
         R.layout.view_language_box,
-        translations
+        audioModels
 ) {
     // This is a view for use in the dropdown...
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {

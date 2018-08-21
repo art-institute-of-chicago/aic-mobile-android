@@ -8,7 +8,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.models.ArticObject
-import edu.artic.db.models.AudioTranslation
+import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
@@ -34,7 +34,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
 
-    val currentTrack: Subject<Optional<AudioTranslation>> = BehaviorSubject.createDefault(Optional(null))
+    val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
 
 
@@ -52,17 +52,17 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
         /**
          * Stop playing the current audio (if any) and start playing
          * [requestedObject]. If [requestedObject] has an associated
-         * translation (i.e. because it was already registered
+         * audioModel (i.e. because it was already registered
          * with the [AudioPlayerService]), please provide that
-         * translation.
+         * audioModel.
          *
-         * If it was not associated with a translation,
+         * If it was not associated with an audioModel,
          * [edu.artic.localization.LanguageSelector] can choose an
          * appropriate value. Use-sites may wish to call
          * [edu.artic.db.models.ArticAudioFile.preferredLanguage]
          * to retrieve that value.
          */
-        class Play(val requestedObject: ArticObject, val translation: AudioTranslation) : PlayerAction()
+        class Play(val requestedObject: ArticObject, val audioModel: AudioFileModel) : PlayerAction()
 
         /**
          * Pause playback of the current audio track, if any.
@@ -81,17 +81,17 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
             }
 
             if (isDifferent) {
-                audioTranslation = value?.audioFile?.preferredLanguage(languageSelector)
+                audioFileModel = value?.audioFile?.preferredLanguage(languageSelector)
             }
         }
 
-    var audioTranslation: AudioTranslation? = null
+    var audioFileModel: AudioFileModel? = null
 
     init {
 
         audioPlayBackStatus
                 .filter { playBackState ->
-                    playBackState.audio == audioTranslation
+                    playBackState.audio == audioFileModel
                 }.bindTo(playState)
                 .disposedBy(disposeBag)
 
@@ -120,7 +120,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
         playerControl
                 .filterFlatMap({ it is PlayerAction.Play }, { it as PlayerAction.Play })
                 .withLatestFrom(currentTrack, objectObservable) { playerAction, currentTrack, articObject ->
-                    val requested = playerAction.translation
+                    val requested = playerAction.audioModel
                     val isNewTrack = currentTrack.value != requested
 
                     return@withLatestFrom isNewTrack to articObject
@@ -135,7 +135,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
     fun playCurrentObject() {
         articObject?.let { source: ArticObject ->
-            audioTranslation?.let { translation ->
+            audioFileModel?.let { translation ->
                 playerControl.onNext(PlayerAction.Play(source, translation))
             }
         }

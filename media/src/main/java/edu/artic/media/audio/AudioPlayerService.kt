@@ -31,7 +31,7 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticObject
-import edu.artic.db.models.AudioTranslation
+import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.R
@@ -94,7 +94,7 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
          * @see [ExoPlayer.prepare]
          * @see [Player.setPlayWhenReady]
          */
-        class Play(val audioFile: ArticObject, val translation: AudioTranslation) : PlayBackAction()
+        class Play(val audioFile: ArticObject, val audioModel: AudioFileModel) : PlayBackAction()
 
         /**
          * Pause the current track.
@@ -140,10 +140,10 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
      *
      * To switch states, send a [PlayBackAction] to [audioControl].
      */
-    sealed class PlayBackState(val audio: AudioTranslation) {
-        class Playing(audio: AudioTranslation) : PlayBackState(audio)
-        class Paused(audio: AudioTranslation) : PlayBackState(audio)
-        class Stopped(audio: AudioTranslation) : PlayBackState(audio)
+    sealed class PlayBackState(val audio: AudioFileModel) {
+        class Playing(audio: AudioFileModel) : PlayBackState(audio)
+        class Paused(audio: AudioFileModel) : PlayBackState(audio)
+        class Stopped(audio: AudioFileModel) : PlayBackState(audio)
     }
 
     private val binder: Binder = AudioPlayerServiceBinder()
@@ -152,11 +152,11 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
 
     var articObject: ArticObject? = null
         private set
-    var preferredAudio: AudioTranslation? = null
+    var preferredAudio: AudioFileModel? = null
 
     private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
     val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
-    val currentTrack: Subject<AudioTranslation> = BehaviorSubject.create()
+    val currentTrack: Subject<AudioFileModel> = BehaviorSubject.create()
 
     val disposeBag = DisposeBag()
 
@@ -166,7 +166,7 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                val audio: AudioTranslation? = preferredAudio
+                val audio: AudioFileModel? = preferredAudio
 
                 audio?.let { given ->
                     when {
@@ -186,7 +186,7 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
                 is PlayBackAction.Play -> {
-                    setArticObject(playBackAction.audioFile, playBackAction.translation)
+                    setArticObject(playBackAction.audioFile, playBackAction.audioModel)
                     player.playWhenReady = true
                 }
 
@@ -284,7 +284,7 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
         }
     }
 
-    fun setArticObject(_articObject: ArticObject, audio: AudioTranslation, resetPosition: Boolean = false) {
+    fun setArticObject(_articObject: ArticObject, audio: AudioFileModel, resetPosition: Boolean = false) {
 
         if (articObject != _articObject || preferredAudio != audio || player.playbackState == Player.STATE_IDLE) {
 
@@ -353,7 +353,7 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
      *
      * @see setArticObject
      */
-    fun switchAudioTrack(alternative: AudioTranslation) {
+    fun switchAudioTrack(alternative: AudioFileModel) {
         articObject?.let {
             pausePlayer()
             playPlayer(it, alternative)
@@ -373,8 +373,8 @@ class AudioPlayerService @Inject constructor(val analyticsTracker: AnalyticsTrac
         }
     }
 
-    fun playPlayer(audioFile: ArticObject, translation: AudioTranslation) {
-        audioControl.onNext(PlayBackAction.Play(audioFile, translation))
+    fun playPlayer(audioFile: ArticObject, audioModel: AudioFileModel) {
+        audioControl.onNext(PlayBackAction.Play(audioFile, audioModel))
     }
 
     fun resumePlayer() {
