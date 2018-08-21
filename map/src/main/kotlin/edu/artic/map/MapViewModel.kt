@@ -170,7 +170,7 @@ class MapViewModel @Inject constructor(
         /**
          * Combines tour intro and tour stops in order.
          */
-        mapContext.filterFlatMap({ it is MapContext.Tour }, { it as MapContext.Tour })
+        val tourMarkers = mapContext.filterFlatMap({ it is MapContext.Tour }, { it as MapContext.Tour })
                 .map { context ->
                     /** Add tour intro**/
                     listOf<MapItem<*>>(MapItem.TourIntro(context.tour, context.tour.floorAsInt))
@@ -181,7 +181,14 @@ class MapViewModel @Inject constructor(
                         addAll(stopList)
                     }
                 }
-                .bindTo(whatToDisplayOnMap)
+
+        /**
+         * Update tour stop markers every time floor is changed.
+         */
+        Observables
+                .combineLatest(distinctFloor, tourMarkers) { _, markers ->
+                    markers
+                }.bindTo(whatToDisplayOnMap)
                 .disposedBy(disposeBag)
 
         /**

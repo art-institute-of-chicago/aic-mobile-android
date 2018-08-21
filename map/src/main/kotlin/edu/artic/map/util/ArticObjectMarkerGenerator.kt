@@ -21,15 +21,9 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
     }
 
 
-    fun makeIcon(imageViewBitmap: Bitmap, order: String? = null, semiTransparent: Boolean = false): Bitmap {
+    fun makeIcon(imageViewBitmap: Bitmap, order: String? = null): Bitmap {
 
         imageView.setImageBitmap(imageViewBitmap)
-
-        if (semiTransparent) {
-            imageView.alpha = 0.6f
-        } else {
-            imageView.alpha = 1f
-        }
 
         val orderTextView = container.findViewById<TextView>(R.id.order)
         if (order != null) {
