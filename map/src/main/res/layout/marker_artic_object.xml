@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:background="#fab">
+    tools:background="@color/brownishOrange">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circularImage"
@@ -17,6 +17,7 @@
         app:civ_border_overlay="true"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toTopOf="@id/base"
+        tools:background="#fab"
         tools:layout_height="200dp"
         tools:layout_width="200dp" />
 
