@@ -34,7 +34,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
         }
 
     sealed class NavigationEndpoint {
-        class Map(tour: ArticTour) : NavigationEndpoint()
+        class Map(val tour: ArticTour) : NavigationEndpoint()
     }
 
     init {
@@ -112,10 +112,11 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
      * Navigate user to the Map activity in Tour Context.
      */
     fun onClickStartTour() {
-        tour?.let { tour ->
-            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour)))
-        }
-
+        tourObservable.take(1)
+                .subscribe {tour->
+                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour)))
+                }
+                .disposedBy(disposeBag)
     }
 }
 

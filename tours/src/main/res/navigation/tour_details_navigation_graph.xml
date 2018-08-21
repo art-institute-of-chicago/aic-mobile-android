@@ -4,13 +4,30 @@
     android:id="@+id/tour_details_navigation_graph"
     app:startDestination="@id/tourDetailsFragment">
 
+    <include app:graph="@navigation/map_navigation_graph" />
+
     <fragment
         android:id="@+id/tourDetailsFragment"
         android:name="edu.artic.tours.TourDetailsFragment"
-        android:label="TourDetailsFragment" >
+        android:label="TourDetailsFragment">
         <argument
             android:name="tour"
-            app:argType="edu.artic.db.models.ArticTour"/>
+            app:argType="edu.artic.db.models.ArticTour" />
+        <action
+            android:id="@+id/loadMap"
+            app:destination="@+id/mapFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="edu.artic.map.MapFragment"
+        android:label="MapFragment">
+
+        <argument
+            android:name="tour"
+            app:argType="edu.artic.db.models.ArticTour" />
+
+    </fragment>
+
 
 </navigation>
