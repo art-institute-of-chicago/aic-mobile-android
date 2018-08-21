@@ -1,6 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">AIC Mobile</string>
+
     <string name="accessYourMemberCard">Access your member card</string>
+
+    <!-- Welcome/Home screen -->
     <string name="welcomePrompt">Explore the museum with your personal, pocket-sized guide.</string>
     <string name="tours">Tours</string>
     <string name="onView">On View</string>
@@ -11,6 +14,9 @@
     <string name="infoPrompt">Access your member card, see museum hours, or update your app settings.</string>
     <string name="accessMemberCard">Access Member Card</string>
     <string name="channel_name">audio</string>
+
+    <!-- Audio screen and the Media service -->
     <string name="transcript">Transcript</string>
     <string name="credits">Credits</string>
+    <string name="name_of_this_language">English</string>
 </resources>

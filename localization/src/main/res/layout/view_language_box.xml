@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AudioTranslationSans"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:paddingStart="@dimen/marginDouble"
+    android:paddingTop="@dimen/marginHalf"
+    android:paddingEnd="@dimen/marginQuad"
+    android:paddingBottom="@dimen/marginHalf"
+    tools:background="@android:color/darker_gray"
+    tools:drawableEnd="@drawable/ic_language_caret"
+    tools:text="@string/name_of_this_language"
+    />

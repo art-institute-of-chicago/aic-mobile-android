@@ -108,6 +108,20 @@
             android:layout_height="match_parent"
             android:background="@color/greyText">
 
+            <!--
+
+            NB: the actual appearance of the 'PlayerView' is
+            in exo_playback_control_view.xml; this doesn't show
+            up in edit mode because I suppose it's too heavy on
+            the renderer? IDK.
+
+            The aforementioned controller layout is where we
+            define the play/pause button, seek controls, time
+            (i.e. progress through the track), and audioFileModel
+            selection.
+
+            -->
+
             <com.google.android.exoplayer2.ui.PlayerView
                 android:id="@+id/audioPlayer"
                 android:layout_width="match_parent"

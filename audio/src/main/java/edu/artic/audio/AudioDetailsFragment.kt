@@ -2,28 +2,51 @@ package edu.artic.audio
 
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
+import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
+import edu.artic.db.models.AudioFileModel
+import edu.artic.localization.SpecifiesLanguage
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.zipWith
+import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_audio_details.*
 import kotlin.reflect.KClass
 
 /**
+ * Extensive details about a specific [ArticObject][edu.artic.db.models.ArticObject].
+ *
+ * This object is expected (but as it stands, not *required* per se) to have a
+ * valid [audio file][edu.artic.db.models.ArticAudioFile], which is then used
+ * to fill out the interesting properties in a backing [AudioDetailsViewModel].
+ *
+ * This class maintains a strong connection to [AudioPlayerService] for playback
+ * and a minimal amount of caching.
+ *
  * @author Sameer Dhakal (Fuzz)
  */
 class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
@@ -87,6 +110,12 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                     .into(audioImage)
         }.disposedBy(disposeBag)
 
+
+
+        bindTranslationSelector(viewModel)
+
+
+
         viewModel.authorCulturalPlace
                 .map { it.isNotEmpty() }
                 .bindToMain(artistCulturePlaceDenim.visibility())
@@ -119,6 +148,35 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     }
 
 
+    private fun bindTranslationSelector(viewModel: AudioDetailsViewModel) {
+        val selectorView: Spinner = exo_translation_selector
+        viewModel.availableTranslations
+                .map {
+                    LanguageAdapter(selectorView.context, it)
+                }.zipWith(viewModel.chosenAudioModel)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    (adapter, which) ->
+                    selectorView.apply {
+                        this.adapter = adapter
+                        this.itemSelections().subscribe { position ->
+                            if (position >= 0) {
+                                val translation = adapter.getItem(position)
+                                viewModel.setTranslationOverride(translation)
+                                boundService?.switchAudioTrack(translation)
+                            }
+                        }.disposedBy(disposeBag)
+                        this.setSelection(adapter.getPosition(which))
+                    }
+                }
+                .disposedBy(disposeBag)
+
+       LanguageSelectorViewBackground(selectorView)
+               .listenToLayoutChanges()
+               .disposedBy(disposeBag)
+    }
+
+
     override fun onResume() {
         super.onResume()
         audioIntent = AudioPlayerService.getLaunchIntent(requireContext())
@@ -135,5 +193,56 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
         }
+    }
+}
+
+/**
+ * List adapter for the language-selection dropdown.
+ *
+ * This is also responsible for creating the view seen at the top
+ * of the list (i.e. the 'currently selected' language).
+ */
+class LanguageAdapter(context: Context, audioModels: List<AudioFileModel>) : ArrayAdapter<AudioFileModel>(
+        context,
+        R.layout.view_language_box,
+        audioModels
+) {
+    // This is a view for use in the dropdown...
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        return inflateAndBind(position, convertView, parent)
+    }
+
+    // ..and this is the one used to preview the current selection
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): TextView {
+        val derived = inflateAndBind(position, convertView, parent)
+
+        derived.setTextColor(Color.WHITE)
+
+        return derived
+    }
+
+    /**
+     * Inflate and return a copy of `view_language_box.xml`.
+     *
+     * The inflated [TextView] will display the text of an
+     * [object which specifies its own language][SpecifiesLanguage] at the
+     * [provided index][position] within this adapter. Please refer to
+     * [SpecifiesLanguage.userFriendlyLanguage] for the expected textual output.
+     *
+     * @see ArrayAdapter.getView
+     */
+    private fun inflateAndBind(position: Int, convertView: View?, parent: ViewGroup): TextView {
+        val derived = if (convertView == null) {
+            LayoutInflater.from(parent.context)
+                    .inflate(R.layout.view_language_box, parent, false)
+        } else {
+            convertView
+        } as TextView
+
+        val item = getItem(position)
+
+        derived.text = item.userFriendlyLanguage(derived.context)
+
+        return derived
     }
 }

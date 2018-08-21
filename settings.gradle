@@ -1,6 +1,7 @@
 include ':app',
         ':navigation',
         ':analytics',
+        ':localization',
         ':audio',
         ':media',
         ':media_ui',
