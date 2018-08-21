@@ -85,6 +85,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
+        const val ZOOM_LEVEL_ONE = 18.0f
+        const val ZOOM_LEVEL_TWO = 19.0f
+        const val ZOOM_LEVEL_THREE = 20.0f
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -362,13 +365,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     newPosition,
                                     when (zoomLevel) {
                                         MapZoomLevel.One -> {
-                                            18.0f
+                                            ZOOM_LEVEL_ONE
                                         }
                                         MapZoomLevel.Two -> {
-                                            19.0f
+                                            ZOOM_LEVEL_TWO
                                         }
                                         MapZoomLevel.Three -> {
-                                            20.0f
+                                            ZOOM_LEVEL_THREE
                                         }
                                     }
                             )
@@ -572,6 +575,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         /**
          * Center the full object marker in the map.
+         * When we are in [MapContext.Tour] and if the item is being centered, always reset the zoom level to MapZoomLevel.Three
          */
         viewModel
                 .centerFullObjectMarker
@@ -580,7 +584,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         val tag = marker.tag
                         tag is ArticObject && tag.nid == nid
                     }?.let { marker ->
-                        map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
+                        val currentZoomLevel = map.cameraPosition.zoom
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, Math.max(ZOOM_LEVEL_THREE, currentZoomLevel)))
                     }
 
                 }.disposedBy(disposeBag)
