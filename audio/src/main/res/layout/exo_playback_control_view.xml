@@ -12,7 +12,8 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -52,12 +53,32 @@
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
         android:paddingStart="@dimen/marginTwo"
-        android:paddingRight="@dimen/marginTwo"
+        android:paddingEnd="@dimen/marginTwo"
         android:textColor="@color/audioDurationTextColor"
         android:textSize="@dimen/textFifteen"
         app:layout_constraintStart_toEndOf="@id/divider"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1:30" />
+
+    <Spinner
+        android:id="@+id/exo_translation_selector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginStandard"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:background="@null"
+        android:clipToPadding="false"
+        android:spinnerMode="dropdown"
+        android:textColor="@android:color/white"
+        app:layout_constraintHeight_default="wrap"
+        app:layout_constraintWidth_default="wrap"
+        app:layout_constraintStart_toEndOf="@id/exo_duration"
+        app:layout_constraintBottom_toTopOf="@id/exo_progress"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@drawable/exo_scrubber"
+        />
 
 
     <FrameLayout
@@ -72,12 +93,14 @@
             android:id="@id/exo_play"
             android:layout_width="@dimen/large_icon_size"
             android:layout_height="@dimen/large_icon_size"
+            android:contentDescription="@string/exo_controls_play_description"
             android:background="@drawable/ic_play" />
 
         <ImageButton
             android:id="@id/exo_pause"
             android:layout_width="@dimen/large_icon_size"
             android:layout_height="@dimen/large_icon_size"
+            android:contentDescription="@string/exo_controls_pause_description"
             android:background="@drawable/ic_pause" />
     </FrameLayout>
 

@@ -1,0 +1,14 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    implementation project(':base')
+
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+
+    implementation libs.rx_kotlin
+    implementation libs.rx
+    implementation libs.rx_android
+    implementation libs.room_rx
+}

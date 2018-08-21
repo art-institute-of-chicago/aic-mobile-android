@@ -30,9 +30,10 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
-import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
+import edu.artic.localization.LanguageSelector
 import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
@@ -93,7 +94,7 @@ class AudioPlayerService : DaggerService() {
          * @see [ExoPlayer.prepare]
          * @see [Player.setPlayWhenReady]
          */
-        class Play(val audioFile: ArticObject) : PlayBackAction()
+        class Play(val audioFile: ArticObject, val audioModel: AudioFileModel) : PlayBackAction()
 
         /**
          * Pause the current track.
@@ -136,43 +137,51 @@ class AudioPlayerService : DaggerService() {
      * * [Playing]
      * * [Paused]
      * * [Stopped]
+     *
+     * To switch states, send a [PlayBackAction] to [audioControl].
      */
-    sealed class PlayBackState(val articAudioFile: ArticAudioFile) {
-        class Playing(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
-        class Paused(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
-        class Stopped(articAudioFile: ArticAudioFile) : PlayBackState(articAudioFile)
+    sealed class PlayBackState(val audio: AudioFileModel) {
+        class Playing(audio: AudioFileModel) : PlayBackState(audio)
+        class Paused(audio: AudioFileModel) : PlayBackState(audio)
+        class Stopped(audio: AudioFileModel) : PlayBackState(audio)
     }
 
     private val binder: Binder = AudioPlayerServiceBinder()
     private lateinit var playerNotificationManager: PlayerNotificationManager
-    var articObject: ArticObject? = null
 
-    private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
-    val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
-    val currentTrack: Subject<ArticAudioFile> = BehaviorSubject.create()
-
-    val disposeBag = DisposeBag()
+    // NB: As this is an Android Service, we _CANNOT_ define '@Inject' properties in the constructor
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
+    @Inject
+    lateinit var languageSelector: LanguageSelector
+
+
+    var articObject: ArticObject? = null
+        private set
+
+    private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
+    val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
+    val currentTrack: Subject<AudioFileModel> = BehaviorSubject.create()
+
+    val disposeBag = DisposeBag()
+
 
     override fun onCreate() {
         super.onCreate()
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                val articAudioFile = articObject?.audioFile
-
-                articAudioFile?.let { audioFile ->
+                (currentTrack as BehaviorSubject).value?.let { given ->
                     when {
-                        playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(audioFile))
+                        playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(given))
                         playbackState == Player.STATE_ENDED -> {
                             /*Play back completed*/
-                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, articAudioFile.title.orEmpty())
-                            audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value.title.orEmpty())
+                            audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
                         }
-                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
-                        else -> audioPlayBackStatus.onNext(PlayBackState.Paused(audioFile))
+                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
+                        else -> audioPlayBackStatus.onNext(PlayBackState.Paused(given))
                     }
                 }
             }
@@ -181,7 +190,7 @@ class AudioPlayerService : DaggerService() {
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
                 is PlayBackAction.Play -> {
-                    setArticObject(playBackAction.audioFile)
+                    setArticObject(playBackAction.audioFile, playBackAction.audioModel)
                     player.playWhenReady = true
                 }
 
@@ -194,7 +203,7 @@ class AudioPlayerService : DaggerService() {
                 }
 
                 is PlayBackAction.Stop -> {
-                    articObject?.audioFile?.let { audioFile ->
+                    (currentTrack as BehaviorSubject).value?.let { audioFile ->
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                     }
                     player.stop()
@@ -279,9 +288,9 @@ class AudioPlayerService : DaggerService() {
         }
     }
 
-    fun setArticObject(_articObject: ArticObject, resetPosition: Boolean = false) {
+    fun setArticObject(_articObject: ArticObject, audio: AudioFileModel, resetPosition: Boolean = false) {
 
-        if (articObject != _articObject || player.playbackState == Player.STATE_IDLE) {
+        if (articObject != _articObject || (currentTrack as BehaviorSubject).value != audio || player.playbackState == Player.STATE_IDLE) {
 
             /** Check if the current audio is being interrupted by other audio object.**/
             articObject?.let { articObject ->
@@ -290,16 +299,15 @@ class AudioPlayerService : DaggerService() {
                 }
             }
             articObject = _articObject
-            val audioFile = articObject?.audioFile
-            audioFile?.let {
-                val fileUrl = audioFile.fileUrl
-                fileUrl?.let { url ->
+
+            audio.let {
+                audio.fileUrl?.let { url ->
                     val uri = Uri.parse(url)
                     val mediaSource = buildMediaSource(uri)
                     player.prepare(mediaSource, resetPosition, false)
                     player.seekTo(0)
                 }
-                currentTrack.onNext(audioFile)
+                currentTrack.onNext(audio)
             }
         }
     }
@@ -341,14 +349,42 @@ class AudioPlayerService : DaggerService() {
         disposeBag.dispose()
     }
 
+    /**
+     * Pause current track, switch audio file, resume the new track at
+     * that same position.
+     *
+     * If nothing is [currently playing][audioPlayBackStatus], this skips
+     * the 'pause' and 'resume' operations.
+     *
+     * @see setArticObject
+     */
+    fun switchAudioTrack(alternative: AudioFileModel) {
+        articObject?.let {
+            val playBackState = (audioPlayBackStatus as BehaviorSubject).value
+            if (playBackState is Playing) {
+                pausePlayer()
+                playPlayer(it, alternative)
+            } else {
+                currentTrack.onNext(alternative)
+            }
+        }
+    }
+
     fun pausePlayer() {
         audioControl.onNext(PlayBackAction.Pause())
     }
 
-    fun playPlayer(audioFile: ArticObject?) {
-        audioFile?.let {
-            audioControl.onNext(PlayBackAction.Play(it))
+    fun playPlayer(given: ArticObject?) {
+        if (given != null) {
+            val audioFile = given.audioFile
+            if (audioFile != null) {
+                playPlayer(given, audioFile.preferredLanguage(languageSelector))
+            }
         }
+    }
+
+    fun playPlayer(audioFile: ArticObject, audioModel: AudioFileModel) {
+        audioControl.onNext(PlayBackAction.Play(audioFile, audioModel))
     }
 
     fun resumePlayer() {
@@ -356,7 +392,7 @@ class AudioPlayerService : DaggerService() {
     }
 
     fun stopPlayer() {
-        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject?.audioFile?.title.orEmpty())
+        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, (currentTrack as BehaviorSubject).value?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 }

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.localization.SpecifiesLanguage
 
 @JsonClass(generateAdapter = true)
 @Entity
@@ -47,5 +48,9 @@ data class ArticGeneralInfo(
             @Json(name = "see_all_tours_intro") val seeAllToursIntro: String,
             @Json(name = "restrooms_title") val restroomsTitle: String,
             @Json(name = "restrooms_text") val restroomsText: String
-    )
+    ) : SpecifiesLanguage {
+        override fun underlyingLanguage(): String? {
+            return language
+        }
+    }
 }

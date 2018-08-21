@@ -10,6 +10,7 @@ import edu.artic.db.DBModule
 import edu.artic.events.EventsModule
 import edu.artic.exhibitions.ExhibitionsModule
 import edu.artic.info.InfoModule
+import edu.artic.localization.LocalizerModule
 import edu.artic.map.MapModule
 import edu.artic.splash.SplashModule
 import edu.artic.tours.ToursModule
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     AppModule::class,
+    LocalizerModule::class,
     SplashModule::class,
     WelcomeModule::class,
     ToursModule::class,

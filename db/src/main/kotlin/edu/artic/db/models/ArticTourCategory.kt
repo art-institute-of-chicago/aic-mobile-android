@@ -2,6 +2,7 @@ package edu.artic.db.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.localization.SpecifiesLanguage
 
 @JsonClass(generateAdapter = true)
 data class ArticTourCategory(
@@ -12,5 +13,9 @@ data class ArticTourCategory(
     data class Translation(
             @Json(name = "language") val language: String,
             @Json(name = "category") val category: String
-    )
+    ) : SpecifiesLanguage {
+        override fun underlyingLanguage(): String? {
+            return language
+        }
+    }
 }
