@@ -32,7 +32,7 @@ import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.zipWith
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_audio_details.*
 import kotlin.reflect.KClass
@@ -153,9 +153,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.availableTranslations
                 .map {
                     LanguageAdapter(selectorView.context, it)
-                }.withLatestFrom(viewModel.chosenAudioModel) {
-                    adapter, which -> adapter to which
-                }
+                }.zipWith(viewModel.chosenAudioModel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     (adapter, which) ->
