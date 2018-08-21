@@ -159,7 +159,6 @@ class AudioPlayerService : DaggerService() {
 
     var articObject: ArticObject? = null
         private set
-    var preferredAudio: AudioFileModel? = null
 
     private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
     val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
@@ -173,14 +172,12 @@ class AudioPlayerService : DaggerService() {
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                val audio: AudioFileModel? = preferredAudio
-
-                audio?.let { given ->
+                (currentTrack as BehaviorSubject).value?.let { given ->
                     when {
                         playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(given))
                         playbackState == Player.STATE_ENDED -> {
                             /*Play back completed*/
-                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, audio.title.orEmpty())
+                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value.title.orEmpty())
                             audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
                         }
                         playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
@@ -206,7 +203,7 @@ class AudioPlayerService : DaggerService() {
                 }
 
                 is PlayBackAction.Stop -> {
-                    preferredAudio?.let { audioFile ->
+                    (currentTrack as BehaviorSubject).value?.let { audioFile ->
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                     }
                     player.stop()
@@ -293,7 +290,7 @@ class AudioPlayerService : DaggerService() {
 
     fun setArticObject(_articObject: ArticObject, audio: AudioFileModel, resetPosition: Boolean = false) {
 
-        if (articObject != _articObject || preferredAudio != audio || player.playbackState == Player.STATE_IDLE) {
+        if (articObject != _articObject || (currentTrack as BehaviorSubject).value != audio || player.playbackState == Player.STATE_IDLE) {
 
             /** Check if the current audio is being interrupted by other audio object.**/
             articObject?.let { articObject ->
@@ -302,7 +299,6 @@ class AudioPlayerService : DaggerService() {
                 }
             }
             articObject = _articObject
-            preferredAudio = audio
 
             audio.let {
                 val fileUrl = audio.fileUrl
@@ -389,7 +385,7 @@ class AudioPlayerService : DaggerService() {
     }
 
     fun stopPlayer() {
-        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, preferredAudio?.title.orEmpty())
+        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, (currentTrack as BehaviorSubject).value?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 }
