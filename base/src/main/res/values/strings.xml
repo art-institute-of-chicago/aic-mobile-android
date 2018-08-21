@@ -8,8 +8,8 @@
     <string name="stops">%s Stops</string>
     <string name="events" tools:ignore="ExtraTranslation">Events</string>
     <string name="through">Through %s</string>
-    <string name="infoPrompt">Access your memeber card, see museum hours, or update your app settings.</string>
-    <string name="accessMemberCard">Access Memeber Card</string>
+    <string name="infoPrompt">Access your member card, see museum hours, or update your app settings.</string>
+    <string name="accessMemberCard">Access Member Card</string>
     <string name="channel_name">audio</string>
     <string name="transcript">Transcript</string>
     <string name="credits">Credits</string>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,80 +9,10 @@
     android:fitsSystemWindows="true"
     app:statusBarBackground="@android:color/transparent">
 
-    <android.support.design.widget.AppBarLayout
+    <edu.artic.view.ArticDetailsAppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="true">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleEnabled="false">
-
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:fitsSystemWindows="true">
-
-                <ImageView
-                    android:id="@+id/exhibitionImage"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@null"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/expandedTitle"
-                    style="@style/DetailToolbarExpandedText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:maxLines="3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/exhibitionImage" />
-
-            </android.support.constraint.ConstraintLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:contentDescription="@null"
-                android:fitsSystemWindows="true"
-                android:src="@drawable/detail_header_gradient"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="1" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                tools:title="test">
-
-                <TextView
-                    android:id="@+id/toolbarTitle"
-                    style="@style/DetailToolbarText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0"
-                    android:lines="1" />
-
-            </android.support.v7.widget.Toolbar>
-
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
+        android:layout_height="wrap_content"/>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -101,38 +32,38 @@
                 android:layout_width="@dimen/marginDouble"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent=".5" />
+                app:layout_constraintGuide_percent=".5"/>
 
             <Button
                 android:id="@+id/showOnMap"
                 style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginStandard"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
-                android:layout_marginEnd="@dimen/marginStandard"
                 android:drawableLeft="@drawable/ic_show_on_map"
                 android:padding="@dimen/marginStandard"
                 app:layout_constraintEnd_toStartOf="@id/centerGuide"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Show on Map" />
+                tools:text="Show on Map"/>
 
             <Button
                 android:id="@+id/buyTickets"
                 style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginStandard"
                 android:layout_marginTop="21dp"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:drawableStart="@drawable/ic_ticket"
                 android:drawablePadding="@dimen/marginStandard"
+                android:drawableStart="@drawable/ic_ticket"
                 android:padding="@dimen/marginStandard"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/centerGuide"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Buy Tickets" />
+                tools:text="Buy Tickets"/>
 
             <TextView
                 android:id="@+id/description"
@@ -140,12 +71,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginTop="19dp"
                 android:layout_marginRight="@dimen/marginDouble"
+                android:layout_marginTop="19dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/showOnMap"
-                tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate." />
+                tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate."/>
 
             <TextView
                 android:id="@+id/throughDate"
@@ -153,12 +84,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="@dimen/marginDouble"
+                android:layout_marginTop="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"
-                tools:text="Through August 5, 2018" />
+                tools:text="Through August 5, 2018"/>
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>

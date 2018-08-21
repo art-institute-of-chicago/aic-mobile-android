@@ -1,7 +1,6 @@
 package edu.artic.welcome
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -11,15 +10,14 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.adapter.itemSelectionsWithPosition
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.app_bar_layout.view.*
 import kotlinx.android.synthetic.main.fragment_welcome.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -45,20 +43,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /**
-         * TODO:: move this logic away into the app bar view class
-         * TODO:: Make a Custom AppBar view that dynamically switches the toolbar type (collapsible and non collapsible)
-         */
-        val appBar = appBarLayout as AppBarLayout
-        (appBarLayout as AppBarLayout).apply {
-            addOnOffsetChangedListener { aBarLayout, verticalOffset ->
-                val progress: Double = 1 - Math.abs(verticalOffset) / aBarLayout.totalScrollRange.toDouble()
-                appBar.searchIcon.background.alpha = (progress * 255).toInt()
-                appBar.flagIcon.drawable.alpha = (progress * 255).toInt()
-                appBar.expandedImage.background.alpha = (progress * 255).toInt()
-            }
-        }
-
         /* Build tour summary list*/
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         tourSummaryRecyclerView.layoutManager = layoutManager
@@ -70,22 +54,27 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         val tourSummaryAdapter = WelcomeToursAdapter()
         tourSummaryRecyclerView.adapter = tourSummaryAdapter
 
-        viewModel.tours.bindToMain(tourSummaryAdapter.itemChanges()).disposedBy(disposeBag)
+        viewModel.tours
+                .bindToMain(tourSummaryAdapter.itemChanges())
+                .disposedBy(disposeBag)
 
         /* Build on view list*/
         val adapter = OnViewAdapter()
         val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         onViewRecyclerView.layoutManager = exhibitionLayoutManager
         onViewRecyclerView.adapter = adapter
-        viewModel.exhibitions.bindToMain(adapter.itemChanges()).disposedBy(disposeBag)
+        viewModel.exhibitions
+                .bindToMain(adapter.itemChanges())
+                .disposedBy(disposeBag)
 
         /* Build event summary list*/
         val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         eventsRecyclerView.layoutManager = eventsLayoutManager
         val eventsAdapter = WelcomeEventsAdapter()
         eventsRecyclerView.adapter = eventsAdapter
-        viewModel.events.bindToMain(eventsAdapter.itemChanges()).disposedBy(disposeBag)
-
+        viewModel.events
+                .bindToMain(eventsAdapter.itemChanges())
+                .disposedBy(disposeBag)
 
         viewModel.shouldPeekTourSummary
                 .filter { it }
@@ -93,7 +82,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     animateRecyclerView()
                 }
                 .disposedBy(disposeBag)
-
     }
 
     override fun setupBindings(viewModel: WelcomeViewModel) {

@@ -4,23 +4,20 @@ import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.asUrlViewIntent
+import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.listenerAnimateSharedTransaction
-import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticEvent
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlin.reflect.KClass
-
 
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     override val screenCategory: ScreenCategoryName
@@ -38,10 +35,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
-        }
-        eventImage.transitionName = event.title
+        appBarLayout.setImageTransitionName(event.title)
     }
 
     override fun onRegisterViewModel(viewModel: EventDetailViewModel) {
@@ -50,10 +44,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     override fun setupBindings(viewModel: EventDetailViewModel) {
         viewModel.title
-                .subscribe {
-                    expandedTitle.text = it
-                    toolbarTitle.text = it
-                }
+                .subscribe { appBarLayout.setTitleText(it) }
                 .disposedBy(disposeBag)
 
         viewModel.imageUrl
@@ -64,8 +55,8 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                     Glide.with(this)
                             .load(it)
                             .apply(options)
-                            .listenerAnimateSharedTransaction(this, eventImage)
-                            .into(eventImage)
+                            .listenerAnimateSharedTransaction(this, appBarLayout.detailImage)
+                            .into(appBarLayout.detailImage)
                 }
                 .disposedBy(disposeBag)
 
@@ -89,7 +80,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.eventButtonText
-                .map{ it.isNotEmpty()}
+                .map { it.isNotEmpty() }
                 .bindToMain(registerToday.visibility())
 
 
