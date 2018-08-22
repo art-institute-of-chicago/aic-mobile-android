@@ -287,7 +287,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.displayMode
                 .filterFlatMap({ it is MapViewModel.DisplayMode.Tour }, { it as MapViewModel.DisplayMode.Tour })
                 .subscribe { mapMode ->
-                    val tour = mapMode.tour
+                    val tour = mapMode.active
                     val fragmentManager = requireActivity().supportFragmentManager
                     fragmentManager.beginTransaction()
                             .replace(R.id.infocontainer, TourCarouselFragment.create(tour), OBJECT_DETAILS)
@@ -639,7 +639,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                 /**
                                  * If map's display mode is Tour, get the order number of the stop.
                                  */
-                                val index = displayMode.tour
+                                val index = displayMode.active
                                         .tourStops
                                         .map { it.objectId }
                                         .indexOf(articObject.nid)
