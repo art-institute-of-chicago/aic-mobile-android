@@ -611,6 +611,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 })
     }
 
+    private fun getAlphaValue(mapContext: MapViewModel.MapContext, floor: Int): Float {
+        return when (mapContext) {
+            is MapViewModel.MapContext.General -> 1.0f
+            is MapViewModel.MapContext.Tour -> {
+                if (viewModel.currentFloor == floor) {
+                    1.0f
+                } else {
+                    0.6f
+                }
+            }
+        }
+    }
+
     private fun loadObject(articObject: ArticObject, floor: Int, mapContext: MapViewModel.MapContext) {
         Glide.with(this)
                 .asBitmap()
@@ -621,23 +634,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                          * If map context is Tour, get the order number of the stop.
                          */
                         if (viewModel.currentFloor == floor || mapContext is MapViewModel.MapContext.Tour) {
-
-                            /**
-                             * If the tour is not in the current floor make the ui translucent
-                             */
-
-                            val markerAlpha = when (mapContext) {
-                                is MapViewModel.MapContext.General -> 1.0f
-                                is MapViewModel.MapContext.Tour -> {
-                                    if (viewModel.currentFloor == floor) {
-                                        1.0f
-                                    } else {
-                                        0.6f
-                                    }
-                                }
-                            }
-
-
                             var order: String? = null
                             if (mapContext is MapViewModel.MapContext.Tour) {
                                 /**
@@ -661,7 +657,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             ))
                                             .zIndex(2f)
                                             .visible(true)
-                                            .alpha(markerAlpha)
+                                            .alpha(getAlphaValue(mapContext, floor))/* If the tour is not in the current floor make the ui translucent*/
                             )
 
                             fullMaker.tag = articObject
