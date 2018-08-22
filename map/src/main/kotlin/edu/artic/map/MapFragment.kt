@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.getStatusBarHeight
+import edu.artic.base.utils.statusBarHeight
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
 import edu.artic.db.models.*
@@ -116,7 +116,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             map.setMinZoomPreference(17f)
             map.setMaxZoomPreference(22f)
             /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
-            map.setPadding(0, requireActivity().getStatusBarHeight(), 0, 0)
+            map.setPadding(0, requireActivity().statusBarHeight, 0, 0)
             /**
              * We are setting the bounds here as they are roughly the bounds of the museum,
              * locks us into just that area
