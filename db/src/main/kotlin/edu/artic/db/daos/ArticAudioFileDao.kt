@@ -5,6 +5,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import edu.artic.db.models.ArticAudioFile
+import io.reactivex.Flowable
 
 @Dao
 interface ArticAudioFileDao {
@@ -16,4 +17,7 @@ interface ArticAudioFileDao {
 
     @Query("select * from ArticAudioFile where nid = :id")
     fun getAudioById(id: String): ArticAudioFile
+
+    @Query("select * from ArticAudioFile where nid = :id")
+    fun getAudioByIdAsync(id: String): Flowable<ArticAudioFile>
 }
