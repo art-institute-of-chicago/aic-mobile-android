@@ -31,7 +31,7 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
     val tourStopViewModels: Subject<List<TourCarousalBaseViewModel>> = BehaviorSubject.create()
     val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
-    val playerControl: Subject<TourCarousalStopCellViewModel.PlayerAction> = PublishSubject.create()
+    val playerControl: Subject<TourCarousalBaseViewModel.PlayerAction> = PublishSubject.create()
     val currentPage: Subject<Int> = BehaviorSubject.createDefault(0)
 
     private val selectedStop: Subject<ArticObject> = BehaviorSubject.create()
@@ -121,7 +121,16 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
 
 }
 
-open class TourCarousalBaseViewModel : BaseViewModel()
+open class TourCarousalBaseViewModel : BaseViewModel() {
+    sealed class PlayerAction {
+        class Play(val requestedObject: ArticObject) : PlayerAction()
+        class Pause : PlayerAction()
+    }
+
+    val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
+    val playerControl: Subject<PlayerAction> = PublishSubject.create()
+    val viewPlayBackState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
+}
 
 
 /**
@@ -130,8 +139,6 @@ open class TourCarousalBaseViewModel : BaseViewModel()
  */
 class TourCarousalIntroViewModel(tourStop: ArticTour.TourStop) : TourCarousalBaseViewModel() {
 
-    //current track status
-    val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val isPlaying: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
     init {
@@ -151,23 +158,13 @@ class TourCarousalIntroViewModel(tourStop: ArticTour.TourStop) : TourCarousalBas
 
 
 class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : TourCarousalBaseViewModel() {
-
-    val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
-    val playerControl: Subject<PlayerAction> = PublishSubject.create()
-
-    val viewPlayBackState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val currentAudioTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
     val stopNumber: Subject<String> = BehaviorSubject.createDefault("${tourStop.order + 1}.")
-
     val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
 
-    sealed class PlayerAction {
-        class Play(val requestedObject: ArticObject) : PlayerAction()
-        class Pause : PlayerAction()
-    }
 
     init {
 
