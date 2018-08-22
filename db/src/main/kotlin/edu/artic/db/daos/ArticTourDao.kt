@@ -13,6 +13,9 @@ interface ArticTourDao {
     @Query("select * from ArticTour limit 1")
     fun getFirstTour(): ArticTour
 
+    @Query("select * from ArticTour limit 1")
+    fun getAsyncFirstTour(): Flowable<ArticTour>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addTours(tours: List<ArticTour>)
 

@@ -3,19 +3,21 @@ package edu.artic.map
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.models.ArticGallery
-import edu.artic.db.models.ArticMapAnnotation
-import edu.artic.db.models.ArticMapTextType
-import edu.artic.db.models.ArticObject
+import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.models.*
+import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.mapToMapItem
 import edu.artic.map.helpers.toLatLng
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -34,12 +36,31 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
         private val mapAnnotationDao: ArticMapAnnotationDao,
         private val galleryDao: ArticGalleryDao,
-        private val objectDao: ArticObjectDao
+        private val objectDao: ArticObjectDao,
+        tourDao: ArticTourDao,
+        private val tourProgressManager: TourProgressManager
 ) : BaseViewModel() {
 
     val amenities: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val spacesAndLandmarks: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
+
+    val displayMode: Subject<DisplayMode> = BehaviorSubject.create()
+    val centerFullObjectMarker: Subject<String> = BehaviorSubject.create()
+
+    /**
+     * Class used to represent the display mode of map.
+     * Map view can be used with following different modes
+     *
+     * <ul>
+     *     <li>General: Everything is displayed for selected floor </li>
+     *     <li>Tour   : Only the tour tourStopViewModels are displayed in the map.</li>
+     * </ul>
+     */
+    sealed class DisplayMode {
+        class CurrentFloor() : DisplayMode()
+        class Tour(val active: ArticTour) : DisplayMode()
+    }
 
     /**
      * This stores all the map items, and changes at every zoom level and every floor.
@@ -49,7 +70,7 @@ class MapViewModel @Inject constructor(
      * you'll probably want to minimize allocations in whatever you have observing it.
      */
     val whatToDisplayOnMap: Subject<List<MapItem<*>>> = BehaviorSubject.create()
-
+    val tour: Subject<Optional<ArticTour>> = BehaviorSubject.createDefault(Optional(null))
 
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     val distinctFloor: Observable<Int>
@@ -81,30 +102,38 @@ class MapViewModel @Inject constructor(
 
     init {
 
-        // Each time the floor changes update the current amenities for that floor this is explore mode
-        distinctFloor
-                .flatMap { floor ->
-                    mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).toObservable()
-                }.map { amenitiesList -> amenitiesList.mapToMapItem() }
+        tour
+                .map { articTour ->
+                    val tour = articTour.value
+                    var displayMode: DisplayMode = DisplayMode.CurrentFloor()
+                    tour?.let {
+                        displayMode = DisplayMode.Tour(it)
+                        floorChangedTo(tour.floorAsInt)
+                        tourProgressManager.selectedTour.onNext(Optional(it))
+                    }
+                    displayMode
+                }
+                .bindTo(displayMode)
+
+
+
+        observeAmenities()
                 .bindTo(amenities)
                 .disposedBy(disposeBag)
 
+        /**
+         * Clear out amenities on tour mode.
+         */
+        displayMode.filter { it is DisplayMode.Tour }
+                .map { listOf<MapItem.Annotation>() }
+                .bindTo(amenities)
+                .disposedBy(disposeBag)
 
         /**
-         * Upon changing zoom level to anything except MapZoomLevel.One and any distinct change in
-         * floor causes a change of space landmarks
+         * Observe landmark for all modes.
          */
-        Observables.combineLatest(
-                zoomLevel.distinctUntilChanged()
-                        .filter { zoomLevel -> zoomLevel !== MapZoomLevel.One },
-                distinctFloor
-        ) { _, floor ->
-            mapAnnotationDao.getTextAnnotationByTypeAndFloor(
-                    ArticMapTextType.SPACE,
-                    floor.toString())
-                    .toObservable()
-                    .map { it.mapToMapItem() }
-        }.flatMap { it }
+        observeSpaces()
+                .flatMap { it }
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
 
@@ -112,6 +141,105 @@ class MapViewModel @Inject constructor(
         setupZoomLevelTwoBinds()
         setupZoomLevelThreeBinds()
 
+        /**
+         * Emits list of tour stops without tour intro.
+         */
+        val tourObjects: Observable<List<MapItem<*>>> = displayMode
+                .filterFlatMap({ it is DisplayMode.Tour }, { it as DisplayMode.Tour })
+                .map { mapMode ->
+                    mapMode.active.tourStops.mapNotNull { it.objectId } to mapMode.active
+                }.flatMap { objectIdsWithFloor ->
+                    val ids = objectIdsWithFloor.first
+                    val tour = objectIdsWithFloor.second
+                    objectDao.getObjectsByIdList(ids).toObservable().map {
+                        convertToMapItem(it, tour.floorAsInt)
+                    }
+                }
+
+        /**
+         * Combines tour intro and tour stops in order.
+         */
+        val tourMarkers = displayMode.filterFlatMap({ it is DisplayMode.Tour }, { it as DisplayMode.Tour })
+                .map { tourMode ->
+                    /** Add tour intro**/
+                    listOf<MapItem<*>>(MapItem.TourIntro(tourMode.active, tourMode.active.floorAsInt))
+                }.zipWith(tourObjects) { introList, stopList ->
+                    /** Add tour stops**/
+                    mutableListOf<MapItem<*>>().apply {
+                        addAll(introList)
+                        addAll(stopList)
+                    }
+                }
+
+        /**
+         * Update tour stop markers every time floor is changed.
+         */
+        Observables
+                .combineLatest(distinctFloor, tourMarkers) { _, markers ->
+                    markers
+                }.bindTo(whatToDisplayOnMap)
+                .disposedBy(disposeBag)
+
+        /**
+         * Sync the selected tour stop with the carousel.
+         */
+        selectedArticObject
+                .distinctUntilChanged()
+                .map { it.nid }
+                .bindTo(tourProgressManager.selectedStop)
+                .disposedBy(disposeBag)
+
+        /**
+         * Sync the carousel tour stop with map tour stop.
+         */
+        tourProgressManager.selectedStop
+                .distinctUntilChanged()
+                .bindTo(centerFullObjectMarker)
+                .disposedBy(disposeBag)
+
+    }
+
+    /**
+     *  Each time the floor changes update the current amenities for that floor this is explore mode
+     */
+    fun observeAmenities(): Observable<List<MapItem.Annotation>> {
+
+        return distinctFloor
+                .withLatestFrom(displayMode) { floor, mode ->
+                    floor to mode
+                }
+                .filter { it -> it.second is DisplayMode.CurrentFloor }
+                .map { it.first }
+                .flatMap { floor ->
+                    mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).toObservable()
+                }.map { amenitiesList -> amenitiesList.mapToMapItem() }
+    }
+
+
+    /**
+     * Upon changing zoom level to anything except MapZoomLevel.One and any distinct change in
+     * floor causes a change of space landmarks
+     */
+
+    fun observeSpaces(): Observable<Observable<List<MapItem.Annotation>>> {
+        return Observables.combineLatest(
+                zoomLevel.distinctUntilChanged().filter { zoomLevel -> zoomLevel !== MapZoomLevel.One },
+                distinctFloor
+        ) { _, floor ->
+            mapAnnotationDao.getTextAnnotationByTypeAndFloor(
+                    ArticMapTextType.SPACE,
+                    floor.toString())
+                    .toObservable()
+                    .map { it.mapToMapItem() }
+        }
+    }
+
+    private fun convertToMapItem(it: List<ArticObject>, floor: Int): MutableList<MapItem<ArticObject>> {
+        val mapList = mutableListOf<MapItem<ArticObject>>()
+        it.forEach { articObject ->
+            mapList.add(MapItem.Object(articObject, floor))
+        }
+        return mapList
     }
 
     /**
@@ -128,6 +256,10 @@ class MapViewModel @Inject constructor(
         ) { zoomLevel, floor ->
             return@combineLatest if (zoomLevel === zoomRestriction) floor else Int.MIN_VALUE
         }.filter { floor -> floor >= 0 }
+                .withLatestFrom(displayMode) { floor, mode ->
+                    floor to mode
+                }.filter { it -> it.second is DisplayMode.CurrentFloor }
+                .map { it.first }
     }
 
 
@@ -140,22 +272,27 @@ class MapViewModel @Inject constructor(
 
 
         zoomLevelOneObservable
+                .withLatestFrom(displayMode) { zoomLevelOne, mode ->
+                    zoomLevelOne to mode
+                }
+                .filter { it.second is DisplayMode.CurrentFloor }
+                .map { it.first }
                 .flatMap {
                     mapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK).toObservable()
                 }.map { landmarkList -> landmarkList.mapToMapItem() }
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
-        zoomLevelOneObservable
-                .map {
-                    listOf<MapItem<*>>()
-                }
-                .bindTo(whatToDisplayOnMap)
-                .disposedBy(disposeBag)
+
     }
 
     fun setupZoomLevelTwoBinds() {
 
         observeFloorsAtZoom(MapZoomLevel.Two)
+                .withLatestFrom(displayMode) { zoomLevelTwo, mode ->
+                    zoomLevelTwo to mode
+                }
+                .filter { it.second is DisplayMode.CurrentFloor }
+                .map { it.first }
                 .flatMap { floor ->
                     mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString()).toObservable()
                 }.map { it.mapToMapItem() }
@@ -166,9 +303,9 @@ class MapViewModel @Inject constructor(
 
 
     fun setupZoomLevelThreeBinds() {
-        val galleries = observeGalleriesAtFloor()
+        val galleries: Observable<List<ArticGallery>> = observeGalleriesAtFloor()
 
-        val objects = observeObjectsWithin(galleries)
+        val objects: Observable<List<MapItem.Object>> = observeObjectsWithin(galleries)
 
         Observables.combineLatest(
                 galleries,
@@ -176,9 +313,9 @@ class MapViewModel @Inject constructor(
         ) { galleryList, objectList ->
             mutableListOf<MapItem<*>>().apply {
                 addAll(
-                    galleryList.map { gallery ->
-                        MapItem.Gallery(gallery, gallery.floorAsInt)
-                    }
+                        galleryList.map { gallery ->
+                            MapItem.Gallery(gallery, gallery.floorAsInt)
+                        }
                 )
                 addAll(
                         objectList

@@ -116,7 +116,9 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
                 }.bindTo(image)
                 .disposedBy(disposeBag)
 
-
+        /**
+         * Check and log audio interrupted event if current audio playback is being interrupted.
+         */
         playerControl
                 .filterFlatMap({ it is PlayerAction.Play }, { it as PlayerAction.Play })
                 .withLatestFrom(currentTrack, objectObservable) { playerAction, currentTrack, articObject ->

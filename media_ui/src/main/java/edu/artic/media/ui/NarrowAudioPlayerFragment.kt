@@ -13,7 +13,10 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.navigation.NavigationConstants
+import edu.artic.ui.BaseFragment
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_bottom_audio_player.*
 import kotlin.reflect.KClass
 
@@ -47,6 +50,10 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
     var boundService: AudioPlayerService? = null
     var audioIntent: Intent? = null
 
+    /**
+     * Upon successful service connection sends the service instance to observers.
+     */
+    val observableAudioService: BehaviorSubject<AudioPlayerService> = BehaviorSubject.create()
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -57,6 +64,13 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
             val binder = service as AudioPlayerService.AudioPlayerServiceBinder
             boundService = binder.getService()
             setUpAudioServiceBindings()
+
+            /**
+             * Emits instance of AudioPlayerService only when the connection is successful.
+             */
+            boundService?.let {
+                observableAudioService.onNext(it)
+            }
         }
     }
 
@@ -90,8 +104,11 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         requireActivity().unbindService(serviceConnection)
     }
 
-
+    /**
+     * Binds the current track info and audio control actions with the service.
+     */
     private fun setUpAudioServiceBindings() {
+        
         boundService?.let { audioService ->
             audioService.currentTrack
                     .subscribe { audioFile ->
@@ -115,4 +132,12 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         }
     }
 
+}
+
+/**
+ * Returns Observable AudioPlayerService.
+ */
+fun BaseFragment.getAudioServiceObservable(fragmentId: Int = R.id.newPlayer): Subject<AudioPlayerService> {
+    val audioFragment = requireActivity().supportFragmentManager.findFragmentById(fragmentId) as NarrowAudioPlayerFragment
+    return audioFragment.observableAudioService
 }

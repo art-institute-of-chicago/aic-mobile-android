@@ -17,4 +17,8 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':base')
     implementation project(':adapter')
+    implementation project(':media')
+    implementation project(':media_ui')
+    implementation project(':map')
+    implementation project(':navigation')
 }

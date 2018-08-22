@@ -70,13 +70,13 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
             boundService = null
-            viewModel.audioObject = null
+            viewModel.playable = null
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as AudioPlayerService.AudioPlayerServiceBinder
             boundService = binder.getService()
-            viewModel.audioObject = boundService?.articObject
+            viewModel.playable = boundService?.playable
 
             boundService?.let {
                 audioPlayer.player = it.player
@@ -155,8 +155,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                     LanguageAdapter(selectorView.context, it)
                 }.zipWith(viewModel.chosenAudioModel)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
-                    (adapter, which) ->
+                .subscribeBy { (adapter, which) ->
                     selectorView.apply {
                         this.adapter = adapter
                         this.itemSelections().subscribe { position ->
@@ -171,9 +170,9 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
-       LanguageSelectorViewBackground(selectorView)
-               .listenToLayoutChanges()
-               .disposedBy(disposeBag)
+        LanguageSelectorViewBackground(selectorView)
+                .listenToLayoutChanges()
+                .disposedBy(disposeBag)
     }
 
 

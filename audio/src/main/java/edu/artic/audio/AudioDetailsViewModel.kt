@@ -2,6 +2,8 @@ package edu.artic.audio
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
+import edu.artic.db.Playable
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
@@ -29,10 +31,10 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
     val credits: Subject<String> = BehaviorSubject.create()
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
 
-    private val objectObservable: Subject<ArticObject> = BehaviorSubject.create()
+    private val objectObservable: Subject<Playable> = BehaviorSubject.create()
 
 
-    var audioObject: ArticObject? = null
+    var playable: Playable? = null
         set(value) {
             field = value
             value?.let {
@@ -46,19 +48,22 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
         // that we don't need to worry about them later
 
         objectObservable
+                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
                 .map {
                     it.artistCulturePlaceDelim?.replace("\r", "\n").orEmpty()
                 }.bindTo(authorCulturalPlace)
                 .disposedBy(disposeBag)
 
+
         objectObservable
                 .map {
-                    it.largeImageFullPath.orEmpty()
+                    it.getPlayableThumbnailUrl().orEmpty()
                 }.bindTo(image)
                 .disposedBy(disposeBag)
 
         // Note there is a 'credits' property on each AudioFileModel. We do not want that here.
         objectObservable
+                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
                 .map {
                     // This is a credit line for the object, _not_ translated on a per-language basis
                     it.creditLine.orEmpty()
@@ -66,10 +71,9 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
                 .disposedBy(disposeBag)
 
 
-
-
         // Retrieve a list of all translations we have available for this object
         val known = objectObservable
+                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
                 .map {
                     it.audioFile?.allTranslations().orEmpty()
                 }.share()
@@ -80,8 +84,8 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
         // Set up the default language selection.
         known.map {
             // TODO: we'll need to modify this to account for the current Tour language
-                    languageSelector.selectFrom(it)
-                }.bindTo(chosenAudioModel)
+            languageSelector.selectFrom(it)
+        }.bindTo(chosenAudioModel)
                 .disposedBy(disposeBag)
 
 
@@ -89,7 +93,7 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
 
         chosenAudioModel
                 .map {
-                    // TODO: default to articObject.title, perhaps?
+                    // TODO: default to playable.title, perhaps?
                     it.title.orEmpty()
                 }.bindTo(title)
                 .disposedBy(disposeBag)
