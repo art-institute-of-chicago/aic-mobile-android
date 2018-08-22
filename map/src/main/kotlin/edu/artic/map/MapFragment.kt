@@ -193,7 +193,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         mapMode
                     }.subscribe { mapMode ->
                         when (mapMode) {
-                            is MapViewModel.DisplayMode.General -> {
+                            is MapViewModel.DisplayMode.CurrentFloor -> {
                                 val supportFragmentManager = requireActivity().supportFragmentManager
                                 supportFragmentManager
                                         .findFragmentByTag(OBJECT_DETAILS)
@@ -496,7 +496,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     val mapMode = mapModeWithObject.first
 
                     when (mapMode) {
-                        is MapViewModel.DisplayMode.General -> {
+                        is MapViewModel.DisplayMode.CurrentFloor -> {
                             /**
                              * Display the selected object details.
                              */
@@ -613,7 +613,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     private fun getAlphaValue(displayMode: MapViewModel.DisplayMode, floor: Int): Float {
         return when (displayMode) {
-            is MapViewModel.DisplayMode.General -> 1.0f
+            is MapViewModel.DisplayMode.CurrentFloor -> 1.0f
             is MapViewModel.DisplayMode.Tour -> {
                 if (viewModel.currentFloor == floor) {
                     1.0f

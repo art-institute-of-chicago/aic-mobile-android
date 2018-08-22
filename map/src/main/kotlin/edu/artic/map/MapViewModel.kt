@@ -58,7 +58,7 @@ class MapViewModel @Inject constructor(
      * </ul>
      */
     sealed class DisplayMode {
-        class General() : DisplayMode()
+        class CurrentFloor() : DisplayMode()
         class Tour(val tour: ArticTour) : DisplayMode()
     }
 
@@ -104,7 +104,7 @@ class MapViewModel @Inject constructor(
         set(value) {
             field = value
             if (value == null) {
-                displayMode.onNext(DisplayMode.General())
+                displayMode.onNext(DisplayMode.CurrentFloor())
             } else {
                 displayMode.onNext(DisplayMode.Tour(value))
             }
@@ -133,7 +133,7 @@ class MapViewModel @Inject constructor(
         distinctFloor
                 .withLatestFrom(displayMode) { floor, mode ->
                     floor to mode
-                }.filter { floorToMapDisplayMode -> floorToMapDisplayMode.second is DisplayMode.General }
+                }.filter { floorToMapDisplayMode -> floorToMapDisplayMode.second is DisplayMode.CurrentFloor }
                 .flatMap { floorToMapDisplayMode ->
                     val currentFloor = floorToMapDisplayMode.first
                     mapAnnotationDao.getAmenitiesOnMapForFloor(currentFloor.toString()).toObservable()
@@ -160,7 +160,7 @@ class MapViewModel @Inject constructor(
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
 
-        displayMode.filter { it is DisplayMode.General }
+        displayMode.filter { it is DisplayMode.CurrentFloor }
                 .subscribe {
                     setupZoomLevelOneBinds()
                     setupZoomLevelTwoBinds()
