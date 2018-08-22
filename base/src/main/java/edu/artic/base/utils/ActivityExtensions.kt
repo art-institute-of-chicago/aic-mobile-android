@@ -79,7 +79,7 @@ val Activity.statusBarHeight: Int
     get() {
         var statusBarHeight = 0
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
+        if (resourceId != 0) {
             statusBarHeight = resources.getDimensionPixelSize(resourceId)
         }
         return statusBarHeight
