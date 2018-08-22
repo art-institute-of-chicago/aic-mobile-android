@@ -206,7 +206,7 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
          */
         audioPlayBackStatus
                 .withLatestFrom(articObjectObservable.toObservable()) { mediaPlayBackState, articObject ->
-                    val currentlyPlaying = mediaPlayBackState?.audio?.nid == articObject.audioFile?.nid
+                    val currentlyPlaying = mediaPlayBackState?.audio?.audioGroupId == articObject.audioFile?.nid
                     mediaPlayBackState to currentlyPlaying
                 }
                 .observeOn(AndroidSchedulers.mainThread())
