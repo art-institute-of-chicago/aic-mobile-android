@@ -85,8 +85,14 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                     val playControl = pair.first
                     val service = pair.second
                     when (playControl) {
-                        is TourCarousalStopCellViewModel.PlayerAction.Play -> service.playPlayer(playControl.requestedObject)
-                        is TourCarousalStopCellViewModel.PlayerAction.Pause -> service.pausePlayer()
+                        is TourCarousalBaseViewModel.PlayerAction.Play -> {
+                            if (playControl.audioFileModel != null) {
+                                service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
+                            } else {
+                                service.playPlayer(playControl.requestedObject)
+                            }
+                        }
+                        is TourCarousalBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
                     }
                 }.disposedBy(disposeBag)
 
