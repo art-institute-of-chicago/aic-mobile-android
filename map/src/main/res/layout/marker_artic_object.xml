@@ -17,6 +17,7 @@
         app:civ_border_overlay="true"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toTopOf="@id/base"
+        app:layout_constraintStart_toStartOf="parent"
         tools:background="#fab"
         tools:layout_height="200dp"
         tools:layout_width="200dp" />
