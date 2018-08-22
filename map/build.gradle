@@ -28,5 +28,5 @@ dependencies {
     implementation libs.arch_navigation
     implementation libs.arch_navigation_ui
     implementation libs.glide
-    implementation libs.view_pager_indicator
+    implementation libs.view_indicator
 }
