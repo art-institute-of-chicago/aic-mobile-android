@@ -9,7 +9,7 @@ buildscript {
         dagger_version = '2.15'
         support_version = '27.1.1'
         arch_version = '1.1.0'
-        navigation_version = '1.0.0-alpha04'
+        navigation_version = '1.0.0-alpha05'
         paging_version = '1.0.0-beta1'
         rx_binding_version = '2.1.1'
         kotshi_version = '1.0.4'

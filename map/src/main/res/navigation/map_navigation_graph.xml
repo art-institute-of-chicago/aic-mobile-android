@@ -9,6 +9,12 @@
         android:id="@+id/mapFragment"
         android:name="edu.artic.map.MapFragment"
         android:label="fragment_information"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map">
+
+        <argument
+            android:name="@string/tour_argument_key"
+            app:argType="edu.artic.db.models.ArticTour" />
+
+    </fragment>
 
 </navigation>
