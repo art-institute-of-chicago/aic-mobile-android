@@ -10,24 +10,19 @@
         android:id="@+id/tourDetailsFragment"
         android:name="edu.artic.tours.TourDetailsFragment"
         android:label="TourDetailsFragment">
+
         <argument
             android:name="tour"
             app:argType="edu.artic.db.models.ArticTour" />
+
         <action
             android:id="@+id/loadMap"
-            app:destination="@+id/mapFragment" />
+            app:destination="@id/mapActivity" />
     </fragment>
 
-    <fragment
-        android:id="@+id/mapFragment"
-        android:name="edu.artic.map.MapFragment"
-        android:label="MapFragment">
-
-        <argument
-            android:name="tour"
-            app:argType="edu.artic.db.models.ArticTour" />
-
-    </fragment>
-
+    <activity
+        android:id="@+id/mapActivity"
+        android:name="edu.artic.map.MapActivity"
+        android:label="MapActivity" />
 
 </navigation>

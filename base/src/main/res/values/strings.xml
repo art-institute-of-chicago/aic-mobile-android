@@ -19,4 +19,5 @@
     <string name="transcript">Transcript</string>
     <string name="credits">Credits</string>
     <string name="name_of_this_language">English</string>
+    <string name="tour_argument_key" >tour</string>
 </resources>

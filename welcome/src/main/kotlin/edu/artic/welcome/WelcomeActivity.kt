@@ -39,7 +39,7 @@ class WelcomeActivity : BaseActivity() {
     override fun onBackPressed() {
         if (!isTaskRoot && supportFragmentManager.backStackEntryCount == 0) {
             val navigationController = Navigation.findNavController(this, R.id.container)
-            if (navigationController.currentDestination.id == R.id.welcomeFragment) {
+            if (navigationController.currentDestination?.id == R.id.welcomeFragment) {
                 startActivity(quitIntent(this))
                 finish()
                 return
