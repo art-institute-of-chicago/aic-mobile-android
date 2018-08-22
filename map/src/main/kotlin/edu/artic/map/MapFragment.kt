@@ -8,10 +8,7 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.fuzz.rx.defaultThrottle
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
-import com.fuzz.rx.filterValue
+import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
@@ -19,9 +16,9 @@ import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.statusBarHeight
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
+import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.*
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
@@ -84,6 +81,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
+    private val tourArgument: Subject<ArticTour> = BehaviorSubject.create()
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
@@ -92,16 +90,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         const val ZOOM_LEVEL_THREE = 20.0f
     }
 
-
-
-    private val tour by lazy {
-        /** using the argument key define in [R.navigation.map_navigation_graph] **/
-        val tour_arg_key = resources.getString(R.string.tour_argument_key)
-        arguments!!.getParcelable<ArticTour>(tour_arg_key)
-    }
-
     override fun onRegisterViewModel(viewModel: MapViewModel) {
-        viewModel.tour = tour
+        tourArgument
+                .mapOptional()
+                .bindTo(viewModel.tour)
+                .disposedBy(disposeBag)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -734,4 +727,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
+    override fun setupNavigationBindings(viewModel: MapViewModel) {
+        super.setupNavigationBindings(viewModel)
+        val tour = requireActivity().intent?.extras?.getParcelable<ArticTour>(MapActivity.ARG_TOUR)
+
+        tour?.let {
+            tourArgument.onNext(tour)
+        }
+    }
 }
