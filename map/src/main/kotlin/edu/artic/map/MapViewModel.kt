@@ -45,20 +45,21 @@ class MapViewModel @Inject constructor(
     val spacesAndLandmarks: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
 
-    val mapContext: Subject<MapContext> = BehaviorSubject.create()
+    val displayMode: Subject<DisplayMode> = BehaviorSubject.create()
     val centerFullObjectMarker: Subject<String> = BehaviorSubject.create()
 
     /**
-     * Class used to represent the context of map.
-     * Map view can be used with following different contexts
+     * Class used to represent the display mode of map.
+     * Map view can be used with following different modes
+     *
      * <ul>
      *     <li>General: Everything is displayed for selected floor </li>
      *     <li>Tour   : Only the tour tourStopViewModels are displayed in the map.</li>
      * </ul>
      */
-    sealed class MapContext {
-        class General() : MapContext()
-        class Tour(val tour: ArticTour) : MapContext()
+    sealed class DisplayMode {
+        class General() : DisplayMode()
+        class Tour(val tour: ArticTour) : DisplayMode()
     }
 
     /**
@@ -103,9 +104,9 @@ class MapViewModel @Inject constructor(
         set(value) {
             field = value
             if (value == null) {
-                mapContext.onNext(MapContext.General())
+                displayMode.onNext(DisplayMode.General())
             } else {
-                mapContext.onNext(MapContext.Tour(value))
+                displayMode.onNext(DisplayMode.Tour(value))
             }
         }
 
@@ -120,21 +121,21 @@ class MapViewModel @Inject constructor(
                 .subscribe { tour ->
                     tour?.let {
                         /**
-                         * Switch the context to [MapContext.Tour] and select the tour floor.
+                         * Switch the displayMode to [DisplayMode.Tour] and select the tour floor.
                          */
                         floorChangedTo(tour.floorAsInt)
-                        mapContext.onNext(MapContext.Tour(tour))
+                        displayMode.onNext(DisplayMode.Tour(tour))
                     }
                 }.disposedBy(disposeBag)
 
 
         // Each time the floor changes update the current amenities for that floor this is explore mode
         distinctFloor
-                .withLatestFrom(mapContext) { floor, mapContext ->
-                    floor to mapContext
-                }.filter { floorToMapContext -> floorToMapContext.second is MapContext.General }
-                .flatMap { floorToMapContext ->
-                    val currentFloor = floorToMapContext.first
+                .withLatestFrom(displayMode) { floor, mode ->
+                    floor to mode
+                }.filter { floorToMapDisplayMode -> floorToMapDisplayMode.second is DisplayMode.General }
+                .flatMap { floorToMapDisplayMode ->
+                    val currentFloor = floorToMapDisplayMode.first
                     mapAnnotationDao.getAmenitiesOnMapForFloor(currentFloor.toString()).toObservable()
                 }.map { amenitiesList -> amenitiesList.mapToMapItem() }
                 .bindTo(amenities)
@@ -159,7 +160,7 @@ class MapViewModel @Inject constructor(
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
 
-        mapContext.filter { it is MapContext.General }
+        displayMode.filter { it is DisplayMode.General }
                 .subscribe {
                     setupZoomLevelOneBinds()
                     setupZoomLevelTwoBinds()
@@ -169,10 +170,10 @@ class MapViewModel @Inject constructor(
         /**
          * Emits list of tour stops without tour intro.
          */
-        val tourObjects: Observable<List<MapItem<*>>> = mapContext
-                .filterFlatMap({ it is MapContext.Tour }, { it as MapContext.Tour })
-                .map { mapContext ->
-                    mapContext.tour.tourStops.mapNotNull { it.objectId } to mapContext.tour
+        val tourObjects: Observable<List<MapItem<*>>> = displayMode
+                .filterFlatMap({ it is DisplayMode.Tour }, { it as DisplayMode.Tour })
+                .map { mapMode ->
+                    mapMode.tour.tourStops.mapNotNull { it.objectId } to mapMode.tour
                 }.flatMap { objectIdsWithFloor ->
                     val ids = objectIdsWithFloor.first
                     val tour = objectIdsWithFloor.second
@@ -184,10 +185,10 @@ class MapViewModel @Inject constructor(
         /**
          * Combines tour intro and tour stops in order.
          */
-        val tourMarkers = mapContext.filterFlatMap({ it is MapContext.Tour }, { it as MapContext.Tour })
-                .map { context ->
+        val tourMarkers = displayMode.filterFlatMap({ it is DisplayMode.Tour }, { it as DisplayMode.Tour })
+                .map { displayMode ->
                     /** Add tour intro**/
-                    listOf<MapItem<*>>(MapItem.TourIntro(context.tour, context.tour.floorAsInt))
+                    listOf<MapItem<*>>(MapItem.TourIntro(displayMode.tour, displayMode.tour.floorAsInt))
                 }.zipWith(tourObjects) { introList, stopList ->
                     /** Add tour stops**/
                     mutableListOf<MapItem<*>>().apply {
