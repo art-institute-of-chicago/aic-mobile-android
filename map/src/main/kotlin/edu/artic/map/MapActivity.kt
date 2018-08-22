@@ -37,14 +37,14 @@ class MapActivity : BaseActivity() {
             selectedItemId = R.id.action_map
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
-        graphBuilder(tour)
+        registerGraph(tour)
     }
 
     /**
      * Passing argument directly to startDestination is not possible without
      * building graph and setting the bundle manually.
      */
-    private fun graphBuilder(tour: ArticTour?) {
+    private fun registerGraph(tour: ArticTour?) {
         val navHostFragment = container as NavHostFragment
         val inflater = navHostFragment.navController.navInflater
         val graph = inflater.inflate(R.navigation.map_navigation_graph)
