@@ -189,11 +189,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              */
             mapClicks
                     .defaultThrottle()
-                    .withLatestFrom(viewModel.mapContext) { _, mapContext ->
-                        mapContext
-                    }.subscribe { mapContext ->
-                        when (mapContext) {
-                            is MapViewModel.MapContext.General -> {
+                    .withLatestFrom(viewModel.displayMode) { _, mapMode ->
+                        mapMode
+                    }.subscribe { mapMode ->
+                        when (mapMode) {
+                            is MapViewModel.DisplayMode.General -> {
                                 val supportFragmentManager = requireActivity().supportFragmentManager
                                 supportFragmentManager
                                         .findFragmentByTag(OBJECT_DETAILS)
@@ -205,7 +205,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                         }
                             }
 
-                            is MapViewModel.MapContext.Tour -> {
+                            is MapViewModel.DisplayMode.Tour -> {
                                 /*do nothing*/
                             }
                         }
@@ -284,10 +284,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe { viewModel.floorChangedTo(3) }
                 .disposedBy(disposeBag)
 
-        viewModel.mapContext
-                .filterFlatMap({ it is MapViewModel.MapContext.Tour }, { it as MapViewModel.MapContext.Tour })
-                .subscribe { mapContext ->
-                    val tour = mapContext.tour
+        viewModel.displayMode
+                .filterFlatMap({ it is MapViewModel.DisplayMode.Tour }, { it as MapViewModel.DisplayMode.Tour })
+                .subscribe { mapMode ->
+                    val tour = mapMode.tour
                     val fragmentManager = requireActivity().supportFragmentManager
                     fragmentManager.beginTransaction()
                             .replace(R.id.infocontainer, TourCarouselFragment.create(tour), OBJECT_DETAILS)
@@ -433,13 +433,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
 
         viewModel.whatToDisplayOnMap
-                .withLatestFrom(viewModel.mapContext) { whatToDisplayOnMap, mapContext ->
-                    mapContext to whatToDisplayOnMap
+                .withLatestFrom(viewModel.displayMode) { whatToDisplayOnMap, mapMode ->
+                    mapMode to whatToDisplayOnMap
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { mapContextWithItemList ->
-                    val mapContext = mapContextWithItemList.first
-                    val itemList = mapContextWithItemList.second
+                .subscribe { mapModeWithItemList ->
+                    val mapMode = mapModeWithItemList.first
+                    val itemList = mapModeWithItemList.second
 
                     departmentMarkers.forEach { marker ->
                         marker.remove()
@@ -476,11 +476,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             }
                             is MapItem.Object -> {
                                 val articObject = mapItem.item
-                                loadObject(articObject, mapItem.floor, mapContext)
+                                loadObject(articObject, mapItem.floor, mapMode)
                             }
                             is MapItem.TourIntro -> {
                                 val articTour = mapItem.item
-                                loadTourObject(articTour, mapItem.floor, mapContext)
+                                loadTourObject(articTour, mapItem.floor, mapMode)
                             }
 
                         }
@@ -489,14 +489,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }.disposedBy(disposeBag)
 
         viewModel.selectedArticObject
-                .withLatestFrom(viewModel.mapContext) { articObject, mapContext ->
-                    mapContext to articObject
-                }.subscribe { contextWithObject ->
-                    val selectedArticObject = contextWithObject.second
-                    val mapContext = contextWithObject.first
+                .withLatestFrom(viewModel.displayMode) { articObject, mapMode ->
+                    mapMode to articObject
+                }.subscribe { mapModeWithObject ->
+                    val selectedArticObject = mapModeWithObject.second
+                    val mapMode = mapModeWithObject.first
 
-                    when (mapContext) {
-                        is MapViewModel.MapContext.General -> {
+                    when (mapMode) {
+                        is MapViewModel.DisplayMode.General -> {
                             /**
                              * Display the selected object details.
                              */
@@ -505,7 +505,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     .replace(R.id.infocontainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
                                     .commit()
                         }
-                        is MapViewModel.MapContext.Tour -> {
+                        is MapViewModel.DisplayMode.Tour -> {
                             /* do nothing */
                         }
                     }
@@ -513,7 +513,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         /**
          * Center the full object marker in the map.
-         * When we are in [MapContext.Tour] and if the item is being centered, always reset the zoom level to MapZoomLevel.Three
+         * When we are in [DisplayMode.Tour] and if the item is being centered, always reset the zoom level to MapZoomLevel.Three
          */
         viewModel
                 .centerFullObjectMarker
@@ -611,10 +611,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 })
     }
 
-    private fun getAlphaValue(mapContext: MapViewModel.MapContext, floor: Int): Float {
-        return when (mapContext) {
-            is MapViewModel.MapContext.General -> 1.0f
-            is MapViewModel.MapContext.Tour -> {
+    private fun getAlphaValue(displayMode: MapViewModel.DisplayMode, floor: Int): Float {
+        return when (displayMode) {
+            is MapViewModel.DisplayMode.General -> 1.0f
+            is MapViewModel.DisplayMode.Tour -> {
                 if (viewModel.currentFloor == floor) {
                     1.0f
                 } else {
@@ -624,22 +624,22 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
-    private fun loadObject(articObject: ArticObject, floor: Int, mapContext: MapViewModel.MapContext) {
+    private fun loadObject(articObject: ArticObject, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
                 .load(articObject.thumbnailFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         /**
-                         * If map context is Tour, get the order number of the stop.
+                         * If map display mode is Tour, get the order number of the stop.
                          */
-                        if (viewModel.currentFloor == floor || mapContext is MapViewModel.MapContext.Tour) {
+                        if (viewModel.currentFloor == floor || displayMode is MapViewModel.DisplayMode.Tour) {
                             var order: String? = null
-                            if (mapContext is MapViewModel.MapContext.Tour) {
+                            if (displayMode is MapViewModel.DisplayMode.Tour) {
                                 /**
-                                 * If map context is Tour, get the order number of the stop.
+                                 * If map's display mode is Tour, get the order number of the stop.
                                  */
-                                val index = mapContext.tour
+                                val index = displayMode.tour
                                         .tourStops
                                         .map { it.objectId }
                                         .indexOf(articObject.nid)
@@ -657,7 +657,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             ))
                                             .zIndex(2f)
                                             .visible(true)
-                                            .alpha(getAlphaValue(mapContext, floor))/* If the tour is not in the current floor make the ui translucent*/
+                                            .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
                             )
 
                             fullMaker.tag = articObject
@@ -681,13 +681,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     /**
      * Loads the tour intro object as the marker in the map.
      */
-    private fun loadTourObject(articTour: ArticTour, floor: Int, mapContext: MapViewModel.MapContext) {
+    private fun loadTourObject(articTour: ArticTour, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
                 .load(articTour.thumbnailFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        if (mapContext is MapViewModel.MapContext.Tour) {
+                        if (displayMode is MapViewModel.DisplayMode.Tour) {
 
                             val markerAlpha = if (viewModel.currentFloor == floor) {
                                 1.0f
