@@ -59,7 +59,7 @@ class MapViewModel @Inject constructor(
      */
     sealed class DisplayMode {
         class CurrentFloor() : DisplayMode()
-        class Tour(val tour: ArticTour) : DisplayMode()
+        class Tour(val active: ArticTour) : DisplayMode()
     }
 
     /**
@@ -173,7 +173,7 @@ class MapViewModel @Inject constructor(
         val tourObjects: Observable<List<MapItem<*>>> = displayMode
                 .filterFlatMap({ it is DisplayMode.Tour }, { it as DisplayMode.Tour })
                 .map { mapMode ->
-                    mapMode.tour.tourStops.mapNotNull { it.objectId } to mapMode.tour
+                    mapMode.active.tourStops.mapNotNull { it.objectId } to mapMode.active
                 }.flatMap { objectIdsWithFloor ->
                     val ids = objectIdsWithFloor.first
                     val tour = objectIdsWithFloor.second
@@ -186,9 +186,9 @@ class MapViewModel @Inject constructor(
          * Combines tour intro and tour stops in order.
          */
         val tourMarkers = displayMode.filterFlatMap({ it is DisplayMode.Tour }, { it as DisplayMode.Tour })
-                .map { displayMode ->
+                .map { tourMode ->
                     /** Add tour intro**/
-                    listOf<MapItem<*>>(MapItem.TourIntro(displayMode.tour, displayMode.tour.floorAsInt))
+                    listOf<MapItem<*>>(MapItem.TourIntro(tourMode.active, tourMode.active.floorAsInt))
                 }.zipWith(tourObjects) { introList, stopList ->
                     /** Add tour stops**/
                     mutableListOf<MapItem<*>>().apply {
