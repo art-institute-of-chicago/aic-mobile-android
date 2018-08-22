@@ -194,14 +194,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }.subscribe { mapMode ->
                         when (mapMode) {
                             is MapViewModel.DisplayMode.CurrentFloor -> {
-                                val supportFragmentManager = requireActivity().supportFragmentManager
+                                val supportFragmentManager = this.requireFragmentManager()
                                 supportFragmentManager
                                         .findFragmentByTag(OBJECT_DETAILS)
                                         ?.let {
                                             supportFragmentManager
-                                                    ?.beginTransaction()
-                                                    ?.remove(it)
-                                                    ?.commit()
+                                                    .beginTransaction()
+                                                    .remove(it)
+                                                    .commit()
                                         }
                             }
 
