@@ -26,8 +26,8 @@ welcome suggestions and contributions from outside parties.
 This codebase is licensed under the GNU Affero General Public License v3
 as defined in the [top-level LICENSE file](LICENSE). We make heavy use
 of the Android support libraries and the Kotlin programming language -
-our modifications to those, if any, are licensed under the AGPL as well
-License unless otherwise indicated.
+our modifications to those, if any, are also licensed under the AGPL,
+ unless otherwise indicated.
 
 The following modules use proprietary APIs:
 * The `map` module includes Google's "`GoogleMap`" and "`LatLng`"
