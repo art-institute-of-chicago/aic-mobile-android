@@ -92,10 +92,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         const val ZOOM_LEVEL_THREE = 20.0f
     }
 
-    /** using the argument key define in [R.navigation.map_navigation_graph] **/
-    val tour_arg_key = resources.getString(R.string.tour_argument_key)
 
-    private val tour by lazy { arguments!!.getParcelable<ArticTour>(tour_arg_key) }
+
+    private val tour by lazy {
+        /** using the argument key define in [R.navigation.map_navigation_graph] **/
+        val tour_arg_key = resources.getString(R.string.tour_argument_key)
+        arguments!!.getParcelable<ArticTour>(tour_arg_key)
+    }
 
     override fun onRegisterViewModel(viewModel: MapViewModel) {
         viewModel.tour = tour
@@ -110,12 +113,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         mapView.onCreate(savedInstanceState)
         MapsInitializer.initialize(view.context)
+        val mapStyleOptions = requireActivity().assets.fileAsString(filename = "google_map_config.json")
         mapView.getMapAsync { map ->
             this.map = map
             map.isBuildingsEnabled = false
             map.isIndoorEnabled = false
             map.isTrafficEnabled = false
-            map.setMapStyle(MapStyleOptions(requireActivity().assets.fileAsString(filename = "google_map_config.json")))
+            map.setMapStyle(MapStyleOptions(mapStyleOptions))
             map.setMinZoomPreference(17f)
             map.setMaxZoomPreference(22f)
             /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
