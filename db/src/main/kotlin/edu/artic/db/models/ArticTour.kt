@@ -2,10 +2,12 @@ package edu.artic.db.models
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.db.Playable
 import edu.artic.localization.SpecifiesLanguage
 import kotlinx.android.parcel.Parcelize
 
@@ -43,7 +45,7 @@ data class ArticTour(
         @Json(name = "weight") val weight: Int,
         @Json(name = "tour_stops") val tourStops: List<TourStop>
 
-) : Parcelable {
+) : Parcelable, Playable {
 
     data class TourDate(
             @Json(name = "start_date") val startDate: String?,
@@ -82,6 +84,13 @@ data class ArticTour(
         }
     }
 
+    override fun getPlayableThumbnailUrl(): String? {
+        return this.largeImageFullPath
+    }
+
+    override fun getPlayableTitle(): String? {
+        return this.title
+    }
 
     /**
      * Returns [floor], parsed to an integer. We default to [Int.MIN_VALUE] as 0 is a valid floor.
@@ -91,6 +100,6 @@ data class ArticTour(
 
 }
 
-fun ArticTour.getIntroStop() : ArticTour.TourStop {
+fun ArticTour.getIntroStop(): ArticTour.TourStop {
     return ArticTour.TourStop("INTRO", this.tourAudio, null, -1)
 }
