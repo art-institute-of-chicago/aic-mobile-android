@@ -69,7 +69,7 @@ data class ArticAudioFile(
 
 fun ArticAudioFile.asAudioFileModel(): AudioFileModel {
     return AudioFileModel(
-            nid = nid,
+            audioGroupId = nid,
             language = "en-US",
             title = title,
             fileName = fileName,
@@ -83,7 +83,7 @@ fun ArticAudioFile.asAudioFileModel(): AudioFileModel {
 
 fun ArticAudioFile.Translation.asAudioFileModel(nid: String): AudioFileModel {
     return AudioFileModel(
-            nid = nid,
+            audioGroupId = nid,
             language = language,
             title = title,
             fileName = fileName,
@@ -104,7 +104,7 @@ fun ArticAudioFile.Translation.asAudioFileModel(nid: String): AudioFileModel {
  * handle that?
  */
 data class AudioFileModel(
-        val nid: String,
+        val audioGroupId: String,
         val language: String?,
         val title: String?,
         val fileName: String?,
