@@ -6,6 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.db.Playable
 import kotlinx.android.parcel.Parcelize
 
 @JsonClass(generateAdapter = true)
@@ -54,7 +55,15 @@ data class ArticObject(
         @Json(name = "audio_transcript") val audioTranscript: String?,
         @Json(name = "object_selector_number") val objectSelectorNumber: String?,
         @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?>
-) : Parcelable
+) : Parcelable, Playable {
+    override fun getPlayableThumbnailUrl(): String? {
+        return this.largeImageFullPath
+    }
+
+    override fun getPlayableTitle(): String? {
+        return this.title
+    }
+}
 
 val ArticObject.audioFile: ArticAudioFile?
     get() = this.audioCommentary.firstOrNull()?.audioFile
