@@ -115,6 +115,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             map.setMapStyle(MapStyleOptions(requireActivity().assets.fileAsString(filename = "google_map_config.json")))
             map.setMinZoomPreference(17f)
             map.setMaxZoomPreference(22f)
+            /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
             map.setPadding(0, requireActivity().getStatusBarHeight(), 0, 0)
             /**
              * We are setting the bounds here as they are roughly the bounds of the museum,
@@ -622,7 +623,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         if (viewModel.currentFloor == floor || mapContext is MapViewModel.MapContext.Tour) {
 
                             /**
-                             * If the tour is not in the current floor make the ui transparent
+                             * If the tour is not in the current floor make the ui translucent
                              */
 
                             val markerAlpha = when (mapContext) {
