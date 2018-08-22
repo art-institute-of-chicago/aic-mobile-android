@@ -3,8 +3,9 @@ package edu.artic.map.carousel
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsTracker
+import edu.artic.db.Playable
+import edu.artic.db.daos.ArticAudioFileDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.media.audio.AudioPlayerService
@@ -22,6 +23,7 @@ import javax.inject.Inject
  */
 class TourCarouselViewModel @Inject constructor(private val analyticsTracker: AnalyticsTracker,
                                                 private val objectDao: ArticObjectDao,
+                                                private val audioObjectDao: ArticAudioFileDao,
                                                 tourProgressManager: TourProgressManager) : BaseViewModel() {
 
 
@@ -64,12 +66,25 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
                 }.bindTo(tourStops)
                 .disposedBy(disposeBag)
 
+
         tourStops
-                .map { tourStops ->
+                .withLatestFrom(tourObservable) { tourStops, tour ->
+                    tour to tourStops
+                }
+                .map { tourWithTourStops ->
+                    val tour = tourWithTourStops.first
+                    val tourStops = tourWithTourStops.second
+
                     val list = mutableListOf<TourCarousalBaseViewModel>()
                     tourStops.forEach { tourStop ->
                         if (tourStop.objectId === "INTRO") {
-                            list.add(TourCarousalIntroViewModel(tourStop))
+                            val element = TourCarousalIntroViewModel(tour, audioObjectDao)
+
+                            element.playerControl
+                                    .bindTo(playerControl)
+                                    .disposedBy(element.viewDisposeBag)
+
+                            list.add(element)
                         } else {
                             val element = TourCarousalStopCellViewModel(tourStop, objectDao)
 
@@ -123,7 +138,7 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
 
 open class TourCarousalBaseViewModel : BaseViewModel() {
     sealed class PlayerAction {
-        class Play(val requestedObject: ArticObject) : PlayerAction()
+        class Play(val requestedObject: Playable, val audioFileModel: AudioFileModel? = null) : PlayerAction()
         class Pause : PlayerAction()
     }
 
@@ -137,20 +152,21 @@ open class TourCarousalBaseViewModel : BaseViewModel() {
  * ViewModel for the tour intro layout.
  * Play pause the tour introduction.
  */
-class TourCarousalIntroViewModel(tourStop: ArticTour.TourStop) : TourCarousalBaseViewModel() {
+class TourCarousalIntroViewModel(val tour: ArticTour,
+                                 val audioObjectDao: ArticAudioFileDao) : TourCarousalBaseViewModel() {
 
     val isPlaying: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
-    init {
-
-        /**
-         * check if the current audio translation's id same as this one.
-         * if the current tracks audio id and the intro audio io are same display pause otherwise pause
-         */
-        audioPlayBackStatus.filterFlatMap({ it is AudioPlayerService.PlayBackState.Playing }, { it as AudioPlayerService.PlayBackState.Playing })
-                .map { it.audio.nid == tourStop.audioId }
-                .bindTo(isPlaying)
-                .disposedBy(disposeBag)
+    fun playTourIntro() {
+        tour.tourAudio?.let { audioId ->
+            audioObjectDao.getAudioByIdAsync(audioId)
+                    .toObservable()
+                    .take(1)
+                    .map { it.asAudioFileModel() }
+                    .subscribe { audioFileModel ->
+                        playerControl.onNext(PlayerAction.Play(tour, audioFileModel))
+                    }
+        }
     }
 
 
