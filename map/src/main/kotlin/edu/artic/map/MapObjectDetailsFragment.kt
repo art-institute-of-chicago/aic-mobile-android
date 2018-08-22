@@ -7,10 +7,14 @@ import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.media.ui.NarrowAudioPlayerFragment
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map_object_details.*
 import kotlin.reflect.KClass
 
@@ -33,7 +37,7 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
         get() = ScreenCategoryName.OnViewDetails
 
     private val mapObject: ArticObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
-
+    private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
     override fun onRegisterViewModel(viewModel: MapObjectDetailsViewModel) {
         viewModel.articObject = mapObject
@@ -56,53 +60,23 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
         }.disposedBy(disposeBag)
 
 
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val audioFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.newPlayer) as NarrowAudioPlayerFragment
-        val audioService = audioFragment.boundService
-
-        audioService?.let { audioService ->
-            audioService.audioPlayBackStatus
-                    .bindTo(viewModel.audioPlayBackStatus)
-                    .disposedBy(disposeBag)
-
-            audioService.currentTrack
-                    .mapOptional()
-                    .bindTo(viewModel.currentTrack)
-                    .disposedBy(disposeBag)
-        }
-
-
-
         viewModel.playerControl
-                .subscribe { action ->
-                    when (action) {
+                .observeOn(AndroidSchedulers.mainThread())
+                .withLatestFrom(audioService) { playerAction, service ->
+                    playerAction to service
+                }.subscribe { actionWithService ->
+                    val playerAction = actionWithService.first
+                    val service = actionWithService.second
+
+                    when (playerAction) {
                         is MapObjectDetailsViewModel.PlayerAction.Play -> {
-                            audioService?.playPlayer(action.requestedObject)
+                            service.playPlayer(playerAction.requestedObject)
                         }
                         is MapObjectDetailsViewModel.PlayerAction.Pause -> {
-                            audioService?.pausePlayer()
+                            service.pausePlayer()
                         }
                     }
                 }.disposedBy(disposeBag)
-
-        playCurrent
-                .clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.playCurrentObject()
-                }.disposedBy(disposeBag)
-
-        pauseCurrent
-                .clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.pauseCurrentObject()
-                }.disposedBy(disposeBag)
-
 
 
         viewModel.playState.subscribe { playBackState ->
@@ -118,6 +92,39 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
                 }
             }
         }.disposedBy(disposeBag)
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        getAudioServiceObservable()
+                .bindTo(audioService)
+                .disposedBy(disposeBag)
+
+        audioService.flatMap { service -> service.audioPlayBackStatus }
+                .bindTo(viewModel.audioPlayBackStatus)
+                .disposedBy(disposeBag)
+
+        audioService.flatMap { service -> service.currentTrack }
+                .mapOptional()
+                .bindTo(viewModel.currentTrack)
+                .disposedBy(disposeBag)
+
+
+        playCurrent
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.playCurrentObject()
+                }.disposedBy(disposeBag)
+
+        pauseCurrent
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.pauseCurrentObject()
+                }.disposedBy(disposeBag)
 
     }
 

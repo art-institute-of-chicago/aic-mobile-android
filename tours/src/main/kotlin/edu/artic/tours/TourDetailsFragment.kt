@@ -1,5 +1,6 @@
 package edu.artic.tours
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
@@ -7,14 +8,19 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticTour
+import edu.artic.map.MapActivity
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
 import kotlinx.android.synthetic.main.fragment_tour_details.*
 import kotlin.reflect.KClass
@@ -96,6 +102,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         startTourButton.clicks()
+                .defaultThrottle()
                 .subscribe { viewModel.onClickStartTour() }
                 .disposedBy(disposeBag)
 
@@ -104,6 +111,34 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
+    }
+
+    override fun setupNavigationBindings(viewModel: TourDetailsViewModel) {
+        viewModel.navigateTo
+                .subscribe { navigationEndpoint ->
+                    when (navigationEndpoint) {
+                        is Navigate.Forward -> {
+                            when (navigationEndpoint.endpoint) {
+                                is TourDetailsViewModel.NavigationEndpoint.Map -> {
+
+                                    /**
+                                     * Couldn't find a way to use [Intent.FLAG_ACTIVITY_REORDER_TO_FRONT] Intent flag
+                                     * while navigating using Navigation arch component.
+                                     */
+                                    val endpoint = navigationEndpoint.endpoint as TourDetailsViewModel.NavigationEndpoint.Map
+                                    val mapIntent = NavigationConstants.MAP.asDeepLinkIntent()
+                                    mapIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    mapIntent.putExtras(MapActivity.argsBundle(endpoint.tour))
+                                    startActivity(mapIntent)
+                                }
+
+                            }
+                        }
+                        is Navigate.Back -> {
+                        }
+                    }
+
+                }.disposedBy(disposeBag)
     }
 
     companion object {

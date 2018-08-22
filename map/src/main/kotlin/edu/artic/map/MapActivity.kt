@@ -2,6 +2,7 @@ package edu.artic.map
 
 import android.os.Bundle
 import edu.artic.base.utils.disableShiftMode
+import edu.artic.db.models.ArticTour
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_map.*
@@ -17,6 +18,14 @@ class MapActivity : BaseActivity() {
     override val layoutResId: Int
         get() = R.layout.activity_map
 
+    companion object {
+        val ARG_TOUR = "ARG_TOUR"
+
+        fun argsBundle(tour: ArticTour) = Bundle().apply {
+            putParcelable(ARG_TOUR, tour)
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,5 +35,4 @@ class MapActivity : BaseActivity() {
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
     }
-
 }

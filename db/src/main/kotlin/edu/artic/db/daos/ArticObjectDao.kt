@@ -33,7 +33,9 @@ interface ArticObjectDao {
      * @see edu.artic.db.models.ArticGallery.floor
      */
     @Query("select * from ArticObject where galleryLocation in (:galleryTitle)")
-    fun getObjectsInGallery(galleryTitle: String) : List<ArticObject>
+    fun getObjectsInGallery(galleryTitle: String): List<ArticObject>
 
+    @Query(value="select * from ArticObject where nid in (:ids)")
+    fun getObjectsByIdList(ids: List<String>): Flowable<List<ArticObject>>
 
 }

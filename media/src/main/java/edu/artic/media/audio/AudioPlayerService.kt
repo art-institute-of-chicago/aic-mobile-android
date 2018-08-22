@@ -30,9 +30,8 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
-import edu.artic.db.models.ArticObject
-import edu.artic.db.models.AudioFileModel
-import edu.artic.db.models.audioFile
+import edu.artic.db.Playable
+import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
@@ -87,14 +86,14 @@ class AudioPlayerService : DaggerService() {
      */
     sealed class PlayBackAction {
         /**
-         * Play the track associated with the given [ArticObject].
+         * Play the track associated with the given [Playable].
          *
          * Currently, we only support tracks defined in [ArticObject.audioCommentary].
          *
          * @see [ExoPlayer.prepare]
          * @see [Player.setPlayWhenReady]
          */
-        class Play(val audioFile: ArticObject, val audioModel: AudioFileModel) : PlayBackAction()
+        class Play(val audioFile: Playable, val audioModel: AudioFileModel) : PlayBackAction()
 
         /**
          * Pause the current track.
@@ -157,7 +156,7 @@ class AudioPlayerService : DaggerService() {
     lateinit var languageSelector: LanguageSelector
 
 
-    var articObject: ArticObject? = null
+    var playable: Playable? = null
         private set
 
     private val audioControl: Subject<PlayBackAction> = BehaviorSubject.create()
@@ -234,12 +233,12 @@ class AudioPlayerService : DaggerService() {
                     }
 
                     override fun getCurrentContentTitle(player: Player?): String {
-                        return articObject?.title.orEmpty()
+                        return playable?.getPlayableTitle().orEmpty()
                     }
 
 
                     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
-                        articObject?.largeImageFullPath?.let {
+                        playable?.getPlayableThumbnailUrl()?.let {
 
                             Glide.with(this@AudioPlayerService)
                                     .asBitmap()
@@ -288,17 +287,17 @@ class AudioPlayerService : DaggerService() {
         }
     }
 
-    fun setArticObject(_articObject: ArticObject, audio: AudioFileModel, resetPosition: Boolean = false) {
+    fun setArticObject(_articObject: Playable, audio: AudioFileModel, resetPosition: Boolean = false) {
 
-        if (articObject != _articObject || (currentTrack as BehaviorSubject).value != audio || player.playbackState == Player.STATE_IDLE) {
+        if (playable != _articObject || (currentTrack as BehaviorSubject).value != audio || player.playbackState == Player.STATE_IDLE) {
 
             /** Check if the current audio is being interrupted by other audio object.**/
-            articObject?.let { articObject ->
+            playable?.let { articObject ->
                 if (player.playbackState != Player.STATE_IDLE) {
-                    analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject.audioFile?.title.orEmpty())
+                    analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject.getPlayableTitle().orEmpty())
                 }
             }
-            articObject = _articObject
+            playable = _articObject
 
             audio.let {
                 audio.fileUrl?.let { url ->
@@ -359,7 +358,7 @@ class AudioPlayerService : DaggerService() {
      * @see setArticObject
      */
     fun switchAudioTrack(alternative: AudioFileModel) {
-        articObject?.let {
+        playable?.let {
             val playBackState = (audioPlayBackStatus as BehaviorSubject).value
             if (playBackState is Playing) {
                 pausePlayer()
@@ -374,16 +373,20 @@ class AudioPlayerService : DaggerService() {
         audioControl.onNext(PlayBackAction.Pause())
     }
 
-    fun playPlayer(given: ArticObject?) {
+    fun playPlayer(given: Playable?) {
         if (given != null) {
-            val audioFile = given.audioFile
+            var audioFile: ArticAudioFile? = null
+            when (given) {
+                is ArticObject -> audioFile = given.audioFile
+                is ArticTour -> audioFile = null
+            }
             if (audioFile != null) {
                 playPlayer(given, audioFile.preferredLanguage(languageSelector))
             }
         }
     }
 
-    fun playPlayer(audioFile: ArticObject, audioModel: AudioFileModel) {
+    fun playPlayer(audioFile: Playable, audioModel: AudioFileModel) {
         audioControl.onNext(PlayBackAction.Play(audioFile, audioModel))
     }
 

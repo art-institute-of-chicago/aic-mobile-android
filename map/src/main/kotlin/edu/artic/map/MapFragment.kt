@@ -8,20 +8,19 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterValue
+import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.fileAsString
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
-import edu.artic.db.models.ArticGallery
-import edu.artic.db.models.ArticMapAmenityType
-import edu.artic.db.models.ArticMapAnnotationType
-import edu.artic.db.models.ArticObject
+import edu.artic.base.utils.statusBarHeight
+import edu.artic.db.models.*
+import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.util.ArticObjectDotMarkerGenerator
 import edu.artic.map.util.ArticObjectMarkerGenerator
@@ -30,7 +29,9 @@ import edu.artic.map.util.GalleryNumberMarkerGenerator
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
@@ -79,9 +80,21 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var baseGroundOverlay: GroundOverlay
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
+    private var mapClicks: Subject<Boolean> = PublishSubject.create()
+    private val tourArgument: Subject<ArticTour> = BehaviorSubject.create()
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
+        const val ZOOM_LEVEL_ONE = 18.0f
+        const val ZOOM_LEVEL_TWO = 19.0f
+        const val ZOOM_LEVEL_THREE = 20.0f
+    }
+
+    override fun onRegisterViewModel(viewModel: MapViewModel) {
+        tourArgument
+                .mapOptional()
+                .bindTo(viewModel.tour)
+                .disposedBy(disposeBag)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -93,85 +106,17 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         mapView.onCreate(savedInstanceState)
         MapsInitializer.initialize(view.context)
+        val mapStyleOptions = requireActivity().assets.fileAsString(filename = "google_map_config.json")
         mapView.getMapAsync { map ->
             this.map = map
             map.isBuildingsEnabled = false
             map.isIndoorEnabled = false
             map.isTrafficEnabled = false
-            map.setMapStyle(
-                    //Leaving this here for now; we will pull from raw resource folder or assets
-                    // folder at a later time. Or possibly just turn it into a helper constant
-                    MapStyleOptions("[\n" +
-                            "  {\n" +
-                            "    \"elementType\": \"labels\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"administrative\",\n" +
-                            "    \"elementType\": \"geometry\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"administrative.land_parcel\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"administrative.neighborhood\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"poi\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"road\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"road\",\n" +
-                            "    \"elementType\": \"labels.icon\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  },\n" +
-                            "  {\n" +
-                            "    \"featureType\": \"transit\",\n" +
-                            "    \"stylers\": [\n" +
-                            "      {\n" +
-                            "        \"visibility\": \"off\"\n" +
-                            "      }\n" +
-                            "    ]\n" +
-                            "  }\n" +
-                            "]")
-            )
+            map.setMapStyle(MapStyleOptions(mapStyleOptions))
             map.setMinZoomPreference(17f)
             map.setMaxZoomPreference(22f)
+            /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
+            map.setPadding(0, requireActivity().statusBarHeight, 0, 0)
             /**
              * We are setting the bounds here as they are roughly the bounds of the museum,
              * locks us into just that area
@@ -229,15 +174,44 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             .build()
             ))
 
+
+            /**
+             * Funneling map click event into the mapClicks Observer so that it could be combined
+             * with other Observable stream.
+             */
             map.setOnMapClickListener {
-                val objectDetailsFragment = requireActivity().supportFragmentManager?.findFragmentByTag(OBJECT_DETAILS)
-                objectDetailsFragment?.let { fragment ->
-                    requireActivity().supportFragmentManager
-                            ?.beginTransaction()
-                            ?.remove(fragment)
-                            ?.commit()
-                }
+                mapClicks.onNext(true)
             }
+
+
+            /**
+             * Remove the map object details fragment when user taps outside of object.
+             */
+            mapClicks
+                    .defaultThrottle()
+                    .withLatestFrom(viewModel.displayMode) { _, mapMode ->
+                        mapMode
+                    }.subscribe { mapMode ->
+                        when (mapMode) {
+                            is MapViewModel.DisplayMode.CurrentFloor -> {
+                                val supportFragmentManager = this.requireFragmentManager()
+                                supportFragmentManager
+                                        .findFragmentByTag(OBJECT_DETAILS)
+                                        ?.let {
+                                            supportFragmentManager
+                                                    .beginTransaction()
+                                                    .remove(it)
+                                                    .commit()
+                                        }
+                            }
+
+                            is MapViewModel.DisplayMode.Tour -> {
+                                /*do nothing*/
+                            }
+                        }
+
+                    }.disposedBy(disposeBag)
+
 
             map.setOnMarkerClickListener { marker ->
                 when (marker.tag) {
@@ -252,7 +226,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     is ArticObject -> {
                         val mapObject = marker.tag as ArticObject
                         viewModel.articObjectSelected(mapObject)
-
+                        map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
                     }
                     else -> {
                         map.animateCamera(
@@ -285,7 +259,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         val baseOverlayFilename = "AIC_MapBG.jpg"
 
         return if (host.isResourceConstrained()) {
-            val baseOverlayBitmap : Bitmap = host.assets.loadBitmap(baseOverlayFilename, 4)
+            val baseOverlayBitmap: Bitmap = host.assets.loadBitmap(baseOverlayFilename, 4)
 
             BitmapDescriptorFactory.fromBitmap(baseOverlayBitmap)
         } else {
@@ -297,15 +271,29 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         lowerLevel.clicks()
                 .subscribe { viewModel.floorChangedTo(0) }
                 .disposedBy(disposeBag)
+
         floorOne.clicks()
                 .subscribe { viewModel.floorChangedTo(1) }
                 .disposedBy(disposeBag)
+
         floorTwo.clicks()
                 .subscribe { viewModel.floorChangedTo(2) }
                 .disposedBy(disposeBag)
+
         floorThree.clicks()
                 .subscribe { viewModel.floorChangedTo(3) }
                 .disposedBy(disposeBag)
+
+        viewModel.displayMode
+                .filterFlatMap({ it is MapViewModel.DisplayMode.Tour }, { it as MapViewModel.DisplayMode.Tour })
+                .subscribe { mapMode ->
+                    val tour = mapMode.active
+                    val fragmentManager = requireActivity().supportFragmentManager
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.infocontainer, TourCarouselFragment.create(tour), OBJECT_DETAILS)
+                            .commit()
+                }.disposedBy(disposeBag)
+
 
         viewModel.cameraMovementRequested
                 .filterValue()
@@ -315,13 +303,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     newPosition,
                                     when (zoomLevel) {
                                         MapZoomLevel.One -> {
-                                            18.0f
+                                            ZOOM_LEVEL_ONE
                                         }
                                         MapZoomLevel.Two -> {
-                                            19.0f
+                                            ZOOM_LEVEL_TWO
                                         }
                                         MapZoomLevel.Three -> {
-                                            20.0f
+                                            ZOOM_LEVEL_THREE
                                         }
                                     }
                             )
@@ -445,8 +433,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
 
         viewModel.whatToDisplayOnMap
+                .withLatestFrom(viewModel.displayMode) { whatToDisplayOnMap, mapMode ->
+                    mapMode to whatToDisplayOnMap
+                }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { itemList ->
+                .subscribe { mapModeWithItemList ->
+                    val mapMode = mapModeWithItemList.first
+                    val itemList = mapModeWithItemList.second
+
                     departmentMarkers.forEach { marker ->
                         marker.remove()
                     }
@@ -482,7 +476,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             }
                             is MapItem.Object -> {
                                 val articObject = mapItem.item
-                                loadObject(articObject, mapItem.floor)
+                                loadObject(articObject, mapItem.floor, mapMode)
+                            }
+                            is MapItem.TourIntro -> {
+                                val articTour = mapItem.item
+                                loadTourObject(articTour, mapItem.floor, mapMode)
                             }
 
                         }
@@ -491,19 +489,43 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }.disposedBy(disposeBag)
 
         viewModel.selectedArticObject
-                .subscribe { selectedArticObject ->
-                    val isMapObjectVisible = objectDetailsContainer.childCount != 0
-                    val fragmentManager = requireActivity().supportFragmentManager
-                    if (!isMapObjectVisible) {
-                        val fragment = MapObjectDetailsFragment.create(selectedArticObject)
-                        fragmentManager.beginTransaction()
-                                .add(R.id.objectDetailsContainer, fragment, OBJECT_DETAILS)
-                                .commit()
-                    } else {
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.objectDetailsContainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
-                                .commit()
+                .withLatestFrom(viewModel.displayMode) { articObject, mapMode ->
+                    mapMode to articObject
+                }.subscribe { mapModeWithObject ->
+                    val selectedArticObject = mapModeWithObject.second
+                    val mapMode = mapModeWithObject.first
+
+                    when (mapMode) {
+                        is MapViewModel.DisplayMode.CurrentFloor -> {
+                            /**
+                             * Display the selected object details.
+                             */
+                            val fragmentManager = requireActivity().supportFragmentManager
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.infocontainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
+                                    .commit()
+                        }
+                        is MapViewModel.DisplayMode.Tour -> {
+                            /* do nothing */
+                        }
                     }
+                }.disposedBy(disposeBag)
+
+        /**
+         * Center the full object marker in the map.
+         * When we are in [DisplayMode.Tour] and if the item is being centered, always reset the zoom level to MapZoomLevel.Three
+         */
+        viewModel
+                .centerFullObjectMarker
+                .subscribe { nid ->
+                    fullObjectMarkers.firstOrNull { marker ->
+                        val tag = marker.tag
+                        tag is ArticObject && tag.nid == nid
+                    }?.let { marker ->
+                        val currentZoomLevel = map.cameraPosition.zoom
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, Math.max(ZOOM_LEVEL_THREE, currentZoomLevel)))
+                    }
+
                 }.disposedBy(disposeBag)
     }
 
@@ -589,21 +611,53 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 })
     }
 
-    private fun loadObject(articObject: ArticObject, floor: Int) {
+    private fun getAlphaValue(displayMode: MapViewModel.DisplayMode, floor: Int): Float {
+        return when (displayMode) {
+            is MapViewModel.DisplayMode.CurrentFloor -> 1.0f
+            is MapViewModel.DisplayMode.Tour -> {
+                if (viewModel.currentFloor == floor) {
+                    1.0f
+                } else {
+                    0.6f
+                }
+            }
+        }
+    }
+
+    private fun loadObject(articObject: ArticObject, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
                 .load(articObject.thumbnailFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        if (viewModel.currentZoomLevel === MapZoomLevel.Three && viewModel.currentFloor == floor) {
+                        /**
+                         * If map display mode is Tour, get the order number of the stop.
+                         */
+                        if (viewModel.currentFloor == floor || displayMode is MapViewModel.DisplayMode.Tour) {
+                            var order: String? = null
+                            if (displayMode is MapViewModel.DisplayMode.Tour) {
+                                /**
+                                 * If map's display mode is Tour, get the order number of the stop.
+                                 */
+                                val index = displayMode.active
+                                        .tourStops
+                                        .map { it.objectId }
+                                        .indexOf(articObject.nid)
+
+                                if (index > -1) {
+                                    order = (index + 1).toString()
+                                }
+                            }
+
                             val fullMaker = map.addMarker(
                                     MarkerOptions()
                                             .position(articObject.toLatLng())
                                             .icon(BitmapDescriptorFactory.fromBitmap(
-                                                    objectMarkerGenerator.makeIcon(resource)
+                                                    objectMarkerGenerator.makeIcon(resource, order)
                                             ))
                                             .zIndex(2f)
                                             .visible(true)
+                                            .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
                             )
 
                             fullMaker.tag = articObject
@@ -624,6 +678,41 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     }
 
+    /**
+     * Loads the tour intro object as the marker in the map.
+     */
+    private fun loadTourObject(articTour: ArticTour, floor: Int, displayMode: MapViewModel.DisplayMode) {
+        Glide.with(this)
+                .asBitmap()
+                .load(articTour.thumbnailFullPath)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        if (displayMode is MapViewModel.DisplayMode.Tour) {
+
+                            val markerAlpha = if (viewModel.currentFloor == floor) {
+                                1.0f
+                            } else {
+                                0.6f
+                            }
+
+                            val fullMaker = map.addMarker(
+                                    MarkerOptions()
+                                            .position(articTour.toLatLng())
+                                            .icon(BitmapDescriptorFactory.fromBitmap(
+                                                    objectMarkerGenerator.makeIcon(imageViewBitmap = resource)
+                                            ))
+                                            .zIndex(2f)
+                                            .visible(true)
+                                            .alpha(markerAlpha)
+                            )
+                            fullObjectMarkers.add(fullMaker)
+                            fullMaker.tag = articTour
+                        }
+                    }
+                })
+
+    }
+
     private inline fun loadMarkersForAnnotation(annotationList: List<MapItem.Annotation>, list: MutableList<Marker>, markerBuilder: (MapItem.Annotation) -> MarkerOptions) {
         list.forEach {
             it.remove()
@@ -638,4 +727,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
+    override fun setupNavigationBindings(viewModel: MapViewModel) {
+        super.setupNavigationBindings(viewModel)
+        val tour = requireActivity().intent?.extras?.getParcelable<ArticTour>(MapActivity.ARG_TOUR)
+
+        tour?.let {
+            tourArgument.onNext(tour)
+        }
+    }
 }

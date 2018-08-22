@@ -31,4 +31,5 @@ abstract class ToursModule {
     @get:ContributesAndroidInjector
     abstract val tourDetailsFragment: TourDetailsFragment
 
+
 }
