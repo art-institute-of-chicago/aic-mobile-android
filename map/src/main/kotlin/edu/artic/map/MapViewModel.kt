@@ -38,7 +38,7 @@ class MapViewModel @Inject constructor(
         private val galleryDao: ArticGalleryDao,
         private val objectDao: ArticObjectDao,
         tourDao: ArticTourDao,
-        tourProgressManager: TourProgressManager
+        private val tourProgressManager: TourProgressManager
 ) : BaseViewModel() {
 
     val amenities: Subject<List<MapItem.Annotation>> = BehaviorSubject.create()
@@ -70,7 +70,7 @@ class MapViewModel @Inject constructor(
      * you'll probably want to minimize allocations in whatever you have observing it.
      */
     val whatToDisplayOnMap: Subject<List<MapItem<*>>> = BehaviorSubject.create()
-
+    val tour: Subject<Optional<ArticTour>> = BehaviorSubject.createDefault(Optional(null))
 
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     val distinctFloor: Observable<Int>
@@ -100,72 +100,46 @@ class MapViewModel @Inject constructor(
             }
         }
 
-    var tour: ArticTour? = null
-        set(value) {
-            field = value
-            if (value == null) {
-                displayMode.onNext(DisplayMode.CurrentFloor())
-            } else {
-                displayMode.onNext(DisplayMode.Tour(value))
-            }
-        }
-
-
     init {
-        /**
-         * TODO:: once integrated to tour flow remove it.
-         * Maybe hold the last tour item in the tour commence manager in order to save last state.
-         */
-        tourDao.getAsyncFirstTour()
-                .toObservable()
-                .subscribe { tour ->
+
+        tour
+                .map { articTour ->
+                    val tour = articTour.value
+                    var displayMode: DisplayMode = DisplayMode.CurrentFloor()
                     tour?.let {
-                        /**
-                         * Switch the displayMode to [DisplayMode.Tour] and select the tour floor.
-                         */
+                        displayMode = DisplayMode.Tour(it)
                         floorChangedTo(tour.floorAsInt)
-                        displayMode.onNext(DisplayMode.Tour(tour))
+                        tourProgressManager.selectedTour.onNext(Optional(it))
                     }
-                }.disposedBy(disposeBag)
+                    displayMode
+                }
+                .bindTo(displayMode)
 
 
-        // Each time the floor changes update the current amenities for that floor this is explore mode
-        distinctFloor
-                .withLatestFrom(displayMode) { floor, mode ->
-                    floor to mode
-                }.filter { floorToMapDisplayMode -> floorToMapDisplayMode.second is DisplayMode.CurrentFloor }
-                .flatMap { floorToMapDisplayMode ->
-                    val currentFloor = floorToMapDisplayMode.first
-                    mapAnnotationDao.getAmenitiesOnMapForFloor(currentFloor.toString()).toObservable()
-                }.map { amenitiesList -> amenitiesList.mapToMapItem() }
+
+        observeAmenities()
                 .bindTo(amenities)
                 .disposedBy(disposeBag)
 
+        /**
+         * Clear out amenities on tour mode.
+         */
+        displayMode.filter { it is DisplayMode.Tour }
+                .map { listOf<MapItem.Annotation>() }
+                .bindTo(amenities)
+                .disposedBy(disposeBag)
 
         /**
-         * Upon changing zoom level to anything except MapZoomLevel.One and any distinct change in
-         * floor causes a change of space landmarks
+         * Observe landmark for all modes.
          */
-        Observables.combineLatest(
-                zoomLevel.distinctUntilChanged()
-                        .filter { zoomLevel -> zoomLevel !== MapZoomLevel.One },
-                distinctFloor
-        ) { _, floor ->
-            mapAnnotationDao.getTextAnnotationByTypeAndFloor(
-                    ArticMapTextType.SPACE,
-                    floor.toString())
-                    .toObservable()
-                    .map { it.mapToMapItem() }
-        }.flatMap { it }
+        observeSpaces()
+                .flatMap { it }
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
 
-        displayMode.filter { it is DisplayMode.CurrentFloor }
-                .subscribe {
-                    setupZoomLevelOneBinds()
-                    setupZoomLevelTwoBinds()
-                    setupZoomLevelThreeBinds()
-                }.disposedBy(disposeBag)
+        setupZoomLevelOneBinds()
+        setupZoomLevelTwoBinds()
+        setupZoomLevelThreeBinds()
 
         /**
          * Emits list of tour stops without tour intro.
@@ -225,6 +199,41 @@ class MapViewModel @Inject constructor(
 
     }
 
+    /**
+     *  Each time the floor changes update the current amenities for that floor this is explore mode
+     */
+    fun observeAmenities(): Observable<List<MapItem.Annotation>> {
+
+        return distinctFloor
+                .withLatestFrom(displayMode) { floor, mode ->
+                    floor to mode
+                }
+                .filter { it -> it.second is DisplayMode.CurrentFloor }
+                .map { it.first }
+                .flatMap { floor ->
+                    mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).toObservable()
+                }.map { amenitiesList -> amenitiesList.mapToMapItem() }
+    }
+
+
+    /**
+     * Upon changing zoom level to anything except MapZoomLevel.One and any distinct change in
+     * floor causes a change of space landmarks
+     */
+
+    fun observeSpaces(): Observable<Observable<List<MapItem.Annotation>>> {
+        return Observables.combineLatest(
+                zoomLevel.distinctUntilChanged().filter { zoomLevel -> zoomLevel !== MapZoomLevel.One },
+                distinctFloor
+        ) { _, floor ->
+            mapAnnotationDao.getTextAnnotationByTypeAndFloor(
+                    ArticMapTextType.SPACE,
+                    floor.toString())
+                    .toObservable()
+                    .map { it.mapToMapItem() }
+        }
+    }
+
     private fun convertToMapItem(it: List<ArticObject>, floor: Int): MutableList<MapItem<ArticObject>> {
         val mapList = mutableListOf<MapItem<ArticObject>>()
         it.forEach { articObject ->
@@ -247,6 +256,10 @@ class MapViewModel @Inject constructor(
         ) { zoomLevel, floor ->
             return@combineLatest if (zoomLevel === zoomRestriction) floor else Int.MIN_VALUE
         }.filter { floor -> floor >= 0 }
+                .withLatestFrom(displayMode) { floor, mode ->
+                    floor to mode
+                }.filter { it -> it.second is DisplayMode.CurrentFloor }
+                .map { it.first }
     }
 
 
@@ -259,22 +272,27 @@ class MapViewModel @Inject constructor(
 
 
         zoomLevelOneObservable
+                .withLatestFrom(displayMode) { zoomLevelOne, mode ->
+                    zoomLevelOne to mode
+                }
+                .filter { it.second is DisplayMode.CurrentFloor }
+                .map { it.first }
                 .flatMap {
                     mapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK).toObservable()
                 }.map { landmarkList -> landmarkList.mapToMapItem() }
                 .bindTo(spacesAndLandmarks)
                 .disposedBy(disposeBag)
-        zoomLevelOneObservable
-                .map {
-                    listOf<MapItem<*>>()
-                }
-                .bindTo(whatToDisplayOnMap)
-                .disposedBy(disposeBag)
+
     }
 
     fun setupZoomLevelTwoBinds() {
 
         observeFloorsAtZoom(MapZoomLevel.Two)
+                .withLatestFrom(displayMode) { zoomLevelTwo, mode ->
+                    zoomLevelTwo to mode
+                }
+                .filter { it.second is DisplayMode.CurrentFloor }
+                .map { it.first }
                 .flatMap { floor ->
                     mapAnnotationDao.getDepartmentOnMapForFloor(floor.toString()).toObservable()
                 }.map { it.mapToMapItem() }
@@ -285,9 +303,9 @@ class MapViewModel @Inject constructor(
 
 
     fun setupZoomLevelThreeBinds() {
-        val galleries = observeGalleriesAtFloor()
+        val galleries: Observable<List<ArticGallery>> = observeGalleriesAtFloor()
 
-        val objects = observeObjectsWithin(galleries)
+        val objects: Observable<List<MapItem.Object>> = observeObjectsWithin(galleries)
 
         Observables.combineLatest(
                 galleries,
