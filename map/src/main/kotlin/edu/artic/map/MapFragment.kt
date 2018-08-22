@@ -92,7 +92,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         const val ZOOM_LEVEL_THREE = 20.0f
     }
 
-    private val tour by lazy { arguments!!.getParcelable<ArticTour>(resources.getString(R.string.tour_argument_key)) }
+    /** using the argument key define in [R.navigation.map_navigation_graph] **/
+    val tour_arg_key = resources.getString(R.string.tour_argument_key)
+
+    private val tour by lazy { arguments!!.getParcelable<ArticTour>(tour_arg_key) }
 
     override fun onRegisterViewModel(viewModel: MapViewModel) {
         viewModel.tour = tour

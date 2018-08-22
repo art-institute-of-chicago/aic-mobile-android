@@ -52,7 +52,8 @@ class MapActivity : BaseActivity() {
         val bundle = Bundle().apply {
             tour?.let {
                 /** using the argument key define in [R.navigation.map_navigation_graph] **/
-                putParcelable("tour", tour)
+                val key = resources.getString(R.string.tour_argument_key)
+                putParcelable(key, tour)
             }
         }
         graph.addDefaultArguments(bundle)
