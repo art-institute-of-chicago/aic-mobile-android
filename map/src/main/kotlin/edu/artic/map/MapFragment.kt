@@ -426,9 +426,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         return@modifyThenRemoveIf wasRemoved
                     }
                     fullObjectMarkers.modifyThenRemoveIf { marker ->
-                        val wasRemoved = itemList.doesNotContain(marker.tag)
+                        val tag = marker.tag
+
+                        val wasRemoved = itemList.doesNotContain(tag)
                         if (wasRemoved) {
                             marker.remove()
+                            if (tag is MapItem.Object) {
+                                Glide.with(this).clear(targetCache[tag])
+                            }
                         }
                         return@modifyThenRemoveIf wasRemoved
                     }
