@@ -1,6 +1,8 @@
 package edu.artic.map
 
 import android.os.Bundle
+import com.bumptech.glide.Glide
+import com.bumptech.glide.MemoryCategory
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.db.models.ArticTour
 import edu.artic.navigation.NavigationSelectListener
@@ -29,10 +31,21 @@ class MapActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // The map is resource-intensive. Be kind to it.
+        Glide.get(this).setMemoryCategory(MemoryCategory.LOW)
+
         bottomNavigation.apply {
             disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Glide.get(this).setMemoryCategory(MemoryCategory.NORMAL)
+    }
+
 }

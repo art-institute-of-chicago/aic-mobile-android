@@ -3,6 +3,7 @@ package edu.artic.map
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
+import android.location.Location
 import android.os.Bundle
 import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
@@ -46,15 +47,16 @@ import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.*
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 /**
@@ -101,6 +103,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
+    /**
+     * The region of [map] that was visible during the last 'camera idle' event.
+     */
+    private val visibleArea: Subject<VisibleRegion> = BehaviorSubject.create()
+
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
@@ -176,6 +183,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         viewModel.zoomLevelChangedTo(MapZoomLevel.Three)
                     }
                 }
+
+                // TODO: Consider updating this more frequently
+                visibleArea.onNext(map.projection.visibleRegion)
             }
 
             map.moveCamera(CameraUpdateFactory.newCameraPosition(
@@ -411,7 +421,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                     fullObjectMarkers.clear()
 
-                    bindMarkersSynchronously(itemList, mapMode)
+
+                    Schedulers.io().scheduleDirect {
+                        bindMarkersAsynchronously(itemList, mapMode)
+                    }.disposedBy(disposeBag)
                     Timber.d("DepartmentMarker list size after 'itemList.forEach{}': ${departmentMarkers.size}")
                 }.disposedBy(disposeBag)
 
@@ -525,6 +538,71 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
+
+    @WorkerThread
+    fun bindMarkersAsynchronously(itemList: List<MapItem<*>>, mapMode: MapViewModel.DisplayMode) {
+        val coreCount = Runtime.getRuntime().availableProcessors()
+
+        val batchedItems : List<List<MapItem<*>>>
+        batchedItems = if (requireContext().isRestricted) {
+            // We don't have that many resources. Only pass along 2 x 'number of cores' items at a time
+            itemList.chunked(2 * coreCount)
+        } else {
+            // Work with 3 x 'number of processor cores' items at a time.
+            itemList.chunked(3 * coreCount)
+        }
+
+        Observables.combineLatest(
+                Observables.zip(
+                        // There's an Observable operator 'window', but that's (severely) restricted to a single subscriber
+                        batchedItems.toObservable(),
+                        // The 'interval' here will make sure only one event is emitted every 100 ms
+                        Observable.interval(100, TimeUnit.MILLISECONDS)
+                ),
+                visibleArea
+        )
+                .map {
+                    val mapItems = it.first.first
+                    val bounds = it.second.latLngBounds
+
+                    // Restrict the observable we use below to just the items we ought to display
+                    return@map mapItems.filter { mapItem ->
+                        mapItem !is MapItem.Object
+                                // We only filter 'ArticObject's at this time.
+                                || mapItem.item.toLatLng().isCloseEnoughToCenter(bounds)
+                    }
+                }.filter {
+                    it.isNotEmpty()
+                }.subscribeBy {
+                    it.toObservable()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeBy { mapItem ->
+                                when (mapItem) {
+                                    is MapItem.Annotation -> {
+                                        val annotation = mapItem.item
+                                        when (annotation.annotationType) {
+                                            ArticMapAnnotationType.DEPARTMENT -> {
+                                                loadDepartment(mapItem)
+                                            }
+                                        }
+                                    }
+                                    is MapItem.Gallery -> {
+                                        val gallery = mapItem.item
+                                        loadGalleryNumber(gallery)
+                                    }
+                                    is MapItem.Object -> {
+                                        val articObject = mapItem.item
+                                        loadObject(articObject, mapItem.floor, mapMode)
+                                    }
+                                    is MapItem.TourIntro -> {
+                                        val articTour = mapItem.item
+                                        loadTourObject(articTour, mapItem.floor, mapMode)
+                                    }
+
+                                }
+                            }.disposedBy(disposeBag)
+                }.disposedBy(disposeBag)
+    }
 
     override fun onStart() {
         super.onStart()
@@ -738,3 +816,33 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 }
+
+
+/**
+ * We only want to display [ArticObject] annotations that are within 15 meters
+ * of the center of the map.
+ *
+ * @param bounds the restrictions of
+ * [the map's viewport][com.google.android.gms.maps.Projection.getVisibleRegion]
+ */
+private fun LatLng.isCloseEnoughToCenter(bounds: LatLngBounds): Boolean {
+    return bounds.contains(this) && bounds.center.distanceTo(this) < 15
+}
+
+/**
+ * Alias to [Location.distanceBetween], where 'this' is the first param and 'other' is the second.
+ *
+ * @return a distance, in meters
+ */
+private fun LatLng.distanceTo(other: LatLng): Float {
+    val results = FloatArray(1)
+    Location.distanceBetween(
+            this.latitude,
+            this.longitude,
+            other.latitude,
+            other.longitude,
+            results
+    )
+    return results[0]
+}
+
