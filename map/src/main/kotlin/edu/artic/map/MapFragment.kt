@@ -558,7 +558,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         val coreCount = Runtime.getRuntime().availableProcessors()
 
         val batchedItems : List<List<MapItem<*>>>
-        batchedItems = if (requireContext().isRestricted) {
+        batchedItems = if (requireContext().isResourceConstrained()) {
             // We don't have that many resources. Only pass along 2 x 'number of cores' items at a time
             itemList.chunked(2 * coreCount)
         } else {
