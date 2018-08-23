@@ -566,25 +566,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             itemList.chunked(3 * coreCount)
         }
 
-        Observables.combineLatest(
                 Observables.zip(
                         // There's an Observable operator 'window', but that's (severely) restricted to a single subscriber
                         batchedItems.toObservable(),
                         // The 'interval' here will make sure only one event is emitted every 100 ms
                         Observable.interval(100, TimeUnit.MILLISECONDS)
-                ),
-                visibleArea
-        )
+                )
                 .map {
-                    val mapItems = it.first.first
-                    val bounds = it.second.latLngBounds
+                    val mapItems = it.first
 
-                    // Restrict the observable we use below to just the items we ought to display
-                    return@map mapItems.filter { mapItem ->
-                        mapItem !is MapItem.Object
-                                // We only filter 'ArticObject's at this time.
-                                || mapItem.item.toLatLng().isCloseEnoughToCenter(bounds)
-                    }
+                    return@map mapItems
                 }.filter {
                     it.isNotEmpty()
                 }.subscribeBy {
@@ -712,6 +703,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     private fun loadObject(mapObject: MapItem.Object, displayMode: MapViewModel.DisplayMode) {
+        if (mapObject.item.toLatLng().isCloseEnoughToCenter(
+                        (visibleArea as BehaviorSubject).value.latLngBounds)
+        ) {
+            // Restrict loading to just items we ought to display
+            return
+        }
+
         val floor = mapObject.floor
         val articObject = mapObject.item
 
