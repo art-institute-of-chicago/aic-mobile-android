@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.annotation.AnyThread
 import android.view.View
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.*
@@ -18,6 +19,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
+import edu.artic.base.utils.loadWithThumbnail
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.*
 import edu.artic.map.carousel.TourCarouselFragment
@@ -627,7 +629,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private fun loadObject(articObject: ArticObject, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
-                .load(articObject.thumbnailFullPath)
+                // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
+                .apply(RequestOptions().disallowHardwareConfig())
+                .loadWithThumbnail(articObject.thumbnailFullPath, articObject.fullImageFullPath)
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         /**
