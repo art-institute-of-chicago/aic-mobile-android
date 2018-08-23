@@ -407,7 +407,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         marker.remove()
                     }
                     departmentMarkers.clear()
-                    Timber.d("DepartmentMarker list cleared")
                     galleryMarkers.forEach { marker ->
                         marker.remove()
                     }
@@ -425,7 +424,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     Schedulers.io().scheduleDirect {
                         bindMarkersAsynchronously(itemList, mapMode)
                     }.disposedBy(disposeBag)
-                    Timber.d("DepartmentMarker list size after 'itemList.forEach{}': ${departmentMarkers.size}")
+
                 }.disposedBy(disposeBag)
 
         viewModel.selectedArticObject
