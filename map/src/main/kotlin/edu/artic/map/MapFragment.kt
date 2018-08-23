@@ -92,7 +92,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private val departmentMarkers = mutableListOf<Marker>()
     private val galleryMarkers = mutableListOf<Marker>()
     private val fullObjectMarkers = mutableListOf<Marker>()
-    private val dotObjectMarkers = mutableListOf<Marker>()
 
     private lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
     private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
@@ -234,17 +233,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
 
             map.setOnMarkerClickListener { marker ->
-                when (marker.tag) {
+                val tag = marker.tag
+
+                when (tag) {
                     is MapItem.Annotation -> {
-                        val annotation = marker.tag as MapItem.Annotation
-                        when (annotation.item.annotationType) {
+                        when (tag.item.annotationType) {
                             ArticMapAnnotationType.DEPARTMENT -> {
-                                viewModel.departmentMarkerSelected(annotation.item)
+                                viewModel.departmentMarkerSelected(tag.item)
                             }
                         }
                     }
-                    is ArticObject -> {
-                        val mapObject = marker.tag as ArticObject
+                    is MapItem.Object -> {
+                        val mapObject = tag.item
                         viewModel.articObjectSelected(mapObject)
                         map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
                     }
@@ -409,10 +409,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         marker.remove()
                     }
                     galleryMarkers.clear()
-                    dotObjectMarkers.forEach { marker ->
-                        marker.remove()
-                    }
-                    dotObjectMarkers.clear()
                     fullObjectMarkers.forEach { marker ->
                         marker.remove()
                     }
@@ -457,7 +453,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe { nid ->
                     fullObjectMarkers.firstOrNull { marker ->
                         val tag = marker.tag
-                        tag is ArticObject && tag.nid == nid
+                        tag is MapItem.Object && tag.item.nid == nid
                     }?.let { marker ->
                         val currentZoomLevel = map.cameraPosition.zoom
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, Math.max(ZOOM_LEVEL_THREE, currentZoomLevel)))
@@ -518,17 +514,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 }
                 is MapItem.Gallery -> {
-                    val gallery = mapItem.item
-                    loadGalleryNumber(gallery)
+                    loadGalleryNumber(mapItem)
 
                 }
                 is MapItem.Object -> {
-                    val articObject = mapItem.item
-                    loadObject(articObject, mapItem.floor, mapMode)
+                    loadObject(mapItem, mapMode)
                 }
                 is MapItem.TourIntro -> {
-                    val articTour = mapItem.item
-                    loadTourObject(articTour, mapItem.floor, mapMode)
+                    loadTourObject(mapItem, mapMode)
                 }
 
             }
@@ -584,16 +577,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                         }
                                     }
                                     is MapItem.Gallery -> {
-                                        val gallery = mapItem.item
-                                        loadGalleryNumber(gallery)
+                                        loadGalleryNumber(mapItem)
                                     }
                                     is MapItem.Object -> {
-                                        val articObject = mapItem.item
-                                        loadObject(articObject, mapItem.floor, mapMode)
+                                        loadObject(mapItem, mapMode)
                                     }
                                     is MapItem.TourIntro -> {
-                                        val articTour = mapItem.item
-                                        loadTourObject(articTour, mapItem.floor, mapMode)
+                                        loadTourObject(mapItem, mapMode)
                                     }
 
                                 }
@@ -637,22 +627,24 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         mapView.onLowMemory()
     }
 
-    private fun loadGalleryNumber(gallery: ArticGallery) {
+    private fun loadGalleryNumber(mapGallery: MapItem.Gallery) {
+        val gallery = mapGallery.item
+
         gallery.number?.let {
-            galleryMarkers.add(
-                    map.addMarker(MarkerOptions()
-                            .position(gallery.toLatLng())
-                            .icon(BitmapDescriptorFactory
-                                    .fromBitmap(
-                                            galleryNumberGenerator
-                                                    .makeIcon(
-                                                            it
-                                                    )
-                                    )
+            val marker = map.addMarker(MarkerOptions()
+                    .position(gallery.toLatLng())
+                    .icon(BitmapDescriptorFactory
+                            .fromBitmap(
+                                    galleryNumberGenerator
+                                            .makeIcon(
+                                                    it
+                                            )
                             )
-                            .zIndex(1f)
                     )
+                    .zIndex(1f)
             )
+            marker.tag = mapGallery
+            galleryMarkers.add(marker)
         }
     }
 
@@ -695,7 +687,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
-    private fun loadObject(articObject: ArticObject, floor: Int, displayMode: MapViewModel.DisplayMode) {
+    private fun loadObject(mapObject: MapItem.Object, displayMode: MapViewModel.DisplayMode) {
+        val floor = mapObject.floor
+        val articObject = mapObject.item
+
         Glide.with(this)
                 .asBitmap()
                 // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
@@ -737,7 +732,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
                             )
 
-                            fullMarker.tag = articObject
+                        fullMarker.tag = mapObject
 
                             fullObjectMarkers.add(fullMarker)
                         }
@@ -750,7 +745,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     /**
      * Loads the tour intro object as the marker in the map.
      */
-    private fun loadTourObject(articTour: ArticTour, floor: Int, displayMode: MapViewModel.DisplayMode) {
+    private fun loadTourObject(mapTour: MapItem.TourIntro, displayMode: MapViewModel.DisplayMode) {
+        val articTour = mapTour.item
+        val floor = mapTour.floor
+
         Glide.with(this)
                 .asBitmap()
                 .load(articTour.thumbnailFullPath?.asCDNUri())
@@ -774,8 +772,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .visible(true)
                                             .alpha(markerAlpha)
                             )
+                            fullMaker.tag = mapTour
                             fullObjectMarkers.add(fullMaker)
-                            fullMaker.tag = articTour
                         }
                     }
                 })
