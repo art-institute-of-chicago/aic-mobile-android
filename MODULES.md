@@ -30,7 +30,7 @@ conventions.
 ### `audio`
 
 This allows entry of those numbers found throughout the museum; if an
-Object d'art is found matching that number, we offer up
+objet d'art is found matching that number, we offer up
 
 1. a picture of the object
 2. a long, in-depth audio description of the object
@@ -47,7 +47,7 @@ understanding the code.
 NB: the `MapFragment` class in this module makes extensive use of
 Google's `GoogleMap` class to display the museum, but we do not depend
 on the Google Map API for map tiles. All floor-plans should be provided
-by the `AppData` dao in the `db` module.
+by the `AppData` `DAO` in the `db` module.
 
 ### `tours`
 
@@ -77,7 +77,7 @@ defined in a single (somewhat large) JSON file called the `AppData`. It
 is downloaded during startup by `AppDataManager` and stored via the
 [Room](https://developer.android.com/topic/libraries/architecture/room)
 persistence api. `BaseActivity`s and `BaseFragment`s can access this
-with implementations of the specialized 'DAO' interfaces defined in the
+with implementations of the specialized `DAO` interfaces defined in the
 `db` module.
 
 At build time, an annotation processor uses both the `DAO` files and
