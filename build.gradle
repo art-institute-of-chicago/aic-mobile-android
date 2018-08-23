@@ -59,19 +59,21 @@ buildscript {
                 exo_player_ui           : "com.google.android.exoplayer:exoplayer-ui:$exo_player_version",
                 exo_player_media_session: "com.google.android.exoplayer:extension-mediasession:$exo_player_version",
                 view_indicator          : "com.github.fuzz-productions:CutoutViewIndicator:v0.8.2"
-
+                firebase_core           : "com.google.firebase:firebase-core:${firebase_version}"
         ]
 
     }
     repositories {
         google()
         jcenter()
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.0-alpha06'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath 'com.google.gms:google-services:4.0.1'
+        classpath 'io.fabric.tools:gradle:1.25.4'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -82,10 +84,12 @@ subprojects {
         google()
         jcenter()
         maven { url "https://www.jitpack.io" }
+        maven { url 'https://maven.google.com/' }
     }
 
     if (name == 'app') {
         apply plugin: 'com.android.application'
+        apply plugin: 'io.fabric'
     } else {
         apply plugin: 'com.android.library'
     }
