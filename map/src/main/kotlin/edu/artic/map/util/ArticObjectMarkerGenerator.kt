@@ -5,32 +5,42 @@ import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import de.hdodenhof.circleimageview.CircleImageView
 import edu.artic.map.R
 
 
 class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context) {
 
-    private var imageView: CircleImageView
+    /**
+     * Where the [icon][BaseMarkerGenerator.makeIcon] will appear.
+     */
+    private val imageView: ImageView
+    private val overlayTextView: TextView
 
     init {
         container = LayoutInflater.from(context)
                 .inflate(R.layout.marker_artic_object, null) as ViewGroup
-         imageView = container.findViewById(R.id.circularImage)
+        imageView = container.findViewById(R.id.circularImage)
+        overlayTextView = container.findViewById(R.id.order)
     }
 
 
-    fun makeIcon(imageViewBitmap: Bitmap, order: String? = null): Bitmap {
+    /**
+     * NB: 'imageViewBitmap' _MUST_ be rendered in software. If its config
+     * is [android.graphics.Bitmap.Config.HARDWARE], the
+     * [CircleImageView][de.hdodenhof.circleimageview.CircleImageView]
+     * may crash.
+     */
+    fun makeIcon(imageViewBitmap: Bitmap, overlay: String? = null): Bitmap {
 
         imageView.setImageBitmap(imageViewBitmap)
 
-        val orderTextView = container.findViewById<TextView>(R.id.order)
-        if (order != null) {
-            orderTextView.visibility = View.VISIBLE
-            orderTextView.text = order
+        if (overlay != null) {
+            overlayTextView.visibility = View.VISIBLE
+            overlayTextView.text = overlay
         } else {
-            orderTextView.visibility = View.GONE
+            overlayTextView.visibility = View.GONE
         }
         return makeIcon()
     }
