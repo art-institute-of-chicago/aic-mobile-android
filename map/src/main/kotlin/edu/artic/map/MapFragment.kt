@@ -44,6 +44,8 @@ import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.helpers.doesNotContain
+import edu.artic.map.helpers.modifyThenRemoveIf
 import edu.artic.map.helpers.toLatLng
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -58,6 +60,8 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
+
+typealias BitmapTarget = com.bumptech.glide.request.target.Target<Bitmap>
 
 /**
  * This Fragment contains a [GoogleMap] with a custom tileset and quite a few markers.
@@ -92,6 +96,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private val departmentMarkers = mutableListOf<Marker>()
     private val galleryMarkers = mutableListOf<Marker>()
     private val fullObjectMarkers = mutableListOf<Marker>()
+
+    /**
+     * Cache of network response targets; this helps us avoid making too
+     * many API calls for the same image resource.
+     */
+    private val targetCache: MutableMap<MapItem<*>, BitmapTarget> = mutableMapOf()
 
     private lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
     private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
@@ -401,18 +411,27 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     val mapMode = mapModeWithItemList.first
                     val itemList = mapModeWithItemList.second
 
-                    departmentMarkers.forEach { marker ->
-                        marker.remove()
+                    departmentMarkers.modifyThenRemoveIf { marker ->
+                        val wasRemoved = itemList.doesNotContain(marker.tag)
+                        if (wasRemoved) {
+                            marker.remove()
+                        }
+                        return@modifyThenRemoveIf wasRemoved
                     }
-                    departmentMarkers.clear()
-                    galleryMarkers.forEach { marker ->
-                        marker.remove()
+                    galleryMarkers.modifyThenRemoveIf { marker ->
+                        val wasRemoved = itemList.doesNotContain(marker.tag)
+                        if (wasRemoved) {
+                            marker.remove()
+                        }
+                        return@modifyThenRemoveIf wasRemoved
                     }
-                    galleryMarkers.clear()
-                    fullObjectMarkers.forEach { marker ->
-                        marker.remove()
+                    fullObjectMarkers.modifyThenRemoveIf { marker ->
+                        val wasRemoved = itemList.doesNotContain(marker.tag)
+                        if (wasRemoved) {
+                            marker.remove()
+                        }
+                        return@modifyThenRemoveIf wasRemoved
                     }
-                    fullObjectMarkers.clear()
 
 
                     Schedulers.io().scheduleDirect {
@@ -700,46 +719,61 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         // Prefer 'image_url', fall back to 'large image' if necessary.
                         (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
                 )
-                .into(object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        /**
-                         * If map display mode is Tour, get the order number of the stop.
-                         */
-                        if (viewModel.currentFloor == floor || displayMode is MapViewModel.DisplayMode.Tour) {
-                            var order: String? = null
-                            if (displayMode is MapViewModel.DisplayMode.Tour) {
-                                /**
-                                 * If map's display mode is Tour, get the order number of the stop.
-                                 */
-                                val index = displayMode.active
-                                        .tourStops
-                                        .map { it.objectId }
-                                        .indexOf(articObject.nid)
+                .into(getTargetFor(mapObject, displayMode))
 
-                                if (index > -1) {
-                                    order = (index + 1).toString()
-                                }
+
+    }
+
+    private fun getTargetFor(mapObject: MapItem.Object, displayMode: MapViewModel.DisplayMode): BitmapTarget {
+        val cached = targetCache[mapObject]
+
+        if (cached == null) {
+            val floor = mapObject.floor
+            val articObject = mapObject.item
+
+            val newTarget: BitmapTarget = object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    /**
+                     * If map display mode is Tour, get the order number of the stop.
+                     */
+                    if (viewModel.currentFloor == floor || displayMode is MapViewModel.DisplayMode.Tour) {
+                        var order: String? = null
+                        if (displayMode is MapViewModel.DisplayMode.Tour) {
+                            /**
+                             * If map's display mode is Tour, get the order number of the stop.
+                             */
+                            val index = displayMode.active
+                                    .tourStops
+                                    .map { it.objectId }
+                                    .indexOf(articObject.nid)
+
+                            if (index > -1) {
+                                order = (index + 1).toString()
                             }
+                        }
 
-                            val fullMarker = map.addMarker(
-                                    MarkerOptions()
-                                            .position(articObject.toLatLng())
-                                            .icon(BitmapDescriptorFactory.fromBitmap(
-                                                    objectMarkerGenerator.makeIcon(resource, order)
-                                            ))
-                                            .zIndex(2f)
-                                            .visible(true)
-                                            .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
-                            )
+                        val fullMarker = map.addMarker(
+                                MarkerOptions()
+                                        .position(articObject.toLatLng())
+                                        .icon(BitmapDescriptorFactory.fromBitmap(
+                                                objectMarkerGenerator.makeIcon(resource, order)
+                                        ))
+                                        .zIndex(2f)
+                                        .visible(true)
+                                        .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
+                        )
 
                         fullMarker.tag = mapObject
 
-                            fullObjectMarkers.add(fullMarker)
-                        }
+                        fullObjectMarkers.add(fullMarker)
                     }
-                })
-
-
+                }
+            }
+            targetCache[mapObject] = newTarget
+            return newTarget
+        } else {
+            return cached
+        }
     }
 
     /**
