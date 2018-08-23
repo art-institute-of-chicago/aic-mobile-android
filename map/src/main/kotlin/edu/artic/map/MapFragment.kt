@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.AnyThread
+import android.support.annotation.UiThread
+import android.support.annotation.WorkerThread
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -409,32 +411,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                     fullObjectMarkers.clear()
 
-                    itemList.forEach { mapItem ->
-                        when (mapItem) {
-                            is MapItem.Annotation -> {
-                                val annotation = mapItem.item
-                                when (annotation.annotationType) {
-                                    ArticMapAnnotationType.DEPARTMENT -> {
-                                        loadDepartment(mapItem)
-                                    }
-                                }
-                            }
-                            is MapItem.Gallery -> {
-                                val gallery = mapItem.item
-                                loadGalleryNumber(gallery)
-
-                            }
-                            is MapItem.Object -> {
-                                val articObject = mapItem.item
-                                loadObject(articObject, mapItem.floor, mapMode)
-                            }
-                            is MapItem.TourIntro -> {
-                                val articTour = mapItem.item
-                                loadTourObject(articTour, mapItem.floor, mapMode)
-                            }
-
-                        }
-                    }
+                    bindMarkersSynchronously(itemList, mapMode)
                     Timber.d("DepartmentMarker list size after 'itemList.forEach{}': ${departmentMarkers.size}")
                 }.disposedBy(disposeBag)
 
@@ -515,6 +492,36 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                     .create()
             leaveTourDialog?.show()
+        }
+    }
+
+    @UiThread
+    fun bindMarkersSynchronously(itemList: List<MapItem<*>>, mapMode: MapViewModel.DisplayMode) {
+        itemList.forEach { mapItem ->
+            when (mapItem) {
+                is MapItem.Annotation -> {
+                    val annotation = mapItem.item
+                    when (annotation.annotationType) {
+                        ArticMapAnnotationType.DEPARTMENT -> {
+                            loadDepartment(mapItem)
+                        }
+                    }
+                }
+                is MapItem.Gallery -> {
+                    val gallery = mapItem.item
+                    loadGalleryNumber(gallery)
+
+                }
+                is MapItem.Object -> {
+                    val articObject = mapItem.item
+                    loadObject(articObject, mapItem.floor, mapMode)
+                }
+                is MapItem.TourIntro -> {
+                    val articTour = mapItem.item
+                    loadTourObject(articTour, mapItem.floor, mapMode)
+                }
+
+            }
         }
     }
 
