@@ -16,11 +16,7 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.isResourceConstrained
-import edu.artic.base.utils.loadBitmap
-import edu.artic.base.utils.loadWithThumbnail
-import edu.artic.base.utils.statusBarHeight
+import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
@@ -352,9 +348,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 groundOverlayGenerated.filter { it }
         ) { floor, _ ->
             floor
-        }.subscribe {
-            buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$it.png"))
-        }.disposedBy(disposeBag)
+        }.filter { floor -> floor > -1 }
+                .subscribe {
+                    buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$it.png"))
+                }.disposedBy(disposeBag)
 
         viewModel.amenities
                 .observeOn(AndroidSchedulers.mainThread())
