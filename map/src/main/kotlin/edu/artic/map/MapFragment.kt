@@ -95,7 +95,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private val dotObjectMarkers = mutableListOf<Marker>()
 
     private lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
-    private lateinit var objectDotMarkerGenerator: ArticObjectDotMarkerGenerator
     private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
     private lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
@@ -119,7 +118,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
-        objectDotMarkerGenerator = ArticObjectDotMarkerGenerator(view.context)
         galleryNumberGenerator = GalleryNumberMarkerGenerator(view.context)
         departmentMarkerGenerator = DepartmentMarkerGenerator(view.context)
 
@@ -728,7 +726,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                 }
                             }
 
-                            val fullMaker = map.addMarker(
+                            val fullMarker = map.addMarker(
                                     MarkerOptions()
                                             .position(articObject.toLatLng())
                                             .icon(BitmapDescriptorFactory.fromBitmap(
@@ -739,17 +737,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
                             )
 
-                            fullMaker.tag = articObject
+                            fullMarker.tag = articObject
 
-                            fullObjectMarkers.add(fullMaker)
-                            val dotMaker = map.addMarker(MarkerOptions()
-                                    .position(articObject.toLatLng())
-                                    .icon(BitmapDescriptorFactory.fromBitmap(
-                                            objectDotMarkerGenerator.makeIcon()
-                                    ))
-                                    .zIndex(2f)
-                                    .visible(false))
-                            dotObjectMarkers.add(dotMaker)
+                            fullObjectMarkers.add(fullMarker)
                         }
                     }
                 })
