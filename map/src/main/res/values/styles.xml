@@ -18,4 +18,11 @@
         <item name="android:textSize">15sp</item>
         <item name="android:background">@drawable/map_floor_background_default</item>
     </style>
+
+    <style name="LeaveTourDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/off_blue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
 </resources>

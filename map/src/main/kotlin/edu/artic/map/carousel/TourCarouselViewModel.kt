@@ -24,7 +24,7 @@ import javax.inject.Inject
 class TourCarouselViewModel @Inject constructor(private val analyticsTracker: AnalyticsTracker,
                                                 private val objectDao: ArticObjectDao,
                                                 private val audioObjectDao: ArticAudioFileDao,
-                                                tourProgressManager: TourProgressManager) : BaseViewModel() {
+                                                val tourProgressManager: TourProgressManager) : BaseViewModel() {
 
 
     val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
@@ -134,6 +134,9 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
 
     }
 
+    fun leaveTour() {
+        tourProgressManager.leaveTourRequest.onNext(true)
+    }
 }
 
 open class TourCarousalBaseViewModel : BaseViewModel() {

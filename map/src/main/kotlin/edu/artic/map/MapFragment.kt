@@ -1,10 +1,12 @@
 package edu.artic.map
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.AnyThread
 import android.view.View
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
@@ -526,6 +528,37 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
 
                 }.disposedBy(disposeBag)
+
+        viewModel
+                .leaveTourRequest
+                .subscribe {
+                    val dialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
+                            .setMessage(getString(R.string.leaveTour))
+                            .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
+                                viewModel.leaveTour()
+                                dialog.dismiss()
+                            }
+                            .create()
+                    dialog.show()
+
+                }.disposedBy(disposeBag)
+
+        viewModel
+                .displayMode
+                .filter { mode -> mode is MapViewModel.DisplayMode.CurrentFloor }
+                .subscribe {
+                    val fragment = requireActivity().supportFragmentManager.findFragmentByTag(OBJECT_DETAILS)
+                    fragment?.let { carousalFragment ->
+                        requireFragmentManager()
+                                .beginTransaction()
+                                .remove(carousalFragment)
+                                .commit()
+                    }
+                }
+                .disposedBy(disposeBag)
     }
 
 

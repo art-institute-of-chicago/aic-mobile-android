@@ -1,5 +1,6 @@
 package edu.artic.map
 
+import android.util.Log
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
@@ -19,6 +20,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
@@ -79,6 +81,7 @@ class MapViewModel @Inject constructor(
     val zoomLevel: Subject<MapZoomLevel> = BehaviorSubject.create()
 
     val cameraMovementRequested: Subject<Optional<Pair<LatLng, MapZoomLevel>>> = BehaviorSubject.create()
+    val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
 
     val currentFloor: Int
         get() {
@@ -115,7 +118,23 @@ class MapViewModel @Inject constructor(
                 }
                 .bindTo(displayMode)
 
+        tourProgressManager
+                .leaveTourRequest
+                .bindTo(leaveTourRequest)
+                .disposedBy(disposeBag)
 
+        /**
+         * Reset tour object
+         */
+        tourProgressManager
+                .selectedTour
+                .subscribe { selectedTour ->
+                    if (selectedTour.value == null) {
+                        tour.onNext(Optional(null))
+                        floorChangedTo(1)
+                    }
+
+                }.disposedBy(disposeBag)
 
         observeAmenities()
                 .bindTo(amenities)
@@ -197,6 +216,15 @@ class MapViewModel @Inject constructor(
                 .bindTo(centerFullObjectMarker)
                 .disposedBy(disposeBag)
 
+        tourProgressManager
+                .selectedTour
+                .skip(1)
+                .subscribe { value ->
+                    val tour = value.value
+                    if (tour == null) {
+                        Log.d("LEAVE", "leaving tour")
+                    }
+                }.disposedBy(disposeBag)
     }
 
     /**
@@ -383,6 +411,10 @@ class MapViewModel @Inject constructor(
 
     fun articObjectSelected(articObject: ArticObject) {
         selectedArticObject.onNext(articObject)
+    }
+
+    fun leaveTour() {
+        tourProgressManager.selectedTour.onNext(Optional(null))
     }
 
 }
