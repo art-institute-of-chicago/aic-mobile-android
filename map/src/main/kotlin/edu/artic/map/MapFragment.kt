@@ -41,11 +41,6 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
-import edu.artic.map.util.ArticObjectDotMarkerGenerator
-import edu.artic.map.util.ArticObjectMarkerGenerator
-import edu.artic.map.util.DepartmentMarkerGenerator
-import edu.artic.map.util.GalleryNumberMarkerGenerator
-import edu.artic.map.util.amenityIconForAmenityType
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers

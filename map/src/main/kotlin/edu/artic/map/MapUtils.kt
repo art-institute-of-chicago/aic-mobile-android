@@ -1,4 +1,4 @@
-package edu.artic.map.util
+package edu.artic.map
 
 import android.support.annotation.DrawableRes
 import edu.artic.db.models.ArticMapAmenityType
