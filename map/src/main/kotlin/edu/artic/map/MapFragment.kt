@@ -348,7 +348,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 groundOverlayGenerated.filter { it }
         ) { floor, _ ->
             floor
-        }.filter { floor -> floor > Int.MIN_VALUE }
+        }.filter { floor -> floor in 0..3 }
                 .subscribe {
                     buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$it.png"))
                 }.disposedBy(disposeBag)
