@@ -15,9 +15,11 @@ import edu.artic.map.helpers.mapToMapItem
 import edu.artic.map.helpers.toLatLng
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -122,14 +124,6 @@ class MapViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         /**
-         * Clear out amenities on tour mode.
-         */
-        displayMode.filter { it is DisplayMode.Tour }
-                .map { listOf<MapItem.Annotation>() }
-                .bindTo(amenities)
-                .disposedBy(disposeBag)
-
-        /**
          * Observe landmark for all modes.
          */
         observeSpaces()
@@ -204,15 +198,19 @@ class MapViewModel @Inject constructor(
      */
     fun observeAmenities(): Observable<List<MapItem.Annotation>> {
 
-        return distinctFloor
-                .withLatestFrom(displayMode) { floor, mode ->
-                    floor to mode
+        return Observable.combineLatest<DisplayMode, Int, List<ArticMapAnnotation>>(
+                displayMode,
+                distinctFloor,
+                BiFunction { mode, floor ->
+                    if (mode is DisplayMode.Tour) {
+                        emptyList<ArticMapAnnotation>()
+                    } else {
+                        mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).blockingFirst()
+                    }
                 }
-                .filter { it -> it.second is DisplayMode.CurrentFloor }
-                .map { it.first }
-                .flatMap { floor ->
-                    mapAnnotationDao.getAmenitiesOnMapForFloor(floor.toString()).toObservable()
-                }.map { amenitiesList -> amenitiesList.mapToMapItem() }
+        ).observeOn(Schedulers.io())
+                .map { amenitiesList -> amenitiesList.mapToMapItem() }
+
     }
 
 
