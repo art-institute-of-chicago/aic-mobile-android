@@ -535,29 +535,26 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     @UiThread
-    fun bindMarkersSynchronously(itemList: List<MapItem<*>>, mapMode: MapViewModel.DisplayMode) {
-        itemList.forEach { mapItem ->
-            when (mapItem) {
-                is MapItem.Annotation -> {
-                    val annotation = mapItem.item
-                    when (annotation.annotationType) {
-                        ArticMapAnnotationType.DEPARTMENT -> {
-                            loadDepartment(mapItem)
-                        }
+    fun bindToMap(mapItem: MapItem<*>, mapMode: MapViewModel.DisplayMode) {
+        when (mapItem) {
+            is MapItem.Annotation -> {
+                val annotation = mapItem.item
+                when (annotation.annotationType) {
+                    ArticMapAnnotationType.DEPARTMENT -> {
+                        loadDepartment(mapItem)
                     }
                 }
-                is MapItem.Gallery -> {
-                    loadGalleryNumber(mapItem)
-
-                }
-                is MapItem.Object -> {
-                    loadObject(mapItem, mapMode)
-                }
-                is MapItem.TourIntro -> {
-                    loadTourObject(mapItem, mapMode)
-                }
-
             }
+            is MapItem.Gallery -> {
+                loadGalleryNumber(mapItem)
+            }
+            is MapItem.Object -> {
+                loadObject(mapItem, mapMode)
+            }
+            is MapItem.TourIntro -> {
+                loadTourObject(mapItem, mapMode)
+            }
+
         }
     }
 
@@ -584,43 +581,33 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .map {
                     val mapItems = it.first
 
-                    return@map mapItems.filter { mapItem ->
-                        mapItem !is MapItem.Object
-                        // If there is already a marker for this in 'fullObjectMarkers', we don't need to start another load
-                        || fullObjectsLock.withLock {
-                            fullObjectMarkers.all {
-                                (model, _) -> model != mapItem
-                            }
-                        }
-                    }
+                    return@map mapItems.filter(this@MapFragment::alreadyHasMarker)
                 }.filter {
                     it.isNotEmpty()
                 }.subscribeBy {
                     it.toObservable()
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribeBy { mapItem ->
-                                when (mapItem) {
-                                    is MapItem.Annotation -> {
-                                        val annotation = mapItem.item
-                                        when (annotation.annotationType) {
-                                            ArticMapAnnotationType.DEPARTMENT -> {
-                                                loadDepartment(mapItem)
-                                            }
-                                        }
-                                    }
-                                    is MapItem.Gallery -> {
-                                        loadGalleryNumber(mapItem)
-                                    }
-                                    is MapItem.Object -> {
-                                        loadObject(mapItem, mapMode)
-                                    }
-                                    is MapItem.TourIntro -> {
-                                        loadTourObject(mapItem, mapMode)
-                                    }
-
-                                }
+                                bindToMap(mapItem, mapMode)
                             }.disposedBy(disposeBag)
                 }.disposedBy(disposeBag)
+    }
+
+    /**
+     * If there is already a marker for [mapItem] in 'fullObjectMarkers', we
+     * don't need to start another load. This method helps us detect that case.
+     *
+     * Currently, we only look for duplicates of [MapItem.Object]s;
+     * other types of items may be filtered in a future commit.
+     */
+    private fun alreadyHasMarker(mapItem: MapItem<*>): Boolean {
+        return (mapItem !is MapItem.Object
+                || fullObjectsLock.withLock {
+                    fullObjectMarkers.all { (model, _) ->
+                        model != mapItem
+                    }
+                }
+        )
     }
 
     override fun onStart() {
