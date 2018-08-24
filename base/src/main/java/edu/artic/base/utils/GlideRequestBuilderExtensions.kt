@@ -3,6 +3,7 @@ package edu.artic.base.utils
 import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.support.v4.app.Fragment
 import android.view.View
 import android.widget.ImageView
@@ -24,10 +25,10 @@ import com.bumptech.glide.request.target.Target
  * @see [RequestBuilder.load]
  * @see [RequestBuilder.thumbnail]
  */
-fun RequestBuilder<Bitmap>.loadWithThumbnail(thumbUrl: String?, fullUrl: String?): RequestBuilder<Bitmap> {
+fun RequestBuilder<Bitmap>.loadWithThumbnail(thumbUri: Uri?, fullUri: Uri?): RequestBuilder<Bitmap> {
     return this.thumbnail(
-            clone().load(thumbUrl)
-    ).load(fullUrl)
+            clone().load(thumbUri)
+    ).load(fullUri)
 }
 
 /**

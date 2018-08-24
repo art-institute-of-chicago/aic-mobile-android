@@ -50,6 +50,7 @@ data class ArticObject(
         @Json(name = "reference_num") val referenceNum: String?,
         @Json(name = "audio_commentary") val audioCommentary: List<AudioCommentaryObject>,
         @Json(name = "highlighted_object") val highlightedObject: String?,
+        @Deprecated("Please do not use the 'full' image, as it is too large to fit on screen. Migrate to 'image_url' or 'large_image_full_path' immediately.")
         @Json(name = "full_image_full_path") val fullImageFullPath: String?,
 //        @Json(name = "audio") val audio: List<String?>, Removed for now until json gets fixed as sometimes returns string othertimes object
         @Json(name = "audio_transcript") val audioTranscript: String?,
