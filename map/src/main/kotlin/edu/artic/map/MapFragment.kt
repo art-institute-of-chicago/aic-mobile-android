@@ -27,9 +27,7 @@ import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
-import edu.artic.map.helpers.doesNotContain
-import edu.artic.map.helpers.modifyThenRemoveIf
-import edu.artic.map.helpers.toLatLng
+import edu.artic.map.helpers.*
 import edu.artic.map.util.*
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -437,7 +435,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                             val shouldRemove = itemList.doesNotContain(model)
                             if (shouldRemove) {
-                                marker.remove()
+                                marker.ifNotRemoved {
+                                    marker.remove()
+                                }
                                 Glide.with(this).clear(targetCache[model])
                             }
                             return@modifyThenRemoveIf shouldRemove
@@ -746,16 +746,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         fullObjectMarkers.doesNotContain(paired)
                     }
                 }.observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
+                .subscribeBy {region ->
 
                     /* If the tour is not in the current floor make the ui translucent*/
                     fullMarker.alpha = getAlphaValue(displayMode, floor)
-                    if (objectPosition.isCloseEnoughToCenter(it.latLngBounds)) {
+                    if (objectPosition.isCloseEnoughToCenter(region.latLngBounds)) {
                         if (isDot.compareAndSet(true, false)) {
                             // First switch to 'loading' icon
-                            fullMarker.setIcon(
-                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
-                            )
+                            fullMarker.ifNotRemoved {
+                                it.setIcon(
+                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+                                )
+                            }
                             // Now we must make the call - show the image at its full size
                             Glide.with(this)
                                     .asBitmap()
@@ -771,9 +773,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         }
                     } else if (isDot.compareAndSet(false, true)) {
                         // Show as small dot
-                        fullMarker.setIcon(
-                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
-                        )
+                        fullMarker.ifNotRemoved {
+                            it.setIcon(
+                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
+                            )
+                        }
                         isDot.set(true)
                     }
                 }.disposedBy(disposeBag)
@@ -813,11 +817,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
 
                         // Switch to full icon (from placeholder dot)
-                        fullMarker.setIcon(
-                                BitmapDescriptorFactory.fromBitmap(
-                                        objectMarkerGenerator.makeIcon(resource, order)
-                                )
-                        )
+                        fullMarker.ifNotRemoved {
+                            it.setIcon(
+                                    BitmapDescriptorFactory.fromBitmap(
+                                            objectMarkerGenerator.makeIcon(resource, order)
+                                    )
+                            )
+                        }
 
 
                     }
