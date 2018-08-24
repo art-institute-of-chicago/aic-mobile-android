@@ -59,6 +59,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.reflect.KClass
 
 typealias BitmapTarget = com.bumptech.glide.request.target.Target<Bitmap>
@@ -595,7 +596,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                         loadGalleryNumber(mapItem)
                                     }
                                     is MapItem.Object -> {
-                                        loadObject(mapItem, mapMode)
+                                        // If there is already a marker for this in 'fullObjectMarkers', we don't need to start another load
+                                        if (fullObjectMarkers.all { mark -> mark.tag != mapItem }) {
+                                            loadObject(mapItem, mapMode)
+                                        }
                                     }
                                     is MapItem.TourIntro -> {
                                         loadTourObject(mapItem, mapMode)
@@ -703,12 +707,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     private fun loadObject(mapObject: MapItem.Object, displayMode: MapViewModel.DisplayMode) {
-        if (mapObject.item.toLatLng().isCloseEnoughToCenter(
-                        (visibleArea as BehaviorSubject).value.latLngBounds)
-        ) {
-            // Restrict loading to just items we ought to display
-            return
-        }
+
 
         val floor = mapObject.floor
         val articObject = mapObject.item
@@ -726,7 +725,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                         .zIndex(2f)
                         .visible(true)
-                        .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
 
         )
 
@@ -734,17 +732,41 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         fullObjectMarkers.add(fullMarker)
 
+        val isDot: AtomicBoolean = AtomicBoolean(true)
 
-        Glide.with(this)
-                .asBitmap()
-                // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
-                .apply(RequestOptions().disallowHardwareConfig())
-                .loadWithThumbnail(
-                        articObject.thumbnailFullPath?.asCDNUri(),
-                        // Prefer 'image_url', fall back to 'large image' if necessary.
-                        (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
-                )
-                .into(getTargetFor(mapObject, fullMarker, displayMode))
+
+        // All of this detecting changes logic is solely relevant for 'ArticObject's at this point in time.
+        visibleArea.observeOn(Schedulers.computation())
+                .takeUntil {
+                    fullObjectMarkers.doesNotContain(fullMarker)
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    val wasDotOnLastRun: Boolean = isDot.get()
+
+                    /* If the tour is not in the current floor make the ui translucent*/
+                    fullMarker.alpha = getAlphaValue(displayMode, floor)
+                    if (wasDotOnLastRun && objectPosition.isCloseEnoughToCenter(it.latLngBounds)) {
+                        // Now we must make the call - show the image at its full size
+                        Glide.with(this)
+                                .asBitmap()
+                                // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
+                                .apply(RequestOptions().disallowHardwareConfig())
+                                .loadWithThumbnail(
+                                        articObject.thumbnailFullPath?.asCDNUri(),
+                                        // Prefer 'image_url', fall back to 'large image' if necessary.
+                                        (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
+                                )
+                                .into(getTargetFor(mapObject, fullMarker, displayMode))
+                        isDot.set(false)
+                    } else if (!wasDotOnLastRun) {
+                        // Show as small dot
+                        fullMarker.setIcon(
+                                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
+                        )
+                        isDot.set(true)
+                    }
+                }.disposedBy(disposeBag)
+
 
 
 
