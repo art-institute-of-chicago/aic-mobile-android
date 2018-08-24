@@ -10,9 +10,10 @@ import android.widget.Spinner
 import android.widget.SpinnerAdapter
 
 /**
- * Description:
+ * Description: Convenience conversion method that turns this object into a [BaseAdapter].
  */
-fun <TModel> BaseRecyclerViewAdapter<TModel, *>.toBaseAdapter() = BaseAdapterBinder(this)
+fun <TModel> BaseRecyclerViewAdapter<TModel, *>.toBaseAdapter(): BaseAdapter =
+        BaseAdapterBinder(this)
 
 /**
  * Retrieve original [BaseRecyclerViewAdapter] from this [BaseAdapter]. It must be created with [toBaseAdapter] first.
@@ -55,7 +56,7 @@ interface DropDownAdapter<TModel, VH : BaseViewHolder> {
  * without needing to use a different implementation.
  * @author Andrew Grosner (Fuzz)
  */
-open class BaseAdapterBinder<TModel>(
+class BaseAdapterBinder<TModel>(
         val adapter: BaseRecyclerViewAdapter<TModel, *>) : BaseAdapter() {
 
     private var currentMaxViewType = 0
@@ -90,15 +91,11 @@ open class BaseAdapterBinder<TModel>(
         val viewHolder: BaseViewHolder?
         val viewType = adapter.getItemViewType(i)
         if (localView == null || localView.getTag(R.id.tag_item_type) != viewType) {
-            viewHolder = adapter.createViewHolder(viewGroup, viewType)
-
-            if (viewHolder != null) {
-                localView = viewHolder.itemView
-                localView.setTag(R.id.tag_holder, viewHolder)
-                localView.setTag(R.id.tag_item_type, viewType)
+            viewHolder = adapter.createViewHolder(viewGroup, viewType)?.also {
+                localView = applyViewHolderTags(it, viewType)
             }
         } else {
-            viewHolder = localView.getTag(R.id.tag_holder) as BaseViewHolder?
+            viewHolder = localView?.getTag(R.id.tag_holder) as BaseViewHolder?
         }
 
         viewHolder?.let { adapter.bindViewHolder(viewHolder, i) }
@@ -109,30 +106,36 @@ open class BaseAdapterBinder<TModel>(
      * Defaults to the [getView] implementation if no helper is used.
      */
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View? {
-        if (adapter is DropDownAdapter<*, *> && !adapter.isFooterPosition(position) && !adapter.isHeaderPosition(position)) {
+        if (adapter is DropDownAdapter<*, *> &&
+                // headers and footers are not supported in dropdowns.
+                !adapter.isFooterPosition(position) &&
+                !adapter.isHeaderPosition(position)) {
             @Suppress("UNCHECKED_CAST")
             val dropDownAdapter = adapter as DropDownAdapter<TModel, BaseViewHolder>
-            var localView = convertView
-            val viewHolder: BaseViewHolder?
-            val viewType = adapter.getItemViewType(position)
-            if (localView == null || localView.getTag(R.id.tag_item_type) != viewType) {
-                viewHolder = adapter.onCreateDropdownItemViewHolder(parent, viewType)
+            var viewToReturn = convertView
 
-                if (viewHolder != null) {
-                    localView = viewHolder.itemView
-                    localView.setTag(R.id.tag_holder, viewHolder)
-                    localView.setTag(R.id.tag_item_type, viewType)
+            val viewType = adapter.getItemViewType(position)
+            val viewHolder: BaseViewHolder?
+            if (viewToReturn == null || viewToReturn.getTag(R.id.tag_item_type) != viewType) {
+                viewHolder = adapter.onCreateDropdownItemViewHolder(parent, viewType)?.also {
+                    viewToReturn = applyViewHolderTags(it, viewType)
                 }
             } else {
-                viewHolder = localView.getTag(R.id.tag_holder) as BaseViewHolder?
+                viewHolder = viewToReturn?.getTag(R.id.tag_holder) as BaseViewHolder?
             }
 
             viewHolder?.let { dropDownAdapter.onBindDropdownItemViewHolder(viewHolder, adapter.getItem(position), position) }
-            return localView
+            return viewToReturn
         } else {
             return getView(position, convertView, parent)
         }
     }
+
+    private fun applyViewHolderTags(viewHolder: BaseViewHolder, viewType: Int) =
+            viewHolder.itemView.apply {
+                setTag(R.id.tag_holder, viewHolder)
+                setTag(R.id.tag_item_type, viewType)
+            }
 
     private inner class RecyclerViewToBaseAdapterObserver : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) = notifyDataSetChanged()
