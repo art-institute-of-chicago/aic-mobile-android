@@ -628,7 +628,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .asBitmap()
                 // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
                 .apply(RequestOptions().disallowHardwareConfig())
-                .loadWithThumbnail(articObject.thumbnailFullPath, articObject.fullImageFullPath)
+                .loadWithThumbnail(
+                        articObject.thumbnailFullPath,
+                        // Prefer 'image_url', fall back to 'large image' if necessary.
+                        articObject.image_url ?: articObject.largeImageFullPath
+                )
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         /**
