@@ -31,7 +31,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_audio_details.*
-import timber.log.Timber
 import kotlin.reflect.KClass
 
 /**
@@ -162,9 +161,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.availableTranslations
-                .doOnNext {
-                    Timber.d("Next")
-                }
                 .bindToMain(translationsAdapter.itemChanges())
                 .disposedBy(disposeBag)
 
