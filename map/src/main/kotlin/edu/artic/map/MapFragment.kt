@@ -20,10 +20,8 @@ import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
-import edu.artic.map.util.ArticObjectDotMarkerGenerator
-import edu.artic.map.util.ArticObjectMarkerGenerator
-import edu.artic.map.util.DepartmentMarkerGenerator
-import edu.artic.map.util.GalleryNumberMarkerGenerator
+import edu.artic.map.util.*
+import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables

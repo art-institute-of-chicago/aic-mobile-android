@@ -32,19 +32,6 @@ fun RequestBuilder<Bitmap>.loadWithThumbnail(thumbUri: Uri?, fullUri: Uri?): Req
 }
 
 /**
- * Use this to ensure that your image urls are always hitting the CDN.
- */
-fun String.asCDNUri() : Uri {
-    val parsed = Uri.parse(this)
-    return when {
-        parsed.authority == "lakeimagesweb.artic.edu" -> parsed.buildUpon()
-                .authority("www-2018.artic.edu")
-                .build()
-        else -> parsed
-    }
-}
-
-/**
  * Adds listener that only cares about returning the drawable on success, and notifying that there
  * was a failure. nothing else.
  */
