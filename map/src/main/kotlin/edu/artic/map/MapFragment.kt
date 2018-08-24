@@ -20,10 +20,8 @@ import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
-import edu.artic.map.util.ArticObjectDotMarkerGenerator
-import edu.artic.map.util.ArticObjectMarkerGenerator
-import edu.artic.map.util.DepartmentMarkerGenerator
-import edu.artic.map.util.GalleryNumberMarkerGenerator
+import edu.artic.map.util.*
+import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
@@ -589,7 +587,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         val floor = annotation.floor
         Glide.with(this)
                 .asBitmap()
-                .load(department.imageUrl)
+                .load(department.imageUrl?.asCDNUri())
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (viewModel.currentZoomLevel === MapZoomLevel.Two && viewModel.currentFloor == floor) {
@@ -628,7 +626,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .asBitmap()
                 // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
                 .apply(RequestOptions().disallowHardwareConfig())
-                .loadWithThumbnail(articObject.thumbnailFullPath, articObject.fullImageFullPath)
+                .loadWithThumbnail(
+                        articObject.thumbnailFullPath?.asCDNUri(),
+                        // Prefer 'image_url', fall back to 'large image' if necessary.
+                        (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
+                )
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         /**
@@ -685,7 +687,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private fun loadTourObject(articTour: ArticTour, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
-                .load(articTour.thumbnailFullPath)
+                .load(articTour.thumbnailFullPath?.asCDNUri())
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (displayMode is MapViewModel.DisplayMode.Tour) {
