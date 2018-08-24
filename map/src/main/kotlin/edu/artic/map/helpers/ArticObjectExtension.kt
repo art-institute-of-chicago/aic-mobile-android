@@ -35,14 +35,22 @@ fun ArticTour.toLatLng(): LatLng {
  * crashing the app.
  *
  * FIXME: Fix all such synchronization issues, then remove this method
+ *
+ * @return true if the operation failed, false if it succeeded
  */
 @UiThread
-fun <T> Marker.ifNotRemoved(action: (Marker) -> T) {
-    try {
+fun <T> Marker.ifNotRemoved(retry: Boolean = false, action: (Marker) -> T) : Boolean {
+    return try {
         action(this)
+        false
     } catch (ex: IllegalArgumentException) {
-        if (BuildConfig.DEBUG) {
-            Log.w("MapMarker", ex.message)
+        if (retry) {
+            return this.ifNotRemoved(false, action)
+        } else {
+            if (BuildConfig.DEBUG) {
+                Log.w("MapMarker", ex.message)
+            }
+            true
         }
     }
 }

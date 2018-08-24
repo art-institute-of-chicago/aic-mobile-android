@@ -9,6 +9,7 @@ import android.support.annotation.AnyThread
 import android.support.annotation.GuardedBy
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
+import android.util.Log
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -435,10 +436,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                             val shouldRemove = itemList.doesNotContain(model)
                             if (shouldRemove) {
-                                marker.ifNotRemoved {
-                                    marker.remove()
+                                while (marker.ifNotRemoved(true) { it.remove() }) {
+                                    if (BuildConfig.DEBUG && model is MapItem.Object) {
+                                        Log.e("MapMarker", "Removal failed: " + model.item.nid)
+                                    }
                                 }
-                                Glide.with(this).clear(targetCache[model])
+                                val target = targetCache.remove(model)
+                                Glide.with(this).clear(target)
                             }
                             return@modifyThenRemoveIf shouldRemove
                         }
@@ -730,6 +734,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         fullMarker.tag = mapObject
 
+        /* If the tour is not in the current floor make the ui translucent*/
+        fullMarker.alpha = getAlphaValue(displayMode, floor)
+
         val paired: BiasedPair<MapItem<*>, Marker> = BiasedPair(mapObject, fullMarker)
 
         fullObjectsLock.withLock {
@@ -748,8 +755,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }.observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {region ->
 
-                    /* If the tour is not in the current floor make the ui translucent*/
-                    fullMarker.alpha = getAlphaValue(displayMode, floor)
                     if (objectPosition.isCloseEnoughToCenter(region.latLngBounds)) {
                         if (isDot.compareAndSet(true, false)) {
                             // First switch to 'loading' icon
