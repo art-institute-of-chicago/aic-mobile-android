@@ -713,6 +713,28 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         val floor = mapObject.floor
         val articObject = mapObject.item
 
+
+        // We'll need a marker no matter what....
+        val objectPosition = articObject.toLatLng()
+
+        // Get a placeholder onto the map ASAP
+        val fullMarker: Marker
+        fullMarker = map.addMarker(
+                MarkerOptions()
+                        .position(objectPosition)
+                        // TODO: Replace with resource for a small blue dot
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                        .zIndex(2f)
+                        .visible(true)
+                        .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
+
+        )
+
+        fullMarker.tag = mapObject
+
+        fullObjectMarkers.add(fullMarker)
+
+
         Glide.with(this)
                 .asBitmap()
                 // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
@@ -722,12 +744,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         // Prefer 'image_url', fall back to 'large image' if necessary.
                         (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
                 )
-                .into(getTargetFor(mapObject, displayMode))
+                .into(getTargetFor(mapObject, fullMarker, displayMode))
+
 
 
     }
 
-    private fun getTargetFor(mapObject: MapItem.Object, displayMode: MapViewModel.DisplayMode): BitmapTarget {
+    private fun getTargetFor(mapObject: MapItem.Object, fullMarker: Marker, displayMode: MapViewModel.DisplayMode): BitmapTarget {
         val cached = targetCache[mapObject]
 
         if (cached == null) {
@@ -755,20 +778,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             }
                         }
 
-                        val fullMarker = map.addMarker(
-                                MarkerOptions()
-                                        .position(articObject.toLatLng())
-                                        .icon(BitmapDescriptorFactory.fromBitmap(
-                                                objectMarkerGenerator.makeIcon(resource, order)
-                                        ))
-                                        .zIndex(2f)
-                                        .visible(true)
-                                        .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
+
+                        // Switch to full icon (from placeholder dot)
+                        fullMarker.setIcon(
+                                BitmapDescriptorFactory.fromBitmap(
+                                        objectMarkerGenerator.makeIcon(resource, order)
+                                )
                         )
 
-                        fullMarker.tag = mapObject
 
-                        fullObjectMarkers.add(fullMarker)
                     }
                 }
             }
