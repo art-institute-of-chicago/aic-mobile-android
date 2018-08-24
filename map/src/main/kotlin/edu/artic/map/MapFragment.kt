@@ -6,12 +6,14 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.AnyThread
 import android.view.View
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.fuzz.rx.*
+import com.fuzz.rx.defaultThrottle
+import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
+import com.fuzz.rx.filterValue
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
@@ -81,20 +83,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
-    private val tourArgument: Subject<ArticTour> = BehaviorSubject.create()
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
         const val ZOOM_LEVEL_ONE = 18.0f
         const val ZOOM_LEVEL_TWO = 19.0f
         const val ZOOM_LEVEL_THREE = 20.0f
-    }
-
-    override fun onRegisterViewModel(viewModel: MapViewModel) {
-        tourArgument
-                .mapOptional()
-                .bindTo(viewModel.tour)
-                .disposedBy(disposeBag)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -286,6 +280,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.displayMode
                 .filterFlatMap({ it is MapViewModel.DisplayMode.Tour }, { it as MapViewModel.DisplayMode.Tour })
+                .distinctUntilChanged()
                 .subscribe { mapMode ->
                     val tour = mapMode.active
                     val fragmentManager = requireActivity().supportFragmentManager
@@ -532,7 +527,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel
                 .leaveTourRequest
                 .subscribe {
-                    val dialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
+                    AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
                             .setMessage(getString(R.string.leaveTour))
                             .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
                                 dialog.dismiss()
@@ -541,18 +536,20 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                 viewModel.leaveTour()
                                 dialog.dismiss()
                             }
-                            .create()
-                    dialog.show()
+                            .show()
 
                 }.disposedBy(disposeBag)
 
         viewModel
                 .displayMode
+                .distinctUntilChanged()
                 .filter { mode -> mode is MapViewModel.DisplayMode.CurrentFloor }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    val fragment = requireActivity().supportFragmentManager.findFragmentByTag(OBJECT_DETAILS)
+                    val supportFragmentManager = requireActivity().supportFragmentManager
+                    val fragment = supportFragmentManager.findFragmentByTag(OBJECT_DETAILS)
                     fragment?.let { carousalFragment ->
-                        requireFragmentManager()
+                        supportFragmentManager
                                 .beginTransaction()
                                 .remove(carousalFragment)
                                 .commit()
@@ -765,8 +762,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         super.setupNavigationBindings(viewModel)
         val tour = requireActivity().intent?.extras?.getParcelable<ArticTour>(MapActivity.ARG_TOUR)
 
-        tour?.let {
-            tourArgument.onNext(tour)
+        if (tour != null) {
+            viewModel.loadTourMode(tour)
+        } else {
+            viewModel.loadCurrentFloorMode()
         }
+
     }
 }
