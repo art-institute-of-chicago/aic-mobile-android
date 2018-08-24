@@ -436,7 +436,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                             val shouldRemove = itemList.doesNotContain(model)
                             if (shouldRemove) {
-                                while (marker.ifNotRemoved(true) { it.remove() }) {
+                                if (marker.tryExpectingFailure(true) { it.remove() }) {
                                     if (BuildConfig.DEBUG && model is MapItem.Object) {
                                         Log.e("MapMarker", "Removal failed: " + model.item.nid)
                                     }
@@ -758,7 +758,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     if (objectPosition.isCloseEnoughToCenter(region.latLngBounds)) {
                         if (isDot.compareAndSet(true, false)) {
                             // First switch to 'loading' icon
-                            fullMarker.ifNotRemoved {
+                            fullMarker.tryExpectingFailure {
                                 it.setIcon(
                                         BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
                                 )
@@ -778,7 +778,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         }
                     } else if (isDot.compareAndSet(false, true)) {
                         // Show as small dot
-                        fullMarker.ifNotRemoved {
+                        fullMarker.tryExpectingFailure {
                             it.setIcon(
                                     BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
                             )
@@ -822,7 +822,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
 
                         // Switch to full icon (from placeholder dot)
-                        fullMarker.ifNotRemoved {
+                        fullMarker.tryExpectingFailure {
                             it.setIcon(
                                     BitmapDescriptorFactory.fromBitmap(
                                             objectMarkerGenerator.makeIcon(resource, order)

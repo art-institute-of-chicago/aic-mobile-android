@@ -39,13 +39,13 @@ fun ArticTour.toLatLng(): LatLng {
  * @return true if the operation failed, false if it succeeded
  */
 @UiThread
-fun <T> Marker.ifNotRemoved(retry: Boolean = false, action: (Marker) -> T) : Boolean {
+fun <T> Marker.tryExpectingFailure(retry: Boolean = false, action: (Marker) -> T) : Boolean {
     return try {
         action(this)
         false
     } catch (ex: IllegalArgumentException) {
         if (retry) {
-            return this.ifNotRemoved(false, action)
+            return this.tryExpectingFailure(false, action)
         } else {
             if (BuildConfig.DEBUG) {
                 Log.w("MapMarker", ex.message)
