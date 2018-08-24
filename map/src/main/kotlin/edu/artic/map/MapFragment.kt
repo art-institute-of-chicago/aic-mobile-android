@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
 import android.support.annotation.AnyThread
+import android.support.annotation.GuardedBy
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.view.View
@@ -60,6 +61,8 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 import kotlin.reflect.KClass
 
 typealias BitmapTarget = com.bumptech.glide.request.target.Target<Bitmap>
@@ -91,12 +94,32 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = ScreenCategoryName.Map
 
     lateinit var map: GoogleMap
+
+    /**
+     * Synchronization lock for [fullObjectMarkers].
+     */
+    private val fullObjectsLock = ReentrantLock()
+
     private var leaveTourDialog: AlertDialog? = null
     private val amenitiesMarkerList = mutableListOf<Marker>()
     private val spaceOrLandmarkMarkerList = mutableListOf<Marker>()
     private val departmentMarkers = mutableListOf<Marker>()
     private val galleryMarkers = mutableListOf<Marker>()
-    private val fullObjectMarkers = mutableListOf<Marker>()
+    /**
+     * This is a list of all the [MapItem.Object] elements (and if present,
+     * the one [MapItem.TourIntro]) that are currently shown on the map.
+     *
+     * This list is updated against [MapViewModel.whatToDisplayOnMap]
+     * as the visible set of [MapItem]s changes. Accessing
+     * [Marker.getTag] is only permitted on the UI thread, and may
+     * incur significant delays (3-4 seconds for 200 accesses). For
+     * that reason, we cache the tag here in a [BiasedPair].
+     *
+     * Please lock all usage of this field against concurrency with
+     * [fullObjectsLock].
+     */
+    @GuardedBy("fullObjectsLock")
+    private val fullObjectMarkers = mutableListOf<BiasedPair<MapItem<*>, Marker>>()
 
     /**
      * Cache of network response targets; this helps us avoid making too
@@ -413,30 +436,29 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     val itemList = mapModeWithItemList.second
 
                     departmentMarkers.modifyThenRemoveIf { marker ->
-                        val wasRemoved = itemList.doesNotContain(marker.tag)
-                        if (wasRemoved) {
+                        val shouldRemove = itemList.doesNotContain(marker.tag)
+                        if (shouldRemove) {
                             marker.remove()
                         }
-                        return@modifyThenRemoveIf wasRemoved
+                        return@modifyThenRemoveIf shouldRemove
                     }
                     galleryMarkers.modifyThenRemoveIf { marker ->
-                        val wasRemoved = itemList.doesNotContain(marker.tag)
-                        if (wasRemoved) {
+                        val shouldRemove = itemList.doesNotContain(marker.tag)
+                        if (shouldRemove) {
                             marker.remove()
                         }
-                        return@modifyThenRemoveIf wasRemoved
+                        return@modifyThenRemoveIf shouldRemove
                     }
-                    fullObjectMarkers.modifyThenRemoveIf { marker ->
-                        val tag = marker.tag
+                    fullObjectsLock.withLock {
+                        fullObjectMarkers.modifyThenRemoveIf { (model, marker) ->
 
-                        val wasRemoved = itemList.doesNotContain(tag)
-                        if (wasRemoved) {
-                            marker.remove()
-                            if (tag is MapItem.Object) {
-                                Glide.with(this).clear(targetCache[tag])
+                            val shouldRemove = itemList.doesNotContain(model)
+                            if (shouldRemove) {
+                                marker.remove()
+                                Glide.with(this).clear(targetCache[model])
                             }
+                            return@modifyThenRemoveIf shouldRemove
                         }
-                        return@modifyThenRemoveIf wasRemoved
                     }
 
 
@@ -476,12 +498,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel
                 .centerFullObjectMarker
                 .subscribe { nid ->
-                    fullObjectMarkers.firstOrNull { marker ->
-                        val tag = marker.tag
-                        tag is MapItem.Object && tag.item.nid == nid
-                    }?.let { marker ->
-                        val currentZoomLevel = map.cameraPosition.zoom
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, Math.max(ZOOM_LEVEL_THREE, currentZoomLevel)))
+                    fullObjectsLock.withLock {
+                        fullObjectMarkers.firstOrNull { (model, _) ->
+                            model is MapItem.Object && model.item.nid == nid
+                                    ||
+                                    model is MapItem.TourIntro && model.item.nid == nid
+                        }?.let { (_, marker) ->
+                            val currentZoomLevel = map.cameraPosition.zoom
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, Math.max(ZOOM_LEVEL_THREE, currentZoomLevel)))
+                        }
                     }
 
                 }.disposedBy(disposeBag)
@@ -576,7 +601,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .map {
                     val mapItems = it.first
 
-                    return@map mapItems
+                    return@map mapItems.filter { mapItem ->
+                        mapItem !is MapItem.Object
+                        // If there is already a marker for this in 'fullObjectMarkers', we don't need to start another load
+                        || fullObjectsLock.withLock {
+                            fullObjectMarkers.all {
+                                (model, _) -> model != mapItem
+                            }
+                        }
+                    }
                 }.filter {
                     it.isNotEmpty()
                 }.subscribeBy {
@@ -596,10 +629,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                         loadGalleryNumber(mapItem)
                                     }
                                     is MapItem.Object -> {
-                                        // If there is already a marker for this in 'fullObjectMarkers', we don't need to start another load
-                                        if (fullObjectMarkers.all { mark -> mark.tag != mapItem }) {
-                                            loadObject(mapItem, mapMode)
-                                        }
+                                        loadObject(mapItem, mapMode)
                                     }
                                     is MapItem.TourIntro -> {
                                         loadTourObject(mapItem, mapMode)
@@ -730,7 +760,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         fullMarker.tag = mapObject
 
-        fullObjectMarkers.add(fullMarker)
+        val paired: BiasedPair<MapItem<*>, Marker> = BiasedPair(mapObject, fullMarker)
+
+        fullObjectsLock.withLock {
+            fullObjectMarkers.add(paired)
+        }
 
         val isDot: AtomicBoolean = AtomicBoolean(true)
 
@@ -738,7 +772,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         // All of this detecting changes logic is solely relevant for 'ArticObject's at this point in time.
         visibleArea.observeOn(Schedulers.computation())
                 .takeUntil {
-                    fullObjectMarkers.doesNotContain(fullMarker)
+                    fullObjectsLock.withLock {
+                        fullObjectMarkers.doesNotContain(paired)
+                    }
                 }.observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     val wasDotOnLastRun: Boolean = isDot.get()
@@ -850,7 +886,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .alpha(markerAlpha)
                             )
                             fullMaker.tag = mapTour
-                            fullObjectMarkers.add(fullMaker)
+                            fullObjectsLock.withLock {
+                                fullObjectMarkers.add(BiasedPair(mapTour, fullMaker))
+                            }
                         }
                     }
                 })
