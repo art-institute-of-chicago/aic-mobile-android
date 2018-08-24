@@ -3,6 +3,7 @@ package edu.artic.map.carousel
 import com.fuzz.rx.Optional
 import edu.artic.db.models.ArticTour
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
 
@@ -19,4 +20,6 @@ class TourProgressManager {
      * Save the last selected tour.
      */
     val selectedTour: Subject<Optional<ArticTour>> = BehaviorSubject.createDefault(Optional(null))
+
+    val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
 }
