@@ -66,7 +66,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = ScreenCategoryName.Map
 
     lateinit var map: GoogleMap
-
+    private var leaveTourDialog: AlertDialog? = null
     private val amenitiesMarkerList = mutableListOf<Marker>()
     private val spaceOrLandmarkMarkerList = mutableListOf<Marker>()
     private val departmentMarkers = mutableListOf<Marker>()
@@ -526,18 +526,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel
                 .leaveTourRequest
+                .distinctUntilChanged()
                 .subscribe {
-                    AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
-                            .setMessage(getString(R.string.leaveTour))
-                            .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
-                                dialog.dismiss()
-                            }
-                            .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
-                                viewModel.leaveTour()
-                                dialog.dismiss()
-                            }
-                            .show()
-
+                    displayLeaveTourConfirmation(viewModel)
                 }.disposedBy(disposeBag)
 
         viewModel
@@ -556,6 +547,22 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 }
                 .disposedBy(disposeBag)
+    }
+
+    private fun displayLeaveTourConfirmation(viewModel: MapViewModel) {
+        if (leaveTourDialog?.isShowing != true) {
+            leaveTourDialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
+                    .setMessage(getString(R.string.leaveTour))
+                    .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
+                        viewModel.leaveTour()
+                        dialog.dismiss()
+                    }
+                    .create()
+            leaveTourDialog?.show()
+        }
     }
 
 
@@ -764,9 +771,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         if (tour != null) {
             viewModel.loadTourMode(tour)
-        } else {
-            viewModel.loadCurrentFloorMode()
         }
-
     }
 }

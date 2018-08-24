@@ -40,7 +40,7 @@ class MapViewModel @Inject constructor(
         private val objectDao: ArticObjectDao,
         tourDao: ArticTourDao,
         private val tourProgressManager: TourProgressManager
-) : BaseViewModel(), MapContract {
+) : BaseViewModel() {
 
 
     /**
@@ -65,11 +65,11 @@ class MapViewModel @Inject constructor(
      * you'll probably want to minimize allocations in whatever you have observing it.
      */
     val whatToDisplayOnMap: Subject<List<MapItem<*>>> = BehaviorSubject.create()
-    private val floor: Subject<Int> = BehaviorSubject.create()
+    private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     val distinctFloor: Observable<Int>
         get() = floor.distinctUntilChanged()
 
-    private val zoomLevel: Subject<MapZoomLevel> = BehaviorSubject.create()
+    private val zoomLevel: Subject<MapZoomLevel> = BehaviorSubject.createDefault(MapZoomLevel.One)
 
     val cameraMovementRequested: Subject<Optional<Pair<LatLng, MapZoomLevel>>> = BehaviorSubject.create()
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
@@ -97,9 +97,6 @@ class MapViewModel @Inject constructor(
 
     val displayMode: Subject<DisplayMode> = BehaviorSubject.create()
 
-    override fun loadMode(mode: DisplayMode) {
-        displayMode.onNext(mode)
-    }
 
     /**
      * Load amenities for map
@@ -108,7 +105,7 @@ class MapViewModel @Inject constructor(
      * Mode: [MapViewModel.DisplayMode.CurrentFloor]
      * Observable<List<MapItem.Annotation>>
      */
-    override fun getAmenities() {
+    private fun loadAmenities() {
         Observables.combineLatest(
                 floor.distinctUntilChanged(),
                 displayMode.distinctUntilChanged())
@@ -132,9 +129,9 @@ class MapViewModel @Inject constructor(
      * Zoom: Only on the [MapZoomLevel.One]
      * Mode: [MapViewModel.DisplayMode.CurrentFloor, MapViewModel.DisplayMode.Tour]
      */
-    override fun getSpacesAndLandMarks() {
+    private fun loadSpacesAndLandMarks() {
         Observables.combineLatest(
-                zoomLevel.distinctUntilChanged().filter { zoomLevel -> zoomLevel !== MapZoomLevel.One },
+                zoomLevel.distinctUntilChanged().filter { zoomLevel -> zoomLevel is MapZoomLevel.One },
                 floor.distinctUntilChanged(),
                 displayMode.distinctUntilChanged())
         { zoom, floor, mode ->
@@ -169,7 +166,7 @@ class MapViewModel @Inject constructor(
      *        first, second, third : Objects
      *        third : galleries
      */
-    override fun getMapMarkers() {
+    private fun loadMapMarkers() {
         Observables.combineLatest(
                 zoomLevel.distinctUntilChanged(),
                 floor.distinctUntilChanged(),
@@ -251,9 +248,9 @@ class MapViewModel @Inject constructor(
 
 
     init {
-        getAmenities()
-        getSpacesAndLandMarks()
-        getMapMarkers()
+        loadAmenities()
+        loadSpacesAndLandMarks()
+        loadMapMarkers()
 
         displayMode.filterFlatMap({ it is DisplayMode.Tour }, { it as DisplayMode.Tour })
                 .map { it -> it.active }
@@ -273,9 +270,13 @@ class MapViewModel @Inject constructor(
          */
         tourProgressManager
                 .selectedTour
+                .distinctUntilChanged()
                 .subscribe { selectedTour ->
-                    if (selectedTour.value == null) {
+                    val tour = selectedTour.value
+                    if (tour == null) {
                         loadCurrentFloorMode()
+                    } else {
+                        loadTourMode(tour)
                     }
 
                 }.disposedBy(disposeBag)
@@ -309,7 +310,7 @@ class MapViewModel @Inject constructor(
                 }.disposedBy(disposeBag)
     }
 
-    fun loadCurrentFloorMode() {
+    private fun loadCurrentFloorMode() {
         displayMode.onNext(DisplayMode.CurrentFloor())
         floorChangedTo(1)
     }
