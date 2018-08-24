@@ -6,7 +6,8 @@ import edu.artic.map.R
 import timber.log.Timber
 
 /**
- * Description:
+ * Description: Returns a drawable resource for the type of [ArticMapAmenityType] specified. If one
+ * is not matched up, we return a 0 and log the unknown type.
  */
 @DrawableRes
 internal fun amenityIconForAmenityType(type: String?): Int {
