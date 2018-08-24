@@ -14,33 +14,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.defaultThrottle
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
-import com.fuzz.rx.filterValue
-import com.fuzz.rx.mapOptional
+import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.GroundOverlay
-import com.google.android.gms.maps.model.GroundOverlayOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.isResourceConstrained
-import edu.artic.base.utils.loadBitmap
-import edu.artic.base.utils.loadWithThumbnail
-import edu.artic.base.utils.statusBarHeight
-import edu.artic.db.models.ArticGallery
+import edu.artic.base.utils.*
+import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
@@ -48,6 +30,7 @@ import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.doesNotContain
 import edu.artic.map.helpers.modifyThenRemoveIf
 import edu.artic.map.helpers.toLatLng
+import edu.artic.map.util.*
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.Observable
@@ -777,24 +760,29 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 }.observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
-                    val wasDotOnLastRun: Boolean = isDot.get()
 
                     /* If the tour is not in the current floor make the ui translucent*/
                     fullMarker.alpha = getAlphaValue(displayMode, floor)
-                    if (wasDotOnLastRun && objectPosition.isCloseEnoughToCenter(it.latLngBounds)) {
-                        // Now we must make the call - show the image at its full size
-                        Glide.with(this)
-                                .asBitmap()
-                                // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
-                                .apply(RequestOptions().disallowHardwareConfig())
-                                .loadWithThumbnail(
-                                        articObject.thumbnailFullPath?.asCDNUri(),
-                                        // Prefer 'image_url', fall back to 'large image' if necessary.
-                                        (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
-                                )
-                                .into(getTargetFor(mapObject, fullMarker, displayMode))
-                        isDot.set(false)
-                    } else if (!wasDotOnLastRun) {
+                    if (objectPosition.isCloseEnoughToCenter(it.latLngBounds)) {
+                        if (isDot.compareAndSet(true, false)) {
+                            // First switch to 'loading' icon
+                            fullMarker.setIcon(
+                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+                            )
+                            // Now we must make the call - show the image at its full size
+                            Glide.with(this)
+                                    .asBitmap()
+                                    // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
+                                    .apply(RequestOptions().disallowHardwareConfig())
+                                    .loadWithThumbnail(
+                                            articObject.thumbnailFullPath?.asCDNUri(),
+                                            // Prefer 'image_url', fall back to 'large image' if necessary.
+                                            (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
+                                    )
+                                    .into(getTargetFor(mapObject, fullMarker, displayMode))
+                            isDot.set(false)
+                        }
+                    } else if (isDot.compareAndSet(false, true)) {
                         // Show as small dot
                         fullMarker.setIcon(
                                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
