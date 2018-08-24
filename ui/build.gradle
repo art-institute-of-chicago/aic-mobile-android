@@ -1,13 +1,6 @@
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-android {
-    defaultConfig {
-        buildConfigField("String", "OFFICIAL_IMAGE_HOST", "\"lakeimagesweb.artic.edu\"")
-        buildConfigField("String", "CDN_HOST", "\"www-2018.artic.edu\"")
-    }
-}
-
 
 dependencies {
     implementation libs.rxHelper
