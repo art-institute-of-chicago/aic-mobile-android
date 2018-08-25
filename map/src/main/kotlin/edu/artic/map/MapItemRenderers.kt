@@ -7,6 +7,7 @@ import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.asFlowable
 import com.fuzz.rx.asObservable
+import com.fuzz.rx.disposedBy
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
@@ -30,6 +31,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -75,11 +77,17 @@ abstract class MapItemRenderer<T> {
     fun getMarkerHolderById(id: String): Observable<Optional<MarkerHolder<T>>> =
             mapItems.take(1).map { mapItems -> optionalOf(mapItems[id]) }
 
+    fun bindToMapChanges(map: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>, disposeBag: DisposeBag) {
+        renderMarkers(map, floorFocus)
+                .subscribeBy { updateMarkers(it) }
+                .disposedBy(disposeBag)
+    }
+
     fun updateMarkers(markers: List<MarkerHolder<T>>) {
         this.mapItems.onNext(markers.associateBy { it.id })
     }
 
-    fun renderMarkers(map: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
+    private fun renderMarkers(map: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
             : Flowable<List<MarkerHolder<T>>> {
         return floorFocus
                 .withLatestFrom(map.toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
