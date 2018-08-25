@@ -3,7 +3,6 @@ package edu.artic.map
 import android.content.Context
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
-import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterValue
 import com.google.android.gms.maps.GoogleMap
 import edu.artic.db.daos.ArticGalleryDao
@@ -12,7 +11,6 @@ import edu.artic.db.daos.ArticObjectDao
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -62,25 +60,9 @@ class ExploreMapMarkerConstructor
                 .toFlowable(BackpressureStrategy.LATEST)
                 .share()
 
-        landmarkMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
-                .subscribeBy { landmarkMapItemRenderer.updateMarkers(it) }
-                .disposedBy(disposeBag)
-
-        spacesMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
-                .subscribeBy { spacesMapItemRenderer.updateMarkers(it) }
-                .disposedBy(disposeBag)
-
-        amenitiesMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
-                .subscribeBy { amenitiesMapItemRenderer.updateMarkers(it) }
-                .disposedBy(disposeBag)
-
-        departmentsMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
-                .subscribeBy { departmentsMapItemRenderer.updateMarkers(it) }
-                .disposedBy(disposeBag)
-
-        galleriesMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
-                .subscribeBy { galleriesMapItemRenderer.updateMarkers(it) }
-                .disposedBy(disposeBag)
+        renderers.forEach { renderer ->
+            renderer.bindToMapChanges(map.filterValue(), bufferedFloorFocus, disposeBag)
+        }
     }
 
     fun cleanup() {
