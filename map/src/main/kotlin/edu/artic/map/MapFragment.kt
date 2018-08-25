@@ -2,8 +2,10 @@ package edu.artic.map
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.support.annotation.AnyThread
+import android.support.v4.content.ContextCompat
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -16,11 +18,7 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.isResourceConstrained
-import edu.artic.base.utils.loadBitmap
-import edu.artic.base.utils.loadWithThumbnail
-import edu.artic.base.utils.statusBarHeight
+import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
@@ -38,6 +36,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
 import kotlin.reflect.KClass
+
 
 /**
  * This Fragment contains a [GoogleMap] with a custom tileset and quite a few markers.
@@ -151,7 +150,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             ).zIndex(.11f)
                             .image(BitmapDescriptorFactory.fromAsset("AIC_Floor1.png"))
             )
-
             map.isIndoorEnabled = false
             map.setOnCameraIdleListener {
                 val zoom = map.cameraPosition.zoom
@@ -239,6 +237,33 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 return@setOnMarkerClickListener true
             }
             groundOverlayGenerated.onNext(true)
+
+            /**
+             * Add Lion icons.
+             * TODO:: fix bounds of map.
+             */
+            map.addMarker(MarkerOptions()
+                    .position(LatLng(41.879678006591391, -87.624091248446064))
+                    .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.map_lion_1)))
+
+            map.addMarker(MarkerOptions()
+                    .position(LatLng(41.879491568164525, -87.624089977901931))
+                    .icon(bitmapDescriptorFromVector(requireContext(), R.drawable.map_lion_2)))
+
+        }
+    }
+
+    /**
+     * Builds BitmapDescriptor from vector drawable.
+     */
+    private fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+        return vectorDrawable?.let { drawable ->
+            drawable.setBounds(0, 0, drawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+            val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            vectorDrawable.draw(canvas)
+            BitmapDescriptorFactory.fromBitmap(bitmap)
         }
     }
 
