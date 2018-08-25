@@ -1,7 +1,13 @@
 package edu.artic.analytics
 
 /**
- * Description:
+ * Description: various categories of analytics event.
+ *
+ * An analytics event has up to 4 properties:
+ * * Category (required)
+ * * Action (technically optional, but required in practice)
+ * * Label (optional)
+ * * Value (optional)
  */
 sealed class ScreenCategoryName(val screenName: String) {
     object Home : ScreenCategoryName("Home")
@@ -28,7 +34,11 @@ sealed class ScreenCategoryName(val screenName: String) {
 }
 
 sealed class EventCategoryName(val eventCategoryName: String) {
-    object App : EventCategoryName("App")
+    object App : EventCategoryName("app")
+    /**
+     * NB: actions in this category may be `Locale.nameOfLanguageForAnalytics()` instead of a constant from this file.
+     */
+    object Language : EventCategoryName("language")
     object PlayAudio : EventCategoryName("play_audio")
     object PlayBack : EventCategoryName("playback")
 }
