@@ -97,16 +97,11 @@ abstract class MapItemRenderer<T> {
                 }
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .debug("Received Items")
                 .withLatestFrom(mapItems) { event, mapItems -> event to mapItems }
-                .debug("Getting Existing Items")
                 .doOnNext { (event, existingMapItems) ->
-
-                    // returns items not in the new list.
-                    val list = (existingMapItems.values - event.items)
-                    @Suppress("UNCHECKED_CAST")
-                    (list as List<MarkerHolder<T>>)
-                            .forEach { it.marker.remove() }
+                    // trim down items not in the new list
+                    val toBeRemoved = existingMapItems.values.filterNot { event.items.contains(it.item) }
+                    toBeRemoved.forEach { it.marker.remove() }
                 }
                 .flatMap { (event, existingMapItems) ->
                     Observable.zip(event.items.map { item ->
@@ -139,7 +134,6 @@ abstract class MapItemRenderer<T> {
                                 .toList()
                     }
                 }
-                .debug("Constructed Map MarkerHolders")
     }
 
 }
