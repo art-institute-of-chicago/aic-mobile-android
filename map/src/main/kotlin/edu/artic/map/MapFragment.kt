@@ -420,14 +420,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     departmentMarkers.modifyThenRemoveIf { marker ->
                         val shouldRemove = itemList.doesNotContain(marker.tag)
                         if (shouldRemove) {
-                            marker.remove()
+                            marker.removeWithFadeOut()
                         }
                         return@modifyThenRemoveIf shouldRemove
                     }
                     galleryMarkers.modifyThenRemoveIf { marker ->
                         val shouldRemove = itemList.doesNotContain(marker.tag)
                         if (shouldRemove) {
-                            marker.remove()
+                            marker.removeWithFadeOut()
                         }
                         return@modifyThenRemoveIf shouldRemove
                     }
@@ -436,7 +436,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
                             val shouldRemove = itemList.doesNotContain(model)
                             if (shouldRemove) {
-                                if (marker.tryExpectingFailure(true) { it.remove() }) {
+                                if (marker.tryExpectingFailure(true, Marker::removeWithFadeOut)) {
                                     if (BuildConfig.DEBUG && model is MapItem.Object) {
                                         Log.e("MapMarker", "Removal failed: " + model.item.nid)
                                     }

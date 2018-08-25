@@ -1,12 +1,36 @@
 package edu.artic.map
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.location.Location
 import android.support.annotation.UiThread
 import android.util.Log
+import android.util.Property
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import edu.artic.db.models.ArticObject
+
+
+
+/**
+ * Reference instance of [AlphaProperty]. Use this
+ * to animate [Marker.setAlpha] and [Marker.getAlpha].
+ *
+ * @see [Marker.removeWithFadeOut]
+ */
+val MARKER_ALPHA: Property<Marker, Float> = AlphaProperty()
+
+internal class AlphaProperty : Property<Marker, Float>(Float::class.java, "alpha") {
+    override fun get(given: Marker?): Float {
+        return given?.alpha ?: Float.NaN
+    }
+
+    override fun set(given: Marker?, value: Float) {
+        given?.alpha = value
+    }
+}
 
 
 /**
@@ -67,3 +91,23 @@ fun <T> Marker.tryExpectingFailure(retry: Boolean = false, action: (Marker) -> T
         }
     }
 }
+
+/**
+ * This calls [Marker.remove] after animating the [alpha][MARKER_ALPHA] to 0 -
+ * essentially, fully fading it out.
+ *
+ * Similar concept to [android.transition.Fade].
+ */
+@UiThread
+fun Marker.removeWithFadeOut() {
+    val fadeOut: ObjectAnimator = ObjectAnimator.ofFloat(this, MARKER_ALPHA, 1f, 0f)
+    fadeOut.addListener(object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator?) {
+            tryExpectingFailure(true) {
+                remove()
+            }
+        }
+    })
+    fadeOut.start()
+}
+
