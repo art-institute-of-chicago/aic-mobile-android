@@ -906,31 +906,3 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 }
 
 
-/**
- * We only want to display [ArticObject] annotations that are within 15 meters
- * of the center of the map.
- *
- * @param bounds the restrictions of
- * [the map's viewport][com.google.android.gms.maps.Projection.getVisibleRegion]
- */
-private fun LatLng.isCloseEnoughToCenter(bounds: LatLngBounds): Boolean {
-    return bounds.contains(this) && bounds.center.distanceTo(this) < 15
-}
-
-/**
- * Alias to [Location.distanceBetween], where 'this' is the first param and 'other' is the second.
- *
- * @return a distance, in meters
- */
-private fun LatLng.distanceTo(other: LatLng): Float {
-    val results = FloatArray(1)
-    Location.distanceBetween(
-            this.latitude,
-            this.longitude,
-            other.latitude,
-            other.longitude,
-            results
-    )
-    return results[0]
-}
-
