@@ -27,6 +27,7 @@ import edu.artic.base.utils.fileAsString
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
 import edu.artic.base.utils.statusBarHeight
+import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
@@ -187,11 +188,11 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
 
             map.setOnMarkerClickListener { marker ->
                 when (marker.tag) {
-                    is MapItem.Annotation -> {
-                        val annotation = marker.tag as MapItem.Annotation
-                        when (annotation.item.annotationType) {
+                    is ArticMapAnnotation -> {
+                        val annotation = marker.tag as ArticMapAnnotation
+                        when (annotation.annotationType) {
                             ArticMapAnnotationType.DEPARTMENT -> {
-                                viewModel.departmentMarkerSelected(annotation.item)
+                                viewModel.departmentMarkerSelected(annotation)
                             }
                         }
                     }

@@ -64,10 +64,11 @@ abstract class MapItemRenderer<T> {
     init {
         bitmapQueue
                 .buffer(500, TimeUnit.MILLISECONDS, 10)
+                .toFlowable(BackpressureStrategy.BUFFER)
                 .debug("Emitting Bitmap Queue")
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
-                .withLatestFrom(mapItems)
+                .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST))
                 .map { (newMarkers, existingMarkers) ->
                     Timber.d("Updating with ${newMarkers.size} to ${existingMarkers.size}")
                     val modifiedMarkers = existingMarkers.toMutableMap()
@@ -247,7 +248,7 @@ abstract class MapItemRenderer<T> {
         return MarkerHolder(
                 id,
                 item,
-                map.addMarker(options))
+                map.addMarker(options).apply { tag = item })
     }
 
 }
