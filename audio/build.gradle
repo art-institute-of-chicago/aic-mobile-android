@@ -23,4 +23,5 @@ dependencies {
     implementation project(':navigation')
     implementation project(':db')
     implementation project(':media')
+    implementation project(':adapter')
 }

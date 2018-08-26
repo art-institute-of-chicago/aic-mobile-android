@@ -1,9 +1,7 @@
 package edu.artic.map
 
-import com.fuzz.rx.Optional
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
+import android.util.Log
+import com.fuzz.rx.*
 import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
@@ -19,6 +17,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
@@ -70,8 +69,6 @@ class MapViewModel @Inject constructor(
      * you'll probably want to minimize allocations in whatever you have observing it.
      */
     val whatToDisplayOnMap: Subject<List<MapItem<*>>> = BehaviorSubject.create()
-    val tour: Subject<Optional<ArticTour>> = BehaviorSubject.createDefault(Optional(null))
-
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     val distinctFloor: Observable<Int>
         get() = floor.distinctUntilChanged()
@@ -79,6 +76,7 @@ class MapViewModel @Inject constructor(
     val zoomLevel: Subject<MapZoomLevel> = BehaviorSubject.create()
 
     val cameraMovementRequested: Subject<Optional<Pair<LatLng, MapZoomLevel>>> = BehaviorSubject.create()
+    val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
 
     val currentFloor: Int
         get() {
@@ -102,20 +100,34 @@ class MapViewModel @Inject constructor(
 
     init {
 
-        tour
-                .map { articTour ->
-                    val tour = articTour.value
-                    var displayMode: DisplayMode = DisplayMode.CurrentFloor()
-                    tour?.let {
-                        displayMode = DisplayMode.Tour(it)
-                        floorChangedTo(tour.floorAsInt)
-                        tourProgressManager.selectedTour.onNext(Optional(it))
+        displayMode.filterFlatMap({ it is DisplayMode.Tour }, { it as DisplayMode.Tour })
+                .map { it -> it.active }
+                .mapOptional()
+                .bindTo(tourProgressManager.selectedTour)
+                .disposedBy(disposeBag)
+
+
+
+        tourProgressManager
+                .leaveTourRequest
+                .bindTo(leaveTourRequest)
+                .disposedBy(disposeBag)
+
+        /**
+         * Reset tour object
+         */
+        tourProgressManager
+                .selectedTour
+                .distinctUntilChanged()
+                .subscribe { selectedTour ->
+                    val tour = selectedTour.value
+                    if (tour == null) {
+                        loadCurrentFloorMode()
+                    } else {
+                        loadTourMode(tour)
                     }
-                    displayMode
-                }
-                .bindTo(displayMode)
 
-
+                }.disposedBy(disposeBag)
 
         observeAmenities()
                 .bindTo(amenities)
@@ -197,6 +209,15 @@ class MapViewModel @Inject constructor(
                 .bindTo(centerFullObjectMarker)
                 .disposedBy(disposeBag)
 
+        tourProgressManager
+                .selectedTour
+                .skip(1)
+                .subscribe { value ->
+                    val tour = value.value
+                    if (tour == null) {
+                        Log.d("LEAVE", "leaving tour")
+                    }
+                }.disposedBy(disposeBag)
     }
 
     /**
@@ -385,4 +406,17 @@ class MapViewModel @Inject constructor(
         selectedArticObject.onNext(articObject)
     }
 
+    fun leaveTour() {
+        tourProgressManager.selectedTour.onNext(Optional(null))
+    }
+
+    fun loadTourMode(tour: ArticTour) {
+        displayMode.onNext(DisplayMode.Tour(tour))
+        floorChangedTo(tour.floorAsInt)
+    }
+
+    private fun loadCurrentFloorMode() {
+        displayMode.onNext(DisplayMode.CurrentFloor())
+        floorChangedTo(1)
+    }
 }
