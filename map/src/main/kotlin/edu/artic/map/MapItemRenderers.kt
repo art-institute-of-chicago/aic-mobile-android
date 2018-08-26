@@ -226,11 +226,16 @@ abstract class MapItemRenderer<T>(
                         items.mapNotNull { item ->
                             val id = getIdFromItem(item)
                             val existing = foundItemsMap[id]
-                            val newAlpha = getMarkerAlpha(floor, displayMode, item)
+                            val newAlpha = getMarkerAlpha(floor, displayMode, item) != existing?.marker?.alpha
                             // same item, don't re-add to the map. or if the marker alpha will not change.
-                            if (existing != null && existing.marker.alpha == newAlpha) {
+                            if (existing != null && !newAlpha) {
                                 existing
                             } else {
+                                // alpha changed, we're replacing existing now too.
+                                if (newAlpha) {
+                                    existingMapItems[id]?.marker?.remove()
+                                }
+
                                 // fetching is enqueued
                                 getBitmapFetcher(item, displayMode)?.let { bitmapFetcher ->
                                     enqueueBitmapFetch(bitmapFetcher.map { DelayedMapItemRenderEvent(event.mapChangeEvent, item, it) })
