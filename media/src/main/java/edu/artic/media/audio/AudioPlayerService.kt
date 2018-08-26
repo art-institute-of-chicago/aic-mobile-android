@@ -33,6 +33,7 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.Playable
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
+import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
@@ -289,7 +290,17 @@ class AudioPlayerService : DaggerService() {
 
     fun setArticObject(_articObject: Playable, audio: AudioFileModel, resetPosition: Boolean = false) {
 
-        if (playable != _articObject || (currentTrack as BehaviorSubject).value != audio || player.playbackState == Player.STATE_IDLE) {
+        val isDifferentAudio = (currentTrack as BehaviorSubject).value != audio
+
+        if (isDifferentAudio) {
+            analyticsTracker.reportEvent(
+                    EventCategoryName.Language,
+                    audio.underlyingLocale().nameOfLanguageForAnalytics(),
+                    audio.title.orEmpty()
+            )
+        }
+
+        if (playable != _articObject || isDifferentAudio || player.playbackState == Player.STATE_IDLE) {
 
             /** Check if the current audio is being interrupted by other audio object.**/
             playable?.let { articObject ->

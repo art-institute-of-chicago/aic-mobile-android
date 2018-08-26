@@ -61,7 +61,11 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
         tourCarousel.adapter = adapter.toPagerAdapter()
         viewPagerIndicator.setViewPager(tourCarousel)
         viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
+        close.setOnClickListener {
+            viewModel.leaveTour()
+        }
     }
+
 
     override fun setupBindings(viewModel: TourCarouselViewModel) {
         super.setupBindings(viewModel)
