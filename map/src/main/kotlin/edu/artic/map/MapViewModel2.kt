@@ -13,6 +13,7 @@ import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticObject
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
+import edu.artic.map.rendering.MarkerHolder
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy

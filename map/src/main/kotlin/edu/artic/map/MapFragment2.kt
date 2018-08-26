@@ -32,6 +32,7 @@ import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
