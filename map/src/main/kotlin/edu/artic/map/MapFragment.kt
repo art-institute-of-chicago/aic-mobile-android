@@ -10,22 +10,43 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.fuzz.rx.*
+import com.fuzz.rx.bindTo
+import com.fuzz.rx.defaultThrottle
+import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
+import com.fuzz.rx.filterValue
+import com.fuzz.rx.mapOptional
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.GroundOverlay
+import com.google.android.gms.maps.model.GroundOverlayOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.*
-import edu.artic.db.models.*
+import edu.artic.base.utils.fileAsString
+import edu.artic.base.utils.isResourceConstrained
+import edu.artic.base.utils.loadBitmap
+import edu.artic.base.utils.loadWithThumbnail
+import edu.artic.base.utils.statusBarHeight
+import edu.artic.db.models.ArticGallery
+import edu.artic.db.models.ArticMapAnnotationType
+import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
-import edu.artic.map.util.*
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -292,46 +313,27 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             CameraUpdateFactory.newLatLngZoom(
                                     newPosition,
                                     when (zoomLevel) {
-                                        MapZoomLevel.One -> {
-                                            ZOOM_LEVEL_ONE
-                                        }
-                                        MapZoomLevel.Two -> {
-                                            ZOOM_LEVEL_TWO
-                                        }
-                                        MapZoomLevel.Three -> {
-                                            ZOOM_LEVEL_THREE
-                                        }
+                                        MapZoomLevel.One -> ZOOM_LEVEL_ONE
+                                        MapZoomLevel.Two -> ZOOM_LEVEL_TWO
+                                        MapZoomLevel.Three -> ZOOM_LEVEL_THREE
                                     }
                             )
                     )
                 }.disposedBy(disposeBag)
 
         viewModel.distinctFloor
-                .subscribe {
-                    lowerLevel.setBackgroundResource(
-                            if (it == 0)
-                                R.drawable.map_floor_background_selected
-                            else
-                                R.drawable.map_floor_background_default
-                    )
-                    floorOne.setBackgroundResource(
-                            if (it == 1)
-                                R.drawable.map_floor_background_selected
-                            else
-                                R.drawable.map_floor_background_default
-                    )
-                    floorTwo.setBackgroundResource(
-                            if (it == 2)
-                                R.drawable.map_floor_background_selected
-                            else
-                                R.drawable.map_floor_background_default
-                    )
-                    floorThree.setBackgroundResource(
-                            if (it == 3)
-                                R.drawable.map_floor_background_selected
-                            else
-                                R.drawable.map_floor_background_default
-                    )
+                .subscribeBy { floor: Int ->
+                    fun backgroundForState(whichFloor: Int): Int {
+                        return when (floor) {
+                            whichFloor -> R.drawable.map_floor_background_selected
+                            else -> R.drawable.map_floor_background_default
+                        }
+                    }
+
+                    lowerLevel.setBackgroundResource(backgroundForState(0))
+                    floorOne.setBackgroundResource(backgroundForState(1))
+                    floorTwo.setBackgroundResource(backgroundForState(2))
+                    floorThree.setBackgroundResource(backgroundForState(3))
                 }
                 .disposedBy(disposeBag)
 
@@ -352,50 +354,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             annotationList,
                             amenitiesMarkerList
                     ) { mapItem ->
-                        val icon = when (mapItem.item.amenityType) {
-                            ArticMapAmenityType.WOMANS_ROOM -> {
-                                R.drawable.icon_amenity_map_womens_room_blue
-                            }
-                            ArticMapAmenityType.MENS_ROOM -> {
-                                R.drawable.icon_amenity_map_mens_room_blue
-                            }
-                            ArticMapAmenityType.ELEVATOR -> {
-                                R.drawable.icon_amenity_map_elevator_blue
-                            }
-                            ArticMapAmenityType.GIFT_SHOP -> {
-                                R.drawable.icon_amenity_map_shop_blue
-                            }
-                            ArticMapAmenityType.TICKETS -> {
-                                R.drawable.icon_amenity_map_tickets_blue
-                            }
-                            ArticMapAmenityType.INFORMATION -> {
-                                R.drawable.icon_amenity_map_information_blue
-                            }
-                            ArticMapAmenityType.CHECK_ROOM -> {
-                                R.drawable.icon_amenity_map_check_room_blue
-                            }
-                            ArticMapAmenityType.AUDIO_GUIDE -> {
-                                R.drawable.icon_amenity_map_audio_guide_blue
-                            }
-                            ArticMapAmenityType.WHEELCHAIR_RAMP -> {
-                                R.drawable.icon_amenity_map_wheelchair_ramp_blue
-                            }
-                            ArticMapAmenityType.DINING -> {
-                                R.drawable.icon_amenity_map_restaurant_blue
-                            }
-                            ArticMapAmenityType.FAMILY_RESTROOM -> {
-                                R.drawable.icon_amenity_map_family_restroom_blue
-                            }
-                            ArticMapAmenityType.MEMBERS_LOUNGE -> {
-                                R.drawable.icon_amenity_map_cafe_blue
-                            }
-                            else -> {
-                                Timber.d("unknownAmenityType: ${mapItem.item.amenityType}")
-                                0
-                            }
-
-                        }
-
+                        val icon = amenityIconForAmenityType(mapItem.item.amenityType)
                         var options = MarkerOptions()
                                 .position(mapItem.item.toLatLng())
                                 .zIndex(0f)
