@@ -19,7 +19,7 @@ import javax.inject.Inject
 /**
  * Description: Handles Map population and Marker creation management.
  */
-class ExploreMapMarkerConstructor
+class MapMarkerConstructor
 @Inject constructor(articMapAnnotationDao: ArticMapAnnotationDao,
                     galleryDao: ArticGalleryDao,
                     objectsDao: ArticObjectDao) { // App context, won't leak.
@@ -67,6 +67,7 @@ class ExploreMapMarkerConstructor
     }
 
     fun cleanup() {
+        renderers.forEach { it.dispose() }
         disposeBag.clear()
     }
 }

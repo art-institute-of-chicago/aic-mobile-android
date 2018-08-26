@@ -22,7 +22,7 @@ import javax.inject.Inject
 /**
  * Description:
  */
-class MapViewModel2 @Inject constructor(val mapMarkerConstructor: ExploreMapMarkerConstructor,
+class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                         private val tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
@@ -91,7 +91,7 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: ExploreMapMark
     }
 
     /**
-     * Retrieve an object from the [ExploreMapMarkerConstructor]
+     * Retrieve an object from the [MapMarkerConstructor]
      */
     fun retrieveObjectById(nid: String): Observable<Optional<MarkerHolder<ArticObject>>> {
         return mapMarkerConstructor.objectsMapItemRenderer.getMarkerHolderById(nid)

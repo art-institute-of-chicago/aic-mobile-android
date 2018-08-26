@@ -7,6 +7,7 @@ import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.asFlowable
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterValue
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
@@ -45,14 +46,39 @@ import java.util.concurrent.TimeUnit
 private const val ALPHA_DIMMED = 0.6f
 private const val ALPHA_VISIBLE = 1.0f
 
+/**
+ * Holder class that keeps a reference to our [item], a unique [id], and the rendered [marker] so
+ * we can clear it out later.
+ */
 data class MarkerHolder<T>(val id: String,
                            val item: T,
                            val marker: Marker)
 
 data class MapItemRendererEvent<T>(val map: GoogleMap, val mapChangeEvent: MapChangeEvent, val items: List<T>)
+
+/**
+ * This class is used when we load [BitmapDescriptor] asynchronously, awaiting callbacks from [Glide].
+ * We keep reference to the [mapChangeEvent] and [item] so we can construct the [MarkerOptions] correctly.
+ */
 data class DelayedMapItemRenderEvent<T>(val mapChangeEvent: MapChangeEvent,
                                         val item: T,
                                         val bitmap: BitmapDescriptor)
+
+/**
+ * Common logic for non-tour objects.
+ * Returns a [Set] of [MapFocus] which results in:
+ * If active in search, then always display. We assume when you get to this point, the item should show on the map,
+ * and in search mode that is only one item at a time.
+ * If on current tour, don't show.
+ * @param allContentFocus A lazy evaluated method that only gets run if the we're in [MapDisplayMode.CurrentFloor]
+ * @param displayMode The current map's [MapDisplayMode]
+ */
+internal inline fun searchMapFocus(displayMode: MapDisplayMode, allContentFocus: () -> Set<MapFocus>): Set<MapFocus> =
+        when (displayMode) {
+            is MapDisplayMode.Tour -> setOf() // don't show
+            is MapDisplayMode.Search<*> -> MapFocus.values().toSet() // assume visible if we get here.
+            is MapDisplayMode.CurrentFloor -> allContentFocus()
+        }
 
 abstract class MapItemRenderer<T>(
         /**
@@ -61,7 +87,7 @@ abstract class MapItemRenderer<T>(
         useBitmapQueue: Boolean = false) {
 
     private val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
-    private val currentMap: Subject<GoogleMap> = BehaviorSubject.create()
+    private val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     private var currentFloor: Int = Int.MIN_VALUE
 
     private val imageQueueDisposeBag = DisposeBag()
@@ -80,7 +106,7 @@ abstract class MapItemRenderer<T>(
                     .buffer(1, TimeUnit.SECONDS, 20)
                     .filter { it.isNotEmpty() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .withLatestFrom(currentMap.toFlowable(BackpressureStrategy.LATEST))
+                    .withLatestFrom(currentMap.filterValue().toFlowable(BackpressureStrategy.LATEST))
                     .subscribe { (newMarkers, map) ->
                         // concat our observables to not overflood the main thread. Delay each one by 50ms.
                         Single.concat(newMarkers
@@ -132,10 +158,16 @@ abstract class MapItemRenderer<T>(
     }
 
     /**
-     * Return what map focus level these [MapItem] display at.
+     * Return what map focus level these [MapItem] display at. [MapDisplayMode] affects this considerably.
+     * [MapDisplayMode.Search] will allow any items in the renderer to display at all levels if its searchable and requested.
+     * [MapDisplayMode.Tour] only displays certain items like [ArticObject] at all levels.
+     * [MapDisplayMode.CurrentFloor] depends on the [MapFocus] for each type.
      */
     abstract fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus>
 
+    /**
+     * Return the zIndex of what you want markers displayed to go at.
+     */
     abstract val zIndex: Float
 
     /**
@@ -143,8 +175,14 @@ abstract class MapItemRenderer<T>(
      */
     abstract fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<T>>
 
+    /**
+     * Retrieve location from the item type.
+     */
     abstract fun getLocationFromItem(item: T): LatLng
 
+    /**
+     * Returns the item's id. Since our objects are mostly different without common interfaces, this method exists.
+     */
     abstract fun getIdFromItem(item: T): String
 
     /**
@@ -159,46 +197,61 @@ abstract class MapItemRenderer<T>(
      */
     open fun getBitmapFetcher(item: T, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? = null
 
-
     /**
-     * Return marker alpha based on couple conditions here.
+     * Return marker alpha based on map configuration. By default, all markers are [ALPHA_VISIBLE],
+     * but depending on mode, this might be [ALPHA_DIMMED]. If for example, we're on tour and displaying
+     * a different floor than current.
      */
     open fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: T): Float = ALPHA_VISIBLE
 
     fun getMarkerHolderById(id: String): Observable<Optional<MarkerHolder<T>>> =
             mapItems.take(1).map { mapItems -> optionalOf(mapItems[id]) }
 
+    /**
+     * Binds this [MapItemRenderer] to changes to the map, based on [MapChangeEvent] and if the [GoogleMap]
+     * is active.
+     */
     fun bindToMapChanges(map: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>, disposeBag: DisposeBag) {
         renderMarkers(map, floorFocus)
-                .subscribeBy { updateMarkers(it) }
+                .subscribeBy { markers -> this.mapItems.onNext(markers.associateBy { it.id }) }
                 .disposedBy(disposeBag)
     }
 
-    fun updateMarkers(markers: List<MarkerHolder<T>>) {
-        this.mapItems.onNext(markers.associateBy { it.id })
+    /**
+     * Call this when the renderer will no longer display in the UI and free up resources.
+     */
+    fun dispose() {
+        this.currentMap.onNext(Optional(null))
     }
 
+    /**
+     * Enqueues a fetch of the [BitmapDescriptor] associated with this [item] (if specified). Runs
+     * the operation on a different thread, posting the result on the [bitmapQueue] for processing.
+     */
     @Synchronized
-    private fun enqueueBitmapFetch(fetcher: Observable<DelayedMapItemRenderEvent<T>>) {
-        fetcher.subscribeBy { bitmapQueue.onNext(it) }
-                .disposedBy(imageFetcherDisposeBag)
+    private fun enqueueBitmapFetch(item: T, displayMode: MapDisplayMode, mapChangeEvent: MapChangeEvent) {
+        getBitmapFetcher(item, displayMode)?.let { fetcher ->
+            fetcher
+                    .map { DelayedMapItemRenderEvent(mapChangeEvent, item, it) }
+                    .subscribeBy { bitmapQueue.onNext(it) }
+                    .disposedBy(imageFetcherDisposeBag)
+        }
     }
 
     private fun renderMarkers(mapObservable: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
             : Flowable<List<MarkerHolder<T>>> {
         return floorFocus
                 .withLatestFrom(mapObservable
-                        .doOnNext { currentMap.onNext(it) }
+                        .doOnNext { currentMap.onNext(optionalOf(it)) }
                         .toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
                 .debug("New Map Event")
                 .observeOn(Schedulers.io())
                 .flatMap { (mapEvent, map) ->
                     val visibleMapFocus = getVisibleMapFocus(mapEvent.displayMode)
                     if (!visibleMapFocus.contains(mapEvent.focus)) {
-                        Timber.d("Empty list for ${mapEvent.focus} with visible range: $visibleMapFocus")
+                        // clear out list if the focus is not within scope of the renderer.
                         MapItemRendererEvent(map, mapEvent, emptyList<T>()).asFlowable()
                     } else {
-                        Timber.d("Getting items at floor ${mapEvent.floor} for ${this::class}")
                         getItems(mapEvent.floor, mapEvent.displayMode).map {
                             Timber.d("Found ${it.size} items for ${this::class}")
                             MapItemRendererEvent(map, mapEvent, it)
@@ -206,12 +259,12 @@ abstract class MapItemRenderer<T>(
                     }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(TrampolineScheduler.instance())
+                .subscribeOn(TrampolineScheduler.instance()) // execute serially so we don't overlap on other events on the main thread.
                 .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST)) { event, mapItems -> event to mapItems }
                 .map { (event, existingMapItems) ->
-                    val (map, _, items) = event
-                    val (_, floor, displayMode) = event.mapChangeEvent
-                    Timber.d("Cancelling Image Fetching. Existing size is ${existingMapItems.size} where new items are ${items.size}")
+                    val (map, mapChangeEvent, items) = event
+                    val (_, floor, displayMode) = mapChangeEvent
+
                     imageFetcherDisposeBag.clear()
                     val foundItemsMap = removeOldMarkers(existingMapItems, items)
 
@@ -236,10 +289,8 @@ abstract class MapItemRenderer<T>(
                                     existingMapItems[id]?.marker?.remove()
                                 }
 
-                                // fetching is enqueued
-                                getBitmapFetcher(item, displayMode)?.let { bitmapFetcher ->
-                                    enqueueBitmapFetch(bitmapFetcher.map { DelayedMapItemRenderEvent(event.mapChangeEvent, item, it) })
-                                }
+                                enqueueBitmapFetch(item = item, displayMode = displayMode, mapChangeEvent = mapChangeEvent)
+
                                 // fast bitmap returns immediately.
                                 getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
                                     constructAndAddMarkerHolder(
@@ -261,7 +312,6 @@ abstract class MapItemRenderer<T>(
         // one for existing items in the new list too.
         val (existingFoundItems, toBeRemoved) = existingMapItems.values.partition { items.contains(it.item) }
 
-        Timber.d("Removing ${toBeRemoved.size} for list ${this::class}")
         // trim down items not in the new list
         toBeRemoved.forEach {
             it.marker.remove()
@@ -284,15 +334,7 @@ abstract class MapItemRenderer<T>(
             floor: Int,
             id: String
     ): MarkerHolder<T> {
-        val options = makeMarkerOptions(item, bitmap, floor, displayMode)
-        return MarkerHolder(
-                id,
-                item,
-                map.addMarker(options).apply { tag = item })
-    }
-
-    private fun makeMarkerOptions(item: T, bitmap: BitmapDescriptor?, floor: Int, displayMode: MapDisplayMode): MarkerOptions? {
-        return MarkerOptions()
+        val options = MarkerOptions()
                 .zIndex(zIndex)
                 .position(getLocationFromItem(item))
                 .icon(bitmap)
@@ -300,20 +342,12 @@ abstract class MapItemRenderer<T>(
                         displayMode,
                         item)
                 )
+        return MarkerHolder(
+                id,
+                item,
+                map.addMarker(options).apply { tag = item })
     }
 
-    /**
-     * Returns a [Set] of [MapFocus] which results in:
-     * If active in search, then always display. If not active in search, don't show.
-     * If on current tour,
-     * don't show.
-     */
-    protected inline fun searchMapFocus(displayMode: MapDisplayMode, allContentFocus: () -> Set<MapFocus>): Set<MapFocus> =
-            when (displayMode) {
-                is MapDisplayMode.Tour -> setOf() // don't show
-                is MapDisplayMode.Search<*> -> MapFocus.values().toSet() // assume visible if we get here.
-                else -> allContentFocus()
-            }
 }
 
 /**
