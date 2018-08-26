@@ -86,24 +86,26 @@ class BaseAdapterBinder<TModel>(
         return viewType
     }
 
-    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View? {
-        var localView = view
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+        var localView = convertView
         val viewHolder: BaseViewHolder?
-        val viewType = adapter.getItemViewType(i)
+        val viewType = adapter.getItemViewType(position)
         if (localView == null || localView.getTag(R.id.tag_item_type) != viewType) {
-            viewHolder = adapter.createViewHolder(viewGroup, viewType)?.also {
+            viewHolder = adapter.createViewHolder(parent, viewType)?.also {
                 localView = applyViewHolderTags(it, viewType)
             }
         } else {
             viewHolder = localView?.getTag(R.id.tag_holder) as BaseViewHolder?
         }
 
-        viewHolder?.let { adapter.bindViewHolder(viewHolder, i) }
+        viewHolder?.let { adapter.bindViewHolder(viewHolder, position) }
         return localView
     }
 
     /**
-     * Defaults to the [getView] implementation if no helper is used.
+     * This is used when the dropdown view is open. The adapter must implement [DropDownAdapter] to
+     * gain hooks into the dropdown view functionality if you wanted to display a different view than
+     * what is returned in [getView], for example.
      */
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View? {
         if (adapter is DropDownAdapter<*, *> &&
