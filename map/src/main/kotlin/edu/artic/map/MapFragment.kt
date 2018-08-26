@@ -1,11 +1,13 @@
 package edu.artic.map
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.AnyThread
 import android.view.View
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.*
@@ -15,17 +17,12 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.isResourceConstrained
-import edu.artic.base.utils.loadBitmap
-import edu.artic.base.utils.statusBarHeight
+import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
-import edu.artic.map.util.ArticObjectDotMarkerGenerator
-import edu.artic.map.util.ArticObjectMarkerGenerator
-import edu.artic.map.util.DepartmentMarkerGenerator
-import edu.artic.map.util.GalleryNumberMarkerGenerator
+import edu.artic.map.util.*
+import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
@@ -64,7 +61,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = ScreenCategoryName.Map
 
     lateinit var map: GoogleMap
-
+    private var leaveTourDialog: AlertDialog? = null
     private val amenitiesMarkerList = mutableListOf<Marker>()
     private val spaceOrLandmarkMarkerList = mutableListOf<Marker>()
     private val departmentMarkers = mutableListOf<Marker>()
@@ -81,20 +78,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
-    private val tourArgument: Subject<ArticTour> = BehaviorSubject.create()
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
         const val ZOOM_LEVEL_ONE = 18.0f
         const val ZOOM_LEVEL_TWO = 19.0f
         const val ZOOM_LEVEL_THREE = 20.0f
-    }
-
-    override fun onRegisterViewModel(viewModel: MapViewModel) {
-        tourArgument
-                .mapOptional()
-                .bindTo(viewModel.tour)
-                .disposedBy(disposeBag)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -286,6 +275,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.displayMode
                 .filterFlatMap({ it is MapViewModel.DisplayMode.Tour }, { it as MapViewModel.DisplayMode.Tour })
+                .distinctUntilChanged()
                 .subscribe { mapMode ->
                     val tour = mapMode.active
                     val fragmentManager = requireActivity().supportFragmentManager
@@ -350,9 +340,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 groundOverlayGenerated.filter { it }
         ) { floor, _ ->
             floor
-        }.subscribe {
-            buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$it.png"))
-        }.disposedBy(disposeBag)
+        }.filter { floor -> floor in 0..3 }
+                .subscribe {
+                    buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$it.png"))
+                }.disposedBy(disposeBag)
 
         viewModel.amenities
                 .observeOn(AndroidSchedulers.mainThread())
@@ -527,6 +518,45 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
 
                 }.disposedBy(disposeBag)
+
+        viewModel
+                .leaveTourRequest
+                .subscribe {
+                    displayLeaveTourConfirmation(viewModel)
+                }.disposedBy(disposeBag)
+
+        viewModel
+                .displayMode
+                .distinctUntilChanged()
+                .filter { mode -> mode is MapViewModel.DisplayMode.CurrentFloor }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    val supportFragmentManager = requireActivity().supportFragmentManager
+                    val fragment = supportFragmentManager.findFragmentByTag(OBJECT_DETAILS)
+                    fragment?.let { carousalFragment ->
+                        supportFragmentManager
+                                .beginTransaction()
+                                .remove(carousalFragment)
+                                .commit()
+                    }
+                }
+                .disposedBy(disposeBag)
+    }
+
+    private fun displayLeaveTourConfirmation(viewModel: MapViewModel) {
+        if (leaveTourDialog?.isShowing != true) {
+            leaveTourDialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
+                    .setMessage(getString(R.string.leaveTour))
+                    .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
+                        viewModel.leaveTour()
+                        dialog.dismiss()
+                    }
+                    .create()
+            leaveTourDialog?.show()
+        }
     }
 
 
@@ -590,7 +620,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         val floor = annotation.floor
         Glide.with(this)
                 .asBitmap()
-                .load(department.imageUrl)
+                .load(department.imageUrl?.asCDNUri())
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (viewModel.currentZoomLevel === MapZoomLevel.Two && viewModel.currentFloor == floor) {
@@ -627,7 +657,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private fun loadObject(articObject: ArticObject, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
-                .load(articObject.thumbnailFullPath)
+                // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
+                .apply(RequestOptions().disallowHardwareConfig())
+                .loadWithThumbnail(
+                        articObject.thumbnailFullPath?.asCDNUri(),
+                        // Prefer 'image_url', fall back to 'large image' if necessary.
+                        (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
+                )
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         /**
@@ -684,7 +720,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private fun loadTourObject(articTour: ArticTour, floor: Int, displayMode: MapViewModel.DisplayMode) {
         Glide.with(this)
                 .asBitmap()
-                .load(articTour.thumbnailFullPath)
+                .load(articTour.thumbnailFullPath?.asCDNUri())
                 .into(object : SimpleTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         if (displayMode is MapViewModel.DisplayMode.Tour) {
@@ -731,8 +767,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         super.setupNavigationBindings(viewModel)
         val tour = requireActivity().intent?.extras?.getParcelable<ArticTour>(MapActivity.ARG_TOUR)
 
-        tour?.let {
-            tourArgument.onNext(tour)
+        if (tour != null) {
+            viewModel.loadTourMode(tour)
         }
     }
 }
