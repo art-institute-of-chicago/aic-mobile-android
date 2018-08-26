@@ -2,9 +2,13 @@ package edu.artic.db
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.spy
 import com.nhaarman.mockito_kotlin.verify
-import edu.artic.db.daos.*
+import edu.artic.db.daos.ArticAudioFileDao
+import edu.artic.db.daos.ArticEventDao
+import edu.artic.db.daos.ArticGalleryDao
+import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.DashboardDao
+import edu.artic.db.daos.GeneralInfoDao
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import org.junit.After
@@ -35,14 +39,22 @@ class AppDataManagerTest {
         appDataPrefManager = mock()
 
         database = mock()
-        doReturn(dashboardDao).`when`(database).dashboardDao
-        doReturn(generalInfoDao).`when`(database).generalInfoDao
-        doReturn(galleryDao).`when`(database).galleryDao
-        doReturn(objectDao).`when`(database).objectDao
-        doReturn(audioFileDao).`when`(database).audioFileDao
-
         appDataProvider = mock()
-        appDataManager = AppDataManager(appDataProvider, appDataPrefManager, database)
+        appDataManager = AppDataManager(serviceProvider = appDataProvider,
+                appDataPreferencesManager = appDataPrefManager,
+                dashboardDao = dashboardDao,
+                generalInfoDao = generalInfoDao,
+                galleryDao = galleryDao,
+                objectDao = objectDao,
+                audioFileDao = audioFileDao,
+                appDatabase = database,
+                dataObjectDao = mock(),
+                eventDao = mock(),
+                exhibitionCMSDao = mock(),
+                exhibitionDao = mock(),
+                mapAnnotationDao = mock(),
+                tourDao = mock()
+        )
     }
 
     @After
