@@ -9,6 +9,14 @@ import com.google.android.gms.maps.model.VisibleRegion
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.map.rendering.AmenitiesMapItemRenderer
+import edu.artic.map.rendering.DepartmentsMapItemRenderer
+import edu.artic.map.rendering.GalleriesMapItemRenderer
+import edu.artic.map.rendering.LandmarkMapItemRenderer
+import edu.artic.map.rendering.LionMapItemRenderer
+import edu.artic.map.rendering.ObjectsMapItemRenderer
+import edu.artic.map.rendering.SpacesMapItemRenderer
+import edu.artic.map.rendering.TourIntroMapItemRenderer
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables

@@ -1,4 +1,4 @@
-package edu.artic.map
+package edu.artic.map.rendering
 
 import android.content.Context
 import android.support.annotation.DrawableRes
@@ -16,7 +16,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.VisibleRegion
 import edu.artic.db.daos.ArticGalleryDao
@@ -31,7 +30,17 @@ import edu.artic.db.models.ArticTour
 import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
 import edu.artic.image.toBitmap
+import edu.artic.map.ArticObjectMarkerGenerator
+import edu.artic.map.DepartmentMarkerGenerator
+import edu.artic.map.MapChangeEvent
+import edu.artic.map.MapDisplayMode
+import edu.artic.map.MapFocus
+import edu.artic.map.R
+import edu.artic.map.TextMarkerGenerator
+import edu.artic.map.amenityIconForAmenityType
+import edu.artic.map.getTourOrderNumberBasedOnDisplayMode
 import edu.artic.map.helpers.toLatLng
+import edu.artic.map.isCloseEnoughToCenter
 import edu.artic.ui.util.asCDNUri
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -51,26 +60,6 @@ import java.util.concurrent.TimeUnit
 private const val ALPHA_DIMMED = 0.6f
 private const val ALPHA_VISIBLE = 1.0f
 
-data class MarkerMetaData<T>(val item: T,
-                             val loadedBitmap: Boolean)
-
-/**
- * Holder class that keeps a reference to our [item], a unique [id], and the rendered [marker] so
- * we can clear it out later.
- */
-data class MarkerHolder<T>(val id: String,
-                           val item: T,
-                           val marker: Marker)
-
-data class MapItemRendererEvent<T>(val map: GoogleMap, val mapChangeEvent: MapChangeEvent, val items: List<T>)
-
-/**
- * This class is used when we load [BitmapDescriptor] asynchronously, awaiting callbacks from [Glide].
- * We keep reference to the [mapChangeEvent] and [item] so we can construct the [MarkerOptions] correctly.
- */
-data class DelayedMapItemRenderEvent<T>(val mapChangeEvent: MapChangeEvent,
-                                        val item: T,
-                                        val bitmap: BitmapDescriptor)
 
 /**
  * Common logic for non-tour objects.
@@ -264,10 +253,9 @@ abstract class MapItemRenderer<T>(
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(TrampolineScheduler.instance()) // execute serially so we don't overlap on other events on the main thread.
-                .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST)) { event, mapItems -> event to mapItems }
-                .map { (event, existingMapItems) ->
-                    val (map, mapChangeEvent, items) = event
-                    val (_, floor, displayMode) = mapChangeEvent
+                .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST))
+                .map { (mapItemRendererEvent, existingMapItems) ->
+                    val (_, _, items) = mapItemRendererEvent
 
                     imageFetcherDisposeBag.clear()
                     val foundItemsMap = removeOldMarkers(existingMapItems, items)
@@ -278,35 +266,47 @@ abstract class MapItemRenderer<T>(
                     // don't emit an empty event (which empty zip list does), rather emit an
                     // empty list here.
                     if (items.isEmpty()) {
-                        listOf()
+                        listOf<MarkerHolder<T>>()
                     } else {
-                        items.mapNotNull { item ->
-                            val id = getIdFromItem(item)
-                            val existing = foundItemsMap[id]
-                            // same item, don't re-add to the map.
-                            if (existing != null) {
-                                // adjust alpha, especially for items that are on tour.
-                                existing.marker.alpha = getMarkerAlpha(floor, displayMode, item)
-                                existing
-                            } else {
-                                enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
-
-                                // fast bitmap returns immediately.
-                                getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
-                                    constructAndAddMarkerHolder(
-                                            item = item,
-                                            bitmap = bitmapDescriptor,
-                                            displayMode = displayMode,
-                                            map = map,
-                                            floor = floor,
-                                            id = id,
-                                            // bitmap queue not used, means bitmap is considered loaded
-                                            loadedBitmap = !useBitmapQueue)
-                                }
-                            }
-                        }
+                        return@map mapAndFetchDisplayMarkers(foundItemsMap, mapItemRendererEvent)
                     }
                 }
+    }
+
+    /**
+     * Maps out any fast [getFastBitmap] markers, will bind those to the [mapItems]. Will enqueue
+     * any delayed markers with [enqueueBitmapFetch]. If marker exists on map currently we reuse it
+     * and adjust alpha, if needed.
+     */
+    private fun mapAndFetchDisplayMarkers(foundItemsMap: Map<String, MarkerHolder<T>>,
+                                          mapRenderEvent: MapItemRendererEvent<T>): List<MarkerHolder<T>> {
+        val (map, mapChangeEvent, items) = mapRenderEvent
+        val (_, floor, displayMode) = mapChangeEvent
+        return items.mapNotNull { item ->
+            val id = getIdFromItem(item)
+            val existing = foundItemsMap[id]
+            // same item, don't re-add to the map.
+            if (existing != null) {
+                // adjust alpha, especially for items that are on tour.
+                existing.marker.alpha = getMarkerAlpha(floor, displayMode, item)
+                existing
+            } else {
+                enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
+
+                // fast bitmap returns immediately.
+                getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
+                    constructAndAddMarkerHolder(
+                            item = item,
+                            bitmap = bitmapDescriptor,
+                            displayMode = displayMode,
+                            map = map,
+                            floor = floor,
+                            id = id,
+                            // bitmap queue not used, means bitmap is considered loaded
+                            loadedBitmap = !useBitmapQueue)
+                }
+            }
+        }
     }
 
     /**
@@ -578,7 +578,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                         // set icon to dot.
                         val itemId = getIdFromItem(markerHolder.item)
                         @Suppress("UNCHECKED_CAST")
-                        val meta = markerHolder.marker.tag as MarkerMetaData<ArticObject>
+                        val meta = markerHolder.marker.metaData<ArticObject>()
                         if (position.isCloseEnoughToCenter(region.latLngBounds)) {
                             if (!meta.loadedBitmap) {
                                 // show loading while its loading.
