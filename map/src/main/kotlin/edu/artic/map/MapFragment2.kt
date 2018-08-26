@@ -130,6 +130,7 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
 
             map.isIndoorEnabled = false
             map.setOnCameraIdleListener { viewModel.zoomLevelChanged(zoomLevel = map.cameraPosition.zoom) }
+            map.setOnCameraMoveListener { viewModel.visibleRegionChanges.onNext(map.projection.visibleRegion) }
 
             map.moveCamera(CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder()
@@ -139,7 +140,6 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
                             .build()
             ))
 
-
             /**
              * Funneling map click event into the mapClicks Observer so that it could be combined
              * with other Observable stream.
@@ -147,7 +147,6 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
             map.setOnMapClickListener {
                 mapClicks.onNext(true)
             }
-
 
             /**
              * Remove the map object details fragment when user taps outside of object.

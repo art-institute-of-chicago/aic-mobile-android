@@ -8,6 +8,7 @@ import com.fuzz.rx.mapOptional
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.VisibleRegion
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticObject
 import edu.artic.map.carousel.TourProgressManager
@@ -38,10 +39,13 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
 
     val selectedTourStopMarkerId: Subject<String> = BehaviorSubject.create()
 
+    val visibleRegionChanges: Subject<VisibleRegion> = PublishSubject.create()
+
     init {
         mapMarkerConstructor.bindToMapChanges(distinctFloor,
                 focus.distinctUntilChanged(),
-                displayMode.distinctUntilChanged())
+                displayMode.distinctUntilChanged(),
+                visibleRegionChanges.distinctUntilChanged())
 
         // when we change to tour mode, we notify the tourProgressManager.
         displayMode

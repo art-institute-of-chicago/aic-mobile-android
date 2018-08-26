@@ -8,6 +8,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.asFlowable
+import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterValue
 import com.fuzz.rx.optionalOf
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.VisibleRegion
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
@@ -89,13 +91,16 @@ abstract class MapItemRenderer<T>(
          */
         useBitmapQueue: Boolean = false) {
 
-    private val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
+    protected val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
     private val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     private var currentFloor: Int = Int.MIN_VALUE
 
-    private val imageQueueDisposeBag = DisposeBag()
+    protected val imageQueueDisposeBag = DisposeBag()
     private val imageFetcherDisposeBag = DisposeBag()
     private val bitmapQueue: Subject<DelayedMapItemRenderEvent<T>> = PublishSubject.create()
+
+    protected val visibleRegionChanges: Subject<VisibleRegion> = PublishSubject.create()
+    protected val mapChangeEvents: Subject<MapChangeEvent> = PublishSubject.create()
 
     // this should be the inflated view's context
     lateinit var context: Context
@@ -109,26 +114,12 @@ abstract class MapItemRenderer<T>(
                     .buffer(1, TimeUnit.SECONDS, 20)
                     .filter { it.isNotEmpty() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .withLatestFrom(currentMap.filterValue().toFlowable(BackpressureStrategy.LATEST))
-                    .subscribe { (newMarkers, map) ->
+                    .withLatestFrom(currentMap.filterValue().toFlowable(BackpressureStrategy.LATEST),
+                            mapItems.toFlowable(BackpressureStrategy.LATEST))
+                    .subscribe { (newMarkers, map, existingMapItems) ->
                         // concat our observables to not overflood the main thread. Delay each one by 50ms.
                         Single.concat(newMarkers
-                                .map { item ->
-                                    Single.fromCallable {
-                                        val (_, floor, displayMode) = item.mapChangeEvent
-                                        val holder = constructAndAddMarkerHolder(item = item.item,
-                                                bitmap = item.bitmap,
-                                                displayMode = displayMode,
-                                                map = map,
-                                                floor = floor,
-                                                id = getIdFromItem(item.item))
-                                        synchronized(tempMarkers) {
-                                            tempMarkers += holder
-                                        }
-                                        return@fromCallable holder
-                                    }.delay(100, TimeUnit.MILLISECONDS)
-                                            .subscribeOn(AndroidSchedulers.mainThread())
-                                })
+                                .map { item -> newDeferredMarkerCreationSingle(item, existingMapItems, map) })
                                 .observeOn(TrampolineScheduler.instance()) // sequential
                                 .toList()
                                 .toObservable()
@@ -137,12 +128,15 @@ abstract class MapItemRenderer<T>(
                                 .map { (newMarkersList, existingMarkers) ->
                                     Timber.d("Updating ${existingMarkers.size} with set of ${newMarkers.size} for ${this::class}")
                                     val modifiedMarkers = existingMarkers.toMutableMap()
-                                    newMarkersList.forEach {
-                                        synchronized(tempMarkers) {
-                                            tempMarkers -= it
+                                    newMarkersList.forEach { (newMarker) ->
+                                        if (newMarker != null) {
+                                            synchronized(tempMarkers) {
+                                                tempMarkers -= newMarker
+                                            }
+                                            // double-check in case marker exists already.
+                                            modifiedMarkers[newMarker.id]?.marker?.remove()
+                                            modifiedMarkers[newMarker.id] = newMarker
                                         }
-                                        modifiedMarkers[it.id]?.marker?.remove()
-                                        modifiedMarkers[it.id] = it
                                     }
                                     modifiedMarkers
                                 }
@@ -150,13 +144,6 @@ abstract class MapItemRenderer<T>(
                                 .disposedBy(imageFetcherDisposeBag)
                     }
                     .disposedBy(imageQueueDisposeBag)
-        }
-    }
-
-    private fun flushTempMarkers() {
-        synchronized(tempMarkers) {
-            tempMarkers.forEach { it.marker.remove() }
-            tempMarkers.clear()
         }
     }
 
@@ -214,9 +201,20 @@ abstract class MapItemRenderer<T>(
      * Binds this [MapItemRenderer] to changes to the map, based on [MapChangeEvent] and if the [GoogleMap]
      * is active.
      */
-    fun bindToMapChanges(map: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>, disposeBag: DisposeBag) {
-        renderMarkers(map, floorFocus)
+    fun bindToMapChanges(map: Observable<GoogleMap>,
+                         mapChangeEvents: Flowable<MapChangeEvent>,
+                         visibleRegionChanges: Observable<VisibleRegion>,
+                         disposeBag: DisposeBag) {
+        renderMarkers(map, mapChangeEvents)
                 .subscribeBy { markers -> this.mapItems.onNext(markers.associateBy { it.id }) }
+                .disposedBy(disposeBag)
+
+        visibleRegionChanges
+                .bindTo(this.visibleRegionChanges)
+                .disposedBy(disposeBag)
+
+        mapChangeEvents
+                .bindTo(this.mapChangeEvents)
                 .disposedBy(disposeBag)
     }
 
@@ -232,8 +230,8 @@ abstract class MapItemRenderer<T>(
      * the operation on a different thread, posting the result on the [bitmapQueue] for processing.
      */
     @Synchronized
-    private fun enqueueBitmapFetch(item: T, displayMode: MapDisplayMode, mapChangeEvent: MapChangeEvent) {
-        getBitmapFetcher(item, displayMode)?.let { fetcher ->
+    protected fun enqueueBitmapFetch(item: T, mapChangeEvent: MapChangeEvent) {
+        getBitmapFetcher(item, mapChangeEvent.displayMode)?.let { fetcher ->
             fetcher
                     .map { DelayedMapItemRenderEvent(mapChangeEvent, item, it) }
                     .subscribeBy { bitmapQueue.onNext(it) }
@@ -282,17 +280,13 @@ abstract class MapItemRenderer<T>(
                         items.mapNotNull { item ->
                             val id = getIdFromItem(item)
                             val existing = foundItemsMap[id]
-                            val newAlpha = getMarkerAlpha(floor, displayMode, item) != existing?.marker?.alpha
-                            // same item, don't re-add to the map. or if the marker alpha will not change.
-                            if (existing != null && !newAlpha) {
+                            // same item, don't re-add to the map.
+                            if (existing != null) {
+                                // adjust alpha, especially for items that are on tour.
+                                existing.marker.alpha = getMarkerAlpha(floor, displayMode, item)
                                 existing
                             } else {
-                                // alpha changed, we're replacing existing now too.
-                                if (newAlpha) {
-                                    existingMapItems[id]?.marker?.remove()
-                                }
-
-                                enqueueBitmapFetch(item = item, displayMode = displayMode, mapChangeEvent = mapChangeEvent)
+                                enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
 
                                 // fast bitmap returns immediately.
                                 getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
@@ -308,6 +302,49 @@ abstract class MapItemRenderer<T>(
                         }
                     }
                 }
+    }
+
+    /**
+     * Constructs a [Single] that updates the map marker (if present), otherwise creates and adds
+     * the marker to the map.
+     */
+    private fun newDeferredMarkerCreationSingle(
+            item: DelayedMapItemRenderEvent<T>,
+            existingMapItems: Map<String, MarkerHolder<T>>,
+            map: GoogleMap
+    ): Single<Optional<MarkerHolder<T>>>? {
+        return Single.fromCallable {
+            val (_, floor, displayMode) = item.mapChangeEvent
+            val id = getIdFromItem(item.item)
+            val existingMarker = existingMapItems[id]
+            // reusing existing marker if possible.
+            if (existingMarker != null) {
+                existingMarker.apply {
+                    marker.setIcon(item.bitmap)
+                    marker.alpha = getMarkerAlpha(floor, displayMode, item.item)
+                }
+                return@fromCallable Optional(null)
+            } else {
+                val holder = constructAndAddMarkerHolder(item = item.item,
+                        bitmap = item.bitmap,
+                        displayMode = displayMode,
+                        map = map,
+                        floor = floor,
+                        id = id)
+                synchronized(tempMarkers) {
+                    tempMarkers += holder
+                }
+                return@fromCallable Optional(holder)
+            }
+        }.delay(100, TimeUnit.MILLISECONDS)
+                .subscribeOn(AndroidSchedulers.mainThread())
+    }
+
+    private fun flushTempMarkers() {
+        synchronized(tempMarkers) {
+            tempMarkers.forEach { it.marker.remove() }
+            tempMarkers.clear()
+        }
     }
 
     private fun removeOldMarkers(existingMapItems: Map<String, MarkerHolder<T>>, items: List<T>): Map<String, MarkerHolder<T>> {
@@ -508,6 +545,36 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
+    private val loadingBitmap by lazy { BitmapDescriptorFactory.fromBitmap(articObjectMarkerGenerator.makeIcon(null, scale = .7f)) }
+
+    init {
+        // when visible region changes, it's slightly different than mapChanges, because this can
+        // happen pretty often.
+        visibleRegionChanges
+                .sample(500, TimeUnit.MILLISECONDS) // too many events, prevent flooding.
+                .withLatestFrom(mapItems, mapChangeEvents)
+                .toFlowable(BackpressureStrategy.LATEST) // if downstream can't keep up, let's pick latest.
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.trampoline())
+                .subscribeBy { (region, mapItems, mapChangeEvent) ->
+                    Timber.d("Evaluating Markers For Visible Region Change")
+                    val scaledDot =
+                            BitmapDescriptorFactory.fromBitmap(articObjectMarkerGenerator.makeIcon(null, scale = .15f))
+                    mapItems.values.forEach { markerHolder ->
+                        val position = getLocationFromItem(markerHolder.item)
+                        if (position.isCloseEnoughToCenter(region.latLngBounds)) {
+                            // enqueue replacement if possible
+                            enqueueBitmapFetch(item = markerHolder.item, mapChangeEvent = mapChangeEvent)
+                        } else {
+                            // set icon to dot.
+                            val itemId = getIdFromItem(markerHolder.item)
+                            mapItems[itemId]?.marker?.setIcon(scaledDot)
+                        }
+                    }
+                }
+                .disposedBy(imageQueueDisposeBag)
+    }
+
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticObject>> = when (displayMode) {
         is MapDisplayMode.CurrentFloor -> objectsDao.getObjectsByFloor(floor = floor)
         is MapDisplayMode.Tour -> objectsDao.getObjectsByIdList(displayMode.tour.tourStops.mapNotNull { it.objectId })
@@ -523,6 +590,9 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     override fun getLocationFromItem(item: ArticObject): LatLng = item.toLatLng()
 
     override fun getIdFromItem(item: ArticObject): String = item.nid
+
+    override fun getFastBitmap(item: ArticObject, displayMode: MapDisplayMode): BitmapDescriptor? =
+            loadingBitmap
 
     override fun getBitmapFetcher(item: ArticObject, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? =
             Glide.with(context)
