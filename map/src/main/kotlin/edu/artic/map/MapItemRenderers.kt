@@ -545,7 +545,14 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
-    private val loadingBitmap by lazy { BitmapDescriptorFactory.fromBitmap(articObjectMarkerGenerator.makeIcon(null, scale = .7f)) }
+    private val loadingBitmap by lazy {
+        BitmapDescriptorFactory.fromBitmap(
+                articObjectMarkerGenerator.makeIcon(null, scale = .7f))
+    }
+    private val scaledDot by lazy {
+        BitmapDescriptorFactory.fromBitmap(
+                articObjectMarkerGenerator.makeIcon(null, scale = .15f))
+    }
 
     init {
         // when visible region changes, it's slightly different than mapChanges, because this can
@@ -554,20 +561,21 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                 .sample(500, TimeUnit.MILLISECONDS) // too many events, prevent flooding.
                 .withLatestFrom(mapItems, mapChangeEvents)
                 .toFlowable(BackpressureStrategy.LATEST) // if downstream can't keep up, let's pick latest.
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.trampoline())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (region, mapItems, mapChangeEvent) ->
                     Timber.d("Evaluating Markers For Visible Region Change")
-                    val scaledDot =
-                            BitmapDescriptorFactory.fromBitmap(articObjectMarkerGenerator.makeIcon(null, scale = .15f))
                     mapItems.values.forEach { markerHolder ->
                         val position = getLocationFromItem(markerHolder.item)
+                        // set icon to dot.
+                        val itemId = getIdFromItem(markerHolder.item)
                         if (position.isCloseEnoughToCenter(region.latLngBounds)) {
-                            // enqueue replacement if possible
+                            // show loading while its loading.
+                            mapItems[itemId]?.marker?.setIcon(loadingBitmap)
+
+                            // enqueue replacement
                             enqueueBitmapFetch(item = markerHolder.item, mapChangeEvent = mapChangeEvent)
                         } else {
-                            // set icon to dot.
-                            val itemId = getIdFromItem(markerHolder.item)
                             mapItems[itemId]?.marker?.setIcon(scaledDot)
                         }
                     }

@@ -33,7 +33,6 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.viewmodel.BaseViewModelFragment
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
@@ -288,14 +287,8 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
         }.filter { floor -> floor in 0..3 }
                 .subscribe {
                     buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$it.png"))
-                }.disposedBy(disposeBag)
-
-        // TODO: get tour intro back
-        /* is MapItem.TourIntro -> {
-             val articTour = mapItem.item
-             loadTourObject(articTour, articTour.floor?.toIntOrNull()
-                     ?: Int.MIN_VALUE, mapMode)
-         }*/
+                }
+                .disposedBy(disposeBag)
 
         viewModel.selectedArticObject
                 .withLatestFrom(viewModel.displayMode) { articObject, mapMode ->
@@ -382,16 +375,4 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
     companion object {
         const val OBJECT_DETAILS = "object-details"
     }
-
-/*
-TODO: dot markers
-                            fullObjectMarkers.add(fullMaker)
-                            val dotMaker = map.addMarker(MarkerOptions()
-                                    .position(articObject.toLatLng())
-                                    .icon(BitmapDescriptorFactory.fromBitmap(
-                                            objectDotMarkerGenerator.makeIcon()
-                                    ))
-                                    .zIndex(2f)
-                                    .visible(false))
-                            dotObjectMarkers.add(dotMaker)*/
 }
