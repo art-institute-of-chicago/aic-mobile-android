@@ -1,6 +1,8 @@
 package edu.artic.map
 
 import android.content.Context
+import android.support.annotation.DrawableRes
+import android.support.v4.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.DisposeBag
@@ -26,6 +28,7 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
+import edu.artic.image.toBitmap
 import edu.artic.map.helpers.toLatLng
 import edu.artic.ui.util.asCDNUri
 import io.reactivex.BackpressureStrategy
@@ -458,7 +461,6 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
     override val zIndex: Float = ALPHA_VISIBLE
 }
 
-
 class TourIntroMapItemRenderer : MapItemRenderer<ArticTour>(useBitmapQueue = true) {
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
@@ -547,5 +549,34 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
         } else {
             ALPHA_VISIBLE
         }
+    }
+}
+
+/**
+ * Simple [Pair]-like object which holds a [LatLng] and [Int] icon.
+ */
+data class LionMapItem(val location: LatLng, @DrawableRes val iconId: Int)
+
+class LionMapItemRenderer : MapItemRenderer<LionMapItem>() {
+
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
+            MapFocus.values().toSet()
+
+    override val zIndex: Float
+        get() = 1.0f
+
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<LionMapItem>> {
+        return Flowable.just(listOf(
+                LionMapItem(LatLng(41.879491568164525, -87.624089977901931), R.drawable.map_lion_1),
+                LionMapItem(LatLng(41.879678006591391, -87.624091248446064), R.drawable.map_lion_2)))
+    }
+
+    override fun getLocationFromItem(item: LionMapItem): LatLng = item.location
+
+    override fun getIdFromItem(item: LionMapItem): String = item.iconId.toString()
+
+    override fun getFastBitmap(item: LionMapItem, displayMode: MapDisplayMode): BitmapDescriptor? {
+        return BitmapDescriptorFactory.fromBitmap(
+                ContextCompat.getDrawable(context, item.iconId)!!.toBitmap())
     }
 }

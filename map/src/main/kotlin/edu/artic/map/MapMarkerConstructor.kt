@@ -35,11 +35,12 @@ class MapMarkerConstructor
     private val departmentsMapItemRenderer = DepartmentsMapItemRenderer(articMapAnnotationDao)
     private val galleriesMapItemRenderer = GalleriesMapItemRenderer(galleryDao)
     private val tourIntroMapItemRenderer = TourIntroMapItemRenderer()
+    private val lionMapItemRenderer = LionMapItemRenderer()
     val objectsMapItemRenderer = ObjectsMapItemRenderer(objectsDao)
 
     private val renderers = setOf(landmarkMapItemRenderer, spacesMapItemRenderer,
             amenitiesMapItemRenderer, departmentsMapItemRenderer, galleriesMapItemRenderer,
-            objectsMapItemRenderer, tourIntroMapItemRenderer)
+            objectsMapItemRenderer, tourIntroMapItemRenderer, lionMapItemRenderer)
 
     /**
      * Bind this when the Fragment view loads.
