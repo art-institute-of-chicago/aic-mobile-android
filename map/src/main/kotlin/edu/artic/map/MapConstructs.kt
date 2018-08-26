@@ -4,9 +4,9 @@ import edu.artic.db.models.ArticTour
 
 data class MapChangeEvent(val focus: MapFocus, val floor: Int, val displayMode: MapDisplayMode)
 
-const val ZOOM_LANDMARK: ZoomLevel = 17.0f
+const val ZOOM_LANDMARK: ZoomLevel = 17.5f
 const val ZOOM_DEPARTMENTS: ZoomLevel = 18.0f
-const val ZOOM_DEPARTMENT_AND_SPACES: ZoomLevel = 20.0f
+const val ZOOM_DEPARTMENT_AND_SPACES: ZoomLevel = 19.0f
 const val ZOOM_INDIVIDUAL: ZoomLevel = 21.0f
 
 /**
