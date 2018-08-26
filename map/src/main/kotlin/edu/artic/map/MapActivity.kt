@@ -1,6 +1,8 @@
 package edu.artic.map
 
 import android.os.Bundle
+import com.bumptech.glide.Glide
+import com.bumptech.glide.MemoryCategory
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.db.models.ArticTour
 import edu.artic.navigation.NavigationSelectListener
@@ -29,10 +31,26 @@ class MapActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         bottomNavigation.apply {
             disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        // The map is resource-intensive. Be kind to it.
+        Glide.get(this).setMemoryCategory(MemoryCategory.LOW)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // The GoogleMap itself will lower its usage at this point, so it is
+        // safe to increase the memory category too.
+        Glide.get(this).setMemoryCategory(MemoryCategory.NORMAL)
+    }
+
 }
