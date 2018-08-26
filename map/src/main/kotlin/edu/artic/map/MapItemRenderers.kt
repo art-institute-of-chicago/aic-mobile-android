@@ -51,6 +51,9 @@ import java.util.concurrent.TimeUnit
 private const val ALPHA_DIMMED = 0.6f
 private const val ALPHA_VISIBLE = 1.0f
 
+data class MarkerMetaData<T>(val item: T,
+                             val loadedBitmap: Boolean)
+
 /**
  * Holder class that keeps a reference to our [item], a unique [id], and the rendered [marker] so
  * we can clear it out later.
@@ -89,7 +92,7 @@ abstract class MapItemRenderer<T>(
         /**
          * Minor optimization to register or not register the bitmap queue within a subclass.
          */
-        useBitmapQueue: Boolean = false) {
+        protected val useBitmapQueue: Boolean = false) {
 
     protected val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
     private val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
@@ -117,7 +120,7 @@ abstract class MapItemRenderer<T>(
                     .withLatestFrom(currentMap.filterValue().toFlowable(BackpressureStrategy.LATEST),
                             mapItems.toFlowable(BackpressureStrategy.LATEST))
                     .subscribe { (newMarkers, map, existingMapItems) ->
-                        // concat our observables to not overflood the main thread. Delay each one by 50ms.
+                        // concat our observables to not overload the main thread. Delay each one by 50ms.
                         Single.concat(newMarkers
                                 .map { item -> newDeferredMarkerCreationSingle(item, existingMapItems, map) })
                                 .observeOn(TrampolineScheduler.instance()) // sequential
@@ -296,7 +299,9 @@ abstract class MapItemRenderer<T>(
                                             displayMode = displayMode,
                                             map = map,
                                             floor = floor,
-                                            id = id)
+                                            id = id,
+                                            // bitmap queue not used, means bitmap is considered loaded
+                                            loadedBitmap = !useBitmapQueue)
                                 }
                             }
                         }
@@ -322,6 +327,7 @@ abstract class MapItemRenderer<T>(
                 existingMarker.apply {
                     marker.setIcon(item.bitmap)
                     marker.alpha = getMarkerAlpha(floor, displayMode, item.item)
+                    marker.tag = MarkerMetaData(item.item, loadedBitmap = true)
                 }
                 return@fromCallable Optional(null)
             } else {
@@ -330,7 +336,8 @@ abstract class MapItemRenderer<T>(
                         displayMode = displayMode,
                         map = map,
                         floor = floor,
-                        id = id)
+                        id = id,
+                        loadedBitmap = true)
                 synchronized(tempMarkers) {
                     tempMarkers += holder
                 }
@@ -372,7 +379,8 @@ abstract class MapItemRenderer<T>(
             displayMode: MapDisplayMode,
             map: GoogleMap,
             floor: Int,
-            id: String
+            id: String,
+            loadedBitmap: Boolean
     ): MarkerHolder<T> {
         val options = MarkerOptions()
                 .zIndex(zIndex)
@@ -385,7 +393,7 @@ abstract class MapItemRenderer<T>(
         return MarkerHolder(
                 id,
                 item,
-                map.addMarker(options).apply { tag = item })
+                map.addMarker(options).apply { tag = MarkerMetaData(item, loadedBitmap) })
     }
 
 }
@@ -569,14 +577,22 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                         val position = getLocationFromItem(markerHolder.item)
                         // set icon to dot.
                         val itemId = getIdFromItem(markerHolder.item)
+                        @Suppress("UNCHECKED_CAST")
+                        val meta = markerHolder.marker.tag as MarkerMetaData<ArticObject>
                         if (position.isCloseEnoughToCenter(region.latLngBounds)) {
-                            // show loading while its loading.
-                            mapItems[itemId]?.marker?.setIcon(loadingBitmap)
+                            if (!meta.loadedBitmap) {
+                                // show loading while its loading.
+                                mapItems[itemId]?.marker?.setIcon(loadingBitmap)
 
-                            // enqueue replacement
-                            enqueueBitmapFetch(item = markerHolder.item, mapChangeEvent = mapChangeEvent)
+                                // enqueue replacement
+                                enqueueBitmapFetch(item = markerHolder.item, mapChangeEvent = mapChangeEvent)
+                            }
                         } else {
-                            mapItems[itemId]?.marker?.setIcon(scaledDot)
+                            // reset loading state here.
+                            mapItems[itemId]?.marker?.apply {
+                                tag = meta.copy(loadedBitmap = false)
+                                setIcon(scaledDot)
+                            }
                         }
                     }
                 }

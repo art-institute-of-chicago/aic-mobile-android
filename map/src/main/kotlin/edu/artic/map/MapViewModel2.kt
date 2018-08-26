@@ -15,6 +15,7 @@ import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -39,7 +40,10 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
 
     val selectedTourStopMarkerId: Subject<String> = BehaviorSubject.create()
 
-    val visibleRegionChanges: Subject<VisibleRegion> = PublishSubject.create()
+    private val visibleRegionChanges: Subject<VisibleRegion> = PublishSubject.create()
+
+    // when set, normal visible region changes are locked until, say the map move completes.
+    private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
     init {
         mapMarkerConstructor.bindToMapChanges(distinctFloor,
@@ -91,7 +95,23 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
     }
 
     fun articObjectSelected(articObject: ArticObject) {
+        lockVisibleRegion.onNext(true)
         selectedArticObject.onNext(articObject)
+    }
+
+    fun visibleRegionChanged(visibleRegion: VisibleRegion) {
+        // only emit if visible region is not locked.
+        lockVisibleRegion
+                .filter { !it }
+                .subscribeBy {
+                    visibleRegionChanges.onNext(visibleRegion)
+                }
+                .disposedBy(disposeBag)
+    }
+
+    fun visibleRegionIdle(visibleRegion: VisibleRegion) {
+        this.lockVisibleRegion.onNext(false)
+        visibleRegionChanged(visibleRegion)
     }
 
     /**
@@ -105,4 +125,6 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
         super.onCleared()
         mapMarkerConstructor.cleanup()
     }
+
+
 }
