@@ -63,15 +63,17 @@ abstract class MapItemRenderer<T> {
 
     init {
         bitmapQueue
-                .buffer(500, TimeUnit.MILLISECONDS, 30)
+                .buffer(500, TimeUnit.MILLISECONDS, 10)
+                .debug("Emitting Bitmap Queue")
                 .filter { it.isNotEmpty() }
-                .withLatestFrom(mapItems)
                 .observeOn(AndroidSchedulers.mainThread())
+                .withLatestFrom(mapItems)
                 .map { (newMarkers, existingMarkers) ->
                     Timber.d("Updating with ${newMarkers.size} to ${existingMarkers.size}")
+                    val modifiedMarkers = existingMarkers.toMutableMap()
+
                     newMarkers
-                            .asSequence()
-                            .mapNotNull { item ->
+                            .forEach { item ->
                                 val id = getIdFromItem(item.item)
                                 // only construct things that actually exist in the current mapItems list.
                                 // slight chance that the items here will still exist when attemping map
@@ -80,17 +82,19 @@ abstract class MapItemRenderer<T> {
                                 if (existing != null) {
                                     // remove existing marker when found, we're overloading the existing one.
                                     existing.marker.remove()
+                                }
 
-                                    val (map, _, _) = item.originalEvent
-                                    val (_, floor, displayMode) = item.originalEvent.mapChangeEvent
-                                    constructAndAddMarkerHolder(item = item.item,
-                                            bitmap = item.bitmap,
-                                            displayMode = displayMode,
-                                            map = map,
-                                            floor = floor,
-                                            id = getIdFromItem(item.item))
-                                } else null
-                            }.associateBy { it.id }
+                                val (map, _, _) = item.originalEvent
+                                val (_, floor, displayMode) = item.originalEvent.mapChangeEvent
+                                val holder = constructAndAddMarkerHolder(item = item.item,
+                                        bitmap = item.bitmap,
+                                        displayMode = displayMode,
+                                        map = map,
+                                        floor = floor,
+                                        id = getIdFromItem(item.item))
+                                modifiedMarkers[id] = holder
+                            }
+                    modifiedMarkers
                 }
                 .bindTo(mapItems)
                 .disposedBy(imageQueueDisposeBag)
@@ -167,7 +171,7 @@ abstract class MapItemRenderer<T> {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST)) { event, mapItems -> event to mapItems }
-                .flatMap { (event, existingMapItems) ->
+                .map { (event, existingMapItems) ->
                     val (map, _, items) = event
                     val (_, floor, displayMode) = event.mapChangeEvent
                     // TODO: for now cancel all running image requests.
@@ -177,46 +181,30 @@ abstract class MapItemRenderer<T> {
                     // don't emit an empty event (which empty zip list does), rather emit an
                     // empty list here.
                     if (items.isEmpty()) {
-                        listOf<MarkerHolder<T>>().asFlowable()
+                        listOf()
                     } else {
-                        Flowable.zip(items.mapNotNull { item ->
+                        items.mapNotNull { item ->
                             val id = getIdFromItem(item)
                             val existing = foundItemsMap[id]
                             // same item, don't re-add to the map.
                             if (existing != null) {
-                                existing.asFlowable()
+                                existing
                             } else {
+                                // fetching is enqueued
                                 getBitmapFetcher(item, displayMode)?.let { bitmapFetcher ->
                                     enqueueBitmapFetch(bitmapFetcher.map { DelayedMapItemRenderEvent(event, item, it) })
                                 }
-                                Flowable.fromCallable { Optional(getFastBitmap(item, displayMode)) }
-                                        .subscribeOn(Schedulers.computation())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .map { optionalBitmap ->
-                                            optionalOf(optionalBitmap.value?.let { bitmap ->
-                                                constructAndAddMarkerHolder(
-                                                        item = item,
-                                                        bitmap = bitmap,
-                                                        displayMode = displayMode,
-                                                        map = map,
-                                                        floor = floor,
-                                                        id = id)
-                                            })
-                                        }
+                                // fast bitmap returns immediately.
+                                getFastBitmap(item, displayMode)?.let { bitmap ->
+                                    constructAndAddMarkerHolder(
+                                            item = item,
+                                            bitmap = bitmap,
+                                            displayMode = displayMode,
+                                            map = map,
+                                            floor = floor,
+                                            id = id)
+                                }
                             }
-                        }) { markers ->
-                            // RX Zip does not return a properly typed array, it is an Object[] from this zip.
-                            @Suppress("UNCHECKED_CAST")
-                            (markers as Array<Any>)
-                                    .mapNotNullTo(mutableListOf()) { item ->
-                                        // ugly cast necessary.
-                                        when (item) {
-                                            is MarkerHolder<*> -> item as MarkerHolder<T>?
-                                            is Optional<*> -> item.value as MarkerHolder<T>?
-                                            else -> null
-                                        }
-                                    }
-                                    .toList()
                         }
                     }
                 }
