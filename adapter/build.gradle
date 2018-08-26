@@ -2,7 +2,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
-    implementation libs.rxHelper
+    implementation libs.rx_helpers
     implementation project(':base')
     api libs.arch_paging
 }
