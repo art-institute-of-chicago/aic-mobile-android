@@ -128,8 +128,11 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
             )
 
             map.isIndoorEnabled = false
-            map.setOnCameraIdleListener { viewModel.zoomLevelChanged(zoomLevel = map.cameraPosition.zoom) }
-            map.setOnCameraMoveListener { viewModel.visibleRegionChanges.onNext(map.projection.visibleRegion) }
+            map.setOnCameraIdleListener {
+                viewModel.zoomLevelChanged(zoomLevel = map.cameraPosition.zoom)
+                viewModel.visibleRegionIdle(map.projection.visibleRegion)
+            }
+            map.setOnCameraMoveListener { viewModel.visibleRegionChanged(map.projection.visibleRegion) }
 
             map.moveCamera(CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder()
@@ -156,7 +159,7 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
                     .subscribe { mapMode ->
                         when (mapMode) {
                             is MapDisplayMode.CurrentFloor -> {
-                                val supportFragmentManager = this.requireFragmentManager()
+                                val supportFragmentManager = requireActivity().supportFragmentManager
                                 supportFragmentManager
                                         .findFragmentByTag(OBJECT_DETAILS)
                                         ?.let {
@@ -175,25 +178,27 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
 
 
             map.setOnMarkerClickListener { marker ->
-                when (marker.tag) {
-                    is ArticMapAnnotation -> {
-                        val annotation = marker.tag as ArticMapAnnotation
-                        when (annotation.annotationType) {
-                            ArticMapAnnotationType.DEPARTMENT -> {
-                                viewModel.departmentMarkerSelected(annotation)
+                val markerTag = marker.tag
+                when (markerTag) {
+                    is MarkerMetaData<*> -> {
+                        when (markerTag.item) {
+                            is ArticMapAnnotation -> {
+                                val annotation = markerTag as ArticMapAnnotation
+                                when (annotation.annotationType) {
+                                    ArticMapAnnotationType.DEPARTMENT -> {
+                                        viewModel.departmentMarkerSelected(annotation)
+                                    }
+                                }
                             }
+                            is ArticObject -> {
+                                val mapObject = markerTag.item
+                                viewModel.articObjectSelected(mapObject)
+                                map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
+                            }
+                            else -> map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
                         }
                     }
-                    is ArticObject -> {
-                        val mapObject = marker.tag as ArticObject
-                        viewModel.articObjectSelected(mapObject)
-                        map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
-                    }
-                    else -> {
-                        map.animateCamera(
-                                CameraUpdateFactory.newLatLng(marker.position)
-                        )
-                    }
+                    else -> map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
                 }
                 return@setOnMarkerClickListener true
             }
