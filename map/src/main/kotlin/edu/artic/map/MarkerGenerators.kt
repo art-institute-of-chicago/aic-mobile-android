@@ -11,9 +11,6 @@ import android.widget.ImageView
 import android.widget.TextView
 
 /**
- * Description:
- */
-/**
  * Simple [Bitmap]-generating class for drawing map markers from custom layouts.
  *
  * If you're familiar with RecyclerView's
