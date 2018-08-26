@@ -12,8 +12,8 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.fromHtml
-import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.db.models.ArticEvent
+import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_event_details.*

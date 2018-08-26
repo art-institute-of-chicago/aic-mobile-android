@@ -25,6 +25,7 @@ import edu.artic.base.utils.*
 import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticTour
+import edu.artic.image.loadWithThumbnail
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.*
 import edu.artic.map.util.*

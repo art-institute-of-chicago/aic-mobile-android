@@ -1,4 +1,4 @@
-package edu.artic.base.utils
+package edu.artic.image
 
 import android.animation.ValueAnimator
 import android.graphics.Bitmap

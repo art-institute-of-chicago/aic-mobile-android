@@ -16,4 +16,5 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':base')
     implementation project(':adapter')
+    implementation project(':image')
 }
