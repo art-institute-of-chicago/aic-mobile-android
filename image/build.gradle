@@ -1,0 +1,9 @@
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    api libs.glide
+    kapt libs.glide_compiler
+
+    api libs.rx_helpers
+}
