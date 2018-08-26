@@ -3,7 +3,6 @@ package edu.artic.map
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
-import android.location.Location
 import android.os.Bundle
 import android.support.annotation.AnyThread
 import android.support.annotation.GuardedBy
@@ -25,7 +24,6 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.*
 import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotationType
-import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.*
@@ -725,8 +723,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         fullMarker = map.addMarker(
                 MarkerOptions()
                         .position(objectPosition)
-                        // TODO: Replace with resource for a small blue dot
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                        .icon(BitmapDescriptorFactory.fromBitmap(
+                                objectMarkerGenerator.makeIcon(null, .15f)
+                        ))
                         .zIndex(2f)
                         .visible(true)
 
@@ -760,7 +759,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             // First switch to 'loading' icon
                             fullMarker.tryExpectingFailure {
                                 it.setIcon(
-                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+                                        BitmapDescriptorFactory.fromBitmap(
+                                                objectMarkerGenerator.makeIcon(null, .7f)
+                                        )
                                 )
                             }
                             // Now we must make the call - show the image at its full size
@@ -779,9 +780,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     } else if (isDot.compareAndSet(false, true)) {
                         // Show as small dot
                         fullMarker.tryExpectingFailure {
-                            it.setIcon(
-                                    BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
-                            )
+                            it.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                    objectMarkerGenerator.makeIcon(null, .15f)
+                            ))
                         }
                         isDot.set(true)
                     }
@@ -825,7 +826,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         fullMarker.tryExpectingFailure {
                             it.setIcon(
                                     BitmapDescriptorFactory.fromBitmap(
-                                            objectMarkerGenerator.makeIcon(resource, order)
+                                            objectMarkerGenerator.makeIcon(resource, 1f, order)
                                     )
                             )
                         }
