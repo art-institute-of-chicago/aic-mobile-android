@@ -114,7 +114,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var baseGroundOverlay: GroundOverlay
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
-    private var mapClicks: Subject<Boolean> = PublishSubject.create()
+    private val mapClicks: Subject<Boolean> = PublishSubject.create()
+    private val mapMovements: Subject<Boolean> = PublishSubject.create()
     /**
      * The region of [map] that was visible during the last 'camera idle' event.
      */
@@ -195,7 +196,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 }
 
-                // TODO: Consider updating this more frequently
+            }
+
+            map.setOnCameraMoveListener {
+                mapMovements.onNext(true)
+                // This event catches the end of any sequence of movement events, so the below
+                // line makes sure `visibleArea` contains the most accurate value when idle.
                 visibleArea.onNext(map.projection.visibleRegion)
             }
 
@@ -206,6 +212,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             .tilt(45f)
                             .build()
             ))
+
+            mapMovements
+                    // Up to ten events a second.
+                    .throttleFirst(100, TimeUnit.MILLISECONDS)
+                    .subscribe {
+                        visibleArea.onNext(map.projection.visibleRegion)
+                    }.disposedBy(disposeBag)
 
 
             /**
@@ -567,8 +580,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         val batchedItems : List<List<MapItem<*>>>
         batchedItems = if (requireContext().isResourceConstrained()) {
-            // We don't have that many resources. Only pass along 2 x 'number of cores' items at a time
-            itemList.chunked(2 * coreCount)
+            // We don't have that many resources. Only pass along 'number of cores' items at a time
+            itemList.chunked(coreCount)
         } else {
             // Work with 3 x 'number of processor cores' items at a time.
             itemList.chunked(3 * coreCount)
@@ -577,8 +590,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 Observables.zip(
                         // There's an Observable operator 'window', but that's (severely) restricted to a single subscriber
                         batchedItems.toObservable(),
-                        // The 'interval' here will make sure only one event is emitted every 100 ms
-                        Observable.interval(100, TimeUnit.MILLISECONDS)
+                        // The 'interval' here will make sure only one event is emitted every 150 ms
+                        Observable.interval(150, TimeUnit.MILLISECONDS)
                 )
                 .map {
                     val mapItems = it.first
