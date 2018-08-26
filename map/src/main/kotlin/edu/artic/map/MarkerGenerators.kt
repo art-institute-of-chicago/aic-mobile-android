@@ -4,6 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.drawable.ColorDrawable
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,20 +47,33 @@ open class BaseMarkerGenerator(val context: Context) {
      * [container] is [attached to a Window][View.getWindowToken] at the time, the
      * Window might re-layout itself.
      */
-    fun makeIcon(): Bitmap {
+    fun makeIcon(scale: Float = 1f): Bitmap {
         val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         container.measure(measureSpec, measureSpec)
 
-        val measuredWidth = container.measuredWidth
-        val measuredHeight = container.measuredHeight
+        val w = container.measuredWidth
+        val h = container.measuredHeight
 
-        container.layout(0, 0, measuredWidth, measuredHeight)
+        container.layout(0, 0, w, h)
 
-        val r = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+        val r = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
         r.eraseColor(Color.TRANSPARENT)
 
         val canvas = Canvas(r)
         container.draw(canvas)
+
+        if (scale < 1f) {
+            // Draw that Bitmap into a second Bitmap.
+            val second = Bitmap.createBitmap((w * scale).toInt(), (h * scale).toInt(), Bitmap.Config.ARGB_8888)
+            val scaled = Canvas(second)
+            scaled.drawBitmap(
+                    r,
+                    Matrix().apply { preScale(scale, scale) },
+                    null
+            )
+            return second
+        }
+
         return r
     }
 }
@@ -77,12 +93,16 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
      */
     private val imageView: ImageView
     private val overlayTextView: TextView
+    private val baseView: View
+    private val defaultImage: ColorDrawable
 
     init {
         container = LayoutInflater.from(context)
                 .inflate(R.layout.marker_artic_object, null) as ViewGroup
         imageView = container.findViewById(R.id.circularImage)
         overlayTextView = container.findViewById(R.id.order)
+        baseView = container.findViewById(R.id.base)
+        defaultImage = ColorDrawable(ContextCompat.getColor(context, R.color.map_light_dot))
     }
 
 
@@ -92,9 +112,13 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
      * [CircleImageView][de.hdodenhof.circleimageview.CircleImageView]
      * may crash.
      */
-    fun makeIcon(imageViewBitmap: Bitmap, overlay: String? = null): Bitmap {
+    fun makeIcon(imageViewBitmap: Bitmap?, scale: Float = 1f, overlay: String? = null): Bitmap {
 
-        imageView.setImageBitmap(imageViewBitmap)
+        if (imageViewBitmap != null) {
+            imageView.setImageBitmap(imageViewBitmap)
+        } else {
+            imageView.setImageDrawable(defaultImage)
+        }
 
         if (overlay != null) {
             overlayTextView.visibility = View.VISIBLE
@@ -102,7 +126,14 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
         } else {
             overlayTextView.visibility = View.GONE
         }
-        return makeIcon()
+
+        if (scale < 1f) {
+            baseView.visibility = View.GONE
+        } else {
+            baseView.visibility = View.VISIBLE
+        }
+
+        return makeIcon(scale)
     }
 }
 
