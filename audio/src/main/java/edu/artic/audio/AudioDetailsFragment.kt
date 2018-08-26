@@ -21,9 +21,9 @@ import edu.artic.adapter.baseRecyclerViewAdapter
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toBaseAdapter
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.listenerAnimateSharedTransaction
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.AudioFileModel
+import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
