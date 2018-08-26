@@ -5,55 +5,47 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.AnyThread
+import android.support.annotation.GuardedBy
+import android.support.annotation.UiThread
+import android.support.annotation.WorkerThread
+import android.util.Log
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.defaultThrottle
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
-import com.fuzz.rx.filterValue
-import com.fuzz.rx.mapOptional
+import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.GroundOverlay
-import com.google.android.gms.maps.model.GroundOverlayOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.isResourceConstrained
-import edu.artic.base.utils.loadBitmap
-import edu.artic.base.utils.loadWithThumbnail
-import edu.artic.base.utils.statusBarHeight
-import edu.artic.db.models.ArticGallery
+import edu.artic.base.utils.*
+import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotationType
-import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
-import edu.artic.map.helpers.toLatLng
+import edu.artic.map.helpers.*
+import edu.artic.map.util.*
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.*
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 import kotlin.reflect.KClass
+
+typealias BitmapTarget = com.bumptech.glide.request.target.Target<Bitmap>
 
 /**
  * This Fragment contains a [GoogleMap] with a custom tileset and quite a few markers.
@@ -82,23 +74,53 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = ScreenCategoryName.Map
 
     lateinit var map: GoogleMap
+
+    /**
+     * Synchronization lock for [fullObjectMarkers].
+     */
+    private val fullObjectsLock = ReentrantLock()
+
     private var leaveTourDialog: AlertDialog? = null
     private val amenitiesMarkerList = mutableListOf<Marker>()
     private val spaceOrLandmarkMarkerList = mutableListOf<Marker>()
     private val departmentMarkers = mutableListOf<Marker>()
     private val galleryMarkers = mutableListOf<Marker>()
-    private val fullObjectMarkers = mutableListOf<Marker>()
-    private val dotObjectMarkers = mutableListOf<Marker>()
+    /**
+     * This is a list of all the [MapItem.Object] elements (and if present,
+     * the one [MapItem.TourIntro]) that are currently shown on the map.
+     *
+     * This list is updated against [MapViewModel.whatToDisplayOnMap]
+     * as the visible set of [MapItem]s changes. Accessing
+     * [Marker.getTag] is only permitted on the UI thread, and may
+     * incur significant delays (3-4 seconds for 200 accesses). For
+     * that reason, we cache the tag here in a [BiasedPair].
+     *
+     * Please lock all usage of this field against concurrency with
+     * [fullObjectsLock].
+     */
+    @GuardedBy("fullObjectsLock")
+    private val fullObjectMarkers = mutableListOf<BiasedPair<MapItem<*>, Marker>>()
+
+    /**
+     * Cache of network response targets; this helps us avoid making too
+     * many API calls for the same image resource.
+     */
+    private val targetCache: MutableMap<MapItem<*>, BitmapTarget> = mutableMapOf()
 
     private lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
-    private lateinit var objectDotMarkerGenerator: ArticObjectDotMarkerGenerator
     private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
     private lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
     private lateinit var baseGroundOverlay: GroundOverlay
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
-    private var mapClicks: Subject<Boolean> = PublishSubject.create()
+    private val mapClicks: Subject<Boolean> = PublishSubject.create()
+    private val mapMovements: Subject<Boolean> = PublishSubject.create()
+    /**
+     * The region of [map] that was visible during the last 'camera idle' event.
+     */
+    private val visibleArea: Subject<VisibleRegion> = BehaviorSubject.create()
+
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
@@ -110,7 +132,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
-        objectDotMarkerGenerator = ArticObjectDotMarkerGenerator(view.context)
         galleryNumberGenerator = GalleryNumberMarkerGenerator(view.context)
         departmentMarkerGenerator = DepartmentMarkerGenerator(view.context)
 
@@ -174,6 +195,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         viewModel.zoomLevelChangedTo(MapZoomLevel.Three)
                     }
                 }
+
+            }
+
+            map.setOnCameraMoveListener {
+                mapMovements.onNext(true)
+                // This event catches the end of any sequence of movement events, so the below
+                // line makes sure `visibleArea` contains the most accurate value when idle.
+                visibleArea.onNext(map.projection.visibleRegion)
             }
 
             map.moveCamera(CameraUpdateFactory.newCameraPosition(
@@ -183,6 +212,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             .tilt(45f)
                             .build()
             ))
+
+            mapMovements
+                    // Up to ten events a second.
+                    .throttleFirst(100, TimeUnit.MILLISECONDS)
+                    .subscribe {
+                        visibleArea.onNext(map.projection.visibleRegion)
+                    }.disposedBy(disposeBag)
 
 
             /**
@@ -224,17 +260,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
 
             map.setOnMarkerClickListener { marker ->
-                when (marker.tag) {
+                val tag = marker.tag
+
+                when (tag) {
                     is MapItem.Annotation -> {
-                        val annotation = marker.tag as MapItem.Annotation
-                        when (annotation.item.annotationType) {
+                        when (tag.item.annotationType) {
                             ArticMapAnnotationType.DEPARTMENT -> {
-                                viewModel.departmentMarkerSelected(annotation.item)
+                                viewModel.departmentMarkerSelected(tag.item)
                             }
                         }
                     }
-                    is ArticObject -> {
-                        val mapObject = marker.tag as ArticObject
+                    is MapItem.Object -> {
+                        val mapObject = tag.item
                         viewModel.articObjectSelected(mapObject)
                         map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
                     }
@@ -391,51 +428,42 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     val mapMode = mapModeWithItemList.first
                     val itemList = mapModeWithItemList.second
 
-                    departmentMarkers.forEach { marker ->
-                        marker.remove()
+                    departmentMarkers.modifyThenRemoveIf { marker ->
+                        val shouldRemove = itemList.doesNotContain(marker.tag)
+                        if (shouldRemove) {
+                            marker.removeWithFadeOut()
+                        }
+                        return@modifyThenRemoveIf shouldRemove
                     }
-                    departmentMarkers.clear()
-                    Timber.d("DepartmentMarker list cleared")
-                    galleryMarkers.forEach { marker ->
-                        marker.remove()
+                    galleryMarkers.modifyThenRemoveIf { marker ->
+                        val shouldRemove = itemList.doesNotContain(marker.tag)
+                        if (shouldRemove) {
+                            marker.removeWithFadeOut()
+                        }
+                        return@modifyThenRemoveIf shouldRemove
                     }
-                    galleryMarkers.clear()
-                    dotObjectMarkers.forEach { marker ->
-                        marker.remove()
-                    }
-                    dotObjectMarkers.clear()
-                    fullObjectMarkers.forEach { marker ->
-                        marker.remove()
-                    }
-                    fullObjectMarkers.clear()
+                    fullObjectsLock.withLock {
+                        fullObjectMarkers.modifyThenRemoveIf { (model, marker) ->
 
-                    itemList.forEach { mapItem ->
-                        when (mapItem) {
-                            is MapItem.Annotation -> {
-                                val annotation = mapItem.item
-                                when (annotation.annotationType) {
-                                    ArticMapAnnotationType.DEPARTMENT -> {
-                                        loadDepartment(mapItem)
+                            val shouldRemove = itemList.doesNotContain(model)
+                            if (shouldRemove) {
+                                if (marker.tryExpectingFailure(true, Marker::removeWithFadeOut)) {
+                                    if (BuildConfig.DEBUG && model is MapItem.Object) {
+                                        Log.e("MapMarker", "Removal failed: " + model.item.nid)
                                     }
                                 }
+                                val target = targetCache.remove(model)
+                                Glide.with(this).clear(target)
                             }
-                            is MapItem.Gallery -> {
-                                val gallery = mapItem.item
-                                loadGalleryNumber(gallery)
-
-                            }
-                            is MapItem.Object -> {
-                                val articObject = mapItem.item
-                                loadObject(articObject, mapItem.floor, mapMode)
-                            }
-                            is MapItem.TourIntro -> {
-                                val articTour = mapItem.item
-                                loadTourObject(articTour, mapItem.floor, mapMode)
-                            }
-
+                            return@modifyThenRemoveIf shouldRemove
                         }
                     }
-                    Timber.d("DepartmentMarker list size after 'itemList.forEach{}': ${departmentMarkers.size}")
+
+
+                    Schedulers.io().scheduleDirect {
+                        bindMarkersAsynchronously(itemList, mapMode)
+                    }.disposedBy(disposeBag)
+
                 }.disposedBy(disposeBag)
 
         viewModel.selectedArticObject
@@ -468,12 +496,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel
                 .centerFullObjectMarker
                 .subscribe { nid ->
-                    fullObjectMarkers.firstOrNull { marker ->
-                        val tag = marker.tag
-                        tag is ArticObject && tag.nid == nid
-                    }?.let { marker ->
-                        val currentZoomLevel = map.cameraPosition.zoom
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, Math.max(ZOOM_LEVEL_THREE, currentZoomLevel)))
+                    fullObjectsLock.withLock {
+                        fullObjectMarkers.firstOrNull { (model, _) ->
+                            model is MapItem.Object && model.item.nid == nid
+                                    ||
+                                    model is MapItem.TourIntro && model.item.nid == nid
+                        }?.let { (_, marker) ->
+                            val currentZoomLevel = map.cameraPosition.zoom
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, Math.max(ZOOM_LEVEL_THREE, currentZoomLevel)))
+                        }
                     }
 
                 }.disposedBy(disposeBag)
@@ -518,6 +549,81 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
+    @UiThread
+    fun bindToMap(mapItem: MapItem<*>, mapMode: MapViewModel.DisplayMode) {
+        when (mapItem) {
+            is MapItem.Annotation -> {
+                val annotation = mapItem.item
+                when (annotation.annotationType) {
+                    ArticMapAnnotationType.DEPARTMENT -> {
+                        loadDepartment(mapItem)
+                    }
+                }
+            }
+            is MapItem.Gallery -> {
+                loadGalleryNumber(mapItem)
+            }
+            is MapItem.Object -> {
+                loadObject(mapItem, mapMode)
+            }
+            is MapItem.TourIntro -> {
+                loadTourObject(mapItem, mapMode)
+            }
+
+        }
+    }
+
+
+    @WorkerThread
+    fun bindMarkersAsynchronously(itemList: List<MapItem<*>>, mapMode: MapViewModel.DisplayMode) {
+        val coreCount = Runtime.getRuntime().availableProcessors()
+
+        val batchedItems : List<List<MapItem<*>>>
+        batchedItems = if (requireContext().isResourceConstrained()) {
+            // We don't have that many resources. Only pass along 'number of cores' items at a time
+            itemList.chunked(coreCount)
+        } else {
+            // Work with 3 x 'number of processor cores' items at a time.
+            itemList.chunked(3 * coreCount)
+        }
+
+                Observables.zip(
+                        // There's an Observable operator 'window', but that's (severely) restricted to a single subscriber
+                        batchedItems.toObservable(),
+                        // The 'interval' here will make sure only one event is emitted every 150 ms
+                        Observable.interval(150, TimeUnit.MILLISECONDS)
+                )
+                .map {
+                    val mapItems = it.first
+
+                    return@map mapItems.filter(this@MapFragment::alreadyHasMarker)
+                }.filter {
+                    it.isNotEmpty()
+                }.subscribeBy {
+                    it.toObservable()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeBy { mapItem ->
+                                bindToMap(mapItem, mapMode)
+                            }.disposedBy(disposeBag)
+                }.disposedBy(disposeBag)
+    }
+
+    /**
+     * If there is already a marker for [mapItem] in 'fullObjectMarkers', we
+     * don't need to start another load. This method helps us detect that case.
+     *
+     * Currently, we only look for duplicates of [MapItem.Object]s;
+     * other types of items may be filtered in a future commit.
+     */
+    private fun alreadyHasMarker(mapItem: MapItem<*>): Boolean {
+        return (mapItem !is MapItem.Object
+                || fullObjectsLock.withLock {
+                    fullObjectMarkers.all { (model, _) ->
+                        model != mapItem
+                    }
+                }
+        )
+    }
 
     override fun onStart() {
         super.onStart()
@@ -555,22 +661,24 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         mapView.onLowMemory()
     }
 
-    private fun loadGalleryNumber(gallery: ArticGallery) {
+    private fun loadGalleryNumber(mapGallery: MapItem.Gallery) {
+        val gallery = mapGallery.item
+
         gallery.number?.let {
-            galleryMarkers.add(
-                    map.addMarker(MarkerOptions()
-                            .position(gallery.toLatLng())
-                            .icon(BitmapDescriptorFactory
-                                    .fromBitmap(
-                                            galleryNumberGenerator
-                                                    .makeIcon(
-                                                            it
-                                                    )
-                                    )
+            val marker = map.addMarker(MarkerOptions()
+                    .position(gallery.toLatLng())
+                    .icon(BitmapDescriptorFactory
+                            .fromBitmap(
+                                    galleryNumberGenerator
+                                            .makeIcon(
+                                                    it
+                                            )
                             )
-                            .zIndex(1f)
                     )
+                    .zIndex(1f)
             )
+            marker.tag = mapGallery
+            galleryMarkers.add(marker)
         }
     }
 
@@ -613,70 +721,147 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
-    private fun loadObject(articObject: ArticObject, floor: Int, displayMode: MapViewModel.DisplayMode) {
-        Glide.with(this)
-                .asBitmap()
-                // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
-                .apply(RequestOptions().disallowHardwareConfig())
-                .loadWithThumbnail(
-                        articObject.thumbnailFullPath?.asCDNUri(),
-                        // Prefer 'image_url', fall back to 'large image' if necessary.
-                        (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
-                )
-                .into(object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        /**
-                         * If map display mode is Tour, get the order number of the stop.
-                         */
-                        if (viewModel.currentFloor == floor || displayMode is MapViewModel.DisplayMode.Tour) {
-                            var order: String? = null
-                            if (displayMode is MapViewModel.DisplayMode.Tour) {
-                                /**
-                                 * If map's display mode is Tour, get the order number of the stop.
-                                 */
-                                val index = displayMode.active
-                                        .tourStops
-                                        .map { it.objectId }
-                                        .indexOf(articObject.nid)
+    private fun loadObject(mapObject: MapItem.Object, displayMode: MapViewModel.DisplayMode) {
 
-                                if (index > -1) {
-                                    order = (index + 1).toString()
-                                }
-                            }
 
-                            val fullMaker = map.addMarker(
-                                    MarkerOptions()
-                                            .position(articObject.toLatLng())
-                                            .icon(BitmapDescriptorFactory.fromBitmap(
-                                                    objectMarkerGenerator.makeIcon(resource, order)
-                                            ))
-                                            .zIndex(2f)
-                                            .visible(true)
-                                            .alpha(getAlphaValue(displayMode, floor))/* If the tour is not in the current floor make the ui translucent*/
-                            )
+        val floor = mapObject.floor
+        val articObject = mapObject.item
 
-                            fullMaker.tag = articObject
 
-                            fullObjectMarkers.add(fullMaker)
-                            val dotMaker = map.addMarker(MarkerOptions()
-                                    .position(articObject.toLatLng())
-                                    .icon(BitmapDescriptorFactory.fromBitmap(
-                                            objectDotMarkerGenerator.makeIcon()
-                                    ))
-                                    .zIndex(2f)
-                                    .visible(false))
-                            dotObjectMarkers.add(dotMaker)
-                        }
+        // We'll need a marker no matter what....
+        val objectPosition = articObject.toLatLng()
+
+        // Get a placeholder onto the map ASAP
+        val fullMarker: Marker
+        fullMarker = map.addMarker(
+                MarkerOptions()
+                        .position(objectPosition)
+                        .icon(BitmapDescriptorFactory.fromBitmap(
+                                objectMarkerGenerator.makeIcon(null, .15f)
+                        ))
+                        .zIndex(2f)
+                        .visible(true)
+
+        )
+
+        fullMarker.tag = mapObject
+
+        /* If the tour is not in the current floor make the ui translucent*/
+        fullMarker.alpha = getAlphaValue(displayMode, floor)
+
+        val paired: BiasedPair<MapItem<*>, Marker> = BiasedPair(mapObject, fullMarker)
+
+        fullObjectsLock.withLock {
+            fullObjectMarkers.add(paired)
+        }
+
+        val isDot: AtomicBoolean = AtomicBoolean(true)
+
+
+        // All of this detecting changes logic is solely relevant for 'ArticObject's at this point in time.
+        visibleArea.observeOn(Schedulers.computation())
+                .takeUntil {
+                    fullObjectsLock.withLock {
+                        fullObjectMarkers.doesNotContain(paired)
                     }
-                })
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {region ->
+
+                    if (objectPosition.isCloseEnoughToCenter(region.latLngBounds)) {
+                        if (isDot.compareAndSet(true, false)) {
+                            // First switch to 'loading' icon
+                            fullMarker.tryExpectingFailure {
+                                it.setIcon(
+                                        BitmapDescriptorFactory.fromBitmap(
+                                                objectMarkerGenerator.makeIcon(null, .7f)
+                                        )
+                                )
+                            }
+                            // Now we must make the call - show the image at its full size
+                            Glide.with(this)
+                                    .asBitmap()
+                                    // The 'objectMarkerGenerator' used by the below target only supports bitmaps rendered in software
+                                    .apply(RequestOptions().disallowHardwareConfig())
+                                    .loadWithThumbnail(
+                                            articObject.thumbnailFullPath?.asCDNUri(),
+                                            // Prefer 'image_url', fall back to 'large image' if necessary.
+                                            (articObject.image_url ?: articObject.largeImageFullPath)?.asCDNUri()
+                                    )
+                                    .into(getTargetFor(mapObject, fullMarker, displayMode))
+                            isDot.set(false)
+                        }
+                    } else if (isDot.compareAndSet(false, true)) {
+                        // Show as small dot
+                        fullMarker.tryExpectingFailure {
+                            it.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                    objectMarkerGenerator.makeIcon(null, .15f)
+                            ))
+                        }
+                        isDot.set(true)
+                    }
+                }.disposedBy(disposeBag)
 
 
+
+
+    }
+
+    private fun getTargetFor(mapObject: MapItem.Object, fullMarker: Marker, displayMode: MapViewModel.DisplayMode): BitmapTarget {
+        val cached = targetCache[mapObject]
+
+        if (cached == null) {
+            val floor = mapObject.floor
+            val articObject = mapObject.item
+
+            val newTarget: BitmapTarget = object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    /**
+                     * If map display mode is Tour, get the order number of the stop.
+                     */
+                    if (viewModel.currentFloor == floor || displayMode is MapViewModel.DisplayMode.Tour) {
+                        var order: String? = null
+                        if (displayMode is MapViewModel.DisplayMode.Tour) {
+                            /**
+                             * If map's display mode is Tour, get the order number of the stop.
+                             */
+                            val index = displayMode.active
+                                    .tourStops
+                                    .map { it.objectId }
+                                    .indexOf(articObject.nid)
+
+                            if (index > -1) {
+                                order = (index + 1).toString()
+                            }
+                        }
+
+
+                        // Switch to full icon (from placeholder dot)
+                        fullMarker.tryExpectingFailure {
+                            it.setIcon(
+                                    BitmapDescriptorFactory.fromBitmap(
+                                            objectMarkerGenerator.makeIcon(resource, 1f, order)
+                                    )
+                            )
+                        }
+
+
+                    }
+                }
+            }
+            targetCache[mapObject] = newTarget
+            return newTarget
+        } else {
+            return cached
+        }
     }
 
     /**
      * Loads the tour intro object as the marker in the map.
      */
-    private fun loadTourObject(articTour: ArticTour, floor: Int, displayMode: MapViewModel.DisplayMode) {
+    private fun loadTourObject(mapTour: MapItem.TourIntro, displayMode: MapViewModel.DisplayMode) {
+        val articTour = mapTour.item
+        val floor = mapTour.floor
+
         Glide.with(this)
                 .asBitmap()
                 .load(articTour.thumbnailFullPath?.asCDNUri())
@@ -700,8 +885,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                             .visible(true)
                                             .alpha(markerAlpha)
                             )
-                            fullObjectMarkers.add(fullMaker)
-                            fullMaker.tag = articTour
+                            fullMaker.tag = mapTour
+                            fullObjectsLock.withLock {
+                                fullObjectMarkers.add(BiasedPair(mapTour, fullMaker))
+                            }
                         }
                     }
                 })
@@ -731,3 +918,5 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 }
+
+

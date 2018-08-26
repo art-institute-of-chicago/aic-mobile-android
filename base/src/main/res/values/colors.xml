@@ -21,9 +21,12 @@
     <color name="grape">#6d2861</color>
     <color name="marine">#063258</color>
     <color name="grey_blue">#6a8ba8</color>
+
     <color name="bluegrey">#96aec2</color>
     <color name="brownish_orange">#ce6b27</color>
     <color name="denim">#39658b</color>
+    <color name="map_light_dot">@color/denim</color>
+
     <color name="off_blue">#5e73b2</color>
     <color name="black_96">#f50a0a0a</color>
     <color name="dark_grey">#333333</color>
