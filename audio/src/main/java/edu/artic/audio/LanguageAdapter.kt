@@ -9,7 +9,10 @@ import edu.artic.db.models.AudioFileModel
 import kotlinx.android.synthetic.main.view_language_box.view.*
 
 /**
- * Description: Provides the dropdown adapter for [AudioFileModel] in an [AudioDetailsFragment].
+ * List adapter for the language-selection dropdown.
+ *
+ * This is also responsible for creating the view seen at the top
+ * of the list (i.e. the 'currently selected' language).
  */
 class LanguageAdapter : AutoHolderRecyclerViewAdapter<AudioFileModel>(),
         DropDownAdapter<AudioFileModel, BaseViewHolder> {
