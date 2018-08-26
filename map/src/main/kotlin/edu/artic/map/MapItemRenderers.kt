@@ -6,7 +6,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.asFlowable
-import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
@@ -33,6 +32,7 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.internal.schedulers.TrampolineScheduler
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
@@ -50,7 +50,7 @@ data class MarkerHolder<T>(val id: String,
                            val marker: Marker)
 
 data class MapItemRendererEvent<T>(val map: GoogleMap, val mapChangeEvent: MapChangeEvent, val items: List<T>)
-data class DelayedMapItemRenderEvent<T>(val originalEvent: MapItemRendererEvent<T>,
+data class DelayedMapItemRenderEvent<T>(val mapChangeEvent: MapChangeEvent,
                                         val item: T,
                                         val bitmap: BitmapDescriptor)
 
@@ -61,6 +61,7 @@ abstract class MapItemRenderer<T>(
         useBitmapQueue: Boolean = false) {
 
     private val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
+    private val currentMap: Subject<GoogleMap> = BehaviorSubject.create()
     private var currentFloor: Int = Int.MIN_VALUE
 
     private val imageQueueDisposeBag = DisposeBag()
@@ -70,51 +71,63 @@ abstract class MapItemRenderer<T>(
     // this should be the inflated view's context
     lateinit var context: Context
 
+    private val tempMarkers: MutableList<MarkerHolder<T>> = mutableListOf()
+
     init {
         if (useBitmapQueue) {
             bitmapQueue
                     .toFlowable(BackpressureStrategy.BUFFER)
                     .buffer(1, TimeUnit.SECONDS, 20)
                     .filter { it.isNotEmpty() }
-                    .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .flatMapSingle { (newMarkers, existingMarkers) ->
-                        Timber.d("Updating with ${newMarkers.size} to ${existingMarkers.size}")
-                        val modifiedMarkers = existingMarkers.toMutableMap()
-
+                    .withLatestFrom(currentMap.toFlowable(BackpressureStrategy.LATEST))
+                    .subscribe { (newMarkers, map) ->
                         // concat our observables to not overflood the main thread. Delay each one by 50ms.
                         Single.concat(newMarkers
                                 .map { item ->
                                     Single.fromCallable {
-                                        val id = getIdFromItem(item.item)
-
-                                        // only construct things that actually exist in the current mapItems list.
-                                        // slight chance that the items here will still exist when attemping map
-                                        // propagation.
-                                        // remove existing marker when found, we're overloading the existing one.
-                                        existingMarkers[id]?.marker?.remove()
-
-                                        val (map, _, _) = item.originalEvent
-                                        val (_, floor, displayMode) = item.originalEvent.mapChangeEvent
-                                        constructAndAddMarkerHolder(item = item.item,
+                                        val (_, floor, displayMode) = item.mapChangeEvent
+                                        val holder = constructAndAddMarkerHolder(item = item.item,
                                                 bitmap = item.bitmap,
                                                 displayMode = displayMode,
                                                 map = map,
                                                 floor = floor,
                                                 id = getIdFromItem(item.item))
+                                        synchronized(tempMarkers) {
+                                            tempMarkers += holder
+                                        }
+                                        return@fromCallable holder
                                     }.delay(100, TimeUnit.MILLISECONDS)
                                             .subscribeOn(AndroidSchedulers.mainThread())
                                 })
+                                .observeOn(TrampolineScheduler.instance()) // sequential
                                 .toList()
-                                .map { newMarkersList ->
+                                .toObservable()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .withLatestFrom(mapItems)
+                                .map { (newMarkersList, existingMarkers) ->
+                                    Timber.d("Updating ${existingMarkers.size} with set of ${newMarkers.size} for ${this::class}")
+                                    val modifiedMarkers = existingMarkers.toMutableMap()
                                     newMarkersList.forEach {
+                                        synchronized(tempMarkers) {
+                                            tempMarkers -= it
+                                        }
+                                        modifiedMarkers[it.id]?.marker?.remove()
                                         modifiedMarkers[it.id] = it
                                     }
                                     modifiedMarkers
                                 }
+                                .subscribeBy { mapItems.onNext(it) }
+                                .disposedBy(imageFetcherDisposeBag)
                     }
-                    .bindTo(mapItems)
                     .disposedBy(imageQueueDisposeBag)
+        }
+    }
+
+    private fun flushTempMarkers() {
+        synchronized(tempMarkers) {
+            tempMarkers.forEach { it.marker.remove() }
+            tempMarkers.clear()
         }
     }
 
@@ -174,7 +187,9 @@ abstract class MapItemRenderer<T>(
     private fun renderMarkers(mapObservable: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
             : Flowable<List<MarkerHolder<T>>> {
         return floorFocus
-                .withLatestFrom(mapObservable.toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
+                .withLatestFrom(mapObservable
+                        .doOnNext { currentMap.onNext(it) }
+                        .toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
                 .debug("New Map Event")
                 .observeOn(Schedulers.io())
                 .flatMap { (mapEvent, map) ->
@@ -191,12 +206,17 @@ abstract class MapItemRenderer<T>(
                     }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(TrampolineScheduler.instance())
                 .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST)) { event, mapItems -> event to mapItems }
                 .map { (event, existingMapItems) ->
                     val (map, _, items) = event
                     val (_, floor, displayMode) = event.mapChangeEvent
+                    Timber.d("Cancelling Image Fetching. Existing size is ${existingMapItems.size} where new items are ${items.size}")
                     imageFetcherDisposeBag.clear()
                     val foundItemsMap = removeOldMarkers(existingMapItems, items)
+
+                    // any markers in between loading and done are removed here.
+                    flushTempMarkers()
 
                     // don't emit an empty event (which empty zip list does), rather emit an
                     // empty list here.
@@ -213,16 +233,18 @@ abstract class MapItemRenderer<T>(
                             } else {
                                 // fetching is enqueued
                                 getBitmapFetcher(item, displayMode)?.let { bitmapFetcher ->
-                                    enqueueBitmapFetch(bitmapFetcher.map { DelayedMapItemRenderEvent(event, item, it) })
+                                    enqueueBitmapFetch(bitmapFetcher.map { DelayedMapItemRenderEvent(event.mapChangeEvent, item, it) })
                                 }
                                 // fast bitmap returns immediately.
-                                constructAndAddMarkerHolder(
-                                        item = item,
-                                        bitmap = getFastBitmap(item, displayMode),
-                                        displayMode = displayMode,
-                                        map = map,
-                                        floor = floor,
-                                        id = id)
+                                getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
+                                    constructAndAddMarkerHolder(
+                                            item = item,
+                                            bitmap = bitmapDescriptor,
+                                            displayMode = displayMode,
+                                            map = map,
+                                            floor = floor,
+                                            id = id)
+                                }
                             }
                         }
                     }
@@ -234,8 +256,11 @@ abstract class MapItemRenderer<T>(
         // one for existing items in the new list too.
         val (existingFoundItems, toBeRemoved) = existingMapItems.values.partition { items.contains(it.item) }
 
+        Timber.d("Removing ${toBeRemoved.size} for list ${this::class}")
         // trim down items not in the new list
-        toBeRemoved.forEach { it.marker.remove() }
+        toBeRemoved.forEach {
+            it.marker.remove()
+        }
 
         // re-associate the existing found items that are still in the list when a change happens.
         val existingFoundItemsMap = existingFoundItems.associateBy { it.id }
@@ -254,7 +279,15 @@ abstract class MapItemRenderer<T>(
             floor: Int,
             id: String
     ): MarkerHolder<T> {
-        val options = MarkerOptions()
+        val options = makeMarkerOptions(item, bitmap, floor, displayMode)
+        return MarkerHolder(
+                id,
+                item,
+                map.addMarker(options).apply { tag = item })
+    }
+
+    private fun makeMarkerOptions(item: T, bitmap: BitmapDescriptor?, floor: Int, displayMode: MapDisplayMode): MarkerOptions? {
+        return MarkerOptions()
                 .zIndex(zIndex)
                 .position(getLocationFromItem(item))
                 .icon(bitmap)
@@ -262,10 +295,6 @@ abstract class MapItemRenderer<T>(
                         displayMode,
                         item)
                 )
-        return MarkerHolder(
-                id,
-                item,
-                map.addMarker(options).apply { tag = item })
     }
 
     /**
@@ -452,7 +481,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     override fun getLocationFromItem(item: ArticObject): LatLng = item.toLatLng()
 
-    override fun getIdFromItem(item: ArticObject): String = item.id.toString()
+    override fun getIdFromItem(item: ArticObject): String = item.nid
 
     override fun getBitmapFetcher(item: ArticObject, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? =
             Glide.with(context)

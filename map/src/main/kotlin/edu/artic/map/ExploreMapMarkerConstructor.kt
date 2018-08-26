@@ -20,9 +20,9 @@ import javax.inject.Inject
  * Description: Handles Map population and Marker creation management.
  */
 class ExploreMapMarkerConstructor
-@Inject constructor(private val articMapAnnotationDao: ArticMapAnnotationDao,
-                    private val galleryDao: ArticGalleryDao,
-                    private val objectsDao: ArticObjectDao) { // App context, won't leak.
+@Inject constructor(articMapAnnotationDao: ArticMapAnnotationDao,
+                    galleryDao: ArticGalleryDao,
+                    objectsDao: ArticObjectDao) { // App context, won't leak.
 
 
     val map: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
