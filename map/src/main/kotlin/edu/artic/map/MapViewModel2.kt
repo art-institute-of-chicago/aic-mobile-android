@@ -3,6 +3,8 @@ package edu.artic.map
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
+import com.fuzz.rx.mapOptional
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
@@ -40,6 +42,15 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: ExploreMapMark
         mapMarkerConstructor.bindToMapChanges(distinctFloor,
                 focus.distinctUntilChanged(),
                 displayMode.distinctUntilChanged())
+
+        // when we change to tour mode, we notify the tourProgressManager.
+        displayMode
+                .distinctUntilChanged()
+                .filterFlatMap({ it is MapDisplayMode.Tour }, { (it as MapDisplayMode.Tour).tour })
+                .doOnNext { floorChangedTo(it.floorAsInt) }
+                .mapOptional()
+                .bindTo(tourProgressManager.selectedTour)
+                .disposedBy(disposeBag)
 
         /**
          * Sync the selected tour stop with the carousel.

@@ -23,6 +23,7 @@ import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapTextType
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticTour
 import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
 import edu.artic.map.helpers.toLatLng
@@ -39,6 +40,9 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+
+private const val ALPHA_DIMMED = 0.6f
+private const val ALPHA_VISIBLE = 1.0f
 
 data class MarkerHolder<T>(val id: String,
                            val item: T,
@@ -65,7 +69,7 @@ abstract class MapItemRenderer<T> {
         bitmapQueue
                 .buffer(500, TimeUnit.MILLISECONDS, 10)
                 .toFlowable(BackpressureStrategy.BUFFER)
-                .debug("Emitting Bitmap Queue")
+                .debug("Emitting Bitmap Queue", emitValue = false)
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST))
@@ -76,14 +80,12 @@ abstract class MapItemRenderer<T> {
                     newMarkers
                             .forEach { item ->
                                 val id = getIdFromItem(item.item)
+
                                 // only construct things that actually exist in the current mapItems list.
                                 // slight chance that the items here will still exist when attemping map
                                 // propagation.
-                                val existing = existingMarkers[id]
-                                if (existing != null) {
-                                    // remove existing marker when found, we're overloading the existing one.
-                                    existing.marker.remove()
-                                }
+                                // remove existing marker when found, we're overloading the existing one.
+                                existingMarkers[id]?.marker?.remove()
 
                                 val (map, _, _) = item.originalEvent
                                 val (_, floor, displayMode) = item.originalEvent.mapChangeEvent
@@ -109,10 +111,9 @@ abstract class MapItemRenderer<T> {
     abstract val zIndex: Float
 
     /**
-     * Return the specific items that should render based on map floor.
+     * Return the specific items that should render based on map floor and [MapDisplayMode].
      */
-    abstract fun getItemsAtFloor(floor: Int): Flowable<List<T>>
-
+    abstract fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<T>>
 
     abstract fun getLocationFromItem(item: T): LatLng
 
@@ -164,7 +165,7 @@ abstract class MapItemRenderer<T> {
                         MapItemRendererEvent(map, mapEvent, emptyList<T>()).asFlowable()
                     } else {
                         Timber.d("Getting items at floor ${mapEvent.floor} for ${this::class}")
-                        getItemsAtFloor(mapEvent.floor).map {
+                        getItems(mapEvent.floor, mapEvent.displayMode).map {
                             Timber.d("Found ${it.size} items for ${this::class}")
                             MapItemRendererEvent(map, mapEvent, it)
                         }
@@ -175,7 +176,6 @@ abstract class MapItemRenderer<T> {
                 .map { (event, existingMapItems) ->
                     val (map, _, items) = event
                     val (_, floor, displayMode) = event.mapChangeEvent
-                    // TODO: for now cancel all running image requests.
                     imageFetcherDisposeBag.clear()
                     val foundItemsMap = removeOldMarkers(existingMapItems, items)
 
@@ -251,6 +251,18 @@ abstract class MapItemRenderer<T> {
                 map.addMarker(options).apply { tag = item })
     }
 
+    /**
+     * Returns a [Set] of [MapFocus] which results in:
+     * If active in search, then always display. If not active in search, don't show.
+     * If on current tour,
+     * don't show.
+     */
+    protected inline fun searchMapFocus(displayMode: MapDisplayMode, allContentFocus: () -> Set<MapFocus>): Set<MapFocus> =
+            when (displayMode) {
+                is MapDisplayMode.Tour -> setOf() // don't show
+                is MapDisplayMode.Search<*> -> MapFocus.values().toSet() // assume visible if we get here.
+                else -> allContentFocus()
+            }
 }
 
 /**
@@ -269,16 +281,17 @@ class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : Ma
 
     private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
-    override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
         return articMapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK)
     }
 
-    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = setOf(MapFocus.Landmark)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
+            searchMapFocus(displayMode) { setOf(MapFocus.Landmark) }
 
     override fun getFastBitmap(item: ArticMapAnnotation, displayMode: MapDisplayMode): BitmapDescriptor =
             BitmapDescriptorFactory.fromBitmap(textMarkerGenerator.makeIcon(item.label.orEmpty()))
 
-    override val zIndex: Float = 1.0f
+    override val zIndex: Float = ALPHA_VISIBLE
 }
 
 class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
@@ -286,20 +299,21 @@ class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
 
     private val textMarkerGenerator: TextMarkerGenerator  by lazy { TextMarkerGenerator(context) }
 
-    override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
         return articMapAnnotationDao.getTextAnnotationByTypeAndFloor(ArticMapTextType.SPACE, floor = floor.toString()) // TODO: switch to int
     }
 
-    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = setOf(MapFocus.DepartmentAndSpaces, MapFocus.Individual)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
+            searchMapFocus(displayMode) { setOf(MapFocus.DepartmentAndSpaces, MapFocus.Individual) }
 
     override fun getFastBitmap(item: ArticMapAnnotation, displayMode: MapDisplayMode): BitmapDescriptor =
             BitmapDescriptorFactory.fromBitmap(textMarkerGenerator.makeIcon(item.label.orEmpty()))
 
-    override val zIndex: Float = 1.0f
+    override val zIndex: Float = ALPHA_VISIBLE
 }
 
 class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : MapAnnotationItemRenderer(articMapAnnotationDao) {
-    override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
         return articMapAnnotationDao.getAmenitiesOnMapForFloor(floor = floor.toString())
     }
 
@@ -317,11 +331,12 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
 
     private val departmentMarkerGenerator: DepartmentMarkerGenerator by lazy { DepartmentMarkerGenerator(context) }
 
-    override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
         return articMapAnnotationDao.getDepartmentOnMapForFloor(floor = floor.toString())
     }
 
-    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = setOf(MapFocus.Department, MapFocus.DepartmentAndSpaces)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
+            searchMapFocus(displayMode) { setOf(MapFocus.Department, MapFocus.DepartmentAndSpaces) }
 
     override fun getBitmapFetcher(item: ArticMapAnnotation, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? {
         return Glide.with(context)
@@ -339,11 +354,12 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
 
     private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
-    override fun getItemsAtFloor(floor: Int): Flowable<List<ArticGallery>> {
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticGallery>> {
         return galleriesDao.getGalleriesForFloor(floor = floor.toString())
     }
 
-    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = setOf(MapFocus.Individual)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
+            searchMapFocus(displayMode) { setOf(MapFocus.Individual) }
 
     override fun getLocationFromItem(item: ArticGallery): LatLng = item.toLatLng()
 
@@ -352,7 +368,50 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
 
     override fun getIdFromItem(item: ArticGallery): String = item.galleryId.orEmpty()
 
-    override val zIndex: Float = 1.0f
+    override val zIndex: Float = ALPHA_VISIBLE
+}
+
+
+class TourIntroMapItemRenderer : MapItemRenderer<ArticTour>() {
+
+    private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
+
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = when (displayMode) {
+        is MapDisplayMode.Tour -> MapFocus.values().toSet()
+        else -> setOf()
+    }
+
+    override val zIndex: Float = 2.0f
+
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticTour>> = when (displayMode) {
+        is MapDisplayMode.Tour -> listOf(displayMode.tour).asFlowable()
+        else -> listOf<ArticTour>().asFlowable()
+    }
+
+    override fun getBitmapFetcher(item: ArticTour, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? =
+            Glide.with(context)
+                    .asBitmap()
+                    .load(item.thumbnailFullPath?.asCDNUri())
+                    .asRequestObservable(context)
+                    .debug("Glide loading: ${item.title}")
+                    .map { bitmap ->
+                        BitmapDescriptorFactory.fromBitmap(
+                                articObjectMarkerGenerator.makeIcon(bitmap))
+                    }
+
+
+    override fun getLocationFromItem(item: ArticTour): LatLng = item.toLatLng()
+
+    override fun getIdFromItem(item: ArticTour): String = item.nid
+
+    override fun MarkerOptions.configureMarkerOptions(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticTour) {
+        // on tour, set the alpha depending on current floor.
+        if (mapDisplayMode is MapDisplayMode.Tour) {
+            alpha(if (item.floorAsInt == floor) ALPHA_VISIBLE else ALPHA_DIMMED)
+        } else if (mapDisplayMode is MapDisplayMode.CurrentFloor) {
+            alpha(ALPHA_VISIBLE)
+        }
+    }
 }
 
 class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
@@ -360,17 +419,17 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
-    override fun getItemsAtFloor(floor: Int): Flowable<List<ArticObject>> {
-        return objectsDao.getObjectsByFloor(floor = floor)
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticObject>> = when (displayMode) {
+        is MapDisplayMode.CurrentFloor -> objectsDao.getObjectsByFloor(floor = floor)
+        is MapDisplayMode.Tour -> objectsDao.getObjectsByIdList(displayMode.tour.tourStops.mapNotNull { it.objectId })
+        is MapDisplayMode.Search<*> -> objectsDao.getObjectById((displayMode.item as ArticObject).nid).map { listOf(it) }
     }
 
-    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> {
-        return if (displayMode is MapDisplayMode.Tour) {
-            MapFocus.values().toSet()
-        } else {
-            setOf(MapFocus.Individual)
-        }
-    }
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
+            when (displayMode) {
+                is MapDisplayMode.Tour -> MapFocus.values().toSet()
+                else -> setOf(MapFocus.Individual)
+            }
 
     override fun getLocationFromItem(item: ArticObject): LatLng = item.toLatLng()
 
@@ -398,9 +457,9 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     override fun MarkerOptions.configureMarkerOptions(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticObject) {
         // on tour, set the alpha depending on current floor.
         if (mapDisplayMode is MapDisplayMode.Tour) {
-            alpha(if (item.floor == floor) 1.0f else 0.6f)
+            alpha(if (item.floor == floor) ALPHA_VISIBLE else ALPHA_DIMMED)
         } else if (mapDisplayMode is MapDisplayMode.CurrentFloor) {
-            alpha(1.0f)
+            alpha(ALPHA_VISIBLE)
         }
     }
 }

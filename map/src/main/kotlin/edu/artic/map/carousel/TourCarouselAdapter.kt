@@ -8,6 +8,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.map.R
 import edu.artic.media.audio.AudioPlayerService
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.tour_carousel_cell.view.*
 import kotlinx.android.synthetic.main.tour_carousel_intro_cell.view.*
 
@@ -34,6 +35,7 @@ class TourCarouselAdapter : AutoHolderRecyclerViewAdapter<TourCarousalBaseViewMo
                         .disposedBy(item.viewDisposeBag)
 
                 item.imageUrl
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                             Glide.with(this)
                                     .load(it)
