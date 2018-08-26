@@ -34,9 +34,9 @@ inline fun debugApply(fn: () -> Unit) {
  * In release mode, this is stripped out.
  */
 @SuppressLint("CheckResult")
-inline fun <T> Observable<T>.debug(tag: String): Observable<T> =
+inline fun <T> Observable<T>.debug(tag: String, emitValue: Boolean = true): Observable<T> =
         debugTransform {
-            doOnNext { Timber.d("~~~~$tag~~~~: NEXT $it") }
+            doOnNext { Timber.d("~~~~$tag~~~~: NEXT ${if (emitValue) it else null}") }
                     .doOnComplete { Timber.d("~~~~$tag~~~: COMPLETED") }
                     .doOnError { Timber.e("~~~~$tag~~~~: ERROR") }
                     .doOnSubscribe { Timber.i("~~~~$tag~~~: SUBSCRIBED") }
@@ -49,9 +49,9 @@ inline fun <T> Observable<T>.debug(tag: String): Observable<T> =
  * In release mode, this is stripped out.
  */
 @SuppressLint("CheckResult")
-inline fun <T> Flowable<T>.debug(tag: String): Flowable<T> =
+inline fun <T> Flowable<T>.debug(tag: String, emitValue: Boolean = true): Flowable<T> =
         debugTransform {
-            doOnNext { Timber.d("~~~~$tag~~~~: NEXT $it") }
+            doOnNext { Timber.d("~~~~$tag~~~~: NEXT ${if (emitValue) it else null}") }
                     .doOnCancel { Timber.i("~~~~$tag~~~: CANCELLED") }
                     .doOnComplete { Timber.d("~~~~$tag~~~: COMPLETED") }
                     .doOnError { Timber.e("~~~~$tag~~~~: ERROR") }
@@ -64,9 +64,9 @@ inline fun <T> Flowable<T>.debug(tag: String): Flowable<T> =
  * In release mode, this is stripped out.
  */
 @SuppressLint("CheckResult")
-inline fun <T> Single<T>.debug(tag: String): Single<T> =
+inline fun <T> Single<T>.debug(tag: String, emitValue: Boolean = true): Single<T> =
         debugTransform {
-            doOnSuccess { Timber.d("~~~~$tag~~~~: SUCCESS $it") }
+            doOnSuccess { Timber.d("~~~~$tag~~~~: SUCCESS ${if (emitValue) it else null}") }
                     .doOnError { Timber.e("~~~~$tag~~~~: ERROR") }
                     .doOnDispose { Timber.i("~~~~$tag~~~~: DISPOSED") }
                     .doOnSubscribe { Timber.i("~~~~$tag~~~: SUBSCRIBED") }
