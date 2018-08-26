@@ -23,7 +23,12 @@ import android.media.AudioManager
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.media.AudioAttributesCompat
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ExoPlaybackException
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import timber.log.Timber
@@ -130,7 +135,7 @@ class AudioFocusExoPlayerDecorator(private val audioAttributes: AudioAttributesC
             shouldPlayWhenReady = true
             audioFocusListener.onAudioFocusChange(AudioManager.AUDIOFOCUS_GAIN)
         } else {
-            Timber.i(TAG, "Playback not started: Audio focus request denied")
+            Timber.i("Playback not started: Audio focus request denied")
         }
     }
 
@@ -215,6 +220,5 @@ class AudioFocusExoPlayerDecorator(private val audioAttributes: AudioAttributesC
     }
 }
 
-private const val TAG = "AFExoPlayerDecorator"
 private const val MEDIA_VOLUME_DEFAULT = 1.0f
 private const val MEDIA_VOLUME_DUCK = 0.2f
