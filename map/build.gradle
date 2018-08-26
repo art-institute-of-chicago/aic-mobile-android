@@ -21,6 +21,7 @@ dependencies {
     implementation project(':audio')
     implementation project(':media_ui')
     implementation project(':adapter')
+    implementation project(':image')
     implementation libs.rx_kotlin
 
     implementation libs.constraint_layout

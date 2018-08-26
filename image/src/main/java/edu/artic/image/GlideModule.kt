@@ -1,4 +1,4 @@
-package edu.artic.welcome
+package edu.artic.image
 
 import android.content.Context
 import android.util.Log
