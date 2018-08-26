@@ -5,6 +5,7 @@ import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.filterValue
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.VisibleRegion
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
@@ -54,16 +55,17 @@ class MapMarkerConstructor
      */
     fun bindToMapChanges(floorChanges: Observable<Int>,
                          focusChanges: Observable<MapFocus>,
-                         displayMode: Observable<MapDisplayMode>) {
+                         displayMode: Observable<MapDisplayMode>,
+                         visibleRegion: Observable<VisibleRegion>) {
         // buffer changes between the two events.
-        val bufferedFloorFocus = Observables.combineLatest(focusChanges, floorChanges, displayMode) { focus, floor, mode ->
+        val bufferedMapChangeEvents = Observables.combineLatest(focusChanges, floorChanges, displayMode) { focus, floor, mode ->
             MapChangeEvent(floor = floor, focus = focus, displayMode = mode)
         }
                 .toFlowable(BackpressureStrategy.LATEST)
                 .share()
 
         renderers.forEach { renderer ->
-            renderer.bindToMapChanges(map.filterValue(), bufferedFloorFocus, disposeBag)
+            renderer.bindToMapChanges(map.filterValue(), bufferedMapChangeEvents, visibleRegion, disposeBag)
         }
     }
 
