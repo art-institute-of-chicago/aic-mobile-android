@@ -31,6 +31,7 @@ import edu.artic.ui.util.asCDNUri
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
@@ -53,7 +54,11 @@ data class DelayedMapItemRenderEvent<T>(val originalEvent: MapItemRendererEvent<
                                         val item: T,
                                         val bitmap: BitmapDescriptor)
 
-abstract class MapItemRenderer<T> {
+abstract class MapItemRenderer<T>(
+        /**
+         * Minor optimization to register or not register the bitmap queue within a subclass.
+         */
+        useBitmapQueue: Boolean = false) {
 
     private val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
     private var currentFloor: Int = Int.MIN_VALUE
@@ -66,41 +71,51 @@ abstract class MapItemRenderer<T> {
     lateinit var context: Context
 
     init {
-        bitmapQueue
-                .buffer(500, TimeUnit.MILLISECONDS, 10)
-                .toFlowable(BackpressureStrategy.BUFFER)
-                .debug("Emitting Bitmap Queue", emitValue = false)
-                .filter { it.isNotEmpty() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST))
-                .map { (newMarkers, existingMarkers) ->
-                    Timber.d("Updating with ${newMarkers.size} to ${existingMarkers.size}")
-                    val modifiedMarkers = existingMarkers.toMutableMap()
+        if (useBitmapQueue) {
+            bitmapQueue
+                    .toFlowable(BackpressureStrategy.BUFFER)
+                    .buffer(1, TimeUnit.SECONDS, 20)
+                    .filter { it.isNotEmpty() }
+                    .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .flatMapSingle { (newMarkers, existingMarkers) ->
+                        Timber.d("Updating with ${newMarkers.size} to ${existingMarkers.size}")
+                        val modifiedMarkers = existingMarkers.toMutableMap()
 
-                    newMarkers
-                            .forEach { item ->
-                                val id = getIdFromItem(item.item)
+                        // concat our observables to not overflood the main thread. Delay each one by 50ms.
+                        Single.concat(newMarkers
+                                .map { item ->
+                                    Single.fromCallable {
+                                        val id = getIdFromItem(item.item)
 
-                                // only construct things that actually exist in the current mapItems list.
-                                // slight chance that the items here will still exist when attemping map
-                                // propagation.
-                                // remove existing marker when found, we're overloading the existing one.
-                                existingMarkers[id]?.marker?.remove()
+                                        // only construct things that actually exist in the current mapItems list.
+                                        // slight chance that the items here will still exist when attemping map
+                                        // propagation.
+                                        // remove existing marker when found, we're overloading the existing one.
+                                        existingMarkers[id]?.marker?.remove()
 
-                                val (map, _, _) = item.originalEvent
-                                val (_, floor, displayMode) = item.originalEvent.mapChangeEvent
-                                val holder = constructAndAddMarkerHolder(item = item.item,
-                                        bitmap = item.bitmap,
-                                        displayMode = displayMode,
-                                        map = map,
-                                        floor = floor,
-                                        id = getIdFromItem(item.item))
-                                modifiedMarkers[id] = holder
-                            }
-                    modifiedMarkers
-                }
-                .bindTo(mapItems)
-                .disposedBy(imageQueueDisposeBag)
+                                        val (map, _, _) = item.originalEvent
+                                        val (_, floor, displayMode) = item.originalEvent.mapChangeEvent
+                                        constructAndAddMarkerHolder(item = item.item,
+                                                bitmap = item.bitmap,
+                                                displayMode = displayMode,
+                                                map = map,
+                                                floor = floor,
+                                                id = getIdFromItem(item.item))
+                                    }.delay(100, TimeUnit.MILLISECONDS)
+                                            .subscribeOn(AndroidSchedulers.mainThread())
+                                })
+                                .toList()
+                                .map { newMarkersList ->
+                                    newMarkersList.forEach {
+                                        modifiedMarkers[it.id] = it
+                                    }
+                                    modifiedMarkers
+                                }
+                    }
+                    .bindTo(mapItems)
+                    .disposedBy(imageQueueDisposeBag)
+        }
     }
 
     /**
@@ -131,7 +146,11 @@ abstract class MapItemRenderer<T> {
      */
     open fun getBitmapFetcher(item: T, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? = null
 
-    open fun MarkerOptions.configureMarkerOptions(floor: Int, mapDisplayMode: MapDisplayMode, item: T) = Unit
+
+    /**
+     * Return marker alpha based on couple conditions here.
+     */
+    open fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: T): Float = ALPHA_VISIBLE
 
     fun getMarkerHolderById(id: String): Observable<Optional<MarkerHolder<T>>> =
             mapItems.take(1).map { mapItems -> optionalOf(mapItems[id]) }
@@ -187,8 +206,9 @@ abstract class MapItemRenderer<T> {
                         items.mapNotNull { item ->
                             val id = getIdFromItem(item)
                             val existing = foundItemsMap[id]
-                            // same item, don't re-add to the map.
-                            if (existing != null) {
+                            val newAlpha = getMarkerAlpha(floor, displayMode, item)
+                            // same item, don't re-add to the map. or if the marker alpha will not change.
+                            if (existing != null && existing.marker.alpha == newAlpha) {
                                 existing
                             } else {
                                 // fetching is enqueued
@@ -196,22 +216,20 @@ abstract class MapItemRenderer<T> {
                                     enqueueBitmapFetch(bitmapFetcher.map { DelayedMapItemRenderEvent(event, item, it) })
                                 }
                                 // fast bitmap returns immediately.
-                                getFastBitmap(item, displayMode)?.let { bitmap ->
-                                    constructAndAddMarkerHolder(
-                                            item = item,
-                                            bitmap = bitmap,
-                                            displayMode = displayMode,
-                                            map = map,
-                                            floor = floor,
-                                            id = id)
-                                }
+                                constructAndAddMarkerHolder(
+                                        item = item,
+                                        bitmap = getFastBitmap(item, displayMode),
+                                        displayMode = displayMode,
+                                        map = map,
+                                        floor = floor,
+                                        id = id)
                             }
                         }
                     }
                 }
     }
 
-    fun removeOldMarkers(existingMapItems: Map<String, MarkerHolder<T>>, items: List<T>): Map<String, MarkerHolder<T>> {
+    private fun removeOldMarkers(existingMapItems: Map<String, MarkerHolder<T>>, items: List<T>): Map<String, MarkerHolder<T>> {
         // separate the list into two separate lists, one for items to be removed
         // one for existing items in the new list too.
         val (existingFoundItems, toBeRemoved) = existingMapItems.values.partition { items.contains(it.item) }
@@ -230,7 +248,7 @@ abstract class MapItemRenderer<T> {
      */
     private fun constructAndAddMarkerHolder(
             item: T,
-            bitmap: BitmapDescriptor,
+            bitmap: BitmapDescriptor?,
             displayMode: MapDisplayMode,
             map: GoogleMap,
             floor: Int,
@@ -240,11 +258,10 @@ abstract class MapItemRenderer<T> {
                 .zIndex(zIndex)
                 .position(getLocationFromItem(item))
                 .icon(bitmap)
-                .apply {
-                    configureMarkerOptions(floor,
-                            displayMode,
-                            item)
-                }
+                .alpha(getMarkerAlpha(floor,
+                        displayMode,
+                        item)
+                )
         return MarkerHolder(
                 id,
                 item,
@@ -268,7 +285,9 @@ abstract class MapItemRenderer<T> {
 /**
  * Convenience construct for handling [ArticMapAnnotation] typed objects.
  */
-abstract class MapAnnotationItemRenderer(protected val articMapAnnotationDao: ArticMapAnnotationDao) : MapItemRenderer<ArticMapAnnotation>() {
+abstract class MapAnnotationItemRenderer(protected val articMapAnnotationDao: ArticMapAnnotationDao,
+                                         useBitmapQueue: Boolean = false)
+    : MapItemRenderer<ArticMapAnnotation>(useBitmapQueue) {
     override fun getLocationFromItem(item: ArticMapAnnotation): LatLng = item.toLatLng()
 
     override fun getIdFromItem(item: ArticMapAnnotation): String = item.nid
@@ -327,7 +346,7 @@ class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : M
 }
 
 class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
-    : MapAnnotationItemRenderer(articMapAnnotationDao) {
+    : MapAnnotationItemRenderer(articMapAnnotationDao, useBitmapQueue = true) {
 
     private val departmentMarkerGenerator: DepartmentMarkerGenerator by lazy { DepartmentMarkerGenerator(context) }
 
@@ -372,7 +391,7 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
 }
 
 
-class TourIntroMapItemRenderer : MapItemRenderer<ArticTour>() {
+class TourIntroMapItemRenderer : MapItemRenderer<ArticTour>(useBitmapQueue = true) {
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
@@ -404,18 +423,18 @@ class TourIntroMapItemRenderer : MapItemRenderer<ArticTour>() {
 
     override fun getIdFromItem(item: ArticTour): String = item.nid
 
-    override fun MarkerOptions.configureMarkerOptions(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticTour) {
+    override fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticTour): Float {
         // on tour, set the alpha depending on current floor.
-        if (mapDisplayMode is MapDisplayMode.Tour) {
-            alpha(if (item.floorAsInt == floor) ALPHA_VISIBLE else ALPHA_DIMMED)
-        } else if (mapDisplayMode is MapDisplayMode.CurrentFloor) {
-            alpha(ALPHA_VISIBLE)
+        return if (mapDisplayMode is MapDisplayMode.Tour) {
+            if (item.floorAsInt == floor) ALPHA_VISIBLE else ALPHA_DIMMED
+        } else {
+            ALPHA_VISIBLE
         }
     }
 }
 
 class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
-    : MapItemRenderer<ArticObject>() {
+    : MapItemRenderer<ArticObject>(useBitmapQueue = true) {
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
@@ -445,7 +464,6 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                             (item.image_url ?: item.largeImageFullPath)?.asCDNUri()
                     )
                     .asRequestObservable(context)
-                    .debug("Glide loading: ${item.title}")
                     .map { bitmap ->
                         val order: String? = item.getTourOrderNumberBasedOnDisplayMode(displayMode)
                         BitmapDescriptorFactory.fromBitmap(
@@ -454,12 +472,12 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     override val zIndex: Float = 2.0f
 
-    override fun MarkerOptions.configureMarkerOptions(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticObject) {
+    override fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticObject): Float {
         // on tour, set the alpha depending on current floor.
-        if (mapDisplayMode is MapDisplayMode.Tour) {
-            alpha(if (item.floor == floor) ALPHA_VISIBLE else ALPHA_DIMMED)
-        } else if (mapDisplayMode is MapDisplayMode.CurrentFloor) {
-            alpha(ALPHA_VISIBLE)
+        return if (mapDisplayMode is MapDisplayMode.Tour) {
+            if (item.floor == floor) ALPHA_VISIBLE else ALPHA_DIMMED
+        } else {
+            ALPHA_VISIBLE
         }
     }
 }
