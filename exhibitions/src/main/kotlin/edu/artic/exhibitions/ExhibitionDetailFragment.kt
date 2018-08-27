@@ -9,8 +9,8 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asUrlViewIntent
-import edu.artic.base.utils.listenerSetHeight
 import edu.artic.db.models.ArticExhibition
+import edu.artic.image.listenerSetHeight
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_exhibition_details.*

@@ -7,7 +7,7 @@ dependencies {
 
     implementation libs.constraint_layout
     implementation project(':viewmodel')
-    implementation libs.rxHelper
+    implementation libs.rx_helpers
     implementation project(':base')
     implementation project(':ui')
     implementation project(':media')

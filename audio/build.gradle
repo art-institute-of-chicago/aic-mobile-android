@@ -24,4 +24,5 @@ dependencies {
     implementation project(':db')
     implementation project(':media')
     implementation project(':adapter')
+    implementation project(':image')
 }
