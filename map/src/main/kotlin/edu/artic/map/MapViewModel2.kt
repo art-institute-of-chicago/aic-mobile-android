@@ -26,7 +26,7 @@ import javax.inject.Inject
  * Description:
  */
 class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
-                                        private val tourProgressManager: TourProgressManager)
+                                        tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
 
@@ -41,7 +41,7 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
 
     val selectedTourStopMarkerId: Subject<String> = BehaviorSubject.create()
 
-    private val visibleRegionChanges: Subject<VisibleRegion> = PublishSubject.create()
+    private val visibleRegionChanges: Subject<VisibleRegion> = BehaviorSubject.create()
 
     // when set, normal visible region changes are locked until, say the map move completes.
     private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)

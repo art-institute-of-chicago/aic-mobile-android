@@ -142,6 +142,9 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
                             .tilt(45f)
                             .build()
             ))
+            // initial visible region
+            viewModel.visibleRegionChanged(map.projection.visibleRegion)
+
 
             /**
              * Funneling map click event into the mapClicks Observer so that it could be combined
