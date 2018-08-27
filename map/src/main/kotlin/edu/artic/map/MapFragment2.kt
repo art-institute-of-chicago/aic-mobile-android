@@ -288,8 +288,8 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
         viewModel.distinctFloor
                 .withLatestFrom(groundOverlayGenerated)
                 .filter { (floor, generated) -> generated && floor in 0..3 }
-                .subscribe {
-                    buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$it.png"))
+                .subscribe { (floor) ->
+                    buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$floor.png"))
                 }
                 .disposedBy(disposeBag)
 
