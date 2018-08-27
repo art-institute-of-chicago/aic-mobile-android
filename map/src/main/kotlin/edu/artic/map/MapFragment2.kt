@@ -184,7 +184,7 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
                     is MarkerMetaData<*> -> {
                         when (markerTag.item) {
                             is ArticMapAnnotation -> {
-                                val annotation = markerTag as ArticMapAnnotation
+                                val annotation = markerTag.item
                                 when (annotation.annotationType) {
                                     ArticMapAnnotationType.DEPARTMENT -> {
                                         viewModel.departmentMarkerSelected(annotation)
