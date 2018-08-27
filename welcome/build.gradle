@@ -5,9 +5,7 @@ dependencies {
     implementation libs.constraint_layout
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
-    kapt libs.glide_compiler
     api libs.design_support
-    implementation libs.glide
     implementation libs.threeten
     implementation project(':base')
     implementation libs.constraint_layout
@@ -22,6 +20,7 @@ dependencies {
     implementation project(':events')
     implementation project(':navigation')
     implementation project(':media')
+    implementation project(':image')
     implementation libs.exo_player_core
     implementation libs.exo_player_ui
 }
