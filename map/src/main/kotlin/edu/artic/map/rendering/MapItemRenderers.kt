@@ -577,8 +577,8 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                         val position = getLocationFromItem(markerHolder.item)
                         // set icon to dot.
                         val itemId = getIdFromItem(markerHolder.item)
-                        @Suppress("UNCHECKED_CAST")
-                        val meta = markerHolder.marker.metaData<ArticObject>()
+                        val meta = markerHolder.marker.metaData()
+                                ?: MarkerMetaData(markerHolder.item, loadedBitmap = false)
                         if (position.isCloseEnoughToCenter(region.latLngBounds)) {
                             if (!meta.loadedBitmap) {
                                 // show loading while its loading.

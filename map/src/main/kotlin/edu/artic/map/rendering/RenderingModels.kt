@@ -14,10 +14,10 @@ data class MarkerMetaData<T>(val item: T,
                              val loadedBitmap: Boolean)
 
 /**
- * Useful extension that casts the [Marker.getTag] into a [MarkerMetaData]
+ * Useful extension that casts the [Marker.getTag] into a [MarkerMetaData]. Might be null.
  */
 @Suppress("UNCHECKED_CAST")
-fun <T> Marker.metaData(): MarkerMetaData<T> = tag as MarkerMetaData<T>
+fun <T> Marker.metaData(): MarkerMetaData<T>? = tag as MarkerMetaData<T>?
 
 /**
  * Holder class that keeps a reference to our [item], a unique [id], and the rendered [marker] so
