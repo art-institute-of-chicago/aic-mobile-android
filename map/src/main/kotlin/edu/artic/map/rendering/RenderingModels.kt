@@ -29,7 +29,22 @@ fun <T> Marker.metaData(): MarkerMetaData<T>? = tag as MarkerMetaData<T>?
  */
 data class MarkerHolder<T>(val id: String,
                            val item: T,
-                           val marker: Marker)
+                           val marker: Marker) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MarkerHolder<*>
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+}
 
 /**
  * Holder class for change events, including [GoogleMap], [MapChangeEvent], and [items].
