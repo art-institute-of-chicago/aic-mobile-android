@@ -214,8 +214,9 @@ abstract class MapItemRenderer<T>(
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(TrampolineScheduler.instance()) // execute serially so we don't overlap on other events on the main thread.
-                .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST))
-                .map { (mapItemRendererEvent, existingMapItems) ->
+                .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST),
+                        visibleRegionChanges.toFlowable(BackpressureStrategy.LATEST))
+                .map { (mapItemRendererEvent, existingMapItems, visibleRegion) ->
                     val (_, _, items) = mapItemRendererEvent
 
                     imageFetcherDisposeBag.clear()
@@ -229,7 +230,7 @@ abstract class MapItemRenderer<T>(
                     if (items.isEmpty()) {
                         listOf<MarkerHolder<T>>()
                     } else {
-                        return@map mapAndFetchDisplayMarkers(foundItemsMap, mapItemRendererEvent)
+                        return@map mapAndFetchDisplayMarkers(foundItemsMap, mapItemRendererEvent, visibleRegion)
                     }
                 }
     }
@@ -240,7 +241,8 @@ abstract class MapItemRenderer<T>(
      * and adjust alpha, if needed.
      */
     private fun mapAndFetchDisplayMarkers(foundItemsMap: Map<String, MarkerHolder<T>>,
-                                          mapRenderEvent: MapItemRendererEvent<T>): List<MarkerHolder<T>> {
+                                          mapRenderEvent: MapItemRendererEvent<T>,
+                                          visibleRegion: VisibleRegion): List<MarkerHolder<T>> {
         val (map, mapChangeEvent, items) = mapRenderEvent
         val (_, floor, displayMode) = mapChangeEvent
         return items.mapNotNull { item ->
@@ -250,24 +252,45 @@ abstract class MapItemRenderer<T>(
             if (existing != null) {
                 // adjust alpha, especially for items that are on tour.
                 existing.marker.alpha = getMarkerAlpha(floor, displayMode, item)
+                adjustVisibleMarker(existing, visibleRegion, mapChangeEvent)
                 existing
             } else {
-                val requestDisposable = enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
-
-                // fast bitmap returns immediately.
-                getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
-                    constructAndAddMarkerHolder(
-                            item = item,
-                            bitmap = bitmapDescriptor,
-                            displayMode = displayMode,
-                            map = map,
-                            floor = floor,
-                            id = id,
-                            // bitmap queue not used, means bitmap is considered loaded
-                            loadedBitmap = !useBitmapQueue,
-                            requestDisposable = requestDisposable)
-                }
+                displayMarker(item,
+                        mapChangeEvent, visibleRegion, displayMode, map, floor, id)
             }
+        }
+    }
+
+    /**
+     * Perform custom marker changes when visible.
+     */
+    protected open fun adjustVisibleMarker(
+            existing: MarkerHolder<T>,
+            visibleRegion: VisibleRegion,
+            mapChangeEvent: MapChangeEvent
+    ) = Unit
+
+    protected open fun displayMarker(item: T,
+                                     mapChangeEvent: MapChangeEvent,
+                                     visibleRegion: VisibleRegion,
+                                     displayMode: MapDisplayMode,
+                                     map: GoogleMap,
+                                     floor: Int,
+                                     id: String): MarkerHolder<T>? {
+        val requestDisposable = enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
+
+        // fast bitmap returns immediately.
+        return getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
+            constructAndAddMarkerHolder(
+                    item = item,
+                    bitmap = bitmapDescriptor,
+                    displayMode = displayMode,
+                    map = map,
+                    floor = floor,
+                    id = id,
+                    // bitmap queue not used, means bitmap is considered loaded
+                    loadedBitmap = !useBitmapQueue,
+                    requestDisposable = requestDisposable)
         }
     }
 
@@ -340,7 +363,7 @@ abstract class MapItemRenderer<T>(
      * Constructs the [MarkerHolder] based on a few parameters. Also adds the [MarkerHolder] to
      * the [GoogleMap].
      */
-    private fun constructAndAddMarkerHolder(
+    internal fun constructAndAddMarkerHolder(
             item: T,
             bitmap: BitmapDescriptor?,
             displayMode: MapDisplayMode,
