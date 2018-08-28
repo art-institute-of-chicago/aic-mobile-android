@@ -15,7 +15,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.GroundOverlay
 import com.google.android.gms.maps.model.GroundOverlayOptions
 import com.google.android.gms.maps.model.LatLng
@@ -87,61 +86,15 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
         mapView.getMapAsync { map ->
             this.map = map
             viewModel.setMap(map)
-            map.isBuildingsEnabled = false
-            map.isIndoorEnabled = false
-            map.isTrafficEnabled = false
-            map.setMapStyle(MapStyleOptions(mapStyleOptions))
-            map.setMinZoomPreference(17f)
-            map.setMaxZoomPreference(22f)
-            /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
-            map.setPadding(0, requireActivity().statusBarHeight, 0, 0)
-            /**
-             * We are setting the bounds here as they are roughly the bounds of the museum,
-             * locks us into just that area
-             */
-            map.setLatLngBoundsForCameraTarget(
-                    LatLngBounds(
-                            LatLng(41.878423, -87.624189),
-                            LatLng(41.881612, -87.621000)
-                    )
-            )
+            configureMap(map, mapStyleOptions)
 
-            baseGroundOverlay = map.addGroundOverlay(
-                    GroundOverlayOptions()
-                            .positionFromBounds(
-                                    LatLngBounds(
-                                            LatLng(41.874620, -87.629243),
-                                            LatLng(41.884753, -87.615841)
-                                    )
-                            ).image(deriveBaseOverlayDescriptor(requireActivity()))
-                            .zIndex(0.1f)
-                    //TODO: Load image from network instead of from Assets
-            )
-            buildingGroundOverlay = map.addGroundOverlay(
-                    GroundOverlayOptions()
-                            .positionFromBounds(
-                                    LatLngBounds(
-                                            LatLng(41.878467, -87.624127),
-                                            LatLng(41.880730, -87.621027)
-                                    )
-                            ).zIndex(.11f)
-                            .image(BitmapDescriptorFactory.fromAsset("AIC_Floor1.png"))
-            )
-
-            map.isIndoorEnabled = false
             map.setOnCameraIdleListener {
                 viewModel.zoomLevelChanged(zoomLevel = map.cameraPosition.zoom)
                 viewModel.visibleRegionIdle(map.projection.visibleRegion)
             }
             map.setOnCameraMoveListener { viewModel.visibleRegionChanged(map.projection.visibleRegion) }
 
-            map.moveCamera(CameraUpdateFactory.newCameraPosition(
-                    CameraPosition.Builder()
-                            .target(LatLng(41.879592, -87.622491))
-                            .bearing(90f)
-                            .tilt(45f)
-                            .build()
-            ))
+            map.moveCamera(initialMapCameraPosition())
             // initial visible region
             viewModel.visibleRegionChanged(map.projection.visibleRegion)
 
@@ -150,9 +103,7 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
              * Funneling map click event into the mapClicks Observer so that it could be combined
              * with other Observable stream.
              */
-            map.setOnMapClickListener {
-                mapClicks.onNext(true)
-            }
+            map.setOnMapClickListener { mapClicks.onNext(true) }
 
             /**
              * Remove the map object details fragment when user taps outside of object.
@@ -208,6 +159,49 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
             }
             groundOverlayGenerated.onNext(true)
         }
+    }
+
+    private fun configureMap(map: GoogleMap, mapStyleOptions: String) {
+        map.apply {
+            isBuildingsEnabled = false
+            isIndoorEnabled = false
+            isTrafficEnabled = false
+
+            setMapStyle(MapStyleOptions(mapStyleOptions))
+            setMinZoomPreference(17f)
+            setMaxZoomPreference(22f)
+
+            /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
+            setPadding(0, requireActivity().statusBarHeight, 0, 0)
+
+            /**
+             * We are setting the bounds here as they are roughly the bounds of the museum,
+             * locks us into just that area
+             */
+            setLatLngBoundsForCameraTarget(museumBounds)
+        }
+
+        // TODO: use custom tiling here instead.
+        baseGroundOverlay = map.addGroundOverlay(
+                GroundOverlayOptions()
+                        .positionFromBounds(
+                                LatLngBounds(
+                                        LatLng(41.874620, -87.629243),
+                                        LatLng(41.884753, -87.615841)
+                                )
+                        ).image(deriveBaseOverlayDescriptor(requireActivity()))
+                        .zIndex(0.1f)
+        )
+        buildingGroundOverlay = map.addGroundOverlay(
+                GroundOverlayOptions()
+                        .positionFromBounds(
+                                LatLngBounds(
+                                        LatLng(41.878467, -87.624127),
+                                        LatLng(41.880730, -87.621027)
+                                )
+                        ).zIndex(.11f)
+                        .image(BitmapDescriptorFactory.fromAsset("AIC_Floor1.png"))
+        )
     }
 
     /**
