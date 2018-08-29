@@ -29,9 +29,9 @@ import javax.inject.Inject
 /**
  * Description:
  */
-class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
-                                        private val articObjectDao: ArticObjectDao,
-                                        tourProgressManager: TourProgressManager)
+class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
+                                       private val articObjectDao: ArticObjectDao,
+                                       tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
 

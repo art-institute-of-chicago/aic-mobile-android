@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="edu.artic.map.MapFragment2"
+        android:name="edu.artic.map.MapFragment"
         android:label="fragment_information"
         tools:layout="@layout/fragment_map">
 

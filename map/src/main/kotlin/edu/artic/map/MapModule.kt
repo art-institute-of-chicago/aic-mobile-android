@@ -21,8 +21,8 @@ abstract class MapModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MapViewModel2::class)
-    abstract fun mapViewModel2(mapViewModel: MapViewModel2): ViewModel
+    @ViewModelKey(MapViewModel::class)
+    abstract fun mapViewModel(mapViewModel: MapViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -33,7 +33,7 @@ abstract class MapModule {
     abstract val mapActivity: MapActivity
 
     @get:ContributesAndroidInjector
-    abstract val mapFragment2: MapFragment2
+    abstract val mapFragment: MapFragment
 
     @get:ContributesAndroidInjector
     abstract val mapObjectDetailsFragment: MapObjectDetailsFragment
