@@ -109,7 +109,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private val targetCache: MutableMap<MapItem<*>, BitmapTarget> = mutableMapOf()
 
     private lateinit var objectMarkerGenerator: ArticObjectMarkerGenerator
-    private lateinit var galleryNumberGenerator: GalleryNumberMarkerGenerator
+    private lateinit var textGenerator: TextMarkerGenerator
     private lateinit var departmentMarkerGenerator: DepartmentMarkerGenerator
 
     private lateinit var baseGroundOverlay: GroundOverlay
@@ -133,7 +133,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         objectMarkerGenerator = ArticObjectMarkerGenerator(view.context)
-        galleryNumberGenerator = GalleryNumberMarkerGenerator(view.context)
+        textGenerator = TextMarkerGenerator(view.context)
         departmentMarkerGenerator = DepartmentMarkerGenerator(view.context)
 
         mapView.onCreate(savedInstanceState)
@@ -414,7 +414,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         MarkerOptions()
                                 .position(mapItem.item.toLatLng())
                                 .icon(BitmapDescriptorFactory.fromBitmap(
-                                        galleryNumberGenerator.makeIcon(mapItem.item.label.orEmpty()))
+                                        textGenerator.makeIcon(mapItem.item.label.orEmpty()))
                                 ).zIndex(1f)
                     }
                 }.disposedBy(disposeBag)
@@ -666,17 +666,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         val gallery = mapGallery.item
 
         gallery.number?.let {
-            val marker = map.addMarker(MarkerOptions()
-                    .position(gallery.toLatLng())
-                    .icon(BitmapDescriptorFactory
-                            .fromBitmap(
-                                    galleryNumberGenerator
-                                            .makeIcon(
-                                                    it
-                                            )
+            val marker =
+                    map.addMarker(MarkerOptions()
+                            .position(gallery.toLatLng())
+                            .icon(BitmapDescriptorFactory
+                                    .fromBitmap(
+                                            textGenerator
+                                                    .makeIcon(
+                                                            it
+                                                    )
+                                    )
                             )
-                    )
-                    .zIndex(1f)
+                            .zIndex(1f)
+
             )
             marker.tag = mapGallery
             galleryMarkers.add(marker)
