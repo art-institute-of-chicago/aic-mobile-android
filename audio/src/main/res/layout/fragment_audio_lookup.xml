@@ -16,7 +16,7 @@
         android:layout_marginTop="@dimen/marginOneHalf"
         android:importantForAccessibility="no"
         android:src="@drawable/ic_audio"
-        app:layout_constraintBottom_toTopOf="@+id/header"
+        app:layout_constraintBottom_toTopOf="@+id/lookup_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,7 +36,7 @@
     -->
 
     <EditText
-        android:id="@+id/header"
+        android:id="@+id/lookup_field"
         style="@style/PageTitleRegularWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,12 +49,13 @@
         android:focusable="true"
         android:importantForAutofill="no"
         android:inputType="none"
-        android:text="@string/audio_screen_header"
+        android:hint="@string/audio_screen_header"
+        android:textColorHint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/subheader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/screen_icon"
-        tools:ignore="Deprecated,UnusedAttribute"
+        tools:ignore="Deprecated,LabelFor,UnusedAttribute"
         />
 
     <TextView
@@ -66,10 +67,10 @@
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginStandard"
         android:text="@string/audio_instructions"
-        android:labelFor="@id/header"
+        android:labelFor="@id/lookup_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintTop_toBottomOf="@id/lookup_field"
         />
 
 

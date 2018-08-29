@@ -2,9 +2,13 @@ package edu.artic.audio
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import edu.artic.adapter.BaseRecyclerViewAdapter.OnItemClickListener
+import edu.artic.adapter.BaseViewHolder
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_audio_lookup.*
+import java.text.BreakIterator
 import kotlin.reflect.KClass
 
 /**
@@ -37,6 +41,37 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         val numberPadAdapter = NumberPadAdapter()
         numberPadAdapter.setItemsList(viewModel.preferredNumberPadElements)
         number_pad.adapter = numberPadAdapter
+        numberPadAdapter.onItemClickListener = NumPadClickListener(lookup_field)
     }
 
+
+    /**
+     * This on-click-listener adds and removes numbers to the [entryField] it wraps.
+     */
+    class NumPadClickListener(private val entryField: EditText) : OnItemClickListener<NumberPadElement> {
+
+        private val perCharacter = BreakIterator.getCharacterInstance()
+
+        @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
+        override fun onItemClick(position: Int, element: NumberPadElement, holder: BaseViewHolder) {
+            when (element) {
+                is NumberPadElement.Numeric -> {
+                    entryField.append(element.value)
+                }
+                NumberPadElement.DeleteBack -> {
+                    entryField.text.apply {
+                        if (isNotEmpty()) {
+                            perCharacter.setText(this.toString())
+
+                            val end = perCharacter.last()
+                            val start = perCharacter.previous()
+
+                            delete(start, end)
+                        }
+                    }
+                }
+                NumberPadElement.GoSearch -> TODO()
+            }
+        }
+    }
 }
