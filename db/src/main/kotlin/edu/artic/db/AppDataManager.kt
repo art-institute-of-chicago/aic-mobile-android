@@ -116,10 +116,10 @@ class AppDataManager @Inject constructor(
                             if (objects?.isNotEmpty() == true) {
                                 objects.values.forEach { articObject ->
                                     // add a floor field to the object, since its not known in the JSON directly.
-                                    //galleries?.firstOrNull { it.title == articObject.galleryLocation }
-                                           // ?.let { gallery ->
-                                           //     articObject.floor = gallery.floorAsInt
-                                           // }
+                                    galleries?.firstOrNull { it.title == articObject.galleryLocation }
+                                            ?.let { gallery ->
+                                                articObject.floor = gallery.floorAsInt
+                                            }
                                     articObject.audioCommentary.forEach { audioCommentaryObject ->
                                         audioCommentaryObject.audio?.let {
                                             audioCommentaryObject.audioFile = audioFileDao.getAudioById(it)
