@@ -80,7 +80,7 @@ abstract class MapItemRenderer<T> {
     }
 
     fun renderMarkers(map: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
-            : Observable<List<MarkerHolder<T>>> {
+            : Flowable<List<MarkerHolder<T>>> {
         return floorFocus
                 .withLatestFrom(map.toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
                 .debug("New Map Event")
@@ -92,24 +92,36 @@ abstract class MapItemRenderer<T> {
                         Timber.d("Empty list for ${mapEvent.focus} with visible range: $visibleMapFocus")
                         MapItemRendererEvent(map, mapEvent, emptyList<T>()).asFlowable()
                     } else {
-                        Timber.d("Getting items at floor ${mapEvent.floor}")
-                        getItemsAtFloor(mapEvent.floor).map { MapItemRendererEvent(map, mapEvent, it) }
+                        Timber.d("Getting items at floor ${mapEvent.floor} for ${this::class}")
+                        getItemsAtFloor(mapEvent.floor).map {
+                            Timber.d("Found ${it.size} items for ${this::class}")
+                            MapItemRendererEvent(map, mapEvent, it)
+                        }
                     }
                 }
-                .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .withLatestFrom(mapItems) { event, mapItems -> event to mapItems }
-                .doOnNext { (event, existingMapItems) ->
-                    // trim down items not in the new list
-                    val toBeRemoved = existingMapItems.values.filterNot { event.items.contains(it.item) }
-                    toBeRemoved.forEach { it.marker.remove() }
-                }
+                .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST)) { event, mapItems -> event to mapItems }
                 .flatMap { (event, existingMapItems) ->
-                    Observable.zip(event.items.map { item ->
+                    // separate the list into two separate lists, one for items to be removed
+                    // one for existing items in the new list too.
+                    val (existingFoundItems, toBeRemoved) = existingMapItems.values.partition { event.items.contains(it.item) }
+
+                    // trim down items not in the new list
+                    toBeRemoved.forEach { it.marker.remove() }
+
+                    // re-associate the existing found items that are still in the list when a change happens.
+                    val existingFoundItemsMap = existingFoundItems.associateBy { it.id }
+
+                    // don't emit an empty event (which empty zip list does), rather emit an
+                    // empty list here.
+                    if (event.items.isEmpty()) {
+                        return@flatMap listOf<MarkerHolder<T>>().asFlowable()
+                    }
+                    Flowable.zip(event.items.map { item ->
                         val id = getIdFromItem(item)
-                        val existing = existingMapItems[id]
+                        val existing = existingFoundItemsMap[id]
                         // same item, don't re-add to the map.
-                        existing?.asObservable()
+                        existing?.asFlowable()
                                 ?: getBitmap(item, event.mapChangeEvent.displayMode)
                                         .map { bitmap ->
                                             val options = MarkerOptions()
@@ -126,6 +138,7 @@ abstract class MapItemRenderer<T> {
                                                     item,
                                                     event.map.addMarker(options))
                                         }
+                                        .toFlowable(BackpressureStrategy.LATEST)
 
                     }) { markers ->
                         // RX Zip does not return a properly typed array, it is an Object[] from this zip.
