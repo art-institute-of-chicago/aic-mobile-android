@@ -1,7 +1,11 @@
 package edu.artic.map
 
 import android.util.Log
-import com.fuzz.rx.*
+import com.fuzz.rx.Optional
+import com.fuzz.rx.bindTo
+import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
+import com.fuzz.rx.mapOptional
 import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao

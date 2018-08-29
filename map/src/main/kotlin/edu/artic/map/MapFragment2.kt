@@ -74,7 +74,7 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
 
-    private val tour: ArticTour? by lazy { requireActivity().intent?.extras?.getParcelable<ArticTour>(MapActivity.ARG_TOUR) }
+    private val tour: ArticTour? get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -255,16 +255,27 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
                     fragmentManager.beginTransaction()
                             .replace(R.id.infocontainer, TourCarouselFragment.create(tour), OBJECT_DETAILS)
                             .commit()
-                }.disposedBy(disposeBag)
+                }
+                .disposedBy(disposeBag)
 
+        viewModel.tourBoundsChanged
+                .withLatestFrom(viewModel.currentMap.filterValue())
+                .subscribe { (bounds, map) ->
+                    map.moveCamera(CameraUpdateFactory
+                            .newLatLngBounds(LatLngBounds.builder()
+                                    .includeAll(bounds)
+                                    .build(), 0))
+                }
+                .disposedBy(disposeBag)
 
-        viewModel.cameraMovementRequested
+        viewModel.individualMapChange
                 .filterValue()
                 .subscribe { (newPosition, focus) ->
                     map.animateCamera(
                             CameraUpdateFactory.newLatLngZoom(newPosition, focus.toZoomLevel())
                     )
-                }.disposedBy(disposeBag)
+                }
+                .disposedBy(disposeBag)
 
         viewModel.distinctFloor
                 .subscribeBy { floor: Int ->
@@ -327,10 +338,10 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
 
         val localTour = tour
         if (localTour != null) {
-            viewModel.displayMode.onNext(MapDisplayMode.Tour(localTour))
+            viewModel.displayModeChanged(MapDisplayMode.Tour(localTour))
         } else {
             // TODO: Search mode
-            viewModel.displayMode.onNext(MapDisplayMode.CurrentFloor)
+            viewModel.displayModeChanged(MapDisplayMode.CurrentFloor)
         }
     }
 

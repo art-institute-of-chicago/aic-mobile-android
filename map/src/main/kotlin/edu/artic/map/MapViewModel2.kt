@@ -2,6 +2,7 @@ package edu.artic.map
 
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
+import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import com.fuzz.rx.mapOptional
@@ -9,6 +10,9 @@ import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
+import com.jakewharton.rxrelay2.PublishRelay
+import com.jakewharton.rxrelay2.Relay
+import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticObject
 import edu.artic.map.carousel.TourProgressManager
@@ -26,6 +30,7 @@ import javax.inject.Inject
  * Description:
  */
 class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
+                                        private val articObjectDao: ArticObjectDao,
                                         tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
@@ -35,7 +40,9 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
 
     val displayMode: Subject<MapDisplayMode> = BehaviorSubject.create()
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
-    val cameraMovementRequested: Subject<Optional<Pair<LatLng, MapFocus>>> = PublishSubject.create()
+    val individualMapChange: Subject<Optional<Pair<LatLng, MapFocus>>> = PublishSubject.create()
+    val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
+    val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     val distinctFloor: Observable<Int>
         get() = floor.distinctUntilChanged()
 
@@ -77,10 +84,14 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
                 .distinctUntilChanged()
                 .bindTo(selectedTourStopMarkerId)
                 .disposedBy(disposeBag)
+
+        this.currentMap
+                .bindTo(mapMarkerConstructor.map)
+                .disposedBy(disposeBag)
     }
 
     fun setMap(map: GoogleMap) {
-        mapMarkerConstructor.map.onNext(optionalOf(map))
+        currentMap.onNext(optionalOf(map))
     }
 
     fun floorChangedTo(floor: Int) {
@@ -92,12 +103,28 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
     }
 
     fun departmentMarkerSelected(department: ArticMapAnnotation) {
-        cameraMovementRequested.onNext(optionalOf(department.toLatLng() to MapFocus.Individual))
+        individualMapChange.onNext(optionalOf(department.toLatLng() to MapFocus.Individual))
     }
 
     fun articObjectSelected(articObject: ArticObject) {
         lockVisibleRegion.onNext(true)
         selectedArticObject.onNext(articObject)
+    }
+
+    fun displayModeChanged(displayMode: MapDisplayMode) {
+        this.displayMode.onNext(displayMode)
+        if (displayMode is MapDisplayMode.Tour) {
+            animateToTourStopBounds(displayMode)
+        }
+    }
+
+    private fun animateToTourStopBounds(displayMode: MapDisplayMode.Tour) {
+        val tour = displayMode.tour
+        articObjectDao.getObjectsByIdList(tour.tourStops.mapNotNull { it.objectId })
+                .toObservable()
+                .map { stops -> stops.map { it.toLatLng() } }
+                .bindToMain(tourBoundsChanged)
+                .disposedBy(disposeBag)
     }
 
     fun visibleRegionChanged(visibleRegion: VisibleRegion) {
