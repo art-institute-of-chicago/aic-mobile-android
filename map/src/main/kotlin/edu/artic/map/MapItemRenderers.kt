@@ -7,7 +7,6 @@ import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.asFlowable
 import com.fuzz.rx.asObservable
-import com.fuzz.rx.debug
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
@@ -18,6 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.debug
 import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapTextType
@@ -34,6 +34,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 
 data class MarkerHolder<T>(val id: String,
                            val item: T,
@@ -46,6 +47,9 @@ abstract class MapItemRenderer<T> {
     private val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
     private var currentFloor: Int = Int.MIN_VALUE
     private val disposeBag: DisposeBag = DisposeBag()
+
+    // this should be the inflated view's context
+    lateinit var context: Context
 
     /**
      * Return what map focus level these [MapItem] display at.
@@ -78,26 +82,30 @@ abstract class MapItemRenderer<T> {
     fun renderMarkers(map: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
             : Observable<List<MarkerHolder<T>>> {
         return floorFocus
-                .debug("MapItemRenders Floor Focus Changed")
                 .withLatestFrom(map.toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
-                .debug("MapItemRenders Focus")
+                .debug("New Map Event")
                 .observeOn(Schedulers.io())
                 .flatMap { (mapEvent, map) ->
                     // no longer renderable, we
                     if (!visibleMapFocus.contains(mapEvent.focus)) {
+                        Timber.d("Empty list for ${mapEvent.focus} with visible range: $visibleMapFocus")
                         MapItemRendererEvent(map, mapEvent, emptyList<T>()).asFlowable()
                     } else {
+                        Timber.d("Getting items at floor ${mapEvent.floor}")
                         getItemsAtFloor(mapEvent.floor).map { MapItemRendererEvent(map, mapEvent, it) }
                     }
                 }
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
+                .debug("Received Items")
                 .withLatestFrom(mapItems) { event, mapItems -> event to mapItems }
+                .debug("Getting Existing Items")
                 .doOnNext { (event, existingMapItems) ->
 
                     // returns items not in the new list.
+                    val list = (existingMapItems.values - event.items)
                     @Suppress("UNCHECKED_CAST")
-                    ((existingMapItems.toList() - event.items) as List<MarkerHolder<T>>)
+                    (list as List<MarkerHolder<T>>)
                             .forEach { it.marker.remove() }
                 }
                 .flatMap { (event, existingMapItems) ->
@@ -124,11 +132,16 @@ abstract class MapItemRenderer<T> {
                                         }
 
                     }) { markers ->
+                        // RX Zip does not return a properly typed array, it is an Object[] from this zip.
                         @Suppress("UNCHECKED_CAST")
-                        markers as List<MarkerHolder<T>>
+                        (markers as Array<Any>)
+                                .mapTo(mutableListOf()) { item -> item as MarkerHolder<T> }
+                                .toList()
                     }
                 }
+                .debug("Constructed Map MarkerHolders")
     }
+
 }
 
 /**
@@ -136,15 +149,16 @@ abstract class MapItemRenderer<T> {
  */
 abstract class MapAnnotationItemRenderer(protected val articMapAnnotationDao: ArticMapAnnotationDao) : MapItemRenderer<ArticMapAnnotation>() {
     override fun getLocationFromItem(item: ArticMapAnnotation): LatLng = item.toLatLng()
+
     override fun getIdFromItem(item: ArticMapAnnotation): String = item.nid
 }
 
 /**
  * Displays Landmark items.
  */
-class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao, context: Context) : MapAnnotationItemRenderer(articMapAnnotationDao) {
+class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : MapAnnotationItemRenderer(articMapAnnotationDao) {
 
-    private val textMarkerGenerator: TextMarkerGenerator = TextMarkerGenerator(context)
+    private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
         return articMapAnnotationDao.getAnnotationByTypeForFloor(ArticMapTextType.LANDMARK, floor = floor.toString()) // TODO: switch to int
@@ -158,11 +172,10 @@ class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao, cont
     override val zIndex: Float = 1.0f
 }
 
-class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao,
-                            private val context: Context)
+class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     : MapAnnotationItemRenderer(articMapAnnotationDao) {
 
-    private val textMarkerGenerator: TextMarkerGenerator = TextMarkerGenerator(context)
+    private val textMarkerGenerator: TextMarkerGenerator  by lazy { TextMarkerGenerator(context) }
 
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
         return articMapAnnotationDao.getAnnotationByTypeForFloor(ArticMapTextType.SPACE, floor = floor.toString())
@@ -191,11 +204,10 @@ class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : M
     override val zIndex: Float = 0.0f
 }
 
-class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao,
-                                 private val context: Context)
+class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     : MapAnnotationItemRenderer(articMapAnnotationDao) {
 
-    private val departmentMarkerGenerator: DepartmentMarkerGenerator = DepartmentMarkerGenerator(context)
+    private val departmentMarkerGenerator: DepartmentMarkerGenerator by lazy { DepartmentMarkerGenerator(context) }
 
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
         return articMapAnnotationDao.getDepartmentOnMapForFloor(floor = floor.toString())
@@ -214,16 +226,17 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao,
     override val zIndex: Float = 2.0f
 }
 
-class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao,
-                               private val context: Context)
+class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
     : MapItemRenderer<ArticGallery>() {
 
-    private val textMarkerGenerator: TextMarkerGenerator = TextMarkerGenerator(context)
+    private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
+
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticGallery>> {
         return galleriesDao.getGalleriesForFloor(floor = floor.toString())
     }
 
     override val visibleMapFocus: Set<MapFocus> = setOf(MapFocus.Individual)
+
     override fun getLocationFromItem(item: ArticGallery): LatLng = item.toLatLng()
 
     override fun getBitmap(item: ArticGallery, displayMode: MapDisplayMode): Observable<BitmapDescriptor> =
@@ -234,11 +247,10 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao,
     override val zIndex: Float = 1.0f
 }
 
-class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao,
-                             private val context: Context)
+class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     : MapItemRenderer<ArticObject>() {
 
-    private val articObjectMarkerGenerator = ArticObjectMarkerGenerator(context)
+    private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticObject>> {
         return objectsDao.getObjectsByFloor(floor = floor)
@@ -261,6 +273,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao,
                             (item.image_url ?: item.largeImageFullPath)?.asCDNUri()
                     )
                     .asRequestObservable(context)
+                    .debug("Glide loading: ${item.title}")
                     .map { bitmap ->
                         var order: String? = null
                         if (displayMode is MapDisplayMode.Tour) {
@@ -290,4 +303,3 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao,
         }
     }
 }
-
