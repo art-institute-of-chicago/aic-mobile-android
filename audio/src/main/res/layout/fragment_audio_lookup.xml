@@ -82,6 +82,8 @@
         app:layout_constraintTop_toBottomOf="@id/subheader"
         app:layoutManager="android.support.v7.widget.GridLayoutManager"
         app:spanCount="3"
+        tools:listitem="@layout/view_number_pad_numeric_element"
+        tools:itemCount="12"
         />
 
 

@@ -25,6 +25,11 @@ sealed class NumberPadElement {
 }
 
 
+class CircularElementViewHolder(parent: ViewGroup, @LayoutRes layout: Int): NumberPadViewHolder(parent, layout) {
+
+    val number : TextView = itemView.findViewById(R.id.number_content)
+}
+
 
 /**
  * Layout within RecyclerView (left-to-right, top-to-bottom):
@@ -37,16 +42,39 @@ sealed class NumberPadElement {
  * Where `B` means 'Delete back one character' and `G` means `Search with this input`.
  */
 class NumberPadAdapter : BaseRecyclerViewAdapter<NumberPadElement, NumberPadViewHolder>() {
-    override fun getLayoutResId(position: Int): Int {
-        TODO("not implemented")
+    override fun getViewType(position: Int): Int {
+        val element = getItem(position)
+
+        return when (element) {
+            is NumberPadElement.Numeric -> 0
+            NumberPadElement.DeleteBack -> 1
+            NumberPadElement.GoSearch -> 2
+        }
     }
 
-    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): NumberPadViewHolder {
-        TODO("not implemented")
+    override fun getLayoutResId(position: Int): Int {
+        // We don't expect this method to get called because this class also overrides .getViewType
+        TODO("NumberPadAdapter.getLayoutResId is not supported at this time.")
     }
 
     override fun onBindViewHolder(holder: NumberPadViewHolder, item: NumberPadElement?, position: Int) {
-        TODO("not implemented")
+        if (holder is CircularElementViewHolder) {
+            if (item is NumberPadElement.Numeric) {
+                holder.number.text = item.value
+            } else if (item is NumberPadElement.GoSearch) {
+                holder.number.text = "Go"
+            }
+        }
+    }
+
+    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): NumberPadViewHolder {
+        return if (viewType == 1) {
+            // 'DeleteBack' type
+            TODO("No 'delete back' holder class has been defined yet")
+        } else {
+            // 'Numeric' and 'GoSearch' types
+            CircularElementViewHolder(parent, R.layout.view_number_pad_numeric_element)
+        }
     }
 
 }
