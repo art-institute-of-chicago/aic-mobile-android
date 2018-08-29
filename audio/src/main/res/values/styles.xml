@@ -8,4 +8,13 @@
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowBackground">@color/grape</item>
     </style>
+
+    <style name="PageSubHeaderRegularWhite">
+        <item name="android:fontFamily">@font/amiri_regular</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>
