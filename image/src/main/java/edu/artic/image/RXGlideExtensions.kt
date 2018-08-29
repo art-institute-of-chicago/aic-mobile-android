@@ -10,8 +10,6 @@ import com.bumptech.glide.request.transition.Transition
 import io.reactivex.Observable
 
 
-class ImageFailedToLoadError(url: String) : RuntimeException("Image Resource $url Failed to Load.")
-
 /**
  * Description: Converts a [GlideRequest] into an [Observable] that does not complete.
  */
@@ -20,9 +18,11 @@ fun <T> RequestBuilder<T>.asRequestObservable(context: Context): Observable<T> {
         val target = object : SimpleTarget<T>() {
             override fun onResourceReady(resource: T, transition: Transition<in T>?) {
                 emitter.onNext(resource)
+                emitter.onComplete()
             }
 
             override fun onLoadFailed(errorDrawable: Drawable?) {
+                emitter.onComplete()
             }
         }
         into(target)
