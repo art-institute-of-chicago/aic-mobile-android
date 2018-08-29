@@ -39,5 +39,5 @@ interface ArticObjectDao {
     fun getObjectsByIdList(ids: List<String>): Flowable<List<ArticObject>>
 
     @Query("select * from ArticObject where floor = :floor")
-    fun getObjectsByFloor(floor: String): Flowable<List<ArticObject>>
+    fun getObjectsByFloor(floor: Int): Flowable<List<ArticObject>>
 }
