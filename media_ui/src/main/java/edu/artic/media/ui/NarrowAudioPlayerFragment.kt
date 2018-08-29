@@ -95,7 +95,9 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         }
 
         trackTitle.setOnClickListener {
-            startActivity(NavigationConstants.AUDIO.asDeepLinkIntent())
+            val intent = NavigationConstants.AUDIO.asDeepLinkIntent()
+            intent.putExtras(argsBundle(true))
+            startActivity(intent)
         }
     }
 
@@ -130,6 +132,19 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
                     .bindToMain(requireView().visibility())
                     .disposedBy(disposeBag)
         }
+    }
+
+    companion object {
+        const val ARG_SKIP_TO_DETAILS = "ARG_SKIP_TO_DETAILS"
+
+        /**
+         * Use this to modify an [Intent] for launching the AudioActivity's
+         * AudioDetailsFragment (in 'audio' module, of course).
+         */
+        fun argsBundle(shouldSkip: Boolean) = Bundle().apply {
+            putBoolean(ARG_SKIP_TO_DETAILS, shouldSkip)
+        }
+
     }
 
 }
