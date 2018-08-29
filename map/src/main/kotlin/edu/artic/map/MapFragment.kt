@@ -9,6 +9,7 @@ import android.view.View
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
+import com.fuzz.rx.filterTo
 import com.fuzz.rx.filterValue
 import com.fuzz.rx.withLatestFromOther
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -108,26 +109,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             mapClicks
                     .defaultThrottle()
                     .withLatestFromOther(viewModel.displayMode)
-                    .subscribe { mapMode ->
-                        when (mapMode) {
-                            is MapDisplayMode.CurrentFloor -> {
-                                val supportFragmentManager = requireActivity().supportFragmentManager
-                                supportFragmentManager
-                                        .findFragmentByTag(OBJECT_DETAILS)
-                                        ?.let {
-                                            supportFragmentManager
-                                                    .beginTransaction()
-                                                    .remove(it)
-                                                    .commit()
-                                        }
-                            }
-                            is MapDisplayMode.Tour -> {
-                                /*do nothing*/
-                            }
-                        }
-
-                    }.disposedBy(disposeBag)
-
+                    .filterTo<MapDisplayMode, MapDisplayMode.CurrentFloor>()
+                    .subscribeBy { hideFragmentInInfoContainer() }
+                    .disposedBy(disposeBag)
 
             map.setOnMarkerClickListener { marker ->
                 val markerTag = marker.tag
@@ -340,6 +324,28 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     val height = infocontainer.height
                     map.setMapPadding(activity = requireActivity(), bottom = height)
                 }
+                .disposedBy(disposeBag)
+    }
+
+    /**
+     * Removes the fragment information below the map, and readjusts the padding back to normal.
+     */
+    private fun hideFragmentInInfoContainer() {
+        val supportFragmentManager = requireActivity().supportFragmentManager
+        supportFragmentManager
+                .findFragmentByTag(OBJECT_DETAILS)
+                ?.let {
+                    supportFragmentManager
+                            .beginTransaction()
+                            .remove(it)
+                            .commit()
+                }
+
+        // reset back to initial.
+        viewModel.currentMap
+                .take(1)
+                .filterValue()
+                .subscribeBy { map -> map.setMapPadding(requireActivity()) }
                 .disposedBy(disposeBag)
     }
 
