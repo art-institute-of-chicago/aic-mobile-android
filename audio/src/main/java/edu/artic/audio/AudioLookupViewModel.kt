@@ -26,6 +26,7 @@ class AudioLookupViewModel @Inject constructor() : BaseViewModel() {
             Numeric("8"),
             Numeric("9"),
             DeleteBack,
+            // NB: Due to a bug in the ideal_sans_medium font files, the 0 and o look very similar. This is a zero.
             Numeric("0"),
             GoSearch
     )
