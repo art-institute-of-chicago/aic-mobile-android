@@ -38,6 +38,7 @@ dependencies {
     implementation project(':media')
     implementation project(':media_ui')
     implementation project(':image')
+    implementation project(':search')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin

@@ -1,5 +1,6 @@
 package edu.artic
 
+import artic.edu.search.SearchModule
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -38,7 +39,8 @@ import javax.inject.Singleton
     AnalyticsModule::class,
     AndroidSupportInjectionModule::class,
     MediaUiModule::class,
-    MediaModule::class
+    MediaModule::class,
+    SearchModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {
 
