@@ -51,15 +51,15 @@ import kotlin.reflect.KClass
  * The rendering is handled buy the [MapMarkerConstructor] which contains all of the [MapItemRenderer]
  * that handle image fetching, backpressure, and buffering.
  *
- * This fragment should remain small as possible and delegate its functionality to [MapViewModel2]
+ * This fragment should remain small as possible and delegate its functionality to [MapViewModel]
  * and other constructs.
  *
  * @see [MapActivity]
  */
-class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
+class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
-    override val viewModelClass: KClass<MapViewModel2>
-        get() = MapViewModel2::class
+    override val viewModelClass: KClass<MapViewModel>
+        get() = MapViewModel::class
     override val title: String
         get() = ""
     override val layoutResId: Int
@@ -228,7 +228,7 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
         }
     }
 
-    override fun setupBindings(viewModel: MapViewModel2) {
+    override fun setupBindings(viewModel: MapViewModel) {
         lowerLevel.clicks()
                 .subscribe { viewModel.floorChangedTo(0) }
                 .disposedBy(disposeBag)

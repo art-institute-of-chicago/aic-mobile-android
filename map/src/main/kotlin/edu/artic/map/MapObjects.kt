@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 
 /**
- * The initial position where the [GoogleMap] starts on load of the [MapFragment2]
+ * The initial position where the [GoogleMap] starts on load of the [MapFragment]
  */
 internal fun initialMapCameraPosition(): CameraUpdate = CameraUpdateFactory.newCameraPosition(
         CameraPosition.Builder()
