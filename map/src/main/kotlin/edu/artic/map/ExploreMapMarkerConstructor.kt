@@ -2,6 +2,7 @@ package edu.artic.map
 
 import android.content.Context
 import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.disposedBy
 import com.google.android.gms.maps.GoogleMap
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
@@ -9,6 +10,7 @@ import edu.artic.db.daos.ArticObjectDao
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 
@@ -26,14 +28,12 @@ class ExploreMapMarkerConstructor
 
     private val disposeBag: DisposeBag = DisposeBag()
 
-    private val landmarkMapItemRenderer = LandmarkMapItemRenderer(articMapAnnotationDao)
-    private val spacesMapItemRenderer = SpacesMapItemRenderer(articMapAnnotationDao)
+    private val landmarkMapItemRenderer = LandmarkMapItemRenderer(articMapAnnotationDao, appContext)
+    private val spacesMapItemRenderer = SpacesMapItemRenderer(articMapAnnotationDao, appContext)
     private val amenitiesMapItemRenderer = AmenitiesMapItemRenderer(articMapAnnotationDao)
-    private val departmentsMapItemRenderer = DepartmentsMapItemRenderer(articMapAnnotationDao)
-    private val galleriesMapItemRenderer = GalleriesMapItemRenderer(galleryDao)
-    private val objectsMapItemRenderer = ObjectsMapItemRenderer(objectsDao)
-
-    private val textMarkerGenerator: TextMarkerGenerator = TextMarkerGenerator(appContext)
+    private val departmentsMapItemRenderer = DepartmentsMapItemRenderer(articMapAnnotationDao, appContext)
+    private val galleriesMapItemRenderer = GalleriesMapItemRenderer(galleryDao, appContext)
+    private val objectsMapItemRenderer = ObjectsMapItemRenderer(objectsDao, appContext)
 
     /**
      * Constructs handling for the floor and focus changes on the map.
@@ -45,6 +45,8 @@ class ExploreMapMarkerConstructor
                 .toFlowable(BackpressureStrategy.LATEST)
                 .share()
 
-
+        landmarkMapItemRenderer.renderMarkers(map, bufferedFloorFocus)
+                .subscribeBy { landmarkMapItemRenderer.updateMarkers(it) }
+                .disposedBy(disposeBag)
     }
 }

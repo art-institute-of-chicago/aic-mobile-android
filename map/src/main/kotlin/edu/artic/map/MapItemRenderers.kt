@@ -101,7 +101,9 @@ class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao, cont
             BitmapDescriptorFactory.fromBitmap(textMarkerGenerator.makeIcon(item.label.orEmpty())).asObservable()
 }
 
-class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : MapAnnotationItemRenderer(articMapAnnotationDao) {
+class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao,
+                            private val context: Context)
+    : MapAnnotationItemRenderer(articMapAnnotationDao) {
 
     private val textMarkerGenerator: TextMarkerGenerator = TextMarkerGenerator(context)
 
@@ -128,7 +130,9 @@ class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : M
     }
 }
 
-class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao, private val context: Context) : MapAnnotationItemRenderer(articMapAnnotationDao) {
+class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao,
+                                 private val context: Context)
+    : MapAnnotationItemRenderer(articMapAnnotationDao) {
 
     private val departmentMarkerGenerator: DepartmentMarkerGenerator = DepartmentMarkerGenerator(context)
 
@@ -147,7 +151,9 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao, p
     }
 }
 
-class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao) : MapItemRenderer<ArticGallery>() {
+class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao,
+                               private val context: Context)
+    : MapItemRenderer<ArticGallery>() {
 
 
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticGallery>> {
@@ -157,7 +163,12 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao) : MapI
     override val visibleMapFocus: Set<MapFocus> = setOf(MapFocus.Individual)
 }
 
-class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao) : MapItemRenderer<ArticObject>() {
+class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao,
+                             private val context: Context)
+    : MapItemRenderer<ArticObject>() {
+
+    private val articObjectMarkerGenerator = ArticObjectMarkerGenerator(context)
+
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticObject>> {
         return objectsDao.getObjectsByFloor(floor = floor)
     }
