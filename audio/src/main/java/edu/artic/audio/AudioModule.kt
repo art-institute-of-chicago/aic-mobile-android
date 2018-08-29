@@ -37,9 +37,6 @@ abstract class AudioModule {
     abstract val audioDetailsFragment: AudioDetailsFragment
 
     @get:ContributesAndroidInjector
-    abstract val audioSelectFragment: AudioSelectFragment
-
-    @get:ContributesAndroidInjector
     abstract val audioActivity: AudioActivity
 
 }
