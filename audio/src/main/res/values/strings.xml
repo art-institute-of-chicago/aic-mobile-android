@@ -3,5 +3,6 @@
 
     <string name="audio_screen_header">Look It Up</string>
     <string name="audio_instructions">Find an artwork you like?\nEnter the artwork number to learn more.</string>
+    <string name="audio_delete_back" translatable="false">X</string>
 
 </resources>

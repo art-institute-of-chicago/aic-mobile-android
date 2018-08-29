@@ -31,6 +31,10 @@ class CircularElementViewHolder(parent: ViewGroup, @LayoutRes layout: Int): Numb
 }
 
 
+class DeleteBackViewHolder(parent: ViewGroup, @LayoutRes layout: Int): NumberPadViewHolder(parent, layout) {
+
+}
+
 /**
  * Layout within RecyclerView (left-to-right, top-to-bottom):
  *
@@ -70,7 +74,7 @@ class NumberPadAdapter : BaseRecyclerViewAdapter<NumberPadElement, NumberPadView
     override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): NumberPadViewHolder {
         return if (viewType == 1) {
             // 'DeleteBack' type
-            TODO("No 'delete back' holder class has been defined yet")
+            DeleteBackViewHolder(parent, R.layout.view_number_pad_delete_back_element)
         } else {
             // 'Numeric' and 'GoSearch' types
             CircularElementViewHolder(parent, R.layout.view_number_pad_numeric_element)
