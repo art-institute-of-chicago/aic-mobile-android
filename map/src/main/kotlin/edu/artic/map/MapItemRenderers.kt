@@ -1,5 +1,6 @@
 package edu.artic.map
 
+import com.google.android.gms.maps.model.Marker
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
@@ -7,8 +8,13 @@ import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapTextType
 import edu.artic.map.helpers.mapToMapItem
 import io.reactivex.Flowable
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 
 abstract class MapItemRenderer {
+
+    private val mapItems: Subject<List<Marker>> = BehaviorSubject.createDefault(emptyList())
+    private var currentFloor: Int = Int.MIN_VALUE
 
     /**
      * Return the specific items that should render based on map floor.
@@ -82,9 +88,10 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao) : MapI
 
 class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao) : MapItemRenderer() {
     override fun getItemsAtFloor(floor: Int): Flowable<List<MapItem<*>>> {
-        return objectsDao.
+        return objectsDao.getObjectsByFloor(floor = floor)
+                .map { objects -> objects.map { MapItem.Object(it, floor) } }
     }
 
     override val visibleMapFocus: Set<MapFocus>
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = setOf(MapFocus.Individual)
 }
