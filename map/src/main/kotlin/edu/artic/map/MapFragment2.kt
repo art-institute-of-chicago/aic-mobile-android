@@ -291,27 +291,15 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
                 .disposedBy(disposeBag)
 
         viewModel.selectedArticObject
-                .withLatestFrom(viewModel.displayMode) { articObject, mapMode ->
-                    mapMode to articObject
-                }.subscribe { mapModeWithObject ->
-                    val selectedArticObject = mapModeWithObject.second
-                    val mapMode = mapModeWithObject.first
-
-                    when (mapMode) {
-                        is MapDisplayMode.CurrentFloor -> {
-                            /**
-                             * Display the selected object details.
-                             */
-                            val fragmentManager = requireActivity().supportFragmentManager
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.infocontainer, MapObjectDetailsFragment.create(selectedArticObject), OBJECT_DETAILS)
-                                    .commit()
-                        }
-                        is MapDisplayMode.Tour -> {
-                            /* do nothing */
-                        }
-                    }
-                }.disposedBy(disposeBag)
+                .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
+                .filterFlatMap({ (_, mapMode) -> mapMode !is MapDisplayMode.Tour }, { (selected) -> selected })
+                .subscribe { selected ->
+                    val fragmentManager = requireActivity().supportFragmentManager
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.infocontainer, MapObjectDetailsFragment.create(selected), OBJECT_DETAILS)
+                            .commit()
+                }
+                .disposedBy(disposeBag)
 
         /**
          * Center the full object marker in the map.

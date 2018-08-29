@@ -63,7 +63,7 @@ abstract class MapItemRenderer<T>(
         if (useBitmapQueue) {
             bitmapQueue
                     .toFlowable(BackpressureStrategy.BUFFER)
-                    .buffer(1, TimeUnit.SECONDS, 20)
+                    .buffer(100, TimeUnit.MILLISECONDS, 20)
                     .filter { it.isNotEmpty() }
                     .observeOn(AndroidSchedulers.mainThread())
                     .withLatestFrom(currentMap.filterValue().toFlowable(BackpressureStrategy.LATEST),

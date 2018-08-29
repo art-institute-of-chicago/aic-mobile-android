@@ -92,7 +92,7 @@ class MapViewModel2 @Inject constructor(val mapMarkerConstructor: MapMarkerConst
     }
 
     fun departmentMarkerSelected(department: ArticMapAnnotation) {
-        cameraMovementRequested.onNext(optionalOf(department.toLatLng() to MapFocus.Department))
+        cameraMovementRequested.onNext(optionalOf(department.toLatLng() to MapFocus.Individual))
     }
 
     fun articObjectSelected(articObject: ArticObject) {
