@@ -2,6 +2,7 @@ package edu.artic.db.models
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
@@ -13,49 +14,52 @@ import kotlinx.android.parcel.Parcelize
 @Entity
 @Parcelize
 data class ArticObject(
-        @Json(name = "title") val title: String,
-        @Json(name = "status") val status: String?,
-        @Json(name = "nid") @PrimaryKey val nid: String,
-        @Json(name = "type") val type: String?,
-        @Json(name = "id") val id: Int?,
-        @Json(name = "object_id") val objectId: Int?,
-        @Json(name = "alt_titles") val altTitles: String?,
-        @Json(name = "main_reference_number") val mainReferenceNumber: String?,
-        @Json(name = "boost_rank") val boostRank: String?,
-        @Json(name = "date_display") val dateDisplay: String?,
-        @Json(name = "artist_culture_place_delim") val artistCulturePlaceDelim: String?,
-        @Json(name = "dimensions") val dimensions: String?,
-        @Json(name = "artwork_type_title") val artworkTypeTitle: String?,
-        @Json(name = "artwork_type_id") val artworkTypeId: String?,
-        @Json(name = "credit_line") val creditLine: String?,
-        @Json(name = "copyright_notice") val copyrightNotice: String?,
-        @Json(name = "in_gallery") val inGallery: Boolean,
-        @Json(name = "subject_id") val subjectId: String?,
-        @Json(name = "technique_id") val techniqueId: String?,
-        @Json(name = "color") val color: String?,
-        @Json(name = "tour_titles") val tourTitles: String?,
-        @Json(name = "location") val location: String?,
-        @Json(name = "image_filename") val image_filename: String?,
-        @Json(name = "image_url") val image_url: String?,
-        @Json(name = "image_filemime") val imageFileMime: String?,
-        @Json(name = "image_filesize") val imageFileSize: String?,
-        @Json(name = "image_width") val imageWidth: String?,
-        @Json(name = "image_height") val imageHeight: String?,
-        @Json(name = "thumbnail_crop_v2") @Embedded(prefix = "thumbnail_crop_rect") val thumbnailCropRectV2: CropRect?,
-        @Json(name = "thumbnail_full_path") val thumbnailFullPath: String?,
-        @Json(name = "large_image_crop_v2") @Embedded(prefix = "large_image_crop_rect") val largeImageCropRectV2: CropRect?,
-        @Json(name = "large_image_full_path") val largeImageFullPath: String?,
-        @Json(name = "title_t") val titleT: String?,
-        @Json(name = "gallery_location") val galleryLocation: String?,
-        @Json(name = "reference_num") val referenceNum: String?,
-        @Json(name = "audio_commentary") val audioCommentary: List<AudioCommentaryObject>,
-        @Json(name = "highlighted_object") val highlightedObject: String?,
+        @Json(name = "title") val title: String = "",
+        @Json(name = "status") val status: String? = null,
+        @Json(name = "nid") @PrimaryKey val nid: String = "",
+        @Json(name = "type") val type: String? = null,
+        @Json(name = "id") val id: Int? = 0,
+        @Json(name = "object_id") val objectId: Int? = 0,
+        @Json(name = "alt_titles") val altTitles: String? = "",
+        @Json(name = "main_reference_number") val mainReferenceNumber: String? = "",
+        @Json(name = "boost_rank") val boostRank: String? = "",
+        @Json(name = "date_display") val dateDisplay: String? = "",
+        @Json(name = "artist_culture_place_delim") val artistCulturePlaceDelim: String? = "",
+        @Json(name = "dimensions") val dimensions: String? = "",
+        @Json(name = "artwork_type_title") val artworkTypeTitle: String? = "",
+        @Json(name = "artwork_type_id") val artworkTypeId: String? = "",
+        @Json(name = "credit_line") val creditLine: String? = "",
+        @Json(name = "copyright_notice") val copyrightNotice: String? = "",
+        @Json(name = "in_gallery") val inGallery: Boolean = false,
+        @Json(name = "subject_id") val subjectId: String? = "",
+        @Json(name = "technique_id") val techniqueId: String? = "",
+        @Json(name = "color") val color: String? = "",
+        @Json(name = "tour_titles") val tourTitles: String? = "",
+        @Json(name = "location") val location: String? = "",
+        @Json(name = "image_filename") val image_filename: String? = "",
+        @Json(name = "image_url") val image_url: String? = "",
+        @Json(name = "image_filemime") val imageFileMime: String? = "",
+        @Json(name = "image_filesize") val imageFileSize: String? = "",
+        @Json(name = "image_width") val imageWidth: String? = "",
+        @Json(name = "image_height") val imageHeight: String? = "",
+        @Json(name = "thumbnail_crop_v2") @Embedded(prefix = "thumbnail_crop_rect") val thumbnailCropRectV2: CropRect? = null,
+        @Json(name = "thumbnail_full_path") val thumbnailFullPath: String? = null,
+        @Json(name = "large_image_crop_v2") @Embedded(prefix = "large_image_crop_rect") val largeImageCropRectV2: CropRect? = null,
+        @Json(name = "large_image_full_path") val largeImageFullPath: String? = null,
+        @Json(name = "title_t") val titleT: String? = null,
+        @Json(name = "gallery_location") val galleryLocation: String? = null,
+        @Json(name = "reference_num") val referenceNum: String? = null,
+        @Json(name = "audio_commentary") val audioCommentary: List<AudioCommentaryObject> = listOf(),
+        @Json(name = "highlighted_object") val highlightedObject: String? = null,
         @Deprecated("Please do not use the 'full' image, as it is too large to fit on screen. Migrate to 'image_url' or 'large_image_full_path' immediately.")
-        @Json(name = "full_image_full_path") val fullImageFullPath: String?,
+        @Json(name = "full_image_full_path") val fullImageFullPath: String? = null,
 //        @Json(name = "audio") val audio: List<String?>, Removed for now until json gets fixed as sometimes returns string othertimes object
-        @Json(name = "audio_transcript") val audioTranscript: String?,
-        @Json(name = "object_selector_number") val objectSelectorNumber: String?,
-        @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?>
+        @Json(name = "audio_transcript") val audioTranscript: String? = null,
+        @Json(name = "object_selector_number") val objectSelectorNumber: String? = null,
+        @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?> = listOf(),
+
+        // manually populated via DB save.
+        var floor: Int = Int.MIN_VALUE
 ) : Parcelable, Playable {
     override fun getPlayableThumbnailUrl(): String? {
         return this.largeImageFullPath
@@ -64,6 +68,9 @@ data class ArticObject(
     override fun getPlayableTitle(): String? {
         return this.title
     }
+
+    @Ignore
+    constructor() : this(floor = Int.MIN_VALUE)
 }
 
 val ArticObject.audioFile: ArticAudioFile?
