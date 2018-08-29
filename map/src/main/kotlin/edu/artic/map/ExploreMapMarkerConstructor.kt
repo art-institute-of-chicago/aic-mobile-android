@@ -3,6 +3,7 @@ package edu.artic.map
 import android.content.Context
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
+import com.fuzz.rx.debug
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterValue
 import com.google.android.gms.maps.GoogleMap
@@ -52,13 +53,11 @@ class ExploreMapMarkerConstructor
                 .toFlowable(BackpressureStrategy.LATEST)
                 .share()
 
-        map.filterValue()
-                .flatMap { map -> landmarkMapItemRenderer.renderMarkers(map, bufferedFloorFocus) }
+        landmarkMapItemRenderer.renderMarkers(map.debug("Map Changed").filterValue(), bufferedFloorFocus)
                 .subscribeBy { landmarkMapItemRenderer.updateMarkers(it) }
                 .disposedBy(disposeBag)
 
-        map.filterValue()
-                .flatMap { map -> spacesMapItemRenderer.renderMarkers(map, bufferedFloorFocus) }
+        spacesMapItemRenderer.renderMarkers(map.debug("Map Changed").filterValue(), bufferedFloorFocus)
                 .subscribeBy { spacesMapItemRenderer.updateMarkers(it) }
                 .disposedBy(disposeBag)
     }
