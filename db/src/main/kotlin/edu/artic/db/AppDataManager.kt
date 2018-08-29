@@ -18,7 +18,9 @@ import edu.artic.db.models.ArticExhibition
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AppDataManager @Inject constructor(
         private val serviceProvider: AppDataServiceProvider,
         private val appDataPreferencesManager: AppDataPreferencesManager,
