@@ -1,6 +1,8 @@
 package edu.artic.audio
 
+import android.support.annotation.LayoutRes
 import android.view.ViewGroup
+import android.widget.TextView
 import edu.artic.adapter.BaseRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 
@@ -15,11 +17,11 @@ open class NumberPadViewHolder(parent: ViewGroup, resId: Int) : BaseViewHolder(p
  * buttons.
  */
 sealed class NumberPadElement {
-    class Numeric(value: String)
+    data class Numeric(val value: String) : NumberPadElement()
 
-    class DeleteBack()
+    object DeleteBack : NumberPadElement()
 
-    class GoSearch()
+    object GoSearch : NumberPadElement()
 }
 
 
