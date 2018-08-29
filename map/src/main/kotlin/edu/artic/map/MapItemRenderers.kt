@@ -86,7 +86,6 @@ abstract class MapItemRenderer<T> {
                 .debug("New Map Event")
                 .observeOn(Schedulers.io())
                 .flatMap { (mapEvent, map) ->
-                    // no longer renderable, we
                     val visibleMapFocus = getVisibleMapFocus(mapEvent.displayMode)
                     if (!visibleMapFocus.contains(mapEvent.focus)) {
                         Timber.d("Empty list for ${mapEvent.focus} with visible range: $visibleMapFocus")
@@ -247,7 +246,7 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
     override fun getLocationFromItem(item: ArticGallery): LatLng = item.toLatLng()
 
     override fun getBitmap(item: ArticGallery, displayMode: MapDisplayMode): Observable<BitmapDescriptor> =
-            BitmapDescriptorFactory.fromBitmap(textMarkerGenerator.makeIcon(item.number.orEmpty())).asObservable()
+            BitmapDescriptorFactory.fromBitmap(textMarkerGenerator.makeIcon(item.displayTitle)).asObservable()
 
     override fun getIdFromItem(item: ArticGallery): String = item.galleryId.orEmpty()
 
