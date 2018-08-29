@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * Description:
  */
-class MapViewModel2 @Inject constructor(private val mapMarkerConstructor: ExploreMapMarkerConstructor,
+class MapViewModel2 @Inject constructor(val mapMarkerConstructor: ExploreMapMarkerConstructor,
                                         private val tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
@@ -37,7 +37,9 @@ class MapViewModel2 @Inject constructor(private val mapMarkerConstructor: Explor
     val selectedTourStopMarkerId: Subject<String> = BehaviorSubject.create()
 
     init {
-        mapMarkerConstructor.bindToMapChanges(floor, focus, displayMode)
+        mapMarkerConstructor.bindToMapChanges(distinctFloor,
+                focus.distinctUntilChanged(),
+                displayMode.distinctUntilChanged())
 
         /**
          * Sync the selected tour stop with the carousel.
@@ -82,5 +84,10 @@ class MapViewModel2 @Inject constructor(private val mapMarkerConstructor: Explor
      */
     fun retrieveObjectById(nid: String): Observable<Optional<MarkerHolder<ArticObject>>> {
         return mapMarkerConstructor.objectsMapItemRenderer.getMarkerHolderById(nid)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        mapMarkerConstructor.cleanup()
     }
 }

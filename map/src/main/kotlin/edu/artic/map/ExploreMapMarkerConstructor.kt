@@ -3,7 +3,6 @@ package edu.artic.map
 import android.content.Context
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
-import com.fuzz.rx.debug
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterValue
 import com.google.android.gms.maps.GoogleMap
@@ -25,20 +24,30 @@ import javax.inject.Inject
 class ExploreMapMarkerConstructor
 @Inject constructor(private val articMapAnnotationDao: ArticMapAnnotationDao,
                     private val galleryDao: ArticGalleryDao,
-                    private val objectsDao: ArticObjectDao,
-                    private val appContext: Context) { // App context, won't leak.
+                    private val objectsDao: ArticObjectDao) { // App context, won't leak.
 
 
     val map: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
 
     private val disposeBag: DisposeBag = DisposeBag()
 
-    private val landmarkMapItemRenderer = LandmarkMapItemRenderer(articMapAnnotationDao, appContext)
-    private val spacesMapItemRenderer = SpacesMapItemRenderer(articMapAnnotationDao, appContext)
+    private val landmarkMapItemRenderer = LandmarkMapItemRenderer(articMapAnnotationDao)
+    private val spacesMapItemRenderer = SpacesMapItemRenderer(articMapAnnotationDao)
     private val amenitiesMapItemRenderer = AmenitiesMapItemRenderer(articMapAnnotationDao)
-    private val departmentsMapItemRenderer = DepartmentsMapItemRenderer(articMapAnnotationDao, appContext)
-    private val galleriesMapItemRenderer = GalleriesMapItemRenderer(galleryDao, appContext)
-    val objectsMapItemRenderer = ObjectsMapItemRenderer(objectsDao, appContext)
+    private val departmentsMapItemRenderer = DepartmentsMapItemRenderer(articMapAnnotationDao)
+    private val galleriesMapItemRenderer = GalleriesMapItemRenderer(galleryDao)
+    val objectsMapItemRenderer = ObjectsMapItemRenderer(objectsDao)
+
+    private val renderers = setOf(landmarkMapItemRenderer, spacesMapItemRenderer,
+            amenitiesMapItemRenderer, departmentsMapItemRenderer, galleriesMapItemRenderer,
+            objectsMapItemRenderer)
+
+    /**
+     * Bind this when the Fragment view loads.
+     */
+    fun associateContext(context: Context) {
+        renderers.forEach { it.context = context }
+    }
 
     /**
      * Constructs handling for the floor and focus changes on the map.
@@ -53,12 +62,28 @@ class ExploreMapMarkerConstructor
                 .toFlowable(BackpressureStrategy.LATEST)
                 .share()
 
-        landmarkMapItemRenderer.renderMarkers(map.debug("Map Changed").filterValue(), bufferedFloorFocus)
+        landmarkMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
                 .subscribeBy { landmarkMapItemRenderer.updateMarkers(it) }
                 .disposedBy(disposeBag)
 
-        spacesMapItemRenderer.renderMarkers(map.debug("Map Changed").filterValue(), bufferedFloorFocus)
+        spacesMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
                 .subscribeBy { spacesMapItemRenderer.updateMarkers(it) }
                 .disposedBy(disposeBag)
+
+        amenitiesMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
+                .subscribeBy { amenitiesMapItemRenderer.updateMarkers(it) }
+                .disposedBy(disposeBag)
+
+        departmentsMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
+                .subscribeBy { departmentsMapItemRenderer.updateMarkers(it) }
+                .disposedBy(disposeBag)
+
+        galleriesMapItemRenderer.renderMarkers(map.filterValue(), bufferedFloorFocus)
+                .subscribeBy { galleriesMapItemRenderer.updateMarkers(it) }
+                .disposedBy(disposeBag)
+    }
+
+    fun cleanup() {
+        disposeBag.clear()
     }
 }

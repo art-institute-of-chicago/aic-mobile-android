@@ -89,6 +89,8 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
+        viewModel.mapMarkerConstructor.associateContext(view.context)
+
         MapsInitializer.initialize(view.context)
         val mapStyleOptions = requireActivity().assets.fileAsString(filename = "google_map_config.json")
         mapView.getMapAsync { map ->
