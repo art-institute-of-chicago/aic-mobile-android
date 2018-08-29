@@ -24,6 +24,5 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="26sp"
-        android:text="@string/audio_delete_back"
         />
 </FrameLayout>
