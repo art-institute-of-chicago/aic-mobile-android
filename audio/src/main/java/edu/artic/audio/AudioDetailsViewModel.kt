@@ -1,5 +1,6 @@
 package edu.artic.audio
 
+import android.net.Uri
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
@@ -8,6 +9,7 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
+import edu.artic.ui.util.orEmpty
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -24,7 +26,7 @@ import javax.inject.Inject
  */
 class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSelector) : BaseViewModel() {
     val title: Subject<String> = BehaviorSubject.create()
-    val image: Subject<String> = BehaviorSubject.create()
+    val image: Subject<Uri> = BehaviorSubject.create()
     val availableTranslations: Subject<List<AudioFileModel>> = BehaviorSubject.create()
     val chosenAudioModel: Subject<AudioFileModel> = BehaviorSubject.create()
     val transcript: Subject<String> = BehaviorSubject.create()
