@@ -4,6 +4,12 @@ import edu.artic.db.models.ArticTour
 
 data class MapChangeEvent(val focus: MapFocus, val floor: Int, val displayMode: MapDisplayMode)
 
+/**
+ * A more fluent naming that describes a map zoom level. Analogous to [Float] but when Kotlin gets
+ * inline classes, this'll provide more safety.
+ */
+typealias ZoomLevel = Float
+
 const val ZOOM_LANDMARK: ZoomLevel = 17.5f
 const val ZOOM_DEPARTMENTS: ZoomLevel = 18.0f
 const val ZOOM_DEPARTMENT_AND_SPACES: ZoomLevel = 19.0f
@@ -26,7 +32,6 @@ enum class MapFocus {
     }
 }
 
-typealias ZoomLevel = Float
 
 /**
  * Convers a [ZoomLevel] int into a
