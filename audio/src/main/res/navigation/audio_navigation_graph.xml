@@ -5,6 +5,11 @@
     app:startDestination="@id/audioDetailsFragment">
 
     <fragment
+        android:id="@+id/audioLookupFragment"
+        android:name="edu.artic.audio.AudioLookupFragment"
+        android:label="audioLookupFragment" />
+
+    <fragment
         android:id="@+id/audioDetailsFragment"
         android:name="edu.artic.audio.AudioDetailsFragment"
         android:label="audioDetailsFragment" />

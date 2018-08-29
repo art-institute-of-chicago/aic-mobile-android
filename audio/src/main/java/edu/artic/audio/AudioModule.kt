@@ -20,6 +20,14 @@ abstract class AudioModule {
     @ViewModelKey(AudioDetailsViewModel::class)
     abstract fun informationViewModel(audioDetailsViewModel: AudioDetailsViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(AudioLookupViewModel::class)
+    abstract fun lookupViewModel(audioLookupViewModel: AudioLookupViewModel): ViewModel
+
+    @get:ContributesAndroidInjector
+    abstract val audioLookupFragment: AudioLookupFragment
+
     @get:ContributesAndroidInjector
     abstract val audioDetailsFragment: AudioDetailsFragment
 
