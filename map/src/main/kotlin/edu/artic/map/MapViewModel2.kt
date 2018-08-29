@@ -57,6 +57,10 @@ class MapViewModel2 @Inject constructor(private val mapMarkerConstructor: Explor
                 .disposedBy(disposeBag)
     }
 
+    fun setMap(map: GoogleMap) {
+        mapMarkerConstructor.map.onNext(optionalOf(map))
+    }
+
     fun floorChangedTo(floor: Int) {
         this.floor.onNext(floor)
     }
@@ -71,5 +75,12 @@ class MapViewModel2 @Inject constructor(private val mapMarkerConstructor: Explor
 
     fun articObjectSelected(articObject: ArticObject) {
         selectedArticObject.onNext(articObject)
+    }
+
+    /**
+     * Retrieve an object from the [ExploreMapMarkerConstructor]
+     */
+    fun retrieveObjectById(nid: String): Observable<Optional<MarkerHolder<ArticObject>>> {
+        return mapMarkerConstructor.objectsMapItemRenderer.getMarkerHolderById(nid)
     }
 }
