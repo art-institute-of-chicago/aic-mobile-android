@@ -47,6 +47,7 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.internal.schedulers.TrampolineScheduler
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
@@ -222,13 +223,14 @@ abstract class MapItemRenderer<T>(
      * the operation on a different thread, posting the result on the [bitmapQueue] for processing.
      */
     @Synchronized
-    protected fun enqueueBitmapFetch(item: T, mapChangeEvent: MapChangeEvent) {
+    protected fun enqueueBitmapFetch(item: T, mapChangeEvent: MapChangeEvent): Disposable? {
         getBitmapFetcher(item, mapChangeEvent.displayMode)?.let { fetcher ->
-            fetcher
+            return@let fetcher
                     .map { DelayedMapItemRenderEvent(mapChangeEvent, item, it) }
                     .subscribeBy { bitmapQueue.onNext(it) }
                     .disposedBy(imageFetcherDisposeBag)
         }
+        return null
     }
 
     private fun renderMarkers(mapObservable: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
@@ -291,7 +293,7 @@ abstract class MapItemRenderer<T>(
                 existing.marker.alpha = getMarkerAlpha(floor, displayMode, item)
                 existing
             } else {
-                enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
+                val requestDisposable = enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
 
                 // fast bitmap returns immediately.
                 getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
@@ -303,7 +305,8 @@ abstract class MapItemRenderer<T>(
                             floor = floor,
                             id = id,
                             // bitmap queue not used, means bitmap is considered loaded
-                            loadedBitmap = !useBitmapQueue)
+                            loadedBitmap = !useBitmapQueue,
+                            requestDisposable = requestDisposable)
                 }
             }
         }
@@ -324,10 +327,14 @@ abstract class MapItemRenderer<T>(
             val existingMarker = existingMapItems[id]
             // reusing existing marker if possible.
             if (existingMarker != null) {
-                existingMarker.apply {
-                    marker.setIcon(item.bitmap)
-                    marker.alpha = getMarkerAlpha(floor, displayMode, item.item)
-                    marker.tag = MarkerMetaData(item.item, loadedBitmap = true)
+                existingMarker.marker.apply {
+                    // manually remove.
+                    metaData<T>()?.requestDisposable?.let { toCancel ->
+                        imageFetcherDisposeBag.remove(toCancel)
+                    }
+                    setIcon(item.bitmap)
+                    alpha = getMarkerAlpha(floor, displayMode, item.item)
+                    tag = MarkerMetaData(item.item, loadedBitmap = true)
                 }
                 return@fromCallable Optional(null)
             } else {
@@ -337,7 +344,8 @@ abstract class MapItemRenderer<T>(
                         map = map,
                         floor = floor,
                         id = id,
-                        loadedBitmap = true)
+                        loadedBitmap = true,
+                        requestDisposable = null)
                 synchronized(tempMarkers) {
                     tempMarkers += holder
                 }
@@ -380,7 +388,8 @@ abstract class MapItemRenderer<T>(
             map: GoogleMap,
             floor: Int,
             id: String,
-            loadedBitmap: Boolean
+            loadedBitmap: Boolean,
+            requestDisposable: Disposable?
     ): MarkerHolder<T> {
         val options = MarkerOptions()
                 .zIndex(zIndex)
@@ -393,7 +402,9 @@ abstract class MapItemRenderer<T>(
         return MarkerHolder(
                 id,
                 item,
-                map.addMarker(options).apply { tag = MarkerMetaData(item, loadedBitmap) })
+                map.addMarker(options).apply {
+                    tag = MarkerMetaData(item, loadedBitmap, requestDisposable)
+                })
     }
 
 }
@@ -553,6 +564,9 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
+    // The rate we check for changes from the incoming stream. (it can update faster).
+    private val visibleRegionSampleRate = 500L
+
     private val loadingBitmap by lazy {
         BitmapDescriptorFactory.fromBitmap(
                 articObjectMarkerGenerator.makeIcon(null, scale = .7f))
@@ -563,11 +577,10 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     }
 
     init {
-        // when visible region changes, it's slightly different than mapChanges, because this can
-        // happen pretty often.
         visibleRegionChanges
-                .sample(500, TimeUnit.MILLISECONDS) // too many events, prevent flooding.
+                .sample(visibleRegionSampleRate, TimeUnit.MILLISECONDS) // too many events, prevent flooding.
                 .withLatestFrom(mapItems, mapChangeEvents)
+                .filter { (_, _, mapEvent) -> mapEvent.displayMode !is MapDisplayMode.Tour }
                 .toFlowable(BackpressureStrategy.LATEST) // if downstream can't keep up, let's pick latest.
                 .subscribeOn(Schedulers.trampoline())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -575,22 +588,26 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                     Timber.d("Evaluating Markers For Visible Region Change")
                     mapItems.values.forEach { markerHolder ->
                         val position = getLocationFromItem(markerHolder.item)
-                        // set icon to dot.
                         val itemId = getIdFromItem(markerHolder.item)
                         val meta = markerHolder.marker.metaData()
-                                ?: MarkerMetaData(markerHolder.item, loadedBitmap = false)
+                                ?: MarkerMetaData(markerHolder.item, loadedBitmap = false, requestDisposable = null)
+
+                        // if should display, display loading indicator then enqueue a bitmap fetch
+                        // as we don't want to hold all of the bitmap references in memory.
                         if (position.isCloseEnoughToCenter(region.latLngBounds)) {
                             if (!meta.loadedBitmap) {
                                 // show loading while its loading.
                                 mapItems[itemId]?.marker?.setIcon(loadingBitmap)
 
-                                // enqueue replacement
-                                enqueueBitmapFetch(item = markerHolder.item, mapChangeEvent = mapChangeEvent)
+                                // enqueue replacement and add to marker meta.
+                                markerHolder.marker.tag = meta.copy(
+                                        requestDisposable = enqueueBitmapFetch(item = markerHolder.item, mapChangeEvent = mapChangeEvent))
                             }
                         } else {
                             // reset loading state here.
                             mapItems[itemId]?.marker?.apply {
-                                tag = meta.copy(loadedBitmap = false)
+                                meta.requestDisposable?.let { existing -> imageQueueDisposeBag.remove(existing) }
+                                tag = meta.copy(loadedBitmap = false, requestDisposable = null)
                                 setIcon(scaledDot)
                             }
                         }
@@ -618,21 +635,25 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     override fun getFastBitmap(item: ArticObject, displayMode: MapDisplayMode): BitmapDescriptor? =
             loadingBitmap
 
-    override fun getBitmapFetcher(item: ArticObject, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? =
-            Glide.with(context)
-                    .asBitmap()
-                    .apply(RequestOptions().disallowHardwareConfig())
-                    .loadWithThumbnail(
-                            item.thumbnailFullPath?.asCDNUri(),
-                            // Prefer 'image_url', fall back to 'large image' if necessary.
-                            (item.image_url ?: item.largeImageFullPath)?.asCDNUri()
-                    )
-                    .asRequestObservable(context)
-                    .map { bitmap ->
-                        val order: String? = item.getTourOrderNumberBasedOnDisplayMode(displayMode)
-                        BitmapDescriptorFactory.fromBitmap(
-                                articObjectMarkerGenerator.makeIcon(bitmap, overlay = order))
-                    }
+    override fun getBitmapFetcher(item: ArticObject, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? {
+        val imageSize = context.resources.getDimension(R.dimen.artic_object_map_image_size).toInt()
+        return Glide.with(context)
+                .asBitmap()
+                .apply(RequestOptions().disallowHardwareConfig())
+                .loadWithThumbnail(
+                        item.thumbnailFullPath?.asCDNUri(),
+                        // Prefer 'image_url', fall back to 'large image' if necessary.
+                        (item.image_url ?: item.largeImageFullPath)?.asCDNUri()
+                )
+                .asRequestObservable(context,
+                        width = imageSize,
+                        height = imageSize)
+                .map { bitmap ->
+                    val order: String? = item.getTourOrderNumberBasedOnDisplayMode(displayMode)
+                    BitmapDescriptorFactory.fromBitmap(
+                            articObjectMarkerGenerator.makeIcon(bitmap, overlay = order))
+                }
+    }
 
     override val zIndex: Float = 2.0f
 
