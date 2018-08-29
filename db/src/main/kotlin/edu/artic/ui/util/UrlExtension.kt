@@ -6,6 +6,8 @@ import edu.artic.db.BuildConfig
 /**
  * Use this to ensure that your image urls are always hitting the CDN.
  *
+ * Especially handy for IIIF resources.
+ *
  * FIXME: Use [edu.artic.db.models.ArticDataObject.imageServerUrl] instead of [BuildConfig.CDN_HOST]
  */
 fun String.asCDNUri() : Uri {

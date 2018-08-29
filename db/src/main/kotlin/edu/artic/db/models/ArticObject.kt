@@ -4,10 +4,12 @@ import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import android.net.Uri
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import edu.artic.db.Playable
+import edu.artic.ui.util.asCDNUri
 import kotlinx.android.parcel.Parcelize
 
 @JsonClass(generateAdapter = true)
@@ -61,8 +63,8 @@ data class ArticObject(
         // manually populated via DB save.
         var floor: Int = Int.MIN_VALUE
 ) : Parcelable, Playable {
-    override fun getPlayableThumbnailUrl(): String? {
-        return this.largeImageFullPath
+    override fun getPlayableThumbnailUrl(): Uri? {
+        return this.largeImageFullPath?.asCDNUri()
     }
 
     override fun getPlayableTitle(): String? {
