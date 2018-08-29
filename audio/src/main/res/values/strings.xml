@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="audio_screen_header">Look It Up</string>
+    <string name="audio_instructions">Find an artwork you like?\nEnter the artwork number to learn more.</string>
+
+</resources>
