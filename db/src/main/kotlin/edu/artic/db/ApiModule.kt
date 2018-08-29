@@ -8,7 +8,17 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
+import edu.artic.db.daos.ArticAudioFileDao
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticEventDao
+import edu.artic.db.daos.ArticExhibitionCMSDao
+import edu.artic.db.daos.ArticExhibitionDao
+import edu.artic.db.daos.ArticGalleryDao
+import edu.artic.db.daos.ArticMapAnnotationDao
+import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.daos.DashboardDao
+import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.progress.DownloadProgressInterceptor
 import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
@@ -30,6 +40,41 @@ abstract class ApiModule {
     companion object {
 
         private const val DEFAULT_TIMEOUT = 10L
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideAppDataManager(
+                serviceProvider: AppDataServiceProvider,
+                appDataPreferencesManager: AppDataPreferencesManager,
+                appDatabase: AppDatabase,
+                dashboardDao: DashboardDao,
+                generalInfoDao: GeneralInfoDao,
+                audioFileDao: ArticAudioFileDao,
+                galleryDao: ArticGalleryDao,
+                tourDao: ArticTourDao,
+                exhibitionCMSDao: ArticExhibitionCMSDao,
+                mapAnnotationDao: ArticMapAnnotationDao,
+                dataObjectDao: ArticDataObjectDao,
+                eventDao: ArticEventDao,
+                exhibitionDao: ArticExhibitionDao,
+                objectDao: ArticObjectDao
+        ): AppDataManager = AppDataManager(
+                serviceProvider,
+                appDataPreferencesManager,
+                appDatabase,
+                dashboardDao,
+                generalInfoDao,
+                audioFileDao,
+                galleryDao,
+                tourDao,
+                exhibitionCMSDao,
+                mapAnnotationDao,
+                dataObjectDao,
+                eventDao,
+                exhibitionDao,
+                objectDao
+        )
 
         @JvmStatic
         @Provides
@@ -81,15 +126,6 @@ abstract class ApiModule {
         @Singleton
         fun provideProgressEventBus(): ProgressEventBus = ProgressEventBus()
 
-
-        @JvmStatic
-        @Provides
-        @Singleton
-        fun provideAppDataManager(
-                appDataServiceProvider: AppDataServiceProvider,
-                appDataPreferencesManager: AppDataPreferencesManager,
-                database: AppDatabase
-        ): AppDataManager = AppDataManager(appDataServiceProvider, appDataPreferencesManager, database)
 
         @JvmStatic
         @Provides

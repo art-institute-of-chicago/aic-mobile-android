@@ -15,4 +15,7 @@ interface ArticGalleryDao {
 
     @Query("select * from ArticGallery where floor = :floor")
     fun getGalleriesForFloor(floor: String): Flowable<List<ArticGallery>>
+
+    @Query("select * from ArticGallery where title = :name")
+    fun getGalleryByNameOrNull(name: String?): ArticGallery?
 }

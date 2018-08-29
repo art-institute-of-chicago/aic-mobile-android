@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    android:id="@+id/map_navigation_graph"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map_navigation_graph"
     app:startDestination="@id/mapFragment">
 
     <fragment
@@ -13,7 +14,7 @@
 
         <argument
             android:name="@string/tour_argument_key"
-            app:argType="edu.artic.db.models.ArticTour" />
+            app:argType="edu.artic.db.models.ArticTour"/>
 
     </fragment>
 

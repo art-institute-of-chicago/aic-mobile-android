@@ -78,6 +78,9 @@ open class BaseMarkerGenerator(val context: Context) {
     }
 }
 
+/**
+ * Used for displaying non-focused objects on the map.
+ */
 class ArticObjectDotMarkerGenerator(context: Context) : BaseMarkerGenerator(context) {
 
     init {
@@ -86,6 +89,9 @@ class ArticObjectDotMarkerGenerator(context: Context) : BaseMarkerGenerator(cont
     }
 }
 
+/**
+ * Used for displaying [ArticObject] on the map.
+ */
 class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context) {
 
     /**
@@ -137,11 +143,14 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
     }
 }
 
+/**
+ * Used for displaying departments on the map.
+ */
 class DepartmentMarkerGenerator(context: Context) : BaseMarkerGenerator(context) {
 
     init {
         container = LayoutInflater.from(context)
-                .inflate(R.layout.marker_department, null) as ViewGroup
+                .inflate(R.layout.view_marker_department, null) as ViewGroup
     }
 
 
@@ -152,11 +161,14 @@ class DepartmentMarkerGenerator(context: Context) : BaseMarkerGenerator(context)
     }
 }
 
-class GalleryNumberMarkerGenerator(context: Context) : BaseMarkerGenerator(context) {
+/**
+ * Generates marker only displaying text.
+ */
+class TextMarkerGenerator(context: Context) : BaseMarkerGenerator(context) {
 
     init {
         container = LayoutInflater.from(context)
-                .inflate(R.layout.marker_gallery_number, null) as ViewGroup
+                .inflate(R.layout.view_marker_text, null) as ViewGroup
     }
 
 

@@ -3,15 +3,17 @@ package edu.artic.map
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.location.Location
 import android.support.annotation.UiThread
 import android.util.Log
 import android.util.Property
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
+import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.ArticObject
-
 
 
 /**
@@ -111,3 +113,18 @@ fun Marker.removeWithFadeOut() {
     fadeOut.start()
 }
 
+/**
+ * Simple helper that allows us to include a [list] of [LatLng].
+ */
+fun LatLngBounds.Builder.includeAll(list: List<LatLng>) = apply { list.forEach { include(it) } }
+
+/**
+ * Specifies default padding. We add padding to the top so that StatusBar doesn't overlap the compass.
+ * */
+fun GoogleMap.setMapPadding(activity: Activity,
+                            left: Int = 0,
+                            top: Int = activity.statusBarHeight,
+                            right: Int = 0,
+                            bottom: Int = 0) {
+    setPadding(left, top, right, bottom)
+}
