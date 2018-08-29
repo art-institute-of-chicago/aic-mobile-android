@@ -82,7 +82,7 @@ class MapViewModel @Inject constructor(
         get() {
             val castFloor = (floor as BehaviorSubject)
             return if (castFloor.hasValue()) {
-                castFloor.value
+                castFloor.value ?: Int.MIN_VALUE
             } else {
                 1
             }
@@ -92,7 +92,7 @@ class MapViewModel @Inject constructor(
         get() {
             val castLevel = (zoomLevel as BehaviorSubject)
             return if (castLevel.hasValue()) {
-                castLevel.value
+                castLevel.value ?: MapZoomLevel.One
             } else {
                 MapZoomLevel.One
             }
