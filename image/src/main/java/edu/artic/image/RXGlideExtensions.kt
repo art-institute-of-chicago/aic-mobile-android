@@ -1,5 +1,6 @@
 package edu.artic.image
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
 import com.bumptech.glide.Glide
@@ -25,6 +26,12 @@ fun <T> RequestBuilder<T>.asRequestObservable(context: Context): Observable<T> {
             }
         }
         into(target)
-        emitter.setCancellable { Glide.with(context).clear(target) }
+        emitter.setCancellable {
+            // Glide checks if activity is destroyed and then crashes if it is. We don't call cancel
+            // in that case.
+            if (context !is Activity || !context.isDestroyed) {
+                Glide.with(context).clear(target)
+            }
+        }
     }
 }
