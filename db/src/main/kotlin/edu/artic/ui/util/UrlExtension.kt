@@ -17,3 +17,30 @@ fun String.asCDNUri() : Uri {
         else -> parsed
     }
 }
+
+/**
+ * Returns this if it is not null, or else [Uri.EMPTY] if it _is_ `null`.
+ *
+ * This method is inspired by [String.orEmpty].
+ */
+fun Uri?.orEmpty(): Uri {
+    return Uri.EMPTY
+}
+
+/**
+ * Checks whether this is `==` to [Uri.EMPTY].
+ *
+ * This method is inspired by [String.isEmpty].
+ */
+fun Uri.isEmpty(): Boolean {
+    return this == Uri.EMPTY
+}
+
+/**
+ * Checks whether this is `!=` to [Uri.EMPTY].
+ *
+ * This method is inspired by [String.isNotEmpty].
+ */
+fun Uri.isNotEmpty(): Boolean {
+    return this != Uri.EMPTY
+}
