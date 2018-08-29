@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.AnyThread
+import android.support.v4.app.Fragment
 import android.view.View
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.globalLayouts
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
 import edu.artic.base.utils.isResourceConstrained
@@ -33,6 +35,7 @@ import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
@@ -67,8 +70,6 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Map
 
-    lateinit var map: GoogleMap
-
     private lateinit var baseGroundOverlay: GroundOverlay
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
@@ -84,7 +85,6 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
         MapsInitializer.initialize(view.context)
         val mapStyleOptions = requireActivity().assets.fileAsString(filename = "google_map_config.json")
         mapView.getMapAsync { map ->
-            this.map = map
             viewModel.setMap(map)
             configureMap(map, mapStyleOptions)
 
@@ -250,17 +250,13 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
 
         viewModel.displayMode
                 .filterFlatMap({ it is MapDisplayMode.Tour }, { it as MapDisplayMode.Tour })
-                .subscribe { (tour) ->
-                    val fragmentManager = requireActivity().supportFragmentManager
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.infocontainer, TourCarouselFragment.create(tour), OBJECT_DETAILS)
-                            .commit()
-                }
+                .subscribeBy { (tour) -> displayFragmentInInfoContainer(TourCarouselFragment.create(tour)) }
                 .disposedBy(disposeBag)
 
         viewModel.tourBoundsChanged
                 .withLatestFrom(viewModel.currentMap.filterValue())
-                .subscribe { (bounds, map) ->
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { (bounds, map) ->
                     map.moveCamera(CameraUpdateFactory
                             .newLatLngBounds(LatLngBounds.builder()
                                     .includeAll(bounds)
@@ -270,7 +266,9 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
 
         viewModel.individualMapChange
                 .filterValue()
-                .subscribe { (newPosition, focus) ->
+                .withLatestFrom(viewModel.currentMap.filterValue())
+                .subscribeBy { (change, map) ->
+                    val (newPosition, focus) = change
                     map.animateCamera(
                             CameraUpdateFactory.newLatLngZoom(newPosition, focus.toZoomLevel())
                     )
@@ -296,7 +294,7 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
         viewModel.distinctFloor
                 .withLatestFrom(groundOverlayGenerated)
                 .filter { (floor, generated) -> generated && floor in 0..3 }
-                .subscribe { (floor) ->
+                .subscribeBy { (floor) ->
                     buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$floor.png"))
                 }
                 .disposedBy(disposeBag)
@@ -304,11 +302,8 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
         viewModel.selectedArticObject
                 .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
                 .filterFlatMap({ (_, mapMode) -> mapMode !is MapDisplayMode.Tour }, { (selected) -> selected })
-                .subscribe { selected ->
-                    val fragmentManager = requireActivity().supportFragmentManager
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.infocontainer, MapObjectDetailsFragment.create(selected), OBJECT_DETAILS)
-                            .commit()
+                .subscribeBy { selected ->
+                    displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
                 }
                 .disposedBy(disposeBag)
 
@@ -320,9 +315,33 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
                 .selectedTourStopMarkerId
                 .flatMap { viewModel.retrieveObjectById(it) }
                 .filterValue()
-                .subscribe { (_, _, marker) ->
+                .withLatestFrom(viewModel.currentMap.filterValue())
+                .subscribeBy { (markerHolder, map) ->
+                    val (_, _, marker) = markerHolder
                     val currentZoomLevel = map.cameraPosition.zoom
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position,
+                            Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
+                }
+                .disposedBy(disposeBag)
+    }
+
+    /**
+     * Shows contextual information below the map. Also, it adjusts padding on the map to stay
+     * in line with product requirements.
+     */
+    private fun displayFragmentInInfoContainer(fragment: Fragment) {
+        val fragmentManager = requireActivity().supportFragmentManager
+        fragmentManager.beginTransaction()
+                .replace(R.id.infocontainer, fragment, OBJECT_DETAILS)
+                .commit()
+
+        // wait for it to update first time
+        infocontainer.globalLayouts()
+                .withLatestFromOther(viewModel.currentMap.filterValue())
+                .take(1)
+                .subscribe { map ->
+                    val height = infocontainer.height
+                    map.setMapPadding(activity = requireActivity(), bottom = height)
                 }
                 .disposedBy(disposeBag)
     }
