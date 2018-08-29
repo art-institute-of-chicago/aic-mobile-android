@@ -1,6 +1,17 @@
 package edu.artic.db
 
 import com.fuzz.rx.asObservable
+import edu.artic.db.daos.ArticAudioFileDao
+import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticEventDao
+import edu.artic.db.daos.ArticExhibitionCMSDao
+import edu.artic.db.daos.ArticExhibitionDao
+import edu.artic.db.daos.ArticGalleryDao
+import edu.artic.db.daos.ArticMapAnnotationDao
+import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.daos.DashboardDao
+import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
@@ -11,7 +22,18 @@ import javax.inject.Inject
 class AppDataManager @Inject constructor(
         private val serviceProvider: AppDataServiceProvider,
         private val appDataPreferencesManager: AppDataPreferencesManager,
-        private val appDatabase: AppDatabase
+        private val appDatabase: AppDatabase,
+        private val dashboardDao: DashboardDao,
+        private val generalInfoDao: GeneralInfoDao,
+        private val audioFileDao: ArticAudioFileDao,
+        private val galleryDao: ArticGalleryDao,
+        private val tourDao: ArticTourDao,
+        private val exhibitionCMSDao: ArticExhibitionCMSDao,
+        private val mapAnnotationDao: ArticMapAnnotationDao,
+        private val dataObjectDao: ArticDataObjectDao,
+        private val eventDao: ArticEventDao,
+        private val exhibitionDao: ArticExhibitionDao,
+        private val objectDao: ArticObjectDao
 ) {
     companion object {
         const val HEADER_LAST_MODIFIED = "last-modified"
@@ -73,52 +95,59 @@ class AppDataManager @Inject constructor(
                             appDataPreferencesManager.lastModified = it[0]
                         }
 
-                        val result = appDataState.result as ArticAppData
+                        // runs the whole operation in a transaction.
+                        appDatabase.runInTransaction {
+                            val result = appDataState.result as ArticAppData
 
-                        appDatabase.dashboardDao.setDashBoard(result.dashboard)
-                        appDatabase.generalInfoDao.setGeneralInfo(result.generalInfo)
+                            dashboardDao.setDashBoard(result.dashboard)
+                            generalInfoDao.setGeneralInfo(result.generalInfo)
 
-                        val galleries = result.galleries
-                        if (galleries?.isNotEmpty() == true) {
-                            appDatabase.galleryDao.addGalleries(galleries.values.toList())
-                        }
+                            val galleries = result.galleries?.values?.toList()
+                            if (galleries?.isNotEmpty() == true) {
+                                galleryDao.addGalleries(galleries)
+                            }
 
-                        val audioFiles = result.audioFiles
-                        if (audioFiles?.isNotEmpty() == true) {
-                            appDatabase.audioFileDao.addAudioFiles(audioFiles.values.toList())
-                        }
+                            val audioFiles = result.audioFiles
+                            if (audioFiles?.isNotEmpty() == true) {
+                                audioFileDao.addAudioFiles(audioFiles.values.toList())
+                            }
 
-                        val objects = result.objects
-                        if (objects?.isNotEmpty() == true) {
-                            objects.values.forEach { articObject ->
-                                articObject.audioCommentary.forEach { audioCommentaryObject ->
-                                    audioCommentaryObject.audio?.let {
-                                        audioCommentaryObject.audioFile = appDatabase.audioFileDao.getAudioById(it)
+                            val objects = result.objects
+                            if (objects?.isNotEmpty() == true) {
+                                objects.values.forEach { articObject ->
+                                    // add a floor field to the object, since its not known in the JSON directly.
+                                    //galleries?.firstOrNull { it.title == articObject.galleryLocation }
+                                           // ?.let { gallery ->
+                                           //     articObject.floor = gallery.floorAsInt
+                                           // }
+                                    articObject.audioCommentary.forEach { audioCommentaryObject ->
+                                        audioCommentaryObject.audio?.let {
+                                            audioCommentaryObject.audioFile = audioFileDao.getAudioById(it)
+                                        }
                                     }
                                 }
+                                objectDao.addObjects(objects.values.toList())
                             }
-                            appDatabase.objectDao.addObjects(objects.values.toList())
+
+                            val tours = result.tours
+                            if (tours?.isNotEmpty() == true) {
+                                tourDao.clear()
+                                tourDao.addTours(tours)
+                            }
+
+                            val exhibitionsCMS = result.exhibitions
+                            if (exhibitionsCMS?.isNotEmpty() == true) {
+                                exhibitionCMSDao.clear()
+                                exhibitionCMSDao.addCMSExhibitions(exhibitionsCMS)
+                            }
+
+                            val mapAnnotations = result.mapAnnotations
+                            if (mapAnnotations?.isNotEmpty() == true) {
+                                mapAnnotationDao.addAnnotations(mapAnnotations.values.toList())
+                            }
+
+                            dataObjectDao.setDataObject(result.data)
                         }
-
-                        val tours = result.tours
-                        if (tours?.isNotEmpty() == true) {
-                            appDatabase.tourDao.clear()
-                            appDatabase.tourDao.addTours(tours)
-                        }
-
-                        val exhibitionsCMS = result.exhibitions
-                        if (exhibitionsCMS?.isNotEmpty() == true) {
-                            appDatabase.exhibitionCMSDao.clear()
-                            appDatabase.exhibitionCMSDao.addCMSExhibitions(exhibitionsCMS)
-                        }
-
-                        val mapAnnotations = result.mapAnnotations
-                        if (mapAnnotations?.isNotEmpty() == true) {
-                            appDatabase.mapAnnotationDao.addAnnotations(mapAnnotations.values.toList())
-                        }
-
-                        appDatabase.dataObjectDao.setDataObject(result.data)
-
                     }
                     return@flatMap appDataState.asObservable()
                 }
@@ -148,11 +177,11 @@ class AppDataManager @Inject constructor(
                         is ProgressDataState.Done<*> -> {
                             val result = progressDataState.result as ArticResult<*>
                             if (result.data.isNotEmpty() && result.data[0] is ArticExhibition) {
-                                appDatabase.exhibitionDao.clear()
+                                exhibitionDao.clear()
                                 /**
                                  * Update the sort order of the exhibitions according to the ArticExhibitionCMS
                                  */
-                                appDatabase.exhibitionCMSDao
+                                exhibitionCMSDao
                                         .getAllCMSExhibitions()
                                         .subscribe { cmsExhibitionList ->
                                             @Suppress("UNCHECKED_CAST")
@@ -166,7 +195,7 @@ class AppDataManager @Inject constructor(
                                                 }
                                                 mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                             }
-                                            appDatabase.exhibitionDao.updateExhibitions(list)
+                                            exhibitionDao.updateExhibitions(list)
                                         }
                             }
                         }
@@ -184,9 +213,9 @@ class AppDataManager @Inject constructor(
                         is ProgressDataState.Done<*> -> {
                             val result = progressDataState.result as ArticResult<*>
                             if (result.data.isNotEmpty() && result.data[0] is ArticEvent) {
-                                appDatabase.eventDao.clear()
+                                eventDao.clear()
                                 @Suppress("UNCHECKED_CAST")
-                                appDatabase.eventDao.updateEvents((result as ArticResult<ArticEvent>).data)
+                                eventDao.updateEvents((result as ArticResult<ArticEvent>).data)
 
                             }
                         }
