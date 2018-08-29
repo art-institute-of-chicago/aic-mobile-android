@@ -13,7 +13,6 @@ import com.google.android.gms.maps.model.Marker
 import edu.artic.db.models.ArticObject
 
 
-
 /**
  * Reference instance of [AlphaProperty]. Use this
  * to animate [Marker.setAlpha] and [Marker.getAlpha].
@@ -111,3 +110,7 @@ fun Marker.removeWithFadeOut() {
     fadeOut.start()
 }
 
+/**
+ * Simple helper that allows us to include a [list] of [LatLng].
+ */
+fun LatLngBounds.Builder.includeAll(list: List<LatLng>) = apply { list.forEach { include(it) } }

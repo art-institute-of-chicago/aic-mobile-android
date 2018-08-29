@@ -81,7 +81,8 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
         val meta = existing.marker.metaData()
                 ?: MarkerMetaData(existing.item, loadedBitmap = false, requestDisposable = null)
 
-        if (position.isCloseEnoughToCenter(visibleRegion.latLngBounds)) {
+        if (mapChangeEvent.displayMode !is MapDisplayMode.CurrentFloor
+                || position.isCloseEnoughToCenter(visibleRegion.latLngBounds)) {
             if (!meta.loadedBitmap) {
                 // show loading while its loading.
                 existing.marker.setIcon(loadingBitmap)
@@ -112,9 +113,10 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
         val position = item.toLatLng()
         var requestDisposable: Disposable? = null
 
-        // slightly different logic than the above method. If close enough to center, enqueue and show loading.
+        // slightly different logic than the above method. If close enough to center or on tour, enqueue and show loading.
         // otherwise just show dot.
-        val fastBitmap = if (position.isCloseEnoughToCenter(visibleRegion.latLngBounds)) {
+        val fastBitmap = if (displayMode !is MapDisplayMode.CurrentFloor ||
+                position.isCloseEnoughToCenter(visibleRegion.latLngBounds)) {
             requestDisposable = enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
             loadingBitmap
         } else {
