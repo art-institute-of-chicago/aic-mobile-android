@@ -11,16 +11,23 @@ import kotlinx.android.synthetic.main.activity_audio.*
 
 /**
  * One of the four primary sections of the app. This Activity may host either
- * an [AudioSelectFragment] or an [AudioDetailsFragment].
+ * an [AudioLookupFragment] or an [AudioDetailsFragment].
  *
- * Note that we do not use [NarrowAudioPlayerFragment][edu.artic.audioui.NarrowAudioPlayerFragment]
- * here at this time - that will be done soon as a prerequisite for ticket AIC-35.
+ * Note that a [NarrowAudioPlayerFragment] anywhere in the app may deep-link
+ * to this screen. When it does so, we record that state in [willNavigate]
+ * and perform the navigation in [onStart]. This prevents us from accidentally
+ * showing [AudioLookupFragment] first.
  */
 class AudioActivity : BaseActivity() {
 
     override val layoutResId: Int
         get() = R.layout.activity_audio
 
+    /**
+     * Lifecycle-check set by [onCreate] and consumed by [onStart].
+     *
+     * Always reset to false by [onDestroy].
+     */
     private var willNavigate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
