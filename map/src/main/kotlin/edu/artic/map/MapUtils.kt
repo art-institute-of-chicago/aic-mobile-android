@@ -2,7 +2,7 @@ package edu.artic.map
 
 import android.support.annotation.DrawableRes
 import edu.artic.db.models.ArticMapAmenityType
-import edu.artic.map.R
+import edu.artic.db.models.ArticObject
 import timber.log.Timber
 
 /**
@@ -29,4 +29,28 @@ internal fun amenityIconForAmenityType(type: String?): Int {
             0
         }
     }
+}
+
+/**
+ * If the passed [displayMode] is [MapDisplayMode.Tour] then we extract what place the [ArticObject]
+ * resides in the tourStops. Returns null if not in [MapDisplayMode.Tour] or not found as a stop on the tour.
+ */
+fun ArticObject.getTourOrderNumberBasedOnDisplayMode(displayMode: MapDisplayMode): String? {
+    var order: String? = null
+    if (displayMode is MapDisplayMode.Tour) {
+        /**
+         * If map's display mode is Tour, get the order number of the stop.
+         */
+        /**
+         * If map's display mode is Tour, get the order number of the stop.
+         */
+        val index = displayMode.tour
+                .tourStops
+                .indexOfFirst { it.objectId == nid }
+
+        if (index > -1) {
+            order = (index + 1).toString()
+        }
+    }
+    return order
 }
