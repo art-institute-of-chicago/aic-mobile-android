@@ -1,10 +1,13 @@
 package edu.artic.map
 
+import android.content.Intent
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.db.models.ArticTour
+import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_map.*
@@ -23,8 +26,13 @@ class MapActivity : BaseActivity() {
     companion object {
         val ARG_TOUR = "ARG_TOUR"
 
-        fun argsBundle(tour: ArticTour) = Bundle().apply {
-            putParcelable(ARG_TOUR, tour)
+        fun getLaunchIntent(tour: ArticTour): Intent {
+            return NavigationConstants.MAP.asDeepLinkIntent().apply {
+                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                putExtras(Bundle().apply {
+                    putParcelable(ARG_TOUR, tour)
+                })
+            }
         }
 
     }

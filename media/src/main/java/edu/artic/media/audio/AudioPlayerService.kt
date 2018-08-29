@@ -177,7 +177,7 @@ class AudioPlayerService : DaggerService() {
                         playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(given))
                         playbackState == Player.STATE_ENDED -> {
                             /*Play back completed*/
-                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value.title.orEmpty())
+                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value?.title.orEmpty())
                             audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
                         }
                         playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))

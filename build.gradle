@@ -5,7 +5,7 @@ buildscript {
         sdk = 27
         minSdk = 21
         kotlin_version = '1.2.51'
-        latest_helper = '7f1d88469155cedd57df87682806736437088abc'
+        latest_helper = '72626c5db8'
         dagger_version = '2.15'
         support_version = '27.1.1'
         arch_version = '1.1.0'
@@ -68,7 +68,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha06'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha07'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath 'com.google.gms:google-services:4.0.1'
