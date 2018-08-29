@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
@@ -25,6 +26,9 @@ abstract class ApiModule {
     @get:Multibinds
     @get:AdapterFactory
     abstract val jsonAdapterFactorySet: MutableSet<JsonAdapter.Factory>
+
+    @Binds
+    abstract fun appDataManager(appDataManager: AppDataManager): AppDataManager
 
     @Module
     companion object {
@@ -81,15 +85,6 @@ abstract class ApiModule {
         @Singleton
         fun provideProgressEventBus(): ProgressEventBus = ProgressEventBus()
 
-
-        @JvmStatic
-        @Provides
-        @Singleton
-        fun provideAppDataManager(
-                appDataServiceProvider: AppDataServiceProvider,
-                appDataPreferencesManager: AppDataPreferencesManager,
-                database: AppDatabase
-        ): AppDataManager = AppDataManager(appDataServiceProvider, appDataPreferencesManager, database)
 
         @JvmStatic
         @Provides
