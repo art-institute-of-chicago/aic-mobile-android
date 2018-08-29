@@ -26,6 +26,11 @@ abstract class MapModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(MapViewModel2::class)
+    abstract fun mapViewModel2(mapViewModel: MapViewModel2): ViewModel
+
+    @Binds
+    @IntoMap
     @ViewModelKey(MapObjectDetailsViewModel::class)
     abstract fun mapObjectDetailsViewModel(mapViewModel: MapObjectDetailsViewModel): ViewModel
 
