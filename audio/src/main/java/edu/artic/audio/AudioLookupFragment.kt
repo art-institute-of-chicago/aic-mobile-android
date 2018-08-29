@@ -1,7 +1,10 @@
 package edu.artic.audio
 
+import android.os.Bundle
+import android.view.View
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
+import kotlinx.android.synthetic.main.fragment_audio_lookup.*
 import kotlin.reflect.KClass
 
 /**
@@ -28,5 +31,11 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         get() = ScreenCategoryName.AudioGuide
 
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val numberPadAdapter = NumberPadAdapter()
+        number_pad.adapter = numberPadAdapter
+    }
 
 }
