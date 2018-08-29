@@ -35,6 +35,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         val numberPadAdapter = NumberPadAdapter()
+        numberPadAdapter.setItemsList(viewModel.preferredNumberPadElements)
         number_pad.adapter = numberPadAdapter
     }
 
