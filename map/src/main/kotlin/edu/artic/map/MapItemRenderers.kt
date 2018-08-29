@@ -54,7 +54,7 @@ abstract class MapItemRenderer<T> {
     /**
      * Return what map focus level these [MapItem] display at.
      */
-    abstract val visibleMapFocus: Set<MapFocus>
+    abstract fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus>
 
     abstract val zIndex: Float
 
@@ -87,6 +87,7 @@ abstract class MapItemRenderer<T> {
                 .observeOn(Schedulers.io())
                 .flatMap { (mapEvent, map) ->
                     // no longer renderable, we
+                    val visibleMapFocus = getVisibleMapFocus(mapEvent.displayMode)
                     if (!visibleMapFocus.contains(mapEvent.focus)) {
                         Timber.d("Empty list for ${mapEvent.focus} with visible range: $visibleMapFocus")
                         MapItemRendererEvent(map, mapEvent, emptyList<T>()).asFlowable()
@@ -155,10 +156,10 @@ class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : Ma
     private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
-        return articMapAnnotationDao.getAnnotationByTypeForFloor(ArticMapTextType.LANDMARK, floor = floor.toString()) // TODO: switch to int
+        return articMapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK)
     }
 
-    override val visibleMapFocus: Set<MapFocus> = setOf(MapFocus.Landmark)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = setOf(MapFocus.Landmark)
 
     override fun getBitmap(item: ArticMapAnnotation, displayMode: MapDisplayMode): Observable<BitmapDescriptor> =
             BitmapDescriptorFactory.fromBitmap(textMarkerGenerator.makeIcon(item.label.orEmpty())).asObservable()
@@ -172,11 +173,10 @@ class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     private val textMarkerGenerator: TextMarkerGenerator  by lazy { TextMarkerGenerator(context) }
 
     override fun getItemsAtFloor(floor: Int): Flowable<List<ArticMapAnnotation>> {
-        return articMapAnnotationDao.getAnnotationByTypeForFloor(ArticMapTextType.SPACE, floor = floor.toString())
+        return articMapAnnotationDao.getTextAnnotationByTypeAndFloor(ArticMapTextType.SPACE, floor = floor.toString()) // TODO: switch to int
     }
 
-    override val visibleMapFocus: Set<MapFocus>
-        get() = setOf(MapFocus.DepartmentAndSpaces, MapFocus.Individual)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = setOf(MapFocus.DepartmentAndSpaces, MapFocus.Individual)
 
     override fun getBitmap(item: ArticMapAnnotation, displayMode: MapDisplayMode): Observable<BitmapDescriptor> =
             BitmapDescriptorFactory.fromBitmap(textMarkerGenerator.makeIcon(item.label.orEmpty())).asObservable()
@@ -189,7 +189,7 @@ class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : M
         return articMapAnnotationDao.getAmenitiesOnMapForFloor(floor = floor.toString())
     }
 
-    override val visibleMapFocus: Set<MapFocus> = MapFocus.values().toSet() // all zoom levels
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = MapFocus.values().toSet() // all zoom levels
 
     override fun getBitmap(item: ArticMapAnnotation, displayMode: MapDisplayMode): Observable<BitmapDescriptor> {
         return BitmapDescriptorFactory.fromResource(amenityIconForAmenityType(item.amenityType)).asObservable()
@@ -207,7 +207,7 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
         return articMapAnnotationDao.getDepartmentOnMapForFloor(floor = floor.toString())
     }
 
-    override val visibleMapFocus: Set<MapFocus> = setOf(MapFocus.Department, MapFocus.DepartmentAndSpaces)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = setOf(MapFocus.Department, MapFocus.DepartmentAndSpaces)
 
     override fun getBitmap(item: ArticMapAnnotation, displayMode: MapDisplayMode): Observable<BitmapDescriptor> {
         return Glide.with(context)
@@ -229,7 +229,7 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
         return galleriesDao.getGalleriesForFloor(floor = floor.toString())
     }
 
-    override val visibleMapFocus: Set<MapFocus> = setOf(MapFocus.Individual)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = setOf(MapFocus.Individual)
 
     override fun getLocationFromItem(item: ArticGallery): LatLng = item.toLatLng()
 
@@ -250,8 +250,13 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
         return objectsDao.getObjectsByFloor(floor = floor)
     }
 
-    override val visibleMapFocus: Set<MapFocus>
-        get() = setOf(MapFocus.Individual)
+    override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> {
+        return if (displayMode is MapDisplayMode.Tour) {
+            MapFocus.values().toSet()
+        } else {
+            setOf(MapFocus.Individual)
+        }
+    }
 
     override fun getLocationFromItem(item: ArticObject): LatLng = item.toLatLng()
 
