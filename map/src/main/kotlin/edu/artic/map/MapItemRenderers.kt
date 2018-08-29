@@ -7,6 +7,7 @@ import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.asFlowable
 import com.fuzz.rx.asObservable
+import com.fuzz.rx.debug
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
@@ -25,6 +26,7 @@ import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
 import edu.artic.map.helpers.toLatLng
 import edu.artic.ui.util.asCDNUri
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -37,7 +39,7 @@ data class MarkerHolder<T>(val id: String,
                            val item: T,
                            val marker: Marker)
 
-data class MapItemRendererEvent<T>(val mapChangeEvent: MapChangeEvent, val items: List<T>)
+data class MapItemRendererEvent<T>(val map: GoogleMap, val mapChangeEvent: MapChangeEvent, val items: List<T>)
 
 abstract class MapItemRenderer<T> {
 
@@ -73,16 +75,19 @@ abstract class MapItemRenderer<T> {
         this.mapItems.onNext(markers.associateBy { it.id })
     }
 
-    fun renderMarkers(map: GoogleMap, floorFocus: Flowable<MapChangeEvent>)
+    fun renderMarkers(map: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
             : Observable<List<MarkerHolder<T>>> {
         return floorFocus
+                .debug("MapItemRenders Floor Focus Changed")
+                .withLatestFrom(map.toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
+                .debug("MapItemRenders Focus")
                 .observeOn(Schedulers.io())
-                .flatMap { mapEvent ->
+                .flatMap { (mapEvent, map) ->
                     // no longer renderable, we
                     if (!visibleMapFocus.contains(mapEvent.focus)) {
-                        MapItemRendererEvent(mapEvent, emptyList<T>()).asFlowable()
+                        MapItemRendererEvent(map, mapEvent, emptyList<T>()).asFlowable()
                     } else {
-                        getItemsAtFloor(mapEvent.floor).map { MapItemRendererEvent(mapEvent, it) }
+                        getItemsAtFloor(mapEvent.floor).map { MapItemRendererEvent(map, mapEvent, it) }
                     }
                 }
                 .toObservable()
@@ -115,7 +120,7 @@ abstract class MapItemRenderer<T> {
                                             MarkerHolder(
                                                     id,
                                                     item,
-                                                    map.addMarker(options))
+                                                    event.map.addMarker(options))
                                         }
 
                     }) { markers ->
