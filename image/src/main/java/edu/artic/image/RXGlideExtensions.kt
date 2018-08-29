@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,10 +14,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 
 /**
  * Description: Converts a [GlideRequest] into an [Observable] that does not complete.
+ *
+ * @param width Specify a width to optimize image loading.
+ * @param height Specify a height to optimize image loading.
  */
-fun <T> RequestBuilder<T>.asRequestObservable(context: Context): Observable<T> {
+fun <T> RequestBuilder<T>.asRequestObservable(context: Context,
+                                              width: Int = Target.SIZE_ORIGINAL,
+                                              height: Int = Target.SIZE_ORIGINAL): Observable<T> {
     return Observable.create { emitter ->
-        val target = object : SimpleTarget<T>() {
+        val target = object : SimpleTarget<T>(width, height) {
             override fun onResourceReady(resource: T, transition: Transition<in T>?) {
                 emitter.onNext(resource)
                 emitter.onComplete()
@@ -25,6 +31,8 @@ fun <T> RequestBuilder<T>.asRequestObservable(context: Context): Observable<T> {
             override fun onLoadFailed(errorDrawable: Drawable?) {
                 emitter.onComplete()
             }
+
+
         }
         into(target)
         emitter.setCancellable {
