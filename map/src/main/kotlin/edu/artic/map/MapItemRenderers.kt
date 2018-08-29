@@ -4,8 +4,10 @@ import android.content.Context
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.Optional
 import com.fuzz.rx.asFlowable
 import com.fuzz.rx.asObservable
+import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -27,7 +29,6 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.withLatestFrom
-import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -36,13 +37,13 @@ data class MarkerHolder<T>(val id: String,
                            val item: T,
                            val marker: Marker)
 
+data class MapItemRendererEvent<T>(val mapChangeEvent: MapChangeEvent, val items: List<T>)
+
 abstract class MapItemRenderer<T> {
 
     private val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
     private var currentFloor: Int = Int.MIN_VALUE
     private val disposeBag: DisposeBag = DisposeBag()
-
-    protected val alpha: Float = 1.0f
 
     /**
      * Return what map focus level these [MapItem] display at.
@@ -63,6 +64,11 @@ abstract class MapItemRenderer<T> {
 
     abstract fun getBitmap(item: T, displayMode: MapDisplayMode): Observable<BitmapDescriptor>
 
+    open fun MarkerOptions.configureMarkerOptions(floor: Int, mapDisplayMode: MapDisplayMode, item: T) = Unit
+
+    fun getMarkerHolderById(id: String): Observable<Optional<MarkerHolder<T>>> =
+            mapItems.take(1).map { mapItems -> optionalOf(mapItems[id]) }
+
     fun updateMarkers(markers: List<MarkerHolder<T>>) {
         this.mapItems.onNext(markers.associateBy { it.id })
     }
@@ -71,41 +77,46 @@ abstract class MapItemRenderer<T> {
             : Observable<List<MarkerHolder<T>>> {
         return floorFocus
                 .observeOn(Schedulers.io())
-                .flatMap { (focus, floor, displayMode) ->
+                .flatMap { mapEvent ->
                     // no longer renderable, we
-                    if (!visibleMapFocus.contains(focus)) {
-                        (emptyList<T>() to displayMode).asFlowable()
+                    if (!visibleMapFocus.contains(mapEvent.focus)) {
+                        MapItemRendererEvent(mapEvent, emptyList<T>()).asFlowable()
                     } else {
-                        getItemsAtFloor(floor).zipWith(displayMode.asFlowable())
+                        getItemsAtFloor(mapEvent.floor).map { MapItemRendererEvent(mapEvent, it) }
                     }
                 }
                 .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
-                .withLatestFrom(mapItems) { (newItems, displayMode), mapItems -> Triple(newItems, displayMode, mapItems) }
-                .doOnNext { (newItems, _, existingMapItems) ->
+                .withLatestFrom(mapItems) { event, mapItems -> event to mapItems }
+                .doOnNext { (event, existingMapItems) ->
 
                     // returns items not in the new list.
                     @Suppress("UNCHECKED_CAST")
-                    ((existingMapItems.toList() - newItems) as List<MarkerHolder<T>>)
+                    ((existingMapItems.toList() - event.items) as List<MarkerHolder<T>>)
                             .forEach { it.marker.remove() }
                 }
-                .flatMap { (newItems, displayMode, existingMapItems) ->
-                    Observable.zip(newItems.map { item ->
+                .flatMap { (event, existingMapItems) ->
+                    Observable.zip(event.items.map { item ->
                         val id = getIdFromItem(item)
                         val existing = existingMapItems[id]
                         // same item, don't re-add to the map.
                         existing?.asObservable()
-                                ?: getBitmap(item, displayMode).map { bitmap ->
-                                    MarkerHolder(
-                                            id = id,
-                                            marker = map.addMarker(
-                                                    MarkerOptions()
-                                                            .zIndex(zIndex)
-                                                            .position(getLocationFromItem(item))
-                                                            .alpha(alpha)
-                                                            .icon(bitmap)),
-                                            item = item)
-                                }
+                                ?: getBitmap(item, event.mapChangeEvent.displayMode)
+                                        .map { bitmap ->
+                                            val options = MarkerOptions()
+                                                    .zIndex(zIndex)
+                                                    .position(getLocationFromItem(item))
+                                                    .icon(bitmap)
+                                                    .apply {
+                                                        configureMarkerOptions(event.mapChangeEvent.floor,
+                                                                event.mapChangeEvent.displayMode,
+                                                                item)
+                                                    }
+                                            MarkerHolder(
+                                                    id,
+                                                    item,
+                                                    map.addMarker(options))
+                                        }
 
                     }) { markers ->
                         @Suppress("UNCHECKED_CAST")
@@ -264,5 +275,14 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao,
                     }
 
     override val zIndex: Float = 2.0f
+
+    override fun MarkerOptions.configureMarkerOptions(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticObject) {
+        // on tour, set the alpha depending on current floor.
+        if (mapDisplayMode is MapDisplayMode.Tour) {
+            alpha(if (item.floor == floor) 1.0f else 0.6f)
+        } else if (mapDisplayMode is MapDisplayMode.CurrentFloor) {
+            alpha(1.0f)
+        }
+    }
 }
 
