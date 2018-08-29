@@ -77,7 +77,13 @@ class MapFragment2 : BaseViewModelFragment<MapViewModel2>() {
     private val tour: ArticTour? by lazy { requireActivity().intent?.extras?.getParcelable<ArticTour>(MapActivity.ARG_TOUR) }
 
     override fun onRegisterViewModel(viewModel: MapViewModel2) {
-        tour?.let { tour -> viewModel.displayMode.onNext(MapDisplayMode.Tour(tour)) }
+        val localTour = tour
+        if (localTour != null) {
+            viewModel.displayMode.onNext(MapDisplayMode.Tour(localTour))
+        } else {
+            // TODO: Search mode
+            viewModel.displayMode.onNext(MapDisplayMode.CurrentFloor)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
