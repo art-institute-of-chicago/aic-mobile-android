@@ -217,6 +217,7 @@
         <item name="android:letterSpacing">0.03</item>
         <item name="android:lineSpacingExtra">2sp</item>
         <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
     </style>
 
     <style name="ListItemTitle1White">
