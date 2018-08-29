@@ -6,12 +6,16 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import edu.artic.map.MapChangeEvent
+import io.reactivex.disposables.Disposable
 
 /**
  * Holds meta information related to [Marker].
+ *
+ * @param requestDisposable if non-null, the active request [Disposable] that we can cancel.
  */
 data class MarkerMetaData<T>(val item: T,
-                             val loadedBitmap: Boolean)
+                             val loadedBitmap: Boolean = false,
+                             val requestDisposable: Disposable? = null)
 
 /**
  * Useful extension that casts the [Marker.getTag] into a [MarkerMetaData]. Might be null.
