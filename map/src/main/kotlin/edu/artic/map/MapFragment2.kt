@@ -33,6 +33,7 @@ import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -47,15 +48,11 @@ import kotlin.reflect.KClass
 /**
  * This Fragment contains a [GoogleMap] with a custom tileset and quite a few markers.
  *
- * We support 3 distinct zoom levels at the moment:
- * * [MapZoomLevel.One] shows as much of the museum as possible, with markers for
- * [Spaces and Landmarks][MapViewModel.spacesAndLandmarks]
- * * [MapZoomLevel.Two] shows markers for [departments][DepartmentMarkerGenerator]
- * * [MapZoomLevel.Three] shows markers for specific [Galleries][MapItem.Gallery] and
- * [miscellaneous ArticObjects][MapItem.Object]s
+ * The rendering is handled buy the [MapMarkerConstructor] which contains all of the [MapItemRenderer]
+ * that handle image fetching, backpressure, and buffering.
  *
- * Note that (in keeping with our standard architecture) much of the complexity is
- * delegated through [MapViewModel].
+ * This fragment should remain small as possible and delegate its functionality to [MapViewModel2]
+ * and other constructs.
  *
  * @see [MapActivity]
  */

@@ -16,7 +16,8 @@ const val ZOOM_DEPARTMENT_AND_SPACES: ZoomLevel = 19.0f
 const val ZOOM_INDIVIDUAL: ZoomLevel = 21.0f
 
 /**
- * Description: Defines at a particular map zoom level, what kind of [MapItem] we are to display
+ * Represents a range of [ZoomLevel] that we display marker map items at. Some markers traverse
+ * multiple zoom levels.
  */
 enum class MapFocus {
     Landmark,
