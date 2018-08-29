@@ -4,6 +4,7 @@ import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.optionalOf
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticObject
@@ -36,8 +37,7 @@ class MapViewModel2 @Inject constructor(private val mapMarkerConstructor: Explor
     val selectedTourStopMarkerId: Subject<String> = BehaviorSubject.create()
 
     init {
-        mapMarkerConstructor.bindToMapChanges(floor, focus)
-
+        mapMarkerConstructor.bindToMapChanges(floor, focus, displayMode)
 
         /**
          * Sync the selected tour stop with the carousel.
