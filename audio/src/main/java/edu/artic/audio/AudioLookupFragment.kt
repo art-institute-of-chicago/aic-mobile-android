@@ -3,8 +3,11 @@ package edu.artic.audio
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.disposedBy
 import edu.artic.adapter.BaseRecyclerViewAdapter.OnItemClickListener
 import edu.artic.adapter.BaseViewHolder
+import edu.artic.adapter.itemChanges
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_audio_lookup.*
@@ -39,7 +42,11 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         val numberPadAdapter = NumberPadAdapter()
-        numberPadAdapter.setItemsList(viewModel.preferredNumberPadElements)
+
+        viewModel.preferredNumberPadElements
+                .bindToMain(numberPadAdapter.itemChanges())
+                .disposedBy(disposeBag)
+
         number_pad.adapter = numberPadAdapter
         numberPadAdapter.onItemClickListener = NumPadClickListener(lookup_field)
     }

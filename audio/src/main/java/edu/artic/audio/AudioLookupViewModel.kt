@@ -2,6 +2,8 @@ package edu.artic.audio
 
 import edu.artic.audio.NumberPadElement.*
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 /**
@@ -15,7 +17,7 @@ class AudioLookupViewModel @Inject constructor() : BaseViewModel() {
     /**
      * See [NumberPadAdapter] for details on all this.
      */
-    val preferredNumberPadElements: List<NumberPadElement> = listOf(
+    val preferredNumberPadElements: Subject<List<NumberPadElement>> = BehaviorSubject.createDefault(listOf(
             Numeric("1"),
             Numeric("2"),
             Numeric("3"),
@@ -29,6 +31,6 @@ class AudioLookupViewModel @Inject constructor() : BaseViewModel() {
             // NB: Due to a bug in the ideal_sans_medium font files, the 0 and o look very similar. This is a zero.
             Numeric("0"),
             GoSearch
-    )
+    ))
 
 }
