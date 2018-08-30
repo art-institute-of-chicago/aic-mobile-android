@@ -11,6 +11,15 @@ import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.GroundOverlay
+import com.google.android.gms.maps.model.GroundOverlayOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.TileOverlay
+import com.google.android.gms.maps.model.TileOverlayOptions
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
@@ -26,6 +35,7 @@ import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.rendering.MapItemRenderer
+import edu.artic.map.rendering.MapTileAssetProvider
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
@@ -63,7 +73,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = ScreenCategoryName.Map
 
     private lateinit var baseGroundOverlay: GroundOverlay
-    private lateinit var buildingGroundOverlay: GroundOverlay
+    private lateinit var tileOverlay: TileOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
@@ -161,8 +171,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isTrafficEnabled = false
 
             setMapStyle(MapStyleOptions(mapStyleOptions))
-            setMinZoomPreference(17f)
-            setMaxZoomPreference(22f)
+            setMinZoomPreference(0f)
+            setMaxZoomPreference(3f)
 
             /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
             setPadding(0, requireActivity().statusBarHeight, 0, 0)
@@ -185,16 +195,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         ).image(deriveBaseOverlayDescriptor(requireActivity()))
                         .zIndex(0.1f)
         )
-        buildingGroundOverlay = map.addGroundOverlay(
-                GroundOverlayOptions()
-                        .positionFromBounds(
-                                LatLngBounds(
-                                        LatLng(41.878467, -87.624127),
-                                        LatLng(41.880730, -87.621027)
-                                )
-                        ).zIndex(.11f)
-                        .image(BitmapDescriptorFactory.fromAsset("AIC_Floor1.png"))
-        )
+        tileOverlay = map.addTileOverlay(TileOverlayOptions()
+                .tileProvider(MapTileAssetProvider(resources.assets, 1)))
     }
 
     /**
@@ -313,8 +315,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.distinctFloor
                 .withLatestFrom(groundOverlayGenerated)
                 .filter { (floor, generated) -> generated && floor in 0..3 }
-                .subscribeBy { (floor) ->
-                    buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$floor.png"))
+                .withLatestFrom(viewModel.currentMap.filterValue()) { (floor), map -> floor to map }
+                .subscribeBy { (floor, map) ->
+                    tileOverlay.remove()
+                    tileOverlay = map.addTileOverlay(TileOverlayOptions()
+                            .tileProvider(MapTileAssetProvider(resources.assets, floor)))
                 }
                 .disposedBy(disposeBag)
 
