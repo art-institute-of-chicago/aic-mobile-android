@@ -1,16 +1,9 @@
 package edu.artic.audio
 
-import android.support.annotation.LayoutRes
-import android.view.ViewGroup
-import android.widget.TextView
-import edu.artic.adapter.BaseRecyclerViewAdapter
-import edu.artic.adapter.BaseViewHolder
+import android.view.View
+import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import kotlinx.android.synthetic.main.view_number_pad_numeric_element.view.*
 
-
-/**
- * Internal common holder for views which display [NumberPadElement]s.
- */
-open class NumberPadViewHolder(parent: ViewGroup, resId: Int) : BaseViewHolder(parent, resId)
 
 /**
  * One of the elements in this NumberPad. This is what distinguishes the various
@@ -24,17 +17,6 @@ sealed class NumberPadElement {
     object GoSearch : NumberPadElement()
 }
 
-
-class CircularElementViewHolder(parent: ViewGroup, @LayoutRes layout: Int): NumberPadViewHolder(parent, layout) {
-
-    val number : TextView = itemView.findViewById(R.id.number_content)
-}
-
-
-class DeleteBackViewHolder(parent: ViewGroup, @LayoutRes layout: Int): NumberPadViewHolder(parent, layout) {
-
-}
-
 /**
  * Layout within RecyclerView (left-to-right, top-to-bottom):
  *
@@ -44,40 +26,30 @@ class DeleteBackViewHolder(parent: ViewGroup, @LayoutRes layout: Int): NumberPad
  *     B  0  G
  *
  * Where `B` means 'Delete back one character' and `G` means `Search with this input`.
+ *
+ * We have 2 ViewTypes (i.e. two different layouts) and 3 different [NumberPadElement]s.
+ * This means that [getLayoutResId] will return one of two resIds and that
+ * [onBindView] will use one of 3 bind algorithms.
  */
-class NumberPadAdapter : BaseRecyclerViewAdapter<NumberPadElement, NumberPadViewHolder>() {
-    override fun getViewType(position: Int): Int {
-        val element = getItem(position)
-
-        return when (element) {
-            is NumberPadElement.Numeric -> 0
-            NumberPadElement.DeleteBack -> 1
-            NumberPadElement.GoSearch -> 2
-        }
-    }
+class NumberPadAdapter : AutoHolderRecyclerViewAdapter<NumberPadElement>() {
 
     override fun getLayoutResId(position: Int): Int {
-        // We don't expect this method to get called because this class also overrides .getViewType
-        TODO("NumberPadAdapter.getLayoutResId is not supported at this time.")
-    }
-
-    override fun onBindViewHolder(holder: NumberPadViewHolder, item: NumberPadElement?, position: Int) {
-        if (holder is CircularElementViewHolder) {
-            if (item is NumberPadElement.Numeric) {
-                holder.number.text = item.value
-            } else if (item is NumberPadElement.GoSearch) {
-                holder.number.text = "Go"
-            }
+        return if (getItem(position) is NumberPadElement.DeleteBack) {
+            // 'DeleteBack' type
+            R.layout.view_number_pad_delete_back_element
+        } else {
+            // 'Numeric' and 'GoSearch' types
+            R.layout.view_number_pad_numeric_element
         }
     }
 
-    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): NumberPadViewHolder {
-        return if (viewType == 1) {
-            // 'DeleteBack' type
-            DeleteBackViewHolder(parent, R.layout.view_number_pad_delete_back_element)
-        } else {
-            // 'Numeric' and 'GoSearch' types
-            CircularElementViewHolder(parent, R.layout.view_number_pad_numeric_element)
+    override fun View.onBindView(item: NumberPadElement, position: Int) {
+        when (item) {
+            is NumberPadElement.Numeric -> number_content.text = item.value
+            is NumberPadElement.GoSearch -> number_content.text = "Go"
+            else -> {
+                // Other types of NumberPadElements do not need to be bound.
+            }
         }
     }
 
