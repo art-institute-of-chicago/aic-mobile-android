@@ -21,7 +21,7 @@ buildscript {
 
         libs = [
                 kotlin                  : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
-                rx_helpers               : "com.github.fuzz-productions:rx-helpers:${latest_helper}",
+                rx_helpers              : "com.github.fuzz-productions:rx-helpers:${latest_helper}",
                 dagger                  : "com.google.dagger:dagger:${dagger_version}",
                 dagger_android          : "com.google.dagger:dagger-android-support:${dagger_version}",
                 dagger_compiler         : "com.google.dagger:dagger-compiler:${dagger_version}",
@@ -40,6 +40,7 @@ buildscript {
                 retrofit_rx             : 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0',
                 retrofit_scalars        : 'com.squareup.retrofit2:converter-scalars:2.1.0',
                 retrofit_moshi          : 'com.squareup.retrofit2:converter-moshi:2.1.0',
+                maps_utils              : "com.google.maps.android:android-maps-utils:0.5",
                 moshi                   : "com.squareup.moshi:moshi:${moshi_version}",
                 moshi_kotlin_compiler   : "com.squareup.moshi:moshi-kotlin-codegen:${moshi_version}",
                 moshi_kotlin            : "com.squareup.moshi:moshi-kotlin:${moshi_version}",
@@ -72,7 +73,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.3.0-alpha07'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
-        classpath 'com.google.gms:google-services:4.0.1'
+        classpath 'com.google.gms:google-services:4.1.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
