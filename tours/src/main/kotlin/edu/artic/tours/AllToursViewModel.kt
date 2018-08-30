@@ -51,5 +51,5 @@ class AllToursCellViewModel(val tour : ArticTour) : BaseViewModel() {
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
     val tourStops: Subject<String> = BehaviorSubject.createDefault("${tour.tourStops.count()}")
     val tourDuration: Subject<String> = BehaviorSubject.createDefault(tour.tourDuration)
-    val tourImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.imageUrl)
+    val tourImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.standardImageUrl)
 }
