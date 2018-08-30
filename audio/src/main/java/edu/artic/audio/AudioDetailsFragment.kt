@@ -26,7 +26,6 @@ import edu.artic.db.models.AudioFileModel
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
-import edu.artic.ui.util.isNotEmpty
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
