@@ -26,6 +26,7 @@ dependencies {
 
     implementation libs.constraint_layout
     api libs.maps
+    implementation libs.maps_utils
     implementation libs.arch_navigation
     implementation libs.arch_navigation_ui
     implementation libs.glide
