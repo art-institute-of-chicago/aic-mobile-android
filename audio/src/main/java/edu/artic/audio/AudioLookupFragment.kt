@@ -5,11 +5,11 @@ import android.view.View
 import android.widget.EditText
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
-import edu.artic.adapter.BaseRecyclerViewAdapter.OnItemClickListener
-import edu.artic.adapter.BaseViewHolder
 import edu.artic.adapter.itemChanges
+import edu.artic.adapter.itemSelections
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_audio_lookup.*
 import java.text.BreakIterator
 import kotlin.reflect.KClass
@@ -48,19 +48,27 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                 .disposedBy(disposeBag)
 
         number_pad.adapter = numberPadAdapter
-        numberPadAdapter.onItemClickListener = NumPadClickListener(lookup_field)
+
+        numberPadAdapter.itemSelections()
+                .subscribeBy { element ->
+                    viewModel.adapterClicks
+                            .onNext(element)
+                }
+                .disposedBy(disposeBag)
+
+        registerNumPadSubscription()
+
     }
 
-
     /**
-     * This on-click-listener adds and removes numbers to the [entryField] it wraps.
+     * XXX: This may somehow be split (at least partially) into the [viewModel].
      */
-    class NumPadClickListener(private val entryField: EditText) : OnItemClickListener<NumberPadElement> {
+    private fun registerNumPadSubscription() {
+        val entryField: EditText = lookup_field
+        val perCharacter = BreakIterator.getCharacterInstance()
 
-        private val perCharacter = BreakIterator.getCharacterInstance()
-
-        @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-        override fun onItemClick(position: Int, element: NumberPadElement, holder: BaseViewHolder) {
+        viewModel.adapterClicks
+                .subscribeBy { element ->
             when (element) {
                 is NumberPadElement.Numeric -> {
                     entryField.append(element.value)
@@ -79,6 +87,6 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                 }
                 NumberPadElement.GoSearch -> TODO()
             }
-        }
+        }.disposedBy(disposeBag)
     }
 }
