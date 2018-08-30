@@ -1,4 +1,6 @@
-include ':app', ':image', ':search',
+include ':app',
+        ':image',
+        ':search',
         ':navigation',
         ':analytics',
         ':localization',
