@@ -171,8 +171,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isTrafficEnabled = false
 
             setMapStyle(MapStyleOptions(mapStyleOptions))
-            setMinZoomPreference(0f)
-            setMaxZoomPreference(3f)
+            setMinZoomPreference(ZOOM_MIN)
+            setMaxZoomPreference(ZOOM_MAX)
 
             /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
             setPadding(0, requireActivity().statusBarHeight, 0, 0)
@@ -184,18 +184,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             setLatLngBoundsForCameraTarget(museumBounds)
         }
 
-        // TODO: use custom tiling here instead.
-        baseGroundOverlay = map.addGroundOverlay(
-                GroundOverlayOptions()
-                        .positionFromBounds(
-                                LatLngBounds(
-                                        LatLng(41.874620, -87.629243),
-                                        LatLng(41.884753, -87.615841)
-                                )
-                        ).image(deriveBaseOverlayDescriptor(requireActivity()))
-                        .zIndex(0.1f)
-        )
         tileOverlay = map.addTileOverlay(TileOverlayOptions()
+                .zIndex(0.2f)
                 .tileProvider(MapTileAssetProvider(resources.assets, 1)))
     }
 
@@ -319,6 +309,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribeBy { (floor, map) ->
                     tileOverlay.remove()
                     tileOverlay = map.addTileOverlay(TileOverlayOptions()
+                            .zIndex(0.2f)
                             .tileProvider(MapTileAssetProvider(resources.assets, floor)))
                 }
                 .disposedBy(disposeBag)
