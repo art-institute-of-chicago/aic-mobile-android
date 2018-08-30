@@ -25,8 +25,8 @@ fun String.asCDNUri() : Uri {
  *
  * This method is inspired by [String.orEmpty].
  */
-fun Uri?.orEmpty(): Uri {
-    return Uri.EMPTY
+inline fun Uri?.orEmpty(): Uri {
+    return this ?: Uri.EMPTY
 }
 
 /**
@@ -34,7 +34,7 @@ fun Uri?.orEmpty(): Uri {
  *
  * This method is inspired by [String.isEmpty].
  */
-fun Uri.isEmpty(): Boolean {
+inline fun Uri.isEmpty(): Boolean {
     return this == Uri.EMPTY
 }
 
@@ -43,6 +43,6 @@ fun Uri.isEmpty(): Boolean {
  *
  * This method is inspired by [String.isNotEmpty].
  */
-fun Uri.isNotEmpty(): Boolean {
-    return this != Uri.EMPTY
+inline fun Uri.isNotEmpty(): Boolean {
+    return !isEmpty()
 }
