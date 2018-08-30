@@ -1,20 +1,11 @@
 package edu.artic.db
 
 import com.fuzz.rx.asObservable
-import edu.artic.db.daos.ArticAudioFileDao
-import edu.artic.db.daos.ArticDataObjectDao
-import edu.artic.db.daos.ArticEventDao
-import edu.artic.db.daos.ArticExhibitionCMSDao
-import edu.artic.db.daos.ArticExhibitionDao
-import edu.artic.db.daos.ArticGalleryDao
-import edu.artic.db.daos.ArticMapAnnotationDao
-import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.ArticTourDao
-import edu.artic.db.daos.DashboardDao
-import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.db.daos.*
 import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
+import edu.artic.db.models.ArticSearchSuggestionsObject
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
@@ -35,7 +26,8 @@ class AppDataManager @Inject constructor(
         private val dataObjectDao: ArticDataObjectDao,
         private val eventDao: ArticEventDao,
         private val exhibitionDao: ArticExhibitionDao,
-        private val objectDao: ArticObjectDao
+        private val objectDao: ArticObjectDao,
+        private val searchSuggestionDao: ArticSearchObjectDao
 ) {
     companion object {
         const val HEADER_LAST_MODIFIED = "last-modified"
@@ -149,7 +141,14 @@ class AppDataManager @Inject constructor(
                             }
 
                             dataObjectDao.setDataObject(result.data)
+
+                            result.search?.let { searchObject ->
+                                val searchKeywordSuggestions = searchObject.searchStrings.values.toList()
+                                val artworkSuggestions = searchObject.searchObjects.map { it -> it.toString() }
+                                searchSuggestionDao.setDataObject(ArticSearchSuggestionsObject(searchKeywordSuggestions, artworkSuggestions))
+                            }
                         }
+
                     }
                     return@flatMap appDataState.asObservable()
                 }
