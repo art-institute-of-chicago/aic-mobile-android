@@ -62,16 +62,46 @@ data class ArticObject(
         // manually populated via DB save.
         var floor: Int = Int.MIN_VALUE
 ) : Parcelable, Playable {
+
+    /**
+     * Alias for [image_url], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
+     */
+    val standardImageUrl: String?
+        get() {
+            return image_url?.asCDNUri()
+        }
+
+    /**
+     * Alias for [largeImageFullPath], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
+     */
+    val largeImageUrl: String?
+        get() {
+            return largeImageFullPath?.asCDNUri()
+        }
+
+    /**
+     * Alias for [thumbnailFullPath], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
+     */
+    val thumbUrl: String?
+        get() {
+            return thumbnailFullPath?.asCDNUri()
+        }
+
+    @Ignore
+    constructor() : this(floor = Int.MIN_VALUE)
+
+    /**
+     * Delegates to [largeImageUrl] by default.
+     *
+     * See [Playable.getPlayableThumbnailUrl] for more info.
+     */
     override fun getPlayableThumbnailUrl(): String? {
-        return this.largeImageFullPath?.asCDNUri()
+        return largeImageUrl
     }
 
     override fun getPlayableTitle(): String? {
         return this.title
     }
-
-    @Ignore
-    constructor() : this(floor = Int.MIN_VALUE)
 }
 
 val ArticObject.audioFile: ArticAudioFile?
