@@ -112,7 +112,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
         objectObservable
                 .map {
-                    it.largeImageFullPath.orEmpty()
+                    it.largeImageUrl.orEmpty()
                 }.bindTo(image)
                 .disposedBy(disposeBag)
 
