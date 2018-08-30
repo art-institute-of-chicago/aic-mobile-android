@@ -6,3 +6,4 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor() : BaseViewModel() {
 
 }
+
