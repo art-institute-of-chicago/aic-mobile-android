@@ -12,18 +12,11 @@
 
     <TextView
         android:id="@+id/number_content"
+        style="@style/NumberPadText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="1dp"
         android:background="@drawable/number_pad_circle"
-        android:fontFamily="@font/ideal_sans_medium"
-        android:gravity="center"
-        android:includeFontPadding="false"
         android:maxLength="2"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="26sp"
         tools:text="4"
         />
 </FrameLayout>
