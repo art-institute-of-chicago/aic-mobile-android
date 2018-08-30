@@ -35,7 +35,7 @@ class TourIntroMapItemRenderer : MapItemRenderer<ArticTour>(useBitmapQueue = tru
     override fun getBitmapFetcher(item: ArticTour, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? =
             Glide.with(context)
                     .asBitmap()
-                    .load(item.thumbnailFullPath?.asCDNUri())
+                    .load(item.thumbUrl)
                     .asRequestObservable(context)
                     .debug("Glide loading: ${item.title}")
                     .map { bitmap ->

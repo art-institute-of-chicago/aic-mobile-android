@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.ui.util.asCDNUri
 
 @JsonClass(generateAdapter = true)
 @Entity
@@ -28,7 +29,16 @@ data class ArticMapAnnotation(
         @Json(name = "image_filesize") val imageFileSize: String?,
         @Json(name = "image_width") val imageWidth: String?,
         @Json(name = "image_height") val imageHeight: String?
-)
+) {
+
+    /**
+     * Alias for [imageUrl], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
+     */
+    val standardImageUrl: String?
+        get() {
+            return imageUrl?.asCDNUri()
+        }
+}
 
 class ArticMapAnnotationType {
     companion object {

@@ -20,7 +20,7 @@ import edu.artic.db.models.*
             ArticEvent::class,
             ArticDataObject::class
         ],
-        version = 1,
+        version = 2,
         exportSchema = false
 )
 @TypeConverters(AppConverters::class)

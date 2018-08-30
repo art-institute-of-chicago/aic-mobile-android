@@ -188,8 +188,8 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
     init {
 
         articObjectObservable
-                .filter { it.thumbnailFullPath != null }
-                .map { it.thumbnailFullPath!! }
+                .filter { it.thumbUrl != null }
+                .map { it.thumbUrl!! }
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 

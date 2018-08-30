@@ -122,7 +122,7 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     override fun getBitmapFetcher(item: ArticMapAnnotation, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? {
         return Glide.with(context)
                 .asBitmap()
-                .load(item.imageUrl?.asCDNUri())
+                .load(item.standardImageUrl)
                 .asRequestObservable(context)
                 .map { BitmapDescriptorFactory.fromBitmap(departmentMarkerGenerator.makeIcon(it, item.label.orEmpty())) }
     }
