@@ -1,8 +1,14 @@
 package artic.edu.search
 
 import android.support.annotation.DrawableRes
+import com.fuzz.rx.bindTo
+import com.fuzz.rx.disposedBy
+import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticObject
+import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -11,45 +17,85 @@ import javax.inject.Inject
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class DefaultSearchSuggestionsViewModel @Inject constructor() : BaseViewModel() {
+class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao: ArticSearchObjectDao,
+                                                            objectDao: ArticObjectDao
+) : BaseViewModel() {
 
-
+    private val suggestedKeywords: Subject<List<TextCellViewModel>> = BehaviorSubject.create()
+    private val suggestedArtworks: Subject<List<CircularCellViewModel>> = BehaviorSubject.create()
     val cells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
-    private var viewElements: List<SearchBaseCellViewModel> = mutableListOf<SearchBaseCellViewModel>().apply {
-        /**
-         * TODO:: replace the mock data
-         */
 
-        add(HeaderCellViewModel(SearchViewComponent.Header("Suggested")))
-        add(TextCellViewModel(SearchViewComponent.SuggestedKeyword("Bedroom")))
-        add(TextCellViewModel(SearchViewComponent.SuggestedKeyword("Mandala")))
-        add(TextCellViewModel(SearchViewComponent.SuggestedKeyword("York")))
-        add(HeaderCellViewModel(SearchViewComponent.Header("On The Map")))
+    private val cellViewHolders: List<SearchBaseCellViewModel>?
+        get() {
+            val viewHolders = (cells as BehaviorSubject)
+            return if (viewHolders.hasValue()) {
+                viewHolders.value
+            } else {
+                null
+            }
+        }
 
-        add(AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant))
-        add(AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge))
-        add(AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop))
-        add(AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom))
-
-        add(DividerViewModel())
-
-        add(CircularCellViewModel(null))
-        add(CircularCellViewModel(null))
-        add(CircularCellViewModel(null))
-        add(CircularCellViewModel(null))
-        add(CircularCellViewModel(null))
-        add(CircularCellViewModel(null))
+    private fun getAmenitiesVieModels(): List<SearchBaseCellViewModel> {
+        return listOf(
+                AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
+                AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
+                AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
+                AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom))
     }
 
     init {
-        cells.onNext(viewElements)
+
+
+        searchSuggestionsDao.getDataObject()
+                .toObservable()
+                .map { suggestedSearchOptions ->
+                    val list = mutableListOf<TextCellViewModel>()
+                    suggestedSearchOptions.searchStrings.forEach { keyword ->
+                        list.add(TextCellViewModel(SearchViewComponent.SuggestedKeyword(keyword)))
+                    }
+                    return@map list
+                }
+                .bindTo(suggestedKeywords)
+                .disposedBy(disposeBag)
+
+        searchSuggestionsDao.getDataObject()
+                .toObservable()
+                .map { suggestedSearchOptions -> suggestedSearchOptions.searchObjects }
+                .flatMap { idsList ->
+                    objectDao.getObjectsByIdList(idsList).toObservable()
+                }
+                .map { objects ->
+                    val list = mutableListOf<CircularCellViewModel>()
+                    objects.forEach { artwork ->
+                        list.add(CircularCellViewModel(SearchViewComponent.Artwork(artwork)))
+                    }
+                    return@map list
+                }
+                .bindTo(suggestedArtworks)
+                .disposedBy(disposeBag)
+
+        Observables.combineLatest(suggestedArtworks, suggestedKeywords)
+        { artworks, keywords ->
+            mutableListOf<SearchBaseCellViewModel>()
+                    .apply {
+                        add(0, HeaderCellViewModel(SearchViewComponent.Header("Suggested")))
+                        addAll(keywords)
+                        add(HeaderCellViewModel(SearchViewComponent.Header("On The Map")))
+                        addAll(getAmenitiesVieModels())
+                        add(DividerViewModel())
+                        addAll(artworks)
+                    }
+        }
+                .bindTo(cells)
+                .disposedBy(disposeBag)
+
     }
 
     /**
-     * Span size for the artworks should be 5 (
+     * Span size for the artworks should be 5
      */
     fun getSpanCount(position: Int): Int {
-        val cell = viewElements[position]
+        val cell = cellViewHolders?.get(position)
         return if (cell is CircularCellViewModel || cell is AmenitiesCellViewModel) {
             1
         } else {
@@ -105,10 +151,15 @@ class TextCellViewModel(item: SearchViewComponent.SuggestedKeyword) : SearchBase
 /**
  * ViewModel for displaying the circular artwork image under "On the map" section.
  */
-class CircularCellViewModel(val artWork: SearchViewComponent<*>?) : SearchBaseCellViewModel() {
-    /**
-     * TODO:: remove this mock image url
-     */
-    val imageUrl: Subject<String> = BehaviorSubject.createDefault("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/300px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg")
+class CircularCellViewModel(val artWork: SearchViewComponent.Artwork?) : SearchBaseCellViewModel() {
+
+    val imageUrl: Subject<String> = BehaviorSubject.create()
+
+    init {
+        artWork?.value?.thumbnailFullPath?.asCDNUri()?.let {
+            imageUrl.onNext(it.toString())
+        }
+
+    }
 
 }
