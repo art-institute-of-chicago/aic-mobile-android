@@ -6,14 +6,43 @@ import edu.artic.db.BuildConfig
 /**
  * Use this to ensure that your image urls are always hitting the CDN.
  *
+ * Especially handy for IIIF resources.
+ *
  * FIXME: Use [edu.artic.db.models.ArticDataObject.imageServerUrl] instead of [BuildConfig.CDN_HOST]
  */
-fun String.asCDNUri() : Uri {
+fun String.asCDNUri() : String {
     val parsed = Uri.parse(this)
     return when {
         parsed.authority == BuildConfig.OFFICIAL_IMAGE_HOST -> parsed.buildUpon()
                 .authority(BuildConfig.CDN_HOST)
                 .build()
         else -> parsed
-    }
+    }.toString()
+}
+
+/**
+ * Returns this if it is not null, or else [Uri.EMPTY] if it _is_ `null`.
+ *
+ * This method is inspired by [String.orEmpty].
+ */
+inline fun Uri?.orEmpty(): Uri {
+    return this ?: Uri.EMPTY
+}
+
+/**
+ * Checks whether this is `==` to [Uri.EMPTY].
+ *
+ * This method is inspired by [String.isEmpty].
+ */
+inline fun Uri.isEmpty(): Boolean {
+    return this == Uri.EMPTY
+}
+
+/**
+ * Checks whether this is `!=` to [Uri.EMPTY].
+ *
+ * This method is inspired by [String.isNotEmpty].
+ */
+inline fun Uri.isNotEmpty(): Boolean {
+    return !isEmpty()
 }

@@ -161,9 +161,9 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                 .asBitmap()
                 .apply(RequestOptions().disallowHardwareConfig())
                 .loadWithThumbnail(
-                        item.thumbnailFullPath?.asCDNUri(),
-                        // Prefer 'image_url', fall back to 'large image' if necessary.
-                        (item.image_url ?: item.largeImageFullPath)?.asCDNUri()
+                        item.thumbUrl,
+                        // Prefer standard 'image_url', fall back to 'large image' if necessary.
+                        item.standardImageUrl ?: item.largeImageUrl
                 )
                 .asRequestObservable(context,
                         width = imageSize,

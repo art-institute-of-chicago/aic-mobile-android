@@ -45,8 +45,8 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
 
 
         tourObservable
-                .filter { it.imageUrl != null }
-                .map { it.imageUrl!! }
+                .filter { it.standardImageUrl != null }
+                .map { it.standardImageUrl!! }
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 
@@ -130,8 +130,8 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
 
     init {
         articObjectObservable
-                .filter { it.thumbnailFullPath != null }
-                .map { it.thumbnailFullPath!! }
+                .filter { it.thumbUrl != null }
+                .map { it.thumbUrl!! }
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
         articObjectObservable
