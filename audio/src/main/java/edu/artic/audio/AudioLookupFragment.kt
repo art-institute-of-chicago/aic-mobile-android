@@ -75,7 +75,9 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                 .subscribeBy { element ->
             when (element) {
                 is NumberPadElement.Numeric -> {
-                    entryField.append(element.value)
+                    if (entryField.length() < 5) {
+                        entryField.append(element.value)
+                    }
                 }
                 NumberPadElement.DeleteBack -> {
                     entryField.text.apply {
