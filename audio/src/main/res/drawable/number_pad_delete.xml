@@ -9,7 +9,7 @@
 
     <path
         android:pathData="M 2,18 L 19,1 L 61,1 L 61,36 L 19,36 z"
-        android:strokeColor="@color/number_pad_white"
+        android:strokeColor="@color/number_pad_white_half_visible"
         android:strokeWidth="2"
         />
 
