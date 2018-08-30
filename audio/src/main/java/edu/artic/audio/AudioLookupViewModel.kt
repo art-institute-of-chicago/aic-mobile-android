@@ -3,6 +3,7 @@ package edu.artic.audio
 import edu.artic.audio.NumberPadElement.*
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
@@ -13,6 +14,8 @@ import javax.inject.Inject
  * [AudioDetailsViewModel] instead.
  */
 class AudioLookupViewModel @Inject constructor() : BaseViewModel() {
+
+    val adapterClicks: Subject<NumberPadElement> = PublishSubject.create()
 
     /**
      * See [NumberPadAdapter] for details on all this.
