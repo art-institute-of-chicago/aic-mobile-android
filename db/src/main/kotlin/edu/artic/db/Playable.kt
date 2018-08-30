@@ -1,7 +1,5 @@
 package edu.artic.db
 
-import android.net.Uri
-
 /**
  * Interface for a database model that [edu.artic.media.audio.AudioPlayerService]
  * can play.
@@ -22,7 +20,7 @@ interface Playable {
      * **Implementation note:** the returned Uri has already been passed through
      * [String.asCDNUri][edu.artic.ui.util.asCDNUri].
      */
-    fun getPlayableThumbnailUrl(): Uri?
+    fun getPlayableThumbnailUrl(): String?
 
     /**
      * A friendly title for this media, to display next to the audio controls.

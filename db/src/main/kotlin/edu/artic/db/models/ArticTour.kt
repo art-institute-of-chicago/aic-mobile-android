@@ -2,9 +2,7 @@ package edu.artic.db.models
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
-import android.net.Uri
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -86,7 +84,7 @@ data class ArticTour(
         }
     }
 
-    override fun getPlayableThumbnailUrl(): Uri? {
+    override fun getPlayableThumbnailUrl(): String? {
         return this.largeImageFullPath?.asCDNUri()
     }
 

@@ -4,7 +4,6 @@ import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
-import android.net.Uri
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -63,7 +62,7 @@ data class ArticObject(
         // manually populated via DB save.
         var floor: Int = Int.MIN_VALUE
 ) : Parcelable, Playable {
-    override fun getPlayableThumbnailUrl(): Uri? {
+    override fun getPlayableThumbnailUrl(): String? {
         return this.largeImageFullPath?.asCDNUri()
     }
 

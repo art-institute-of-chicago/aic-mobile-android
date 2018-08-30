@@ -10,14 +10,14 @@ import edu.artic.db.BuildConfig
  *
  * FIXME: Use [edu.artic.db.models.ArticDataObject.imageServerUrl] instead of [BuildConfig.CDN_HOST]
  */
-fun String.asCDNUri() : Uri {
+fun String.asCDNUri() : String {
     val parsed = Uri.parse(this)
     return when {
         parsed.authority == BuildConfig.OFFICIAL_IMAGE_HOST -> parsed.buildUpon()
                 .authority(BuildConfig.CDN_HOST)
                 .build()
         else -> parsed
-    }
+    }.toString()
 }
 
 /**
