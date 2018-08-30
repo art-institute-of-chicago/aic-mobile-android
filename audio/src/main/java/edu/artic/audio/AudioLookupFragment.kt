@@ -1,7 +1,11 @@
 package edu.artic.audio
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.EditText
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -85,8 +89,32 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                         }
                     }
                 }
-                NumberPadElement.GoSearch -> TODO()
+                NumberPadElement.GoSearch -> shakeLookupField()
             }
         }.disposedBy(disposeBag)
+    }
+
+    /**
+     * Call this if the input is not usable.
+     */
+    private fun shakeLookupField() {
+        val shaker = ObjectAnimator.ofFloat(lookup_field, View.TRANSLATION_X,
+                0F, 10F, -10F)
+
+        shaker
+                // According to iOS source code, the duration should be 0.07 seconds
+                .setDuration(70L)
+                .apply {
+                    // Back and forth four times.
+                    repeatCount = 4
+                    // Be explicit about preferred interpolator
+                    interpolator = LinearInterpolator()
+                    addListener(object: AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animator: Animator?) {
+                            // Reset to default at end of animation
+                            ((animator as ObjectAnimator).target as View).translationX = 0F
+                        }
+                    })
+                }.start()
     }
 }
