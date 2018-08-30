@@ -49,6 +49,7 @@
         android:focusable="true"
         android:importantForAutofill="no"
         android:inputType="none"
+        android:maxLength="5"
         android:hint="@string/audio_screen_header"
         android:textColorHint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/subheader"
