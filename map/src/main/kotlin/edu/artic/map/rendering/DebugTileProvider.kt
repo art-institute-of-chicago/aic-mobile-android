@@ -13,30 +13,6 @@ import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import kotlin.math.pow
 
-/**
- * Description: Draws text on the map to show off tiles.
- */
-class DebugTileProvider(context: Context) : TileProvider {
-
-    private val textMarkerGenerator = TextMarkerGenerator(context)
-    private val sphericalMercatorProjection = SphericalMercatorProjection(TILE_SIZE)
-
-    override fun getTile(x: Int, y: Int, zoom: Int): Tile? {
-        val worldXCoordinate = (x * 256.0) / (1 shl zoom)
-        val worldYCoordinate = (y * 256.0) / (1 shl zoom)
-        val latLng = sphericalMercatorProjection.toLatLng(Point(worldXCoordinate, worldYCoordinate))
-        // render coordinates
-        synchronized(textMarkerGenerator) {
-            val bitmap = textMarkerGenerator.makeIcon("(${latLng.latitude}, ${latLng.longitude})")
-            val stream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val byteArray = stream.toByteArray()
-            bitmap.recycle()
-            return Tile(TILE_SIZE.toInt(), TILE_SIZE.toInt(), byteArray)
-        }
-    }
-}
-
 class DebugTileProvider2(context: Context) : TileProvider {
 
     private val northEast: Point
@@ -47,15 +23,7 @@ class DebugTileProvider2(context: Context) : TileProvider {
     init {
         northEast = mapProjection.toPoint(museumBounds.northeast)
         southWest = mapProjection.toPoint(museumBounds.southwest)
-        boundsMap = (17..22).map {
-            it to boundsForZoom(
-                    it,
-                    northEast = northEast,
-                    southWest = southWest
-            )
-        }.toMap()
-
-        Timber.d("Found bounds $boundsMap")
+        boundsMap = evaluatedBoundsMap
     }
 
     private val textMarkerGenerator = TextMarkerGenerator(context)
