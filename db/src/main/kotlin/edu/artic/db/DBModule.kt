@@ -47,5 +47,8 @@ class DBModule {
     fun provideEventDao(appDatabase: AppDatabase) = appDatabase.eventDao
 
     @Provides
+    fun provideSearchSuggestionsDao(appDatabase: AppDatabase) = appDatabase.searchSuggestionDao
+
+    @Provides
     fun provideArticExhibitionCMSDao(appDatabase: AppDatabase) = appDatabase.exhibitionCMSDao
 }

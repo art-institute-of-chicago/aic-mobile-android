@@ -3,7 +3,10 @@
     package="artic.edu.search">
 
     <application>
-        <activity android:name=".SearchActivity">
+        <activity
+            android:name=".SearchActivity"
+            android:theme="@style/SearchTheme"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

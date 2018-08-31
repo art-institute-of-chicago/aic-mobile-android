@@ -3,12 +3,7 @@ package edu.artic.db
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
-import edu.artic.db.daos.ArticAudioFileDao
-import edu.artic.db.daos.ArticEventDao
-import edu.artic.db.daos.ArticGalleryDao
-import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.DashboardDao
-import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.db.daos.*
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
 import org.junit.After
@@ -53,7 +48,8 @@ class AppDataManagerTest {
                 exhibitionCMSDao = mock(),
                 exhibitionDao = mock(),
                 mapAnnotationDao = mock(),
-                tourDao = mock()
+                tourDao = mock(),
+                searchSuggestionDao = mock()
         )
     }
 
