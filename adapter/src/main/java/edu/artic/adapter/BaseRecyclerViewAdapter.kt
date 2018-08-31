@@ -519,25 +519,20 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         }
 
         /**
-         * If the headers and footers of a [BaseRecyclerViewAdapter] share any ids,
-         * RecyclerView.ViewPrefetcher will crash non-deterministically in
-         * [RecyclerView.Recycler.recycleViewHolderInternal].
+         * If the headers and footers of a [BaseRecyclerViewAdapter] share any
+         * ids, RecyclerView.ViewPrefetcher will crash non-deterministically
+         * in [RecyclerView.Recycler.recycleViewHolderInternal].
          *
          *
-         * To preempt that, this method throws an IllegalArgumentException as soon
-         * as a ViewHolder with such a [.getViewType] is proffered to
-         * [.addFooterHolder] or
-         * [.addHeaderHolder], which should make
-         * early detection and diagnosis of this problem much more feasible.
+         * To preempt that, this method throws an IllegalArgumentException as
+         * soon as a ViewHolder with such a [getViewType] is proffered to
+         * [addFooterHolder] or [addHeaderHolder], which should make early
+         * detection and diagnosis of this problem much more feasible.
          *
-
-         * @param forbiddenIds  a list of ids already in use. Typically [.headerLayoutIds]
-         * *                      or [.footerLayoutIds]
-         * *
+         *
+         * @param forbiddenIds  a list of ids already in use. Typically [headerLayoutIds] or [footerLayoutIds]
          * @param id            the suggested id
-         * *
-         * @param forbiddenType a name for the type of ids - this will appear in the exception
-         * *                      message
+         * @param forbiddenType a name for the type of ids - this will appear in the exception message
          */
         @JvmStatic
         protected fun preventReuseOfIdsFrom(
