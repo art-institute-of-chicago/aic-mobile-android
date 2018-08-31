@@ -19,10 +19,11 @@ import java.lang.IndexOutOfBoundsException
 import java.util.ArrayList
 
 /**
- * @author Sameer Dhakal (Fuzz)
- */
-/**
- * Description: The base adapter that consolidates logic here.
+ * Description: Default implementation of [RecyclerView.Adapter].
+ *
+ * Use this class to greatly simplify integration with MVVM (that's
+ * `Model-View-ViewModel`) architectures. Main selling points are as
+ * follows:
  */
 abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         private val diffItemCallback: DiffUtil.ItemCallback<TModel> = object :
@@ -38,12 +39,11 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     interface OnItemClickListener<in T> {
 
         /**
-         * The item clicked.
-
-         * @param position   The position in the itemslist that was clicked.
-         * *
+         * Callback for [on-click listeners][View.setOnClickListener]. Always invoked
+         * on main thread.
+         *
+         * @param position   The position in [itemsList] that was clicked.
          * @param item       The item from the list.
-         * *
          * @param viewHolder The view holder that was clicked.
          */
         fun onItemClick(position: Int, item: T, viewHolder: BaseViewHolder)
@@ -52,12 +52,11 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     interface OnItemLongClickListener<in T> {
 
         /**
-         * The item clicked.
-
-         * @param position   The position in the itemslist that was clicked.
-         * *
+         * Callback for [on-long-click listeners][View.setOnLongClickListener]. Always
+         * invoked on main thread.
+         *
+         * @param position   The position in [itemsList] that was clicked.
          * @param item       The item from the list.
-         * *
          * @param viewHolder The view holder that was clicked.
          *
          * @return true if view consumed the click.
@@ -67,14 +66,25 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
 
     /**
      * Interface for when headers or footers are called.
+     *
+     * One instance should be registered for the headers, and a different
+     * instance should be registered for the footers. While permitted, we
+     * do not recommend using the same callback for both types of
+     * [BaseViewHolder]s.
+     *
+     * (HF -> Header/Footer)
      */
     interface OnHFItemClickListener {
 
         /**
-         * Called when item is clicked.
-
-         * @param position   The position within the header or footers list.
-         * *
+         * Called when a header or footer item is clicked.
+         *
+         * This listener is registered with a [BaseRecyclerViewAdapter]
+         * via [onHeaderClickListener] and/or [onFooterClickListener]. Which
+         * of those two methods it is registered with determines what kind of
+         * parameters you should expect.
+         *
+         * @param position   The position within the headers/footers list.
          * @param viewHolder The view holder clicked.
          */
         fun onItemClick(position: Int, viewHolder: BaseViewHolder)
