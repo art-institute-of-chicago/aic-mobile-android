@@ -6,6 +6,7 @@ import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
 import android.content.Context
 import android.support.annotation.LayoutRes
+import android.support.annotation.UiThread
 import android.support.v7.recyclerview.extensions.AsyncDifferConfig
 import android.support.v7.util.DiffUtil
 import android.support.v7.util.ListUpdateCallback
@@ -386,6 +387,13 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
 
     protected fun getRawPosition(itemPosition: Int) = itemPosition + headersCount
 
+    /**
+     * Dispatch point for [onClick][View.setOnClickListener] events.
+     *
+     * The 'position' integer is always that of the [BaseViewHolder] at the instant
+     * it was clicked; precise fallback logic for detached views, unusual conditions,
+     * and so forth are covered by [BaseRecyclerViewAdapter.getViewHolderPosition].
+     */
     protected open fun onItemPositionClicked(viewHolder: BaseViewHolder, position: Int) {
         getItemOrNull(position)?.let { item ->
             this.onItemClickListener?.onItemClick(position, item, viewHolder)
@@ -393,8 +401,16 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         }
     }
 
+    /**
+     * Delegate for clicks on [this adapter's itemViews][BaseViewHolder.itemView].
+     *
+     * Always called by [onItemPositionClicked] on the UI Thread, right after
+     * [onItemClickListener?.onItemClick][OnItemClickListener.onItemClick].
+     */
+    @UiThread
     protected open fun onItemClicked(position: Int, item: TModel, viewHolder: BaseViewHolder) = Unit
 
+    @UiThread
     protected open fun onItemPositionLongClicked(viewHolder: BaseViewHolder, position: Int): Boolean {
         return getItemOrNull(position)?.let { item ->
             return@let this.onItemLongClickListener?.onItemLongPress(position, item, viewHolder)
