@@ -1,11 +1,12 @@
 package edu.artic.ui
 
+import android.content.res.ColorStateList
+import android.content.res.TypedArray
 import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.Toolbar
 import android.view.*
@@ -97,13 +98,28 @@ abstract class BaseFragment : Fragment() {
             requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
             requireActivity().window?.statusBarColor = Color.TRANSPARENT
         } else {
-            requireActivity().window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            getThemeColors(intArrayOf(android.support.design.R.attr.colorPrimaryDark))?.defaultColor?.let {
+                requireActivity().window?.statusBarColor = it
+            }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         baseActivity.title = title
+    }
+
+
+    private fun getThemeColors(colors: IntArray): ColorStateList? {
+        val found: ColorStateList?
+        var typedArray: TypedArray? = null
+        try {
+            typedArray = requireContext().obtainStyledAttributes(colors)
+            found = typedArray!!.getColorStateList(0)
+        } finally {
+            typedArray?.recycle()
+        }
+        return found
     }
 
     override fun onDestroyView() {
