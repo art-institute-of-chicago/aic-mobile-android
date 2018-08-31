@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/audio_navigation_graph"
-    app:startDestination="@id/audioDetailsFragment">
+    app:startDestination="@id/audioLookupFragment"
+    >
+
+    <fragment
+        android:id="@+id/audioLookupFragment"
+        android:name="edu.artic.audio.AudioLookupFragment"
+        android:label="audioLookupFragment"
+        />
 
     <fragment
         android:id="@+id/audioDetailsFragment"
         android:name="edu.artic.audio.AudioDetailsFragment"
-        android:label="audioDetailsFragment" />
+        android:label="audioDetailsFragment"
+        />
+
+
+    <action
+        android:id="@+id/see_current_audio_details"
+        app:destination="@id/audioDetailsFragment"
+        />
 
 </navigation>
