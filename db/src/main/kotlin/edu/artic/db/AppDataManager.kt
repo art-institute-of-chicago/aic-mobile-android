@@ -155,6 +155,9 @@ class AppDataManager @Inject constructor(
 
                             dashboardDao.setDashBoard(result.dashboard)
                             generalInfoDao.setGeneralInfo(result.generalInfo)
+                            result.mapFloors?.values?.let { floors ->
+                                articMapFloorDao.insertMapFloors(floors.toList())
+                            }
 
                             val galleries = result.galleries?.values?.toList()
                             if (galleries?.isNotEmpty() == true) {
