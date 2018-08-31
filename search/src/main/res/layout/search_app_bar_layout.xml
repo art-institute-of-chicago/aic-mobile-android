@@ -5,6 +5,16 @@
     android:background="@color/greyText"
     android:elevation="5dp">
 
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_close"
+        android:visibility="gone" />
+
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
