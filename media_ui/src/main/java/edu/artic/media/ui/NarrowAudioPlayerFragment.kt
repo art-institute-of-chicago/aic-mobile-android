@@ -14,6 +14,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.navigation.NavigationConstants
+import edu.artic.ui.AloofFragment
 import edu.artic.ui.BaseFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.subjects.BehaviorSubject
@@ -34,7 +35,7 @@ import kotlin.reflect.KClass
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewModel>() {
+class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewModel>(), AloofFragment {
 
     override val viewModelClass: KClass<NarrowAudioPlayerViewModel>
         get() = NarrowAudioPlayerViewModel::class
