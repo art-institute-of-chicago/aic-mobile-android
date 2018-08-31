@@ -39,6 +39,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>() {
                 .disposedBy(disposeBag)
 
         toolbar.close.setOnClickListener {
+            viewModel.clearText()
             toolbar.searchEditText.text.clear()
         }
 
