@@ -1,6 +1,7 @@
 package artic.edu.search
 
 import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
@@ -66,9 +67,9 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
         { artworks, keywords ->
             mutableListOf<SearchBaseCellViewModel>()
                     .apply {
-                        add(0, HeaderCellViewModel(SearchViewComponent.Header("Suggested")))
+                        add(0, HeaderCellViewModel(SearchViewComponent.Header(R.string.suggested)))
                         addAll(keywords)
-                        add(HeaderCellViewModel(SearchViewComponent.Header("On The Map")))
+                        add(HeaderCellViewModel(SearchViewComponent.Header(R.string.on_the_map)))
                         addAll(getAmenitiesViewModels())
                         add(DividerViewModel())
                         addAll(artworks)
@@ -85,7 +86,7 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
  * This class represents different component types used to build the [DefaultSearchSuggestionsFragment] view.
  */
 sealed class SearchViewComponent<T>(val value: T) {
-    class Header(val value: String)
+    class Header(@StringRes val value: Int)
     class SuggestedKeyword(val value: String)
     class Artwork(val value: ArticObject)
 }
@@ -97,7 +98,7 @@ open class SearchBaseCellViewModel : BaseViewModel()
  * Represents the header for each section (e.g. "On the Map")
  */
 class HeaderCellViewModel(item: SearchViewComponent.Header) : SearchBaseCellViewModel() {
-    val text: Subject<String> = BehaviorSubject.createDefault(item.value)
+    val text: Subject<Int> = BehaviorSubject.createDefault(item.value)
 }
 
 /**
@@ -127,13 +128,13 @@ class TextCellViewModel(item: SearchViewComponent.SuggestedKeyword) : SearchBase
 /**
  * ViewModel for displaying the circular artwork image under "On the map" section.
  */
-class CircularCellViewModel(val artWork: SearchViewComponent.Artwork?) : SearchBaseCellViewModel() {
+class CircularCellViewModel(artWork: SearchViewComponent.Artwork?) : SearchBaseCellViewModel() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
 
     init {
-        artWork?.value?.thumbnailFullPath?.asCDNUri()?.let {
-            imageUrl.onNext(it.toString())
+        artWork?.value?.thumbnailFullPath?.asCDNUri()?.let { url ->
+            imageUrl.onNext(url)
         }
 
     }
