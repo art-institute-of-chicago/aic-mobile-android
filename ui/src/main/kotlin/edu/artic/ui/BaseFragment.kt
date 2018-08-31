@@ -93,13 +93,15 @@ abstract class BaseFragment : Fragment() {
             setExpandedTitleTypeface(toolbarTextTypeFace)
         }
 
-        if (hasTransparentStatusBar()) {
-            requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-            requireActivity().window?.statusBarColor = Color.TRANSPARENT
-        } else {
-            val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
-            requireContext().getThemeColors(primaryDarkColor)[0]?.defaultColor?.let {
-                requireActivity().window?.statusBarColor = it
+        if (this !is AloofFragment) {
+            if (hasTransparentStatusBar()) {
+                requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+                requireActivity().window?.statusBarColor = Color.TRANSPARENT
+            } else {
+                val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
+                requireContext().getThemeColors(primaryDarkColor)[0]?.defaultColor?.let {
+                    requireActivity().window?.statusBarColor = it
+                }
             }
         }
     }
@@ -128,3 +130,8 @@ abstract class BaseFragment : Fragment() {
 
 
 }
+
+/**
+ * Marker interface to mark those fragments which shouldn't modify the parent activity theme.
+ */
+interface AloofFragment
