@@ -346,25 +346,32 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     fun getItemsList(): List<TModel> = pagedListAdapterHelper.currentList ?: arrayListOf()
 
     /**
+     * Variant of [getItemViewType] with the `position`
+     * parameter corrected to account for header items.
+     * Subclasses are strongly recommended to return the
+     * layout resource Id of the view instead to ensure
+     * types never clash.
+     *
+     * To specify the layout of a header or footer ViewHolder,
+     * use [addHeaderView] or [addFooterView], respectively.
+     *
      * @param position the position within the items-list dataset.
      *
-     * @return The layout associated with the [TBinding].
+     * @return The layout associated with the [TModel].
      */
     @LayoutRes
     protected abstract fun getLayoutResId(position: Int): Int
 
     /**
-     * Variant of [.getItemViewType] with the `position`
-     * parameter corrected to account for header items.
-     * Subclasses are strongly recommended to return the layout resource Id of the view instead
-     * to ensure types never clash.
+     * Determine what layout should be inflated for the [BaseViewHolder] at
+     * the given [position]. Note that the parameter is already adjusted to
+     * account for header items.
      *
-
-     * @param position index into the item list of the item whose ViewHolder type is
-     * *                 desired
-     * *
-     * @return that type
+     * Please use [getLayoutResId] instead. If two [BaseViewHolder]s possess
+     * the same layout but require different binding logic, isolate that
+     * distinction to the 3-args `onBindViewHolder(VH, TModel?, Int)`.
      */
+    @Deprecated("Implementors should not need to override this method; please migrate to 'getLayoutResId'.", ReplaceWith("getLayoutResId(position)"))
     protected open fun getViewType(position: Int) = getLayoutResId(position)
 
     protected open fun setItemClickListener(viewHolder: BaseViewHolder, onClickListener: View.OnClickListener) {
