@@ -96,7 +96,7 @@ fun Context.getThemeColors(colors: IntArray): Array<ColorStateList?> {
     try {
         typedArray = this.obtainStyledAttributes(colors)
         found = arrayOfNulls(colors.size)
-        for (i in 0..colors.size) {
+        for (i in 0 until colors.size) {
             found[i] = typedArray.getColorStateList(i)
         }
     } finally {
