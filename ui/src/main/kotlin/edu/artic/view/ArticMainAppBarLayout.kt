@@ -5,6 +5,8 @@ import android.support.annotation.DrawableRes
 import android.support.design.widget.AppBarLayout
 import android.util.AttributeSet
 import android.view.View
+import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.navigation.NavigationConstants
 import edu.artic.ui.R
 import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
 
@@ -34,6 +36,10 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             searchIcon.background.alpha = (progress * 255).toInt()
             icon.drawable.alpha = (progress * 255).toInt()
             expandedImage.drawable.alpha = (progress * 255).toInt()
+        }
+
+        searchIcon.setOnClickListener {
+            context.startActivity(NavigationConstants.SEARCH.asDeepLinkIntent())
         }
     }
 
