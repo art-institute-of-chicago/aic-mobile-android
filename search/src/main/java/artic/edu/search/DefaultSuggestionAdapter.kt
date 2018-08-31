@@ -8,6 +8,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
+import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
@@ -29,8 +30,7 @@ class DefaultSuggestionAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellVie
             }
             is HeaderCellViewModel -> {
                 item.text
-                        .map { stringRes -> resources.getString(stringRes) }
-                        .bindTo(headerText.text())
+                        .bindTo(headerText.textRes())
                         .disposedBy(item.viewDisposeBag)
             }
             is CircularCellViewModel -> {
