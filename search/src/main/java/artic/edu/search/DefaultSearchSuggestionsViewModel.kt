@@ -35,7 +35,7 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
             }
         }
 
-    private fun getAmenitiesVieModels(): List<SearchBaseCellViewModel> {
+    private fun getAmenitiesViewModels(): List<SearchBaseCellViewModel> {
         return listOf(
                 AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
                 AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
@@ -81,7 +81,7 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                         add(0, HeaderCellViewModel(SearchViewComponent.Header("Suggested")))
                         addAll(keywords)
                         add(HeaderCellViewModel(SearchViewComponent.Header("On The Map")))
-                        addAll(getAmenitiesVieModels())
+                        addAll(getAmenitiesViewModels())
                         add(DividerViewModel())
                         addAll(artworks)
                     }

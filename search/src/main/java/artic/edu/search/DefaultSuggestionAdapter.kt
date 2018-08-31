@@ -52,24 +52,12 @@ class DefaultSuggestionAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellVie
     override fun getLayoutResId(position: Int): Int {
         val item = getItem(position)
         return when (item) {
-            is HeaderCellViewModel -> {
-                return R.layout.layout_cell_header
-            }
-            is TextCellViewModel -> {
-                return R.layout.layout_cell_suggested_keyword
-            }
-            is AmenitiesCellViewModel -> {
-                return R.layout.layout_cell_amenity
-            }
-            is DividerViewModel -> {
-                return R.layout.layout_cell_divider
-            }
-            is CircularCellViewModel -> {
-                R.layout.layout_cell_suggested_map_object
-            }
-            else -> {
-                R.layout.layout_cell_suggested_map_object
-            }
+            is HeaderCellViewModel -> return R.layout.layout_cell_header
+            is TextCellViewModel -> return R.layout.layout_cell_suggested_keyword
+            is AmenitiesCellViewModel -> return R.layout.layout_cell_amenity
+            is DividerViewModel -> return R.layout.layout_cell_divider
+            is CircularCellViewModel -> R.layout.layout_cell_suggested_map_object
+            else -> R.layout.layout_cell_suggested_map_object
         }
     }
 
