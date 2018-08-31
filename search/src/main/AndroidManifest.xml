@@ -3,7 +3,9 @@
     package="artic.edu.search">
 
     <application>
-        <activity android:name=".SearchActivity">
+        <activity
+            android:name=".SearchActivity"
+            android:theme="@style/SearchTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
