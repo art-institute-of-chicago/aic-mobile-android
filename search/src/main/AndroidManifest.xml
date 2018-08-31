@@ -5,7 +5,8 @@
     <application>
         <activity
             android:name=".SearchActivity"
-            android:theme="@style/SearchTheme">
+            android:theme="@style/SearchTheme"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
