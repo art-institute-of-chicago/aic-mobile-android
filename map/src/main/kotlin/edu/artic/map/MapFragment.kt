@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.GroundOverlay
 import com.google.android.gms.maps.model.GroundOverlayOptions
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.TileOverlay
@@ -34,8 +33,10 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.rendering.DebugTileProvider
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MapTileAssetProvider
+import edu.artic.map.rendering.MapTileAssetProvider2
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
@@ -181,12 +182,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              * We are setting the bounds here as they are roughly the bounds of the museum,
              * locks us into just that area
              */
-            setLatLngBoundsForCameraTarget(museumBounds)
+            //setLatLngBoundsForCameraTarget(museumBounds)
         }
 
         tileOverlay = map.addTileOverlay(TileOverlayOptions()
                 .zIndex(0.2f)
-                .tileProvider(MapTileAssetProvider(resources.assets, 1)))
+                .tileProvider(MapTileAssetProvider2(resources.assets, 1)))
+
+        map.addTileOverlay(TileOverlayOptions().zIndex(0.3f)
+                .transparency(0.5f)
+                .tileProvider(DebugTileProvider(requireContext())))
     }
 
     /**
@@ -294,7 +299,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             else -> R.drawable.map_floor_background_default
                         }
                     }
-
                     lowerLevel.setBackgroundResource(backgroundForState(0))
                     floorOne.setBackgroundResource(backgroundForState(1))
                     floorTwo.setBackgroundResource(backgroundForState(2))
@@ -310,7 +314,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     tileOverlay.remove()
                     tileOverlay = map.addTileOverlay(TileOverlayOptions()
                             .zIndex(0.2f)
-                            .tileProvider(MapTileAssetProvider(resources.assets, floor)))
+                            .tileProvider(MapTileAssetProvider2(resources.assets, floor)))
                 }
                 .disposedBy(disposeBag)
 
