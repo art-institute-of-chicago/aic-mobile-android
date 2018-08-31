@@ -41,4 +41,5 @@
     <color name="mapFloorBlue">#083f6e</color>
     <color name="audioBufferingColor">#868686</color>
     <color name="audioDurationTextColor">#FFBEBEBE</color>
+    <color name="hintColor">#9b9b9b</color>
 </resources>
