@@ -25,16 +25,6 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
     private val suggestedArtworks: Subject<List<CircularCellViewModel>> = BehaviorSubject.create()
     val cells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
 
-    private val cellViewHolders: List<SearchBaseCellViewModel>?
-        get() {
-            val viewHolders = (cells as BehaviorSubject)
-            return if (viewHolders.hasValue()) {
-                viewHolders.value
-            } else {
-                null
-            }
-        }
-
     private fun getAmenitiesViewModels(): List<SearchBaseCellViewModel> {
         return listOf(
                 AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
@@ -44,8 +34,6 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
     }
 
     init {
-
-
         searchSuggestionsDao.getDataObject()
                 .toObservable()
                 .map { suggestedSearchOptions ->
@@ -89,18 +77,6 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                 .bindTo(cells)
                 .disposedBy(disposeBag)
 
-    }
-
-    /**
-     * Span size for the artworks should be 5
-     */
-    fun getSpanCount(position: Int): Int {
-        val cell = cellViewHolders?.get(position)
-        return if (cell is CircularCellViewModel || cell is AmenitiesCellViewModel) {
-            1
-        } else {
-            5
-        }
     }
 }
 

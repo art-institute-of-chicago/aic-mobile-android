@@ -35,7 +35,7 @@ class DefaultSearchSuggestionsFragment : BaseViewModelFragment<DefaultSearchSugg
             layoutManager = GridLayoutManager(view.context, MAX_ARTWORKS_PER_ROW, GridLayoutManager.VERTICAL, false)
             (layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return viewModel.getSpanCount(position)
+                    return (adapter as DefaultSuggestionAdapter).getSpanCount(position)
                 }
             }
             adapter = DefaultSuggestionAdapter()

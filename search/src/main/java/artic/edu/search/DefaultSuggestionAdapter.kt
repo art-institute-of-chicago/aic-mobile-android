@@ -68,5 +68,17 @@ class DefaultSuggestionAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellVie
             onCleared()
         }
     }
+
+    /**
+     * Span size for the artworks should be 5
+     */
+    fun getSpanCount(position: Int): Int {
+        val cell = getItem(position)
+        return if (cell is CircularCellViewModel || cell is AmenitiesCellViewModel) {
+            1
+        } else {
+            5
+        }
+    }
 }
 
