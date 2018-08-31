@@ -58,6 +58,7 @@ abstract class MapItemRenderer<T>(
     lateinit var context: Context
 
     private val tempMarkers: MutableList<MarkerHolder<T>> = mutableListOf()
+    private val mapProjectionHelper = MapProjectionHelper()
 
     init {
         if (useBitmapQueue) {
@@ -118,9 +119,14 @@ abstract class MapItemRenderer<T>(
     abstract fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<T>>
 
     /**
-     * Retrieve location from the item type.
+     * Retrieve location from the item type. Don't call this directly in subclasses.
      */
     abstract fun getLocationFromItem(item: T): LatLng
+
+    /**
+     * Use this method directly to get proper adjusted world position based on our map taking over the world.
+     */
+    fun getAdjustedLocationFromItem(item: T) = mapProjectionHelper.toSmallMapLatLng(getLocationFromItem(item))
 
     /**
      * Returns the item's id. Since our objects are mostly different without common interfaces, this method exists.
@@ -375,7 +381,7 @@ abstract class MapItemRenderer<T>(
     ): MarkerHolder<T> {
         val options = MarkerOptions()
                 .zIndex(zIndex)
-                .position(getLocationFromItem(item))
+                .position(getAdjustedLocationFromItem(item))
                 .icon(bitmap)
                 .alpha(getMarkerAlpha(floor,
                         displayMode,
