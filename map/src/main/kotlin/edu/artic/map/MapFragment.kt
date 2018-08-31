@@ -33,10 +33,9 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
-import edu.artic.map.rendering.DebugTileProvider
+import edu.artic.map.rendering.DebugTileProvider2
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MapTileAssetProvider
-import edu.artic.map.rendering.MapTileAssetProvider2
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
@@ -182,16 +181,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              * We are setting the bounds here as they are roughly the bounds of the museum,
              * locks us into just that area
              */
-            //setLatLngBoundsForCameraTarget(museumBounds)
+            setLatLngBoundsForCameraTarget(museumBounds)
         }
 
         tileOverlay = map.addTileOverlay(TileOverlayOptions()
                 .zIndex(0.2f)
-                .tileProvider(MapTileAssetProvider2(resources.assets, 1)))
+                .tileProvider(MapTileAssetProvider(resources.assets, 1)))
 
         map.addTileOverlay(TileOverlayOptions().zIndex(0.3f)
                 .transparency(0.5f)
-                .tileProvider(DebugTileProvider(requireContext())))
+                .tileProvider(DebugTileProvider2(requireContext())))
     }
 
     /**
@@ -314,7 +313,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     tileOverlay.remove()
                     tileOverlay = map.addTileOverlay(TileOverlayOptions()
                             .zIndex(0.2f)
-                            .tileProvider(MapTileAssetProvider2(resources.assets, floor)))
+                            .tileProvider(MapTileAssetProvider(resources.assets, floor)))
                 }
                 .disposedBy(disposeBag)
 
