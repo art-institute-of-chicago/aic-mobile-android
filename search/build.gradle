@@ -17,4 +17,5 @@ dependencies {
     implementation libs.rx_kotlin
     implementation project(':viewmodel')
     implementation project(':adapter')
+    implementation project(':navigation')
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/greyText"
+    android:elevation="5dp">
+
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:background="@android:color/transparent"
+        android:hint="@string/looking_for_artwork"
+        android:lines="1"
+        android:padding="@dimen/marginStandard"
+        android:textColor="@color/white"
+        android:textColorHint="@color/hintColor" />
+
+</android.support.v7.widget.Toolbar>
