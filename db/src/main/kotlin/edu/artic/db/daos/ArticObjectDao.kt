@@ -6,7 +6,6 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import edu.artic.db.models.ArticObject
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 @Dao
 interface ArticObjectDao {
@@ -21,8 +20,16 @@ interface ArticObjectDao {
     @Query("select * from ArticObject where nid = :id")
     fun getObjectById(id: String): Flowable<ArticObject>
 
+    /**
+     * Return the object with an audio file given by this number.
+     *
+     * We should migrate to [ArticObject.objectSelectorNumbers] in future to
+     * support objects with multiple top-level audio tracks.
+     *
+     * Not expected to be used much outside the 'audio' module.
+     */
     @Query("select * from ArticObject where objectSelectorNumber = :selectorNumber")
-    fun getObjectBySelectorNumber(selectorNumber: String): Single<ArticObject>
+    fun getObjectBySelectorNumber(selectorNumber: String): ArticObject?
 
     /**
      * Retrieves all of the [ArticObject]s found in a specific
