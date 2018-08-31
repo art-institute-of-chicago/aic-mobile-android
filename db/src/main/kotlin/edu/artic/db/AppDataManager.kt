@@ -126,6 +126,15 @@ class AppDataManager @Inject constructor(
                             val tours = result.tours
                             if (tours?.isNotEmpty() == true) {
                                 tourDao.clear()
+                                tours.forEach { tour ->
+                                    // assign the first stop's floor to tour if tour's floor is invalid
+                                    if (tour.floorAsInt == INVALID_FLOOR && tour.tourStops.isNotEmpty()) {
+                                        tour.tourStops.first().objectId?.let { firstTourStopId ->
+                                            tour.floor = objects?.get(firstTourStopId)?.floor ?: INVALID_FLOOR
+                                        }
+                                    }
+
+                                }
                                 tourDao.addTours(tours)
                             }
 

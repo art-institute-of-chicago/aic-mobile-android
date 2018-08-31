@@ -6,6 +6,8 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.db.Floor
+import edu.artic.db.INVALID_FLOOR
 import edu.artic.db.Playable
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.ui.util.asCDNUri
@@ -23,7 +25,13 @@ data class ArticTour(
         @Json(name = "location") val location: String?,
         @Json(name = "latitude") val latitude: String?,
         @Json(name = "longitude") val longitude: String?,
-        @Json(name = "floor") val floor: String?,
+        /**
+         * [FloorAdapter] parses non null string values since Moshi throws the null exception before it is passed to [FloorAdapter].
+         * Therefore had to make this field optional.
+         * There is an open issue in github for this bug.
+         * https://github.com/square/moshi/issues/586
+         */
+        @Floor @Json(name = "floor") var floor: Int?,
         @Json(name = "image_filename") val imageFileName: String?,
         @Json(name = "image_url") val imageUrl: String?,
         @Json(name = "image_filemime") val imageFileMime: String?,
@@ -112,7 +120,7 @@ data class ArticTour(
      * Returns [floor], parsed to an integer. We default to [Int.MIN_VALUE] as 0 is a valid floor.
      */
     val floorAsInt: Int
-        get() = floor?.toIntOrNull() ?: Int.MIN_VALUE
+        get() = floor ?: INVALID_FLOOR
 
 
     override fun getPlayableThumbnailUrl(): String? {
