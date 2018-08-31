@@ -14,13 +14,14 @@ fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemChanges() = Consumer<L
 
 fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.pagedListChanges() = Consumer<PagedList<TModel>> { setPagedList(it) }
 
-fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemSelections(): Observable<TModel> =
+fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemClicks(): Observable<TModel> =
         Observable.create { emitter ->
             onItemClickListener = edu.artic.adapter.onItemClickListener {
                 emitter.onNext(it)
             }
         }
-fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemSelectionsWithPosition(): Observable<Pair<Int,TModel>> =
+
+fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemClicksWithPosition(): Observable<Pair<Int,TModel>> =
         Observable.create { emitter ->
             onItemClickListener = edu.artic.adapter.onItemClickListenerWithPosition { pos, model ->
                 emitter.onNext(pos to model)
