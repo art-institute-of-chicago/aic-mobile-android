@@ -115,7 +115,7 @@ class DividerViewModel : SearchBaseCellViewModel()
  * ViewModel for displaying the amenities icons
  */
 class AmenitiesCellViewModel(@DrawableRes val value: Int) : SearchBaseCellViewModel() {
-    val resource: Subject<Int> = BehaviorSubject.createDefault(value)
+
 }
 
 /**

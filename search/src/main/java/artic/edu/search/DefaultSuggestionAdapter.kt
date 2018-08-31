@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
 import kotlinx.android.synthetic.main.layout_cell_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
@@ -44,9 +45,7 @@ class DefaultSuggestionAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellVie
                         .disposedBy(item.viewDisposeBag)
             }
             is AmenitiesCellViewModel -> {
-                item.resource.subscribe { iconDrawable ->
-                    icon.setImageDrawable(ContextCompat.getDrawable(icon.context, iconDrawable))
-                }.disposedBy(item.viewDisposeBag)
+                icon.setImageDrawable(ContextCompat.getDrawable(icon.context, item.value))
             }
         }
     }
