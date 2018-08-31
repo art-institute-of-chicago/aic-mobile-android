@@ -8,7 +8,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 @Entity
 data class ArticMapFloor(
-        @PrimaryKey @Json(name = "label") val label: String?,
+        @PrimaryKey @Json(name = "label") val label: String,
         @Json(name = "floor_plan") val floorPlan: String?,
         @Json(name = "anchor_pixel_1") val anchorPixel1: String?,
         @Json(name = "anchor_pixel_2") val anchorPixel2: String?,

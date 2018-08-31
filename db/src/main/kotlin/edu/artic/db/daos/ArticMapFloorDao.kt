@@ -1,16 +1,13 @@
 package edu.artic.db.daos
 
 import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.Insert
+import android.arch.persistence.room.OnConflictStrategy
 import edu.artic.db.models.ArticMapFloor
-import io.reactivex.Observable
 
-/**
- * Description:
- */
 @Dao
 interface ArticMapFloorDao {
 
-    @Query("SELECT * FROM ArticMapFloor where label = :number")
-    fun floorByFloorNumber(number: Int): Observable<ArticMapFloor>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertMapFloors(list: List<ArticMapFloor>)
 }
