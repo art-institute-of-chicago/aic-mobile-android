@@ -25,8 +25,20 @@ internal fun boundsForZoom(zoom: Int,
 
 internal val TILE_SIZE = 256.0
 
-private fun tileCoordinateForWorldPosition(zoom: Int, value: Double) =
-        (value * (1 shl zoom).toDouble() / TILE_SIZE).toInt()
+private fun tileCoordinateForWorldPosition(zoom: Int, value: Double): Int {
+    val d = value * (1 shl zoom).toDouble() / TILE_SIZE
+    Timber.d("Found tile coordinate approx $d for zoom $zoom")
+    return d.toInt()
+}
+
+internal val evaluatedBoundsMap
+    get() = mapOf(
+            17 to Bounds(minX = 33631, minY = 48713, maxX = 33635, maxY = 48716),
+            18 to Bounds(minX = 67263, minY = 97426, maxX = 67270, maxY = 97433),
+            19 to Bounds(minX = 134527, minY = 194852, maxX = 134541, maxY = 194867),
+            20 to Bounds(minX = 269054, minY = 389706, maxX = 269083, maxY = 389735),
+            21 to Bounds(minX = 538108, minY = 779412, maxX = 538167, maxY = 779471),
+            22 to Bounds(minX = 1076217, minY = 1558824, maxX = 1076334, maxY = 1558942))
 
 /**
  * Description: Provides map asset tiles based on the [floor] from resources.
@@ -42,14 +54,16 @@ class MapTileAssetProvider(private val assetAssetManager: AssetManager,
     init {
         northEast = mapProjection.toPoint(museumBounds.northeast)
         southWest = mapProjection.toPoint(museumBounds.southwest)
-        boundsMap = (17..22).map {
+
+        // use this snippet of code to calculate bounds map for you.
+        /*boundsMap = (ZOOM_MIN.toInt()..ZOOM_MAX.toInt()).map {
             it to boundsForZoom(
                     it,
                     northEast = northEast,
                     southWest = southWest
             )
-        }.toMap()
-
+        }.toMap()*/
+        boundsMap = evaluatedBoundsMap
         Timber.d("Found bounds $boundsMap")
     }
 
