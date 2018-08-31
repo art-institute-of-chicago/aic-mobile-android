@@ -31,8 +31,7 @@ import javax.inject.Inject
 class MapMarkerConstructor
 @Inject constructor(articMapAnnotationDao: ArticMapAnnotationDao,
                     galleryDao: ArticGalleryDao,
-                    objectsDao: ArticObjectDao) { // App context, won't leak.
-
+                    objectsDao: ArticObjectDao) {
 
     val map: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
 
