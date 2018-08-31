@@ -29,6 +29,7 @@ class DefaultSuggestionAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellVie
             }
             is HeaderCellViewModel -> {
                 item.text
+                        .map { stringRes -> resources.getString(stringRes) }
                         .bindTo(headerText.text())
                         .disposedBy(item.viewDisposeBag)
             }
