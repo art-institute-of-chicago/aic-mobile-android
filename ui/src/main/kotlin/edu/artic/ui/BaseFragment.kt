@@ -1,7 +1,5 @@
 package edu.artic.ui
 
-import android.content.res.ColorStateList
-import android.content.res.TypedArray
 import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.LayoutRes
@@ -15,6 +13,7 @@ import com.fuzz.rx.DisposeBag
 import dagger.android.support.AndroidSupportInjection
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.getThemeColors
 import edu.artic.base.utils.setWindowFlag
 import javax.inject.Inject
 
@@ -98,7 +97,8 @@ abstract class BaseFragment : Fragment() {
             requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
             requireActivity().window?.statusBarColor = Color.TRANSPARENT
         } else {
-            getThemeColors(intArrayOf(android.support.design.R.attr.colorPrimaryDark))?.defaultColor?.let {
+            val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
+            requireContext().getThemeColors(primaryDarkColor)[0]?.defaultColor?.let {
                 requireActivity().window?.statusBarColor = it
             }
         }
@@ -109,18 +109,6 @@ abstract class BaseFragment : Fragment() {
         baseActivity.title = title
     }
 
-
-    private fun getThemeColors(colors: IntArray): ColorStateList? {
-        val found: ColorStateList?
-        var typedArray: TypedArray? = null
-        try {
-            typedArray = requireContext().obtainStyledAttributes(colors)
-            found = typedArray!!.getColorStateList(0)
-        } finally {
-            typedArray?.recycle()
-        }
-        return found
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -3,6 +3,8 @@ package edu.artic.base.utils
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.res.ColorStateList
+import android.content.res.TypedArray
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -84,3 +86,21 @@ val Activity.statusBarHeight: Int
         }
         return statusBarHeight
     }
+
+/**
+ * Takes the array of color attributes ids and return array of colors.
+ */
+fun Context.getThemeColors(colors: IntArray): Array<ColorStateList?> {
+    val found: Array<ColorStateList?>
+    var typedArray: TypedArray? = null
+    try {
+        typedArray = this.obtainStyledAttributes(colors)
+        found = arrayOfNulls(colors.size)
+        for (i in 0..colors.size) {
+            found[i] = typedArray.getColorStateList(i)
+        }
+    } finally {
+        typedArray?.recycle()
+    }
+    return found
+}
