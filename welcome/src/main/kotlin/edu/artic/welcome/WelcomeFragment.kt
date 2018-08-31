@@ -10,7 +10,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
-import edu.artic.adapter.itemSelectionsWithPosition
+import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
@@ -101,14 +101,14 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
 
         val eventsAdapter = eventsRecyclerView.adapter as WelcomeEventsAdapter
-        eventsAdapter.itemSelectionsWithPosition()
+        eventsAdapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickEvent(pos, model.event)
                 }
                 .disposedBy(disposeBag)
 
         val onViewAdapter = onViewRecyclerView.adapter as OnViewAdapter
-        onViewAdapter.itemSelectionsWithPosition()
+        onViewAdapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickExhibition(pos, model.exhibition)
                 }
@@ -116,7 +116,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
 
         val toursAdapter = tourSummaryRecyclerView.adapter as WelcomeToursAdapter
-        toursAdapter.itemSelectionsWithPosition()
+        toursAdapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickTour(pos, model.tour)
                 }
