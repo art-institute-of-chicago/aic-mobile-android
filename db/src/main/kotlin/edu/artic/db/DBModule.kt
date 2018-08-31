@@ -51,4 +51,7 @@ class DBModule {
 
     @Provides
     fun provideArticExhibitionCMSDao(appDatabase: AppDatabase) = appDatabase.exhibitionCMSDao
+
+    @Provides
+    fun provideArticMapFloorDao(appDatabase: AppDatabase) = appDatabase.articMapFloorDao
 }
