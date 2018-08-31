@@ -114,13 +114,23 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
                 AsyncDifferConfig.Builder<TModel>(diffItemCallback).build())
     }
 
+    /**
+     * Backing list of data. Update this atomically with [setItemsList].
+     */
     private var itemsList: List<TModel> = arrayListOf()
 
     private val provider = dataSourceFactory { ListDataSource(itemsList) }
 
     /**
-     * Sets an items list with 10 items. Use a [DataSource] to provide items instead to this adapter and call
-     * [setPagedList] with a [PagedList] instead for dynamically loaded content.
+     * Set up backing content for this adapter to display. Each item in the given
+     * list corresponds directly to one [BaseViewHolder].
+     *
+     * If the list is not a [PagedList], it will be split into 10-item
+     * pages for efficiency's sake.
+     *
+     * **For dynamic loading:**
+     * 1. Instantiate a [DataSource][android.arch.paging.DataSource] to provide items
+     * 2. Call [setPagedList] with a [PagedList] instead of invoking this method
      */
     @SuppressLint("RestrictedApi")
     open fun setItemsList(itemsList: List<TModel>?) {
@@ -337,7 +347,7 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
 
     /**
      * @param position the position within the items-list dataset.
-     * *
+     *
      * @return The layout associated with the [TBinding].
      */
     @LayoutRes
