@@ -2,6 +2,7 @@ package artic.edu.search
 
 import android.support.v4.content.ContextCompat
 import android.view.View
+import artic.edu.search.DefaultSearchSuggestionsFragment.Companion.MAX_ARTWORKS_PER_ROW
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
@@ -77,7 +78,7 @@ class DefaultSuggestionAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellVie
         return if (cell is CircularCellViewModel || cell is AmenitiesCellViewModel) {
             1
         } else {
-            5
+            MAX_ARTWORKS_PER_ROW
         }
     }
 }
