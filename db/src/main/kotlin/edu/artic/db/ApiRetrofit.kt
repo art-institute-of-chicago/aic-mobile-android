@@ -12,7 +12,24 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.Executor
 
 /**
- * Description:
+ * Utility function for creating the precise instance of [Retrofit] that
+ * we desire for executing [AppDataManager.loadData]. It ensures the
+ * following capabilities:
+ *
+ * * Network calls are executed by a specific [OkHttpClient]
+ *     * this defines certain timeouts for the calls
+ *     * in debug builds it also provides helpful logging settings
+ * * Network calls are scheduled in an RxJava-compatible way
+ *     * this lets us use Rx types in our Retrofit definition files
+ *     * we make particular use of [io.reactivex.Observable] and [io.reactivex.Flowable]
+ *     * more details available in docs for [RxJava2CallAdapterFactory]
+ * * Network responses are converted into Kotlin or Java types
+ *     * simple stuff is converted into java primitives and [java.lang.String]s
+ *     * complex json-like structures are converted into Kotlin objects by [MoshiConverterFactory]
+ *     * parsing is done [leniently][com.squareup.moshi.JsonReader.setLenient]
+ *
+ * Additional customization can be performed by passing a custom extension
+ * function in as [customConfiguration].
  */
 inline fun constructRetrofit(
         baseUrl: String,
