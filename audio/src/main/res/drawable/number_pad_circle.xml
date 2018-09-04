@@ -4,6 +4,7 @@
     android:shape="oval"
     android:thickness="2dp"
     >
+    <solid android:color="@color/number_pad_white_translucent"/>
     <stroke android:color="@color/number_pad_white_faint" android:width="2dp"/>
     <size
         android:width="66dp"
