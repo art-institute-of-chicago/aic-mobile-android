@@ -95,10 +95,9 @@ fun Context.getThemeColors(colors: IntArray): Array<ColorStateList?> {
     var typedArray: TypedArray? = null
     try {
         typedArray = this.obtainStyledAttributes(colors)
-        found = arrayOfNulls(colors.size)
-        for (i in 0 until colors.size) {
-            found[i] = typedArray.getColorStateList(i)
-        }
+        found = (0 until colors.size)
+                .map { typedArray.getColorStateList(it) }
+                .toTypedArray()
     } finally {
         typedArray?.recycle()
     }
