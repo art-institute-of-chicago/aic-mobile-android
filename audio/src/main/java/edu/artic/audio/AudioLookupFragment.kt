@@ -81,7 +81,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { result ->
                     when (result) {
-                        is LookupResult.FoundAudio -> sendToPlayerFragment(result)
+                        is LookupResult.FoundAudio -> playAndDisplay(result)
                         is LookupResult.NotFound -> shakeLookupField()
                     }
                 }
@@ -89,7 +89,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
     }
 
-    private fun sendToPlayerFragment(foundAudio: LookupResult.FoundAudio) {
+    private fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {
         audioService.subscribeBy {
             it?.playPlayer(foundAudio.hostObject)
         }.disposedBy(disposeBag)
