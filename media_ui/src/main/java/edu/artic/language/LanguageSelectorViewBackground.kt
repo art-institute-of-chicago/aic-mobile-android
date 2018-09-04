@@ -1,4 +1,4 @@
-package edu.artic.audio
+package edu.artic.language
 
 import android.content.Context
 import android.graphics.Rect
@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.view.ViewLayoutChangeEvent
 import com.jakewharton.rxbinding2.view.layoutChangeEvents
+import edu.artic.media.ui.R
 import io.reactivex.disposables.Disposable
 
 /**
