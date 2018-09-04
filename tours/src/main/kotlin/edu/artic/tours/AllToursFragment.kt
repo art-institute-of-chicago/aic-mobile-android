@@ -9,7 +9,7 @@ import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
-import edu.artic.adapter.itemSelectionsWithPosition
+import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.tours.recyclerview.AllToursItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -64,7 +64,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
         val adapter = recyclerView.adapter as AllToursAdapter
 
-        adapter.itemSelectionsWithPosition()
+        adapter.itemClicksWithPosition()
                 .subscribe { (pos, cell) ->
                     viewModel.onClickTour(pos, cell.tour)
                 }.disposedBy(disposeBag)

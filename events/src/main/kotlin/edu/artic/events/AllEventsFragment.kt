@@ -9,7 +9,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.adapter.itemSelectionsWithPosition
+import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.events.recyclerview.AllEventsItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -64,7 +64,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         viewModel.events
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
-        adapter.itemSelectionsWithPosition()
+        adapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickEvent(pos, model.event)
                 }

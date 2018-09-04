@@ -11,7 +11,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
-import edu.artic.adapter.itemSelections
+import edu.artic.adapter.itemClicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
@@ -64,7 +64,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
         number_pad.adapter = numberPadAdapter
 
-        numberPadAdapter.itemSelections()
+        numberPadAdapter.itemClicks()
                 .subscribeBy { element ->
                     viewModel.adapterClicks
                             .onNext(element)

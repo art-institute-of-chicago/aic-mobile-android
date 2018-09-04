@@ -6,6 +6,7 @@ import android.arch.paging.AsyncPagedListDiffer
 import android.arch.paging.PagedList
 import android.content.Context
 import android.support.annotation.LayoutRes
+import android.support.annotation.UiThread
 import android.support.v7.recyclerview.extensions.AsyncDifferConfig
 import android.support.v7.util.DiffUtil
 import android.support.v7.util.ListUpdateCallback
@@ -18,10 +19,11 @@ import java.lang.IndexOutOfBoundsException
 import java.util.ArrayList
 
 /**
- * @author Sameer Dhakal (Fuzz)
- */
-/**
- * Description: The base adapter that consolidates logic here.
+ * Description: Default implementation of [RecyclerView.Adapter].
+ *
+ * Use this class to greatly simplify integration with MVVM (that's
+ * `Model-View-ViewModel`) architectures. Main selling points are as
+ * follows:
  */
 abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         private val diffItemCallback: DiffUtil.ItemCallback<TModel> = object :
@@ -37,12 +39,11 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     interface OnItemClickListener<in T> {
 
         /**
-         * The item clicked.
-
-         * @param position   The position in the itemslist that was clicked.
-         * *
+         * Callback for [on-click listeners][View.setOnClickListener]. Always invoked
+         * on main thread.
+         *
+         * @param position   The position in [itemsList] that was clicked.
          * @param item       The item from the list.
-         * *
          * @param viewHolder The view holder that was clicked.
          */
         fun onItemClick(position: Int, item: T, viewHolder: BaseViewHolder)
@@ -51,12 +52,11 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     interface OnItemLongClickListener<in T> {
 
         /**
-         * The item clicked.
-
-         * @param position   The position in the itemslist that was clicked.
-         * *
+         * Callback for [on-long-click listeners][View.setOnLongClickListener]. Always
+         * invoked on main thread.
+         *
+         * @param position   The position in [itemsList] that was clicked.
          * @param item       The item from the list.
-         * *
          * @param viewHolder The view holder that was clicked.
          *
          * @return true if view consumed the click.
@@ -66,14 +66,25 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
 
     /**
      * Interface for when headers or footers are called.
+     *
+     * One instance should be registered for the headers, and a different
+     * instance should be registered for the footers. While permitted, we
+     * do not recommend using the same callback for both types of
+     * [BaseViewHolder]s.
+     *
+     * (HF -> Header/Footer)
      */
     interface OnHFItemClickListener {
 
         /**
-         * Called when item is clicked.
-
-         * @param position   The position within the header or footers list.
-         * *
+         * Called when a header or footer item is clicked.
+         *
+         * This listener is registered with a [BaseRecyclerViewAdapter]
+         * via [onHeaderClickListener] and/or [onFooterClickListener]. Which
+         * of those two methods it is registered with determines what kind of
+         * parameters you should expect.
+         *
+         * @param position   The position within the headers/footers list.
          * @param viewHolder The view holder clicked.
          */
         fun onItemClick(position: Int, viewHolder: BaseViewHolder)
@@ -103,13 +114,23 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
                 AsyncDifferConfig.Builder<TModel>(diffItemCallback).build())
     }
 
+    /**
+     * Backing list of data. Update this atomically with [setItemsList].
+     */
     private var itemsList: List<TModel> = arrayListOf()
 
     private val provider = dataSourceFactory { ListDataSource(itemsList) }
 
     /**
-     * Sets an items list with 10 items. Use a [DataSource] to provide items instead to this adapter and call
-     * [setPagedList] with a [PagedList] instead for dynamically loaded content.
+     * Set up backing content for this adapter to display. Each item in the given
+     * list corresponds directly to one [BaseViewHolder].
+     *
+     * If the list is not a [PagedList], it will be split into 10-item
+     * pages for efficiency's sake.
+     *
+     * **For dynamic loading:**
+     * 1. Instantiate a [DataSource][android.arch.paging.DataSource] to provide items
+     * 2. Call [setPagedList] with a [PagedList] instead of invoking this method
      */
     @SuppressLint("RestrictedApi")
     open fun setItemsList(itemsList: List<TModel>?) {
@@ -325,25 +346,32 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     fun getItemsList(): List<TModel> = pagedListAdapterHelper.currentList ?: arrayListOf()
 
     /**
+     * Variant of [getItemViewType] with the `position`
+     * parameter corrected to account for header items.
+     * Subclasses are strongly recommended to return the
+     * layout resource Id of the view instead to ensure
+     * types never clash.
+     *
+     * To specify the layout of a header or footer ViewHolder,
+     * use [addHeaderView] or [addFooterView], respectively.
+     *
      * @param position the position within the items-list dataset.
-     * *
-     * @return The layout associated with the [TBinding].
+     *
+     * @return The layout associated with the [TModel].
      */
     @LayoutRes
     protected abstract fun getLayoutResId(position: Int): Int
 
     /**
-     * Variant of [.getItemViewType] with the `position`
-     * parameter corrected to account for header items.
-     * Subclasses are strongly recommended to return the layout resource Id of the view instead
-     * to ensure types never clash.
+     * Determine what layout should be inflated for the [BaseViewHolder] at
+     * the given [position]. Note that the parameter is already adjusted to
+     * account for header items.
      *
-
-     * @param position index into the item list of the item whose ViewHolder type is
-     * *                 desired
-     * *
-     * @return that type
+     * Please use [getLayoutResId] instead. If two [BaseViewHolder]s possess
+     * the same layout but require different binding logic, isolate that
+     * distinction to the 3-args `onBindViewHolder(VH, TModel?, Int)`.
      */
+    @Deprecated("Implementors should not need to override this method; please migrate to 'getLayoutResId'.", ReplaceWith("getLayoutResId(position)"))
     protected open fun getViewType(position: Int) = getLayoutResId(position)
 
     protected open fun setItemClickListener(viewHolder: BaseViewHolder, onClickListener: View.OnClickListener) {
@@ -386,6 +414,13 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
 
     protected fun getRawPosition(itemPosition: Int) = itemPosition + headersCount
 
+    /**
+     * Dispatch point for [onClick][View.setOnClickListener] events.
+     *
+     * The 'position' integer is always that of the [BaseViewHolder] at the instant
+     * it was clicked; precise fallback logic for detached views, unusual conditions,
+     * and so forth are covered by [BaseRecyclerViewAdapter.getViewHolderPosition].
+     */
     protected open fun onItemPositionClicked(viewHolder: BaseViewHolder, position: Int) {
         getItemOrNull(position)?.let { item ->
             this.onItemClickListener?.onItemClick(position, item, viewHolder)
@@ -393,8 +428,16 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         }
     }
 
+    /**
+     * Delegate for clicks on [this adapter's itemViews][BaseViewHolder.itemView].
+     *
+     * Always called by [onItemPositionClicked] on the UI Thread, right after
+     * [onItemClickListener?.onItemClick][OnItemClickListener.onItemClick].
+     */
+    @UiThread
     protected open fun onItemClicked(position: Int, item: TModel, viewHolder: BaseViewHolder) = Unit
 
+    @UiThread
     protected open fun onItemPositionLongClicked(viewHolder: BaseViewHolder, position: Int): Boolean {
         return getItemOrNull(position)?.let { item ->
             return@let this.onItemLongClickListener?.onItemLongPress(position, item, viewHolder)
@@ -476,25 +519,20 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         }
 
         /**
-         * If the headers and footers of a [BaseRecyclerViewAdapter] share any ids,
-         * RecyclerView.ViewPrefetcher will crash non-deterministically in
-         * [RecyclerView.Recycler.recycleViewHolderInternal].
+         * If the headers and footers of a [BaseRecyclerViewAdapter] share any
+         * ids, RecyclerView.ViewPrefetcher will crash non-deterministically
+         * in [RecyclerView.Recycler.recycleViewHolderInternal].
          *
          *
-         * To preempt that, this method throws an IllegalArgumentException as soon
-         * as a ViewHolder with such a [.getViewType] is proffered to
-         * [.addFooterHolder] or
-         * [.addHeaderHolder], which should make
-         * early detection and diagnosis of this problem much more feasible.
+         * To preempt that, this method throws an IllegalArgumentException as
+         * soon as a ViewHolder with such a [getViewType] is proffered to
+         * [addFooterHolder] or [addHeaderHolder], which should make early
+         * detection and diagnosis of this problem much more feasible.
          *
-
-         * @param forbiddenIds  a list of ids already in use. Typically [.headerLayoutIds]
-         * *                      or [.footerLayoutIds]
-         * *
+         *
+         * @param forbiddenIds  a list of ids already in use. Typically [headerLayoutIds] or [footerLayoutIds]
          * @param id            the suggested id
-         * *
-         * @param forbiddenType a name for the type of ids - this will appear in the exception
-         * *                      message
+         * @param forbiddenType a name for the type of ids - this will appear in the exception message
          */
         @JvmStatic
         protected fun preventReuseOfIdsFrom(
