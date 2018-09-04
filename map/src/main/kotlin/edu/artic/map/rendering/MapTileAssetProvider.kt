@@ -23,7 +23,7 @@ internal fun boundsForZoom(zoom: Int,
             maxY = tileCoordinateForWorldPosition(zoom, southWest.y))
 }
 
-internal val TILE_SIZE = 256.0
+internal const val TILE_SIZE = 512.0
 
 private fun tileCoordinateForWorldPosition(zoom: Int, value: Double): Int {
     val d = value * (1 shl zoom).toDouble() / TILE_SIZE
@@ -35,8 +35,8 @@ internal val evaluatedBoundsMap
     get() = mapOf(
             17 to Bounds(minX = 33631, minY = 48713, maxX = 33635, maxY = 48716),
             18 to Bounds(minX = 67263, minY = 97426, maxX = 67270, maxY = 97433),
-            19 to Bounds(minX = 134527, minY = 194852, maxX = 134541, maxY = 194867),
-            20 to Bounds(minX = 269054, minY = 389706, maxX = 269083, maxY = 389735),
+            19 to Bounds(minX = 134527, minY = 194852, maxX = 134541, maxY = 194868),
+            20 to Bounds(minX = 269055, minY = 389704, maxX = 269084, maxY = 389733),
             21 to Bounds(minX = 538108, minY = 779412, maxX = 538167, maxY = 779471),
             22 to Bounds(minX = 1076217, minY = 1558824, maxX = 1076334, maxY = 1558942))
 
