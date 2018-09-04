@@ -146,13 +146,15 @@ data class ArticTour(
  * Builds english translation for [ArticTour]
  */
 fun ArticTour.toEnglishTranslation() : ArticTour.Translation {
-    return ArticTour.Translation(language = "en",
+    return ArticTour.Translation(
+            language = "en-US",
             title = this.title,
             description = this.description,
             description_html = this.descriptionHtml,
             intro = this.intro,
             intro_html = this.introHtml,
-            tour_duration = this.tourDuration)
+            tour_duration = this.tourDuration
+    )
 }
 
 fun ArticTour.getIntroStop(): ArticTour.TourStop {
