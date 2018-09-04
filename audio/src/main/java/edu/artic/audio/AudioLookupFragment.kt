@@ -51,6 +51,9 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.AudioGuide
 
+    override fun hasTransparentStatusBar(): Boolean {
+        return true
+    }
 
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
