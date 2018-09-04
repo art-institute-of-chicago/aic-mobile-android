@@ -105,7 +105,7 @@ abstract class BaseFragment : Fragment() {
                 requireActivity().window?.statusBarColor = Color.TRANSPARENT
             } else {
                 val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
-                requireContext().getThemeColors(primaryDarkColor)[0]?.defaultColor?.let {
+                requireContext().getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
                     requireActivity().window?.statusBarColor = it
                 }
             }
