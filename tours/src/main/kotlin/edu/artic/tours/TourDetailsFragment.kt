@@ -12,10 +12,14 @@ import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterTo
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.adapter.itemChanges
+import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticTour
+import edu.artic.db.models.AudioFileModel
+import edu.artic.language.LanguageAdapter
+import edu.artic.language.LanguageSelectorViewBackground
+import edu.artic.localization.SpecifiesLanguage
 import edu.artic.map.MapActivity
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -40,6 +44,9 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     private val tour: ArticTour get() = arguments!!.getParcelable(ARG_TOUR)
 
+    private val translationsAdapter: BaseRecyclerViewAdapter<SpecifiesLanguage, BaseViewHolder>
+        get() = languageSelector.adapter.baseRecyclerViewAdapter()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.apply {
@@ -52,6 +59,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
             addItemDecoration(decoration)
             isNestedScrollingEnabled = true
         }
+
+        languageSelector.adapter = LanguageAdapter().toBaseAdapter()
 
     }
 
@@ -107,6 +116,14 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         val adapter = recyclerView.adapter as TourDetailsStopAdapter
         viewModel.stops
                 .bindToMain(adapter.itemChanges())
+                .disposedBy(disposeBag)
+
+        viewModel.availableTranslations
+                .bindToMain(translationsAdapter.itemChanges())
+                .disposedBy(disposeBag)
+
+        LanguageSelectorViewBackground(languageSelector)
+                .listenToLayoutChanges()
                 .disposedBy(disposeBag)
 
     }

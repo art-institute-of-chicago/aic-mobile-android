@@ -4,6 +4,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
+import edu.artic.localization.SpecifiesLanguage
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -19,7 +20,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
     val introductionTitleText: Subject<String> = BehaviorSubject.create()
     val stopsText: Subject<String> = BehaviorSubject.create()
     val timeText: Subject<String> = BehaviorSubject.create()
-    //TODO: langaugeSelection
+    val availableTranslations: Subject<List<SpecifiesLanguage>> = BehaviorSubject.create()
     val startTourButtonText: Subject<String> = BehaviorSubject.createDefault("Start Tour")
     val description: Subject<String> = BehaviorSubject.create()
     val intro: Subject<String> = BehaviorSubject.create()
@@ -48,6 +49,11 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                 .filter { it.standardImageUrl != null }
                 .map { it.standardImageUrl!! }
                 .bindTo(imageUrl)
+                .disposedBy(disposeBag)
+
+        tourObservable
+                .map { tour -> tour.translationWithEnglish }
+                .bindTo(availableTranslations)
                 .disposedBy(disposeBag)
 
         //TODO: replace Stops with localized string when localizer is created
@@ -113,7 +119,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
      */
     fun onClickStartTour() {
         tourObservable.take(1)
-                .subscribe {tour->
+                .subscribe { tour ->
                     navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour)))
                 }
                 .disposedBy(disposeBag)
