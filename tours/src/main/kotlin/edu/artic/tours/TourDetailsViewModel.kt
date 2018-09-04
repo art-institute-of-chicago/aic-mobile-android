@@ -4,6 +4,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
+import edu.artic.localization.LocalizationPreferences
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
@@ -13,7 +14,9 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjectDao) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
+class TourDetailsViewModel @Inject constructor(
+        private val objectDao: ArticObjectDao
+) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
@@ -26,6 +29,7 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
     val intro: Subject<String> = BehaviorSubject.create()
     val stops: Subject<List<TourDetailsStopCellViewModel>> = BehaviorSubject.create()
     val location: Subject<String> = BehaviorSubject.create()
+    val chosenTranslation: Subject<ArticTour.Translation> = BehaviorSubject.create()
 
     private val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
 
@@ -39,8 +43,8 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
     }
 
     init {
-        tourObservable
-                .map { it.title }
+        chosenTranslation
+                .map { it.title.orEmpty() }
                 .bindTo(titleText)
                 .disposedBy(disposeBag)
 
@@ -68,20 +72,20 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                 .bindTo(timeText)
                 .disposedBy(disposeBag)
 
-        tourObservable
+        chosenTranslation
                 .filter { it.description != null }
                 .map { it.description!! }
                 .bindTo(description)
                 .disposedBy(disposeBag)
 
-        tourObservable
+        chosenTranslation
                 .filter { it.intro != null }
                 .map { it.intro!! }
                 .bindTo(intro)
                 .disposedBy(disposeBag)
 
-        tourObservable
-                .map { it.title }
+        chosenTranslation
+                .map { it.title.orEmpty() }
                 .bindTo(introductionTitleText)
                 .disposedBy(disposeBag)
 

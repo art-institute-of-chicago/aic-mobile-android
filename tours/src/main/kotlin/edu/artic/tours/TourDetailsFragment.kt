@@ -6,11 +6,9 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.bumptech.glide.Glide
-import com.fuzz.rx.bindToMain
-import com.fuzz.rx.defaultThrottle
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterTo
+import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
@@ -124,6 +122,16 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
         LanguageSelectorViewBackground(languageSelector)
                 .listenToLayoutChanges()
+                .disposedBy(disposeBag)
+
+        languageSelector
+                .itemSelections()
+                .distinctUntilChanged()
+                .filter { position-> position>=0 }
+                .map { position ->
+                    val translation = translationsAdapter.getItem(position)
+                    translation as ArticTour.Translation
+                }.bindTo(viewModel.chosenTranslation)
                 .disposedBy(disposeBag)
 
     }
