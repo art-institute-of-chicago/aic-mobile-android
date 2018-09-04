@@ -13,4 +13,6 @@ dependencies {
     implementation project(':media')
     implementation project(':db')
     implementation project(':navigation')
+    implementation project(':viewmodel')
+    implementation project(':adapter')
 }
