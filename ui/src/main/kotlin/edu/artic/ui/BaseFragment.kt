@@ -71,6 +71,12 @@ abstract class BaseFragment : Fragment() {
 
     protected open fun hasTransparentStatusBar(): Boolean = false
 
+    /**
+     * If it is set, the status bar is painted with statusBarColor.
+     */
+    protected open val overrideStatusBarColor: Boolean
+        get() = true
+
     protected open fun hasHomeAsUpEnabled(): Boolean = true
 
     private fun updateToolbar(view: View) {
@@ -93,7 +99,7 @@ abstract class BaseFragment : Fragment() {
             setExpandedTitleTypeface(toolbarTextTypeFace)
         }
 
-        if (this !is AloofFragment) {
+        if (overrideStatusBarColor) {
             if (hasTransparentStatusBar()) {
                 requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                 requireActivity().window?.statusBarColor = Color.TRANSPARENT
@@ -130,8 +136,3 @@ abstract class BaseFragment : Fragment() {
 
 
 }
-
-/**
- * Marker interface to mark those fragments which shouldn't modify the parent activity theme.
- */
-interface AloofFragment
