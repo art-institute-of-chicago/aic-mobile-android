@@ -29,10 +29,19 @@
 
             <Spinner
                 android:id="@+id/languageSelector"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginStandard"
+                android:layout_marginEnd="@dimen/marginStandard"
+                android:background="@null"
+                android:clipToPadding="false"
+                android:spinnerMode="dropdown"
+                android:textColor="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintHeight_default="wrap"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_default="wrap"
+                tools:background="@drawable/exo_scrubber" />
 
             <TextView
                 android:id="@+id/tourStops"
