@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginOneHalf"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_audio"
+        android:src="@drawable/ic_audio_large"
         app:layout_constraintBottom_toTopOf="@+id/lookup_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
