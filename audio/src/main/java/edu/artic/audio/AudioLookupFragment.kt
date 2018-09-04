@@ -16,6 +16,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.ui.findNavController
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -73,7 +74,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
         registerNumPadSubscription()
 
-        getAudioServiceObservable()
+        getAudioServiceObservable(fm = childFragmentManager)
                 .bindTo(audioService)
                 .disposedBy(disposeBag)
 
@@ -81,7 +82,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { result ->
                     when (result) {
-                        is LookupResult.FoundAudio -> sendToPlayerFragment(result)
+                        is LookupResult.FoundAudio -> playAndDisplay(result)
                         is LookupResult.NotFound -> shakeLookupField()
                     }
                 }
@@ -89,10 +90,15 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
     }
 
-    private fun sendToPlayerFragment(foundAudio: LookupResult.FoundAudio) {
-        audioService.subscribeBy {
-            it?.playPlayer(foundAudio.hostObject)
-        }.disposedBy(disposeBag)
+    private fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {
+        audioService
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    it?.playPlayer(foundAudio.hostObject)
+                    baseActivity.supportFragmentManager
+                            .findNavController()
+                            ?.navigate(R.id.see_current_audio_details)
+                }.disposedBy(disposeBag)
     }
 
     /**
