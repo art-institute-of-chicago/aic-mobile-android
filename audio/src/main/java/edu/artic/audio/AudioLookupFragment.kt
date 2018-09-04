@@ -91,15 +91,14 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
     }
 
     private fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {
-        audioService.subscribeBy {
-            it?.playPlayer(foundAudio.hostObject)
-            val host = baseActivity
-            host.runOnUiThread {
-                host.supportFragmentManager
-                        .findNavController()
-                        ?.navigate(R.id.see_current_audio_details)
-            }
-        }.disposedBy(disposeBag)
+        audioService
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    it?.playPlayer(foundAudio.hostObject)
+                    baseActivity.supportFragmentManager
+                            .findNavController()
+                            ?.navigate(R.id.see_current_audio_details)
+                }.disposedBy(disposeBag)
     }
 
     /**
