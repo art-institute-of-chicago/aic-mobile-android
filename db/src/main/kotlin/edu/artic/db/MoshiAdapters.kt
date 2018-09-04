@@ -68,7 +68,7 @@ class ZonedDateTimeAdapter {
 }
 
 /**
- * Parses floor as an integer. We default to [Int.MIN_VALUE] as 0 is a valid floor.
+ * Parses floor as an integer. We default to [INVALID_FLOOR] as 0 and negative numbers are valid floors.
  */
 class FloorAdapter {
 
@@ -82,6 +82,7 @@ class FloorAdapter {
             try {
                 return text.toInt()
             } catch (e: NumberFormatException) {
+                /** "LL" stands for 'Lower level' **/
                 if (text == "LL") {
                     0
                 } else {
