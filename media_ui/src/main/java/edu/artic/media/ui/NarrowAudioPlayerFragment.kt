@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.support.v4.app.FragmentManager
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -150,9 +151,21 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
 }
 
 /**
- * Returns Observable AudioPlayerService.
+ * Returns an Observable over the [AudioPlayerService]. Most callers will be fine
+ * with the default arguments. A [NarrowAudioPlayerFragment] _**MUST**_ be in
+ * the same activity as the calling fragment.
+ *
+ * NB: you might need to set [fm] if you're embedding the
+ * [NarrowAudioPlayerFragment] in another fragment's View. Pass the relevant
+ * [child fragment manager][BaseFragment.getChildFragmentManager] in that case.
+ *
+ * @param fragmentId id of a ViewGroup where [NarrowAudioPlayerFragment] is added
+ * @param fm         which [FragmentManager] this id is registered with
  */
-fun BaseFragment.getAudioServiceObservable(fragmentId: Int = R.id.newPlayer): Subject<AudioPlayerService> {
-    val audioFragment = requireActivity().supportFragmentManager.findFragmentById(fragmentId) as NarrowAudioPlayerFragment
+fun BaseFragment.getAudioServiceObservable(
+        fragmentId: Int = R.id.newPlayer,
+        fm: FragmentManager = requireActivity().supportFragmentManager
+): Subject<AudioPlayerService> {
+    val audioFragment = fm.findFragmentById(fragmentId) as NarrowAudioPlayerFragment
     return audioFragment.observableAudioService
 }

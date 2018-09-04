@@ -5,6 +5,7 @@ import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.db.Floor
 
 @JsonClass(generateAdapter = true)
 @Entity
@@ -16,7 +17,7 @@ data class ArticGallery(
         @Json(name = "location") val location: String?,
         @Json(name = "latitude") val latitude: Double,
         @Json(name = "longitude") val longitude: Double,
-        @Json(name = "floor") val floor: String?,
+        @Floor @Json(name = "floor") val floor: Int,
         /**
          * NB: as established by the iOS codebase, please use [title] instead of this field.
          *
@@ -31,11 +32,6 @@ data class ArticGallery(
         @Json(name = "number") val number: String?,
         @Json(name = "category_titles") val categoryTitles: List<String>
 ) {
-    /**
-     * Returns [floor], parsed to an integer. We default to [Int.MIN_VALUE] as 0 is a valid floor.
-     */
-    val floorAsInt: Int
-        get() = floor?.toIntOrNull() ?: Int.MIN_VALUE
 
     // matches iOS implementation
     @Ignore
