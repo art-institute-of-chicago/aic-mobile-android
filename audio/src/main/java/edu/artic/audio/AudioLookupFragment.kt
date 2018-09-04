@@ -73,7 +73,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
         registerNumPadSubscription()
 
-        getAudioServiceObservable()
+        getAudioServiceObservable(fm = childFragmentManager)
                 .bindTo(audioService)
                 .disposedBy(disposeBag)
 
