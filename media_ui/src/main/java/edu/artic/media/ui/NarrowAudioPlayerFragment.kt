@@ -48,6 +48,9 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
     override val screenCategory: ScreenCategoryName?
         get() = null
 
+    override val overrideStatusBarColor: Boolean
+        get() = false
+
     var boundService: AudioPlayerService? = null
     var audioIntent: Intent? = null
 

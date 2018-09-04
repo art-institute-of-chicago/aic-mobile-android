@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.Toolbar
 import android.view.*
@@ -14,6 +13,7 @@ import com.fuzz.rx.DisposeBag
 import dagger.android.support.AndroidSupportInjection
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.getThemeColors
 import edu.artic.base.utils.setWindowFlag
 import javax.inject.Inject
 
@@ -71,6 +71,12 @@ abstract class BaseFragment : Fragment() {
 
     protected open fun hasTransparentStatusBar(): Boolean = false
 
+    /**
+     * If it is set, the status bar is painted with statusBarColor.
+     */
+    protected open val overrideStatusBarColor: Boolean
+        get() = true
+
     protected open fun hasHomeAsUpEnabled(): Boolean = true
 
     private fun updateToolbar(view: View) {
@@ -93,11 +99,16 @@ abstract class BaseFragment : Fragment() {
             setExpandedTitleTypeface(toolbarTextTypeFace)
         }
 
-        if (hasTransparentStatusBar()) {
-            requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-            requireActivity().window?.statusBarColor = Color.TRANSPARENT
-        } else {
-            requireActivity().window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+        if (overrideStatusBarColor) {
+            if (hasTransparentStatusBar()) {
+                requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+                requireActivity().window?.statusBarColor = Color.TRANSPARENT
+            } else {
+                val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
+                requireContext().getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
+                    requireActivity().window?.statusBarColor = it
+                }
+            }
         }
     }
 
@@ -105,6 +116,7 @@ abstract class BaseFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         baseActivity.title = title
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
