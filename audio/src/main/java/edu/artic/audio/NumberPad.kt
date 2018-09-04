@@ -46,7 +46,7 @@ class NumberPadAdapter : AutoHolderRecyclerViewAdapter<NumberPadElement>() {
     override fun View.onBindView(item: NumberPadElement, position: Int) {
         when (item) {
             is NumberPadElement.Numeric -> number_content.text = item.value
-            is NumberPadElement.GoSearch -> number_content.text = "Go"
+            is NumberPadElement.GoSearch -> number_content.text = context.getString(R.string.number_pad_go_search)
             else -> {
                 // Other types of NumberPadElements do not need to be bound.
             }

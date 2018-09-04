@@ -2,6 +2,7 @@ package edu.artic.db
 
 import android.support.annotation.Nullable
 import com.squareup.moshi.FromJson
+import com.squareup.moshi.JsonQualifier
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -25,6 +26,7 @@ fun Moshi.Builder.registerAdapters() = apply {
     add(KotlinJsonAdapterFactory())
     add(NullPrimitiveAdapter())
     add(ZonedDateTimeAdapter())
+    add(FloorAdapter())
 }
 
 internal class NullPrimitiveAdapter {
@@ -64,3 +66,36 @@ class ZonedDateTimeAdapter {
     @FromJson
     fun fromText(text: String): ZonedDateTime = ZonedDateTime.parse(text, formatter)
 }
+
+/**
+ * Parses floor as an integer. We default to [INVALID_FLOOR] as 0 and negative numbers are valid floors.
+ */
+class FloorAdapter {
+
+    @ToJson
+    fun toText(@Floor floor: Int): String = floor.toString()
+
+    @FromJson
+    @Floor
+    fun fromText(text: String?): Int {
+        return if (text != null) {
+            try {
+                return text.toInt()
+            } catch (e: NumberFormatException) {
+                /** "LL" stands for 'Lower level' **/
+                if (text == "LL") {
+                    0
+                } else {
+                    INVALID_FLOOR
+                }
+            }
+        } else {
+            INVALID_FLOOR
+        }
+
+    }
+}
+
+@Retention(AnnotationRetention.RUNTIME)
+@JsonQualifier
+annotation class Floor
