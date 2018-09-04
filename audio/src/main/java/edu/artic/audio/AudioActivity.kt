@@ -2,8 +2,10 @@ package edu.artic.audio
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.annotation.UiThread
 import android.support.v4.app.FragmentManager
+import android.view.View
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.media.ui.NarrowAudioPlayerFragment
 import edu.artic.navigation.NavigationSelectListener
@@ -21,6 +23,15 @@ import kotlinx.android.synthetic.main.activity_audio.*
  * This prevents us from accidentally showing [AudioLookupFragment] first.
  */
 class AudioActivity : BaseActivity() {
+
+    companion object {
+        /**
+         * The number of milliseconds in two frames on a 60Hz refresh-rate
+         * display, rounded to nearest whole number.
+         */
+        @Suppress("PrivatePropertyName")
+        private const val TWO_FRAMES = 33L
+    }
 
     override val layoutResId: Int
         get() = R.layout.activity_audio
@@ -54,6 +65,19 @@ class AudioActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        // Unfortunately, the layout used by AudioActivity needs to be acclimated to the new content.
+        Handler().postDelayed(
+                {
+                    // This ensures that all of the measurement calculations are locked in ASAP, before
+                    // we display on screen OR any (likely to force relayout) touch events are registered.
+                    findViewById<View>(android.R.id.content).forceLayout()
+                },
+                // Practical experimentation has found that one frame at 60fps (16ms) might execute
+                // before the AudioLookupFragment content fully settles. The addition of just one more
+                // frame fully belays that concern.
+                TWO_FRAMES
+        )
 
         navigateToAudioDetailsScreen(supportFragmentManager)
     }
