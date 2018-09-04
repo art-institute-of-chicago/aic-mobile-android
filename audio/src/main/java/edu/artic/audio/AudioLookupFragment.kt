@@ -16,6 +16,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.ui.findNavController
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -92,6 +93,12 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
     private fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {
         audioService.subscribeBy {
             it?.playPlayer(foundAudio.hostObject)
+            val host = baseActivity
+            host.runOnUiThread {
+                host.supportFragmentManager
+                        .findNavController()
+                        ?.navigate(R.id.see_current_audio_details)
+            }
         }.disposedBy(disposeBag)
     }
 
