@@ -12,6 +12,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicks
+import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
@@ -47,7 +48,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         get() = ""
     override val layoutResId: Int
         get() = R.layout.fragment_audio_lookup
-    override val screenCategory: ScreenCategoryName?
+    override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.AudioGuide
 
 
@@ -94,7 +95,15 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         audioService
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
+                    // Send Analytics for 'playback initiated'
+                    analyticsTracker.reportEvent(
+                            screenCategory,
+                            AnalyticsAction.playAudioAudioGuide,
+                            foundAudio.hostObject.title
+                    )
+                    // Request the actual playback (this triggers its own analytics event)
                     it?.playPlayer(foundAudio.hostObject)
+                    // Switch to the details screen
                     baseActivity.supportFragmentManager
                             .findNavController()
                             ?.navigate(R.id.see_current_audio_details)
