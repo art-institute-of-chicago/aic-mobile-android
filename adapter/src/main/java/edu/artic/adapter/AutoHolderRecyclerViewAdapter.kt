@@ -7,6 +7,14 @@ import android.view.ViewGroup
 /**
  * Description: Assumes the ViewHolder is a [BaseViewHolder] and then scopes the [onBindView] method
  * to the itemView of the [BaseViewHolder] to provide simplified kotlin-extensions access.
+ *
+ * Subclasses are expected to make a very clear distinction between their
+ * layouts and their binding logic:
+ *
+ * * In [getLayoutResId], check the current item at that position and return
+ *    the id of the layout needed for binding it.
+ * * In [onBindView], implement binding logic in reference to `this` (where
+ *    `this` is the inflated version of that same layout).
  */
 abstract class AutoHolderRecyclerViewAdapter<TModel> : BaseRecyclerViewAdapter<TModel, BaseViewHolder> {
 
