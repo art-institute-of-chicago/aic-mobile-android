@@ -90,12 +90,13 @@ val Activity.statusBarHeight: Int
 /**
  * Takes the array of color attributes ids and return array of colors.
  */
-fun Context.getThemeColors(colors: IntArray): Array<ColorStateList?> {
-    val found: Array<ColorStateList?>
+fun Context.getThemeColors(colors: IntArray): Array<ColorStateList> {
+    val found: Array<ColorStateList>
     var typedArray: TypedArray? = null
     try {
         typedArray = this.obtainStyledAttributes(colors)
         found = (0 until colors.size)
+                .mapNotNull { it }
                 .map { typedArray.getColorStateList(it) }
                 .toTypedArray()
     } finally {
