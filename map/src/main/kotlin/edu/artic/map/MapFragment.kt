@@ -226,7 +226,17 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.displayMode
                 .filterFlatMap({ it is MapDisplayMode.Tour }, { it as MapDisplayMode.Tour })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (tour) -> displayFragmentInInfoContainer(TourCarouselFragment.create(tour)) }
+                .disposedBy(disposeBag)
+
+        /**
+         * If displayMode is not [MapDisplayMode.Tour], hide the carousel.
+         */
+        viewModel.displayMode
+                .filter { it !is MapDisplayMode.Tour }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { hideFragmentInInfoContainer() }
                 .disposedBy(disposeBag)
 
         viewModel.tourBoundsChanged
@@ -400,6 +410,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override fun onDestroyView() {
         mapView.onDestroy()
+        leaveTourDialog?.dismiss()
         groundOverlayGenerated.onNext(false)
         super.onDestroyView()
     }
