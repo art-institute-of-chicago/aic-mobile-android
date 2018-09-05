@@ -3,7 +3,6 @@ package edu.artic.audio
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
-import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.EditText
@@ -58,8 +57,8 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
     private val audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+    override fun setupBindings(viewModel: AudioLookupViewModel) {
 
         // This sets the hint and instructional text.
         viewModel.chosenInfo
