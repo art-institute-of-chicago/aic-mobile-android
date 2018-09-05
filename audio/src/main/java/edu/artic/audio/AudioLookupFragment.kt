@@ -9,6 +9,8 @@ import android.widget.EditText
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.widget.hint
+import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicks
 import edu.artic.analytics.AnalyticsAction
@@ -60,14 +62,18 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
     override fun setupBindings(viewModel: AudioLookupViewModel) {
 
-        // This sets the hint and instructional text.
+        // These first two bindings set the hint and instructional text.
         viewModel.chosenInfo
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
-                    view.lookup_field.hint = it.audioTitle
-                    view.subheader.text = it.audioSubtitle
-                    view.requestLayout()
-                }.disposedBy(disposeBag)
+                .map { info ->
+                    info.audioTitle
+                }.bindToMain(lookup_field.hint())
+                .disposedBy(disposeBag)
+
+        viewModel.chosenInfo
+                .map { info ->
+                    info.audioSubtitle
+                }.bindToMain(subheader.text())
+                .disposedBy(disposeBag)
 
 
         val numberPadAdapter = NumberPadAdapter()
