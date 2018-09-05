@@ -8,6 +8,7 @@ import edu.artic.db.Playable
 import edu.artic.db.daos.ArticAudioFileDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
+import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +22,8 @@ import javax.inject.Inject
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class TourCarouselViewModel @Inject constructor(private val analyticsTracker: AnalyticsTracker,
+class TourCarouselViewModel @Inject constructor(private val languageSelector: LanguageSelector,
+                                                private val analyticsTracker: AnalyticsTracker,
                                                 private val objectDao: ArticObjectDao,
                                                 private val audioObjectDao: ArticAudioFileDao,
                                                 val tourProgressManager: TourProgressManager) : BaseViewModel() {
@@ -35,7 +37,7 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val playerControl: Subject<TourCarousalBaseViewModel.PlayerAction> = PublishSubject.create()
     val currentPage: Subject<Int> = BehaviorSubject.createDefault(0)
-
+    private val chosenTranslation: Subject<ArticTour.Translation> = BehaviorSubject.create()
     private val selectedStop: Subject<ArticObject> = BehaviorSubject.create()
 
     var tourObject: ArticTour? = null
@@ -47,7 +49,14 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
         }
 
     init {
-        tourObservable.map { it.title }
+        tourObservable
+                .map { tour -> tour.allTranslations }
+                .map {
+                    languageSelector.selectFrom(it, true)
+                }.bindTo(chosenTranslation)
+                .disposedBy(disposeBag)
+
+        chosenTranslation.map { it.title.orEmpty() }
                 .bindTo(tourTitle)
                 .disposedBy(disposeBag)
 

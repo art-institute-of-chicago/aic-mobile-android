@@ -12,6 +12,7 @@ import edu.artic.db.Playable
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.ui.util.asCDNUri
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @JsonClass(generateAdapter = true)
 @Entity
@@ -131,6 +132,30 @@ data class ArticTour(
         return this.title
     }
 
+    /**
+     * Returns the translations including english language
+     */
+    val allTranslations: List<Translation>
+        get() {
+            return mutableListOf(this.toEnglishTranslation()).apply { addAll(translations) }
+        }
+
+}
+
+/**
+ * Builds english translation for [ArticTour].
+ * [ArticTour]'s properties are in english, so copying the required properties suffice the english translation.
+ */
+fun ArticTour.toEnglishTranslation() : ArticTour.Translation {
+    return ArticTour.Translation(
+            language = "en-US",
+            title = this.title,
+            description = this.description,
+            description_html = this.descriptionHtml,
+            intro = this.intro,
+            intro_html = this.introHtml,
+            tour_duration = this.tourDuration
+    )
 }
 
 fun ArticTour.getIntroStop(): ArticTour.TourStop {

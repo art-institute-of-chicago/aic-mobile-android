@@ -26,6 +26,14 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
         }
     }
 
+    fun setTourLanguage(proposedTourLocale: Locale) {
+        if (proposedTourLocale.hasNoLanguage()) {
+            prefs.remove(LocalizationPreferences.PREF_TOUR_LOCALE)
+        } else {
+            prefs.tourLocale = proposedTourLocale
+        }
+    }
+
     /**
      * Returns the first translation we can find in `languages` that belongs to the
      * same locale as [appLocaleRef]. If no such exists, we return the first language
@@ -35,14 +43,25 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
      * languages that have been normalized through [Locale.forLanguageTag]. We
      * cannot necessarily trust the original Strings returned by the API.
      */
-    fun <T : SpecifiesLanguage> selectFrom(languages: List<T>): T {
+    fun <T : SpecifiesLanguage> selectFrom(languages: List<T>, prioritizeTour: Boolean = false): T {
         val appLocale: Locale = appLocaleRef.get()
-
         // TODO: Investigate possibility of replacing the list with a `LocaleList`
+
+        val priority: T? = if (prioritizeTour) {
+            findIn(languages, prefs.tourLocale)
+        } else {
+            null
+        }
+
+        return priority ?: findIn(languages, appLocale) ?: languages.first()
+
+    }
+
+    private fun <T : SpecifiesLanguage> findIn(languages: List<T>, wanted: Locale): T? {
         return languages.firstOrNull {
             // This is very much intentional. Read the method docs fully before changing.
-            it.underlyingLocale().language == appLocale.language
-        } ?: languages[0]
+            it.underlyingLocale().language == wanted.language
+        }
     }
 
 }
