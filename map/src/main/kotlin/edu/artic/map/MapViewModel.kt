@@ -1,12 +1,6 @@
 package edu.artic.map
 
-import com.fuzz.rx.Optional
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.bindToMain
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
-import com.fuzz.rx.mapOptional
-import com.fuzz.rx.optionalOf
+import com.fuzz.rx.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
@@ -31,7 +25,7 @@ import javax.inject.Inject
  */
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
-                                       tourProgressManager: TourProgressManager)
+                                       val tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
 
@@ -68,6 +62,14 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .doOnNext { floorChangedTo(it.floorAsInt) }
                 .mapOptional()
                 .bindTo(tourProgressManager.selectedTour)
+                .disposedBy(disposeBag)
+
+        displayMode
+                .distinctUntilChanged()
+                .filterFlatMap({ it is MapDisplayMode.Tour }, { it as MapDisplayMode.Tour })
+                .filter { it.selectedTourStop != null }
+                .map{it.selectedTourStop!!.nid}
+                .bindTo(tourProgressManager.selectedStop)
                 .disposedBy(disposeBag)
 
         /**
