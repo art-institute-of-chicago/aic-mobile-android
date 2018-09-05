@@ -31,7 +31,6 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
             prefs.remove(LocalizationPreferences.PREF_TOUR_LOCALE)
         } else {
             prefs.tourLocale = proposedTourLocale
-            appLocaleRef.set(proposedTourLocale)
         }
     }
 
