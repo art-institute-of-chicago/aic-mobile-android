@@ -1,6 +1,7 @@
 package artic.edu.search
 
 import android.os.Bundle
+import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -9,6 +10,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticObject
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -33,6 +35,13 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
 
     override fun onRegisterViewModel(viewModel: SearchAudioDetailViewModel) {
         viewModel.articObject = articObject
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
+        }
     }
 
     override fun setupBindings(viewModel: SearchAudioDetailViewModel) {
