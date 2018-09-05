@@ -7,6 +7,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
 
 class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCellViewModel>() {
@@ -22,6 +23,7 @@ class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCell
                 .bindToMain(tourNumber.text())
                 .disposedBy(item.viewDisposeBag)
         item.imageUrl
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     Glide.with(this)
                             .load(it)
