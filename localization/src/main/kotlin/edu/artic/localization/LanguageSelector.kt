@@ -26,12 +26,12 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
         }
     }
 
-    fun setTourLanguage(lang: Locale) {
-        if (lang.hasNoLanguage()) {
+    fun setTourLanguage(proposedTourLocale: Locale) {
+        if (proposedTourLocale.hasNoLanguage()) {
             prefs.remove(LocalizationPreferences.TOUR_KEY)
         } else {
-            prefs.tourLocale = lang
-            appLocaleRef.set(lang)
+            prefs.tourLocale = proposedTourLocale
+            appLocaleRef.set(proposedTourLocale)
         }
     }
 
