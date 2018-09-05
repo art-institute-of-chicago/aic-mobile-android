@@ -13,7 +13,7 @@
                       <LayoutPositions>
                         <option name="myPositions">
                           <map>
-                            <entry key="goToEventDetails">
+                            <entry key="goToEventDetailsAction">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -235,16 +235,14 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="audioDetailsFragment">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="defaultSearchSuggestionsFragment">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-718" />
-                            <option name="y" value="-425" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                 </map>
