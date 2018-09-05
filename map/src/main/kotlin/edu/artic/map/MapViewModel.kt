@@ -128,11 +128,20 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     private fun animateToTourStopBounds(displayMode: MapDisplayMode.Tour) {
         val tour = displayMode.tour
-        articObjectDao.getObjectsByIdList(tour.tourStops.mapNotNull { it.objectId })
-                .toObservable()
-                .map { stops -> stops.map { it.toLatLng() } }
-                .bindToMain(tourBoundsChanged)
-                .disposedBy(disposeBag)
+        if (displayMode.selectedTourStop != null) {
+
+            displayMode.selectedTourStop.toLatLng().asObservable()
+                    .map { listOf(it) }
+                    .bindToMain(tourBoundsChanged)
+                    .disposedBy(disposeBag)
+
+        } else {
+            articObjectDao.getObjectsByIdList(tour.tourStops.mapNotNull { it.objectId })
+                    .toObservable()
+                    .map { stops -> stops.map { it.toLatLng() } }
+                    .bindToMain(tourBoundsChanged)
+                    .disposedBy(disposeBag)
+        }
     }
 
     fun visibleRegionChanged(visibleRegion: VisibleRegion) {
