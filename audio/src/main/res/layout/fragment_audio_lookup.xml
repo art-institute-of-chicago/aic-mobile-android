@@ -67,14 +67,19 @@
         android:importantForAutofill="no"
         android:inputType="none"
         android:maxLength="5"
-        android:hint="@string/audio_screen_header"
         android:textColorHint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/subheader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/screen_icon"
-        tools:ignore="Deprecated,LabelFor,UnusedAttribute"
+        tools:ignore="Deprecated,UnusedAttribute"
         />
+
+    <!--
+
+    Additional note: text for lookup_field and subheader is determined at runtime, in ArticGeneralInfo.
+
+    -->
 
     <TextView
         android:id="@+id/subheader"
@@ -84,11 +89,11 @@
         android:layout_marginStart="@dimen/marginStandard"
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginStandard"
-        android:text="@string/audio_instructions"
         android:labelFor="@id/lookup_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lookup_field"
+        tools:ignore="LabelFor"
         />
 
 
