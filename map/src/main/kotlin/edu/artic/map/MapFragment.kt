@@ -72,8 +72,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
-
-    private val tour: ArticTour? get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
+    private var tour: ArticTour?
+        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
+        set(value) {
+            requireActivity().intent?.putExtra(MapActivity.ARG_TOUR, value)
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
