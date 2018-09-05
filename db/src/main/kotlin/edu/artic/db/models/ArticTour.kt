@@ -135,7 +135,7 @@ data class ArticTour(
     /**
      * Returns the translations including english language
      */
-    val translationWithEnglish: List<Translation>
+    val allTranslations: List<Translation>
         get() {
             return mutableListOf(this.toEnglishTranslation()).apply { addAll(translations) }
         }
