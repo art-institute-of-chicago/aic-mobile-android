@@ -53,4 +53,42 @@ data class ArticGeneralInfo(
             return language
         }
     }
+
+    /**
+     * Retrieve _all_ of the translations of this content, in one
+     * ordered list.
+     *
+     * Note that this uses the (safe) assumption that [ArticGeneralInfo]
+     * itself is an English translation of the content.
+     *
+     * @see ArticAudioFile.allTranslations
+     */
+    fun allTranslations(): List<Translation> {
+        return translations.mapTo(mutableListOf(asTranslation())) { it }
+    }
+
+    /**
+     * Convert this GeneralInfo into a [Translation], with specific
+     * language of `en-US`. Intended for use only by [allTranslations].
+     */
+    private fun asTranslation(): Translation {
+        return Translation(
+                language = "en-US",
+                museumHours = museumHours,
+                homeMemberPromptText = homeMemberPromptText,
+                audioTitle = audioTitle,
+                audioSubtitle = audioSubtitle,
+                mapTitle = mapTitle,
+                mapSubtitle = mapSubtitle,
+                infoTitle = infoTitle,
+                infoSubtitle = infoSubtitle,
+                giftShopsTitle = giftShopsTitle,
+                gift_shops_text = gift_shops_text,
+                membersLoungeTitle = membersLoungeTitle,
+                membersLoungeText = membersLoungeText,
+                seeAllToursIntro = seeAllToursIntro,
+                restroomsTitle = restroomsTitle,
+                restroomsText = restroomsText
+        )
+    }
 }
