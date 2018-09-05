@@ -397,7 +397,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         val localTour = tour
         if (localTour != null) {
-            viewModel.displayModeChanged(MapDisplayMode.Tour(localTour))
+            viewModel.displayModeChanged(MapDisplayMode.Tour(localTour, focusedObject))
         } else {
             // TODO: Search mode
             viewModel.displayModeChanged(MapDisplayMode.CurrentFloor)
