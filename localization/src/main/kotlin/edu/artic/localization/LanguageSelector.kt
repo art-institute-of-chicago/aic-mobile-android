@@ -46,14 +46,22 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
     fun <T : SpecifiesLanguage> selectFrom(languages: List<T>, prioritizeTour: Boolean = false): T {
         val appLocale: Locale = appLocaleRef.get()
         // TODO: Investigate possibility of replacing the list with a `LocaleList`
+
+        val priority: T? = if (prioritizeTour) {
+            findIn(languages, prefs.tourLocale)
+        } else {
+            null
+        }
+
+        return priority ?: findIn(languages, appLocale) ?: languages.first()
+
+    }
+
+    private fun <T : SpecifiesLanguage> findIn(languages: List<T>, wanted: Locale): T? {
         return languages.firstOrNull {
             // This is very much intentional. Read the method docs fully before changing.
-            if (prioritizeTour) {
-                it.underlyingLocale().language == prefs.tourLocale.language
-            } else {
-                it.underlyingLocale().language == appLocale.language
-            }
-        } ?: languages[0]
+            it.underlyingLocale().language == wanted.language
+        }
     }
 
 }
