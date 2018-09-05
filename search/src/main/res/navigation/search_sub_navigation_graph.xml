@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_sub_navigation_graph.xml"
+    app:startDestination="@id/defaultSearchSuggestionsFragment">
+
+    <fragment
+        android:id="@+id/defaultSearchSuggestionsFragment"
+        android:name="artic.edu.search.DefaultSearchSuggestionsFragment"
+        android:label="fragment_default_search_suggestions"
+        tools:layout="@layout/fragment_default_search_suggestions"/>
+
+</navigation>

@@ -4,6 +4,7 @@ package artic.edu.search
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
@@ -22,15 +23,15 @@ class DefaultSearchSuggestionsFragment : BaseViewModelFragment<DefaultSearchSugg
         const val MAX_ARTWORKS_PER_ROW: Int = 5
     }
 
-    override val viewModelClass: KClass<DefaultSearchSuggestionsViewModel>
-        get() = DefaultSearchSuggestionsViewModel::class
+    override val viewModelClass: KClass<DefaultSearchSuggestionsViewModel> = DefaultSearchSuggestionsViewModel::class
 
     override val title = "Search"
 
     override val layoutResId = R.layout.fragment_default_search_suggestions
 
-    override val screenCategory: ScreenCategoryName?
-        get() = ScreenCategoryName.Search
+    override val screenCategory: ScreenCategoryName? = ScreenCategoryName.Search
+
+    override val overrideStatusBarColor: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,7 +69,7 @@ class DefaultSearchSuggestionsFragment : BaseViewModelFragment<DefaultSearchSugg
                     when (navigation.endpoint) {
                         is DefaultSearchSuggestionsViewModel.NavigationEndpoint.ArticObjectDetails -> {
                             val o = (navigation.endpoint as DefaultSearchSuggestionsViewModel.NavigationEndpoint.ArticObjectDetails).articObject
-                            navController.navigate(
+                            Navigation.findNavController(requireActivity(), R.id.container).navigate(
                                     R.id.goToSearchAudioDetails,
                                     SearchAudioDetailFragment.argsBundle(o)
                             )

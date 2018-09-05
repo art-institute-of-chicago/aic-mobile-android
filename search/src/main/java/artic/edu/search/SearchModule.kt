@@ -35,5 +35,8 @@ abstract class SearchModule {
     abstract val defaultSearchSuggestionsFragment: DefaultSearchSuggestionsFragment
 
     @get:ContributesAndroidInjector
+    abstract val searchFragment: SearchFragment
+
+    @get:ContributesAndroidInjector
     abstract val searchAudioDetailFragment: SearchAudioDetailFragment
 }
