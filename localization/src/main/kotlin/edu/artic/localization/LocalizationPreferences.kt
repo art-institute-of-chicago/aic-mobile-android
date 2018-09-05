@@ -15,7 +15,7 @@ class LocalizationPreferences(context: Context)
     : BasePreferencesManager(context, "localization") {
 
     companion object {
-        const val TOUR_KEY = "tour_locale"
+        const val PREF_TOUR_LOCALE = "tour_locale"
     }
 
     var preferredAppLocale: Locale
@@ -31,12 +31,12 @@ class LocalizationPreferences(context: Context)
     var tourLocale: Locale
         set(given) {
             putString(
-                    TOUR_KEY,
+                    PREF_TOUR_LOCALE,
                     given.toLanguageTag()
             )
         }
         get() = Locale.forLanguageTag(getString(
-                TOUR_KEY,
+                PREF_TOUR_LOCALE,
                 Locale.getDefault().toLanguageTag()
         )).orFallback(preferredAppLocale)
 }
