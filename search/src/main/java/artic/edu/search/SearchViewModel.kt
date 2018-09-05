@@ -1,9 +1,12 @@
 package artic.edu.search
 
+import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -20,6 +23,13 @@ class SearchViewModel @Inject constructor(
     val searchResults: Subject<String> = PublishSubject.create()
 
     init {
+
+        searchQuery.observeOn(Schedulers.io())
+                .subscribeBy { query ->
+
+                    // Call searchService functions here
+
+                }.disposedBy(disposeBag)
     }
 
     fun clearText() {
