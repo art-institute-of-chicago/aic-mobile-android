@@ -70,6 +70,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             requireActivity().intent?.putExtra(MapActivity.ARG_TOUR, value)
         }
 
+    private var focusedObject: ArticObject?
+        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_FOCUSED_OBJECT)
+        set(value) {
+            requireActivity().intent?.putExtra(MapActivity.ARG_FOCUSED_OBJECT, value)
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
