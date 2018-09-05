@@ -7,8 +7,11 @@ import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
+import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_default_search_suggestions.*
 import kotlin.reflect.KClass
 
@@ -45,9 +48,37 @@ class DefaultSearchSuggestionsFragment : BaseViewModelFragment<DefaultSearchSugg
     override fun setupBindings(viewModel: DefaultSearchSuggestionsViewModel) {
         super.setupBindings(viewModel)
         val adapter = items.adapter as DefaultSuggestionAdapter
+
+        adapter.itemClicksWithPosition()
+                .subscribeBy { (pos, searchViewModel) ->
+                    viewModel.onClickItem(pos, searchViewModel)
+                }.disposedBy(disposeBag)
+
         viewModel.cells
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
+    }
+
+    override fun setupNavigationBindings(viewModel: DefaultSearchSuggestionsViewModel) {
+        super.setupNavigationBindings(viewModel)
+        viewModel.navigateTo.subscribeBy { navigation ->
+            when (navigation) {
+                is Navigate.Forward -> {
+                    when (navigation.endpoint) {
+                        is DefaultSearchSuggestionsViewModel.NavigationEndpoint.ArticObjectDetails -> {
+                            val o = (navigation.endpoint as DefaultSearchSuggestionsViewModel.NavigationEndpoint.ArticObjectDetails).articObject
+                            navController.navigate(
+                                    R.id.goToSearchAudioDetails,
+                                    SearchAudioDetailFragment.argsBundle(o)
+                            )
+                        }
+                    }
+                }
+                is Navigate.Back -> {
+
+                }
+            }
+        }.disposedBy(disposeBag)
     }
 }

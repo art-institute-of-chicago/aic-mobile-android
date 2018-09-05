@@ -9,5 +9,13 @@
         android:id="@+id/defaultSearchSuggestionsFragment"
         android:name="artic.edu.search.DefaultSearchSuggestionsFragment"
         android:label="fragment_default_search_suggestions"
-        tools:layout="@layout/fragment_default_search_suggestions" />
+        tools:layout="@layout/fragment_default_search_suggestions">
+        <action
+            android:id="@+id/goToSearchAudioDetails"
+            app:destination="@id/searchAudioDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchAudioDetailFragment"
+        android:name="artic.edu.search.SearchAudioDetailFragment"
+        android:label="SearchAudioDetailFragment" />
 </navigation>
