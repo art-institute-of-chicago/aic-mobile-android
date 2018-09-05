@@ -120,7 +120,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                     // Switch to the details screen
                     baseActivity.supportFragmentManager
                             .findNavController()
-                            ?.navigate(R.id.see_current_audio_details)
+                            ?.navigate(R.id.peek_audio_details)
                 }.disposedBy(disposeBag)
     }
 
