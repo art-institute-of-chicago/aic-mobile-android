@@ -26,6 +26,15 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
         }
     }
 
+    fun setTourLanguage(lang: Locale) {
+        if (lang.hasNoLanguage()) {
+            prefs.remove(LocalizationPreferences.TOUR_KEY)
+        } else {
+            prefs.tourLocale = lang
+            appLocaleRef.set(lang)
+        }
+    }
+
     /**
      * Returns the first translation we can find in `languages` that belongs to the
      * same locale as [appLocaleRef]. If no such exists, we return the first language
