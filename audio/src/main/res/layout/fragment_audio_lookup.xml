@@ -10,6 +10,23 @@
     >
 
     <ImageView
+        android:id="@+id/searchIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="@dimen/marginTwenty"
+        android:background="@drawable/ic_search_background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_search_24dp"
+        app:layout_constrainedHeight="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+    <ImageView
         android:id="@+id/screen_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,7 +55,7 @@
     <EditText
         android:id="@+id/lookup_field"
         style="@style/PageTitleRegularWhite"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginStandard"
         android:layout_marginTop="@dimen/marginStandard"
@@ -50,28 +67,35 @@
         android:importantForAutofill="no"
         android:inputType="none"
         android:maxLength="5"
-        android:hint="@string/audio_screen_header"
         android:textColorHint="@color/white"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@+id/subheader"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/screen_icon"
-        tools:ignore="Deprecated,LabelFor,UnusedAttribute"
+        tools:ignore="Deprecated,UnusedAttribute"
         />
+
+    <!--
+
+    Additional note: text for lookup_field and subheader is determined at runtime, in ArticGeneralInfo.
+
+    -->
 
     <TextView
         android:id="@+id/subheader"
         style="@style/PageSubHeaderRegularWhite"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginStandard"
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginStandard"
-        android:text="@string/audio_instructions"
         android:labelFor="@id/lookup_field"
+        app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lookup_field"
+        tools:ignore="LabelFor"
         />
 
 
@@ -82,6 +106,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subheader"
+        app:layout_constraintBottom_toTopOf="@id/newPlayer"
+        app:layout_constraintVertical_bias="0"
         app:layoutManager="android.support.v7.widget.GridLayoutManager"
         app:spanCount="3"
         tools:listitem="@layout/view_number_pad_numeric_element"
