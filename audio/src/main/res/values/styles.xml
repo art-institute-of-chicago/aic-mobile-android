@@ -29,4 +29,6 @@
     </style>
 
     <dimen name="number_pad_text_size">26sp</dimen>
+    <dimen name="number_pad_bg_size">66dp</dimen>
+
 </resources>
