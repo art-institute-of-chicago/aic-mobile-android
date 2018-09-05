@@ -65,7 +65,7 @@ class TourDetailsViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         tourObservable
-                .map { tour -> tour.translationWithEnglish }
+                .map { tour -> tour.allTranslations }
                 .bindTo(availableTranslations)
                 .disposedBy(disposeBag)
 

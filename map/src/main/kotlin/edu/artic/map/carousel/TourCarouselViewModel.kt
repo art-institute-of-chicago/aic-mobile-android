@@ -50,7 +50,7 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
 
     init {
         tourObservable
-                .map{tour->tour.translationWithEnglish}
+                .map{tour->tour.allTranslations}
                 .map {
                     languageSelector.selectFrom(it, true)
                 }.bindTo(chosenTranslation)
