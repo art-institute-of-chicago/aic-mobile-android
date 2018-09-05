@@ -4,24 +4,15 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.annotation.AnyThread
+import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.view.View
-import com.fuzz.rx.defaultThrottle
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
-import com.fuzz.rx.filterTo
-import com.fuzz.rx.filterValue
-import com.fuzz.rx.withLatestFromOther
+import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.GroundOverlay
-import com.google.android.gms.maps.model.GroundOverlayOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
 import edu.artic.analytics.ScreenCategoryName
@@ -72,8 +63,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
-
-    private val tour: ArticTour? get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
+    private var leaveTourDialog: AlertDialog? = null
+    private var tour: ArticTour?
+        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
+        set(value) {
+            requireActivity().intent?.putExtra(MapActivity.ARG_TOUR, value)
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -231,7 +226,17 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.displayMode
                 .filterFlatMap({ it is MapDisplayMode.Tour }, { it as MapDisplayMode.Tour })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (tour) -> displayFragmentInInfoContainer(TourCarouselFragment.create(tour)) }
+                .disposedBy(disposeBag)
+
+        /**
+         * If displayMode is not [MapDisplayMode.Tour], hide the carousel.
+         */
+        viewModel.displayMode
+                .filter { it !is MapDisplayMode.Tour }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { hideFragmentInInfoContainer() }
                 .disposedBy(disposeBag)
 
         viewModel.tourBoundsChanged
@@ -304,6 +309,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
                 }
                 .disposedBy(disposeBag)
+
+        viewModel
+                .leaveTourRequest
+                .distinctUntilChanged()
+                .subscribe {
+                    displayLeaveTourConfirmation(viewModel)
+                }.disposedBy(disposeBag)
     }
 
     /**
@@ -330,6 +342,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     /**
      * Removes the fragment information below the map, and readjusts the padding back to normal.
      */
+    @UiThread
     private fun hideFragmentInInfoContainer() {
         val supportFragmentManager = requireActivity().supportFragmentManager
         supportFragmentManager
@@ -348,6 +361,24 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribeBy { map -> map.setMapPadding(requireActivity()) }
                 .disposedBy(disposeBag)
     }
+
+    private fun displayLeaveTourConfirmation(viewModel: MapViewModel) {
+        if (leaveTourDialog?.isShowing != true) {
+            leaveTourDialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
+                    .setMessage(getString(R.string.leaveTour))
+                    .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
+                        tour = null
+                        viewModel.leaveTour()
+                        dialog.dismiss()
+                    }
+                    .create()
+            leaveTourDialog?.show()
+        }
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -379,6 +410,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override fun onDestroyView() {
         mapView.onDestroy()
+        leaveTourDialog?.dismiss()
         groundOverlayGenerated.onNext(false)
         super.onDestroyView()
     }
