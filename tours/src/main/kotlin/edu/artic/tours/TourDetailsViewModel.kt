@@ -10,6 +10,7 @@ import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -132,9 +133,8 @@ class TourDetailsViewModel @Inject constructor(
     fun onClickStartTour() {
         Observables.combineLatest(tourObservable, chosenTranslation.map { it.underlyingLocale() })
                 .take(1)
-                .subscribe { tourWithLocale ->
-                    val tour = tourWithLocale.first
-                    languageSelector.setTourLanguage(tourWithLocale.second)
+                .subscribeBy { (tour,locale) ->
+                    languageSelector.setTourLanguage(locale)
                     navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour)))
                 }
                 .disposedBy(disposeBag)
