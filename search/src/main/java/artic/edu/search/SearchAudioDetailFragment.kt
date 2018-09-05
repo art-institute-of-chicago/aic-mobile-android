@@ -27,6 +27,10 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
 
     private val articObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_OBJECT) }
 
+    override fun hasTransparentStatusBar(): Boolean {
+        return true
+    }
+
     override fun onRegisterViewModel(viewModel: SearchAudioDetailViewModel) {
         viewModel.articObject = articObject
     }
