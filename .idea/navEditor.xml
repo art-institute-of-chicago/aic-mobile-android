@@ -13,7 +13,7 @@
                       <LayoutPositions>
                         <option name="myPositions">
                           <map>
-                            <entry key="goToEventDetails">
+                            <entry key="goToEventDetailsAction">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -232,19 +232,17 @@
         </entry>
         <entry key="search_navigation_graph.xml">
           <value>
+            <LayoutPositions />
+          </value>
+        </entry>
+        <entry key="search_sub_navigation_graph.xml">
+          <value>
             <LayoutPositions>
               <option name="myPositions">
                 <map>
                   <entry key="defaultSearchSuggestionsFragment">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-718" />
-                            <option name="y" value="-425" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                 </map>
@@ -303,85 +301,37 @@
                 <map>
                   <entry key="all_events_navigation_graph">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="265" />
-                            <option name="y" value="12" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="all_tours_navigation_graph">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="265" />
-                            <option name="y" value="564" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="event_details_navigation_graph">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="265" />
-                            <option name="y" value="426" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="exhibition_details_navigation_graph">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="265" />
-                            <option name="y" value="288" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="exhibition_navigation_graph">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="265" />
-                            <option name="y" value="150" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="tour_details_navigation_graph">
                     <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="265" />
-                            <option name="y" value="702" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="welcomeFragment">
                     <value>
                       <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="12" />
-                            <option name="y" value="197" />
-                          </Point>
-                        </option>
                         <option name="myPositions">
                           <map>
                             <entry key="goToAllEventsAction">

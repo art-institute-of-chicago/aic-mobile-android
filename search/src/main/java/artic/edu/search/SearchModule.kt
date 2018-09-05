@@ -23,9 +23,20 @@ abstract class SearchModule {
     @ViewModelKey(DefaultSearchSuggestionsViewModel::class)
     abstract fun defaultSearchSuggestionsViewModel(defaultSearchSuggestionsViewModel: DefaultSearchSuggestionsViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchAudioDetailViewModel::class)
+    abstract fun searchAudioDetailViewModel(searchAudioDetailViewModel: SearchAudioDetailViewModel): ViewModel
+
     @get:ContributesAndroidInjector
     abstract val splashActivity: SearchActivity
 
     @get:ContributesAndroidInjector
     abstract val defaultSearchSuggestionsFragment: DefaultSearchSuggestionsFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchFragment: SearchFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchAudioDetailFragment: SearchAudioDetailFragment
 }
