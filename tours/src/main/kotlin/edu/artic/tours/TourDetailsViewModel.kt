@@ -9,6 +9,7 @@ import edu.artic.localization.SpecifiesLanguage
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -55,13 +56,6 @@ class TourDetailsViewModel @Inject constructor(
                 .map { it.title.orEmpty() }
                 .bindTo(titleText)
                 .disposedBy(disposeBag)
-
-        chosenTranslation
-                .map { translation ->
-                    translation.underlyingLocale()
-                }.subscribe { locale ->
-                    languageSelector.setTourLanguage(locale)
-                }.disposedBy(disposeBag)
 
         tourObservable
                 .filter { it.standardImageUrl != null }
@@ -136,8 +130,11 @@ class TourDetailsViewModel @Inject constructor(
      * Navigate user to the Map activity in Tour Context.
      */
     fun onClickStartTour() {
-        tourObservable.take(1)
-                .subscribe { tour ->
+        Observables.combineLatest(tourObservable, chosenTranslation.map { it.underlyingLocale() })
+                .take(1)
+                .subscribe { tourWithLocale ->
+                    val tour = tourWithLocale.first
+                    languageSelector.setTourLanguage(tourWithLocale.second)
                     navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour)))
                 }
                 .disposedBy(disposeBag)
