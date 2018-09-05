@@ -24,6 +24,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_audio_lookup.*
+import kotlinx.android.synthetic.main.fragment_audio_lookup.view.*
 import java.text.BreakIterator
 import kotlin.reflect.KClass
 
@@ -60,6 +61,16 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // This sets the hint and instructional text.
+        viewModel.chosenInfo
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    view.lookup_field.hint = it.audioTitle
+                    view.subheader.text = it.audioSubtitle
+                    view.requestLayout()
+                }.disposedBy(disposeBag)
+
 
         val numberPadAdapter = NumberPadAdapter()
 
