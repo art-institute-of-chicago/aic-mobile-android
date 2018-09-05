@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/search_navigation_graph.xml"
-    app:startDestination="@id/defaultSearchSuggestionsFragment">
+    android:id="@+id/search_navigation_graph"
+    app:startDestination="@id/searchFragment">
 
     <fragment
-        android:id="@+id/defaultSearchSuggestionsFragment"
-        android:name="artic.edu.search.DefaultSearchSuggestionsFragment"
-        android:label="fragment_default_search_suggestions"
-        tools:layout="@layout/fragment_default_search_suggestions" />
+        android:id="@+id/searchFragment"
+        android:name="artic.edu.search.SearchFragment"
+        android:label="search_fragment">
+
+        <action
+            android:id="@+id/goToSearchAudioDetails"
+            app:destination="@id/searchAudioDetailFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchAudioDetailFragment"
+        android:name="artic.edu.search.SearchAudioDetailFragment"
+        android:label="SearchAudioDetailFragment" />
+
+
 </navigation>

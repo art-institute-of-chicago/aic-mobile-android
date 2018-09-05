@@ -5,9 +5,14 @@ import android.support.annotation.DrawableRes
 import android.support.design.widget.AppBarLayout
 import android.util.AttributeSet
 import android.view.View
+import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.defaultThrottle
+import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.navigation.NavigationConstants
 import edu.artic.ui.R
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
 
 /**
@@ -15,6 +20,8 @@ import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
  * this app.
  */
 class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : AppBarLayout(context, attrs) {
+    private val disposeBag : DisposeBag = DisposeBag()
+    private var clickConsumer : Consumer<Unit>? = null
 
     init {
         View.inflate(context, R.layout.view_app_bar_layout, this)
@@ -38,9 +45,6 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             expandedImage.drawable.alpha = (progress * 255).toInt()
         }
 
-        searchIcon.setOnClickListener {
-            context.startActivity(NavigationConstants.SEARCH.asDeepLinkIntent())
-        }
     }
 
     fun setIcon(@DrawableRes iconId: Int) {
@@ -49,6 +53,25 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
 
     fun setBackgroundImage(@DrawableRes imageId: Int) {
         expandedImage.setImageResource(imageId)
+    }
+
+    fun setOnSearchClickedConsumer(clickConsumer : Consumer<Unit>) {
+        this.clickConsumer = clickConsumer
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        searchIcon.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    clickConsumer?.accept(it)
+                }
+                .disposedBy(disposeBag)
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        disposeBag.clear()
     }
 
 }

@@ -9,6 +9,8 @@ import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticObject
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -20,7 +22,11 @@ import javax.inject.Inject
  */
 class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao: ArticSearchObjectDao,
                                                             objectDao: ArticObjectDao
-) : BaseViewModel() {
+) : NavViewViewModel<DefaultSearchSuggestionsViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint {
+        data class ArticObjectDetails(val articObject: ArticObject) : NavigationEndpoint()
+    }
 
     private val suggestedKeywords: Subject<List<TextCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<CircularCellViewModel>> = BehaviorSubject.create()
@@ -79,6 +85,24 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                 .disposedBy(disposeBag)
 
     }
+
+    fun onClickItem(pos: Int, vm: SearchBaseCellViewModel) {
+        when (vm) {
+            is CircularCellViewModel -> {
+                vm.artWork?.value?.let { articObject ->
+                    navigateTo.onNext(
+                            Navigate.Forward(
+                                    NavigationEndpoint.ArticObjectDetails(articObject)
+                            )
+                    )
+
+                }
+            }
+            else -> {
+
+            }
+        }
+    }
 }
 
 
@@ -128,7 +152,7 @@ class TextCellViewModel(item: SearchViewComponent.SuggestedKeyword) : SearchBase
 /**
  * ViewModel for displaying the circular artwork image under "On the map" section.
  */
-class CircularCellViewModel(artWork: SearchViewComponent.Artwork?) : SearchBaseCellViewModel() {
+class CircularCellViewModel(val artWork: SearchViewComponent.Artwork?) : SearchBaseCellViewModel() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
 
