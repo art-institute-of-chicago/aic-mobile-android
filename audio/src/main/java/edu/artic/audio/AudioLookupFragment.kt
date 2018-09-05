@@ -56,8 +56,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         return true
     }
 
-    private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
-
+    private val audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
