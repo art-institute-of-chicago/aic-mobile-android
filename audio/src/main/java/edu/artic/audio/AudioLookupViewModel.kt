@@ -1,9 +1,13 @@
 package edu.artic.audio
 
+import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.audio.NumberPadElement.*
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.db.models.ArticGeneralInfo
 import edu.artic.db.models.ArticObject
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -20,7 +24,20 @@ import javax.inject.Inject
  *
  * For lookup, we always query [ArticObject.objectSelectorNumber].
  */
-class AudioLookupViewModel @Inject constructor(objectLookupDao: ArticObjectDao) : BaseViewModel() {
+class AudioLookupViewModel @Inject constructor(
+        objectLookupDao: ArticObjectDao,
+        generalInfoDao: GeneralInfoDao,
+        languageSelector: LanguageSelector
+) : BaseViewModel() {
+
+    /**
+     * This reflects the [ArticGeneralInfo] currently assigned to this screen.
+     *
+     * It provides helpful content like
+     * [the lookup hint text][ArticGeneralInfo.Translation.audioTitle] and
+     * [the subheader instructions][ArticGeneralInfo.Translation.audioSubtitle].
+     */
+    val chosenInfo: Subject<ArticGeneralInfo.Translation> = BehaviorSubject.create()
 
     val adapterClicks: Subject<NumberPadElement> = PublishSubject.create()
 
@@ -71,6 +88,13 @@ class AudioLookupViewModel @Inject constructor(objectLookupDao: ArticObjectDao) 
                     lookupResults.onNext(result)
 
                 }.disposedBy(disposeBag)
+
+
+        generalInfoDao.getGeneralInfo()
+                .map {
+                    languageSelector.selectFrom(it.allTranslations())
+                }.bindTo(chosenInfo)
+                .disposedBy(disposeBag)
     }
 
 }
