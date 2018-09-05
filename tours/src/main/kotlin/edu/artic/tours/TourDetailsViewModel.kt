@@ -140,6 +140,14 @@ class TourDetailsViewModel @Inject constructor(
                 }
                 .disposedBy(disposeBag)
     }
+
+    fun stopClicked(viewModel: TourDetailsStopCellViewModel) {
+        Observables.combineLatest(tourObservable, viewModel.articObjectObservable.toObservable())
+                .take(1)
+                .subscribeBy { (tour, articObject) ->
+                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, articObject)))
+                }.disposedBy(disposeBag)
+    }
 }
 
 class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : BaseViewModel() {

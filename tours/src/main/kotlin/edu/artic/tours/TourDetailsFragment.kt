@@ -117,6 +117,11 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
+        adapter.itemClicks()
+                .subscribeBy {item ->
+                    viewModel.stopClicked(item)
+                }.disposedBy(disposeBag)
+
         viewModel.availableTranslations
                 .bindToMain(translationsAdapter.itemChanges())
                 .disposedBy(disposeBag)
