@@ -22,11 +22,11 @@ import javax.inject.Inject
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class TourCarouselViewModel @Inject constructor(private val analyticsTracker: AnalyticsTracker,
+class TourCarouselViewModel @Inject constructor(private val languageSelector: LanguageSelector,
+                                                private val analyticsTracker: AnalyticsTracker,
                                                 private val objectDao: ArticObjectDao,
                                                 private val audioObjectDao: ArticAudioFileDao,
-                                                val tourProgressManager: TourProgressManager,
-                                                private val languageSelector: LanguageSelector) : BaseViewModel() {
+                                                val tourProgressManager: TourProgressManager) : BaseViewModel() {
 
 
     val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
@@ -50,7 +50,7 @@ class TourCarouselViewModel @Inject constructor(private val analyticsTracker: An
 
     init {
         tourObservable
-                .map{tour->tour.allTranslations}
+                .map { tour -> tour.allTranslations }
                 .map {
                     languageSelector.selectFrom(it, true)
                 }.bindTo(chosenTranslation)
