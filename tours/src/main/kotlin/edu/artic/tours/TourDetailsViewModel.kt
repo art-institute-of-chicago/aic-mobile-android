@@ -3,6 +3,7 @@ package edu.artic.tours
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.SpecifiesLanguage
@@ -42,7 +43,7 @@ class TourDetailsViewModel @Inject constructor(
         }
 
     sealed class NavigationEndpoint {
-        class Map(val tour: ArticTour) : NavigationEndpoint()
+        class Map(val tour: ArticTour, val stop: ArticObject? = null) : NavigationEndpoint()
     }
 
     init {
