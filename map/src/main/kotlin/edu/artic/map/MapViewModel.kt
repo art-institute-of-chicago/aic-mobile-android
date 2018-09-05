@@ -43,6 +43,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val individualMapChange: Subject<Optional<Pair<LatLng, MapFocus>>> = PublishSubject.create()
     val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
+    val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
+
     val distinctFloor: Observable<Int>
         get() = floor.distinctUntilChanged()
 
@@ -84,6 +86,12 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .distinctUntilChanged()
                 .bindTo(selectedTourStopMarkerId)
                 .disposedBy(disposeBag)
+
+        tourProgressManager
+                .leaveTourRequest
+                .bindTo(leaveTourRequest)
+                .disposedBy(disposeBag)
+
 
         this.currentMap
                 .bindTo(mapMarkerConstructor.map)
@@ -152,6 +160,10 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     override fun onCleared() {
         super.onCleared()
         mapMarkerConstructor.cleanup()
+    }
+
+    fun leaveTour() {
+        displayModeChanged(MapDisplayMode.CurrentFloor)
     }
 
 
