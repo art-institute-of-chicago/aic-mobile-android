@@ -14,6 +14,10 @@ import java.util.*
 class LocalizationPreferences(context: Context)
     : BasePreferencesManager(context, "localization") {
 
+    companion object {
+        const val PREF_TOUR_LOCALE = "tour_locale"
+    }
+
     var preferredAppLocale: Locale
         set(given) = putString(
                 "application_locale",
@@ -24,6 +28,17 @@ class LocalizationPreferences(context: Context)
                 Locale.getDefault().toLanguageTag()
         )).orFallback()
 
+    var tourLocale: Locale
+        set(given) {
+            putString(
+                    PREF_TOUR_LOCALE,
+                    given.toLanguageTag()
+            )
+        }
+        get() = Locale.forLanguageTag(getString(
+                PREF_TOUR_LOCALE,
+                Locale.getDefault().toLanguageTag()
+        )).orFallback(preferredAppLocale)
 }
 
 /**
@@ -37,7 +52,7 @@ class LocalizationPreferences(context: Context)
  * we don't have one
  * @return this object or `fallback` as described above
  */
-fun Locale?.orFallback(fallback: Locale = Locale.ENGLISH) : Locale {
+fun Locale?.orFallback(fallback: Locale = Locale.ENGLISH): Locale {
     return if (this == null || this.hasNoLanguage()) {
         fallback
     } else {
