@@ -4,27 +4,35 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
+import edu.artic.localization.LanguageSelector
+import edu.artic.localization.SpecifiesLanguage
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjectDao) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
+class TourDetailsViewModel @Inject constructor(
+        private val objectDao: ArticObjectDao,
+        private val languageSelector: LanguageSelector
+) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val introductionTitleText: Subject<String> = BehaviorSubject.create()
     val stopsText: Subject<String> = BehaviorSubject.create()
     val timeText: Subject<String> = BehaviorSubject.create()
-    //TODO: langaugeSelection
+    val availableTranslations: Subject<List<SpecifiesLanguage>> = BehaviorSubject.create()
     val startTourButtonText: Subject<String> = BehaviorSubject.createDefault("Start Tour")
     val description: Subject<String> = BehaviorSubject.create()
     val intro: Subject<String> = BehaviorSubject.create()
     val stops: Subject<List<TourDetailsStopCellViewModel>> = BehaviorSubject.create()
     val location: Subject<String> = BehaviorSubject.create()
+    val chosenTranslation: Subject<ArticTour.Translation> = BehaviorSubject.create()
 
     private val tourObservable: Subject<ArticTour> = BehaviorSubject.create()
 
@@ -38,16 +46,27 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
     }
 
     init {
-        tourObservable
-                .map { it.title }
-                .bindTo(titleText)
+
+        availableTranslations
+                .map {
+                    languageSelector.selectFrom(it, true) as ArticTour.Translation
+                }.bindTo(chosenTranslation)
                 .disposedBy(disposeBag)
 
+        chosenTranslation
+                .map { it.title.orEmpty() }
+                .bindTo(titleText)
+                .disposedBy(disposeBag)
 
         tourObservable
                 .filter { it.standardImageUrl != null }
                 .map { it.standardImageUrl!! }
                 .bindTo(imageUrl)
+                .disposedBy(disposeBag)
+
+        tourObservable
+                .map { tour -> tour.allTranslations }
+                .bindTo(availableTranslations)
                 .disposedBy(disposeBag)
 
         //TODO: replace Stops with localized string when localizer is created
@@ -62,20 +81,20 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
                 .bindTo(timeText)
                 .disposedBy(disposeBag)
 
-        tourObservable
+        chosenTranslation
                 .filter { it.description != null }
                 .map { it.description!! }
                 .bindTo(description)
                 .disposedBy(disposeBag)
 
-        tourObservable
+        chosenTranslation
                 .filter { it.intro != null }
                 .map { it.intro!! }
                 .bindTo(intro)
                 .disposedBy(disposeBag)
 
-        tourObservable
-                .map { it.title }
+        chosenTranslation
+                .map { it.title.orEmpty() }
                 .bindTo(introductionTitleText)
                 .disposedBy(disposeBag)
 
@@ -112,8 +131,10 @@ class TourDetailsViewModel @Inject constructor(private val objectDao: ArticObjec
      * Navigate user to the Map activity in Tour Context.
      */
     fun onClickStartTour() {
-        tourObservable.take(1)
-                .subscribe {tour->
+        Observables.combineLatest(tourObservable, chosenTranslation.map { it.underlyingLocale() })
+                .take(1)
+                .subscribeBy { (tour,locale) ->
+                    languageSelector.setTourLanguage(locale)
                     navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour)))
                 }
                 .disposedBy(disposeBag)

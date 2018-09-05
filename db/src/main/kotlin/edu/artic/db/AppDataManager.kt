@@ -5,12 +5,24 @@ import edu.artic.db.daos.*
 import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
+import edu.artic.db.models.ArticExhibitionCMS
 import edu.artic.db.models.ArticSearchSuggestionsObject
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Central singleton for the [ArticAppData] which underpins this app.
+ *
+ * This content should be refreshed regularly by invoking
+ * [AppDataManager.loadData]. Note that the download may take some
+ * time; see that method's docs for recommendations.
+ *
+ * Of special note: in stark contrast to the other DAOs injected here,
+ * [ArticSearchObjectDao] and [ArticDataObjectDao] are expected
+ * to contain at most one object apiece.
+ */
 @Singleton
 class AppDataManager @Inject constructor(
         private val serviceProvider: AppDataServiceProvider,
@@ -39,7 +51,28 @@ class AppDataManager @Inject constructor(
 
 
     /**
-     * @return an observable that will show how close to completion we are and a Done if fully complete
+     * The returned observable emits multiple 'state's before completing.
+     *
+     * There is no 'start' emission. The first emission is a
+     * [ProgressDataState.Downloading], and all subsequent progress events
+     * are also emitted as [ProgressDataState.Downloading]s. Note that
+     * the progress given is an aggregate of five separate tasks:
+     *
+     * 1. downloading the primary [app data][getBlob] from
+     * [a designated url][BuildConfig.BLOB_URL]
+     * 2. downloading the secondary ['exhibitions' data][getExhibitions]
+     * 3. downloading the secondary ['events' data][getEvents]
+     * 4. parsing all of the above-downloaded content into models
+     * 5. saving said models to the [AppDatabase]
+     *
+     * Finally, the fully-parsed result is given inside a
+     * [ProgressDataState.Done]. There is no explicit
+     * [onComplete][io.reactivex.Observer.onComplete] event.
+     *
+     * See docs on [getBlob] for when to expect the
+     * ['empty'][ProgressDataState.Empty] emission.
+     *
+     * @return an Observable that will show how close to completion we are
      */
     fun loadData(): Observable<ProgressDataState> {
         return Observable.create<ProgressDataState> { observer ->
@@ -73,6 +106,19 @@ class AppDataManager @Inject constructor(
         }
     }
 
+    /**
+     * Download the majority of an [ArticAppData] object from the
+     * [designated url][BuildConfig.BLOB_URL].
+     *
+     * If the server's copy of this content has not changed since the
+     * last query, our returned Observable will just emit a single
+     * [ProgressDataState.Empty] and complete immediately.
+     *
+     * The actual download is executed by [serviceProvider], which
+     * may be changed at injection time to e.g. a mock service. In
+     * the production environment we expect it to be a
+     * [RetrofitAppDataServiceProvider].
+     */
     fun getBlob(): Observable<ProgressDataState> {
         return serviceProvider.getBlobHeaders()
                 .flatMap { headers ->
@@ -163,6 +209,14 @@ class AppDataManager @Inject constructor(
                 }
     }
 
+    /**
+     * Retrieve the latest [exhibitions][getExhibitions] and [events][getEvents].
+     *
+     * Note that these are found at different API endpoints than the
+     * [primary stuff][getBlob]. As a side-effect, the injected [serviceProvider]
+     * (and not `this` manager) is responsible for determining precisely
+     * how many exhibitions and events we parse when this method is called.
+     */
     private fun loadSecondaryData(): Observable<Int> {
         return Observable.zip(
                 getExhibitions(),
@@ -180,6 +234,19 @@ class AppDataManager @Inject constructor(
 
     }
 
+    /**
+     * Retrieve a number of [exhibitions][ArticExhibition] from the API.
+     *
+     * Each retrieved exhibition will be augmented by a related
+     * [ArticExhibitionCMS] already loaded by [getBlob]. Thus augmented,
+     * these [ArticExhibition]s are finally saved directly
+     * [into the dao][ArticExhibitionDao.updateExhibitions].
+     *
+     * In [the above query][RetrofitAppDataServiceProvider.getExhibitions]
+     * the number of these exhibitions is limited to be at most 99. It is
+     * possible that no exhibitions will be found; in that case whatever
+     * is stored in [exhibitionDao] will be left alone.
+     */
     private fun getExhibitions(): Observable<ProgressDataState> {
         return serviceProvider.getExhibitions()
                 .flatMap { progressDataState ->
@@ -197,7 +264,7 @@ class AppDataManager @Inject constructor(
                                             @Suppress("UNCHECKED_CAST")
                                             val list = (result as ArticResult<ArticExhibition>).data
                                             val mapExhibitionByID = list.associateBy { it.id.toString() }
-                                            cmsExhibitionList.forEach { exhibitionCMS ->
+                                            cmsExhibitionList.forEach { exhibitionCMS: ArticExhibitionCMS ->
                                                 mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                                 // Override with exhibitions optional images from CMS, if available
                                                 exhibitionCMS.imageUrl?.let {
@@ -216,6 +283,14 @@ class AppDataManager @Inject constructor(
     }
 
 
+    /**
+     * Retrieve a number of [events][ArticEvent] from the API.
+     *
+     * In [the above query][RetrofitAppDataServiceProvider.getEvents]
+     * the number of these events is limited to be at most 500. It is
+     * possible that no events will be found; in that case whatever
+     * is stored in [eventDao] will be left alone.
+     */
     private fun getEvents(): Observable<ProgressDataState> {
         return serviceProvider.getEvents()
                 .flatMap { progressDataState ->

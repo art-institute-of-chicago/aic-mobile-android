@@ -7,7 +7,7 @@
     <solid android:color="@color/number_pad_white_translucent"/>
     <stroke android:color="@color/number_pad_white_faint" android:width="2dp"/>
     <size
-        android:width="66dp"
-        android:height="66dp"
+        android:width="@dimen/number_pad_bg_size"
+        android:height="@dimen/number_pad_bg_size"
         />
 </shape>

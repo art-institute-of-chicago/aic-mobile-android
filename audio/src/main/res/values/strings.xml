@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="audio_screen_header">Look It Up</string>
-    <string name="audio_instructions">Find an artwork you like?\nEnter the artwork number to learn more.</string>
-
     <!-- This makes a corresponding audio track start playing. -->
     <string name="number_pad_go_search">Go</string>
 

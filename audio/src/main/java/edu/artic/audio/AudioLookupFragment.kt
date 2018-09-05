@@ -3,15 +3,17 @@ package edu.artic.audio
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
-import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.EditText
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.widget.hint
+import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicks
+import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
@@ -23,6 +25,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_audio_lookup.*
+import kotlinx.android.synthetic.main.fragment_audio_lookup.view.*
 import java.text.BreakIterator
 import kotlin.reflect.KClass
 
@@ -47,15 +50,31 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         get() = ""
     override val layoutResId: Int
         get() = R.layout.fragment_audio_lookup
-    override val screenCategory: ScreenCategoryName?
+    override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.AudioGuide
 
+    override fun hasTransparentStatusBar(): Boolean {
+        return true
+    }
 
-    private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
+    private val audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun setupBindings(viewModel: AudioLookupViewModel) {
+
+        // These first two bindings set the hint and instructional text.
+        viewModel.chosenInfo
+                .map { info ->
+                    info.audioTitle
+                }.bindToMain(lookup_field.hint())
+                .disposedBy(disposeBag)
+
+        viewModel.chosenInfo
+                .map { info ->
+                    info.audioSubtitle
+                }.bindToMain(subheader.text())
+                .disposedBy(disposeBag)
+
 
         val numberPadAdapter = NumberPadAdapter()
 
@@ -94,10 +113,18 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         audioService
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
+                    // Send Analytics for 'playback initiated'
+                    analyticsTracker.reportEvent(
+                            screenCategory,
+                            AnalyticsAction.playAudioAudioGuide,
+                            foundAudio.hostObject.title
+                    )
+                    // Request the actual playback (this triggers its own analytics event)
                     it?.playPlayer(foundAudio.hostObject)
+                    // Switch to the details screen
                     baseActivity.supportFragmentManager
                             .findNavController()
-                            ?.navigate(R.id.see_current_audio_details)
+                            ?.navigate(R.id.peek_audio_details)
                 }.disposedBy(disposeBag)
     }
 

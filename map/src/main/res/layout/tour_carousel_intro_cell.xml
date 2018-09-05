@@ -18,7 +18,7 @@
         android:drawablePadding="@dimen/marginDouble"
         android:paddingStart="@dimen/marginDouble"
         android:paddingEnd="@dimen/marginDouble"
-        android:text="Play Tour Introduction"
+        android:text="@string/play_tour_introduction"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
