@@ -44,13 +44,16 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
      * languages that have been normalized through [Locale.forLanguageTag]. We
      * cannot necessarily trust the original Strings returned by the API.
      */
-    fun <T : SpecifiesLanguage> selectFrom(languages: List<T>): T {
+    fun <T : SpecifiesLanguage> selectFrom(languages: List<T>, prioritizeTour: Boolean = false): T {
         val appLocale: Locale = appLocaleRef.get()
-
         // TODO: Investigate possibility of replacing the list with a `LocaleList`
         return languages.firstOrNull {
             // This is very much intentional. Read the method docs fully before changing.
-            it.underlyingLocale().language == appLocale.language
+            if (prioritizeTour) {
+                it.underlyingLocale().language == prefs.tourLocale.language
+            } else {
+                it.underlyingLocale().language == appLocale.language
+            }
         } ?: languages[0]
     }
 
