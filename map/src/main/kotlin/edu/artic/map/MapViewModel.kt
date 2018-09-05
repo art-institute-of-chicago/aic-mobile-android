@@ -38,7 +38,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     private val focus: Subject<MapFocus> = BehaviorSubject.create()
 
-    val displayMode: Subject<MapDisplayMode> = BehaviorSubject.create()
+    val displayMode: Subject<MapDisplayMode> = PublishSubject.create()
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
     val individualMapChange: Subject<Optional<Pair<LatLng, MapFocus>>> = PublishSubject.create()
     val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
