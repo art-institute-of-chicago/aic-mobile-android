@@ -10,7 +10,13 @@
         android:id="@+id/audioLookupFragment"
         android:name="edu.artic.audio.AudioLookupFragment"
         android:label="audioLookupFragment"
-        />
+        >
+        <!-- This 'peek_audio_details' action can be reversed without leaving the Activity. -->
+        <action
+            android:id="@+id/peek_audio_details"
+            app:destination="@id/audioDetailsFragment"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/audioDetailsFragment"
@@ -19,9 +25,11 @@
         />
 
 
+    <!-- This 'see_current_audio_details' action kills the Activity as soon as you hit back. -->
     <action
         android:id="@+id/see_current_audio_details"
         app:destination="@id/audioDetailsFragment"
+        app:popUpTo="@+id/audio_navigation_graph"
         />
 
 </navigation>
