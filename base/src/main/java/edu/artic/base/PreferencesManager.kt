@@ -19,6 +19,8 @@ interface PreferencesManager {
     fun getString(key: String, defaultValue: String? = ""): String?
 
     fun getLong(key: String, defaultValue: Long = 0): Long
+
+    fun remove(key: String)
 }
 
 /**
@@ -48,6 +50,10 @@ open class BasePreferencesManager : PreferencesManager {
 
     override fun putBoolean(key: String, value: Boolean) {
         edit().putBoolean(key, value).commit()
+    }
+
+    override fun remove(key: String) {
+        edit().remove(key).commit()
     }
 
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean = sharedPreferences.getBoolean(key, defaultValue)
