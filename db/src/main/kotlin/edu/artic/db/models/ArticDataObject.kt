@@ -5,6 +5,9 @@ import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+/**
+ * Global configuration data for the app.
+ */
 @JsonClass(generateAdapter = true)
 @Entity
 data class ArticDataObject(
