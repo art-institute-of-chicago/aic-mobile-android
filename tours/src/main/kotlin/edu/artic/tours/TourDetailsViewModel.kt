@@ -4,7 +4,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
-import edu.artic.localization.LocalizationPreferences
+import edu.artic.localization.LanguageSelector
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
@@ -15,7 +15,8 @@ import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 class TourDetailsViewModel @Inject constructor(
-        private val objectDao: ArticObjectDao
+        private val objectDao: ArticObjectDao,
+        private val languageSelector: LanguageSelector
 ) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
@@ -43,11 +44,24 @@ class TourDetailsViewModel @Inject constructor(
     }
 
     init {
+
+        availableTranslations
+                .map {
+                    languageSelector.selectFrom(it, true) as ArticTour.Translation
+                }.bindTo(chosenTranslation)
+                .disposedBy(disposeBag)
+
         chosenTranslation
                 .map { it.title.orEmpty() }
                 .bindTo(titleText)
                 .disposedBy(disposeBag)
 
+        chosenTranslation
+                .map { translation ->
+                    translation.underlyingLocale()
+                }.subscribe { locale ->
+                    languageSelector.setTourLanguage(locale)
+                }.disposedBy(disposeBag)
 
         tourObservable
                 .filter { it.standardImageUrl != null }

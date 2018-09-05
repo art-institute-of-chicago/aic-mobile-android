@@ -14,13 +14,14 @@ import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticTour
-import edu.artic.db.models.AudioFileModel
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.map.MapActivity
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
 import kotlinx.android.synthetic.main.fragment_tour_details.*
 import kotlin.reflect.KClass
@@ -127,12 +128,21 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         languageSelector
                 .itemSelections()
                 .distinctUntilChanged()
-                .filter { position-> position>=0 }
+                .filter { position -> position >= 0 }
                 .map { position ->
                     val translation = translationsAdapter.getItem(position)
                     translation as ArticTour.Translation
-                }.bindTo(viewModel.chosenTranslation)
+                }
+                .bindTo(viewModel.chosenTranslation)
                 .disposedBy(disposeBag)
+
+        viewModel.chosenTranslation
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { chosen ->
+                    languageSelector.setSelection(translationsAdapter.itemIndexOf(chosen))
+                }
+                .disposedBy(disposeBag)
+
 
     }
 
