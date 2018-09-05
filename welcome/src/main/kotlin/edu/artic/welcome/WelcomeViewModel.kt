@@ -31,10 +31,11 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                                            val analyticsTracker: AnalyticsTracker) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
-        class SeeAllTours : NavigationEndpoint()
-        class SeeAllOnView : NavigationEndpoint()
-        class SeeAllEvents : NavigationEndpoint()
-        class TourDetail(val post: Int, val tour: ArticTour) : NavigationEndpoint()
+        object Search : NavigationEndpoint()
+        object SeeAllTours : NavigationEndpoint()
+        object SeeAllOnView : NavigationEndpoint()
+        object SeeAllEvents : NavigationEndpoint()
+        class TourDetail(val pos: Int, val tour: ArticTour) : NavigationEndpoint()
         class ExhibitionDetail(val pos: Int, val exhibition: ArticExhibition) : NavigationEndpoint()
         class EventDetail(val pos: Int, val event: ArticEvent) : NavigationEndpoint()
     }
@@ -97,15 +98,15 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     }
 
     fun onClickSeeAllTours() {
-        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours()))
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours))
     }
 
     fun onClickSeeAllOnView() {
-        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllOnView()))
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllOnView))
     }
 
     fun onClickSeeAllEvents() {
-        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllEvents()))
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllEvents))
     }
 
     fun onClickTour(pos: Int, tour: ArticTour) {
@@ -119,6 +120,10 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
     fun onClickEvent(pos: Int, event: ArticEvent) {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.EventDetail(pos, event)))
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 }
 

@@ -18,6 +18,7 @@ import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_welcome.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -82,6 +83,8 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     animateRecyclerView()
                 }
                 .disposedBy(disposeBag)
+
+        appBarLayout.setOnSearchClickedConsumer(Consumer { viewModel.onClickSearch() })
     }
 
     override fun setupBindings(viewModel: WelcomeViewModel) {
@@ -166,6 +169,12 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                                     EventDetailFragment.argsBundle(
                                                             endpoint.event
                                                     )
+                                            )
+                                }
+                                WelcomeViewModel.NavigationEndpoint.Search -> {
+                                    navController
+                                            .navigate(
+                                                    R.id.goToSearch
                                             )
                                 }
                             }

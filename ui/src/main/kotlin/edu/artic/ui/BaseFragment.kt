@@ -2,9 +2,11 @@ package edu.artic.ui
 
 import android.graphics.Color
 import android.os.Bundle
+import android.support.annotation.ColorRes
 import android.support.annotation.LayoutRes
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.Toolbar
 import android.view.*
@@ -15,6 +17,7 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.getThemeColors
 import edu.artic.base.utils.setWindowFlag
+import timber.log.Timber
 import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {
@@ -71,6 +74,9 @@ abstract class BaseFragment : Fragment() {
 
     protected open fun hasTransparentStatusBar(): Boolean = false
 
+    protected open val customToolbarColorResource : Int
+            get() = 0
+
     /**
      * If it is set, the status bar is painted with statusBarColor.
      */
@@ -104,9 +110,14 @@ abstract class BaseFragment : Fragment() {
                 requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                 requireActivity().window?.statusBarColor = Color.TRANSPARENT
             } else {
-                val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
-                requireContext().getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
-                    requireActivity().window?.statusBarColor = it
+                Timber.d("updateToolbar: customToolbarColorResource $customToolbarColorResource")
+                if(customToolbarColorResource == 0) {
+                    val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
+                    requireContext().getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
+                        requireActivity().window?.statusBarColor = it
+                    }
+                } else {
+                    requireActivity().window?.statusBarColor =  ContextCompat.getColor(requireContext(), customToolbarColorResource)
                 }
             }
         }

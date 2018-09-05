@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/greyText"
-    android:elevation="5dp">
+    android:elevation="5dp"
+    android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/close"
