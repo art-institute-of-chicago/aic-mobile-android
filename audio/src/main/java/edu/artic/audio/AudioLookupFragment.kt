@@ -98,16 +98,15 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         registerNumPadSubscription()
 
         getAudioServiceObservable(fm = childFragmentManager)
-                .bindTo(viewModel.audioService)
+                .subscribeBy {
+                    viewModel.audioService = it
+                }
                 .disposedBy(disposeBag)
 
-        viewModel.lookupResults
+        viewModel.lookupFailures
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { result ->
-                    when (result) {
-                        is LookupResult.FoundAudio -> viewModel.playAndDisplay(result)
-                        is LookupResult.NotFound -> shakeLookupField()
-                    }
+                .subscribeBy { _ ->
+                    shakeLookupField()
                 }
                 .disposedBy(disposeBag)
 
@@ -117,6 +116,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         super.setupNavigationBindings(viewModel)
 
         viewModel.navigateTo
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     when(it) {
                         is Navigate.Forward -> {
