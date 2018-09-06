@@ -190,6 +190,7 @@ class AudioPlayerService : DaggerService() {
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
                 is PlayBackAction.Play -> {
+                    player.seekTo(0)
                     setArticObject(playBackAction.audioFile, playBackAction.audioModel)
                     player.playWhenReady = true
                 }
