@@ -12,6 +12,7 @@ import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -36,7 +37,7 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
     val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val playerControl: Subject<TourCarousalBaseViewModel.PlayerAction> = PublishSubject.create()
-    val currentPage: Subject<Int> = BehaviorSubject.createDefault(0)
+    val currentPage: Subject<Int> = BehaviorSubject.create()
     private val chosenTranslation: Subject<ArticTour.Translation> = BehaviorSubject.create()
     private val selectedStop: Subject<ArticObject> = BehaviorSubject.create()
 
@@ -120,11 +121,10 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
         /**
          * Get index of the object using id and bind it to currentPage.
          */
-        tourProgressManager
-                .selectedStop
-                .withLatestFrom(tourStops) { objectId, tourStops ->
-                    tourStops.map { it.objectId }.indexOf(objectId)
-                }
+        Observables.combineLatest(tourProgressManager.selectedStop, tourStops)
+        { objectId, tourStops ->
+            tourStops.indexOfFirst{ it.objectId == objectId}
+        }
                 .filter { it > -1 }
                 .distinctUntilChanged()
                 .bindTo(currentPage)

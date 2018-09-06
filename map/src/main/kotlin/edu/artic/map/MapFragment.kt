@@ -70,6 +70,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             requireActivity().intent?.putExtra(MapActivity.ARG_TOUR, value)
         }
 
+    private var startTourStop: ArticTour.TourStop?
+        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR_START_STOP)
+        set(value) {
+            requireActivity().intent?.putExtra(MapActivity.ARG_TOUR_START_STOP, value)
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
@@ -388,14 +394,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-
-        val localTour = tour
-        if (localTour != null) {
-            viewModel.displayModeChanged(MapDisplayMode.Tour(localTour))
-        } else {
-            // TODO: Search mode
-            viewModel.displayModeChanged(MapDisplayMode.CurrentFloor)
-        }
+        viewModel.loadMapDisplayMode(tour, startTourStop)
     }
 
     override fun onPause() {

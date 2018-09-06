@@ -3,10 +3,7 @@ package edu.artic.map.carousel
 import android.os.Bundle
 import android.view.View
 import com.fuzz.indicator.OffSetHint
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.bindToMain
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.mapOptional
+import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.support.v4.view.pageSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
@@ -114,12 +111,14 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
 
         viewModel.currentPage
                 .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { page ->
                     tourCarousel.setCurrentItem(page, true)
                 }
                 .disposedBy(disposeBag)
 
         tourCarousel.pageSelections()
+                .skipInitialValue()
                 .distinctUntilChanged()
                 .bindTo(viewModel.currentPage)
                 .disposedBy(disposeBag)
