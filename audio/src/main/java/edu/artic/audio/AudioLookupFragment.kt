@@ -8,7 +8,9 @@ import android.view.animation.LinearInterpolator
 import android.widget.EditText
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.hint
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
@@ -20,12 +22,12 @@ import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.ui.findNavController
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_audio_lookup.*
-import kotlinx.android.synthetic.main.fragment_audio_lookup.view.*
 import java.text.BreakIterator
 import kotlin.reflect.KClass
 
@@ -76,6 +78,14 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                 .disposedBy(disposeBag)
 
 
+        searchIcon.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
+                }
+                .disposedBy(disposeBag)
+
+
         val numberPadAdapter = NumberPadAdapter()
 
         viewModel.preferredNumberPadElements
@@ -107,6 +117,25 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
+    }
+
+    override fun setupNavigationBindings(viewModel: AudioLookupViewModel) {
+        super.setupNavigationBindings(viewModel)
+
+        viewModel.navigateTo
+                .subscribeBy {
+                    when(it) {
+                        is Navigate.Forward -> {
+                            when(it.endpoint) {
+                                AudioLookupViewModel.NavigationEndpoint.Search -> {
+                                    baseActivity.supportFragmentManager
+                                            .findNavController()
+                                            ?.navigate(R.id.goToSearch)
+                                }
+                            }
+                        }
+                    }
+                }.disposedBy(disposeBag)
     }
 
     private fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {

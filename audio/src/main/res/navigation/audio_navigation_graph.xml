@@ -6,6 +6,8 @@
     app:startDestination="@id/audioLookupFragment"
     >
 
+    <include app:graph="@navigation/search_navigation_graph"/>
+
     <fragment
         android:id="@+id/audioLookupFragment"
         android:name="edu.artic.audio.AudioLookupFragment"
@@ -15,6 +17,11 @@
         <action
             android:id="@+id/peek_audio_details"
             app:destination="@id/audioDetailsFragment"
+            />
+        <!-- Load up the search screen with this action. -->
+        <action
+            android:id="@+id/goToSearch"
+            app:destination="@id/search_navigation_graph"
             />
     </fragment>
 
