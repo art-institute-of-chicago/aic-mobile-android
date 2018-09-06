@@ -32,24 +32,10 @@ sealed class ApiBodyGenerator {
             postParams["query"] = mutableMapOf<String, Any>().apply {
                 //Boolean map
                 this["bool"] = mutableMapOf<String, Any>().apply {
-                    this["must"] = mutableListOf<Any>().apply {
-                        this.add(mutableMapOf<String, Any>().apply {
-                            //range
-                            this["range"] = mutableMapOf<String, Any>().apply {
-                                this["aic_start_at"] = mutableMapOf<String, String>().apply {
-                                    this["lte"] = "now"
-                                }
-                            }
-                        })
-
-                        this.add(mutableMapOf<String, Any>().apply {
-                            this["range"] = mutableMapOf<String, Any>().apply {
-                                this["aic_end_at"] = mutableMapOf<String, String>().apply {
-                                    this["gte"] = "now"
-                                }
-                            }
-                        })
-                    }
+                    this["must"] = restrictToTimeFrame(
+                            startKey = "aic_start_at",
+                            endKey = "aic_end_at"
+                    )
 
                     this["must_not"] = mutableListOf<Any>().apply {
                         this.add(mutableMapOf<String, Any>().apply {
@@ -133,24 +119,10 @@ sealed class ApiBodyGenerator {
             exhibitionParams["query"] = mutableMapOf<String, Any>().apply {
                 //Boolean map
                 this["bool"] = mutableMapOf<String, Any>().apply {
-                    this["must"] = mutableListOf<Any>().apply {
-                        this.add(mutableMapOf<String, Any>().apply {
-                            //range
-                            this["range"] = mutableMapOf<String, Any>().apply {
-                                this["aic_start_at"] = mutableMapOf<String, String>().apply {
-                                    this["lte"] = "now"
-                                }
-                            }
-                        })
-
-                        this.add(mutableMapOf<String, Any>().apply {
-                            this["range"] = mutableMapOf<String, Any>().apply {
-                                this["aic_end_at"] = mutableMapOf<String, String>().apply {
-                                    this["gte"] = "now"
-                                }
-                            }
-                        })
-                    }
+                    this["must"] = restrictToTimeFrame(
+                            startKey = "aic_start_at",
+                            endKey = "aic_end_at"
+                    )
                 }
             }
             return exhibitionParams
@@ -174,27 +146,53 @@ sealed class ApiBodyGenerator {
             postParams["query"] = mutableMapOf<String, Any>().apply {
                 //Boolean map
                 this["bool"] = mutableMapOf<String, Any>().apply {
-                    this["must"] = mutableListOf<Any>().apply {
-                        this.add(mutableMapOf<String, Any>().apply {
-                            //range
-                            this["range"] = mutableMapOf<String, Any>().apply {
-                                this["start_at"] = mutableMapOf<String, String>().apply {
-                                    this["lte"] = "now+2w"
-                                }
-                            }
-                        })
-
-                        this.add(mutableMapOf<String, Any>().apply {
-                            this["range"] = mutableMapOf<String, Any>().apply {
-                                this["end_at"] = mutableMapOf<String, String>().apply {
-                                    this["gte"] = "now"
-                                }
-                            }
-                        })
-                    }
+                    this["must"] = restrictToTimeFrame(
+                            earliest = "now",
+                            latest = "now+2w",
+                            startKey = "start_at",
+                            endKey = "end_at"
+                    )
                 }
             }
             return postParams
+        }
+
+
+        // Private utility functions only below this point
+
+        /**
+         * Use this to ensure that the API response only includes exhibitions
+         * or events (or whatever) that are present in a certain timeframe.
+         *
+         * Times should be given in the appropriate format; by default, we
+         * will restrict to whatever is active at the instant the API call
+         * is made.
+         */
+        private fun restrictToTimeFrame(
+                earliest: String = "now",
+                latest: String = "now",
+                startKey: String,
+                endKey: String
+        ): MutableList<Any> {
+
+            return mutableListOf<Any>().apply {
+                this.add(mutableMapOf<String, Any>().apply {
+                    //range
+                    this["range"] = mutableMapOf<String, Any>().apply {
+                        this[startKey] = mutableMapOf<String, String>().apply {
+                            this["lte"] = latest
+                        }
+                    }
+                })
+
+                this.add(mutableMapOf<String, Any>().apply {
+                    this["range"] = mutableMapOf<String, Any>().apply {
+                        this[endKey] = mutableMapOf<String, String>().apply {
+                            this["gte"] = earliest
+                        }
+                    }
+                })
+            }
         }
     }
 }
