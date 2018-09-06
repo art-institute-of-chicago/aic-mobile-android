@@ -53,7 +53,7 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
                     val navController = Navigation.findNavController(requireActivity(), R.id.searchContainer)
                     when (it) {
                         SearchViewModel.NavigationEndpoint.DefaultSearchResults -> {
-                            navController.popBackStack(R.id.defaultSearchSuggestionsFragment, true)
+                            navController.popBackStack(R.id.defaultSearchSuggestionsFragment, false)
                         }
                         SearchViewModel.NavigationEndpoint.DynamicSearchResults -> {
                             navController.navigate(R.id.goToSearchResults)
