@@ -1,39 +1,32 @@
 package artic.edu.search
 
-import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.viewmodel.BaseViewModel
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import javax.inject.Inject
 
-class SearchViewModel @Inject constructor(
-        private val analyticsTracker: AnalyticsTracker,
-        private val searchService: SearchServiceProvider
-) : BaseViewModel() {
+class SearchViewModel @Inject constructor(private val analyticsTracker: AnalyticsTracker,
+                                          private val searchResultsManager: SearchResultsManager)
+    : NavViewViewModel<SearchViewModel.NavigationEndpoint>() {
 
-    // Subjects for the view-layer to pick up on and hook into
-
-    val searchQuery: Subject<String> = PublishSubject.create()
-    val searchSuggestions: Subject<List<String>> = PublishSubject.create()
-    val searchResults: Subject<String> = PublishSubject.create()
-
-    init {
-
-        searchQuery.observeOn(Schedulers.io())
-                .subscribeBy { query ->
-
-                    // Call searchService functions here
-
-                }.disposedBy(disposeBag)
+    sealed class NavigationEndpoint {
+        object DefaultSearchResults : NavigationEndpoint()
+        object DynamicSearchResults : NavigationEndpoint()
     }
 
     fun clearText() {
         analyticsTracker.reportEvent(ScreenCategoryName.Search, AnalyticsAction.searchAbandoned)
+    }
+
+    fun onTextChanged(newText: String) {
+        //TODO pass new text to manager
+        if (newText.isEmpty()) {
+            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.DefaultSearchResults))
+        } else {
+            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.DynamicSearchResults))
+        }
     }
 
 }

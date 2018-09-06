@@ -17,7 +17,6 @@ class SearchResultsFragment : BaseViewModelFragment<SearchResultsViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val adapter = SearchResultsPagerAdapter(childFragmentManager)
         viewPager.adapter = adapter
         viewPager.currentItem = 0
