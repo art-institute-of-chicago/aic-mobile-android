@@ -1,11 +1,18 @@
 package artic.edu.search
 
-import com.fuzz.rx.bindTo
+import androidx.navigation.Navigation
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
-import com.jakewharton.rxbinding2.widget.textChanges
+import com.fuzz.rx.filterFlatMap
+import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
+import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
-import kotlinx.android.synthetic.main.search_app_bar_layout.view.*
+import edu.artic.viewmodel.Navigate
+import kotlinx.android.synthetic.main.search_app_bar_layout.*
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
@@ -26,14 +33,55 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
     override fun setupBindings(viewModel: SearchViewModel) {
         super.setupBindings(viewModel)
-
-        toolbar!!.searchEditText
-                .textChanges()
-                .filter { it.isNotEmpty() }
-                .map { it.toString() }
-                .bindTo(viewModel.searchQuery)
+        searchEditText
+                .afterTextChangeEvents()
+                .skipInitialValue()
+                .throttleLast(250, TimeUnit.MILLISECONDS)
+                .subscribe { event ->
+                    event.editable()?.let { editable ->
+                        viewModel.onTextChanged(editable.toString())
+                    }
+                }
                 .disposedBy(disposeBag)
 
-        // TODO: bind viewModel.searchSuggestions, viewModel.searchResults, etc.
+        viewModel.closeButtonVisible
+                .bindToMain(close.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.shouldClearTextInput
+                .distinctUntilChanged()
+                .filter { it }
+                .subscribe {
+                    searchEditText.setText("")
+                }.disposedBy(disposeBag)
+
+        close.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onCloseClicked()
+                }
+                .disposedBy(disposeBag)
+
+
+    }
+
+    override fun setupNavigationBindings(viewModel: SearchViewModel) {
+        super.setupNavigationBindings(viewModel)
+        viewModel.navigateTo
+                .filterFlatMap({ it is Navigate.Forward }, { it as Navigate.Forward })
+                .map { it.endpoint }
+                .distinctUntilChanged()
+                .subscribe {
+                    val navController = Navigation.findNavController(requireActivity(), R.id.searchContainer)
+                    when (it) {
+                        SearchViewModel.NavigationEndpoint.DefaultSearchResults -> {
+                            navController.popBackStack(R.id.defaultSearchSuggestionsFragment, false)
+                        }
+                        SearchViewModel.NavigationEndpoint.DynamicSearchResults -> {
+                            navController.navigate(R.id.goToSearchResults)
+                        }
+                    }
+                }
+                .disposedBy(disposeBag)
     }
 }
