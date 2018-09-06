@@ -116,6 +116,7 @@ class AudioLookupViewModel @Inject constructor(
     fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {
         audioService
                 .observeOn(AndroidSchedulers.mainThread())
+                .take(1)
                 .subscribeBy {
                     // Send Analytics for 'playback initiated'
                     analyticsTracker.reportEvent(
