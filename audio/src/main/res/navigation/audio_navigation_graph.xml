@@ -6,6 +6,8 @@
     app:startDestination="@id/audioLookupFragment"
     >
 
+    <include app:graph="@navigation/search_navigation_graph"/>
+
     <fragment
         android:id="@+id/audioLookupFragment"
         android:name="edu.artic.audio.AudioLookupFragment"
@@ -13,8 +15,13 @@
         >
         <!-- This 'peek_audio_details' action can be reversed without leaving the Activity. -->
         <action
-            android:id="@+id/peek_audio_details"
+            android:id="@+id/peekAudioDetails"
             app:destination="@id/audioDetailsFragment"
+            />
+        <!-- Load up the search screen with this action. -->
+        <action
+            android:id="@+id/goToSearch"
+            app:destination="@id/search_navigation_graph"
             />
     </fragment>
 
@@ -27,7 +34,7 @@
 
     <!-- This 'see_current_audio_details' action kills the Activity as soon as you hit back. -->
     <action
-        android:id="@+id/see_current_audio_details"
+        android:id="@+id/seeCurrentAudioDetails"
         app:destination="@id/audioDetailsFragment"
         app:popUpTo="@+id/audio_navigation_graph"
         />
