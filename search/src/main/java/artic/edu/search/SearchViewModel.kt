@@ -26,7 +26,7 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
     }
 
     fun onTextChanged(newText: String) {
-        //TODO pass new text to manager
+        searchResultsManager.onChangeSearchText(newText)
         if (newText.isEmpty()) {
             closeButtonVisible.onNext(false)
             navigateTo.onNext(Navigate.Forward(NavigationEndpoint.DefaultSearchResults))
@@ -37,6 +37,7 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
     }
 
     fun onCloseClicked() {
+        clearText()
         shouldClearTextInput.onNext(true)
         shouldClearTextInput.onNext(false)
         onTextChanged("")

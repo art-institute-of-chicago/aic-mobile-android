@@ -9,7 +9,6 @@ import dagger.multibindings.IntoMap
 import edu.artic.db.ApiModule
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.viewmodel.ViewModelKey
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -68,7 +67,9 @@ abstract class SearchModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideSearchManager(): SearchResultsManager = SearchResultsManager()
+        fun provideSearchManager(searchService: SearchServiceProvider)
+                : SearchResultsManager = SearchResultsManager(searchService)
+
         /**
          * NB: We reuse the [ApiModule]'s Retrofit here.
          *
