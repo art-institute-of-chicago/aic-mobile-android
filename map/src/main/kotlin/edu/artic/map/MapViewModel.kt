@@ -37,6 +37,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
+    val switchTourRequest: Subject<Pair<ArticTour,ArticTour>> = PublishSubject.create()
 
     val distinctFloor: Observable<Int>
         get() = floor.distinctUntilChanged()
@@ -186,19 +187,27 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     }
 
     /**
-     * Updates the display mode of the map, based on the tour.
-     * For future search integration, tour should be canceled before we display the search items in map.
+     * Updates the display mode of the map, based on the requestedTour.
+     * For future search integration, active tour should be canceled before we display the search items in map.
      * refer [TourProgressManager] for managing the tour state.
      */
-    fun loadMapDisplayMode(tour: ArticTour?, tourStop: ArticTour.TourStop?) {
+    fun loadMapDisplayMode(requestedTour: ArticTour?, tourStop: ArticTour.TourStop?) {
         tourProgressManager.selectedTour
                 .take(1)
                 .subscribeBy { lastTour ->
-                    val tourToLoad = tour ?: lastTour.value
-                    if (tourToLoad != null) {
-                        displayModeChanged(MapDisplayMode.Tour(tourToLoad, tourStop))
+                    /**
+                     * If requestedTour is different than current tour display prompt user to leave the previous requestedTour.
+                     */
+                    val activeTour = lastTour.value
+                    if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
+                        switchTourRequest.onNext(activeTour to requestedTour)
                     } else {
-                        displayModeChanged(MapDisplayMode.CurrentFloor)
+                        val tourToLoad = requestedTour ?: activeTour
+                        if (tourToLoad != null) {
+                            displayModeChanged(MapDisplayMode.Tour(tourToLoad, tourStop))
+                        } else {
+                            displayModeChanged(MapDisplayMode.CurrentFloor)
+                        }
                     }
 
                 }.disposedBy(disposeBag)

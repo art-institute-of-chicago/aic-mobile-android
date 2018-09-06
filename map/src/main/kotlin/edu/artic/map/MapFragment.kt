@@ -320,7 +320,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .leaveTourRequest
                 .distinctUntilChanged()
                 .subscribe {
-                    displayLeaveTourConfirmation(viewModel)
+                    displayLeaveTourConfirmation()
+                }.disposedBy(disposeBag)
+
+        viewModel
+                .switchTourRequest
+                .distinctUntilChanged()
+                .subscribeBy { (currentTour, newTour) ->
+                    displaySwitchTourConfirmation(currentTour, newTour)
                 }.disposedBy(disposeBag)
     }
 
@@ -368,7 +375,25 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .disposedBy(disposeBag)
     }
 
-    private fun displayLeaveTourConfirmation(viewModel: MapViewModel) {
+    private fun displaySwitchTourConfirmation(currentTour: ArticTour, newTour: ArticTour) {
+        leaveTourDialog?.dismiss()
+        leaveTourDialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
+                .setMessage(getString(R.string.leaveTour))
+                .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
+                    tour = currentTour
+                    dialog.dismiss()
+                }
+                .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
+                    tour = newTour
+                    viewModel.displayModeChanged(MapDisplayMode.Tour(newTour, startTourStop))
+                    dialog.dismiss()
+                }
+                .create()
+        leaveTourDialog?.show()
+
+    }
+
+    private fun displayLeaveTourConfirmation() {
         if (leaveTourDialog?.isShowing != true) {
             leaveTourDialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
                     .setMessage(getString(R.string.leaveTour))
