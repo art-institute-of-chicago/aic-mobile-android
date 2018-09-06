@@ -122,8 +122,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         adapter.itemClicks()
-                .subscribeBy {item ->
-                    viewModel.stopClicked(item)
+                .subscribeBy { item ->
+                    viewModel.tourStopClicked(item)
                 }.disposedBy(disposeBag)
 
         viewModel.availableTranslations
