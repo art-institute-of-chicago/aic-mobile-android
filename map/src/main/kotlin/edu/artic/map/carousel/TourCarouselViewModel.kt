@@ -88,7 +88,7 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
                     val list = mutableListOf<TourCarousalBaseViewModel>()
                     tourStops.forEach { tourStop ->
                         if (tourStop.objectId === "INTRO") {
-                            val element = TourCarousalIntroViewModel(tour, audioObjectDao)
+                            val element = TourCarousalIntroViewModel(languageSelector, tour, audioObjectDao)
 
                             element.playerControl
                                     .bindTo(playerControl)
@@ -96,7 +96,7 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
 
                             list.add(element)
                         } else {
-                            val element = TourCarousalStopCellViewModel(tourStop, objectDao)
+                            val element = TourCarousalStopCellViewModel(tourStop, objectDao, languageSelector)
 
                             element.playerControl
                                     .bindTo(playerControl)
@@ -123,7 +123,7 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
          */
         Observables.combineLatest(tourProgressManager.selectedStop, tourStops)
         { objectId, tourStops ->
-            tourStops.indexOfFirst{ it.objectId == objectId}
+            tourStops.indexOfFirst { it.objectId == objectId }
         }
                 .filter { it > -1 }
                 .distinctUntilChanged()
@@ -164,7 +164,8 @@ open class TourCarousalBaseViewModel : BaseViewModel() {
  * ViewModel for the tour intro layout.
  * Play pause the tour introduction.
  */
-class TourCarousalIntroViewModel(val tour: ArticTour,
+class TourCarousalIntroViewModel(val languageSelector: LanguageSelector,
+                                 val tour: ArticTour,
                                  val audioObjectDao: ArticAudioFileDao) : TourCarousalBaseViewModel() {
 
     val isPlaying: Subject<Boolean> = BehaviorSubject.createDefault(false)
@@ -174,9 +175,8 @@ class TourCarousalIntroViewModel(val tour: ArticTour,
             audioObjectDao.getAudioByIdAsync(audioId)
                     .toObservable()
                     .take(1)
-                    .map { it.asAudioFileModel() }
                     .subscribe { audioFileModel ->
-                        playerControl.onNext(PlayerAction.Play(tour, audioFileModel))
+                        playerControl.onNext(PlayerAction.Play(tour, languageSelector.selectFrom(audioFileModel.allTranslations(), true)))
                     }
         }
     }
@@ -185,7 +185,7 @@ class TourCarousalIntroViewModel(val tour: ArticTour,
 }
 
 
-class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : TourCarousalBaseViewModel() {
+class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao, val languageSelector: LanguageSelector) : TourCarousalBaseViewModel() {
     val currentAudioTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
@@ -250,7 +250,10 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
                 .toObservable()
                 .take(1)
                 .subscribe { articObject ->
-                    playerControl.onNext(PlayerAction.Play(articObject))
+                    articObject.audioFile?.let {
+                        playerControl.onNext(PlayerAction.Play(articObject, languageSelector.selectFrom(it.allTranslations(), true)))
+                    }
+
                 }.disposedBy(disposeBag)
     }
 
