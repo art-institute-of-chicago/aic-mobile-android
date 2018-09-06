@@ -9,7 +9,6 @@ import dagger.multibindings.IntoMap
 import edu.artic.db.ApiModule
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.viewmodel.ViewModelKey
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -35,6 +34,16 @@ abstract class SearchModule {
     @ViewModelKey(SearchAudioDetailViewModel::class)
     abstract fun searchAudioDetailViewModel(searchAudioDetailViewModel: SearchAudioDetailViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchResultsViewModel::class)
+    abstract fun searchResultsViewModel(searchResultsViewModel: SearchResultsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchResultsSuggestedViewModel::class)
+    abstract fun searchResultsSuggestedViewModel(searchResultsSuggestedViewModel: SearchResultsSuggestedViewModel): ViewModel
+
     @get:ContributesAndroidInjector
     abstract val splashActivity: SearchActivity
 
@@ -47,17 +56,19 @@ abstract class SearchModule {
     @get:ContributesAndroidInjector
     abstract val searchAudioDetailFragment: SearchAudioDetailFragment
 
+    @get:ContributesAndroidInjector
+    abstract val searchResultsFragment: SearchResultsFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchResultsSuggestedFragment: SearchResultsSuggestedFragment
 
     @Module
     companion object {
-
         @JvmStatic
         @Provides
         @Singleton
-        @Named(SEARCH_CLIENT_API)
-        fun provideClient(): OkHttpClient {
-            return OkHttpClient.Builder().build()
-        }
+        fun provideSearchManager(searchService: SearchServiceProvider)
+                : SearchResultsManager = SearchResultsManager(searchService)
 
         /**
          * NB: We reuse the [ApiModule]'s Retrofit here.
@@ -72,8 +83,5 @@ abstract class SearchModule {
                 @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit,
                 dataObjectDao: ArticDataObjectDao
         ): SearchServiceProvider = RetrofitSearchServiceProvider(retrofit, dataObjectDao)
-
-
-        const val SEARCH_CLIENT_API = "SEARCH_CLIENT_API"
     }
 }

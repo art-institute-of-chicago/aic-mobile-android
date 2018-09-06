@@ -9,6 +9,21 @@
         android:id="@+id/defaultSearchSuggestionsFragment"
         android:name="artic.edu.search.DefaultSearchSuggestionsFragment"
         android:label="fragment_default_search_suggestions"
-        tools:layout="@layout/fragment_default_search_suggestions"/>
+        tools:layout="@layout/fragment_default_search_suggestions" />
+
+    <fragment
+        android:id="@+id/searchResultsFragment"
+        android:name="artic.edu.search.SearchResultsFragment"
+        android:label="search_results"/>
+
+    <action
+        android:id="@+id/goToDefaultSuggestions"
+        app:destination="@id/defaultSearchSuggestionsFragment"
+        />
+
+    <action
+        android:id="@+id/goToSearchResults"
+        app:destination="@id/searchResultsFragment"
+        />
 
 </navigation>
