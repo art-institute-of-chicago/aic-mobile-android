@@ -86,7 +86,7 @@ class AudioActivity : BaseActivity() {
     private fun navigateToAudioDetailsScreen(fm: FragmentManager) {
         if (willNavigate) {
             willNavigate = false
-            fm.findNavController()?.navigate(R.id.see_current_audio_details)
+            fm.findNavController()?.navigate(R.id.seeCurrentAudioDetails)
         }
     }
 

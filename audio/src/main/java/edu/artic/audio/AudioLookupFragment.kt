@@ -7,7 +7,6 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.EditText
 import androidx.navigation.Navigation
-import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -125,7 +124,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                                     Navigation.findNavController(requireActivity(), R.id.container).navigate(R.id.goToSearch)
                                 }
                                 AudioLookupViewModel.NavigationEndpoint.AudioDetails -> {
-                                    Navigation.findNavController(requireActivity(), R.id.container).navigate(R.id.peek_audio_details)
+                                    Navigation.findNavController(requireActivity(), R.id.container).navigate(R.id.peekAudioDetails)
                                 }
                             }
                         }
