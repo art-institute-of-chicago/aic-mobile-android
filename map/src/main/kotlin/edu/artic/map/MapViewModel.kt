@@ -1,6 +1,7 @@
 package edu.artic.map
 
 import com.fuzz.rx.*
+import com.fuzz.rx.Optional
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
@@ -8,6 +9,7 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
+import edu.artic.localization.LanguageSelector
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MarkerHolder
@@ -17,6 +19,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -24,6 +27,7 @@ import javax.inject.Inject
  */
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
+                                       private val languageSelector: LanguageSelector,
                                        val tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
@@ -182,6 +186,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     }
 
     fun leaveTour() {
+        /**clear tour locale**/
+        languageSelector.setTourLanguage(Locale(""))
         tourProgressManager.selectedTour.onNext(Optional(null))
         displayModeChanged(MapDisplayMode.CurrentFloor)
     }
