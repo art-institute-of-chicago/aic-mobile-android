@@ -1,8 +1,12 @@
 package artic.edu.search
 
 import androidx.navigation.Navigation
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
+import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -37,6 +41,24 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
                     event.editable()?.let { editable ->
                         viewModel.onTextChanged(editable.toString())
                     }
+                }
+                .disposedBy(disposeBag)
+
+        viewModel.closeButtonVisible
+                .bindToMain(close.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.shouldClearTextInput
+                .distinctUntilChanged()
+                .filter { it }
+                .subscribe {
+                    searchEditText.setText("")
+                }.disposedBy(disposeBag)
+
+        close.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onCloseClicked()
                 }
                 .disposedBy(disposeBag)
 
