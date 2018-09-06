@@ -7,9 +7,7 @@ import com.google.android.gms.maps.model.VisibleRegion
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.models.ArticMapAnnotation
-import edu.artic.db.models.ArticObject
-import edu.artic.db.models.isIntroStop
+import edu.artic.db.models.*
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MarkerHolder
@@ -68,8 +66,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         displayMode
                 .distinctUntilChanged()
                 .filterFlatMap({ it is MapDisplayMode.Tour }, { it as MapDisplayMode.Tour })
-                .filterFlatMap({ it.selectedTourStop.objectId != null }, { it.selectedTourStop.objectId })
-                .map { it!! }
+                .filterFlatMap({ it.selectedTourStop?.objectId != null }, { it.selectedTourStop?.objectId })
+                .map { it }
                 .bindTo(tourProgressManager.selectedStop)
                 .disposedBy(disposeBag)
 
@@ -131,7 +129,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     private fun animateToTourStopBounds(displayMode: MapDisplayMode.Tour) {
         val tour = displayMode.tour
-        val tourStop = displayMode.selectedTourStop
+        val tourStop = displayMode.selectedTourStop ?: tour.getIntroStop()
 
         val latLongs: Observable<List<LatLng>> = if (tourStop.isIntroStop()) {
             /** If the starting tour is intro stop load map in bird eye view**/
@@ -183,8 +181,27 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     }
 
     fun leaveTour() {
+        tourProgressManager.selectedTour.onNext(Optional(null))
         displayModeChanged(MapDisplayMode.CurrentFloor)
     }
 
+    /**
+     * Updates the display mode of the map, based on the tour.
+     * For future search integration, tour should be canceled before we display the search items in map.
+     * refer [TourProgressManager] for managing the tour state.
+     */
+    fun loadMapDisplayMode(tour: ArticTour?, tourStop: ArticTour.TourStop?) {
+        tourProgressManager.selectedTour
+                .take(1)
+                .subscribeBy { lastTour ->
+                    val tourToLoad = tour ?: lastTour.value
+                    if (tourToLoad != null) {
+                        displayModeChanged(MapDisplayMode.Tour(tourToLoad, tourStop))
+                    } else {
+                        displayModeChanged(MapDisplayMode.CurrentFloor)
+                    }
 
+                }.disposedBy(disposeBag)
+
+    }
 }

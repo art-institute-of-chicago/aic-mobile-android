@@ -394,14 +394,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-
-        val localTour = tour
-        if (localTour != null && startTourStop!=null) {
-            viewModel.displayModeChanged(MapDisplayMode.Tour(localTour, startTourStop!!))
-        } else {
-            // TODO: Search mode
-            viewModel.displayModeChanged(MapDisplayMode.CurrentFloor)
-        }
+        viewModel.loadMapDisplayMode(tour, startTourStop)
     }
 
     override fun onPause() {
