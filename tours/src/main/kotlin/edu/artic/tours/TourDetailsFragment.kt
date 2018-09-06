@@ -85,9 +85,11 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .bindToMain(tourDetailIntroCell.tourStopTitle.text())
                 .disposedBy(disposeBag)
 
-        tourDetailIntroCell.setOnClickListener {
-            viewModel.onClickStartTour()
-        }
+        tourDetailIntroCell.clicks()
+                .subscribe {
+                    viewModel.onClickStartTour()
+                }
+                .disposedBy(disposeBag)
 
         viewModel.stopsText
                 .bindToMain(tourStops.text())
