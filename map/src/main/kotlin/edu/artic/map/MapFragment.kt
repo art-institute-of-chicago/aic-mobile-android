@@ -19,7 +19,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.TileOverlay
 import com.google.android.gms.maps.model.TileOverlayOptions
-import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
 import edu.artic.analytics.ScreenCategoryName
@@ -188,9 +187,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .zIndex(0.2f)
                 .tileProvider(MapTileAssetProvider(resources.assets, 1)))
 
-        map.addTileOverlay(TileOverlayOptions().zIndex(0.3f)
-                .transparency(0.5f)
-                .tileProvider(DebugTileProvider2(requireContext())))
+//        map.addTileOverlay(TileOverlayOptions().zIndex(0.3f)
+//                .transparency(0.5f)
+//                .tileProvider(DebugTileProvider2(requireContext())))
     }
 
     /**
