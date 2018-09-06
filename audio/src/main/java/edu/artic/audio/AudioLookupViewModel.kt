@@ -8,7 +8,8 @@ import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticGeneralInfo
 import edu.artic.db.models.ArticObject
 import edu.artic.localization.LanguageSelector
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -28,7 +29,11 @@ class AudioLookupViewModel @Inject constructor(
         objectLookupDao: ArticObjectDao,
         generalInfoDao: GeneralInfoDao,
         languageSelector: LanguageSelector
-) : BaseViewModel() {
+) : NavViewViewModel<AudioLookupViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint {
+        object Search: NavigationEndpoint()
+    }
 
     /**
      * This reflects the [ArticGeneralInfo] currently assigned to this screen.
@@ -95,6 +100,10 @@ class AudioLookupViewModel @Inject constructor(
                     languageSelector.selectFrom(it.allTranslations())
                 }.bindTo(chosenInfo)
                 .disposedBy(disposeBag)
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
 }
