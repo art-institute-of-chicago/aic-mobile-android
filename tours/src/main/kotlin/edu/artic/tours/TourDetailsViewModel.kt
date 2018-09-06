@@ -3,8 +3,8 @@ package edu.artic.tours
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
+import edu.artic.db.models.getIntroStop
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.viewmodel.BaseViewModel
@@ -43,7 +43,7 @@ class TourDetailsViewModel @Inject constructor(
         }
 
     sealed class NavigationEndpoint {
-        class Map(val tour: ArticTour, val stop: ArticObject? = null) : NavigationEndpoint()
+        class Map(val tour: ArticTour, val stop: ArticTour.TourStop) : NavigationEndpoint()
     }
 
     init {
@@ -134,18 +134,18 @@ class TourDetailsViewModel @Inject constructor(
     fun onClickStartTour() {
         Observables.combineLatest(tourObservable, chosenTranslation.map { it.underlyingLocale() })
                 .take(1)
-                .subscribeBy { (tour,locale) ->
+                .subscribeBy { (tour, locale) ->
                     languageSelector.setTourLanguage(locale)
-                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour)))
+                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, tour.getIntroStop())))
                 }
                 .disposedBy(disposeBag)
     }
 
     fun stopClicked(viewModel: TourDetailsStopCellViewModel) {
-        Observables.combineLatest(tourObservable, viewModel.articObjectObservable.toObservable())
+        Observables.combineLatest(tourObservable, viewModel.tourStop)
                 .take(1)
-                .subscribeBy { (tour, articObject) ->
-                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, articObject)))
+                .subscribeBy { (tour, tourStop) ->
+                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, tourStop)))
                 }.disposedBy(disposeBag)
     }
 }
@@ -155,6 +155,7 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
     val stopNumber: Subject<String> = BehaviorSubject.createDefault("${tourStop.order + 1}.")
+    val tourStop: Subject<ArticTour.TourStop> = BehaviorSubject.createDefault(tourStop)
 
     val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
 
