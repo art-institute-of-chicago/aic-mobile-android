@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.fuzz.rx.bindTo
+import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.analytics.ScreenCategoryName
@@ -31,7 +32,7 @@ class SearchResultsSuggestedFragment : BaseViewModelFragment<SearchResultsSugges
         val adapter = resultsRV.adapter as SearchResultsAdapter
 
         viewModel.cells
-                .bindTo(adapter.itemChanges())
+                .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
     }
