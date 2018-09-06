@@ -6,7 +6,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
-import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
@@ -26,14 +25,14 @@ class MapActivity : BaseActivity() {
 
     companion object {
         val ARG_TOUR = "ARG_TOUR"
-        val ARG_FOCUSED_OBJECT = "ARG_FOCUSED_OBJECT_ID"
+        val ARG_TOUR_START_STOP = "ARG_TOUR_START_STOP"
 
-        fun getLaunchIntent(tour: ArticTour, articObject: ArticObject? = null): Intent {
+        fun getLaunchIntent(tour: ArticTour, articTourStop: ArticTour.TourStop): Intent {
             return NavigationConstants.MAP.asDeepLinkIntent().apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 putExtras(Bundle().apply {
                     putParcelable(ARG_TOUR, tour)
-                    articObject?.let { putParcelable(ARG_FOCUSED_OBJECT, it) }
+                    articTourStop.let { putParcelable(ARG_TOUR_START_STOP, it) }
                 })
             }
         }

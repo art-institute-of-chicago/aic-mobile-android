@@ -70,10 +70,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             requireActivity().intent?.putExtra(MapActivity.ARG_TOUR, value)
         }
 
-    private var focusedObject: ArticObject?
-        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_FOCUSED_OBJECT)
+    private var startTourStop: ArticTour.TourStop?
+        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR_START_STOP)
         set(value) {
-            requireActivity().intent?.putExtra(MapActivity.ARG_FOCUSED_OBJECT, value)
+            requireActivity().intent?.putExtra(MapActivity.ARG_TOUR_START_STOP, value)
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -396,8 +396,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         mapView.onResume()
 
         val localTour = tour
-        if (localTour != null) {
-            viewModel.displayModeChanged(MapDisplayMode.Tour(localTour, focusedObject))
+        if (localTour != null && startTourStop!=null) {
+            viewModel.displayModeChanged(MapDisplayMode.Tour(localTour, startTourStop!!))
         } else {
             // TODO: Search mode
             viewModel.displayModeChanged(MapDisplayMode.CurrentFloor)
