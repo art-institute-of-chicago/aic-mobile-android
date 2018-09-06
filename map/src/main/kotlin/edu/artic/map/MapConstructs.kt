@@ -1,5 +1,6 @@
 package edu.artic.map
 
+import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 
 data class MapChangeEvent(val focus: MapFocus, val floor: Int, val displayMode: MapDisplayMode)
@@ -45,7 +46,7 @@ internal fun ZoomLevel.toMapFocus(): MapFocus = when {
 }
 
 sealed class MapDisplayMode {
-    data class Tour(val tour: ArticTour) : MapDisplayMode()
+    data class Tour(val tour: ArticTour, val selectedTourStop: ArticTour.TourStop?) : MapDisplayMode()
     object CurrentFloor : MapDisplayMode()
     data class Search<T>(val item: T) : MapDisplayMode()
 }

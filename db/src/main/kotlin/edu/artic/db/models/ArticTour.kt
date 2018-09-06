@@ -7,6 +7,7 @@ import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import edu.artic.db.Floor
+import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID
 import edu.artic.db.INVALID_FLOOR
 import edu.artic.db.Playable
 import edu.artic.localization.SpecifiesLanguage
@@ -159,5 +160,9 @@ fun ArticTour.toEnglishTranslation() : ArticTour.Translation {
 }
 
 fun ArticTour.getIntroStop(): ArticTour.TourStop {
-    return ArticTour.TourStop("INTRO", this.tourAudio, null, -1)
+    return ArticTour.TourStop(INTRO_TOUR_STOP_OBJECT_ID, this.tourAudio, null, -1)
+}
+
+fun ArticTour.TourStop.isIntroStop(): Boolean {
+    return this.objectId === INTRO_TOUR_STOP_OBJECT_ID
 }

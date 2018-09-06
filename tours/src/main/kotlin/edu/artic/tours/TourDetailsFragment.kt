@@ -85,6 +85,12 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .bindToMain(tourDetailIntroCell.tourStopTitle.text())
                 .disposedBy(disposeBag)
 
+        tourDetailIntroCell.clicks()
+                .subscribe {
+                    viewModel.onClickStartTour()
+                }
+                .disposedBy(disposeBag)
+
         viewModel.stopsText
                 .bindToMain(tourStops.text())
                 .disposedBy(disposeBag)
@@ -116,6 +122,11 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         viewModel.stops
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
+
+        adapter.itemClicks()
+                .subscribeBy { item ->
+                    viewModel.tourStopClicked(item)
+                }.disposedBy(disposeBag)
 
         viewModel.availableTranslations
                 .bindToMain(translationsAdapter.itemChanges())
@@ -154,7 +165,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                     val endpoint = forward.endpoint
                     when (endpoint) {
                         is TourDetailsViewModel.NavigationEndpoint.Map -> {
-                            startActivity(MapActivity.getLaunchIntent(endpoint.tour))
+                            startActivity(MapActivity.getLaunchIntent(endpoint.tour, endpoint.stop))
                         }
                     }
 
