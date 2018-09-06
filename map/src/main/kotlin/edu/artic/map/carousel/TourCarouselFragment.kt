@@ -118,7 +118,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                 .disposedBy(disposeBag)
 
         tourCarousel.pageSelections()
-                .skip(1)
+                .skipInitialValue()
                 .distinctUntilChanged()
                 .bindTo(viewModel.currentPage)
                 .disposedBy(disposeBag)
