@@ -141,7 +141,7 @@ class TourDetailsViewModel @Inject constructor(
                 .disposedBy(disposeBag)
     }
 
-    fun stopClicked(viewModel: TourDetailsStopCellViewModel) {
+    fun tourStopClicked(viewModel: TourDetailsStopCellViewModel) {
         Observables.combineLatest(tourObservable, viewModel.tourStop)
                 .take(1)
                 .subscribeBy { (tour, tourStop) ->

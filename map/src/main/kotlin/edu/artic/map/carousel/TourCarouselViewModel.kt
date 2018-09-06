@@ -123,7 +123,7 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
          */
         Observables.combineLatest(tourProgressManager.selectedStop, tourStops)
         { objectId, tourStops ->
-            tourStops.map { it.objectId }.indexOf(objectId)
+            tourStops.indexOfFirst{ it.objectId == objectId}
         }
                 .filter { it > -1 }
                 .distinctUntilChanged()
