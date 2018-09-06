@@ -2,14 +2,19 @@ package edu.artic.audio
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.audio.NumberPadElement.*
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticGeneralInfo
 import edu.artic.db.models.ArticObject
 import edu.artic.localization.LanguageSelector
+import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -26,6 +31,7 @@ import javax.inject.Inject
  * For lookup, we always query [ArticObject.objectSelectorNumber].
  */
 class AudioLookupViewModel @Inject constructor(
+        private val analyticsTracker: AnalyticsTracker,
         objectLookupDao: ArticObjectDao,
         generalInfoDao: GeneralInfoDao,
         languageSelector: LanguageSelector
@@ -33,6 +39,7 @@ class AudioLookupViewModel @Inject constructor(
 
     sealed class NavigationEndpoint {
         object Search: NavigationEndpoint()
+        object AudioDetails: NavigationEndpoint()
     }
 
     /**
@@ -57,6 +64,9 @@ class AudioLookupViewModel @Inject constructor(
      * [lookupRequests].
      */
     val lookupResults: Subject<LookupResult> = PublishSubject.create()
+
+
+    val audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
     /**
      * See [NumberPadAdapter] for details on all this.
@@ -100,6 +110,24 @@ class AudioLookupViewModel @Inject constructor(
                     languageSelector.selectFrom(it.allTranslations())
                 }.bindTo(chosenInfo)
                 .disposedBy(disposeBag)
+    }
+
+
+    fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {
+        audioService
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    // Send Analytics for 'playback initiated'
+                    analyticsTracker.reportEvent(
+                            ScreenCategoryName.AudioGuide,
+                            AnalyticsAction.playAudioAudioGuide,
+                            foundAudio.hostObject.title
+                    )
+                    // Request the actual playback (this triggers its own analytics event)
+                    it?.playPlayer(foundAudio.hostObject)
+                    // Switch to the details screen
+                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
+                }.disposedBy(disposeBag)
     }
 
     fun onClickSearch() {
