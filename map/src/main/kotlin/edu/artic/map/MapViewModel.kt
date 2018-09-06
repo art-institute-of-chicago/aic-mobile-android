@@ -9,6 +9,7 @@ import com.jakewharton.rxrelay2.Relay
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.isIntroStop
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MarkerHolder
@@ -67,8 +68,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         displayMode
                 .distinctUntilChanged()
                 .filterFlatMap({ it is MapDisplayMode.Tour }, { it as MapDisplayMode.Tour })
-                .filter { it.selectedTourStop != null }
-                .map{it.selectedTourStop!!.nid}
+                .filterFlatMap({ it.selectedTourStop.objectId != null }, { it.selectedTourStop.objectId })
+                .map { it!! }
                 .bindTo(tourProgressManager.selectedStop)
                 .disposedBy(disposeBag)
 
@@ -130,20 +131,28 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     private fun animateToTourStopBounds(displayMode: MapDisplayMode.Tour) {
         val tour = displayMode.tour
-        if (displayMode.selectedTourStop != null) {
+        val tourStop = displayMode.selectedTourStop
 
-            displayMode.selectedTourStop.toLatLng().asObservable()
-                    .map { listOf(it) }
-                    .bindToMain(tourBoundsChanged)
-                    .disposedBy(disposeBag)
-
-        } else {
-            articObjectDao.getObjectsByIdList(tour.tourStops.mapNotNull { it.objectId })
-                    .toObservable()
+        val latLongs: Observable<List<LatLng>> = if (tourStop.isIntroStop()) {
+            /** If the starting tour is intro stop load map in bird eye view**/
+            val allToursLatLongs = articObjectDao
+                    .getObjectsByIdList(tour.tourStops.mapNotNull { it.objectId })
                     .map { stops -> stops.map { it.toLatLng() } }
-                    .bindToMain(tourBoundsChanged)
-                    .disposedBy(disposeBag)
+                    .toObservable()
+
+            Observable.merge(
+                    Observable.just(listOf(tour.toLatLng())),
+                    allToursLatLongs
+            )
+        } else {
+            articObjectDao.getObjectById(tourStop.objectId!!)
+                    .toObservable()
+                    .map { listOf(it.toLatLng()) }
         }
+
+        latLongs
+                .bindToMain(tourBoundsChanged)
+                .disposedBy(disposeBag)
     }
 
     fun visibleRegionChanged(visibleRegion: VisibleRegion) {
