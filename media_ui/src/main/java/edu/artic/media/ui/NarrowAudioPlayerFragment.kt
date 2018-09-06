@@ -98,6 +98,10 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
             boundService?.pausePlayer()
         }
 
+        boundService?.audioPlayBackStatus?.subscribe {
+            requireView().visibility = View.GONE
+        }?.disposedBy(disposeBag)
+
         trackTitle.setOnClickListener {
             val intent = NavigationConstants.AUDIO.asDeepLinkIntent()
             intent.putExtras(argsBundle(true))

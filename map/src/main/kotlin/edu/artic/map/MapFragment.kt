@@ -27,6 +27,8 @@ import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
+import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -75,6 +77,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         set(value) {
             requireActivity().intent?.putExtra(MapActivity.ARG_TOUR_START_STOP, value)
         }
+
+    private val audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -214,6 +218,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     override fun setupBindings(viewModel: MapViewModel) {
+
+        getAudioServiceObservable()
+                .bindTo(audioService)
+                .disposedBy(disposeBag)
+
         lowerLevel.clicks()
                 .subscribe { viewModel.floorChangedTo(0) }
                 .disposedBy(disposeBag)
@@ -404,6 +413,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         tour = null
                         viewModel.leaveTour()
                         dialog.dismiss()
+                        audioService.subscribe {
+                            it.stopPlayer()
+                        }.disposedBy(disposeBag)
                     }
                     .create()
             leaveTourDialog?.show()
