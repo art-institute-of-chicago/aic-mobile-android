@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
+import edu.artic.base.utils.preventReselection
 import edu.artic.db.models.ArticTour
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
@@ -46,6 +47,7 @@ class MapActivity : BaseActivity() {
         bottomNavigation.apply {
             disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map
+            preventReselection()
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
     }

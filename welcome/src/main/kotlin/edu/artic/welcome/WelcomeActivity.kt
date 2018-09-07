@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.navigation.Navigation
 import edu.artic.base.utils.disableShiftMode
+import edu.artic.base.utils.preventReselection
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
@@ -31,9 +32,13 @@ class WelcomeActivity : BaseActivity() {
             finish()
             return
         }
-        bottomNavigation.disableShiftMode(R.color.menu_color_list)
-        bottomNavigation.selectedItemId = R.id.action_home
-        bottomNavigation.setOnNavigationItemSelectedListener(NavigationSelectListener(this))
+
+        bottomNavigation.apply {
+            disableShiftMode(R.color.menu_color_list)
+            selectedItemId = R.id.action_home
+            preventReselection()
+            setOnNavigationItemSelectedListener(NavigationSelectListener(this@WelcomeActivity))
+        }
     }
 
     override fun onBackPressed() {
