@@ -108,6 +108,12 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindTo(leaveTourRequest)
                 .disposedBy(disposeBag)
 
+        searchManager.leaveSearchMode
+                .filter { it }
+                .subscribe {
+                    displayModeChanged(MapDisplayMode.CurrentFloor)
+                }.disposedBy(disposeBag)
+
 
         this.currentMap
                 .bindTo(mapMarkerConstructor.map)
