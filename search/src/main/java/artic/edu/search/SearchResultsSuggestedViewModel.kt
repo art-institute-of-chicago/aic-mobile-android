@@ -32,7 +32,8 @@ class SearchResultsSuggestedViewModel @Inject constructor(private val manager: S
                                 SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
                                 SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
                                 SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
-                                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom))
+                                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom),
+                                SearchResultAmenitiesCellViewModel(0))
                         ),
                         suggestedArtworks)
                 { dynamicCells, amenities, suggestedArtworks ->

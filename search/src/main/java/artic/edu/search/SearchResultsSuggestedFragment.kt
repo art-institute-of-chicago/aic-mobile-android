@@ -1,9 +1,8 @@
 package artic.edu.search
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.view.View
-import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
@@ -23,7 +22,13 @@ class SearchResultsSuggestedFragment : BaseViewModelFragment<SearchResultsSugges
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         resultsRV.adapter = SearchResultsAdapter()
-        resultsRV.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+        val lm = GridLayoutManager(view.context, 5)
+        lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return (resultsRV.adapter as SearchResultsAdapter).getSpanCount(position)
+            }
+        }
+        resultsRV.layoutManager = lm
     }
 
     override fun setupBindings(viewModel: SearchResultsSuggestedViewModel) {
