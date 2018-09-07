@@ -74,11 +74,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             requireActivity().intent?.putExtra(MapActivity.ARG_SEARCH_OBJECT, value)
         }
 
-    private var searchAmenityType: String?
-        get() = requireActivity().intent?.extras?.getString(MapActivity.ARG_SEARCH_AMENITY_TYPE)
-        set(value) {
-            requireActivity().intent?.putExtra(MapActivity.ARG_SEARCH_AMENITY_TYPE, value)
-        }
 
     private var tour: ArticTour?
         get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
@@ -425,6 +420,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
                         tour = null
                         viewModel.leaveTour()
+                        viewModel.loadMapDisplayMode(tour, startTourStop)
                         dialog.dismiss()
                         audioService.subscribe {
                             it.stopPlayer()
@@ -444,7 +440,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        viewModel.loadMapDisplayMode(tour, startTourStop, searchObject, searchAmenityType)
+        searchObject?.let {
+            viewModel.searchManager.selectedObject.onNext(Optional(it))
+        }
+        viewModel.loadMapDisplayMode(tour, startTourStop)
     }
 
     override fun onPause() {
