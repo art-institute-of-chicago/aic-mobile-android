@@ -15,7 +15,7 @@ class SearchResultsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter
                 SearchResultsSuggestedFragment()
             }
             3 -> {
-                SearchResultsSuggestedFragment()
+                SearchResultsExhibitionsFragment()
             }
             else -> {
                 SearchResultsSuggestedFragment()

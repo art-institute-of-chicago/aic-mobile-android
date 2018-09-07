@@ -7,8 +7,8 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_search_results.*
 import kotlin.reflect.KClass
 
-class SearchResultsFragment : BaseViewModelFragment<SearchResultsViewModel>() {
-    override val viewModelClass: KClass<SearchResultsViewModel> = SearchResultsViewModel::class
+class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContainerViewModel>() {
+    override val viewModelClass: KClass<SearchResultsContainerViewModel> = SearchResultsContainerViewModel::class
     override val title: String = ""
     override val layoutResId: Int = R.layout.fragment_search_results
     override val screenCategory: ScreenCategoryName? = ScreenCategoryName.Search
