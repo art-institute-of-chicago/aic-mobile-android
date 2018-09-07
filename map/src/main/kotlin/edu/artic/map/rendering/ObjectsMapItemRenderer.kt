@@ -145,6 +145,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
             when (displayMode) {
                 is MapDisplayMode.Tour -> MapFocus.values().toSet()
+                is MapDisplayMode.Search<*> -> MapFocus.values().toSet()
                 else -> setOf(MapFocus.Individual)
             }
 
