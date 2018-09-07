@@ -120,17 +120,22 @@ abstract class BaseFragment : Fragment() {
     @UiThread
     private fun updateWindowProperties() {
         if (overrideStatusBarColor) {
+            // Since this is always run on UI thread, the activity and context won't
+            // change for the duration of this call.
+            val act = requireActivity()
+            val ctx = requireContext()
+
             if (hasTransparentStatusBar()) {
-                requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-                requireActivity().window?.statusBarColor = Color.TRANSPARENT
+                act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+                act.window?.statusBarColor = Color.TRANSPARENT
             } else {
                 if (customToolbarColorResource == 0) {
                     val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
-                    requireContext().getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
-                        requireActivity().window?.statusBarColor = it
+                    ctx.getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
+                        act.window?.statusBarColor = it
                     }
                 } else {
-                    requireActivity().window?.statusBarColor = ContextCompat.getColor(requireContext(), customToolbarColorResource)
+                    act.window?.statusBarColor = ContextCompat.getColor(ctx, customToolbarColorResource)
                 }
             }
         }
