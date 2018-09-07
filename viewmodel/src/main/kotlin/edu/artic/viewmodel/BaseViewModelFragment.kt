@@ -64,6 +64,8 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
     override fun onResume() {
         super.onResume()
         if (isViewJustCreated) {
+            // Without this assignment, the screen will flicker (whether it's noticeable depends on the subclass)
+            isViewJustCreated = false
             setupBindings(viewModel)
         }
         setupNavigationBindings(viewModel)
