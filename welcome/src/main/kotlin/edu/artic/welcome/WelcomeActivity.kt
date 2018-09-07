@@ -32,10 +32,13 @@ class WelcomeActivity : BaseActivity() {
             finish()
             return
         }
-        bottomNavigation.disableShiftMode(R.color.menu_color_list)
-        bottomNavigation.selectedItemId = R.id.action_home
-        bottomNavigation.preventReselection()
-        bottomNavigation.setOnNavigationItemSelectedListener(NavigationSelectListener(this))
+
+        bottomNavigation.apply {
+            disableShiftMode(R.color.menu_color_list)
+            selectedItemId = R.id.action_home
+            preventReselection()
+            setOnNavigationItemSelectedListener(NavigationSelectListener(this@WelcomeActivity))
+        }
     }
 
     override fun onBackPressed() {
