@@ -11,14 +11,7 @@ import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.GroundOverlay
-import com.google.android.gms.maps.model.GroundOverlayOptions
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.TileOverlay
-import com.google.android.gms.maps.model.TileOverlayOptions
+import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
 import edu.artic.analytics.ScreenCategoryName
@@ -32,7 +25,6 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
-import edu.artic.map.rendering.DebugTileProvider2
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MapTileAssetProvider
 import edu.artic.map.rendering.MarkerMetaData
