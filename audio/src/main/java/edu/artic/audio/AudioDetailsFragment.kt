@@ -154,7 +154,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
 
     private fun bindTranslationSelector(viewModel: AudioDetailsViewModel) {
-        val selectorView: Spinner = exo_translation_selector
+
         viewModel.chosenAudioModel
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { chosen ->
@@ -166,7 +166,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .bindToMain(translationsAdapter.itemChanges())
                 .disposedBy(disposeBag)
 
-        LanguageSelectorViewBackground(selectorView)
+        LanguageSelectorViewBackground(exo_translation_selector)
                 .listenToLayoutChanges()
                 .disposedBy(disposeBag)
 

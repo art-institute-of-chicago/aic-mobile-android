@@ -28,17 +28,21 @@ class LocalizationPreferences(context: Context)
                 Locale.getDefault().toLanguageTag()
         )).orFallback()
 
+    private var innerTourLocale: String? = null
+
+    /**
+     * Public access to the current tour language.
+     *
+     * Internally managed via [innerTourLocale].
+     */
     var tourLocale: Locale
         set(given) {
-            putString(
-                    PREF_TOUR_LOCALE,
-                    given.toLanguageTag()
-            )
+            innerTourLocale = given.toLanguageTag()
         }
-        get() = Locale.forLanguageTag(getString(
-                PREF_TOUR_LOCALE,
+        get() = Locale.forLanguageTag(
+                innerTourLocale ?:
                 Locale.getDefault().toLanguageTag()
-        )).orFallback(preferredAppLocale)
+        ).orFallback(preferredAppLocale)
 }
 
 /**

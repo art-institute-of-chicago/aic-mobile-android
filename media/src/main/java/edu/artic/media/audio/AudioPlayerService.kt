@@ -190,7 +190,7 @@ class AudioPlayerService : DaggerService() {
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
                 is PlayBackAction.Play -> {
-                    player.seekTo(0)
+                    // No need to seek here; that'll be done in 'setArticObject' if needed
                     setArticObject(playBackAction.audioFile, playBackAction.audioModel)
                     player.playWhenReady = true
                 }
@@ -376,7 +376,8 @@ class AudioPlayerService : DaggerService() {
                 pausePlayer()
                 playPlayer(it, alternative)
             } else {
-                currentTrack.onNext(alternative)
+                playPlayer(it, alternative)
+                pausePlayer()
             }
         }
     }
