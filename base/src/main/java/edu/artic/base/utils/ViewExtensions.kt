@@ -5,10 +5,9 @@ import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.content.ContextCompat
+import android.view.MenuItem
 
-/**
- * @author Sameer Dhakal (Fuzz)
- */
+
 
 /**
  * This hack is required for displaying title below icon.
@@ -37,4 +36,23 @@ fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
             }
         }
     }
+}
+
+/**
+ * Special implementation of [BottomNavigationView.OnNavigationItemReselectedListener]
+ * with absolutely no state and no action. Set it on a view with [preventReselection].
+ */
+private object IgnoreReselection : BottomNavigationView.OnNavigationItemReselectedListener {
+    // No need to do anything in the method body.
+    override fun onNavigationItemReselected(item: MenuItem) = Unit
+}
+
+/**
+ * Disable on-click events for highlighted items.
+ *
+ * See [BottomNavigationView.setOnNavigationItemReselectedListener] for
+ * details.
+ */
+fun BottomNavigationView.preventReselection() {
+    setOnNavigationItemReselectedListener(IgnoreReselection)
 }
