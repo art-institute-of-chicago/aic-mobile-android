@@ -5,7 +5,7 @@ dependencies {
 
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
-
+    implementation libs.threeten
     implementation project(':base')
     implementation project(':db')
     implementation project(':analytics')
