@@ -9,8 +9,13 @@ import edu.artic.base.utils.asDeepLinkIntent
 
 
 /**
- * {@link BottomNavigationView.OnNavigationItemSelectedListener} Implementation for app.
+ * [BottomNavigationView.OnNavigationItemSelectedListener] Implementation for the app.
+ *
+ * Makes use of [NavigationConstants] and [asDeepLinkIntent] to launch other modules
+ * without needing to know [precisely what would be loaded][android.content.ComponentName].
+ *
  * @author Sameer Dhakal (Fuzz)
+ * @see edu.artic.base.utils.preventReselection
  */
 class NavigationSelectListener(val context: Context) : BottomNavigationView.OnNavigationItemSelectedListener {
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
