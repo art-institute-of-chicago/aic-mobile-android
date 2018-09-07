@@ -102,5 +102,10 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
 
     protected open fun setupBindings(viewModel: TViewModel) = Unit
 
+    /**
+     * # Remember to dispose your nav bindings with [navigationDisposeBag], not [disposeBag].
+     *
+     * @see NavViewViewModel
+     */
     protected open fun setupNavigationBindings(viewModel: TViewModel) = Unit
 }
