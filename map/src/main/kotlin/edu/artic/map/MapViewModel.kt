@@ -20,6 +20,7 @@ import edu.artic.map.rendering.MarkerHolder
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -32,6 +33,7 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
                                        private val languageSelector: LanguageSelector,
+                                       val searchManager: SearchManager,
                                        val analyticsTracker: AnalyticsTracker,
                                        val tourProgressManager: TourProgressManager)
     : BaseViewModel() {
@@ -213,7 +215,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         /**clear tour locale**/
         languageSelector.setTourLanguage(Locale(""))
         tourProgressManager.selectedTour.onNext(Optional(null))
-        displayModeChanged(MapDisplayMode.CurrentFloor)
     }
 
     /**
@@ -221,26 +222,25 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * For future search integration, active tour should be canceled before we display the search items in map.
      * refer [TourProgressManager] for managing the tour state.
      */
-    fun loadMapDisplayMode(requestedTour: ArticTour?, tourStop: ArticTour.TourStop?, searchObject: ArticObject?, searchAmenityType: String?) {
+    fun loadMapDisplayMode(requestedTour: ArticTour?, tourStop: ArticTour.TourStop?) {
         tourProgressManager.selectedTour
+                .withLatestFrom(searchManager.selectedObject)
                 .take(1)
-                .subscribeBy { lastTour ->
+                .subscribeBy { (lastTour, lastSearchedObject) ->
                     /**
                      * If requestedTour is different than current tour display prompt user to leave the previous requestedTour.
                      */
+                    val searchObject = lastSearchedObject.value
                     val activeTour = lastTour.value
-                    if (searchAmenityType != null || searchObject != null) {
+
+                    if (searchObject != null && requestedTour == null) {
                         /**
                          * If user requests to load search when tour is active, prompt user to leave tour.
                          */
                         if (activeTour != null) {
                             leaveTourRequest.onNext(true)
                         } else {
-                            if (searchObject != null) {
-                                displayModeChanged(MapDisplayMode.Search(searchObject))
-                            } else {
-                                displayModeChanged(MapDisplayMode.CurrentFloor)
-                            }
+                            displayModeChanged(MapDisplayMode.Search(searchObject))
                         }
                     } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
                         switchTourRequest.onNext(activeTour to requestedTour)
