@@ -150,6 +150,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .map { listOf(it.toLatLng()) }
                 .bindToMain(tourBoundsChanged)
                 .disposedBy(disposeBag)
+
+        articObjectSelected(displayMode.item as ArticObject)
     }
 
     private fun animateToTourStopBounds(displayMode: MapDisplayMode.Tour) {
