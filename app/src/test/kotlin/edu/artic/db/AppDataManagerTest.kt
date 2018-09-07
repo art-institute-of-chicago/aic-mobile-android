@@ -49,7 +49,8 @@ class AppDataManagerTest {
                 exhibitionDao = mock(),
                 mapAnnotationDao = mock(),
                 tourDao = mock(),
-                searchSuggestionDao = mock()
+                searchSuggestionDao = mock(),
+                articMapFloorDao = mock()
         )
     }
 
