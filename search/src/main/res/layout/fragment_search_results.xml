@@ -14,11 +14,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!--<android.support.v4.view.PagerTabStrip-->
-        <!--android:id="@+id/tabStrip"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:minHeight="40dp" />-->
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/tabStrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp" />
 
     </android.support.v4.view.ViewPager>
 </android.support.constraint.ConstraintLayout>
