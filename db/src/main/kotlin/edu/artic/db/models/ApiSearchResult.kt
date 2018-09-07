@@ -18,7 +18,7 @@ import edu.artic.db.models.ApiSearchContent.SearchedTour
  */
 @JsonClass(generateAdapter = false)
 data class ApiSearchResult(
-        @Json(name = "artworks") val artworks: List<SearchedArtwork>?,
+        @Json(name = "artworks") val artworks: List<ArticObject>?,
         @Json(name = "tours") val tours: List<SearchedTour>?,
         @Json(name = "exhibitions") val exhibitions: List<ArticExhibition>?
 )
@@ -27,7 +27,7 @@ data class ApiSearchResult(
 
 @JsonClass(generateAdapter = true)
 data class ApiSearchResultRawA(
-        @Json(name = "data") val internalData: List<SearchedArtwork>
+        @Json(name = "data") val internalData: List<ArticObject>
 )
 
 @JsonClass(generateAdapter = true)

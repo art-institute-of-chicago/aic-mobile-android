@@ -8,6 +8,7 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.db.ApiModule
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.viewmodel.ViewModelKey
 import retrofit2.Retrofit
@@ -92,8 +93,11 @@ abstract class SearchModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideSearchManager(searchService: SearchServiceProvider, tourDao : ArticTourDao)
-                : SearchResultsManager = SearchResultsManager(searchService, tourDao)
+        fun provideSearchManager(
+                searchService: SearchServiceProvider,
+                tourDao: ArticTourDao,
+                articObjectDao: ArticObjectDao
+        ): SearchResultsManager = SearchResultsManager(searchService, tourDao, articObjectDao)
 
         /**
          * NB: We reuse the [ApiModule]'s Retrofit here.

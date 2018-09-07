@@ -1,5 +1,6 @@
 package artic.edu.search
 
+import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import javax.inject.Inject
 
@@ -9,10 +10,10 @@ class SearchResultsArtworkViewModel @Inject constructor(
 
     init {
         searchManager.currentSearchResults
-                .map {
-                    it.artworks
+                .map { result ->
+                    result.artworks.map { SearchResultArtworkCellViewModel(it) }
                 }
-                .subscribe { }
+                .bindTo(cells)
                 .disposedBy(disposeBag)
     }
 }

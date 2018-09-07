@@ -1,9 +1,11 @@
 package artic.edu.search
 
 import com.fuzz.rx.bindTo
+import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.ApiSearchContent
 import edu.artic.db.models.ArticExhibition
+import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -15,7 +17,10 @@ import io.reactivex.subjects.Subject
  * current view visible
  * @author Piotr Leja (FUZZ)
  */
-class SearchResultsManager(private val searchService: SearchServiceProvider, private val tourDao: ArticTourDao) {
+class SearchResultsManager(private val searchService: SearchServiceProvider,
+                           private val tourDao: ArticTourDao,
+                           private val articObjectDao: ArticObjectDao
+) {
 
     val currentSearchResults: Subject<ArticSearchResult> = BehaviorSubject.create()
     val currentSearchText: Subject<String> = BehaviorSubject.create()
@@ -69,12 +74,22 @@ class SearchResultsManager(private val searchService: SearchServiceProvider, pri
     private fun loadOtherLists(searchTerm: String): Observable<ArticSearchResult> {
         return searchService
                 .loadAllMatchingContent(searchTerm)
-                .flatMap {
+                .flatMap {result ->
                     Observables.combineLatest(
-                            loadTours(it.tours),
-                            if (it.exhibitions == null) Observable.just(listOf<ArticExhibition>()) else Observable.just(it.exhibitions)
-                    ) { tours: List<ArticTour>, exhibitions: List<ArticExhibition> ->
-                        ArticSearchResult(emptyList(), emptyList(), tours, exhibitions)
+                            if(result.artworks == null)
+                                Observable.just(listOf())
+                            else
+                                Observable.just(
+                                        result.artworks!!
+                                                .filter { it.isOnView != null }
+                                                .filter { it.isOnView!! }),
+                            loadTours(result.tours),
+                            if (result.exhibitions == null)
+                                Observable.just(listOf())
+                            else
+                                Observable.just(result.exhibitions!!)
+                    ) { artwork: List<ArticObject>, tours: List<ArticTour>, exhibitions: List<ArticExhibition> ->
+                        ArticSearchResult(emptyList(), artwork, tours, exhibitions)
                     }
                 }
     }
@@ -84,6 +99,14 @@ class SearchResultsManager(private val searchService: SearchServiceProvider, pri
             Observable.just(emptyList())
         } else {
             tourDao.getToursByIdList(tours.map { it.tourId.toString() }).toObservable()
+        }
+    }
+
+    private fun loadArtwork(artwork: List<ApiSearchContent.SearchedArtwork>?): Observable<List<ArticObject>> {
+        return if (artwork == null) {
+            Observable.just(emptyList())
+        } else {
+            articObjectDao.getObjectsByIdList(artwork.map { it.artworkId.toString() }).toObservable()
         }
     }
 
