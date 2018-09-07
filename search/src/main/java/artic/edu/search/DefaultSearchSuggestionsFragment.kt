@@ -12,6 +12,7 @@ import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.navigation.NavigationConstants
+import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.subscribeBy
@@ -72,7 +73,7 @@ class DefaultSearchSuggestionsFragment : BaseViewModelFragment<DefaultSearchSugg
                         is DefaultSearchSuggestionsViewModel.NavigationEndpoint.ArticObjectDetails -> {
                             val o = (navigation.endpoint as DefaultSearchSuggestionsViewModel.NavigationEndpoint.ArticObjectDetails).articObject
                             val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
-                                putExtra("ARG_SEARCH_OBJECT", o)
+                                putExtra(ARG_SEARCH_OBJECT, o)
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             }
                             startActivity(mapIntent)

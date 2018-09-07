@@ -29,6 +29,7 @@ import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -68,9 +69,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var leaveTourDialog: AlertDialog? = null
 
     private var searchObject: ArticObject?
-        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_SEARCH_OBJECT)
+        get() = requireActivity().intent?.extras?.getParcelable(ARG_SEARCH_OBJECT)
         set(value) {
-            requireActivity().intent?.putExtra(MapActivity.ARG_SEARCH_OBJECT, value)
+            requireActivity().intent?.putExtra(ARG_SEARCH_OBJECT, value)
         }
 
 
