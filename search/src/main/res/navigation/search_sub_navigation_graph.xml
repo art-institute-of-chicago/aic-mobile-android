@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/searchResultsFragment"
-        android:name="artic.edu.search.SearchResultsFragment"
+        android:name="artic.edu.search.SearchResultsContainerFragment"
         android:label="search_results"/>
 
     <action

@@ -36,8 +36,23 @@ abstract class SearchModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SearchResultsViewModel::class)
-    abstract fun searchResultsViewModel(searchResultsViewModel: SearchResultsViewModel): ViewModel
+    @ViewModelKey(SearchResultsContainerViewModel::class)
+    abstract fun searchResultsViewModel(searchResultsContainerViewModel: SearchResultsContainerViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchResultsExhibitionsViewModel::class)
+    abstract fun searchResultsExhibitionsViewModel(searchResultsExhibitionsViewModel: SearchResultsExhibitionsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchResultsArtworkViewModel::class)
+    abstract fun searchResultsArtworkViewModel(searchResultsArtworkViewModel: SearchResultsArtworkViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchResultsToursViewModel::class)
+    abstract fun searchResultsToursViewModel(searchResultsToursViewModel: SearchResultsToursViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -57,10 +72,19 @@ abstract class SearchModule {
     abstract val searchAudioDetailFragment: SearchAudioDetailFragment
 
     @get:ContributesAndroidInjector
-    abstract val searchResultsFragment: SearchResultsFragment
+    abstract val searchResultsContainerFragment: SearchResultsContainerFragment
 
     @get:ContributesAndroidInjector
     abstract val searchResultsSuggestedFragment: SearchResultsSuggestedFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchResultsExhibitionsFragment: SearchResultsExhibitionsFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchResultsArtworkFragment: SearchResultsArtworkFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchResultsToursFragment: SearchResultsToursFragment
 
     @Module
     companion object {
