@@ -45,6 +45,17 @@ class AudioActivity : BaseActivity() {
         }
     }
 
+    /**
+     * This catches deep links from the [NarrowAudioPlayerFragment] within this Activity.
+     *
+     * [onResume] is called just after, and that actually does the navigation.
+     */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        detectDetailsScreenLink(intent)
+    }
+
     @UiThread
     private fun detectDetailsScreenLink(intent: Intent) {
         val extras: Bundle = intent.extras ?: Bundle.EMPTY
@@ -52,8 +63,8 @@ class AudioActivity : BaseActivity() {
         willNavigate = extras.getBoolean(NarrowAudioPlayerFragment.ARG_SKIP_TO_DETAILS, false)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
 
         navigateToAudioDetailsScreen(supportFragmentManager)
     }
