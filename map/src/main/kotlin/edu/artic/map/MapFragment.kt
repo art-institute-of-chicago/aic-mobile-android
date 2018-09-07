@@ -7,7 +7,6 @@ import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.View
 import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -322,7 +321,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.selectedArticObject
                 .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
-                .filterFlatMap({ (_, mapMode) -> mapMode !is MapDisplayMode.Tour }, { (selected) -> selected })
+                .filterFlatMap({ (_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor }, { (selected) -> selected })
                 .subscribeBy { selected ->
                     displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
                 }
@@ -384,7 +383,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
      * Removes the fragment information below the map, and readjusts the padding back to normal.
      */
     @UiThread
-    private fun hideFragmentInInfoContainer(tag : String = OBJECT_DETAILS) {
+    private fun hideFragmentInInfoContainer(tag: String = OBJECT_DETAILS) {
         val supportFragmentManager = requireActivity().supportFragmentManager
         supportFragmentManager
                 .findFragmentByTag(tag)
