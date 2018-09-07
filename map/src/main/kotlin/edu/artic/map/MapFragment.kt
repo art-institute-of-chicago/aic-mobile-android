@@ -430,6 +430,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         viewModel.leaveTour()
                         viewModel.loadMapDisplayMode(tour, startTourStop)
                         dialog.dismiss()
+                        hideFragmentInInfoContainer()
                         audioService.subscribe {
                             it.stopPlayer()
                         }.disposedBy(disposeBag)

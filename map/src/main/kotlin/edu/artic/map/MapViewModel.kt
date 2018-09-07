@@ -251,8 +251,10 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                             displayModeChanged(MapDisplayMode.Search(searchObject))
                         }
                     } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
+                        searchManager.selectedObject.onNext(Optional(null))
                         switchTourRequest.onNext(activeTour to requestedTour)
                     } else {
+                        searchManager.selectedObject.onNext(Optional(null))
                         val tourToLoad = requestedTour ?: activeTour
                         if (tourToLoad != null) {
                             displayModeChanged(MapDisplayMode.Tour(tourToLoad, tourStop))
