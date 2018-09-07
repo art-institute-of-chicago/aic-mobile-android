@@ -444,7 +444,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        viewModel.loadMapDisplayMode(tour, startTourStop)
+        viewModel.loadMapDisplayMode(tour, startTourStop, searchObject, searchAmenityType)
     }
 
     override fun onPause() {

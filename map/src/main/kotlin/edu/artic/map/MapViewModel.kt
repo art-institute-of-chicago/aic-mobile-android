@@ -211,7 +211,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * For future search integration, active tour should be canceled before we display the search items in map.
      * refer [TourProgressManager] for managing the tour state.
      */
-    fun loadMapDisplayMode(requestedTour: ArticTour?, tourStop: ArticTour.TourStop?) {
+    fun loadMapDisplayMode(requestedTour: ArticTour?, tourStop: ArticTour.TourStop?, searchObject: ArticObject?, searchAmenityType: String?) {
         tourProgressManager.selectedTour
                 .take(1)
                 .subscribeBy { lastTour ->
@@ -219,7 +219,20 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                      * If requestedTour is different than current tour display prompt user to leave the previous requestedTour.
                      */
                     val activeTour = lastTour.value
-                    if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
+                    if (searchAmenityType != null || searchObject != null) {
+                        /**
+                         * If user requests to load search when tour is active, prompt user to leave tour.
+                         */
+                        if (activeTour != null) {
+                            leaveTourRequest.onNext(true)
+                        } else {
+                            if (searchObject != null) {
+                                displayModeChanged(MapDisplayMode.Search(searchObject))
+                            } else {
+                                displayModeChanged(MapDisplayMode.CurrentFloor)
+                            }
+                        }
+                    } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
                         switchTourRequest.onNext(activeTour to requestedTour)
                     } else {
                         val tourToLoad = requestedTour ?: activeTour
