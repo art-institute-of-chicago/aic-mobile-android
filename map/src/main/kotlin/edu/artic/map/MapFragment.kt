@@ -68,12 +68,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
     private var leaveTourDialog: AlertDialog? = null
 
-    private var searchObject: ArticObject?
-        get() = requireActivity().intent?.extras?.getParcelable(ARG_SEARCH_OBJECT)
-        set(value) {
-            requireActivity().intent?.putExtra(ARG_SEARCH_OBJECT, value)
-        }
-
+    private fun getLatestSearchObject(): ArticObject? {
+        return requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+    }
 
     private var tour: ArticTour?
         get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
@@ -451,7 +448,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        searchObject?.let {
+        getLatestSearchObject()?.let {
             viewModel.searchManager.selectedObject.onNext(Optional(it))
         }
         viewModel.loadMapDisplayMode(tour, startTourStop)
