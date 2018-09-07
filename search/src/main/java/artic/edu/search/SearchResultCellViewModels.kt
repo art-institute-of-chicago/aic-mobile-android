@@ -10,7 +10,11 @@ class SearchResultTextCellViewModel(text: String) : SearchResultBaseCellViewMode
     val text: Subject<String> = BehaviorSubject.createDefault(text)
 }
 
-class SearchResultHeaderCellViewModel : SearchResultBaseCellViewModel()
+class SearchResultEmptyCellViewModel : SearchResultBaseCellViewModel()
+
+class SearchResultHeaderCellViewModel(text: String) : SearchResultBaseCellViewModel() {
+    val text : Subject<String> = BehaviorSubject.createDefault(text)
+}
 
 class SearchResultArtworkCellViewModel : SearchResultBaseCellViewModel(hasDivider = true)
 
