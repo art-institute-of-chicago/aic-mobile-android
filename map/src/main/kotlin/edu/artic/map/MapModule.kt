@@ -54,5 +54,10 @@ abstract class MapModule {
         @Singleton
         fun tourProgressManager(): TourProgressManager = TourProgressManager()
 
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun searchManager(): SearchManager = SearchManager()
+
     }
 }
