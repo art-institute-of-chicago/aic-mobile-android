@@ -20,6 +20,7 @@ import edu.artic.map.rendering.MarkerHolder
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -32,6 +33,7 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
                                        private val languageSelector: LanguageSelector,
+                                       val searchManager: SearchManager,
                                        val analyticsTracker: AnalyticsTracker,
                                        val tourProgressManager: TourProgressManager)
     : BaseViewModel() {
@@ -106,6 +108,12 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindTo(leaveTourRequest)
                 .disposedBy(disposeBag)
 
+        searchManager.leaveSearchMode
+                .filter { it }
+                .subscribe {
+                    displayModeChanged(MapDisplayMode.CurrentFloor)
+                }.disposedBy(disposeBag)
+
 
         this.currentMap
                 .bindTo(mapMarkerConstructor.map)
@@ -137,7 +145,19 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         this.displayMode.onNext(displayMode)
         if (displayMode is MapDisplayMode.Tour) {
             animateToTourStopBounds(displayMode)
+        } else if (displayMode is MapDisplayMode.Search<*>) {
+            animateToSearchItemBounds(displayMode)
         }
+    }
+
+    private fun animateToSearchItemBounds(displayMode: MapDisplayMode.Search<*>) {
+        Observable.just(displayMode.item)
+                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
+                .map { listOf(it.toLatLng()) }
+                .bindToMain(tourBoundsChanged)
+                .disposedBy(disposeBag)
+
+        articObjectSelected(displayMode.item as ArticObject)
     }
 
     private fun animateToTourStopBounds(displayMode: MapDisplayMode.Tour) {
@@ -203,7 +223,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         /**clear tour locale**/
         languageSelector.setTourLanguage(Locale(""))
         tourProgressManager.selectedTour.onNext(Optional(null))
-        displayModeChanged(MapDisplayMode.CurrentFloor)
     }
 
     /**
@@ -213,13 +232,25 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      */
     fun loadMapDisplayMode(requestedTour: ArticTour?, tourStop: ArticTour.TourStop?) {
         tourProgressManager.selectedTour
+                .withLatestFrom(searchManager.selectedObject)
                 .take(1)
-                .subscribeBy { lastTour ->
+                .subscribeBy { (lastTour, lastSearchedObject) ->
                     /**
                      * If requestedTour is different than current tour display prompt user to leave the previous requestedTour.
                      */
+                    val searchObject = lastSearchedObject.value
                     val activeTour = lastTour.value
-                    if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
+
+                    if (searchObject != null && requestedTour == null) {
+                        /**
+                         * If user requests to load search when tour is active, prompt user to leave tour.
+                         */
+                        if (activeTour != null) {
+                            leaveTourRequest.onNext(true)
+                        } else {
+                            displayModeChanged(MapDisplayMode.Search(searchObject))
+                        }
+                    } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
                         switchTourRequest.onNext(activeTour to requestedTour)
                     } else {
                         val tourToLoad = requestedTour ?: activeTour

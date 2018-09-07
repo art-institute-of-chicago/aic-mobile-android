@@ -29,6 +29,11 @@ abstract class MapModule {
     @ViewModelKey(MapObjectDetailsViewModel::class)
     abstract fun mapObjectDetailsViewModel(mapViewModel: MapObjectDetailsViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchObjectDetailsViewModel::class)
+    abstract fun searchObjectDetailsViewModel(mapViewModel: SearchObjectDetailsViewModel): ViewModel
+
     @get:ContributesAndroidInjector
     abstract val mapActivity: MapActivity
 
@@ -37,6 +42,9 @@ abstract class MapModule {
 
     @get:ContributesAndroidInjector
     abstract val mapObjectDetailsFragment: MapObjectDetailsFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchObjectDetailsFragment: SearchObjectDetailsFragment
 
     @get:ContributesAndroidInjector
     abstract val tourCarouselFragment: TourCarouselFragment
@@ -53,6 +61,11 @@ abstract class MapModule {
         @Provides
         @Singleton
         fun tourProgressManager(): TourProgressManager = TourProgressManager()
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun searchManager(): SearchManager = SearchManager()
 
     }
 }

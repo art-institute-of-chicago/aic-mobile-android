@@ -5,6 +5,7 @@ import android.view.View
 import com.fuzz.indicator.OffSetHint
 import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.support.v4.view.pageSelections
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
@@ -58,9 +59,13 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
         tourCarousel.adapter = adapter.toPagerAdapter()
         viewPagerIndicator.setViewPager(tourCarousel)
         viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
-        close.setOnClickListener {
-            viewModel.leaveTour()
-        }
+
+        close.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.leaveTour()
+                }.disposedBy(disposeBag)
+
     }
 
 

@@ -29,6 +29,7 @@ import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -66,6 +67,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
     private var leaveTourDialog: AlertDialog? = null
+
+    private fun getLatestSearchObject(): ArticObject? {
+        return requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+    }
+
     private var tour: ArticTour?
         get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
         set(value) {
@@ -245,13 +251,24 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribeBy { (tour) -> displayFragmentInInfoContainer(TourCarouselFragment.create(tour)) }
                 .disposedBy(disposeBag)
 
+        viewModel.displayMode
+                .filterFlatMap({ it is MapDisplayMode.Search<*> }, { it as MapDisplayMode.Search<*> })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { (searchObject) -> displayFragmentInInfoContainer(SearchObjectDetailsFragment.create(searchObject as ArticObject), SEARCH_DETILAS) }
+                .disposedBy(disposeBag)
+
         /**
          * If displayMode is not [MapDisplayMode.Tour], hide the carousel.
          */
         viewModel.displayMode
-                .filter { it !is MapDisplayMode.Tour }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { hideFragmentInInfoContainer() }
+                .subscribeBy {
+                    when (it) {
+                        is MapDisplayMode.Tour -> hideFragmentInInfoContainer(SEARCH_DETILAS)
+                        is MapDisplayMode.CurrentFloor -> hideFragmentInInfoContainer(SEARCH_DETILAS)
+                        is MapDisplayMode.Search<*> -> hideFragmentInInfoContainer(OBJECT_DETAILS)
+                    }
+                }
                 .disposedBy(disposeBag)
 
         viewModel.tourBoundsChanged
@@ -302,7 +319,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.selectedArticObject
                 .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
-                .filterFlatMap({ (_, mapMode) -> mapMode !is MapDisplayMode.Tour }, { (selected) -> selected })
+                .filterFlatMap({ (_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor }, { (selected) -> selected })
                 .subscribeBy { selected ->
                     displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
                 }
@@ -327,7 +344,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel
                 .leaveTourRequest
-                .distinctUntilChanged()
                 .subscribe {
                     displayLeaveTourConfirmation()
                 }.disposedBy(disposeBag)
@@ -344,10 +360,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
      * Shows contextual information below the map. Also, it adjusts padding on the map to stay
      * in line with product requirements.
      */
-    private fun displayFragmentInInfoContainer(fragment: Fragment) {
+    private fun displayFragmentInInfoContainer(fragment: Fragment, tag: String = OBJECT_DETAILS) {
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-                .replace(R.id.infocontainer, fragment, OBJECT_DETAILS)
+                .replace(R.id.infocontainer, fragment, tag)
                 .commit()
 
         // wait for it to update first time
@@ -365,10 +381,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
      * Removes the fragment information below the map, and readjusts the padding back to normal.
      */
     @UiThread
-    private fun hideFragmentInInfoContainer() {
+    private fun hideFragmentInInfoContainer(tag: String = OBJECT_DETAILS) {
         val supportFragmentManager = requireActivity().supportFragmentManager
         supportFragmentManager
-                .findFragmentByTag(OBJECT_DETAILS)
+                .findFragmentByTag(tag)
                 ?.let {
                     supportFragmentManager
                             .beginTransaction()
@@ -412,6 +428,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
                         tour = null
                         viewModel.leaveTour()
+                        viewModel.loadMapDisplayMode(tour, startTourStop)
                         dialog.dismiss()
                         audioService.subscribe {
                             it.stopPlayer()
@@ -431,6 +448,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+        getLatestSearchObject()?.let {
+            viewModel.searchManager.selectedObject.onNext(Optional(it))
+        }
         viewModel.loadMapDisplayMode(tour, startTourStop)
     }
 
@@ -463,5 +483,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
+        const val SEARCH_DETILAS = "SEARCH"
     }
 }

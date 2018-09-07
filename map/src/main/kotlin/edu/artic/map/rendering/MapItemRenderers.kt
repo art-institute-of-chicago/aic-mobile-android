@@ -3,6 +3,7 @@ package edu.artic.map.rendering
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.fuzz.rx.asFlowable
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -23,6 +24,7 @@ import edu.artic.map.helpers.toLatLng
 import edu.artic.ui.util.asCDNUri
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.toFlowable
 
 internal const val ALPHA_DIMMED = 0.6f
 internal const val ALPHA_VISIBLE = 1.0f
@@ -63,7 +65,12 @@ class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : Ma
     private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
-        return articMapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK)
+        return when(displayMode) {
+            is MapDisplayMode.Search<*> ->
+                listOf<ArticMapAnnotation>().asFlowable()
+            else ->
+                articMapAnnotationDao.getTextAnnotationByType(ArticMapTextType.LANDMARK)
+        }
     }
 
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
@@ -81,7 +88,12 @@ class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     private val textMarkerGenerator: TextMarkerGenerator  by lazy { TextMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
-        return articMapAnnotationDao.getTextAnnotationByTypeAndFloor(ArticMapTextType.SPACE, floor = floor.toString()) // TODO: switch to int
+        return when(displayMode) {
+            is MapDisplayMode.Search<*> ->
+                listOf<ArticMapAnnotation>().asFlowable()
+            else ->
+                articMapAnnotationDao.getTextAnnotationByTypeAndFloor(ArticMapTextType.SPACE, floor = floor.toString()) // TODO: switch to int
+        }
     }
 
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
@@ -95,7 +107,12 @@ class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
 
 class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : MapAnnotationItemRenderer(articMapAnnotationDao) {
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
-        return articMapAnnotationDao.getAmenitiesOnMapForFloor(floor = floor.toString())
+        return when(displayMode) {
+            is MapDisplayMode.Search<*> ->
+                listOf<ArticMapAnnotation>().asFlowable()
+            else ->
+                articMapAnnotationDao.getAmenitiesOnMapForFloor(floor = floor.toString())
+        }
     }
 
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = MapFocus.values().toSet() // all zoom levels
@@ -113,7 +130,12 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     private val departmentMarkerGenerator: DepartmentMarkerGenerator by lazy { DepartmentMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
-        return articMapAnnotationDao.getDepartmentOnMapForFloor(floor = floor.toString())
+        return when(displayMode) {
+            is MapDisplayMode.Search<*> ->
+                listOf<ArticMapAnnotation>().asFlowable()
+            else ->
+                articMapAnnotationDao.getDepartmentOnMapForFloor(floor = floor.toString())
+        }
     }
 
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
@@ -136,7 +158,12 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
     private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticGallery>> {
-        return galleriesDao.getGalleriesForFloor(floor = floor.toString())
+        return when(displayMode) {
+            is MapDisplayMode.Search<*> ->
+                listOf<ArticGallery>().asFlowable()
+            else ->
+                galleriesDao.getGalleriesForFloor(floor = floor.toString())
+        }
     }
 
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
