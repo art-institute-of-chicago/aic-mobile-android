@@ -7,6 +7,7 @@ import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.View
 import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -340,7 +341,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel
                 .leaveTourRequest
-                .distinctUntilChanged()
                 .subscribe {
                     displayLeaveTourConfirmation()
                 }.disposedBy(disposeBag)
