@@ -129,7 +129,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                             }
                         }
                     }
-                }.disposedBy(disposeBag)
+                }.disposedBy(navigationDisposeBag)
     }
 
 
