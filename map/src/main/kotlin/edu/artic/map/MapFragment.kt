@@ -254,13 +254,24 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribeBy { (tour) -> displayFragmentInInfoContainer(TourCarouselFragment.create(tour)) }
                 .disposedBy(disposeBag)
 
+        viewModel.displayMode
+                .filterFlatMap({ it is MapDisplayMode.Search<*> }, { it as MapDisplayMode.Search<*> })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { (searchObject) -> displayFragmentInInfoContainer(SearchObjectDetailsFragment.create(searchObject as ArticObject), SEARCH_DETILAS) }
+                .disposedBy(disposeBag)
+
         /**
          * If displayMode is not [MapDisplayMode.Tour], hide the carousel.
          */
         viewModel.displayMode
-                .filter { it !is MapDisplayMode.Tour }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { hideFragmentInInfoContainer() }
+                .subscribeBy {
+                    when (it) {
+                        is MapDisplayMode.Tour -> hideFragmentInInfoContainer(SEARCH_DETILAS)
+                        is MapDisplayMode.CurrentFloor -> hideFragmentInInfoContainer(SEARCH_DETILAS)
+                        is MapDisplayMode.Search<*> -> hideFragmentInInfoContainer(OBJECT_DETAILS)
+                    }
+                }
                 .disposedBy(disposeBag)
 
         viewModel.tourBoundsChanged
@@ -352,10 +363,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
      * Shows contextual information below the map. Also, it adjusts padding on the map to stay
      * in line with product requirements.
      */
-    private fun displayFragmentInInfoContainer(fragment: Fragment) {
+    private fun displayFragmentInInfoContainer(fragment: Fragment, tag: String = OBJECT_DETAILS) {
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-                .replace(R.id.infocontainer, fragment, OBJECT_DETAILS)
+                .replace(R.id.infocontainer, fragment, tag)
                 .commit()
 
         // wait for it to update first time
@@ -373,10 +384,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
      * Removes the fragment information below the map, and readjusts the padding back to normal.
      */
     @UiThread
-    private fun hideFragmentInInfoContainer() {
+    private fun hideFragmentInInfoContainer(tag : String = OBJECT_DETAILS) {
         val supportFragmentManager = requireActivity().supportFragmentManager
         supportFragmentManager
-                .findFragmentByTag(OBJECT_DETAILS)
+                .findFragmentByTag(tag)
                 ?.let {
                     supportFragmentManager
                             .beginTransaction()
@@ -475,5 +486,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
+        const val SEARCH_DETILAS = "SEARCH"
     }
 }
