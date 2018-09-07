@@ -28,7 +28,7 @@ class MapActivity : BaseActivity() {
         val ARG_TOUR = "ARG_TOUR"
         val ARG_TOUR_START_STOP = "ARG_TOUR_START_STOP"
 
-        fun getLaunchIntent(tour: ArticTour, articTourStop: ArticTour.TourStop): Intent {
+        fun launchMapForTour(tour: ArticTour, articTourStop: ArticTour.TourStop): Intent {
             return NavigationConstants.MAP.asDeepLinkIntent().apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 putExtras(Bundle().apply {
