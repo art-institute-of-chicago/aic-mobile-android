@@ -38,7 +38,7 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Search
 
-    private val mapObject: ArticObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+    private val mapObject: ArticObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_SEARCH_OBJECT) }
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
     override fun onRegisterViewModel(viewModel: SearchObjectDetailsViewModel) {
@@ -153,12 +153,12 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
 
 
     companion object {
-        private val ARG_MAP_OBJECT = SearchObjectDetailsFragment::class.java.simpleName
+        private val ARG_SEARCH_OBJECT = SearchObjectDetailsFragment::class.java.simpleName
 
         fun create(articObject: ArticObject): SearchObjectDetailsFragment {
             return SearchObjectDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_MAP_OBJECT, articObject)
+                    putParcelable(ARG_SEARCH_OBJECT, articObject)
                 }
             }
         }
