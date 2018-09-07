@@ -137,7 +137,17 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         this.displayMode.onNext(displayMode)
         if (displayMode is MapDisplayMode.Tour) {
             animateToTourStopBounds(displayMode)
+        } else if (displayMode is MapDisplayMode.Search<*>) {
+            animateToSearchItemBounds(displayMode)
         }
+    }
+
+    private fun animateToSearchItemBounds(displayMode: MapDisplayMode.Search<*>) {
+        Observable.just(displayMode.item)
+                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
+                .map { listOf(it.toLatLng()) }
+                .bindToMain(tourBoundsChanged)
+                .disposedBy(disposeBag)
     }
 
     private fun animateToTourStopBounds(displayMode: MapDisplayMode.Tour) {
