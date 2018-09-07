@@ -165,7 +165,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                     val endpoint = forward.endpoint
                     when (endpoint) {
                         is TourDetailsViewModel.NavigationEndpoint.Map -> {
-                            startActivity(MapActivity.getLaunchIntent(endpoint.tour, endpoint.stop))
+                            startActivity(MapActivity.launchMapForTour(endpoint.tour, endpoint.stop))
                         }
                     }
 

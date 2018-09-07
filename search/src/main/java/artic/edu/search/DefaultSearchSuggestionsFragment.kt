@@ -1,15 +1,18 @@
 package artic.edu.search
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
-import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.navigation.NavigationConstants
+import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.subscribeBy
@@ -69,10 +72,11 @@ class DefaultSearchSuggestionsFragment : BaseViewModelFragment<DefaultSearchSugg
                     when (navigation.endpoint) {
                         is DefaultSearchSuggestionsViewModel.NavigationEndpoint.ArticObjectDetails -> {
                             val o = (navigation.endpoint as DefaultSearchSuggestionsViewModel.NavigationEndpoint.ArticObjectDetails).articObject
-                            Navigation.findNavController(requireActivity(), R.id.container).navigate(
-                                    R.id.goToSearchAudioDetails,
-                                    SearchAudioDetailFragment.argsBundle(o)
-                            )
+                            val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
+                                putExtra(ARG_SEARCH_OBJECT, o)
+                                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            }
+                            startActivity(mapIntent)
                         }
                     }
                 }

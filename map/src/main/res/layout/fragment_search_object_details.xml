@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mapObjectWindowBlue"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/searchType"
+        style="@style/SectionTitleWhite"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/marginDouble"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        android:text="Artworks"
+        app:layout_constraintEnd_toStartOf="@id/close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:layout_marginBottom="@dimen/marginDouble"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_close_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/searchType"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/searchType"
+        app:layout_constraintTop_toTopOf="@+id/searchType" />
+
+    <View
+        android:id="@+id/divider"
+        style="@style/divider"
+        android:layout_width="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchType" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="72dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginBottom="@dimen/marginSixtyFour"
+        android:contentDescription="@null"
+        android:scaleType="matrix"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:background="@color/brownishOrange" />
+
+    <TextView
+        android:id="@+id/searchObjectTitle"
+        style="@style/ListItemTitle1White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintTop_toTopOf="@+id/divider"
+        tools:text="Introduction IntroductionIntroductionIntroductionIntroductionIntroduction" />
+
+    <TextView
+        android:id="@+id/subtitle"
+        style="@style/ListItemTitle2White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintTop_toBottomOf="@+id/searchObjectTitle"
+        tools:text="Gallery 201" />
+
+
+    <ImageButton
+        android:id="@+id/playCurrent"
+        android:layout_width="@dimen/bottomAudioControlIconSize"
+        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_play"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image" />
+
+    <ImageButton
+        android:id="@+id/pauseCurrent"
+        android:layout_width="@dimen/bottomAudioControlIconSize"
+        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_pause"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="playCurrent,pauseCurrent"
+        tools:ignore="MissingConstraints" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marginSixtyFour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewPagerIndicator" />
+
+</android.support.constraint.ConstraintLayout>
