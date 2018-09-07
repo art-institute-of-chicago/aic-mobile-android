@@ -3,8 +3,24 @@
     package="edu.artic.audio">
 
     <application>
+        <!--
+
+        This 'AudioActivity' is marked as singleTop so that
+        NarrowAudioPlayerFragment (in the 'media_ui' module)
+        can always use the same deep link logic.
+
+        When there's a NarrowAudioPlayerFragment in the
+        AudioActivity layout, this'll turn taps on that
+        fragment from '::startActivity' calls into
+        '::onNewIntent' ones. ::onNewIntent is much easier to
+        hook into the navigation graph correctly. As an added
+        bonus we avoid the need for code to make backstack
+        events work the way we want them to.
+
+        -->
         <activity
             android:name=".AudioActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.CustomToolbar.AudioTheme">
 
             <intent-filter>
