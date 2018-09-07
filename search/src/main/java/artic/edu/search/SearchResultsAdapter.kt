@@ -2,9 +2,11 @@ package artic.edu.search
 
 import android.view.View
 import com.fuzz.rx.bindTo
+import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
 
 class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellViewModel>() {
@@ -12,7 +14,9 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
     override fun View.onBindView(item: SearchResultBaseCellViewModel, position: Int) {
         when (item) {
             is SearchResultHeaderCellViewModel -> {
-
+                item.text
+                        .bindToMain(title.text())
+                        .disposedBy(item.viewDisposeBag)
             }
             is SearchResultArtworkCellViewModel -> {
 
@@ -21,7 +25,6 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
 
             }
             is SearchResultTourCellViewModel -> {
-
             }
             is SearchResultTextCellViewModel -> {
                 item.text
