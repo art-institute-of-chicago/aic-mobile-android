@@ -83,8 +83,8 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
 
         // Set up the default language selection.
         known.map {
-            // TODO: we'll need to modify this to account for the current Tour language
-            languageSelector.selectFrom(it)
+            // TODO: inject 'edu.artic.map.carousel.TourProgressManager', use that state as boolean
+            languageSelector.selectFrom(it, true)
         }.bindTo(chosenAudioModel)
                 .disposedBy(disposeBag)
 
