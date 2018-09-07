@@ -26,4 +26,22 @@ class SearchResultsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter
     override fun getCount(): Int {
         return 4
     }
+
+    ;
+    override fun getPageTitle(position: Int): CharSequence? {
+        return when(position) {
+            1 -> {
+                "Artworks"
+            }
+            2 -> {
+                "Tours"
+            }
+            3 -> {
+                "Exhibitions"
+            }
+            else -> {
+                "Suggested"
+            }
+        }
+    }
 }
