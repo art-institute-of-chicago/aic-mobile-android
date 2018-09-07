@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.FragmentManager
 import edu.artic.base.utils.disableShiftMode
+import edu.artic.base.utils.preventReselection
 import edu.artic.media.ui.NarrowAudioPlayerFragment
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
@@ -41,6 +42,7 @@ class AudioActivity : BaseActivity() {
         bottomNavigation.apply {
             disableShiftMode(R.color.audio_menu_color_list)
             selectedItemId = R.id.action_audio
+            preventReselection()
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
     }
