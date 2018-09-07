@@ -13,11 +13,20 @@ class SearchResultTextCellViewModel(text: String) : SearchResultBaseCellViewMode
 class SearchResultEmptyCellViewModel : SearchResultBaseCellViewModel()
 
 class SearchResultHeaderCellViewModel(text: String) : SearchResultBaseCellViewModel() {
-    val text : Subject<String> = BehaviorSubject.createDefault(text)
+    val text: Subject<String> = BehaviorSubject.createDefault(text)
 }
 
-class SearchResultArtworkCellViewModel : SearchResultBaseCellViewModel(hasDivider = true)
+open class SearchResultBaseListItemViewModel(isHeadphonesVisisble: Boolean = false)
+    : SearchResultBaseCellViewModel(hasDivider = true) {
+    val imageUrl: Subject<String> = BehaviorSubject.create()
+    val itemTitle: Subject<String> = BehaviorSubject.create()
+    val itemSubTitle: Subject<String> = BehaviorSubject.create()
+    val isHeadphonesVisisble: Subject<Boolean> = BehaviorSubject.createDefault(isHeadphonesVisisble)
+}
 
-class SearchResultExhibitionCellViewModel : SearchResultBaseCellViewModel(hasDivider = true)
+class SearchResultArtworkCellViewModel
+    : SearchResultBaseListItemViewModel(isHeadphonesVisisble = true)
 
-class SearchResultTourCellViewModel : SearchResultBaseCellViewModel(hasDivider = true)
+class SearchResultExhibitionCellViewModel : SearchResultBaseListItemViewModel()
+
+class SearchResultTourCellViewModel : SearchResultBaseListItemViewModel()
