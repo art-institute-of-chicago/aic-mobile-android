@@ -8,6 +8,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import kotlinx.android.synthetic.main.layout_cell_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_search_list_item.view.*
 import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
@@ -23,6 +24,11 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
                         .disposedBy(item.viewDisposeBag)
             }
 
+            is SearchResultOnMapHeaderCellViewModel -> {
+                item.text
+                        .bindToMain(headerText.text())
+                        .disposedBy(item.viewDisposeBag)
+            }
             is SearchResultBaseListItemViewModel -> {
                 item.imageUrl
                         .subscribe {
@@ -30,7 +36,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
                                     .load(it)
                                     .into(image)
                         }.disposedBy(item.viewDisposeBag)
-                item.isHeadphonesVisisble
+                item.isHeadphonesVisible
                         .bindToMain(headphonesIcon.visibility())
                         .disposedBy(item.viewDisposeBag)
 
@@ -67,9 +73,8 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
         val item = getItem(position)
         return when (item) {
             is SearchResultHeaderCellViewModel -> R.layout.layout_cell_result_header
-            is SearchResultArtworkCellViewModel -> R.layout.layout_cell_search_list_item
-            is SearchResultExhibitionCellViewModel -> R.layout.layout_cell_search_list_item
-            is SearchResultTourCellViewModel -> R.layout.layout_cell_search_list_item
+            is SearchResultOnMapHeaderCellViewModel -> R.layout.layout_cell_header
+            is SearchResultBaseListItemViewModel -> R.layout.layout_cell_search_list_item
             is SearchResultTextCellViewModel -> R.layout.layout_cell_suggested_keyword
             is SearchResultEmptyCellViewModel -> 0
             else -> R.layout.layout_cell_suggested_map_object

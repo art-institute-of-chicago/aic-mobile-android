@@ -1,6 +1,7 @@
 package artic.edu.search
 
 import com.fuzz.rx.bindTo
+import edu.artic.db.models.ArticExhibition
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
@@ -35,7 +36,20 @@ class SearchResultsManager(private val searchService: SearchServiceProvider) {
                             it,
                             emptyList(),
                             emptyList(),
-                            emptyList()
+                            listOf(
+                                    ArticExhibition(
+                                            "",
+                                            org.threeten.bp.ZonedDateTime.now(),
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            0,
+                                            org.threeten.bp.ZonedDateTime.now(),
+                                            "Test title",
+                                            0
+                                    )
+                            )
                     )
                 }.bindTo(currentSearchResults)
     }
