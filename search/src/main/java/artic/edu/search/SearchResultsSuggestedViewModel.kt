@@ -71,11 +71,11 @@ class SearchResultsSuggestedViewModel @Inject constructor(private val manager: S
 
                     cellList.addAll(result.suggestions.map { SearchResultTextCellViewModel(it) })
                     if (result.artworks.isNotEmpty()) {
-                        //TODO: add header
+                        cellList.add(SearchResultHeaderCellViewModel("Artwork"))
                         cellList.addAll(
                                 result.artworks
                                         .take(3)
-                                        .map { SearchResultArtworkCellViewModel() }
+                                        .map { SearchResultArtworkCellViewModel(it) }
                         )
                     }
                     if (result.exhibitions.isNotEmpty()) {
@@ -88,11 +88,11 @@ class SearchResultsSuggestedViewModel @Inject constructor(private val manager: S
                     }
 
                     if (result.tours.isNotEmpty()) {
-                        //TODO: add header
+                        cellList.add(SearchResultHeaderCellViewModel("Tours"))
                         cellList.addAll(
-                                result.exhibitions
+                                result.tours
                                         .take(3)
-                                        .map { SearchResultExhibitionCellViewModel(it) }
+                                        .map { SearchResultTourCellViewModel(it) }
                         )
                     }
 

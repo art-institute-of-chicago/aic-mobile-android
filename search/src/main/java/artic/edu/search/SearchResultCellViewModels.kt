@@ -2,6 +2,7 @@ package artic.edu.search
 
 import android.support.annotation.DrawableRes
 import edu.artic.db.models.ArticExhibition
+import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModel
@@ -32,8 +33,15 @@ open class SearchResultBaseListItemViewModel(isHeadphonesVisisble: Boolean = fal
     val isHeadphonesVisible: Subject<Boolean> = BehaviorSubject.createDefault(isHeadphonesVisisble)
 }
 
-class SearchResultArtworkCellViewModel
-    : SearchResultBaseListItemViewModel(isHeadphonesVisisble = true)
+class SearchResultArtworkCellViewModel(val articObject: ArticObject)
+    : SearchResultBaseListItemViewModel(isHeadphonesVisisble = true) {
+
+    init {
+        imageUrl.onNext(articObject.thumbUrl.orEmpty())
+        itemTitle.onNext(articObject.title)
+        itemSubTitle.onNext(articObject.galleryLocation.orEmpty())
+    }
+}
 
 class SearchResultExhibitionCellViewModel (val articExhibition: ArticExhibition) : SearchResultBaseListItemViewModel() {
     init {

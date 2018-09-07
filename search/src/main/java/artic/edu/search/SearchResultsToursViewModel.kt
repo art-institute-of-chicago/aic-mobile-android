@@ -1,5 +1,6 @@
 package artic.edu.search
 
+import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import javax.inject.Inject
 
@@ -13,7 +14,7 @@ class SearchResultsToursViewModel @Inject constructor(
                     //TODO; add empty error message
                     result.tours.map { SearchResultTourCellViewModel(it) }
                 }
-                .subscribe { }
+                .bindTo(cells)
                 .disposedBy(disposeBag)
     }
 }
