@@ -2,18 +2,25 @@ package artic.edu.search
 
 import android.view.View
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
 import kotlinx.android.synthetic.main.layout_cell_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_search_list_item.view.*
 import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
+import kotlinx.android.synthetic.main.layout_cell_suggested_map_object.view.*
 
 class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellViewModel>() {
+
+    companion object {
+        const val MAX_ARTWORKS_PER_ROW = 5
+    }
 
     override fun View.onBindView(item: SearchResultBaseCellViewModel, position: Int) {
         when (item) {
@@ -63,6 +70,23 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
                         .bindTo(suggestedKeyword.text())
                         .disposedBy(item.viewDisposeBag)
             }
+            is SearchResultCircularCellViewModel -> {
+                item.imageUrl
+                        .subscribe {
+                            Glide.with(this)
+                                    .load(it)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(circularImage)
+                        }
+                        .disposedBy(item.viewDisposeBag)
+            }
+            is SearchResultAmenitiesCellViewModel -> {
+                if (item.value != 0) {
+                    icon.setImageResource(item.value)
+                } else {
+                    icon.setImageDrawable(null)
+                }
+            }
             else -> {
 
             }
@@ -77,8 +101,18 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
             is SearchResultBaseListItemViewModel -> R.layout.layout_cell_search_list_item
             is SearchResultTextCellViewModel -> R.layout.layout_cell_suggested_keyword
             is SearchResultEmptyCellViewModel -> 0
+            is SearchResultAmenitiesCellViewModel -> R.layout.layout_cell_amenity
             else -> R.layout.layout_cell_suggested_map_object
         }
     }
 
+
+    fun getSpanCount(position: Int): Int {
+        val cell = getItemOrNull(position)
+        return if (cell is SearchResultCircularCellViewModel || cell is SearchResultAmenitiesCellViewModel) {
+            1
+        } else {
+            SearchResultsAdapter.MAX_ARTWORKS_PER_ROW
+        }
+    }
 }
