@@ -14,9 +14,8 @@ import javax.inject.Inject
 class SearchResultsSuggestedViewModel @Inject constructor(private val manager: SearchResultsManager,
                                                           private val searchSuggestionsDao: ArticSearchObjectDao,
                                                           private val objectDao: ArticObjectDao)
-    : BaseViewModel() {
+    : SearchResultsBaseViewModel() {
 
-    val cells: Subject<List<SearchResultBaseCellViewModel>> = BehaviorSubject.create()
     private val dynamicCells: Subject<List<SearchResultBaseCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchResultCircularCellViewModel>> = BehaviorSubject.create()
 
