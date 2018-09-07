@@ -3,6 +3,7 @@ package edu.artic.ui
 import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.LayoutRes
+import android.support.annotation.UiThread
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -92,6 +93,7 @@ abstract class BaseFragment : Fragment() {
 
     protected open fun hasHomeAsUpEnabled(): Boolean = true
 
+    @UiThread
     private fun updateToolbar(view: View) {
         toolbar = view.findViewById(R.id.toolbar)
         if (toolbar != null) {
@@ -112,6 +114,11 @@ abstract class BaseFragment : Fragment() {
             setExpandedTitleTypeface(toolbarTextTypeFace)
         }
 
+        updateWindowProperties()
+    }
+
+    @UiThread
+    private fun updateWindowProperties() {
         if (overrideStatusBarColor) {
             if (hasTransparentStatusBar()) {
                 requireActivity().setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
