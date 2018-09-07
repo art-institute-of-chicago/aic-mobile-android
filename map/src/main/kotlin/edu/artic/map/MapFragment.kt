@@ -66,6 +66,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
     private var leaveTourDialog: AlertDialog? = null
+
+    private var searchObject: ArticObject?
+        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_SEARCH_OBJECT)
+        set(value) {
+            requireActivity().intent?.putExtra(MapActivity.ARG_SEARCH_OBJECT, value)
+        }
+
+    private var searchAmenityType: String?
+        get() = requireActivity().intent?.extras?.getString(MapActivity.ARG_SEARCH_AMENITY_TYPE)
+        set(value) {
+            requireActivity().intent?.putExtra(MapActivity.ARG_SEARCH_AMENITY_TYPE, value)
+        }
+
     private var tour: ArticTour?
         get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
         set(value) {
