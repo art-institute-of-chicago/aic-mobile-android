@@ -37,7 +37,15 @@ abstract class BaseFragment : Fragment() {
     val baseActivity: BaseActivity
         get() = activity as BaseActivity
 
+    /**
+     * # Lifecycle: `init{}` -> [onDestroyView]
+     *
+     * Do not add navigation observers to this; those belong in [navigationDisposeBag].
+     */
     val disposeBag = DisposeBag()
+    /**
+     * # Lifecycle: [onResume] -> [onPause]
+     */
     val navigationDisposeBag = DisposeBag()
 
     protected fun requireView() = view
