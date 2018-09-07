@@ -376,7 +376,8 @@ class AudioPlayerService : DaggerService() {
                 pausePlayer()
                 playPlayer(it, alternative)
             } else {
-                currentTrack.onNext(alternative)
+                playPlayer(it, alternative)
+                pausePlayer()
             }
         }
     }
