@@ -41,6 +41,7 @@ sealed class EventCategoryName(val eventCategoryName: String) {
     object Language : EventCategoryName("language")
     object PlayAudio : EventCategoryName("play_audio")
     object PlayBack : EventCategoryName("playback")
+    object Tour : EventCategoryName("tour")
 }
 
 
