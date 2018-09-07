@@ -55,16 +55,18 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
                 .bindToMain(subtitle.text())
                 .disposedBy(disposeBag)
 
-        viewModel.image.subscribe {
-            Glide.with(this)
-                    .load(it)
-                    .into(image)
-        }.disposedBy(disposeBag)
+        viewModel.image
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Glide.with(this)
+                            .load(it)
+                            .into(image)
+                }.disposedBy(disposeBag)
 
         close.clicks()
                 .defaultThrottle()
                 .withLatestFrom(audioService)
-                .subscribeBy {(_,service)->
+                .subscribeBy { (_, service) ->
                     viewModel.leaveSearchMode()
                     service.stopPlayer()
                 }.disposedBy(disposeBag)
