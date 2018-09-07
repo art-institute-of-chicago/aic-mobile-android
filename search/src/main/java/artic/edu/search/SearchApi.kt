@@ -1,10 +1,9 @@
 package artic.edu.search
 
 import com.jakewharton.retrofit2.adapter.rxjava2.Result
+import edu.artic.db.models.*
 import io.reactivex.Observable
-import retrofit2.http.GET
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 
 /**
@@ -27,4 +26,22 @@ interface SearchApi {
             @Query("q") searchQuery: String,
             @Query("resources") resources: String = "artworks,tours,exhibitions,artists"
     ): Observable<Result<List<String>>>
+
+    @POST()
+    fun loadMatchingArtworkContent(
+            @Url multiSearchUrl: String,
+            @Body queryContent: MutableList<MutableMap<String, Any>>
+    ): Observable<Result<List<ApiSearchResultRawA>>>
+
+    @POST()
+    fun loadMatchingTourContent(
+            @Url multiSearchUrl: String,
+            @Body queryContent: MutableList<MutableMap<String, Any>>
+    ): Observable<Result<List<ApiSearchResultRawT>>>
+
+    @POST()
+    fun loadMatchingExhibitionContent(
+            @Url multiSearchUrl: String,
+            @Body queryContent: MutableList<MutableMap<String, Any>>
+    ): Observable<Result<List<ApiSearchResultRawE>>>
 }
