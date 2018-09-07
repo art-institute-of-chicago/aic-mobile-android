@@ -7,6 +7,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
@@ -28,6 +32,7 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
                                        private val languageSelector: LanguageSelector,
+                                       val analyticsTracker: AnalyticsTracker,
                                        val tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
@@ -41,7 +46,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
-    val switchTourRequest: Subject<Pair<ArticTour,ArticTour>> = PublishSubject.create()
+    val switchTourRequest: Subject<Pair<ArticTour, ArticTour>> = PublishSubject.create()
 
     val distinctFloor: Observable<Int>
         get() = floor.distinctUntilChanged()
@@ -63,7 +68,10 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         displayMode
                 .distinctUntilChanged()
                 .filterFlatMap({ it is MapDisplayMode.Tour }, { (it as MapDisplayMode.Tour).tour })
-                .doOnNext { floorChangedTo(it.floorAsInt) }
+                .doOnNext {
+                    floorChangedTo(it.floorAsInt)
+                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourStarted, it.title)
+                }
                 .mapOptional()
                 .bindTo(tourProgressManager.selectedTour)
                 .disposedBy(disposeBag)
@@ -186,6 +194,12 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     }
 
     fun leaveTour() {
+        tourProgressManager.selectedTour
+                .filterFlatMap({ it.value != null }, { it.value!! })
+                .take(1)
+                .subscribeBy {
+                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourLeft, it.title)
+                }.disposedBy(disposeBag)
         /**clear tour locale**/
         languageSelector.setTourLanguage(Locale(""))
         tourProgressManager.selectedTour.onNext(Optional(null))
