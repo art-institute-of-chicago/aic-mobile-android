@@ -13,8 +13,13 @@ class SearchResultsExhibitionsViewModel @Inject constructor(
 
     init {
         searchManager.currentSearchResults
-                .map {
-                    it.exhibitions.map { SearchResultExhibitionCellViewModel(it) }
+                .map { it .exhibitions}
+                .map { list ->
+                    if(list.isEmpty()) {
+                        listOf(SearchResultEmptyCellViewModel())
+                    } else {
+                        list.map { SearchResultExhibitionCellViewModel(it) }
+                    }
                 }
                 .bindTo(cells)
                 .disposedBy(disposeBag)

@@ -10,8 +10,13 @@ class SearchResultsArtworkViewModel @Inject constructor(
 
     init {
         searchManager.currentSearchResults
-                .map { result ->
-                    result.artworks.map { SearchResultArtworkCellViewModel(it) }
+                .map { it.artworks }
+                .map { list ->
+                    if (list.isEmpty()) {
+                        listOf(SearchResultEmptyCellViewModel())
+                    } else {
+                        list.map { SearchResultArtworkCellViewModel(it) }
+                    }
                 }
                 .bindTo(cells)
                 .disposedBy(disposeBag)

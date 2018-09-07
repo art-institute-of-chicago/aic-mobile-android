@@ -100,7 +100,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
             is SearchResultOnMapHeaderCellViewModel -> R.layout.layout_cell_header
             is SearchResultBaseListItemViewModel -> R.layout.layout_cell_search_list_item
             is SearchResultTextCellViewModel -> R.layout.layout_cell_suggested_keyword
-            is SearchResultEmptyCellViewModel -> 0
+            is SearchResultEmptyCellViewModel -> R.layout.layout_cell_empty
             is SearchResultAmenitiesCellViewModel -> R.layout.layout_cell_amenity
             else -> R.layout.layout_cell_suggested_map_object
         }

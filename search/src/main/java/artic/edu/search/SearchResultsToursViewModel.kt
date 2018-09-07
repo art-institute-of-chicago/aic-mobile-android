@@ -10,9 +10,13 @@ class SearchResultsToursViewModel @Inject constructor(
 
     init {
         searchManager.currentSearchResults
+                .map{it.tours}
                 .map { result ->
-                    //TODO; add empty error message
-                    result.tours.map { SearchResultTourCellViewModel(it) }
+                    if(result.isEmpty()) {
+                        listOf(SearchResultEmptyCellViewModel())
+                    } else{
+                        result.map { SearchResultTourCellViewModel(it) }
+                    }
                 }
                 .bindTo(cells)
                 .disposedBy(disposeBag)
