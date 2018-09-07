@@ -64,6 +64,8 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
     override fun onResume() {
         super.onResume()
         if (isViewJustCreated) {
+            // Without this assignment, the screen will flicker (whether it's noticeable depends on the subclass)
+            isViewJustCreated = false
             setupBindings(viewModel)
         }
         setupNavigationBindings(viewModel)
@@ -102,5 +104,10 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
 
     protected open fun setupBindings(viewModel: TViewModel) = Unit
 
+    /**
+     * # Remember to dispose your nav bindings with [navigationDisposeBag], not [disposeBag].
+     *
+     * @see NavViewViewModel
+     */
     protected open fun setupNavigationBindings(viewModel: TViewModel) = Unit
 }
