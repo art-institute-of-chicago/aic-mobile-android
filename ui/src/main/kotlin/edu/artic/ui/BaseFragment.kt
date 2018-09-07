@@ -69,11 +69,14 @@ abstract class BaseFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        // We can wait to update the toolbar text...
         requireView().post {
             view?.let {
                 updateToolbar(it)
             }
         }
+        // ...but we need to set status bar color RIGHT NOW (c.f. 'updateWindowProperties' docs)
+        updateWindowProperties()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -114,9 +117,46 @@ abstract class BaseFragment : Fragment() {
             setExpandedTitleTypeface(toolbarTextTypeFace)
         }
 
-        updateWindowProperties()
     }
 
+    /**
+     * # Usage
+     *
+     * Call this at any point after [onCreate] to change the appearance of the host's
+     * [status bar][Window.setStatusBarColor].
+     *
+     * Does nothing if [overrideStatusBarColor] returns false.
+     *
+     * # Why is the fragment drawing partially _under_ the nav buttons?
+     *
+     * Simple answer: because you [posted][View.post] this method call instead of calling
+     * inline in [BaseActivity.onResumeFragments] or [onResume].
+     *
+     * # But it's only doing that sometimes. What's wrong with posting the method call?
+     *
+     * If this is called on _just_ the right frame after [onResume] returns, our host's
+     * DecorView might miscalculate the window inset. You can see this easily in the
+     * SDK 26 emulator image by [posting a call][getView] to this method in [onResume]
+     * and then rotating the device.
+     *
+     * I wasn't able to track down the precise cause, but it seems that it's strongly
+     * related to the inset calculations in
+     *
+     * `com.android.internal.policy.DecorView`'s `updateColorViews` function.
+     *
+     *
+     * The insets are set much earlier, when [BaseActivity.setContentView] actually
+     * instantiates the `DecorView`. The call to `updateColorViews` triggered here
+     * by [assigning statusBarColor][Window.setStatusBarColor] passes along a null
+     * `WindowInsets` object, which means that cached inset values are used for layout
+     * instead of new ones.
+     *
+     *
+     * The only way I found to recompute the insets once you reach that state is to
+     * call [view.getRootView()][View.getRootView] [.forceLayout()][View.forceLayout]
+     * on the following frame. Of course, you can sidestep the whole issue by calling
+     * this sufficiently early in the fragment lifecycle. In [onResume], for example.
+     */
     @UiThread
     private fun updateWindowProperties() {
         if (overrideStatusBarColor) {
