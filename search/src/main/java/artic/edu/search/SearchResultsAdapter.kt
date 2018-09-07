@@ -37,11 +37,12 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
     override fun getLayoutResId(position: Int): Int {
         val item = getItem(position)
         return when (item) {
-            is SearchResultHeaderCellViewModel -> return 0
-            is SearchResultArtworkCellViewModel -> return 0
-            is SearchResultExhibitionCellViewModel -> return 0
-            is SearchResultTourCellViewModel -> return 0
+            is SearchResultHeaderCellViewModel -> R.layout.layout_cell_result_header
+            is SearchResultArtworkCellViewModel -> 0
+            is SearchResultExhibitionCellViewModel -> 0
+            is SearchResultTourCellViewModel -> 0
             is SearchResultTextCellViewModel -> R.layout.layout_cell_suggested_keyword
+            is SearchResultEmptyCellViewModel -> 0
             else -> R.layout.layout_cell_suggested_map_object
         }
     }
