@@ -6,15 +6,17 @@ import javax.inject.Inject
 
 class SearchResultsToursViewModel @Inject constructor(
         searchManager: SearchResultsManager
-) : SearchResultsBaseViewModel() {
+) : SearchResultsBaseViewModel<SearchResultsToursViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint
 
     init {
         searchManager.currentSearchResults
-                .map{it.tours}
+                .map { it.tours }
                 .map { result ->
-                    if(result.isEmpty()) {
+                    if (result.isEmpty()) {
                         listOf(SearchResultEmptyCellViewModel())
-                    } else{
+                    } else {
                         result.map { SearchResultTourCellViewModel(it) }
                     }
                 }
