@@ -8,6 +8,6 @@ import javax.inject.Inject
 open class SearchBaseViewModel<NavEndpoint> @Inject constructor()
     : NavViewViewModel<NavEndpoint>() {
 
-    val cells: Subject<List<SearchResultBaseCellViewModel>> = BehaviorSubject.create()
+    val cells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
 
 }

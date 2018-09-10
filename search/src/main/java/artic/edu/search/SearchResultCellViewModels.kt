@@ -9,32 +9,32 @@ import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
-open class SearchResultBaseCellViewModel(var hasDivider: Boolean = false) : BaseViewModel()
+open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : BaseViewModel()
 
-class SearchResultTextCellViewModel(text: String) : SearchResultBaseCellViewModel() {
+class SearchTextCellViewModel(text: String) : SearchBaseCellViewModel() {
     val text: Subject<String> = BehaviorSubject.createDefault(text)
 }
 
-class SearchResultEmptyCellViewModel : SearchResultBaseCellViewModel()
+class SearchEmptyCellViewModel : SearchBaseCellViewModel()
 
-class SearchResultHeaderCellViewModel(text: String) : SearchResultBaseCellViewModel() {
+class SearchHeaderCellViewModel(text: String) : SearchBaseCellViewModel() {
     val text: Subject<String> = BehaviorSubject.createDefault(text)
 }
 
-class SearchResultTextHeaderViewModel(text: String) : SearchResultBaseCellViewModel() {
+class SearchTextHeaderViewModel(text: String) : SearchBaseCellViewModel() {
     val text: Subject<String> = BehaviorSubject.createDefault(text)
 }
 
-open class SearchResultBaseListItemViewModel(isHeadphonesVisisble: Boolean = false)
-    : SearchResultBaseCellViewModel(hasDivider = true) {
+open class SearchBaseListItemViewModel(isHeadphonesVisisble: Boolean = false)
+    : SearchBaseCellViewModel(hasDivider = true) {
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val itemTitle: Subject<String> = BehaviorSubject.create()
     val itemSubTitle: Subject<String> = BehaviorSubject.create()
     val isHeadphonesVisible: Subject<Boolean> = BehaviorSubject.createDefault(isHeadphonesVisisble)
 }
 
-class SearchResultArtworkCellViewModel(val articObject: ArticObject)
-    : SearchResultBaseListItemViewModel(isHeadphonesVisisble = true) {
+class SearchArtworkCellViewModel(val articObject: ArticObject)
+    : SearchBaseListItemViewModel(isHeadphonesVisisble = true) {
 
     init {
         imageUrl.onNext(articObject.thumbUrl.orEmpty())
@@ -43,14 +43,14 @@ class SearchResultArtworkCellViewModel(val articObject: ArticObject)
     }
 }
 
-class SearchResultExhibitionCellViewModel (val articExhibition: ArticExhibition) : SearchResultBaseListItemViewModel() {
+class SearchExhibitionCellViewModel (val articExhibition: ArticExhibition) : SearchBaseListItemViewModel() {
     init {
         imageUrl.onNext(articExhibition.legacy_image_mobile_url.orEmpty())
         itemTitle.onNext(articExhibition.title)
     }
 }
 
-class SearchResultTourCellViewModel(val articTour: ArticTour) : SearchResultBaseListItemViewModel() {
+class SearchTourCellViewModel(val articTour: ArticTour) : SearchBaseListItemViewModel() {
     init {
         imageUrl.onNext(articTour.thumbUrl.orEmpty())
         itemTitle.onNext(articTour.title)
@@ -60,7 +60,7 @@ class SearchResultTourCellViewModel(val articTour: ArticTour) : SearchResultBase
 /**
  * ViewModel for displaying the circular artwork image under "On the map" section.
  */
-class SearchResultCircularCellViewModel(val artWork: ArticObject?) : SearchResultBaseCellViewModel() {
+class SearchCircularCellViewModel(val artWork: ArticObject?) : SearchBaseCellViewModel() {
 
     val imageUrl: Subject<String> = BehaviorSubject.createDefault(
             artWork?.thumbnailFullPath?.asCDNUri().orEmpty()
@@ -70,7 +70,7 @@ class SearchResultCircularCellViewModel(val artWork: ArticObject?) : SearchResul
 /**
  * ViewModel for displaying the amenities icons
  */
-class SearchResultAmenitiesCellViewModel(@DrawableRes val value: Int) : SearchResultBaseCellViewModel()
+class SearchAmenitiesCellViewModel(@DrawableRes val value: Int) : SearchBaseCellViewModel()
 
 
 
@@ -82,4 +82,4 @@ class SearchResultAmenitiesCellViewModel(@DrawableRes val value: Int) : SearchRe
  *
  * ViewModel breaks the.
  */
-class RowPaddingViewModel2 : SearchResultBaseCellViewModel()
+class RowPaddingViewModel : SearchBaseCellViewModel()
