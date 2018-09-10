@@ -9,7 +9,6 @@ import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticObject
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModel
-import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -22,33 +21,32 @@ import javax.inject.Inject
  */
 class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao: ArticSearchObjectDao,
                                                             objectDao: ArticObjectDao
-) : NavViewViewModel<DefaultSearchSuggestionsViewModel.NavigationEndpoint>() {
+) : SearchResultsBaseViewModel<DefaultSearchSuggestionsViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         data class ArticObjectDetails(val articObject: ArticObject) : NavigationEndpoint()
     }
 
-    private val suggestedKeywords: Subject<List<TextCellViewModel>> = BehaviorSubject.create()
-    private val suggestedArtworks: Subject<List<CircularCellViewModel>> = BehaviorSubject.create()
-    val cells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
+    private val suggestedKeywords: Subject<List<SearchResultTextCellViewModel>> = BehaviorSubject.create()
+    private val suggestedArtworks: Subject<List<SearchResultCircularCellViewModel>> = BehaviorSubject.create()
 
-    private fun getAmenitiesViewModels(): List<SearchBaseCellViewModel> {
+    private fun getAmenitiesViewModels(): List<SearchResultBaseCellViewModel> {
         return listOf(
-                AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
-                AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
-                AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
-                AmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom))
+                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
+                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
+                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
+                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom))
     }
 
     init {
         searchSuggestionsDao.getDataObject()
                 .toObservable()
                 .map { suggestedSearchOptions ->
-                    val list = mutableListOf<TextCellViewModel>()
-                    suggestedSearchOptions.searchStrings.forEach { keyword ->
-                        list.add(TextCellViewModel(SearchViewComponent.SuggestedKeyword(keyword)))
-                    }
-                    return@map list
+                    suggestedSearchOptions
+                            .searchStrings
+                            .map { keyword ->
+                                SearchResultTextCellViewModel(keyword)
+                            }
                 }
                 .bindTo(suggestedKeywords)
                 .disposedBy(disposeBag)
@@ -60,24 +58,22 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                     objectDao.getObjectsByIdList(idsList).toObservable()
                 }
                 .map { objects ->
-                    val list = mutableListOf<CircularCellViewModel>()
-                    objects.forEach { artwork ->
-                        list.add(CircularCellViewModel(SearchViewComponent.Artwork(artwork)))
+                    objects.map { artwork ->
+                        SearchResultCircularCellViewModel(artwork)
                     }
-                    return@map list
                 }
                 .bindTo(suggestedArtworks)
                 .disposedBy(disposeBag)
 
         Observables.combineLatest(suggestedArtworks, suggestedKeywords)
         { artworks, keywords ->
-            mutableListOf<SearchBaseCellViewModel>()
+            mutableListOf<SearchResultBaseCellViewModel>()
                     .apply {
-                        add(0, HeaderCellViewModel(SearchViewComponent.Header(R.string.suggested)))
+                        add(0, SearchResultTextHeaderViewModel("Suggested")) //TODO: use localizer
                         addAll(keywords)
-                        add(HeaderCellViewModel(SearchViewComponent.Header(R.string.on_the_map)))
+                        add(SearchResultTextHeaderViewModel("On the Map"))
                         addAll(getAmenitiesViewModels())
-                        add(DividerViewModel())
+                        add(RowPaddingViewModel2())
                         addAll(artworks)
                     }
         }
@@ -86,10 +82,10 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
 
     }
 
-    fun onClickItem(pos: Int, vm: SearchBaseCellViewModel) {
+    fun onClickItem(pos: Int, vm: SearchResultBaseCellViewModel) {
         when (vm) {
-            is CircularCellViewModel -> {
-                vm.artWork?.value?.let { articObject ->
+            is SearchResultCircularCellViewModel -> {
+                vm.artWork?.let { articObject ->
                     navigateTo.onNext(
                             Navigate.Forward(
                                     NavigationEndpoint.ArticObjectDetails(articObject)
@@ -129,11 +125,11 @@ class HeaderCellViewModel(item: SearchViewComponent.Header) : SearchBaseCellView
  * Adds an empty row in the RecyclerView.
  *
  * Both Map Amenities and Artworks requires span size of 1, and they appear next to each other.
- * In order to display these in different rows, [DividerViewModel] is added in between them to break the row.
+ * In order to display these in different rows, [RowPaddingViewModel] is added in between them to break the row.
  *
  * ViewModel breaks the.
  */
-class DividerViewModel : SearchBaseCellViewModel()
+class RowPaddingViewModel : SearchBaseCellViewModel()
 
 /**
  * ViewModel for displaying the amenities icons
