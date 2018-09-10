@@ -156,4 +156,16 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun filterSearchSuggestions(searchTerm: String, list: List<String>): List<SearchBaseCellViewModel> {
         return list.take(3).map { SearchTextCellViewModel(it, searchTerm) }
     }
+
+    fun onClickCell(pos: Int, vm: SearchBaseCellViewModel) {
+        when(vm) {
+            is SearchTextCellViewModel -> {
+                analyticsTracker.reportEvent(
+                        ScreenCategoryName.Search,
+                        AnalyticsAction.searchAutocomplete,
+                        vm.textString
+                )
+            }
+        }
+    }
 }
