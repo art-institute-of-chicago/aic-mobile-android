@@ -58,7 +58,7 @@ data class ArticObject(
         @Json(name = "audio_transcript") val audioTranscript: String? = null,
         @Json(name = "object_selector_number") val objectSelectorNumber: String? = null,
         @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?> = listOf(),
-
+        @Json(name = "is_on_view") var isOnView: Boolean? = true,
         // manually populated via DB save.
         var floor: Int = Int.MIN_VALUE
 ) : Parcelable, Playable {

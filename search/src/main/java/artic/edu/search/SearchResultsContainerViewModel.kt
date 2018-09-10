@@ -4,7 +4,7 @@ import edu.artic.viewmodel.NavViewViewModel
 import javax.inject.Inject
 
 //Manager
-class SearchResultsViewModel @Inject constructor() : NavViewViewModel<SearchResultsViewModel.NavigationEndpoint>() {
+class SearchResultsContainerViewModel @Inject constructor() : NavViewViewModel<SearchResultsContainerViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
 

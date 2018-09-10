@@ -1,6 +1,7 @@
 package artic.edu.search
 
 import com.jakewharton.retrofit2.adapter.rxjava2.Result
+import edu.artic.db.models.ApiSearchResult
 import io.reactivex.Observable
 
 
@@ -19,4 +20,5 @@ interface SearchServiceProvider {
      */
     fun getSuggestions(searchQuery: String): Observable<Result<List<String>>>
 
+    fun loadAllMatchingContent(searchQuery: String): Observable<ApiSearchResult>
 }

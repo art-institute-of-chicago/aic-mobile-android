@@ -8,6 +8,8 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.db.ApiModule
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.ArticTourDao
 import edu.artic.viewmodel.ViewModelKey
 import retrofit2.Retrofit
 import javax.inject.Named
@@ -36,13 +38,28 @@ abstract class SearchModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SearchResultsViewModel::class)
-    abstract fun searchResultsViewModel(searchResultsViewModel: SearchResultsViewModel): ViewModel
+    @ViewModelKey(SearchResultsContainerViewModel::class)
+    abstract fun searchResultsViewModel(searchResultsContainerViewModel: SearchResultsContainerViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(SearchResultsSuggestedViewModel::class)
-    abstract fun searchResultsSuggestedViewModel(searchResultsSuggestedViewModel: SearchResultsSuggestedViewModel): ViewModel
+    @ViewModelKey(SearchExhibitionsViewModel::class)
+    abstract fun searchResultsExhibitionsViewModel(searchResultsExhibitionsViewModel: SearchExhibitionsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchArtworkViewModel::class)
+    abstract fun searchResultsArtworkViewModel(searchResultsArtworkViewModel: SearchArtworkViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchToursViewModel::class)
+    abstract fun searchResultsToursViewModel(searchResultsToursViewModel: SearchToursViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchSuggestedViewModel::class)
+    abstract fun searchResultsSuggestedViewModel(searchResultsSuggestedViewModel: SearchSuggestedViewModel): ViewModel
 
     @get:ContributesAndroidInjector
     abstract val splashActivity: SearchActivity
@@ -57,18 +74,30 @@ abstract class SearchModule {
     abstract val searchAudioDetailFragment: SearchAudioDetailFragment
 
     @get:ContributesAndroidInjector
-    abstract val searchResultsFragment: SearchResultsFragment
+    abstract val searchResultsContainerFragment: SearchResultsContainerFragment
 
     @get:ContributesAndroidInjector
-    abstract val searchResultsSuggestedFragment: SearchResultsSuggestedFragment
+    abstract val searchResultsSuggestedFragment: SearchSuggestedFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchResultsExhibitionsFragment: SearchExhibitionsFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchResultsArtworkFragment: SearchArtworkFragment
+
+    @get:ContributesAndroidInjector
+    abstract val searchResultsToursFragment: SearchToursFragment
 
     @Module
     companion object {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideSearchManager(searchService: SearchServiceProvider)
-                : SearchResultsManager = SearchResultsManager(searchService)
+        fun provideSearchManager(
+                searchService: SearchServiceProvider,
+                tourDao: ArticTourDao,
+                articObjectDao: ArticObjectDao
+        ): SearchResultsManager = SearchResultsManager(searchService, tourDao, articObjectDao)
 
         /**
          * NB: We reuse the [ApiModule]'s Retrofit here.

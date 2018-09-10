@@ -8,6 +8,9 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ArticSearchObject(
         @Json(name = "search_strings") val searchStrings: Map<String, String>,
+        /**
+         * This (I think?) is a list of [ArticObject.nid] values.
+         */
         @Json(name = "search_objects") val searchObjects: List<Int>
 )
 
