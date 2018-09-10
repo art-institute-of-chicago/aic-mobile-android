@@ -4,6 +4,9 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
+import edu.artic.db.models.ArticExhibition
+import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticTour
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -68,39 +71,63 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun setupResultsBind() {
         manager.currentSearchResults
                 .map { result ->
-                    val cellList = mutableListOf<SearchBaseCellViewModel>()
-
-                    cellList.addAll(result.suggestions.map { SearchTextCellViewModel(it) })
-                    if (result.artworks.isNotEmpty()) {
-                        cellList.add(SearchHeaderCellViewModel("Artwork"))
-                        cellList.addAll(
-                                result.artworks
+                    mutableListOf<SearchBaseCellViewModel>()
+                            .apply {
+                                addAll(result.suggestions
                                         .take(3)
-                                        .map { SearchArtworkCellViewModel(it) }
-                        )
-                    }
-                    if (result.exhibitions.isNotEmpty()) {
-                        cellList.add(SearchHeaderCellViewModel("Exhibitions"))
-                        cellList.addAll(
-                                result.exhibitions
-                                        .take(3)
-                                        .map { SearchExhibitionCellViewModel(it) }
-                        )
-                    }
+                                        .map { SearchTextCellViewModel(it) }
+                                )
 
-                    if (result.tours.isNotEmpty()) {
-                        cellList.add(SearchHeaderCellViewModel("Tours"))
-                        cellList.addAll(
-                                result.tours
-                                        .take(3)
-                                        .map { SearchTourCellViewModel(it) }
-                        )
-                    }
+                                addAll(filterArtworkForViewModel(result.artworks))
 
-                    return@map cellList
+                                addAll(filterToursForViewModel(result.tours))
+
+                                addAll(filterExhibitionsForViewModel(result.exhibitions))
+                            }
+
 
                 }.bindTo(dynamicCells)
                 .disposedBy(disposeBag)
+    }
+
+    private fun filterArtworkForViewModel(artworkList: List<ArticObject>): List<SearchBaseCellViewModel> {
+        val cellList = mutableListOf<SearchBaseCellViewModel>()
+        if (artworkList.isNotEmpty()) {
+            cellList.add(SearchHeaderCellViewModel("Artwork")) //TODO: use localizer
+            cellList.addAll(
+                    artworkList
+                            .take(3)
+                            .map { SearchArtworkCellViewModel(it) }
+            )
+        }
+        return cellList
+    }
+
+
+    private fun filterExhibitionsForViewModel(list: List<ArticExhibition>): List<SearchBaseCellViewModel> {
+        val cellList = mutableListOf<SearchBaseCellViewModel>()
+        if (list.isNotEmpty()) {
+            cellList.add(SearchHeaderCellViewModel("Exhibitions")) // TODO: use localizer
+            cellList.addAll(
+                    list
+                            .take(3)
+                            .map { SearchExhibitionCellViewModel(it) }
+            )
+        }
+        return cellList
+    }
+
+    private fun filterToursForViewModel(list: List<ArticTour>): List<SearchBaseCellViewModel> {
+        val cellList = mutableListOf<SearchBaseCellViewModel>()
+        if (list.isNotEmpty()) {
+            cellList.add(SearchHeaderCellViewModel("Tours")) // TODO: use localizer
+            cellList.addAll(
+                    list
+                            .take(3)
+                            .map { SearchTourCellViewModel(it) }
+            )
+        }
+        return cellList
     }
 
 }
