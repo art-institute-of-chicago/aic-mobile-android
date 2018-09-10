@@ -1,5 +1,10 @@
 package artic.edu.search
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -68,6 +73,21 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
             }
             is SearchTextCellViewModel -> {
                 item.text
+                        .map {(text, highlightedText) ->
+                            if(highlightedText.isEmpty()) {
+                                return@map text
+                            } else {
+                                val startIndex = text.indexOf(string = highlightedText, ignoreCase = true)
+                                val string = SpannableString(text)
+
+                                string.setSpan(
+                                        StyleSpan(Typeface.BOLD),
+                                        startIndex,
+                                        startIndex + highlightedText.length,
+                                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                                return@map string
+                            }
+                        }
                         .bindTo(suggestedKeyword.text())
                         .disposedBy(item.viewDisposeBag)
             }

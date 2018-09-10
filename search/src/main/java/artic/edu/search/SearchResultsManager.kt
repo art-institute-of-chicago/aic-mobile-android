@@ -23,7 +23,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
 ) {
 
     val currentSearchResults: Subject<ArticSearchResult> = BehaviorSubject.create()
-    val currentSearchText: Subject<String> = BehaviorSubject.create()
+    private val currentSearchText: Subject<String> = BehaviorSubject.create()
 
     init {
         setupTextAvailableSearchFlow()
@@ -51,6 +51,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 .filter { it.isEmpty() }
                 .map {
                     ArticSearchResult(
+                            "",
                             emptyList(),
                             emptyList(),
                             emptyList(),
@@ -74,9 +75,9 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
     private fun loadOtherLists(searchTerm: String): Observable<ArticSearchResult> {
         return searchService
                 .loadAllMatchingContent(searchTerm)
-                .flatMap {result ->
+                .flatMap { result ->
                     Observables.combineLatest(
-                            if(result.artworks == null)
+                            if (result.artworks == null)
                                 Observable.just(listOf())
                             else
                                 Observable.just(
@@ -89,7 +90,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                             else
                                 Observable.just(result.exhibitions!!)
                     ) { artwork: List<ArticObject>, tours: List<ArticTour>, exhibitions: List<ArticExhibition> ->
-                        ArticSearchResult(emptyList(), artwork, tours, exhibitions)
+                        ArticSearchResult(searchTerm, emptyList(), artwork, tours, exhibitions)
                     }
                 }
     }

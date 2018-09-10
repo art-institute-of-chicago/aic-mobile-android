@@ -11,8 +11,8 @@ import io.reactivex.subjects.Subject
 
 open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : BaseViewModel()
 
-class SearchTextCellViewModel(text: String) : SearchBaseCellViewModel() {
-    val text: Subject<String> = BehaviorSubject.createDefault(text)
+class SearchTextCellViewModel(text: String, highlightedText: String = "") : SearchBaseCellViewModel() {
+    val text: Subject<Pair<String,String>> = BehaviorSubject.createDefault(Pair(text, highlightedText))
 }
 
 class SearchEmptyCellViewModel : SearchBaseCellViewModel()
