@@ -2,6 +2,9 @@ package artic.edu.search
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticExhibition
@@ -15,7 +18,8 @@ import javax.inject.Inject
 
 class SearchSuggestedViewModel @Inject constructor(private val manager: SearchResultsManager,
                                                    private val searchSuggestionsDao: ArticSearchObjectDao,
-                                                   private val objectDao: ArticObjectDao)
+                                                   private val objectDao: ArticObjectDao,
+                                                   private val analyticsTracker: AnalyticsTracker)
     : SearchBaseViewModel<SearchSuggestedViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
@@ -83,6 +87,11 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                                 // user that it's empty
                                 if (isEmpty()) {
                                     add(SearchEmptyCellViewModel())
+                                    analyticsTracker.reportEvent(
+                                            ScreenCategoryName.Search,
+                                            AnalyticsAction.searchNoResults,
+                                            result.searchTerm
+                                    )
                                 }
 
                                 addAll(filterExhibitionsForViewModel(result.exhibitions))
