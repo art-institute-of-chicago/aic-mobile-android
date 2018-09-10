@@ -15,9 +15,9 @@ class SearchToursViewModel @Inject constructor(
                 .map { it.tours }
                 .map { result ->
                     if (result.isEmpty()) {
-                        listOf(SearchResultEmptyCellViewModel())
+                        listOf(SearchEmptyCellViewModel())
                     } else {
-                        result.map { SearchResultTourCellViewModel(it) }
+                        result.map { SearchTourCellViewModel(it) }
                     }
                 }
                 .bindTo(cells)

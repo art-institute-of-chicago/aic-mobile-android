@@ -15,9 +15,9 @@ class SearchExhibitionsViewModel @Inject constructor(
                 .map { it .exhibitions}
                 .map { list ->
                     if(list.isEmpty()) {
-                        listOf(SearchResultEmptyCellViewModel())
+                        listOf(SearchEmptyCellViewModel())
                     } else {
-                        list.map { SearchResultExhibitionCellViewModel(it) }
+                        list.map { SearchExhibitionCellViewModel(it) }
                     }
                 }
                 .bindTo(cells)

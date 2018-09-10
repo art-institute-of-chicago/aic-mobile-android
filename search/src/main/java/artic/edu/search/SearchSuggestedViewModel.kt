@@ -17,8 +17,8 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
 
     sealed class NavigationEndpoint
 
-    private val dynamicCells: Subject<List<SearchResultBaseCellViewModel>> = BehaviorSubject.create()
-    private val suggestedArtworks: Subject<List<SearchResultCircularCellViewModel>> = BehaviorSubject.create()
+    private val dynamicCells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
+    private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
 
     init {
         setupOnMapSuggestionsBind()
@@ -29,17 +29,17 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                 .combineLatest(
                         dynamicCells,
                         Observable.just(listOf(
-                                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
-                                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
-                                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
-                                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom),
-                                SearchResultAmenitiesCellViewModel(0))
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom),
+                                SearchAmenitiesCellViewModel(0))
                         ),
                         suggestedArtworks)
                 { dynamicCells, amenities, suggestedArtworks ->
-                    return@combineLatest mutableListOf<SearchResultBaseCellViewModel>().apply {
+                    return@combineLatest mutableListOf<SearchBaseCellViewModel>().apply {
                         addAll(dynamicCells)
-                        add(SearchResultTextHeaderViewModel("On the Map"))
+                        add(SearchTextHeaderViewModel("On the Map"))
                         addAll(amenities)
                         addAll(suggestedArtworks)
                     }
@@ -58,7 +58,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                 }
                 .map { objects ->
                     objects.map {
-                        SearchResultCircularCellViewModel(it)
+                        SearchCircularCellViewModel(it)
                     }
                 }
                 .bindTo(suggestedArtworks)
@@ -68,32 +68,32 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun setupResultsBind() {
         manager.currentSearchResults
                 .map { result ->
-                    val cellList = mutableListOf<SearchResultBaseCellViewModel>()
+                    val cellList = mutableListOf<SearchBaseCellViewModel>()
 
-                    cellList.addAll(result.suggestions.map { SearchResultTextCellViewModel(it) })
+                    cellList.addAll(result.suggestions.map { SearchTextCellViewModel(it) })
                     if (result.artworks.isNotEmpty()) {
-                        cellList.add(SearchResultHeaderCellViewModel("Artwork"))
+                        cellList.add(SearchHeaderCellViewModel("Artwork"))
                         cellList.addAll(
                                 result.artworks
                                         .take(3)
-                                        .map { SearchResultArtworkCellViewModel(it) }
+                                        .map { SearchArtworkCellViewModel(it) }
                         )
                     }
                     if (result.exhibitions.isNotEmpty()) {
-                        cellList.add(SearchResultHeaderCellViewModel("Exhibitions"))
+                        cellList.add(SearchHeaderCellViewModel("Exhibitions"))
                         cellList.addAll(
                                 result.exhibitions
                                         .take(3)
-                                        .map { SearchResultExhibitionCellViewModel(it) }
+                                        .map { SearchExhibitionCellViewModel(it) }
                         )
                     }
 
                     if (result.tours.isNotEmpty()) {
-                        cellList.add(SearchResultHeaderCellViewModel("Tours"))
+                        cellList.add(SearchHeaderCellViewModel("Tours"))
                         cellList.addAll(
                                 result.tours
                                         .take(3)
-                                        .map { SearchResultTourCellViewModel(it) }
+                                        .map { SearchTourCellViewModel(it) }
                         )
                     }
 

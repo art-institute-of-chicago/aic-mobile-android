@@ -17,27 +17,27 @@ import kotlinx.android.synthetic.main.layout_cell_search_list_item.view.*
 import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
 import kotlinx.android.synthetic.main.layout_cell_suggested_map_object.view.*
 
-class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellViewModel>() {
+class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewModel>() {
 
     companion object {
         const val MAX_ARTWORKS_PER_ROW = 5
     }
 
-    override fun View.onBindView(item: SearchResultBaseCellViewModel, position: Int) {
+    override fun View.onBindView(item: SearchBaseCellViewModel, position: Int) {
         when (item) {
 
-            is SearchResultHeaderCellViewModel -> {
+            is SearchHeaderCellViewModel -> {
                 item.text
                         .bindToMain(title.text())
                         .disposedBy(item.viewDisposeBag)
             }
 
-            is SearchResultTextHeaderViewModel -> {
+            is SearchTextHeaderViewModel -> {
                 item.text
                         .bindToMain(headerText.text())
                         .disposedBy(item.viewDisposeBag)
             }
-            is SearchResultBaseListItemViewModel -> {
+            is SearchBaseListItemViewModel -> {
                 item.imageUrl
                         .subscribe {
                             Glide.with(context)
@@ -56,22 +56,22 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
                         .disposedBy(item.viewDisposeBag)
 
                 when (item) {
-                    is SearchResultArtworkCellViewModel -> {
+                    is SearchArtworkCellViewModel -> {
 
                     }
-                    is SearchResultExhibitionCellViewModel -> {
+                    is SearchExhibitionCellViewModel -> {
 
                     }
-                    is SearchResultTourCellViewModel -> {
+                    is SearchTourCellViewModel -> {
                     }
                 }
             }
-            is SearchResultTextCellViewModel -> {
+            is SearchTextCellViewModel -> {
                 item.text
                         .bindTo(suggestedKeyword.text())
                         .disposedBy(item.viewDisposeBag)
             }
-            is SearchResultCircularCellViewModel -> {
+            is SearchCircularCellViewModel -> {
                 item.imageUrl
                         .subscribe {
                             Glide.with(this)
@@ -81,7 +81,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
                         }
                         .disposedBy(item.viewDisposeBag)
             }
-            is SearchResultAmenitiesCellViewModel -> {
+            is SearchAmenitiesCellViewModel -> {
                 if (item.value != 0) {
                     icon.setImageResource(item.value)
                 } else {
@@ -97,13 +97,13 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
     override fun getLayoutResId(position: Int): Int {
         val item = getItem(position)
         return when (item) {
-            is SearchResultHeaderCellViewModel -> R.layout.layout_cell_result_header
-            is SearchResultTextHeaderViewModel -> R.layout.layout_cell_header
-            is SearchResultBaseListItemViewModel -> R.layout.layout_cell_search_list_item
-            is SearchResultTextCellViewModel -> R.layout.layout_cell_suggested_keyword
-            is SearchResultEmptyCellViewModel -> R.layout.layout_cell_empty
-            is SearchResultAmenitiesCellViewModel -> R.layout.layout_cell_amenity
-            is RowPaddingViewModel2 -> R.layout.layout_cell_divider
+            is SearchHeaderCellViewModel -> R.layout.layout_cell_result_header
+            is SearchTextHeaderViewModel -> R.layout.layout_cell_header
+            is SearchBaseListItemViewModel -> R.layout.layout_cell_search_list_item
+            is SearchTextCellViewModel -> R.layout.layout_cell_suggested_keyword
+            is SearchEmptyCellViewModel -> R.layout.layout_cell_empty
+            is SearchAmenitiesCellViewModel -> R.layout.layout_cell_amenity
+            is RowPaddingViewModel -> R.layout.layout_cell_divider
             else -> R.layout.layout_cell_suggested_map_object
         }
     }
@@ -119,7 +119,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
 
     fun getSpanCount(position: Int): Int {
         val cell = getItemOrNull(position)
-        return if (cell is SearchResultCircularCellViewModel || cell is SearchResultAmenitiesCellViewModel) {
+        return if (cell is SearchCircularCellViewModel || cell is SearchAmenitiesCellViewModel) {
             1
         } else {
             SearchResultsAdapter.MAX_ARTWORKS_PER_ROW

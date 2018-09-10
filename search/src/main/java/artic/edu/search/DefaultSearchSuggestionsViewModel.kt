@@ -1,14 +1,10 @@
 package artic.edu.search
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticObject
-import edu.artic.ui.util.asCDNUri
-import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -27,15 +23,15 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
         data class ArticObjectDetails(val articObject: ArticObject) : NavigationEndpoint()
     }
 
-    private val suggestedKeywords: Subject<List<SearchResultTextCellViewModel>> = BehaviorSubject.create()
-    private val suggestedArtworks: Subject<List<SearchResultCircularCellViewModel>> = BehaviorSubject.create()
+    private val suggestedKeywords: Subject<List<SearchTextCellViewModel>> = BehaviorSubject.create()
+    private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
 
-    private fun getAmenitiesViewModels(): List<SearchResultBaseCellViewModel> {
+    private fun getAmenitiesViewModels(): List<SearchBaseCellViewModel> {
         return listOf(
-                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
-                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
-                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
-                SearchResultAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom))
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom))
     }
 
     init {
@@ -45,7 +41,7 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                     suggestedSearchOptions
                             .searchStrings
                             .map { keyword ->
-                                SearchResultTextCellViewModel(keyword)
+                                SearchTextCellViewModel(keyword)
                             }
                 }
                 .bindTo(suggestedKeywords)
@@ -59,7 +55,7 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                 }
                 .map { objects ->
                     objects.map { artwork ->
-                        SearchResultCircularCellViewModel(artwork)
+                        SearchCircularCellViewModel(artwork)
                     }
                 }
                 .bindTo(suggestedArtworks)
@@ -67,13 +63,13 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
 
         Observables.combineLatest(suggestedArtworks, suggestedKeywords)
         { artworks, keywords ->
-            mutableListOf<SearchResultBaseCellViewModel>()
+            mutableListOf<SearchBaseCellViewModel>()
                     .apply {
-                        add(0, SearchResultTextHeaderViewModel("Suggested")) //TODO: use localizer
+                        add(0, SearchTextHeaderViewModel("Suggested")) //TODO: use localizer
                         addAll(keywords)
-                        add(SearchResultTextHeaderViewModel("On the Map"))
+                        add(SearchTextHeaderViewModel("On the Map"))
                         addAll(getAmenitiesViewModels())
-                        add(RowPaddingViewModel2())
+                        add(RowPaddingViewModel())
                         addAll(artworks)
                     }
         }
@@ -82,9 +78,9 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
 
     }
 
-    fun onClickItem(pos: Int, vm: SearchResultBaseCellViewModel) {
+    fun onClickItem(pos: Int, vm: SearchBaseCellViewModel) {
         when (vm) {
-            is SearchResultCircularCellViewModel -> {
+            is SearchCircularCellViewModel -> {
                 vm.artWork?.let { articObject ->
                     navigateTo.onNext(
                             Navigate.Forward(
@@ -99,64 +95,4 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
             }
         }
     }
-}
-
-
-/**
- * This class represents different component types used to build the [DefaultSearchSuggestionsFragment] view.
- */
-sealed class SearchViewComponent<T>(val value: T) {
-    class Header(@StringRes val value: Int)
-    class SuggestedKeyword(val value: String)
-    class Artwork(val value: ArticObject)
-}
-
-/** Base class*/
-open class SearchBaseCellViewModel : BaseViewModel()
-
-/**
- * Represents the header for each section (e.g. "On the Map")
- */
-class HeaderCellViewModel(item: SearchViewComponent.Header) : SearchBaseCellViewModel() {
-    val text: Subject<Int> = BehaviorSubject.createDefault(item.value)
-}
-
-/**
- * Adds an empty row in the RecyclerView.
- *
- * Both Map Amenities and Artworks requires span size of 1, and they appear next to each other.
- * In order to display these in different rows, [RowPaddingViewModel] is added in between them to break the row.
- *
- * ViewModel breaks the.
- */
-class RowPaddingViewModel : SearchBaseCellViewModel()
-
-/**
- * ViewModel for displaying the amenities icons
- */
-class AmenitiesCellViewModel(@DrawableRes val value: Int) : SearchBaseCellViewModel() {
-
-}
-
-/**
- * ViewModel for displaying the suggested keywords and header.
- */
-class TextCellViewModel(item: SearchViewComponent.SuggestedKeyword) : SearchBaseCellViewModel() {
-    val text: Subject<String> = BehaviorSubject.createDefault(item.value)
-}
-
-/**
- * ViewModel for displaying the circular artwork image under "On the map" section.
- */
-class CircularCellViewModel(val artWork: SearchViewComponent.Artwork?) : SearchBaseCellViewModel() {
-
-    val imageUrl: Subject<String> = BehaviorSubject.create()
-
-    init {
-        artWork?.value?.thumbnailFullPath?.asCDNUri()?.let { url ->
-            imageUrl.onNext(url)
-        }
-
-    }
-
 }
