@@ -14,7 +14,7 @@
         android:layout_marginEnd="15dp"
         android:contentDescription="@null"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/headphonesIcon"
@@ -38,7 +38,9 @@
         style="@style/ListItemTitle1White"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:gravity="bottom"
+        android:lines="1"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         app:layout_constraintBottom_toTopOf="@id/guideline"
@@ -51,7 +53,9 @@
         style="@style/ListItemTitle2White"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:gravity="top"
+        android:lines="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/headphonesIcon"
         app:layout_constraintStart_toEndOf="@id/image"
