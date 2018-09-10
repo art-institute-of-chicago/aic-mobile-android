@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/off_blue">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/SectionTitleWhite"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginTriple"
+        android:layout_marginBottom="@dimen/leave_tour_title_button_padding"
+        android:fontFamily="@font/ideal_sans_book"
+        android:gravity="center"
+        android:text="Leave Current Tour?"
+        app:layout_constraintBottom_toTopOf="@id/stay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0" />
+
+    <Button
+        android:id="@+id/stay"
+        style="@style/DialogButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginTriple"
+        android:layout_marginBottom="@dimen/marginTwenty"
+        android:gravity="start|center"
+        android:text="@string/stay"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/leave"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <Button
+        android:id="@+id/leave"
+        style="@style/DialogButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/marginTriple"
+        android:gravity="end|center"
+        android:text="@string/leaveTour"
+        android:textAllCaps="true"
+        app:layout_constraintBottom_toBottomOf="@id/stay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/stay"
+        app:layout_constraintTop_toTopOf="@id/stay" />
+
+
+</android.support.constraint.ConstraintLayout>
