@@ -79,6 +79,12 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
 
                                 addAll(filterToursForViewModel(result.tours))
 
+                                // Should the new cell list be empty at that point, we notify the
+                                // user that it's empty
+                                if (isEmpty()) {
+                                    add(SearchEmptyCellViewModel())
+                                }
+
                                 addAll(filterExhibitionsForViewModel(result.exhibitions))
                             }
 
@@ -136,17 +142,9 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     }
 
     /**
-     * Filters search suggestions, returning top 3 or an empty cell view model if no suggestions
-     * available
+     * Filters search suggestions, returning top 3 or an empty list
      */
-    private fun filterSearchSuggestions(searchTerm : String, list: List<String>): List<SearchBaseCellViewModel> {
-        val cellList = mutableListOf<SearchBaseCellViewModel>()
-        if (list.isNotEmpty()) {
-            cellList.addAll(list.take(3).map { SearchTextCellViewModel(it, searchTerm) })
-
-        } else {
-            cellList.add(SearchEmptyCellViewModel())
-        }
-        return cellList
+    private fun filterSearchSuggestions(searchTerm: String, list: List<String>): List<SearchBaseCellViewModel> {
+        return list.take(3).map { SearchTextCellViewModel(it, searchTerm) }
     }
 }
