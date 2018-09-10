@@ -9,6 +9,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import edu.artic.adapter.BaseViewHolder
 import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
 import kotlinx.android.synthetic.main.layout_cell_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
@@ -31,7 +32,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
                         .disposedBy(item.viewDisposeBag)
             }
 
-            is SearchResultOnMapHeaderCellViewModel -> {
+            is SearchResultTextHeaderViewModel -> {
                 item.text
                         .bindToMain(headerText.text())
                         .disposedBy(item.viewDisposeBag)
@@ -97,15 +98,24 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
         val item = getItem(position)
         return when (item) {
             is SearchResultHeaderCellViewModel -> R.layout.layout_cell_result_header
-            is SearchResultOnMapHeaderCellViewModel -> R.layout.layout_cell_header
+            is SearchResultTextHeaderViewModel -> R.layout.layout_cell_header
             is SearchResultBaseListItemViewModel -> R.layout.layout_cell_search_list_item
             is SearchResultTextCellViewModel -> R.layout.layout_cell_suggested_keyword
             is SearchResultEmptyCellViewModel -> R.layout.layout_cell_empty
             is SearchResultAmenitiesCellViewModel -> R.layout.layout_cell_amenity
+            is RowPaddingViewModel2 -> R.layout.layout_cell_divider
             else -> R.layout.layout_cell_suggested_map_object
         }
     }
 
+
+    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
+        super.onItemViewDetachedFromWindow(holder, position)
+        getItem(position).apply {
+            cleanup()
+            onCleared()
+        }
+    }
 
     fun getSpanCount(position: Int): Int {
         val cell = getItemOrNull(position)

@@ -4,7 +4,6 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
-import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -40,7 +39,7 @@ class SearchResultsSuggestedViewModel @Inject constructor(private val manager: S
                 { dynamicCells, amenities, suggestedArtworks ->
                     return@combineLatest mutableListOf<SearchResultBaseCellViewModel>().apply {
                         addAll(dynamicCells)
-                        add(SearchResultOnMapHeaderCellViewModel("On the Map"))
+                        add(SearchResultTextHeaderViewModel("On the Map"))
                         addAll(amenities)
                         addAll(suggestedArtworks)
                     }
@@ -59,7 +58,7 @@ class SearchResultsSuggestedViewModel @Inject constructor(private val manager: S
                 }
                 .map { objects ->
                     objects.map {
-                        SearchResultCircularCellViewModel(SearchViewComponent.Artwork(it))
+                        SearchResultCircularCellViewModel(it)
                     }
                 }
                 .bindTo(suggestedArtworks)

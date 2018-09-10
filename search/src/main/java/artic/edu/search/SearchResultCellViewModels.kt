@@ -21,7 +21,7 @@ class SearchResultHeaderCellViewModel(text: String) : SearchResultBaseCellViewMo
     val text: Subject<String> = BehaviorSubject.createDefault(text)
 }
 
-class SearchResultOnMapHeaderCellViewModel(text: String) : SearchResultBaseCellViewModel() {
+class SearchResultTextHeaderViewModel(text: String) : SearchResultBaseCellViewModel() {
     val text: Subject<String> = BehaviorSubject.createDefault(text)
 }
 
@@ -60,20 +60,26 @@ class SearchResultTourCellViewModel(val articTour: ArticTour) : SearchResultBase
 /**
  * ViewModel for displaying the circular artwork image under "On the map" section.
  */
-class SearchResultCircularCellViewModel(val artWork: SearchViewComponent.Artwork?) : SearchResultBaseCellViewModel() {
+class SearchResultCircularCellViewModel(val artWork: ArticObject?) : SearchResultBaseCellViewModel() {
 
-    val imageUrl: Subject<String> = BehaviorSubject.create()
-
-    init {
-        artWork?.value?.thumbnailFullPath?.asCDNUri()?.let { url ->
-            imageUrl.onNext(url)
-        }
-
-    }
-
+    val imageUrl: Subject<String> = BehaviorSubject.createDefault(
+            artWork?.thumbnailFullPath?.asCDNUri().orEmpty()
+    )
 }
 
 /**
  * ViewModel for displaying the amenities icons
  */
 class SearchResultAmenitiesCellViewModel(@DrawableRes val value: Int) : SearchResultBaseCellViewModel()
+
+
+
+/**
+ * Adds an empty row in the RecyclerView.
+ *
+ * Both Map Amenities and Artworks requires span size of 1, and they appear next to each other.
+ * In order to display these in different rows, [RowPaddingViewModel] is added in between them to break the row.
+ *
+ * ViewModel breaks the.
+ */
+class RowPaddingViewModel2 : SearchResultBaseCellViewModel()
