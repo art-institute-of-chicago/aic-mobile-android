@@ -43,23 +43,23 @@ abstract class SearchModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SearchResultsExhibitionsViewModel::class)
-    abstract fun searchResultsExhibitionsViewModel(searchResultsExhibitionsViewModel: SearchResultsExhibitionsViewModel): ViewModel
+    @ViewModelKey(SearchExhibitionsViewModel::class)
+    abstract fun searchResultsExhibitionsViewModel(searchResultsExhibitionsViewModel: SearchExhibitionsViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(SearchResultsArtworkViewModel::class)
-    abstract fun searchResultsArtworkViewModel(searchResultsArtworkViewModel: SearchResultsArtworkViewModel): ViewModel
+    @ViewModelKey(SearchArtworkViewModel::class)
+    abstract fun searchResultsArtworkViewModel(searchResultsArtworkViewModel: SearchArtworkViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(SearchResultsToursViewModel::class)
-    abstract fun searchResultsToursViewModel(searchResultsToursViewModel: SearchResultsToursViewModel): ViewModel
+    @ViewModelKey(SearchToursViewModel::class)
+    abstract fun searchResultsToursViewModel(searchResultsToursViewModel: SearchToursViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(SearchResultsSuggestedViewModel::class)
-    abstract fun searchResultsSuggestedViewModel(searchResultsSuggestedViewModel: SearchResultsSuggestedViewModel): ViewModel
+    @ViewModelKey(SearchSuggestedViewModel::class)
+    abstract fun searchResultsSuggestedViewModel(searchResultsSuggestedViewModel: SearchSuggestedViewModel): ViewModel
 
     @get:ContributesAndroidInjector
     abstract val splashActivity: SearchActivity
@@ -77,16 +77,16 @@ abstract class SearchModule {
     abstract val searchResultsContainerFragment: SearchResultsContainerFragment
 
     @get:ContributesAndroidInjector
-    abstract val searchResultsSuggestedFragment: SearchResultsSuggestedFragment
+    abstract val searchResultsSuggestedFragment: SearchSuggestedFragment
 
     @get:ContributesAndroidInjector
-    abstract val searchResultsExhibitionsFragment: SearchResultsExhibitionsFragment
+    abstract val searchResultsExhibitionsFragment: SearchExhibitionsFragment
 
     @get:ContributesAndroidInjector
-    abstract val searchResultsArtworkFragment: SearchResultsArtworkFragment
+    abstract val searchResultsArtworkFragment: SearchArtworkFragment
 
     @get:ContributesAndroidInjector
-    abstract val searchResultsToursFragment: SearchResultsToursFragment
+    abstract val searchResultsToursFragment: SearchToursFragment
 
     @Module
     companion object {

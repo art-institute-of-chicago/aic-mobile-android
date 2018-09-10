@@ -9,16 +9,16 @@ class SearchResultsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter
     override fun getItem(position: Int): Fragment {
         return when(position) {
             1 -> {
-                SearchResultsArtworkFragment()
+                SearchArtworkFragment()
             }
             2 -> {
-                SearchResultsToursFragment()
+                SearchToursFragment()
             }
             3 -> {
-                SearchResultsExhibitionsFragment()
+                SearchExhibitionsFragment()
             }
             else -> {
-                SearchResultsSuggestedFragment()
+                SearchSuggestedFragment()
             }
         }
     }

@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_search_results_sub.*
 import kotlin.reflect.KClass
 
 
-class DefaultSearchSuggestionsFragment : SearchResultsBaseFragment<DefaultSearchSuggestionsViewModel>() {
+class DefaultSearchSuggestionsFragment : SearchBaseFragment<DefaultSearchSuggestionsViewModel>() {
     override val viewModelClass: KClass<DefaultSearchSuggestionsViewModel>
         get() = DefaultSearchSuggestionsViewModel::class
 
