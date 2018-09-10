@@ -21,7 +21,7 @@ import javax.inject.Inject
  */
 class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao: ArticSearchObjectDao,
                                                             objectDao: ArticObjectDao
-) : SearchResultsBaseViewModel<DefaultSearchSuggestionsViewModel.NavigationEndpoint>() {
+) : SearchBaseViewModel<DefaultSearchSuggestionsViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         data class ArticObjectDetails(val articObject: ArticObject) : NavigationEndpoint()

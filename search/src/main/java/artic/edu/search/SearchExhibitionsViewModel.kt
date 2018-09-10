@@ -2,14 +2,11 @@ package artic.edu.search
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
-import edu.artic.viewmodel.BaseViewModel
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class SearchResultsExhibitionsViewModel @Inject constructor(
+class SearchExhibitionsViewModel @Inject constructor(
         searchManager: SearchResultsManager
-) : SearchResultsBaseViewModel<SearchResultsExhibitionsViewModel.NavigationEndpoint>() {
+) : SearchBaseViewModel<SearchExhibitionsViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
 

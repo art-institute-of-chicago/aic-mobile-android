@@ -4,9 +4,9 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import javax.inject.Inject
 
-class SearchResultsToursViewModel @Inject constructor(
+class SearchToursViewModel @Inject constructor(
         searchManager: SearchResultsManager
-) : SearchResultsBaseViewModel<SearchResultsToursViewModel.NavigationEndpoint>() {
+) : SearchBaseViewModel<SearchToursViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
 

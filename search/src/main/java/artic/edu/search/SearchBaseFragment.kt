@@ -9,9 +9,8 @@ import edu.artic.adapter.itemChanges
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_search_results_sub.*
-import kotlin.reflect.KClass
 
-abstract class SearchResultsBaseFragment<TViewModel : SearchResultsBaseViewModel<*>> : BaseViewModelFragment<TViewModel>() {
+abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel<*>> : BaseViewModelFragment<TViewModel>() {
     override val title: String = ""
     override val layoutResId: Int = R.layout.fragment_search_results_sub
     override val screenCategory: ScreenCategoryName? = null

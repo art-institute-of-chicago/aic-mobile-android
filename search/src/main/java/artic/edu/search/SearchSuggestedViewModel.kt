@@ -10,10 +10,10 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class SearchResultsSuggestedViewModel @Inject constructor(private val manager: SearchResultsManager,
-                                                          private val searchSuggestionsDao: ArticSearchObjectDao,
-                                                          private val objectDao: ArticObjectDao)
-    : SearchResultsBaseViewModel<SearchResultsSuggestedViewModel.NavigationEndpoint>() {
+class SearchSuggestedViewModel @Inject constructor(private val manager: SearchResultsManager,
+                                                   private val searchSuggestionsDao: ArticSearchObjectDao,
+                                                   private val objectDao: ArticObjectDao)
+    : SearchBaseViewModel<SearchSuggestedViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
 
