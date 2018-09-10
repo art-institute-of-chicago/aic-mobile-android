@@ -5,6 +5,7 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 
 data class ArticSearchResult(
+        var searchTerm : String,
         var suggestions: List<String>,
         val artworks: List<ArticObject>,
         val tours: List<ArticTour>,

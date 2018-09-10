@@ -73,10 +73,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                 .map { result ->
                     mutableListOf<SearchBaseCellViewModel>()
                             .apply {
-                                addAll(result.suggestions
-                                        .take(3)
-                                        .map { SearchTextCellViewModel(it) }
-                                )
+                                addAll(filterSearchSuggestions(result.searchTerm, result.suggestions))
 
                                 addAll(filterArtworkForViewModel(result.artworks))
 
@@ -105,6 +102,10 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
 
 
     private fun filterExhibitionsForViewModel(list: List<ArticExhibition>): List<SearchBaseCellViewModel> {
+        /**
+         * Filters the tours, returning top 3 tours or an empty list if no tours are available for
+         * search terms
+         */
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (list.isNotEmpty()) {
             cellList.add(SearchHeaderCellViewModel("Exhibitions")) // TODO: use localizer
@@ -117,6 +118,10 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
         return cellList
     }
 
+    /**
+     * Filters the tours, returning top 3 tours or an empty list if no tours are available for
+     * search terms
+     */
     private fun filterToursForViewModel(list: List<ArticTour>): List<SearchBaseCellViewModel> {
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (list.isNotEmpty()) {
@@ -130,4 +135,18 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
         return cellList
     }
 
+    /**
+     * Filters search suggestions, returning top 3 or an empty cell view model if no suggestions
+     * available
+     */
+    private fun filterSearchSuggestions(searchTerm : String, list: List<String>): List<SearchBaseCellViewModel> {
+        val cellList = mutableListOf<SearchBaseCellViewModel>()
+        if (list.isNotEmpty()) {
+            cellList.addAll(list.take(3).map { SearchTextCellViewModel(it, searchTerm) })
+
+        } else {
+            cellList.add(SearchEmptyCellViewModel())
+        }
+        return cellList
+    }
 }
