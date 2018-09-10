@@ -154,7 +154,11 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
      * Filters search suggestions, returning top 3 or an empty list
      */
     private fun filterSearchSuggestions(searchTerm: String, list: List<String>): List<SearchBaseCellViewModel> {
-        return list.take(3).map { SearchTextCellViewModel(it, searchTerm) }
+        val l = list.take(3).map { SearchTextCellViewModel(it, searchTerm) }
+        if(l.isNotEmpty()) {
+            l.last().hasDivider = true
+        }
+        return l
     }
 
     fun onClickCell(pos: Int, vm: SearchBaseCellViewModel) {
