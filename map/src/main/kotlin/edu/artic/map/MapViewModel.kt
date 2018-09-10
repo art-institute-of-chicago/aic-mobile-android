@@ -1,6 +1,7 @@
 package edu.artic.map
 
 import com.fuzz.rx.*
+import com.fuzz.rx.Optional
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
@@ -17,11 +18,12 @@ import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MarkerHolder
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -45,7 +47,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
-    val leftCurrentTour: Subject<Boolean> = PublishSubject.create()
+    val leftActiveTour: Subject<Boolean> = PublishSubject.create()
     val switchTourRequest: Subject<Pair<ArticTour, ArticTour.TourStop>> = PublishSubject.create()
 
     val distinctFloor: Observable<Int>
@@ -115,6 +117,14 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
         this.currentMap
                 .bindTo(mapMarkerConstructor.map)
+                .disposedBy(disposeBag)
+
+        /**
+         * If new tour is requested when one is in progress save it as next tour.
+         */
+        switchTourRequest
+                .mapOptional()
+                .bindTo(tourProgressManager.nextTour)
                 .disposedBy(disposeBag)
     }
 
@@ -213,18 +223,17 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
 
     /**
-     * Updates the display mode of the map, based on the requestedTour.
+     * Updates the display mode of the map.
      * For future search integration, active tour should be canceled before we display the search items in map.
      * refer [TourProgressManager] for managing the tour state.
      */
     fun loadMapDisplayMode(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?) {
-        tourProgressManager.selectedTour
-                .withLatestFrom(searchManager.selectedObject)
+        Observables.combineLatest(
+                tourProgressManager.selectedTour,
+                tourProgressManager.nextTour,
+                searchManager.selectedObject)
                 .take(1)
-                .subscribeBy { (lastTour, lastSearchedObject) ->
-                    /**
-                     * If requestedTour is different than current tour display prompt user to leave the previous requestedTour.
-                     */
+                .subscribeBy { (lastTour, nextTour, lastSearchedObject) ->
                     val searchObject = lastSearchedObject.value
                     val activeTour = lastTour.value
 
@@ -238,9 +247,17 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                             displayModeChanged(MapDisplayMode.Search(searchObject))
                         }
                     } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
+                        /**
+                         * If requestedTour is different than current tour display "Leave Current Tour ?" prompt.
+                         */
                         searchManager.selectedObject.onNext(Optional(null))
                         val startStop = requestedTourStop ?: activeTour.getIntroStop()
                         switchTourRequest.onNext(requestedTour to startStop)
+                    } else if (nextTour.value != null) {
+                        val tour = nextTour.value!!.first
+                        val stop = nextTour.value!!.second
+                        displayModeChanged(MapDisplayMode.Tour(tour, stop))
+                        tourProgressManager.nextTour.onNext(Optional(null))
                     } else {
                         searchManager.selectedObject.onNext(Optional(null))
                         val tourToLoad = requestedTour ?: activeTour
@@ -250,8 +267,63 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                             displayModeChanged(MapDisplayMode.CurrentFloor)
                         }
                     }
-
                 }.disposedBy(disposeBag)
 
+    }
+
+    /**
+     * Loads display mode for the map.
+     */
+    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticObject?) {
+
+        /**
+         * Store the search object to memory.
+         * Used in [MapViewModel.loadMapDisplayMode] to determine the map display mode.
+         */
+        searchedObject?.let {
+            searchManager.selectedObject.onNext(Optional(searchedObject))
+        }
+
+        loadMapDisplayMode(requestedTour, requestedTourStop)
+    }
+
+    /**
+     * This method clears the active tour.
+     * Emits tour ended event via [MapViewModel.leftActiveTour] subject.
+     */
+    fun leaveCurrentTour() {
+        /**
+         * Update analytics : user left tour : <tour title>
+         */
+        tourProgressManager.selectedTour.take(1)
+                .filterFlatMap({ it.value != null }, { it.value!! })
+                .subscribe {
+                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourLeft, it.title)
+                }.disposedBy(disposeBag)
+
+        /**
+         * Clear selected tour language.
+         */
+        languageSelector.setTourLanguage(Locale(""))
+
+        /**
+         * Finally, clear out the tour object from memory.
+         */
+        tourProgressManager.selectedTour.onNext(Optional(null))
+
+        /**
+         * Emit tour left event.
+         * This event is consumed by view to update view states (e.g. audio player, tour carousel etc.).
+         */
+        leftActiveTour.onNext(true)
+
+    }
+
+    /**
+     * User stays with current tour.
+     * Clear out cached search object if any.
+     */
+    fun stayedWithCurrentTour() {
+        searchManager.selectedObject.onNext(Optional(null))
     }
 }
