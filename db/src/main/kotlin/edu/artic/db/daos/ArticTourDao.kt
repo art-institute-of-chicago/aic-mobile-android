@@ -25,6 +25,9 @@ interface ArticTourDao {
     @Query("select * from ArticTour order by title")
     fun getTours() : Flowable<List<ArticTour>>
 
+    @Query(value = "select * from ArticTour where nid in (:ids)")
+    fun getToursByIdList(ids: List<String>): Flowable<List<ArticTour>>
+
     @Query("delete from ArticTour")
     fun clear()
 }

@@ -1,32 +1,92 @@
 package artic.edu.search
 
 import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
+import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import edu.artic.adapter.BaseViewHolder
+import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
+import kotlinx.android.synthetic.main.layout_cell_header.view.*
+import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
+import kotlinx.android.synthetic.main.layout_cell_search_list_item.view.*
 import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
+import kotlinx.android.synthetic.main.layout_cell_suggested_map_object.view.*
 
-class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellViewModel>() {
+class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewModel>() {
 
-    override fun View.onBindView(item: SearchResultBaseCellViewModel, position: Int) {
+    companion object {
+        const val MAX_ARTWORKS_PER_ROW = 5
+    }
+
+    override fun View.onBindView(item: SearchBaseCellViewModel, position: Int) {
         when (item) {
-            is SearchResultHeaderCellViewModel -> {
 
+            is SearchHeaderCellViewModel -> {
+                item.text
+                        .bindToMain(title.text())
+                        .disposedBy(item.viewDisposeBag)
             }
-            is SearchResultArtworkCellViewModel -> {
 
+            is SearchTextHeaderViewModel -> {
+                item.text
+                        .bindToMain(headerText.text())
+                        .disposedBy(item.viewDisposeBag)
             }
-            is SearchResultExhibitionCellViewModel -> {
+            is SearchBaseListItemViewModel -> {
+                item.imageUrl
+                        .subscribe {
+                            Glide.with(context)
+                                    .load(it)
+                                    .into(image)
+                        }.disposedBy(item.viewDisposeBag)
+                item.isHeadphonesVisible
+                        .bindToMain(headphonesIcon.visibility())
+                        .disposedBy(item.viewDisposeBag)
 
-            }
-            is SearchResultTourCellViewModel -> {
+                item.itemTitle
+                        .bindToMain(itemTitle.text())
+                        .disposedBy(item.viewDisposeBag)
+                item.itemSubTitle
+                        .bindToMain(itemSubTitle.text())
+                        .disposedBy(item.viewDisposeBag)
 
+                when (item) {
+                    is SearchArtworkCellViewModel -> {
+
+                    }
+                    is SearchExhibitionCellViewModel -> {
+
+                    }
+                    is SearchTourCellViewModel -> {
+                    }
+                }
             }
-            is SearchResultTextCellViewModel -> {
+            is SearchTextCellViewModel -> {
                 item.text
                         .bindTo(suggestedKeyword.text())
                         .disposedBy(item.viewDisposeBag)
+            }
+            is SearchCircularCellViewModel -> {
+                item.imageUrl
+                        .subscribe {
+                            Glide.with(this)
+                                    .load(it)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(circularImage)
+                        }
+                        .disposedBy(item.viewDisposeBag)
+            }
+            is SearchAmenitiesCellViewModel -> {
+                if (item.value != 0) {
+                    icon.setImageResource(item.value)
+                } else {
+                    icon.setImageDrawable(null)
+                }
             }
             else -> {
 
@@ -37,13 +97,32 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchResultBaseCellV
     override fun getLayoutResId(position: Int): Int {
         val item = getItem(position)
         return when (item) {
-            is SearchResultHeaderCellViewModel -> return 0
-            is SearchResultArtworkCellViewModel -> return 0
-            is SearchResultExhibitionCellViewModel -> return 0
-            is SearchResultTourCellViewModel -> return 0
-            is SearchResultTextCellViewModel -> R.layout.layout_cell_suggested_keyword
+            is SearchHeaderCellViewModel -> R.layout.layout_cell_result_header
+            is SearchTextHeaderViewModel -> R.layout.layout_cell_header
+            is SearchBaseListItemViewModel -> R.layout.layout_cell_search_list_item
+            is SearchTextCellViewModel -> R.layout.layout_cell_suggested_keyword
+            is SearchEmptyCellViewModel -> R.layout.layout_cell_empty
+            is SearchAmenitiesCellViewModel -> R.layout.layout_cell_amenity
+            is RowPaddingViewModel -> R.layout.layout_cell_divider
             else -> R.layout.layout_cell_suggested_map_object
         }
     }
 
+
+    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
+        super.onItemViewDetachedFromWindow(holder, position)
+        getItem(position).apply {
+            cleanup()
+            onCleared()
+        }
+    }
+
+    fun getSpanCount(position: Int): Int {
+        val cell = getItemOrNull(position)
+        return if (cell is SearchCircularCellViewModel || cell is SearchAmenitiesCellViewModel) {
+            1
+        } else {
+            SearchResultsAdapter.MAX_ARTWORKS_PER_ROW
+        }
+    }
 }

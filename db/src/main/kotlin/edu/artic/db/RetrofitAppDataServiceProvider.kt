@@ -89,51 +89,7 @@ class RetrofitAppDataServiceProvider(
                 }
                 url += "?limit=99"
 
-                val postParams = mutableMapOf<String, Any>()
-                postParams["fields"] = listOf(
-                        "id",
-                        "title",
-                        "short_description",
-                        "legacy_image_mobile_url",
-                        "legacy_image_desktop_url",
-                        "gallery_id",
-                        "web_url",
-                        "aic_start_at",
-                        "aic_end_at"
-                )
-                postParams["sort"] = listOf("aic_start_at", "aic_end_at")
-                postParams["query"] = mutableMapOf<String, Any>().apply {
-                    //Boolean map
-                    this["bool"] = mutableMapOf<String, Any>().apply {
-                        this["must"] = mutableListOf<Any>().apply {
-                            this.add(mutableMapOf<String, Any>().apply {
-                                //range
-                                this["range"] = mutableMapOf<String, Any>().apply {
-                                    this["aic_start_at"] = mutableMapOf<String, String>().apply {
-                                        this["lte"] = "now"
-                                    }
-                                }
-                            })
-
-                            this.add(mutableMapOf<String, Any>().apply {
-                                this["range"] = mutableMapOf<String, Any>().apply {
-                                    this["aic_end_at"] = mutableMapOf<String, String>().apply {
-                                        this["gte"] = "now"
-                                    }
-                                }
-                            })
-                        }
-
-                        this["must_not"] = mutableListOf<Any>().apply {
-                            this.add(mutableMapOf<String, Any>().apply {
-                                //range
-                                this["term"] = mutableMapOf<String, Any>().apply {
-                                    this["status"] = "Closed"
-                                }
-                            })
-                        }
-                    }
-                }
+                val postParams = ApiBodyGenerator.createExhibitionQueryBody()
 
                 service.getExhibitions(EXHIBITIONS_HEADER_ID, url, postParams)
                         .subscribe({
@@ -172,43 +128,7 @@ class RetrofitAppDataServiceProvider(
                 }
                 url += "?limit=500"
 
-                val postParams = mutableMapOf<String, Any>()
-                postParams["fields"] = listOf(
-                        "id",
-                        "title",
-                        "description",
-                        "short_description",
-                        "image",
-                        "location",
-                        "start_at",
-                        "end_at",
-                        "button_text",
-                        "button_url"
-                )
-                postParams["sort"] = listOf("start_at", "end_at")
-                postParams["query"] = mutableMapOf<String, Any>().apply {
-                    //Boolean map
-                    this["bool"] = mutableMapOf<String, Any>().apply {
-                        this["must"] = mutableListOf<Any>().apply {
-                            this.add(mutableMapOf<String, Any>().apply {
-                                //range
-                                this["range"] = mutableMapOf<String, Any>().apply {
-                                    this["start_at"] = mutableMapOf<String, String>().apply {
-                                        this["lte"] = "now+2w"
-                                    }
-                                }
-                            })
-
-                            this.add(mutableMapOf<String, Any>().apply {
-                                this["range"] = mutableMapOf<String, Any>().apply {
-                                    this["end_at"] = mutableMapOf<String, String>().apply {
-                                        this["gte"] = "now"
-                                    }
-                                }
-                            })
-                        }
-                    }
-                }
+                val postParams = ApiBodyGenerator.createEventQueryBody()
 
                 service.getEvents(EVENT_HEADER_ID, url, postParams)
                         .subscribe({
@@ -232,4 +152,6 @@ class RetrofitAppDataServiceProvider(
             }
         }
     }
+
+
 }
