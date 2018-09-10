@@ -15,7 +15,6 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
 
     val closeButtonVisible : Subject<Boolean> = BehaviorSubject.createDefault(false)
     val shouldClearTextInput : Subject<Boolean> = BehaviorSubject.createDefault(false)
-
     sealed class NavigationEndpoint {
         object DefaultSearchResults : NavigationEndpoint()
         object DynamicSearchResults : NavigationEndpoint()
@@ -34,6 +33,10 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
             closeButtonVisible.onNext(true)
             navigateTo.onNext(Navigate.Forward(NavigationEndpoint.DynamicSearchResults))
         }
+    }
+
+    fun onClickSearch() {
+        searchResultsManager.search()
     }
 
     fun onCloseClicked() {

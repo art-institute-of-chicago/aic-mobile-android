@@ -25,8 +25,13 @@
         android:background="@android:color/transparent"
         android:hint="@string/looking_for_artwork"
         android:lines="1"
+        android:maxLines="1"
         android:padding="@dimen/marginStandard"
         android:textColor="@color/white"
-        android:textColorHint="@color/hintColor" />
+        android:textColorHint="@color/hintColor"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+
+        />
 
 </android.support.v7.widget.Toolbar>

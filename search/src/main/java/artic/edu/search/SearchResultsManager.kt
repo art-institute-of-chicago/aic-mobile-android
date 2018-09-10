@@ -22,12 +22,22 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                            private val articObjectDao: ArticObjectDao
 ) {
 
+
+    private val rawSearchResults: Subject<ArticSearchResult> = BehaviorSubject.create()
     val currentSearchResults: Subject<ArticSearchResult> = BehaviorSubject.create()
     private val currentSearchText: Subject<String> = BehaviorSubject.create()
+    private val showSuggestions: Subject<Boolean> = BehaviorSubject.create()
 
     init {
         setupTextAvailableSearchFlow()
         setupEmptyTextSearchFlow()
+        Observables.combineLatest(showSuggestions, rawSearchResults)
+        { showSuggestions, results ->
+            if (!showSuggestions) {
+                results.suggestions = emptyList()
+            }
+            results
+        }.bindTo(currentSearchResults)
     }
 
     private fun setupTextAvailableSearchFlow() {
@@ -35,15 +45,18 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 .filter { it.isNotEmpty() }
                 .flatMap { searchTerm ->
                     Observables.combineLatest(
+                            showSuggestions,
                             getSuggestionsList(searchTerm),
                             loadOtherLists(searchTerm)
                     )
                 }
-                .map { (suggestions, searchResult) ->
-                    searchResult.suggestions = suggestions
+                .map { (shouldShowSuggestionText, suggestions, searchResult) ->
+                    if (shouldShowSuggestionText) {
+                        searchResult.suggestions = suggestions
+                    }
                     return@map searchResult
 
-                }.bindTo(currentSearchResults)
+                }.bindTo(rawSearchResults)
     }
 
     private fun setupEmptyTextSearchFlow() {
@@ -112,7 +125,13 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
     }
 
     fun onChangeSearchText(newText: String) {
+        showSuggestions.onNext(true)
         currentSearchText.onNext(newText)
     }
+
+    fun search() {
+        showSuggestions.onNext(false)
+    }
+
 
 }
