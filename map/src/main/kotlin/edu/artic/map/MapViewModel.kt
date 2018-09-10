@@ -1,7 +1,6 @@
 package edu.artic.map
 
 import com.fuzz.rx.*
-import com.fuzz.rx.Optional
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
@@ -10,7 +9,6 @@ import com.jakewharton.rxrelay2.Relay
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
@@ -24,7 +22,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -48,7 +45,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
-    val switchTourRequest: Subject<Pair<ArticTour, ArticTour>> = PublishSubject.create()
+    val leftCurrentTour: Subject<Boolean> = PublishSubject.create()
+    val switchTourRequest: Subject<Pair<ArticTour, ArticTour.TourStop>> = PublishSubject.create()
 
     val distinctFloor: Observable<Int>
         get() = floor.distinctUntilChanged()
@@ -213,24 +211,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         mapMarkerConstructor.cleanup()
     }
 
-    fun leaveTour() {
-        tourProgressManager.selectedTour
-                .filterFlatMap({ it.value != null }, { it.value!! })
-                .take(1)
-                .subscribeBy {
-                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourLeft, it.title)
-                }.disposedBy(disposeBag)
-        /**clear tour locale**/
-        languageSelector.setTourLanguage(Locale(""))
-        tourProgressManager.selectedTour.onNext(Optional(null))
-    }
 
     /**
      * Updates the display mode of the map, based on the requestedTour.
      * For future search integration, active tour should be canceled before we display the search items in map.
      * refer [TourProgressManager] for managing the tour state.
      */
-    fun loadMapDisplayMode(requestedTour: ArticTour?, tourStop: ArticTour.TourStop?) {
+    fun loadMapDisplayMode(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?) {
         tourProgressManager.selectedTour
                 .withLatestFrom(searchManager.selectedObject)
                 .take(1)
@@ -252,12 +239,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         }
                     } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
                         searchManager.selectedObject.onNext(Optional(null))
-                        switchTourRequest.onNext(activeTour to requestedTour)
+                        val startStop = requestedTourStop ?: activeTour.getIntroStop()
+                        switchTourRequest.onNext(requestedTour to startStop)
                     } else {
                         searchManager.selectedObject.onNext(Optional(null))
                         val tourToLoad = requestedTour ?: activeTour
                         if (tourToLoad != null) {
-                            displayModeChanged(MapDisplayMode.Tour(tourToLoad, tourStop))
+                            displayModeChanged(MapDisplayMode.Tour(tourToLoad, requestedTourStop))
                         } else {
                             displayModeChanged(MapDisplayMode.CurrentFloor)
                         }

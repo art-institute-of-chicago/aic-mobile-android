@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.view.View
 import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -24,6 +23,7 @@ import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapAnnotationType
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
+import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
@@ -66,23 +66,24 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private lateinit var buildingGroundOverlay: GroundOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
-    private var leaveTourDialog: AlertDialog? = null
+    private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
 
     private fun getLatestSearchObject(): ArticObject? {
         return requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
     }
 
-    private var tour: ArticTour?
-        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR)
-        set(value) {
-            requireActivity().intent?.putExtra(MapActivity.ARG_TOUR, value)
-        }
+    private fun getLatestTourObject(): ArticTour? {
+        val tour: ArticTour? = requireActivity().intent?.getParcelableExtra(MapActivity.ARG_TOUR)
+        requireActivity().intent?.extras?.remove(MapActivity.ARG_TOUR)
+        return tour
+    }
 
-    private var startTourStop: ArticTour.TourStop?
-        get() = requireActivity().intent?.extras?.getParcelable(MapActivity.ARG_TOUR_START_STOP)
-        set(value) {
-            requireActivity().intent?.putExtra(MapActivity.ARG_TOUR_START_STOP, value)
-        }
+    private fun getStartTourStop(): ArticTour.TourStop? {
+        val startStop: ArticTour.TourStop? = requireActivity().intent?.getParcelableExtra(MapActivity.ARG_TOUR_START_STOP)
+        requireActivity().intent?.extras?.remove(MapActivity.ARG_TOUR_START_STOP)
+        return startStop
+    }
+
 
     private val audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
@@ -344,6 +345,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel
                 .leaveTourRequest
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     displayLeaveTourConfirmation()
                 }.disposedBy(disposeBag)
@@ -351,8 +353,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel
                 .switchTourRequest
                 .distinctUntilChanged()
-                .subscribeBy { (currentTour, newTour) ->
-                    displaySwitchTourConfirmation(currentTour, newTour)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { (currentTour, startStop) ->
+                    displaySwitchTourConfirmation(currentTour, startStop)
                 }.disposedBy(disposeBag)
     }
 
@@ -400,44 +403,52 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .disposedBy(disposeBag)
     }
 
-    private fun displaySwitchTourConfirmation(currentTour: ArticTour, newTour: ArticTour) {
+
+    private fun displaySwitchTourConfirmation(newTour: ArticTour, startStop: ArticTour.TourStop) {
         leaveTourDialog?.dismiss()
-        leaveTourDialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
-                .setMessage(getString(R.string.leaveTour))
-                .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
-                    tour = currentTour
-                    dialog.dismiss()
-                }
-                .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
-                    tour = newTour
-                    viewModel.displayModeChanged(MapDisplayMode.Tour(newTour, startTourStop))
-                    dialog.dismiss()
-                }
-                .create()
-        leaveTourDialog?.show()
+        val fm = requireFragmentManager()
+        leaveTourDialog = LeaveCurrentTourDialogFragment().apply {
+            this.showNow(fm, "LeaveTour")
+            this.viewModel
+                    .leftCurrentTour
+                    .filter { it }
+                    .take(1)
+                    .withLatestFrom(audioService)
+                    .subscribeBy { (_, service) ->
+                        service.stopPlayer()
+                        hideFragmentInInfoContainer()
+                        clearLastTour(newTour, startStop)
+                    }.disposedBy(disposeBag)
+        }
 
     }
 
     private fun displayLeaveTourConfirmation() {
-        if (leaveTourDialog?.isShowing != true) {
-            leaveTourDialog = AlertDialog.Builder(requireContext(), R.style.LeaveTourDialogTheme)
-                    .setMessage(getString(R.string.leaveTour))
-                    .setPositiveButton(getString(R.string.stay)) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton(getString(R.string.leave)) { dialog, _ ->
-                        tour = null
-                        viewModel.leaveTour()
-                        viewModel.loadMapDisplayMode(tour, startTourStop)
-                        dialog.dismiss()
+        leaveTourDialog?.dismiss()
+        val fm = requireFragmentManager()
+        leaveTourDialog = LeaveCurrentTourDialogFragment().apply {
+            this.showNow(fm, "LeaveTour")
+            this.viewModel
+                    .leftCurrentTour
+                    .filter { it }
+                    .take(1)
+                    .withLatestFrom(audioService)
+                    .subscribeBy { (_, service) ->
+                        service.stopPlayer()
                         hideFragmentInInfoContainer()
-                        audioService.subscribe {
-                            it.stopPlayer()
-                        }.disposedBy(disposeBag)
-                    }
-                    .create()
-            leaveTourDialog?.show()
+                        clearLastTour()
+                    }.disposedBy(disposeBag)
         }
+
+
+    }
+
+    private fun clearLastTour(requestedTour: ArticTour? = null, requestedStop: ArticTour.TourStop? = null) {
+        /**
+         * clear out the tour and the tour stop from the tour progress manager.
+         */
+        viewModel.loadMapDisplayMode(requestedTour, requestedStop)
+
     }
 
 
@@ -449,10 +460,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
+
+        /**
+         * Save search object
+         */
         getLatestSearchObject()?.let {
             viewModel.searchManager.selectedObject.onNext(Optional(it))
         }
-        viewModel.loadMapDisplayMode(tour, startTourStop)
+
+        /**
+         * Request map to load the tour in bundle if any.
+         */
+        viewModel.loadMapDisplayMode(getLatestTourObject(), getStartTourStop())
+
     }
 
     override fun onPause() {
