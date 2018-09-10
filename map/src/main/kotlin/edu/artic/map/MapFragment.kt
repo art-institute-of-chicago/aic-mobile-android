@@ -51,7 +51,7 @@ import kotlin.reflect.KClass
  *
  * @see [MapActivity]
  */
-class MapFragment : BaseViewModelFragment<MapViewModel>() {
+class MapFragment : BaseViewModelFragment<MapViewModel>(), LeaveCurrentTourDialogFragment.LeaveTourCallback {
 
     override val viewModelClass: KClass<MapViewModel>
         get() = MapViewModel::class
@@ -355,8 +355,21 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (currentTour, startStop) ->
-                    displaySwitchTourConfirmation(currentTour, startStop)
+                    displayLeaveTourConfirmation()
                 }.disposedBy(disposeBag)
+
+        /**
+         * Stop the active tour & dismiss the tour carousel if user leaves tour.
+         */
+        viewModel.leftActiveTour
+                .filter { it }
+                .withLatestFrom(audioService)
+                .subscribeBy { (_, service) ->
+                    service.stopPlayer()
+                    hideFragmentInInfoContainer()
+                    refreshMapDisplayMode()
+                }
+                .disposedBy(disposeBag)
     }
 
     /**
@@ -404,51 +417,32 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
 
-    private fun displaySwitchTourConfirmation(newTour: ArticTour, startStop: ArticTour.TourStop) {
-        leaveTourDialog?.dismiss()
-        val fm = requireFragmentManager()
-        leaveTourDialog = LeaveCurrentTourDialogFragment().apply {
-            this.showNow(fm, "LeaveTour")
-            this.viewModel
-                    .leftCurrentTour
-                    .filter { it }
-                    .take(1)
-                    .withLatestFrom(audioService)
-                    .subscribeBy { (_, service) ->
-                        service.stopPlayer()
-                        hideFragmentInInfoContainer()
-                        clearLastTour(newTour, startStop)
-                    }.disposedBy(disposeBag)
-        }
-
-    }
-
     private fun displayLeaveTourConfirmation() {
         leaveTourDialog?.dismiss()
         val fm = requireFragmentManager()
         leaveTourDialog = LeaveCurrentTourDialogFragment().apply {
-            this.showNow(fm, "LeaveTour")
-            this.viewModel
-                    .leftCurrentTour
-                    .filter { it }
-                    .take(1)
-                    .withLatestFrom(audioService)
-                    .subscribeBy { (_, service) ->
-                        service.stopPlayer()
-                        hideFragmentInInfoContainer()
-                        clearLastTour()
-                    }.disposedBy(disposeBag)
+            attachTourStateListener(this@MapFragment)
+            this.show(fm, "LeaveTour")
         }
-
 
     }
 
-    private fun clearLastTour(requestedTour: ArticTour? = null, requestedStop: ArticTour.TourStop? = null) {
-        /**
-         * clear out the tour and the tour stop from the tour progress manager.
-         */
+    private fun refreshMapDisplayMode(requestedTour: ArticTour? = null, requestedStop: ArticTour.TourStop? = null) {
         viewModel.loadMapDisplayMode(requestedTour, requestedStop)
+    }
 
+    /**
+     * User leaves tour.
+     */
+    override fun leftTour() {
+        viewModel.leaveCurrentTour()
+    }
+
+    /**
+     * Stays decides to stay on active tour.
+     */
+    override fun stayed() {
+        viewModel.stayedWithCurrentTour()
     }
 
 
@@ -460,19 +454,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-
-        /**
-         * Save search object
-         */
-        getLatestSearchObject()?.let {
-            viewModel.searchManager.selectedObject.onNext(Optional(it))
-        }
-
-        /**
-         * Request map to load the tour in bundle if any.
-         */
+        viewModel.onResume(getLatestTourObject(), getStartTourStop(), getLatestSearchObject())
         viewModel.loadMapDisplayMode(getLatestTourObject(), getStartTourStop())
-
     }
 
     override fun onPause() {
@@ -501,6 +484,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         super.onLowMemory()
         mapView.onLowMemory()
     }
+
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
