@@ -6,7 +6,9 @@ import javax.inject.Inject
 
 class SearchResultsArtworkViewModel @Inject constructor(
         searchManager: SearchResultsManager
-) : SearchResultsBaseViewModel() {
+) : SearchResultsBaseViewModel<SearchResultsArtworkViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint
 
     init {
         searchManager.currentSearchResults
