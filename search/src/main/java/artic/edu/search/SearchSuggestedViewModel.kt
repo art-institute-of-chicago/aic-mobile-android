@@ -158,16 +158,4 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
         }
         return l
     }
-
-    fun onClickCell(pos: Int, vm: SearchBaseCellViewModel) {
-        when (vm) {
-            is SearchTextCellViewModel -> {
-                analyticsTracker.reportEvent(
-                        ScreenCategoryName.Search,
-                        AnalyticsAction.searchAutocomplete,
-                        vm.textString
-                )
-            }
-        }
-    }
 }
