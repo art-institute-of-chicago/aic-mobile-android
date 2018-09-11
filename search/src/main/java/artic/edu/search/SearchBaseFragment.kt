@@ -1,16 +1,24 @@
 package artic.edu.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
+import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.exhibitions.ExhibitionDetailFragment
+import edu.artic.navigation.NavigationConstants
+import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_search_results_sub.*
 
-abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel<*>> : BaseViewModelFragment<TViewModel>() {
+abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
     override val title: String = ""
     override val layoutResId: Int = R.layout.fragment_search_results_sub
     override val screenCategory: ScreenCategoryName? = null
@@ -44,6 +52,59 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel<*>> : BaseVie
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
+        adapter.itemClicksWithPosition()
+                .subscribe { (pos, vm) ->
+                    viewModel.onClickItem(pos, vm)
+                }.disposedBy(disposeBag)
+
+    }
+
+    override fun setupNavigationBindings(viewModel: TViewModel) {
+        super.setupNavigationBindings(viewModel)
+        viewModel.navigateTo
+                .filter { it is Navigate.Forward }
+                .map { it as Navigate.Forward }
+                .subscribe {
+                    val searchNavController = Navigation.findNavController(requireActivity(), R.id.container)
+                    when (it.endpoint) {
+                        is SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap -> {
+                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap).articObject
+                            val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
+                                putExtra(NavigationConstants.ARG_SEARCH_OBJECT, o)
+                                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            }
+                            startActivity(mapIntent)
+                        }
+                        is SearchBaseViewModel.NavigationEndpoint.TourDetails -> {
+                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.TourDetails).tour
+                            searchNavController.navigate(
+                                    R.id.goToTourDetails,
+                                    TourDetailsFragment.argsBundle(o)
+                            )
+                        }
+                        is SearchBaseViewModel.NavigationEndpoint.ExhibitionDetails -> {
+                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ExhibitionDetails).exhibition
+                            searchNavController.navigate(
+                                    R.id.goToExhibitionDetails,
+                                    ExhibitionDetailFragment.argsBundle(o)
+                            )
+                        }
+                        is SearchBaseViewModel.NavigationEndpoint.ArtworkDetails -> {
+                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkDetails).articObject
+                            searchNavController.navigate(
+                                    R.id.goToSearchAudioDetails,
+                                    SearchAudioDetailFragment.argsBundle(o)
+                            )
+                        }
+                        SearchBaseViewModel.NavigationEndpoint.AmenityOnMap -> {
+
+                        }
+                        SearchBaseViewModel.NavigationEndpoint.Web -> {
+
+                        }
+                    }
+                }
+                .disposedBy(navigationDisposeBag)
     }
 
 }

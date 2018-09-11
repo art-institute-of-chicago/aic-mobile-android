@@ -2,6 +2,7 @@ package artic.edu.search
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticObject
@@ -16,12 +17,10 @@ import javax.inject.Inject
  * @author Sameer Dhakal (Fuzz)
  */
 class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao: ArticSearchObjectDao,
-                                                            objectDao: ArticObjectDao
-) : SearchBaseViewModel<DefaultSearchSuggestionsViewModel.NavigationEndpoint>() {
-
-    sealed class NavigationEndpoint {
-        data class ArticObjectDetails(val articObject: ArticObject) : NavigationEndpoint()
-    }
+                                                            objectDao: ArticObjectDao,
+                                                            analyticsTracker: AnalyticsTracker,
+                                                            searchManager: SearchResultsManager
+) : SearchBaseViewModel(analyticsTracker, searchManager) {
 
     private val suggestedKeywords: Subject<List<SearchTextCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
@@ -76,23 +75,5 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                 .bindTo(cells)
                 .disposedBy(disposeBag)
 
-    }
-
-    fun onClickItem(pos: Int, vm: SearchBaseCellViewModel) {
-        when (vm) {
-            is SearchCircularCellViewModel -> {
-                vm.artWork?.let { articObject ->
-                    navigateTo.onNext(
-                            Navigate.Forward(
-                                    NavigationEndpoint.ArticObjectDetails(articObject)
-                            )
-                    )
-
-                }
-            }
-            else -> {
-
-            }
-        }
     }
 }

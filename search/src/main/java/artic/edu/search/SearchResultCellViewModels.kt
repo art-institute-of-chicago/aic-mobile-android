@@ -17,8 +17,8 @@ class SearchTextCellViewModel(val textString: String, highlightedText: String = 
 
 class SearchEmptyCellViewModel : SearchBaseCellViewModel()
 
-class SearchHeaderCellViewModel(text: String) : SearchBaseCellViewModel() {
-    val text: Subject<String> = BehaviorSubject.createDefault(text)
+class SearchHeaderCellViewModel(header: Header) : SearchBaseCellViewModel() {
+    val text: Subject<String> = BehaviorSubject.createDefault(header.title)
 }
 
 class SearchTextHeaderViewModel(text: String) : SearchBaseCellViewModel() {
@@ -80,6 +80,12 @@ class SearchAmenitiesCellViewModel(@DrawableRes val value: Int) : SearchBaseCell
  * Both Map Amenities and Artworks requires span size of 1, and they appear next to each other.
  * In order to display these in different rows, [RowPaddingViewModel] is added in between them to break the row.
  *
- * ViewModel breaks the.
  */
 class RowPaddingViewModel : SearchBaseCellViewModel()
+
+
+sealed class Header(val title : String) {
+    class Artworks(title: String = "Artwork") : Header(title)
+    class Tours(title: String = "Tours") : Header(title)
+    class Exhibitions(title: String = "Exhibitions") : Header(title)
+}
