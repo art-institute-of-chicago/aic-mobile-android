@@ -19,14 +19,20 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel<*>> : BaseVie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        resultsRV.adapter = SearchResultsAdapter()
+
         val lm = GridLayoutManager(view.context, 5)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return (resultsRV.adapter as SearchResultsAdapter).getSpanCount(position)
             }
         }
-        resultsRV.layoutManager = lm
+
+        resultsRV.apply {
+            adapter = SearchResultsAdapter()
+            layoutManager = lm
+            addItemDecoration(SearchDividerItemDecoration(this.context))
+        }
+
     }
 
     override fun setupBindings(viewModel: TViewModel) {
