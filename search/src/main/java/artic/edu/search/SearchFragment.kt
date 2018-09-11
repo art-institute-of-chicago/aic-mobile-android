@@ -14,11 +14,14 @@ import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.search_app_bar_layout.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
+
+    lateinit var textChangesDisposable : Disposable
 
     override val viewModelClass: KClass<SearchViewModel>
         get() = SearchViewModel::class
@@ -49,16 +52,16 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
         }
 
-        searchEditText
-                .afterTextChangeEvents()
-                .skipInitialValue()
-                .throttleLast(250, TimeUnit.MILLISECONDS)
-                .subscribe { event ->
-                    event.editable()?.let { editable ->
-                        viewModel.onTextChanged(editable.toString())
-                    }
-                }
-                .disposedBy(disposeBag)
+        bindSearchText()
+
+        viewModel.searchText.subscribe {
+            if(searchEditText.text.toString() != it) {
+                textChangesDisposable.dispose()
+                searchEditText.setText(it)
+                searchEditText.setSelection(it.length)
+                bindSearchText()
+            }
+        }.disposedBy(disposeBag)
 
         viewModel.closeButtonVisible
                 .bindToMain(close.visibility())
@@ -96,6 +99,19 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
                         SearchViewModel.NavigationEndpoint.DynamicSearchResults -> {
                             navController.navigate(R.id.goToSearchResults)
                         }
+                    }
+                }
+                .disposedBy(disposeBag)
+    }
+
+    private fun bindSearchText() {
+        textChangesDisposable = searchEditText
+                .afterTextChangeEvents()
+                .skipInitialValue()
+                .throttleLast(250, TimeUnit.MILLISECONDS)
+                .subscribe { event ->
+                    event.editable()?.let { editable ->
+                        viewModel.onTextChanged(editable.toString())
                     }
                 }
                 .disposedBy(disposeBag)
