@@ -12,5 +12,7 @@ class NavigationConstants {
         const val AUDIO: String = "edu.artic.audio"
         const val INFO: String = "edu.artic.info"
         const val ARG_SEARCH_OBJECT: String = "ARG_SEARCH_OBJECT"
+        const val ARG_TOUR = "ARG_TOUR"
+        const val ARG_TOUR_START_STOP = "ARG_TOUR_START_STOP"
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
@@ -11,6 +12,7 @@ import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.navigation.NavigationConstants
+import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_search_results_sub.*
@@ -62,7 +64,8 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                 .filter { it is Navigate.Forward }
                 .map { it as Navigate.Forward }
                 .subscribe {
-                    when(it.endpoint) {
+                    val searchNavController = Navigation.findNavController(requireActivity(), R.id.container)
+                    when (it.endpoint) {
                         is SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap -> {
                             val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap).articObject
                             val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
@@ -72,7 +75,11 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                             startActivity(mapIntent)
                         }
                         is SearchBaseViewModel.NavigationEndpoint.TourDetails -> {
-
+                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.TourDetails).tour
+                            searchNavController.navigate(
+                                    R.id.goToTourDetails,
+                                    TourDetailsFragment.argsBundle(o)
+                            )
                         }
                         is SearchBaseViewModel.NavigationEndpoint.ExhibitionDetails -> {
 
