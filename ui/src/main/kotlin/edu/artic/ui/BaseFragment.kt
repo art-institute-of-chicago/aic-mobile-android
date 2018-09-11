@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.annotation.UiThread
 import android.support.design.widget.CollapsingToolbarLayout
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
@@ -20,7 +21,7 @@ import edu.artic.base.utils.setWindowFlag
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : DialogFragment() {
 
     var toolbar: Toolbar? = null
     var collapsingToolbar: CollapsingToolbarLayout? = null
