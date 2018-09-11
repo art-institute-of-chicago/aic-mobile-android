@@ -19,6 +19,10 @@
             android:id="@+id/goToTourDetails"
             app:destination="@id/tourDetailsFragment" />
 
+        <action
+            android:id="@+id/goToExhibitionDetails"
+            app:destination="@id/exhibitionDetailsFragment" />
+
         <!--<action-->
             <!--android:id="@+id/goToSearchResults"-->
             <!--app:destination="@id/searchRe"/>-->
@@ -34,6 +38,11 @@
         android:id="@+id/tourDetailsFragment"
         android:name="edu.artic.tours.TourDetailsFragment"
         android:label="TourDetailsFragment" />
+
+    <fragment
+        android:id="@+id/exhibitionDetailsFragment"
+        android:name="edu.artic.exhibitions.ExhibitionDetailFragment"
+        android:label="ExhibitionDetailsFragment" />
 
 
 </navigation>

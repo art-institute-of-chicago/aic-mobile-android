@@ -263,12 +263,29 @@
                                 <LayoutPositions />
                               </value>
                             </entry>
+                            <entry key="goToTourDetails">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                           </map>
                         </option>
                       </LayoutPositions>
                     </value>
                   </entry>
                   <entry key="search_sub_navigation_graph">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="12" />
+                            <option name="y" value="12" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="tourDetailsFragment">
                     <value>
                       <LayoutPositions>
                         <option name="myPosition">

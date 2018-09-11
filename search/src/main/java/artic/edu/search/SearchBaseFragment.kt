@@ -11,6 +11,7 @@ import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.navigation.NavigationConstants
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -82,10 +83,18 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                             )
                         }
                         is SearchBaseViewModel.NavigationEndpoint.ExhibitionDetails -> {
-
+                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ExhibitionDetails).exhibition
+                            searchNavController.navigate(
+                                    R.id.goToExhibitionDetails,
+                                    ExhibitionDetailFragment.argsBundle(o)
+                            )
                         }
                         is SearchBaseViewModel.NavigationEndpoint.ArtworkDetails -> {
-
+                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkDetails).articObject
+                            searchNavController.navigate(
+                                    R.id.goToSearchAudioDetails,
+                                    SearchAudioDetailFragment.argsBundle(o)
+                            )
                         }
                         SearchBaseViewModel.NavigationEndpoint.AmenityOnMap -> {
 
