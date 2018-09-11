@@ -51,7 +51,7 @@ import kotlin.reflect.KClass
  *
  * @see [MapActivity]
  */
-class MapFragment : BaseViewModelFragment<MapViewModel>(), LeaveCurrentTourDialogFragment.LeaveTourCallback {
+class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override val viewModelClass: KClass<MapViewModel>
         get() = MapViewModel::class
@@ -421,7 +421,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>(), LeaveCurrentTourDialo
         leaveTourDialog?.dismiss()
         val fm = requireFragmentManager()
         leaveTourDialog = LeaveCurrentTourDialogFragment().apply {
-            attachTourStateListener(this@MapFragment)
+            attachTourStateListener(object: LeaveCurrentTourDialogFragment.LeaveTourCallback{
+                override fun leftTour() {
+                    viewModel.leaveCurrentTour()
+                }
+
+                override fun stayed() {
+                    viewModel.stayedWithCurrentTour()
+                }
+
+            })
             this.show(fm, "LeaveTour")
         }
 
@@ -430,21 +439,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>(), LeaveCurrentTourDialo
     private fun refreshMapDisplayMode(requestedTour: ArticTour? = null, requestedStop: ArticTour.TourStop? = null) {
         viewModel.loadMapDisplayMode(requestedTour, requestedStop)
     }
-
-    /**
-     * User leaves tour.
-     */
-    override fun leftTour() {
-        viewModel.leaveCurrentTour()
-    }
-
-    /**
-     * Stays decides to stay on active tour.
-     */
-    override fun stayed() {
-        viewModel.stayedWithCurrentTour()
-    }
-
 
     override fun onStart() {
         super.onStart()
