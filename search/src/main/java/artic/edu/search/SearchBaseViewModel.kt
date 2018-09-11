@@ -70,7 +70,7 @@ open class SearchBaseViewModel @Inject constructor(
                 }
             }
             is SearchTextCellViewModel -> {
-                searchResultsManager.onChangeSearchText(viewModel.textString)
+                searchResultsManager.search(viewModel.textString)
             }
             is SearchHeaderCellViewModel -> {
                 //TODO: handle this case
