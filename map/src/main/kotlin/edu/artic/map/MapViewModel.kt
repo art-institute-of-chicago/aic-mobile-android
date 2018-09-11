@@ -328,7 +328,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * User stays with current tour.
      * Clear out cached search object if any.
      */
-    fun stayedWithCurrentTour() {
+    fun stayWithCurrentTour() {
         searchManager.selectedObject.onNext(Optional(null))
     }
 }
