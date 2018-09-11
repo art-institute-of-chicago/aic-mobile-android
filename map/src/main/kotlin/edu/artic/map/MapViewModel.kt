@@ -309,7 +309,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         /**
          * Clear selected tour language.
          */
-        languageSelector.setTourLanguage(Locale(""))
+        languageSelector.setTourLanguage(Locale.ROOT)
 
         /**
          * Finally, clear out the tour object from memory.
