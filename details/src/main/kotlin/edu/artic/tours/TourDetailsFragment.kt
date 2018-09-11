@@ -1,5 +1,6 @@
 package edu.artic.tours
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
@@ -12,12 +13,14 @@ import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticTour
+import edu.artic.details.R
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
-import edu.artic.map.MapActivity
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -165,7 +168,13 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                     val endpoint = forward.endpoint
                     when (endpoint) {
                         is TourDetailsViewModel.NavigationEndpoint.Map -> {
-                            startActivity(MapActivity.launchMapForTour(endpoint.tour, endpoint.stop))
+                            startActivity(NavigationConstants.MAP.asDeepLinkIntent()
+                                    .apply {
+                                        putExtra(NavigationConstants.ARG_TOUR, endpoint.tour)
+                                        putExtra(NavigationConstants.ARG_TOUR_START_STOP, endpoint.stop)
+                                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    }
+                            )
                         }
                     }
 

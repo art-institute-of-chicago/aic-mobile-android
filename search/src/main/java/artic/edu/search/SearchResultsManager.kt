@@ -25,7 +25,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
 
     private val rawSearchResults: Subject<ArticSearchResult> = BehaviorSubject.create()
     val currentSearchResults: Subject<ArticSearchResult> = BehaviorSubject.create()
-    private val currentSearchText: Subject<String> = BehaviorSubject.create()
+    val currentSearchText: Subject<String> = BehaviorSubject.create()
     private val showSuggestions: Subject<Boolean> = BehaviorSubject.create()
 
     init {
@@ -129,8 +129,11 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
         currentSearchText.onNext(newText)
     }
 
-    fun search() {
+    fun search(newText: String? = null) {
         showSuggestions.onNext(false)
+        if(newText != null) {
+            currentSearchText.onNext(newText)
+        }
     }
 
 

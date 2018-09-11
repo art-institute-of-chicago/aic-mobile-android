@@ -1,5 +1,7 @@
 package artic.edu.search
 
+import com.fuzz.rx.bindToMain
+import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
@@ -13,11 +15,19 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
                                           private val searchResultsManager: SearchResultsManager)
     : NavViewViewModel<SearchViewModel.NavigationEndpoint>() {
 
+    val searchText : Subject<String> = BehaviorSubject.create()
     val closeButtonVisible : Subject<Boolean> = BehaviorSubject.createDefault(false)
     val shouldClearTextInput : Subject<Boolean> = BehaviorSubject.createDefault(false)
     sealed class NavigationEndpoint {
         object DefaultSearchResults : NavigationEndpoint()
         object DynamicSearchResults : NavigationEndpoint()
+    }
+
+    init {
+        searchResultsManager.currentSearchText
+                .distinctUntilChanged()
+                .bindToMain(searchText)
+                .disposedBy(disposeBag)
     }
 
     fun clearText() {

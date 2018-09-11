@@ -19,4 +19,5 @@ dependencies {
     implementation project(':image')
     implementation project(':adapter')
     implementation project(':navigation')
+    implementation project(':details')
 }

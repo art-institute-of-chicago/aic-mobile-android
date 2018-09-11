@@ -19,6 +19,7 @@ import edu.artic.viewmodel.ViewModelModule
 import edu.artic.welcome.WelcomeModule
 import edu.artic.media.ui.MediaUiModule
 import edu.artic.media.audio.MediaModule
+import edu.artic.details.DetailsModule
 import javax.inject.Singleton
 
 @Singleton
@@ -40,7 +41,8 @@ import javax.inject.Singleton
     AndroidSupportInjectionModule::class,
     MediaUiModule::class,
     MediaModule::class,
-    SearchModule::class
+    SearchModule::class,
+    DetailsModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {
 

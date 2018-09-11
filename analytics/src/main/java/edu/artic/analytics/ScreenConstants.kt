@@ -39,9 +39,13 @@ sealed class EventCategoryName(val eventCategoryName: String) {
      * NB: actions in this category may be `Locale.nameOfLanguageForAnalytics()` instead of a constant from this file.
      */
     object Language : EventCategoryName("language")
+
     object PlayAudio : EventCategoryName("play_audio")
     object PlayBack : EventCategoryName("playback")
     object Tour : EventCategoryName("tour")
+    object SearchTour : EventCategoryName("search_tour")
+    object SearchExhibition : EventCategoryName("search_exhibition")
+    object SearchArtwork : EventCategoryName("search_artwork")
 }
 
 

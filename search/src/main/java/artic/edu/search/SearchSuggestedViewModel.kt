@@ -19,10 +19,8 @@ import javax.inject.Inject
 class SearchSuggestedViewModel @Inject constructor(private val manager: SearchResultsManager,
                                                    private val searchSuggestionsDao: ArticSearchObjectDao,
                                                    private val objectDao: ArticObjectDao,
-                                                   private val analyticsTracker: AnalyticsTracker)
-    : SearchBaseViewModel<SearchSuggestedViewModel.NavigationEndpoint>() {
-
-    sealed class NavigationEndpoint
+                                                   analyticsTracker: AnalyticsTracker)
+    : SearchBaseViewModel(analyticsTracker, manager) {
 
     private val dynamicCells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
@@ -105,7 +103,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun filterArtworkForViewModel(artworkList: List<ArticObject>): List<SearchBaseCellViewModel> {
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (artworkList.isNotEmpty()) {
-            cellList.add(SearchHeaderCellViewModel("Artwork")) //TODO: use localizer
+            cellList.add(SearchHeaderCellViewModel(Header.Artworks())) //TODO: use localizer
             cellList.addAll(
                     artworkList
                             .take(3)
@@ -123,7 +121,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
          */
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (list.isNotEmpty()) {
-            cellList.add(SearchHeaderCellViewModel("Exhibitions")) // TODO: use localizer
+            cellList.add(SearchHeaderCellViewModel(Header.Exhibitions())) // TODO: use localizer
             cellList.addAll(
                     list
                             .take(3)
@@ -140,7 +138,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun filterToursForViewModel(list: List<ArticTour>): List<SearchBaseCellViewModel> {
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (list.isNotEmpty()) {
-            cellList.add(SearchHeaderCellViewModel("Tours")) // TODO: use localizer
+            cellList.add(SearchHeaderCellViewModel(Header.Tours())) // TODO: use localizer
             cellList.addAll(
                     list
                             .take(3)
@@ -155,21 +153,9 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
      */
     private fun filterSearchSuggestions(searchTerm: String, list: List<String>): List<SearchBaseCellViewModel> {
         val l = list.take(3).map { SearchTextCellViewModel(it, searchTerm) }
-        if(l.isNotEmpty()) {
+        if (l.isNotEmpty()) {
             l.last().hasDivider = true
         }
         return l
-    }
-
-    fun onClickCell(pos: Int, vm: SearchBaseCellViewModel) {
-        when(vm) {
-            is SearchTextCellViewModel -> {
-                analyticsTracker.reportEvent(
-                        ScreenCategoryName.Search,
-                        AnalyticsAction.searchAutocomplete,
-                        vm.textString
-                )
-            }
-        }
     }
 }
