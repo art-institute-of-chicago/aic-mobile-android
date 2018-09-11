@@ -1,5 +1,8 @@
 package artic.edu.search
 
+import android.content.Context
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
@@ -33,6 +36,19 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
     override fun setupBindings(viewModel: SearchViewModel) {
         super.setupBindings(viewModel)
+
+        searchEditText.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val imm : InputMethodManager = requireContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromInputMethod(v.windowToken, 0 )
+                viewModel.onClickSearch()
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+
+        }
+
         searchEditText
                 .afterTextChangeEvents()
                 .skipInitialValue()

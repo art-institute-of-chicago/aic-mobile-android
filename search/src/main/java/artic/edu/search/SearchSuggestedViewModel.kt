@@ -2,8 +2,14 @@ package artic.edu.search
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
+import edu.artic.db.models.ArticExhibition
+import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticTour
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -12,7 +18,8 @@ import javax.inject.Inject
 
 class SearchSuggestedViewModel @Inject constructor(private val manager: SearchResultsManager,
                                                    private val searchSuggestionsDao: ArticSearchObjectDao,
-                                                   private val objectDao: ArticObjectDao)
+                                                   private val objectDao: ArticObjectDao,
+                                                   private val analyticsTracker: AnalyticsTracker)
     : SearchBaseViewModel<SearchSuggestedViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
@@ -68,39 +75,101 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun setupResultsBind() {
         manager.currentSearchResults
                 .map { result ->
-                    val cellList = mutableListOf<SearchBaseCellViewModel>()
+                    mutableListOf<SearchBaseCellViewModel>()
+                            .apply {
+                                addAll(filterSearchSuggestions(result.searchTerm, result.suggestions))
 
-                    cellList.addAll(result.suggestions.map { SearchTextCellViewModel(it) })
-                    if (result.artworks.isNotEmpty()) {
-                        cellList.add(SearchHeaderCellViewModel("Artwork"))
-                        cellList.addAll(
-                                result.artworks
-                                        .take(3)
-                                        .map { SearchArtworkCellViewModel(it) }
-                        )
-                    }
-                    if (result.exhibitions.isNotEmpty()) {
-                        cellList.add(SearchHeaderCellViewModel("Exhibitions"))
-                        cellList.addAll(
-                                result.exhibitions
-                                        .take(3)
-                                        .map { SearchExhibitionCellViewModel(it) }
-                        )
-                    }
+                                addAll(filterArtworkForViewModel(result.artworks))
 
-                    if (result.tours.isNotEmpty()) {
-                        cellList.add(SearchHeaderCellViewModel("Tours"))
-                        cellList.addAll(
-                                result.tours
-                                        .take(3)
-                                        .map { SearchTourCellViewModel(it) }
-                        )
-                    }
+                                addAll(filterToursForViewModel(result.tours))
 
-                    return@map cellList
+                                // Should the new cell list be empty at that point, we notify the
+                                // user that it's empty
+                                if (isEmpty()) {
+                                    add(SearchEmptyCellViewModel())
+                                    analyticsTracker.reportEvent(
+                                            ScreenCategoryName.Search,
+                                            AnalyticsAction.searchNoResults,
+                                            result.searchTerm
+                                    )
+                                }
+
+                                addAll(filterExhibitionsForViewModel(result.exhibitions))
+                            }
+
 
                 }.bindTo(dynamicCells)
                 .disposedBy(disposeBag)
     }
 
+    private fun filterArtworkForViewModel(artworkList: List<ArticObject>): List<SearchBaseCellViewModel> {
+        val cellList = mutableListOf<SearchBaseCellViewModel>()
+        if (artworkList.isNotEmpty()) {
+            cellList.add(SearchHeaderCellViewModel("Artwork")) //TODO: use localizer
+            cellList.addAll(
+                    artworkList
+                            .take(3)
+                            .map { SearchArtworkCellViewModel(it) }
+            )
+        }
+        return cellList
+    }
+
+
+    private fun filterExhibitionsForViewModel(list: List<ArticExhibition>): List<SearchBaseCellViewModel> {
+        /**
+         * Filters the tours, returning top 3 tours or an empty list if no tours are available for
+         * search terms
+         */
+        val cellList = mutableListOf<SearchBaseCellViewModel>()
+        if (list.isNotEmpty()) {
+            cellList.add(SearchHeaderCellViewModel("Exhibitions")) // TODO: use localizer
+            cellList.addAll(
+                    list
+                            .take(3)
+                            .map { SearchExhibitionCellViewModel(it) }
+            )
+        }
+        return cellList
+    }
+
+    /**
+     * Filters the tours, returning top 3 tours or an empty list if no tours are available for
+     * search terms
+     */
+    private fun filterToursForViewModel(list: List<ArticTour>): List<SearchBaseCellViewModel> {
+        val cellList = mutableListOf<SearchBaseCellViewModel>()
+        if (list.isNotEmpty()) {
+            cellList.add(SearchHeaderCellViewModel("Tours")) // TODO: use localizer
+            cellList.addAll(
+                    list
+                            .take(3)
+                            .map { SearchTourCellViewModel(it) }
+            )
+        }
+        return cellList
+    }
+
+    /**
+     * Filters search suggestions, returning top 3 or an empty list
+     */
+    private fun filterSearchSuggestions(searchTerm: String, list: List<String>): List<SearchBaseCellViewModel> {
+        val l = list.take(3).map { SearchTextCellViewModel(it, searchTerm) }
+        if(l.isNotEmpty()) {
+            l.last().hasDivider = true
+        }
+        return l
+    }
+
+    fun onClickCell(pos: Int, vm: SearchBaseCellViewModel) {
+        when(vm) {
+            is SearchTextCellViewModel -> {
+                analyticsTracker.reportEvent(
+                        ScreenCategoryName.Search,
+                        AnalyticsAction.searchAutocomplete,
+                        vm.textString
+                )
+            }
+        }
+    }
 }
