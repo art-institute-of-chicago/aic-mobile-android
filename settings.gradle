@@ -18,4 +18,5 @@ include ':app',
         ':exhibitions',
         ':events',
         ':info',
-        ':map'
+        ':map',
+        ':details'
