@@ -1,7 +1,9 @@
 package artic.edu.search
 
+import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
@@ -87,6 +89,11 @@ open class SearchBaseViewModel @Inject constructor(
                 }
             }
             is SearchTextCellViewModel -> {
+                analyticsTracker.reportEvent(
+                        ScreenCategoryName.Search,
+                        AnalyticsAction.searchAutocomplete,
+                        viewModel.textString
+                )
                 searchResultsManager.search(viewModel.textString)
             }
             is SearchHeaderCellViewModel -> {
