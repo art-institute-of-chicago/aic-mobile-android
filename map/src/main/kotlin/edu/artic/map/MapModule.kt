@@ -6,9 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import edu.artic.map.carousel.TourCarouselFragment
-import edu.artic.map.carousel.TourCarouselViewModel
-import edu.artic.map.carousel.TourProgressManager
+import edu.artic.map.carousel.*
 import edu.artic.viewmodel.ViewModelKey
 import javax.inject.Singleton
 
@@ -45,6 +43,9 @@ abstract class MapModule {
 
     @get:ContributesAndroidInjector
     abstract val searchObjectDetailsFragment: SearchObjectDetailsFragment
+
+    @get:ContributesAndroidInjector
+    abstract val leaveCurrentTourDialogFragment: LeaveCurrentTourDialogFragment
 
     @get:ContributesAndroidInjector
     abstract val tourCarouselFragment: TourCarouselFragment

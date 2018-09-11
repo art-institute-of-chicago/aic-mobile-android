@@ -10,7 +10,6 @@ import com.jakewharton.rxrelay2.Relay
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
@@ -19,8 +18,8 @@ import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MarkerHolder
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -48,7 +47,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
-    val switchTourRequest: Subject<Pair<ArticTour, ArticTour>> = PublishSubject.create()
+    val leftActiveTour: Subject<Boolean> = PublishSubject.create()
+    val switchTourRequest: Subject<Pair<ArticTour, ArticTour.TourStop>> = PublishSubject.create()
 
     val distinctFloor: Observable<Int>
         get() = floor.distinctUntilChanged()
@@ -117,6 +117,14 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
         this.currentMap
                 .bindTo(mapMarkerConstructor.map)
+                .disposedBy(disposeBag)
+
+        /**
+         * If new tour is requested when one is in progress save it as next tour.
+         */
+        switchTourRequest
+                .mapOptional()
+                .bindTo(tourProgressManager.proposedTour)
                 .disposedBy(disposeBag)
     }
 
@@ -213,33 +221,22 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         mapMarkerConstructor.cleanup()
     }
 
-    fun leaveTour() {
-        tourProgressManager.selectedTour
-                .filterFlatMap({ it.value != null }, { it.value!! })
-                .take(1)
-                .subscribeBy {
-                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourLeft, it.title)
-                }.disposedBy(disposeBag)
-        /**clear tour locale**/
-        languageSelector.setTourLanguage(Locale(""))
-        tourProgressManager.selectedTour.onNext(Optional(null))
-    }
 
     /**
-     * Updates the display mode of the map, based on the requestedTour.
+     * Updates the display mode of the map.
      * For future search integration, active tour should be canceled before we display the search items in map.
      * refer [TourProgressManager] for managing the tour state.
      */
-    fun loadMapDisplayMode(requestedTour: ArticTour?, tourStop: ArticTour.TourStop?) {
-        tourProgressManager.selectedTour
-                .withLatestFrom(searchManager.selectedObject)
+    fun loadMapDisplayMode(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?) {
+        Observables.combineLatest(
+                tourProgressManager.selectedTour,
+                tourProgressManager.proposedTour,
+                searchManager.selectedObject)
                 .take(1)
-                .subscribeBy { (lastTour, lastSearchedObject) ->
-                    /**
-                     * If requestedTour is different than current tour display prompt user to leave the previous requestedTour.
-                     */
+                .subscribeBy { (currentTour, nextTour, lastSearchedObject) ->
                     val searchObject = lastSearchedObject.value
-                    val activeTour = lastTour.value
+                    val activeTour = currentTour.value
+                    val proposedTour  = nextTour.value
 
                     if (searchObject != null && requestedTour == null) {
                         /**
@@ -251,19 +248,89 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                             displayModeChanged(MapDisplayMode.Search(searchObject))
                         }
                     } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
+                        /**
+                         * If requestedTour is different than current tour display "Leave Current Tour ?" prompt.
+                         */
                         searchManager.selectedObject.onNext(Optional(null))
-                        switchTourRequest.onNext(activeTour to requestedTour)
+                        val startStop = requestedTourStop ?: activeTour.getIntroStop()
+                        switchTourRequest.onNext(requestedTour to startStop)
+                    } else if (proposedTour != null) {
+                        val (tour, stop) = proposedTour
+                        displayModeChanged(MapDisplayMode.Tour(tour, stop))
+                        tourProgressManager.proposedTour.onNext(Optional(null))
                     } else {
                         searchManager.selectedObject.onNext(Optional(null))
                         val tourToLoad = requestedTour ?: activeTour
                         if (tourToLoad != null) {
-                            displayModeChanged(MapDisplayMode.Tour(tourToLoad, tourStop))
+                            displayModeChanged(MapDisplayMode.Tour(tourToLoad, requestedTourStop))
                         } else {
                             displayModeChanged(MapDisplayMode.CurrentFloor)
                         }
                     }
-
                 }.disposedBy(disposeBag)
 
+    }
+
+    /**
+     * Loads display mode for the map.
+     */
+    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticObject?) {
+
+        /**
+         * Store the search object to memory.
+         * Used in [MapViewModel.loadMapDisplayMode] to determine the map display mode.
+         *
+         * When the map gets a searchedObject, it saves searchedObject to
+         * [SearchManager.selectedObject] until is cleared out from [SearchManager].
+         * If the searchedObject is null we discard it as if there was no search request
+         * and fetch cached data from [SearchManager.selectedObject].
+         */
+        searchedObject?.let {
+            searchManager.selectedObject.onNext(Optional(searchedObject))
+        }
+
+        loadMapDisplayMode(requestedTour, requestedTourStop)
+    }
+
+    /**
+     * This method clears the active tour.
+     * Emits tour ended event via [MapViewModel.leftActiveTour] subject.
+     */
+    fun leaveCurrentTour() {
+        /**
+         * Update analytics : user left tour : <tour title>
+         */
+        tourProgressManager.selectedTour.take(1)
+                .filterFlatMap({ it.value != null }, { it.value!! })
+                .subscribe {
+                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourLeft, it.title)
+                }.disposedBy(disposeBag)
+
+        /**
+         * Clear selected tour language.
+         */
+        languageSelector.setTourLanguage(Locale.ROOT)
+
+        /**
+         * Finally, clear out the tour object from memory.
+         */
+        tourProgressManager.selectedTour.onNext(Optional(null))
+
+        /**
+         * Emit tour left event.
+         * This event is consumed by view to update view states (e.g. audio player, tour carousel etc.).
+         */
+        leftActiveTour.onNext(true)
+
+    }
+
+    /**
+     * User stays with current tour.
+     * Clear out cached search object if any.
+     * Clear out purposed tour.
+     */
+    fun stayWithCurrentTour() {
+        searchManager.selectedObject.onNext(Optional(null))
+        tourProgressManager.proposedTour.onNext(Optional(null))
     }
 }
