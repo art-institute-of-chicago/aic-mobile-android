@@ -80,7 +80,6 @@ class SearchAmenitiesCellViewModel(@DrawableRes val value: Int) : SearchBaseCell
  * Both Map Amenities and Artworks requires span size of 1, and they appear next to each other.
  * In order to display these in different rows, [RowPaddingViewModel] is added in between them to break the row.
  *
- * ViewModel breaks the.
  */
 class RowPaddingViewModel : SearchBaseCellViewModel()
 

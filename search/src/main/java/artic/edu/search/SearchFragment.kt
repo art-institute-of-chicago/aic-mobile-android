@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
 
 class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
-    lateinit var textChangesDisposable : Disposable
+    lateinit var textChangesDisposable: Disposable
 
     override val viewModelClass: KClass<SearchViewModel>
         get() = SearchViewModel::class
@@ -41,10 +41,10 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
         super.setupBindings(viewModel)
 
         searchEditText.setOnEditorActionListener { v, actionId, event ->
-            if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val imm : InputMethodManager = requireContext()
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                val imm: InputMethodManager = requireContext()
                         .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromInputMethod(v.windowToken, 0 )
+                imm.hideSoftInputFromInputMethod(v.windowToken, 0)
                 viewModel.onClickSearch()
                 return@setOnEditorActionListener true
             }
@@ -54,14 +54,18 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
         bindSearchText()
 
-        viewModel.searchText.subscribe {
-            if(searchEditText.text.toString() != it) {
-                textChangesDisposable.dispose()
-                searchEditText.setText(it)
-                searchEditText.setSelection(it.length)
-                bindSearchText()
-            }
-        }.disposedBy(disposeBag)
+        viewModel.searchText
+                .subscribe {
+                    if (searchEditText.text.toString() != it) {
+                        // It is important to dispose here as otherwise we would get into
+                        // an infinte loop of text updated, update edit text,
+                        // notify edit text updated etc etc
+                        textChangesDisposable.dispose()
+                        searchEditText.setText(it)
+                        searchEditText.setSelection(it.length)
+                        bindSearchText()
+                    }
+                }.disposedBy(disposeBag)
 
         viewModel.closeButtonVisible
                 .bindToMain(close.visibility())
