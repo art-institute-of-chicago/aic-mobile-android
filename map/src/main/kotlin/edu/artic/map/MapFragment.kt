@@ -427,7 +427,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }
 
                 override fun stayed() {
-                    viewModel.stayedWithCurrentTour()
+                    viewModel.stayWithCurrentTour()
                 }
 
             })
