@@ -327,8 +327,10 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     /**
      * User stays with current tour.
      * Clear out cached search object if any.
+     * Clear out purposed tour.
      */
     fun stayWithCurrentTour() {
         searchManager.selectedObject.onNext(Optional(null))
+        tourProgressManager.proposedTour.onNext(Optional(null))
     }
 }
