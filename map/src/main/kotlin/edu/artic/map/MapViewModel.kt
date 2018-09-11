@@ -233,9 +233,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 tourProgressManager.proposedTour,
                 searchManager.selectedObject)
                 .take(1)
-                .subscribeBy { (lastTour, nextTour, lastSearchedObject) ->
+                .subscribeBy { (currentTour, nextTour, lastSearchedObject) ->
                     val searchObject = lastSearchedObject.value
-                    val activeTour = lastTour.value
+                    val activeTour = currentTour.value
                     val proposedTour  = nextTour.value
 
                     if (searchObject != null && requestedTour == null) {
