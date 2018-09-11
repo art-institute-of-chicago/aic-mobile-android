@@ -1,6 +1,7 @@
 package artic.edu.search
 
 import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
@@ -31,11 +32,23 @@ open class SearchBaseViewModel @Inject constructor(
     fun onClickItem(pos: Int, viewModel: SearchBaseCellViewModel) {
         when (viewModel) {
             is SearchTourCellViewModel -> {
+                val searchText = (searchResultsManager.currentSearchText as BehaviorSubject<String>).value
+                analyticsTracker.reportEvent(
+                        EventCategoryName.SearchTour,
+                        viewModel.articTour.title,
+                        searchText.orEmpty()
+                )
                 navigateTo.onNext(
                         Navigate.Forward(NavigationEndpoint.TourDetails(viewModel.articTour))
                 )
             }
             is SearchExhibitionCellViewModel -> {
+                val searchText = (searchResultsManager.currentSearchText as BehaviorSubject<String>).value
+                analyticsTracker.reportEvent(
+                        EventCategoryName.SearchExhibition,
+                        viewModel.articExhibition.title,
+                        searchText.orEmpty()
+                )
                 navigateTo.onNext(
                         Navigate.Forward(
                                 NavigationEndpoint.ExhibitionDetails(viewModel.articExhibition)

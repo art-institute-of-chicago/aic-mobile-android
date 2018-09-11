@@ -21,6 +21,4 @@ dependencies {
     implementation project(':localization')
     implementation project(':media_ui')
     implementation project(':image')
-
-
 }
