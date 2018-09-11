@@ -32,13 +32,13 @@ open class SearchBaseViewModel @Inject constructor(
 
 
     fun onClickItem(pos: Int, viewModel: SearchBaseCellViewModel) {
-        val searchText = (searchResultsManager.currentSearchText as BehaviorSubject<String>).value
+        val searchText = (searchResultsManager.currentSearchText as BehaviorSubject<String>).value.orEmpty()
         when (viewModel) {
             is SearchTourCellViewModel -> {
                 analyticsTracker.reportEvent(
                         EventCategoryName.SearchTour,
                         viewModel.articTour.title,
-                        searchText.orEmpty()
+                        searchText
                 )
                 navigateTo.onNext(
                         Navigate.Forward(NavigationEndpoint.TourDetails(viewModel.articTour))
@@ -48,7 +48,7 @@ open class SearchBaseViewModel @Inject constructor(
                 analyticsTracker.reportEvent(
                         EventCategoryName.SearchExhibition,
                         viewModel.articExhibition.title,
-                        searchText.orEmpty()
+                        searchText
                 )
                 navigateTo.onNext(
                         Navigate.Forward(
@@ -60,7 +60,7 @@ open class SearchBaseViewModel @Inject constructor(
                 analyticsTracker.reportEvent(
                         EventCategoryName.SearchArtwork,
                         viewModel.articObject.title,
-                        searchText.orEmpty()
+                        searchText
                 )
                 navigateTo.onNext(
                         Navigate.Forward(
