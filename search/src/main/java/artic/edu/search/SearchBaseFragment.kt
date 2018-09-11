@@ -63,13 +63,28 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                 .map { it as Navigate.Forward }
                 .subscribe {
                     when(it.endpoint) {
-                        is SearchBaseViewModel.NavigationEndpoint.ArticObjectDetails -> {
-                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArticObjectDetails).articObject
+                        is SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap -> {
+                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap).articObject
                             val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                 putExtra(NavigationConstants.ARG_SEARCH_OBJECT, o)
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             }
                             startActivity(mapIntent)
+                        }
+                        is SearchBaseViewModel.NavigationEndpoint.TourDetails -> {
+
+                        }
+                        is SearchBaseViewModel.NavigationEndpoint.ExhibitionDetails -> {
+
+                        }
+                        is SearchBaseViewModel.NavigationEndpoint.ArtworkDetails -> {
+
+                        }
+                        SearchBaseViewModel.NavigationEndpoint.AmenityOnMap -> {
+
+                        }
+                        SearchBaseViewModel.NavigationEndpoint.Web -> {
+
                         }
                     }
                 }

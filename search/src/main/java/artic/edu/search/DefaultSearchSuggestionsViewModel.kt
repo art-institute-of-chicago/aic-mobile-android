@@ -18,8 +18,9 @@ import javax.inject.Inject
  */
 class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao: ArticSearchObjectDao,
                                                             objectDao: ArticObjectDao,
-                                                            analyticsTracker: AnalyticsTracker
-) : SearchBaseViewModel(analyticsTracker) {
+                                                            analyticsTracker: AnalyticsTracker,
+                                                            searchManager: SearchResultsManager
+) : SearchBaseViewModel(analyticsTracker, searchManager) {
 
     private val suggestedKeywords: Subject<List<SearchTextCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
