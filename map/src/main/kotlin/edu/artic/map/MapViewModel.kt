@@ -279,6 +279,11 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         /**
          * Store the search object to memory.
          * Used in [MapViewModel.loadMapDisplayMode] to determine the map display mode.
+         *
+         * When the map gets a searchedObject, it saves searchedObject to
+         * [SearchManager.selectedObject] until is cleared out from [SearchManager].
+         * If the searchedObject is null we discard it as if there was no search request
+         * and fetch cached data from [SearchManager.selectedObject].
          */
         searchedObject?.let {
             searchManager.selectedObject.onNext(Optional(searchedObject))
