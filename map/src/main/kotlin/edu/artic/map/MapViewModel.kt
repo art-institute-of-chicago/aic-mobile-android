@@ -124,7 +124,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
          */
         switchTourRequest
                 .mapOptional()
-                .bindTo(tourProgressManager.nextTour)
+                .bindTo(tourProgressManager.proposedTour)
                 .disposedBy(disposeBag)
     }
 
@@ -230,7 +230,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     fun loadMapDisplayMode(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?) {
         Observables.combineLatest(
                 tourProgressManager.selectedTour,
-                tourProgressManager.nextTour,
+                tourProgressManager.proposedTour,
                 searchManager.selectedObject)
                 .take(1)
                 .subscribeBy { (lastTour, nextTour, lastSearchedObject) ->
@@ -257,7 +257,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                     } else if (proposedTour != null) {
                         val (tour, stop) = proposedTour
                         displayModeChanged(MapDisplayMode.Tour(tour, stop))
-                        tourProgressManager.nextTour.onNext(Optional(null))
+                        tourProgressManager.proposedTour.onNext(Optional(null))
                     } else {
                         searchManager.selectedObject.onNext(Optional(null))
                         val tourToLoad = requestedTour ?: activeTour

@@ -20,6 +20,6 @@ class TourProgressManager {
      * Save the last selected tour.
      */
     val selectedTour: Subject<Optional<ArticTour>> = BehaviorSubject.createDefault(Optional(null))
-    val nextTour: Subject<Optional<Pair<ArticTour, ArticTour.TourStop>>> = BehaviorSubject.createDefault(Optional(null))
+    val proposedTour: Subject<Optional<Pair<ArticTour, ArticTour.TourStop>>> = BehaviorSubject.createDefault(Optional(null))
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
 }
