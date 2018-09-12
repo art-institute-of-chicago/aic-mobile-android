@@ -8,7 +8,7 @@ import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticExhibitionCMS
 import edu.artic.db.models.ArticSearchSuggestionsObject
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -222,7 +222,7 @@ class AppDataManager @Inject constructor(
      * errors occur at a low-level, only one call would go out to that `onError`.
      */
     private fun loadSecondaryData(): Observable<Int> {
-        return Observable.zip(
+        return Observables.zip(
                 getExhibitions()
                         .onErrorReturn {
                             ProgressDataState.Interrupted(it)
@@ -230,24 +230,24 @@ class AppDataManager @Inject constructor(
                 getEvents()
                         .onErrorReturn {
                             ProgressDataState.Interrupted(it)
-                        },
-                BiFunction<ProgressDataState, ProgressDataState, Int> { exhibitions, events ->
+                        }
+        ) { exhibitions, events ->
 
-                    // XXX: Instead of just throwing the first error we see, perhaps
-                    // we ought to figure out how to use rx's CompositeException
+            // XXX: Instead of just throwing the first error we see, perhaps
+            // we ought to figure out how to use rx's CompositeException
 
-                    var currentDownloads = 0
-                    when (exhibitions) {
-                        is ProgressDataState.Done<*> -> currentDownloads++
-                        is ProgressDataState.Interrupted -> throw exhibitions.error
-                    }
-                    when (events) {
-                        is ProgressDataState.Done<*> -> currentDownloads++
-                        is ProgressDataState.Interrupted -> throw events.error
-                    }
+            var currentDownloads = 0
+            when (exhibitions) {
+                is ProgressDataState.Done<*> -> currentDownloads++
+                is ProgressDataState.Interrupted -> throw exhibitions.error
+            }
+            when (events) {
+                is ProgressDataState.Done<*> -> currentDownloads++
+                is ProgressDataState.Interrupted -> throw events.error
+            }
 
-                    return@BiFunction currentDownloads
-                })
+            return@zip currentDownloads
+        }
 
     }
 
