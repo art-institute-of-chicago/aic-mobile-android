@@ -1,7 +1,6 @@
 package edu.artic.info
 
 import android.net.Uri
-import com.fuzz.rx.bindTo
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
@@ -19,7 +18,7 @@ import kotlin.reflect.KClass
 class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
 
     @Inject
-    lateinit var customTabManager : CustomTabManager
+    lateinit var customTabManager: CustomTabManager
 
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Information
@@ -42,7 +41,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
         joinNow.clicks()
                 .defaultThrottle()
                 .subscribeBy {
-                    viewModel.joinNow()
+                    viewModel.onClickJoinNow()
                 }.disposedBy(disposeBag)
     }
 
@@ -59,12 +58,12 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                                 }
                                 is InformationViewModel.NavigationEndpoint.JoinNow -> {
                                     val url = (it.endpoint as InformationViewModel.NavigationEndpoint.JoinNow).url
-                                    customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(resources.getString(url)))
+                                    customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(url))
                                 }
                             }
                         }
                     }
-                }.disposedBy(disposeBag)
+                }.disposedBy(navigationDisposeBag)
     }
 
 }

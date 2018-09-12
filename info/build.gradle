@@ -16,6 +16,7 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':navigation')
     implementation project(':search')
+    implementation project(':db')
     implementation libs.constraint_layout
     implementation libs.rx_helpers
     implementation libs.rx_kotlin
