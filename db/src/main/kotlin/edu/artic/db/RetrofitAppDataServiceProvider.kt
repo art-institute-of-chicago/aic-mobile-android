@@ -6,6 +6,7 @@ import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticDataObject
 import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import retrofit2.Retrofit
@@ -82,7 +83,9 @@ class RetrofitAppDataServiceProvider(
 
     override fun getExhibitions(): Observable<ProgressDataState> {
         return Observable.create { observer ->
-            dataObject.subscribe { dataObject ->
+            dataObject.subscribeBy(
+                    onError = { observer.onError(it) },
+                    onNext = { dataObject ->
                 var url = dataObject.dataApiUrl + dataObject.exhibitionsEndpoint
                 if (!url.contains("/search")) {
                     url += "/search"
@@ -113,7 +116,7 @@ class RetrofitAppDataServiceProvider(
                         }
 
                         )
-            }
+            })
         }
 
     }
@@ -121,7 +124,9 @@ class RetrofitAppDataServiceProvider(
 
     override fun getEvents(): Observable<ProgressDataState> {
         return Observable.create { observer ->
-            dataObject.subscribe { dataObject ->
+            dataObject.subscribeBy(
+                    onError = { observer.onError(it) },
+                    onNext = { dataObject ->
                 var url = dataObject.dataApiUrl + dataObject.eventsEndpoint
                 if (!url.contains("/search")) {
                     url += "/search"
@@ -149,7 +154,7 @@ class RetrofitAppDataServiceProvider(
                         }
 
                         )
-            }
+            })
         }
     }
 
