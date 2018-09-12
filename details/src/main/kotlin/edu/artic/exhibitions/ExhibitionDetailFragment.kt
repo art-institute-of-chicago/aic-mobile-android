@@ -97,16 +97,17 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     override fun setupNavigationBindings(viewModel: ExhibitionDetailViewModel) {
         viewModel.navigateTo
-                .subscribe {
-                    when (it) {
+                .subscribe { navEvent ->
+                    when (navEvent) {
                         is Navigate.Forward -> {
-                            when (it.endpoint) {
+                            val endpoint = navEvent.endpoint
+
+                            when (endpoint) {
                                 is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
                                     Timber.d("Show on map")
                                 }
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
-                                    val endpoint = it.endpoint as ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets
                                     startActivity(endpoint.url.asUrlViewIntent())
                                 }
                             }
