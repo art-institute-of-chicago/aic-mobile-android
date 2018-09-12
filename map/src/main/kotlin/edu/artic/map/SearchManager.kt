@@ -25,4 +25,11 @@ class SearchManager {
     val activeDiningPlace: Subject<Optional<ArticMapAnnotation>> = BehaviorSubject.createDefault(Optional(null))
 
     val leaveSearchMode: Subject<Boolean> = PublishSubject.create()
+
+    fun clearSearch() {
+        selectedObject.onNext(Optional(null))
+        selectedAmenityType.onNext(Optional(null))
+        activeDiningPlace.onNext(Optional(null))
+        leaveSearchMode.onNext(true)
+    }
 }
