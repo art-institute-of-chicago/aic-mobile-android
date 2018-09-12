@@ -10,21 +10,15 @@ import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.models.ArticGallery
+import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapTextType
 import edu.artic.image.asRequestObservable
 import edu.artic.image.toBitmap
-import edu.artic.map.DepartmentMarkerGenerator
-import edu.artic.map.MapDisplayMode
-import edu.artic.map.MapFocus
-import edu.artic.map.R
-import edu.artic.map.TextMarkerGenerator
-import edu.artic.map.amenityIconForAmenityType
+import edu.artic.map.*
 import edu.artic.map.helpers.toLatLng
-import edu.artic.ui.util.asCDNUri
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.toFlowable
 
 internal const val ALPHA_DIMMED = 0.6f
 internal const val ALPHA_VISIBLE = 1.0f
@@ -65,7 +59,7 @@ class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : Ma
     private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
-        return when(displayMode) {
+        return when (displayMode) {
             is MapDisplayMode.Search<*> ->
                 listOf<ArticMapAnnotation>().asFlowable()
             else ->
@@ -88,7 +82,7 @@ class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     private val textMarkerGenerator: TextMarkerGenerator  by lazy { TextMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
-        return when(displayMode) {
+        return when (displayMode) {
             is MapDisplayMode.Search<*> ->
                 listOf<ArticMapAnnotation>().asFlowable()
             else ->
@@ -130,7 +124,7 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     private val departmentMarkerGenerator: DepartmentMarkerGenerator by lazy { DepartmentMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
-        return when(displayMode) {
+        return when (displayMode) {
             is MapDisplayMode.Search<*> ->
                 listOf<ArticMapAnnotation>().asFlowable()
             else ->
@@ -158,7 +152,7 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
     private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticGallery>> {
-        return when(displayMode) {
+        return when (displayMode) {
             is MapDisplayMode.Search<*> ->
                 listOf<ArticGallery>().asFlowable()
             else ->
