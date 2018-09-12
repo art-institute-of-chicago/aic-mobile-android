@@ -228,24 +228,34 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * refer [TourProgressManager] for managing the tour state.
      */
     fun loadMapDisplayMode(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?) {
+
         Observables.combineLatest(
                 tourProgressManager.selectedTour,
                 tourProgressManager.proposedTour,
-                searchManager.selectedObject)
+                searchManager.selectedObject,
+                searchManager.selectedAmenityType
+        ) { currentTour, nextTour, lastSearchedObject, annotationType ->
+            val tours = currentTour.value to nextTour.value
+            val search = lastSearchedObject.value to annotationType.value
+            tours to search
+        }
                 .take(1)
-                .subscribeBy { (currentTour, nextTour, lastSearchedObject) ->
-                    val searchObject = lastSearchedObject.value
-                    val activeTour = currentTour.value
-                    val proposedTour  = nextTour.value
+                .subscribeBy { (tours, searchTypes) ->
+                    val (activeTour, proposedTour) = tours
+                    val (searchObject, searchAnnotationType) = searchTypes
 
-                    if (searchObject != null && requestedTour == null) {
+                    if ((searchObject != null || searchAnnotationType != null) && requestedTour == null) {
                         /**
                          * If user requests to load search when tour is active, prompt user to leave tour.
                          */
                         if (activeTour != null) {
                             leaveTourRequest.onNext(true)
                         } else {
-                            displayModeChanged(MapDisplayMode.Search(searchObject))
+                            if (searchObject != null) {
+                                displayModeChanged(MapDisplayMode.Search.ObjectSearch(searchObject))
+                            } else if (searchAnnotationType != null) {
+                                displayModeChanged(MapDisplayMode.Search.AmenitiesSearch(searchAnnotationType))
+                            }
                         }
                     } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
                         /**
