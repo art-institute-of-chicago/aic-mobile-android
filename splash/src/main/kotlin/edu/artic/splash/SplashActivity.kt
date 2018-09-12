@@ -21,7 +21,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.percentage
-                .map { "Percentage : ${it * 100}" }
+                .map {
+                    "Percentage : %.2f".format(it * 100)
+                }
                 .bindToMain(percentText.text())
                 .disposedBy(disposeBag)
     }
