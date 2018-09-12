@@ -50,5 +50,8 @@ internal fun ZoomLevel.toMapFocus(): MapFocus = when {
 sealed class MapDisplayMode {
     data class Tour(val tour: ArticTour, val selectedTourStop: ArticTour.TourStop?) : MapDisplayMode()
     object CurrentFloor : MapDisplayMode()
-    data class Search<T>(val item: T) : MapDisplayMode()
+    sealed class Search<T>(val item: T) : MapDisplayMode() {
+        class ObjectSearch(item: ArticObject) : Search<ArticObject>(item)
+        class AmenitiesSearch(amenityType: String) : Search<String>(amenityType)
+    }
 }
