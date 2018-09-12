@@ -314,11 +314,13 @@ class AppDataManager @Inject constructor(
      */
     private fun getExhibitions(): Observable<ProgressDataState> {
         return serviceProvider.getExhibitions()
-                .flatMap { progressDataState ->
-                    when (progressDataState) {
+                .flatMap { progress ->
+                    when (progress) {
                         is ProgressDataState.Done<*> -> {
-                            val result = progressDataState.result as ArticResult<*>
-                            if (result.data.isNotEmpty() && result.data[0] is ArticExhibition) {
+                            val result = progress.result as ArticResult<*>
+                            val retrieved = result.data
+
+                            if (retrieved.isNotEmpty() && retrieved[0] is ArticExhibition) {
                                 exhibitionDao.clear()
                                 /**
                                  * Update the sort order of the exhibitions according to the ArticExhibitionCMS
@@ -327,15 +329,17 @@ class AppDataManager @Inject constructor(
                                         .getAllCMSExhibitions()
                                         .subscribe { cmsExhibitionList ->
                                             @Suppress("UNCHECKED_CAST")
-                                            val list = (result as ArticResult<ArticExhibition>).data
-                                            val mapExhibitionByID = list.associateBy { it.id.toString() }
+                                            val list = retrieved as List<ArticExhibition>
+
+                                            val exhibitionsById = list.associateBy { it.id.toString() }
+
                                             cmsExhibitionList.forEach { exhibitionCMS: ArticExhibitionCMS ->
-                                                mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
+                                                exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                                 // Override with exhibitions optional images from CMS, if available
                                                 exhibitionCMS.imageUrl?.let {
-                                                    mapExhibitionByID[exhibitionCMS.id]?.legacy_image_mobile_url = it
+                                                    exhibitionsById[exhibitionCMS.id]?.legacy_image_mobile_url = it
                                                 }
-                                                mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
+                                                exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                             }
                                             exhibitionDao.updateExhibitions(list)
                                         }
@@ -343,7 +347,7 @@ class AppDataManager @Inject constructor(
                         }
                     }
 
-                    progressDataState.asObservable()
+                    progress.asObservable()
                 }
     }
 
