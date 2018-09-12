@@ -2,10 +2,15 @@ package edu.artic.map
 
 import android.os.Bundle
 import android.view.View
-import com.bumptech.glide.Glide
-import com.fuzz.rx.*
+import com.fuzz.indicator.OffSetHint
+import com.fuzz.rx.bindTo
+import com.fuzz.rx.defaultThrottle
+import com.fuzz.rx.disposedBy
+import com.fuzz.rx.mapOptional
+import com.jakewharton.rxbinding2.support.v4.view.pageSelections
 import com.jakewharton.rxbinding2.view.clicks
-import com.jakewharton.rxbinding2.widget.text
+import com.jakewharton.rxbinding2.view.visibility
+import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
 import edu.artic.media.audio.AudioPlayerService
@@ -38,73 +43,83 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Search
 
-    private val mapObject: ArticObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_SEARCH_OBJECT) }
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
-
-    override fun onRegisterViewModel(viewModel: SearchObjectDetailsViewModel) {
-        viewModel.articObject = mapObject
-    }
+    private val adapter = SearchedObjectsAdapter()
 
     override fun setupBindings(viewModel: SearchObjectDetailsViewModel) {
 
-        viewModel.title
-                .bindToMain(searchObjectTitle.text())
-                .disposedBy(disposeBag)
-
-        viewModel.galleryLocation
-                .bindToMain(subtitle.text())
-                .disposedBy(disposeBag)
-
-        viewModel.image
+        /**
+         * Bind the viewHolders to adapter.
+         */
+        viewModel.searchedObjectViewModels
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    Glide.with(this)
-                            .load(it)
-                            .into(image)
-                }.disposedBy(disposeBag)
+                    adapter.setItemsList(it)
+                    adapter.notifyDataSetChanged()
+                }
+                .disposedBy(disposeBag)
 
-        close.clicks()
-                .defaultThrottle()
-                .withLatestFrom(audioService)
-                .subscribeBy { (_, service) ->
-                    viewModel.leaveSearchMode()
-                    service.stopPlayer()
-                }.disposedBy(disposeBag)
-
+        /**
+         * Hide the viewPagerIndicator if there's single item
+         */
+        viewModel.searchedObjectViewModels
+                .map { it.size > 1 }
+                .bindTo(viewPagerIndicator.visibility())
+                .disposedBy(disposeBag)
 
         viewModel.playerControl
                 .observeOn(AndroidSchedulers.mainThread())
-                .withLatestFrom(audioService) { playerAction, service ->
-                    playerAction to service
-                }.subscribe { actionWithService ->
-                    val playerAction = actionWithService.first
-                    val service = actionWithService.second
-
-                    when (playerAction) {
-                        is SearchObjectDetailsViewModel.PlayerAction.Play -> {
-                            service.playPlayer(playerAction.requestedObject)
+                .withLatestFrom(audioService) { playControl, service ->
+                    playControl to service
+                }.subscribe { pair ->
+                    val playControl = pair.first
+                    val service = pair.second
+                    when (playControl) {
+                        is SearchObjectBaseViewModel.PlayerAction.Play -> {
+                            if (playControl.audioFileModel != null) {
+                                service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
+                            } else {
+                                service.playPlayer(playControl.requestedObject)
+                            }
                         }
-                        is SearchObjectDetailsViewModel.PlayerAction.Pause -> {
-                            service.pausePlayer()
-                        }
+                        is SearchObjectBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
                     }
                 }.disposedBy(disposeBag)
 
+        audioService
+                .flatMap { service -> service.audioPlayBackStatus }
+                .bindTo(viewModel.audioPlayBackStatus)
+                .disposedBy(disposeBag)
 
-        viewModel.playState.subscribe { playBackState ->
-            when (playBackState) {
-                is AudioPlayerService.PlayBackState.Playing -> {
-                    displayPause()
-                }
-                is AudioPlayerService.PlayBackState.Paused -> {
-                    displayPlayButton()
-                }
-                is AudioPlayerService.PlayBackState.Stopped -> {
-                    displayPlayButton()
-                }
-            }
-        }.disposedBy(disposeBag)
+        audioService
+                .flatMap { service -> service.currentTrack }
+                .mapOptional()
+                .bindTo(viewModel.currentTrack)
+                .disposedBy(disposeBag)
 
+        /**
+         * Stop the audio player if artwork audio on progress.
+         */
+        viewModel.leftSearchMode
+                .filter { it }
+                .withLatestFrom(audioService)
+                .subscribeBy { (_, service) ->
+                    service.stopPlayer()
+                }.disposedBy(disposeBag)
+
+        searchResults.pageSelections()
+                .distinctUntilChanged()
+                .bindTo(viewModel.currentPage)
+                .disposedBy(disposeBag)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        /**
+         * Bind the searched object or type to viewModel.
+         * Search Object and Search type are mutually exclusive.
+         */
+        viewModel.viewResumed(getLatestTourObject(), getAmenityType())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -114,53 +129,58 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
                 .bindTo(audioService)
                 .disposedBy(disposeBag)
 
-        audioService.flatMap { service -> service.audioPlayBackStatus }
-                .bindTo(viewModel.audioPlayBackStatus)
-                .disposedBy(disposeBag)
+        searchResults.adapter = adapter.toPagerAdapter()
+        viewPagerIndicator.setViewPager(searchResults)
+        viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
 
-        audioService.flatMap { service -> service.currentTrack }
-                .mapOptional()
-                .bindTo(viewModel.currentTrack)
-                .disposedBy(disposeBag)
-
-
-        playCurrent
-                .clicks()
+        /**
+         * Leave search mode when user taps close button.
+         */
+        close.clicks()
                 .defaultThrottle()
                 .subscribe {
-                    viewModel.playCurrentObject()
+                    viewModel.leaveSearchMode()
                 }.disposedBy(disposeBag)
-
-        pauseCurrent
-                .clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.pauseCurrentObject()
-                }.disposedBy(disposeBag)
-
-    }
-
-    private fun displayPause() {
-        playCurrent.visibility = View.INVISIBLE
-        pauseCurrent.visibility = View.VISIBLE
-
-    }
-
-    private fun displayPlayButton() {
-        playCurrent.visibility = View.VISIBLE
-        pauseCurrent.visibility = View.INVISIBLE
     }
 
 
     companion object {
-        private val ARG_SEARCH_OBJECT = SearchObjectDetailsFragment::class.java.simpleName
+        private val ARG_SEARCH_OBJECT = "ARG_SEARCH_OBJECT"
+        private val ARG_AMENITY_TYPE = "ARG_AMENITY_TYPE"
 
-        fun create(articObject: ArticObject): SearchObjectDetailsFragment {
+        fun loadArtworkResults(articObject: ArticObject): SearchObjectDetailsFragment {
             return SearchObjectDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_SEARCH_OBJECT, articObject)
                 }
             }
         }
+
+        fun loadAmenitiesByType(type: String): SearchObjectDetailsFragment {
+            return SearchObjectDetailsFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_AMENITY_TYPE, type)
+                }
+            }
+        }
     }
+
+    private fun getLatestTourObject(): ArticObject? {
+        val data = arguments?.getParcelable<ArticObject>(ARG_SEARCH_OBJECT)
+        arguments?.remove(ARG_SEARCH_OBJECT)
+        return data
+
+    }
+
+    private fun getAmenityType(): String? {
+        val data = arguments?.getString(ARG_AMENITY_TYPE)
+        arguments?.remove(ARG_AMENITY_TYPE)
+        return data
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewPagerIndicator.setViewPager(null)
+    }
+
 }
