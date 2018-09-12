@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import android.support.annotation.WorkerThread
 import com.fuzz.rx.asObservable
 import edu.artic.db.daos.*
 import edu.artic.db.models.ArticAppData
@@ -8,7 +9,7 @@ import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticExhibitionCMS
 import edu.artic.db.models.ArticSearchSuggestionsObject
 import io.reactivex.Observable
-import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -122,6 +123,10 @@ class AppDataManager @Inject constructor(
     fun getBlob(): Observable<ProgressDataState> {
         return serviceProvider.getBlobHeaders()
                 .flatMap { headers ->
+                    // First, verify that we actually _have_ what we need. This is quick.
+                    enforceSanityCheck()
+
+                    // Next, see if the latest data is newer than what we have on file.
                     if (!headers.containsKey(HEADER_LAST_MODIFIED) || headers[HEADER_LAST_MODIFIED]?.get(0)
                             != appDataPreferencesManager.lastModified) {
                         serviceProvider.getBlob()
@@ -130,10 +135,6 @@ class AppDataManager @Inject constructor(
                     }
                 }.flatMap { appDataState ->
                     if (appDataState is ProgressDataState.Done<*>) {
-                        //Save last downloaded headers
-                        appDataState.headers[HEADER_LAST_MODIFIED]?.let {
-                            appDataPreferencesManager.lastModified = it[0]
-                        }
 
                         // runs the whole operation in a transaction.
                         appDatabase.runInTransaction {
@@ -202,11 +203,42 @@ class AppDataManager @Inject constructor(
                                 val artworkSuggestions = searchObject.searchObjects.map { it -> it.toString() }
                                 searchSuggestionDao.setDataObject(ArticSearchSuggestionsObject(searchKeywordSuggestions, artworkSuggestions))
                             }
+
+
+                            // Now that the transaction has reached its end successfully, we may
+                            // save the last-modified date
+                            appDataState.headers[HEADER_LAST_MODIFIED]?.let {
+                                appDataPreferencesManager.lastModified = it[0]
+                            }
+
                         }
 
                     }
                     return@flatMap appDataState.asObservable()
                 }
+    }
+
+    /**
+     * Internal mechanism for checking our database consistency. Right now we look
+     * at two basic metrics:
+     *
+     * * is there exactly one [edu.artic.db.models.ArticGeneralInfo] in the db?
+     * * is there exactly one [edu.artic.db.models.ArticDataObject] in the db?
+     *
+     * We chose these particular objects because they are particularly important
+     * to the UI and any reconstruction mechanisms we might want to trigger.
+     * If just one is missing, the app simply cannot operate in any great capacity
+     * and we _must_ call [AppDataServiceProvider.getBlob].
+     *
+     * If either fails, it means that the database does not contain the
+     * [basic ArticAppData][ArticAppData] content we need to function.
+     */
+    @WorkerThread
+    private fun enforceSanityCheck() {
+        if (generalInfoDao.getRowCount() != 1 || dataObjectDao.getRowCount() != 1) {
+            // Absolutely no reason to keep previous data. Destroy it.
+            appDataPreferencesManager.lastModified = ""
+        }
     }
 
     /**
@@ -222,7 +254,7 @@ class AppDataManager @Inject constructor(
      * errors occur at a low-level, only one call would go out to that `onError`.
      */
     private fun loadSecondaryData(): Observable<Int> {
-        return Observable.zip(
+        return Observables.zip(
                 getExhibitions()
                         .onErrorReturn {
                             ProgressDataState.Interrupted(it)
@@ -230,24 +262,24 @@ class AppDataManager @Inject constructor(
                 getEvents()
                         .onErrorReturn {
                             ProgressDataState.Interrupted(it)
-                        },
-                BiFunction<ProgressDataState, ProgressDataState, Int> { exhibitions, events ->
+                        }
+        ) { exhibitions, events ->
 
-                    // XXX: Instead of just throwing the first error we see, perhaps
-                    // we ought to figure out how to use rx's CompositeException
+            // XXX: Instead of just throwing the first error we see, perhaps
+            // we ought to figure out how to use rx's CompositeException
 
-                    var currentDownloads = 0
-                    when (exhibitions) {
-                        is ProgressDataState.Done<*> -> currentDownloads++
-                        is ProgressDataState.Interrupted -> throw exhibitions.error
-                    }
-                    when (events) {
-                        is ProgressDataState.Done<*> -> currentDownloads++
-                        is ProgressDataState.Interrupted -> throw events.error
-                    }
+            var currentDownloads = 0
+            when (exhibitions) {
+                is ProgressDataState.Done<*> -> currentDownloads++
+                is ProgressDataState.Interrupted -> throw exhibitions.error
+            }
+            when (events) {
+                is ProgressDataState.Done<*> -> currentDownloads++
+                is ProgressDataState.Interrupted -> throw events.error
+            }
 
-                    return@BiFunction currentDownloads
-                })
+            return@zip currentDownloads
+        }
 
     }
 
