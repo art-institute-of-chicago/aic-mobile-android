@@ -30,6 +30,7 @@ import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -71,6 +72,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     private fun getLatestSearchObject(): ArticObject? {
         return requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+    }
+
+    private fun getLatestSearchObjectType(): String? {
+        val data: String? = requireActivity().intent?.getStringExtra(ARG_AMENITY_TYPE)
+        requireActivity().intent?.removeExtra(ARG_AMENITY_TYPE)
+        return data
     }
 
     private fun getLatestTourObject(): ArticTour? {
@@ -411,7 +418,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         leaveTourDialog?.dismiss()
         val fm = requireFragmentManager()
         leaveTourDialog = LeaveCurrentTourDialogFragment().apply {
-            attachTourStateListener(object: LeaveCurrentTourDialogFragment.LeaveTourCallback{
+            attachTourStateListener(object : LeaveCurrentTourDialogFragment.LeaveTourCallback {
                 override fun leftTour() {
                     viewModel.leaveCurrentTour()
                 }
@@ -438,8 +445,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        viewModel.onResume(getLatestTourObject(), getStartTourStop(), getLatestSearchObject())
-        viewModel.loadMapDisplayMode(getLatestTourObject(), getStartTourStop())
+        viewModel.onResume(getLatestTourObject(), getStartTourStop(), getLatestSearchObject(), getLatestSearchObjectType())
     }
 
     override fun onPause() {

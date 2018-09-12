@@ -274,7 +274,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     /**
      * Loads display mode for the map.
      */
-    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticObject?) {
+    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticObject?, searchedAnnotationType: String?) {
 
         /**
          * Store the search object to memory.
@@ -287,6 +287,11 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
          */
         searchedObject?.let {
             searchManager.selectedObject.onNext(Optional(searchedObject))
+        }
+
+        searchedAnnotationType?.let {
+            searchManager.selectedObject.onNext(Optional(null))
+            searchManager.selectedAmenityType.onNext(Optional(it))
         }
 
         loadMapDisplayMode(requestedTour, requestedTourStop)
