@@ -6,6 +6,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asUrlViewIntent
@@ -19,6 +20,12 @@ import timber.log.Timber
 import kotlin.reflect.KClass
 
 
+/**
+ * This is where we show extra information about a specific [ArticExhibition].
+ *
+ * In the UI, it is more frequently called
+ * # On View
+ */
 class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel>() {
 
     override val screenCategory: ScreenCategoryName
@@ -71,6 +78,11 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
         viewModel.buyTicketsButtonText
                 .bindToMain(buyTickets.text())
+                .disposedBy(disposeBag)
+
+        viewModel.location
+                .map { (lat, long) -> lat != null && long != null }
+                .bindToMain(showOnMap.visibility())
                 .disposedBy(disposeBag)
 
         showOnMap.clicks()
