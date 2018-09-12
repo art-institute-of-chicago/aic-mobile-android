@@ -1,6 +1,5 @@
 package edu.artic.splash
 
-import android.util.Log
 import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
@@ -25,6 +24,9 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavV
         appDataManager.loadData()
                 .subscribe({
                     when (it) {
+                        is ProgressDataState.Interrupted -> {
+                            percentage.onError(it.error)
+                        }
                         is ProgressDataState.Downloading -> {
                             percentage.onNext(it.progress)
                         }
@@ -36,7 +38,7 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavV
                         }
                     }
                 }, {
-                    it.printStackTrace()
+                    percentage.onError(it)
                 }, {}).disposedBy(disposeBag)
     }
 
