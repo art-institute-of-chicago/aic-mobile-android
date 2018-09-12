@@ -22,7 +22,7 @@ import edu.artic.db.models.*
             ArticMapFloor::class,
             ArticSearchSuggestionsObject::class
         ],
-        version = 2,
+        version = 3,
         exportSchema = false
 )
 @TypeConverters(AppConverters::class)
