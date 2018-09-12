@@ -71,9 +71,7 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
                 .observeOn(AndroidSchedulers.mainThread())
                 .withLatestFrom(audioService) { playControl, service ->
                     playControl to service
-                }.subscribe { pair ->
-                    val playControl = pair.first
-                    val service = pair.second
+                }.subscribeBy { (playControl, service) ->
                     when (playControl) {
                         is SearchObjectBaseViewModel.PlayerAction.Play -> {
                             if (playControl.audioFileModel != null) {
