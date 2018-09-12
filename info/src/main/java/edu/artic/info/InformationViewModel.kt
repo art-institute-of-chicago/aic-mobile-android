@@ -1,6 +1,9 @@
 package edu.artic.info
 
 import android.support.annotation.StringRes
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import javax.inject.Inject
@@ -8,7 +11,7 @@ import javax.inject.Inject
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class InformationViewModel @Inject constructor() : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
+class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker) : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         object AccessMemberCard : NavigationEndpoint()
@@ -21,6 +24,7 @@ class InformationViewModel @Inject constructor() : NavViewViewModel<InformationV
     }
 
     fun joinNow() {
+        analyticsTracker.reportEvent(ScreenCategoryName.Information, AnalyticsAction.memberJoinPressed)
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.JoinNow(R.string.joinUrl)))
     }
 }
