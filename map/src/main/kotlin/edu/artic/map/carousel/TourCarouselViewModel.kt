@@ -211,6 +211,7 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
                 .filter { it.galleryLocation != null }
                 .map { it.galleryLocation!! }
                 .bindTo(galleryText)
+                .disposedBy(disposeBag)
 
         /**
          * Display play icon if the current stop's audio is already playing
