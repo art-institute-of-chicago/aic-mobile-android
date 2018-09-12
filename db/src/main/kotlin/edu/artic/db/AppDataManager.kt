@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import android.support.annotation.WorkerThread
 import com.fuzz.rx.asObservable
 import edu.artic.db.daos.*
 import edu.artic.db.models.ArticAppData
@@ -122,6 +123,10 @@ class AppDataManager @Inject constructor(
     fun getBlob(): Observable<ProgressDataState> {
         return serviceProvider.getBlobHeaders()
                 .flatMap { headers ->
+                    // First, verify that we actually _have_ what we need. This is quick.
+                    enforceSanityCheck()
+
+                    // Next, see if the latest data is newer than what we have on file.
                     if (!headers.containsKey(HEADER_LAST_MODIFIED) || headers[HEADER_LAST_MODIFIED]?.get(0)
                             != appDataPreferencesManager.lastModified) {
                         serviceProvider.getBlob()
@@ -207,6 +212,29 @@ class AppDataManager @Inject constructor(
                     }
                     return@flatMap appDataState.asObservable()
                 }
+    }
+
+    /**
+     * Internal mechanism for checking our database consistency. Right now we look
+     * at two basic metrics:
+     *
+     * * is there exactly one [edu.artic.db.models.ArticGeneralInfo] in the db?
+     * * is there exactly one [edu.artic.db.models.ArticDataObject] in the db?
+     *
+     * We chose these particular objects because they are particularly important
+     * to the UI and any reconstruction mechanisms we might want to trigger.
+     * If just one is missing, the app simply cannot operate in any great capacity
+     * and we _must_ call [AppDataServiceProvider.getBlob].
+     *
+     * If either fails, it means that the database does not contain the
+     * [basic ArticAppData][ArticAppData] content we need to function.
+     */
+    @WorkerThread
+    private fun enforceSanityCheck() {
+        if (generalInfoDao.getRowCount() != 1 || dataObjectDao.getRowCount() != 1) {
+            // Absolutely no reason to keep previous data. Destroy it.
+            appDataPreferencesManager.lastModified = ""
+        }
     }
 
     /**
