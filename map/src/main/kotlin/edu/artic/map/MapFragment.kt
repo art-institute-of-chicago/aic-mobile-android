@@ -25,6 +25,7 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.rendering.GlideMapTileProvider
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MapTileAssetProvider
 import edu.artic.map.rendering.MarkerMetaData
@@ -177,7 +178,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         tileOverlay = map.addTileOverlay(TileOverlayOptions()
                 .zIndex(0.2f)
-                .tileProvider(MapTileAssetProvider(resources.assets, 1)))
+                .tileProvider(GlideMapTileProvider(requireContext(),1)))
 
 //        map.addTileOverlay(TileOverlayOptions().zIndex(0.3f)
 //                .transparency(0.5f)
@@ -304,7 +305,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     tileOverlay.remove()
                     tileOverlay = map.addTileOverlay(TileOverlayOptions()
                             .zIndex(0.2f)
-                            .tileProvider(MapTileAssetProvider(resources.assets, floor)))
+                            .tileProvider(GlideMapTileProvider(requireContext(), floor)))
                 }
                 .disposedBy(disposeBag)
 
