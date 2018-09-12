@@ -20,7 +20,18 @@ data class ArticExhibition(
         @Json(name = "id") @PrimaryKey val id: Int,
         @Json(name = "aic_end_at") val aic_end_at: ZonedDateTime,
         @Json(name = "title") val title: String,
-        var order: Int = -1
+        var order: Int = -1,
+
+        /**
+         * This value is defined by the associated [ArticGallery], associated
+         * by [gallery_id].
+         */
+        var latitude: Double? = null,
+        /**
+         * This value is defined by the associated [ArticGallery], associated
+         * by [gallery_id].
+         */
+        var longitude: Double? = null
 ) : Parcelable {
 
     val startTime: ZonedDateTime

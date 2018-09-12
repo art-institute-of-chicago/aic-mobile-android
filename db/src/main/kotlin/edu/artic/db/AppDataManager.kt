@@ -15,11 +15,7 @@ import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.daos.DashboardDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.daos.*
-import edu.artic.db.models.ArticAppData
-import edu.artic.db.models.ArticEvent
-import edu.artic.db.models.ArticExhibition
-import edu.artic.db.models.ArticExhibitionCMS
-import edu.artic.db.models.ArticSearchSuggestionsObject
+import edu.artic.db.models.*
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject
@@ -341,6 +337,23 @@ class AppDataManager @Inject constructor(
                                                 }
                                                 exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                             }
+
+
+                                            val desiredIds = exhibitionsById.values.mapNotNull { it.gallery_id }
+                                            val galleries : List<ArticGallery> = galleryDao.getGalleriesForIdList(desiredIds)
+
+                                            val galleriesById: Map<String?, ArticGallery> = galleries.associateBy { it.galleryId }
+
+                                            list.forEach { exhibition ->
+                                                if (exhibition.gallery_id != null) {
+                                                    val gallery = galleriesById[exhibition.gallery_id]
+                                                    if (gallery?.location != null) {
+                                                        exhibition.latitude = gallery.latitude
+                                                        exhibition.longitude = gallery.longitude
+                                                    }
+                                                }
+                                            }
+
                                             exhibitionDao.updateExhibitions(list)
                                         }
                             }
