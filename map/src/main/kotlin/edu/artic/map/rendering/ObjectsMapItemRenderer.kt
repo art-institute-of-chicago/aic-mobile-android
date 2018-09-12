@@ -58,7 +58,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                 .subscribeOn(Schedulers.trampoline())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (region, mapItems, mapChangeEvent) ->
-                    Timber.d("Evaluating Markers For Visible Region Change")
+                    Timber.d("Evaluating Markers For Visible Region Change $region")
                     mapItems.values.forEach { markerHolder ->
                         adjustVisibleMarker(markerHolder, region, mapChangeEvent)
                     }
@@ -77,7 +77,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
             existing: MarkerHolder<ArticObject>,
             visibleRegion: VisibleRegion,
             mapChangeEvent: MapChangeEvent) {
-        val position = getLocationFromItem(existing.item)
+        val position = getAdjustedLocationFromItem(existing.item)
         val meta = existing.marker.metaData()
                 ?: MarkerMetaData(existing.item, loadedBitmap = false, requestDisposable = null)
 

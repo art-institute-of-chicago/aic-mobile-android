@@ -17,6 +17,9 @@ internal fun initialMapCameraPosition(): CameraUpdate = CameraUpdateFactory.newC
                 .build())
 
 internal val museumBounds: LatLngBounds = LatLngBounds(
-        LatLng(41.878423, -87.624189),
-        LatLng(41.881612, -87.621000)
+        // southwest
+        LatLng(41.875815, -87.627528),
+
+        // northeast
+        LatLng(41.883309, -87.617464)
 )
