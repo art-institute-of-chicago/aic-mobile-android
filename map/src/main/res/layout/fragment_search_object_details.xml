@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
     android:background="@color/mapObjectWindowBlue"
     android:clickable="true"
-    android:layout_gravity="bottom"
     android:focusable="true">
 
     <android.support.constraint.ConstraintLayout
@@ -26,6 +26,7 @@
             android:paddingTop="@dimen/marginDouble"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:background="#fab" />
 
         <com.fuzz.indicator.CutoutViewIndicator
@@ -49,11 +50,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:padding="@dimen/marginStandard"
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
         android:layout_marginBottom="@dimen/marginDouble"
         android:contentDescription="@null"
+        android:padding="@dimen/marginStandard"
         android:src="@drawable/ic_close_black_24dp" />
 
 </FrameLayout>
