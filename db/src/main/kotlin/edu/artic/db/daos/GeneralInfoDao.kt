@@ -14,4 +14,13 @@ interface GeneralInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun setGeneralInfo(generalInfo: ArticGeneralInfo): Long
+
+    /**
+     * For sanity checks in [edu.artic.db.AppDataManager.enforceSanityCheck].
+     *
+     * Must return 0 if there's no data, 1 if there _is_ data,
+     * any other number means something is wrong.
+     */
+    @Query("select count(*) from ArticGeneralInfo limit 1")
+    fun getRowCount(): Int
 }
