@@ -29,6 +29,7 @@ class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
         analyticsTracker.reportEvent(ScreenCategoryName.Information, AnalyticsAction.memberJoinPressed)
         dataObjectDao.getDataObject()
                 .toObservable()
+                .take(1)
                 .map { it.membershipUrl.orEmpty() }
                 .filter { it.isNotEmpty() }
                 .map { Navigate.Forward(NavigationEndpoint.JoinNow(it)) }
