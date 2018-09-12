@@ -3,11 +3,12 @@ package artic.edu.search
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
+import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
-import edu.artic.base.utils.DateTimeHelper
-import edu.artic.db.models.ArticEvent
+import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
 import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -15,7 +16,9 @@ import javax.inject.Inject
 class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracker: AnalyticsTracker)
     : NavViewViewModel<SearchAudioDetailViewModel.NavigationEndpoint>() {
 
-    sealed class NavigationEndpoint
+    sealed class NavigationEndpoint{
+        data class ObjectOnMap(val articObject: ArticObject) : NavigationEndpoint()
+    }
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val title: Subject<String> = BehaviorSubject.createDefault("test")
@@ -53,7 +56,14 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
     }
 
     fun onClickShowOnMap() {
-        //TODO: go to map to show this
+        articObject?.let{ articObj->
+            analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowArtwork, articObj.title)
+            navigateTo.onNext(
+                    Navigate.Forward(
+                            NavigationEndpoint.ObjectOnMap(articObj)
+                    )
+            )
+        }
     }
 
     fun onClickPlayAudio() {

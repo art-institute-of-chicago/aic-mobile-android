@@ -1,5 +1,6 @@
 package artic.edu.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
@@ -10,10 +11,13 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticObject
 import edu.artic.image.listenerAnimateSharedTransaction
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_search_audio_detail.*
 import kotlin.reflect.KClass
 
@@ -90,6 +94,21 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
 
     override fun setupNavigationBindings(viewModel: SearchAudioDetailViewModel) {
         super.setupNavigationBindings(viewModel)
+        viewModel.navigateTo
+                .filter { it is Navigate.Forward }
+                .map { it as Navigate.Forward }
+                .subscribe {
+                    when (it.endpoint) {
+                        is SearchAudioDetailViewModel.NavigationEndpoint.ObjectOnMap -> {
+                            val o = (it.endpoint as SearchAudioDetailViewModel.NavigationEndpoint.ObjectOnMap).articObject
+                            val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
+                                putExtra(NavigationConstants.ARG_SEARCH_OBJECT, o)
+                                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            }
+                            startActivity(mapIntent)
+                        }
+                    }
+                }.disposedBy(navigationDisposeBag)
     }
 
 
