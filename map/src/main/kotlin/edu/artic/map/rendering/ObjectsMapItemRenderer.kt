@@ -27,6 +27,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.toFlowable
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -139,7 +140,8 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticObject>> = when (displayMode) {
         is MapDisplayMode.CurrentFloor -> objectsDao.getObjectsByFloor(floor = floor)
         is MapDisplayMode.Tour -> objectsDao.getObjectsByIdList(displayMode.tour.tourStops.mapNotNull { it.objectId })
-        is MapDisplayMode.Search<*> -> objectsDao.getObjectById((displayMode.item as ArticObject).nid).map { listOf(it) }
+        is MapDisplayMode.Search.ObjectSearch -> objectsDao.getObjectById(displayMode.item.nid).map { listOf(it) }
+        is MapDisplayMode.Search.AmenitiesSearch -> listOf<List<ArticObject>>().toFlowable()
     }
 
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
@@ -180,7 +182,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     override fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticObject): Float {
         // on tour, set the alpha depending on current floor.
-        return if (mapDisplayMode is MapDisplayMode.Tour) {
+        return if (mapDisplayMode is MapDisplayMode.Tour || mapDisplayMode is MapDisplayMode.Search.ObjectSearch) {
             if (item.floor == floor) ALPHA_VISIBLE else ALPHA_DIMMED
         } else {
             ALPHA_VISIBLE
