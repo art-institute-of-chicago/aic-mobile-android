@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.db.Floor
 import edu.artic.ui.util.asCDNUri
 
 @JsonClass(generateAdapter = true)
@@ -17,7 +18,7 @@ data class ArticMapAnnotation(
         @Json(name = "location") val location: String?,
         @Json(name = "latitude") val latitude: String?,
         @Json(name = "longitude") val longitude: String?,
-        @Json(name = "floor") val floor: String?,
+        @Floor @Json(name = "floor") val floor: Int?,
         @Json(name = "description") val description: String?,
         @Json(name = "label") val label: String?,
         @Json(name = "annotation_type") val annotationType: String?,
