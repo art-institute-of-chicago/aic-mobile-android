@@ -2,6 +2,18 @@ package edu.artic.db
 
 import android.support.annotation.WorkerThread
 import com.fuzz.rx.asObservable
+import edu.artic.db.daos.ArticAudioFileDao
+import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticEventDao
+import edu.artic.db.daos.ArticExhibitionCMSDao
+import edu.artic.db.daos.ArticExhibitionDao
+import edu.artic.db.daos.ArticGalleryDao
+import edu.artic.db.daos.ArticMapAnnotationDao
+import edu.artic.db.daos.ArticMapFloorDao
+import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.daos.DashboardDao
+import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.daos.*
 import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticEvent
@@ -40,6 +52,7 @@ class AppDataManager @Inject constructor(
         private val eventDao: ArticEventDao,
         private val exhibitionDao: ArticExhibitionDao,
         private val objectDao: ArticObjectDao,
+        private val articMapFloorDao: ArticMapFloorDao,
         private val searchSuggestionDao: ArticSearchObjectDao
 ) {
     companion object {
@@ -142,6 +155,9 @@ class AppDataManager @Inject constructor(
 
                             dashboardDao.setDashBoard(result.dashboard)
                             generalInfoDao.setGeneralInfo(result.generalInfo)
+                            result.mapFloors?.values?.let { floors ->
+                                articMapFloorDao.insertMapFloors(floors.toList())
+                            }
 
                             val galleries = result.galleries?.values?.toList()
                             if (galleries?.isNotEmpty() == true) {

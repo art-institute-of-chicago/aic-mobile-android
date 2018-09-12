@@ -25,6 +25,7 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.rendering.GlideMapTileProvider
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
@@ -63,7 +64,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = ScreenCategoryName.Map
 
     private lateinit var baseGroundOverlay: GroundOverlay
-    private lateinit var buildingGroundOverlay: GroundOverlay
+    private lateinit var tileOverlay: TileOverlay
     private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
@@ -161,8 +162,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isTrafficEnabled = false
 
             setMapStyle(MapStyleOptions(mapStyleOptions))
-            setMinZoomPreference(17f)
-            setMaxZoomPreference(22f)
+            setMinZoomPreference(ZOOM_MIN)
+            setMaxZoomPreference(ZOOM_MAX)
 
             /** Adding padding to map so that StatusBar doesn't overlap the compass .**/
             setPadding(0, requireActivity().statusBarHeight, 0, 0)
@@ -174,27 +175,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             setLatLngBoundsForCameraTarget(museumBounds)
         }
 
-        // TODO: use custom tiling here instead.
-        baseGroundOverlay = map.addGroundOverlay(
-                GroundOverlayOptions()
-                        .positionFromBounds(
-                                LatLngBounds(
-                                        LatLng(41.874620, -87.629243),
-                                        LatLng(41.884753, -87.615841)
-                                )
-                        ).image(deriveBaseOverlayDescriptor(requireActivity()))
-                        .zIndex(0.1f)
-        )
-        buildingGroundOverlay = map.addGroundOverlay(
-                GroundOverlayOptions()
-                        .positionFromBounds(
-                                LatLngBounds(
-                                        LatLng(41.878467, -87.624127),
-                                        LatLng(41.880730, -87.621027)
-                                )
-                        ).zIndex(.11f)
-                        .image(BitmapDescriptorFactory.fromAsset("AIC_Floor1.png"))
-        )
+        tileOverlay = map.addTileOverlay(TileOverlayOptions()
+                .zIndex(0.2f)
+                .tileProvider(GlideMapTileProvider(requireContext(),1)))
+
+//        map.addTileOverlay(TileOverlayOptions().zIndex(0.3f)
+//                .transparency(0.5f)
+//                .tileProvider(DebugTileProvider2(requireContext())))
     }
 
     /**
@@ -302,7 +289,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             else -> R.drawable.map_floor_background_default
                         }
                     }
-
                     lowerLevel.setBackgroundResource(backgroundForState(0))
                     floorOne.setBackgroundResource(backgroundForState(1))
                     floorTwo.setBackgroundResource(backgroundForState(2))
@@ -313,8 +299,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.distinctFloor
                 .withLatestFrom(groundOverlayGenerated)
                 .filter { (floor, generated) -> generated && floor in 0..3 }
-                .subscribeBy { (floor) ->
-                    buildingGroundOverlay.setImage(BitmapDescriptorFactory.fromAsset("AIC_Floor$floor.png"))
+                .withLatestFrom(viewModel.currentMap.filterValue()) { (floor), map -> floor to map }
+                .subscribeBy { (floor, map) ->
+                    tileOverlay.remove()
+                    tileOverlay = map.addTileOverlay(TileOverlayOptions()
+                            .zIndex(0.2f)
+                            .tileProvider(GlideMapTileProvider(requireContext(), floor)))
                 }
                 .disposedBy(disposeBag)
 
