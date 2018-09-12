@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="become_a_member">Become a Member</string>
+    <string name="enjoy_free_year_long_admission">Enjoy free, year long admission.</string>
+    <string name="join_now">Join Now</string>
+    <string name="museum_information">Museum Information</string>
+    <string name="language_settings">Language Settings</string>
+    <string name="location_settings">Location Settings</string>
+    <string name="support_by">Support By</string>
+    <string name="joinUrl" translatable="false">https://sales.artic.edu/memberships?&amp;utm_medium=mobile-app&amp;utm_source=iphone&amp;utm_campaign=join</string>
+</resources>
