@@ -1,5 +1,6 @@
 package edu.artic.info
 
+import com.fuzz.rx.disposedBy
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -43,7 +44,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                             }
                         }
                     }
-                }
+                }.disposedBy(disposeBag)
     }
 
 }
