@@ -27,7 +27,6 @@ import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.rendering.GlideMapTileProvider
 import edu.artic.map.rendering.MapItemRenderer
-import edu.artic.map.rendering.MapTileAssetProvider
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
