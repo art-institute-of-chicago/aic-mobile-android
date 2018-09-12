@@ -101,11 +101,25 @@ class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
 
 class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : MapAnnotationItemRenderer(articMapAnnotationDao) {
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
-        return when(displayMode) {
-            is MapDisplayMode.Search<*> ->
+        return when (displayMode) {
+            is MapDisplayMode.Search.ObjectSearch ->
                 listOf<ArticMapAnnotation>().asFlowable()
-            else ->
-                articMapAnnotationDao.getAmenitiesOnMapForFloor(floor = floor.toString())
+            is MapDisplayMode.Search.AmenitiesSearch -> {
+                val amenityType = ArticMapAmenityType.getAmenityTypes(displayMode.item)
+                if (displayMode.item == ArticMapAmenityType.DINING) {
+                    articMapAnnotationDao.getAmenitiesByAmenityType(amenityType = amenityType)
+                } else {
+                    articMapAnnotationDao.getAmenitiesByAmenityType(floor = floor.toString(), amenityType = amenityType)
+                }
+            }
+            is MapDisplayMode.Tour ->{
+                /**
+                 * Only display restrooms on tour mode.
+                 */
+                val amenityTypes = ArticMapAmenityType.getAmenityTypes(ArticMapAmenityType.RESTROOMS)
+                articMapAnnotationDao.getAmenitiesByAmenityType(floor = floor.toString(), amenityType = amenityTypes)
+            }
+            else -> articMapAnnotationDao.getAmenitiesOnMapForFloor(floor = floor.toString())
         }
     }
 
