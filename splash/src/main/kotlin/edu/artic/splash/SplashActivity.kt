@@ -24,6 +24,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                 .map {
                     "Percentage : %.2f".format(it * 100)
                 }
+                .onErrorReturn {
+                    it.localizedMessage
+                }
                 .bindToMain(percentText.text())
                 .disposedBy(disposeBag)
     }
