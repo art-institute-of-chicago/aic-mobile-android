@@ -42,10 +42,10 @@ internal val evaluatedBoundsMap
  */
 abstract class BaseMapTileProvider(protected val floor: Int) : TileProvider {
 
-    private val northEast: Point
-    private val southWest: Point
-    private val mapProjection = SphericalMercatorProjection(TILE_SIZE)
-    private val boundsMap: Map<Int, Bounds>
+    protected val northEast: Point
+    protected val southWest: Point
+    protected val mapProjection = SphericalMercatorProjection(TILE_SIZE)
+    protected val boundsMap: Map<Int, Bounds>
 
     init {
         northEast = mapProjection.toPoint(museumBounds.northeast)

@@ -2,9 +2,6 @@ package edu.artic.map.rendering
 
 import android.content.res.AssetManager
 import com.google.android.gms.maps.model.Tile
-import com.google.maps.android.geometry.Point
-import com.google.maps.android.projection.SphericalMercatorProjection
-import edu.artic.map.museumBounds
 import timber.log.Timber
 import java.io.IOException
 import kotlin.math.pow
@@ -14,27 +11,6 @@ import kotlin.math.pow
  */
 open class MapTileAssetProvider(private val assetAssetManager: AssetManager,
                                 floor: Int) : BaseMapTileProvider(floor) {
-
-    private val northEast: Point
-    private val southWest: Point
-    private val mapProjection = SphericalMercatorProjection(TILE_SIZE)
-    private val boundsMap: Map<Int, Bounds>
-
-    init {
-        northEast = mapProjection.toPoint(museumBounds.northeast)
-        southWest = mapProjection.toPoint(museumBounds.southwest)
-
-        // use this snippet of code to calculate bounds map for you.
-        /*boundsMap = (ZOOM_MIN.toInt()..ZOOM_MAX.toInt()).map {
-            it to boundsForZoom(
-                    it,
-                    northEast = northEast,
-                    southWest = southWest
-            )
-        }.toMap()*/
-        boundsMap = evaluatedBoundsMap
-        Timber.d("Found bounds $boundsMap")
-    }
 
     override fun getAdjustedTile(x: Int, y: Int, zoom: Int): Tile? {
         return when {
