@@ -13,6 +13,7 @@ dependencies {
     api libs.kotlin
     api libs.dagger
     api libs.dagger_android
+    api libs.custom_tabs
     api 'javax.annotation:jsr250-api:1.0'
 }
 
