@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true">
 
     <edu.artic.view.ArticMainAppBarLayout
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backgroundImage="@drawable/info_image"
-        app:icon="@drawable/ic_info"/>
+        app:icon="@drawable/ic_info" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -19,19 +19,204 @@
         android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/marginStandard"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/becomeMember"
+                style="@style/SectionTitleBlack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/become_a_member"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/dividerBelowBecomeMember"
+                style="@style/divider"
+                android:layout_width="0dp"
+                android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/becomeMember" />
+
+            <TextView
+                android:id="@+id/enjoyFreeYearLongAdmission"
+                style="@style/BodySansSerifBlackCentered"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/enjoy_free_year_long_admission"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerBelowBecomeMember" />
+
+            <TextView
+                android:id="@+id/joinNow"
+                style="@style/BodyCtaTurquoise"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/join_now"
+                android:textColor="@color/brownish_orange"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/enjoyFreeYearLongAdmission" />
+
+            <TextView
+                android:id="@+id/alreadyAMember"
+                style="@style/BodySansSerifBlackCentered"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/enjoy_free_year_long_admission"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/joinNow" />
 
             <Button
-                android:id="@+id/goToMemberCard"
+                android:id="@+id/accessMemberCard"
+                style="@style/DetailButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
                 android:background="@color/brownishOrange"
-                android:text="@string/accessMemberCard"/>
-        </LinearLayout>
+                android:text="@string/accessMemberCard"
+                app:layout_constraintTop_toBottomOf="@id/alreadyAMember" />
+
+            <View
+                android:id="@+id/dividerBelowAccessMemberCard"
+                style="@style/divider"
+                android:layout_width="0dp"
+                android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/accessMemberCard" />
+
+            <TextView
+                android:id="@+id/museumInformation"
+                style="@style/CardTitleLargeBlack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/museum_information"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerBelowAccessMemberCard" />
+
+            <View
+                android:id="@+id/dividerBelowMuseumInformation"
+                style="@style/divider"
+                android:layout_width="0dp"
+                android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/museumInformation" />
+
+            <TextView
+                android:id="@+id/languageSettings"
+                style="@style/CardTitleLargeBlack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/language_settings"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerBelowMuseumInformation" />
+
+            <View
+                android:id="@+id/dividerBelowLanguageSettings"
+                style="@style/divider"
+                android:layout_width="0dp"
+                android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/languageSettings" />
+
+            <TextView
+                android:id="@+id/locationSettings"
+                style="@style/CardTitleLargeBlack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/location_settings"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerBelowLanguageSettings" />
+
+            <View
+                android:id="@+id/dividerBelowLocationSettings"
+                style="@style/divider"
+                android:layout_width="0dp"
+                android:layout_marginTop="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/locationSettings" />
+
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:background="@color/brownish_orange"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerBelowLocationSettings">
+
+                <TextView
+                    android:id="@+id/supportBy"
+                    style="@style/MetadataSmallWhite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginDouble"
+                    android:layout_marginTop="70dp"
+                    android:text="@string/support_by"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <ImageView
+                    android:id="@+id/bloombergLogo"
+                    android:layout_width="136dp"
+                    android:layout_height="43dp"
+                    android:layout_marginStart="@dimen/marginDouble"
+                    android:layout_marginTop="@dimen/marginTriple"
+                    android:src="@drawable/bloomberg_logo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/supportBy" />
+
+                <TextView
+                    android:id="@+id/versionInfo"
+                    style="@style/MetadataSmallWhite"
+                    tools:text="Version 1.0"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/marginDouble"
+                    android:layout_marginTop="46dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bloombergLogo" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
