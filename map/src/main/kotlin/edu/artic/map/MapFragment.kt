@@ -25,6 +25,7 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.GlideMapTileProvider
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
@@ -249,7 +250,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.displayMode
                 .filterFlatMap({ it is MapDisplayMode.Search<*> }, { it as MapDisplayMode.Search<*> })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (searchObject) -> displayFragmentInInfoContainer(SearchObjectDetailsFragment.create(searchObject as ArticObject), SEARCH_DETILAS) }
+                .subscribeBy { searchObject ->
+                    when (searchObject) {
+                        is MapDisplayMode.Search.ObjectSearch -> displayFragmentInInfoContainer(SearchObjectDetailsFragment.loadArtworkResults(searchObject.item), SEARCH_DETILAS)
+                        is MapDisplayMode.Search.AmenitiesSearch -> displayFragmentInInfoContainer(SearchObjectDetailsFragment.loadAmenitiesByType(searchObject.item), SEARCH_DETILAS)
+                    }
+                }
                 .disposedBy(disposeBag)
 
         /**
@@ -337,6 +343,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     val (_, _, marker) = markerHolder
                     val currentZoomLevel = map.cameraPosition.zoom
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position,
+                            Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
+                }
+                .disposedBy(disposeBag)
+
+        viewModel.selectedDiningPlace
+                .filterValue()
+                .withLatestFrom(viewModel.currentMap.filterValue())
+                .subscribeBy { (annotation, map) ->
+                    val currentZoomLevel = map.cameraPosition.zoom
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(annotation.toLatLng(),
                             Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
                 }
                 .disposedBy(disposeBag)
