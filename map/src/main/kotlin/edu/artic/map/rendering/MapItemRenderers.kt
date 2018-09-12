@@ -123,6 +123,15 @@ class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : M
         }
     }
 
+    override fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticMapAnnotation): Float {
+        return if (mapDisplayMode is MapDisplayMode.Search.AmenitiesSearch) {
+            if (item.floor == floor) ALPHA_VISIBLE else ALPHA_DIMMED
+        } else {
+            ALPHA_VISIBLE
+        }
+    }
+
+
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> = MapFocus.values().toSet() // all zoom levels
 
     override fun getFastBitmap(item: ArticMapAnnotation, displayMode: MapDisplayMode): BitmapDescriptor {
