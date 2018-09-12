@@ -12,19 +12,12 @@ import android.support.v4.app.Fragment
  */
 interface LifecycleAware<T> : LifecycleObserver {
 
-    @OnLifecycleEvent(ON_CREATE)
-    fun onCreate(host: T)
-
     @OnLifecycleEvent(ON_START)
     fun onStart(host: T)
 
     @OnLifecycleEvent(ON_STOP)
     fun onStop(host: T)
 
-    @OnLifecycleEvent(ON_DESTROY)
-    fun onDestroy(host: T)
 }
 
-interface FragmentLifecycleAware : LifecycleAware<Fragment>
-
-interface ActivityLifecycleAware : LifecycleAware<Activity>
+interface LifecycleAwareActivity : LifecycleAware<Activity>

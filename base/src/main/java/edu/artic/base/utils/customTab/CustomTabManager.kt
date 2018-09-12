@@ -11,12 +11,12 @@ import android.support.customtabs.CustomTabsSession
 import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import edu.artic.base.R
-import edu.artic.base.utils.ActivityLifecycleAware
+import edu.artic.base.utils.LifecycleAwareActivity
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class CustomTabManager : ActivityLifecycleAware {
+class CustomTabManager : LifecycleAwareActivity {
 
     var mClient: CustomTabsClient? = null
     var mCustomTabsSession: CustomTabsSession? = null
@@ -34,9 +34,6 @@ class CustomTabManager : ActivityLifecycleAware {
         }
     }
 
-    override fun onDestroy(host: Activity) {
-
-    }
 
     override fun onStart(host: Activity) {
 
@@ -52,10 +49,6 @@ class CustomTabManager : ActivityLifecycleAware {
             // Package lookup failed. Nothing to be done.
             canBind = false
         }
-
-    }
-
-    override fun onCreate(host: Activity) {
 
     }
 
