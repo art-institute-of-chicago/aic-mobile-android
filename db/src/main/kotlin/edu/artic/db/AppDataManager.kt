@@ -135,10 +135,6 @@ class AppDataManager @Inject constructor(
                     }
                 }.flatMap { appDataState ->
                     if (appDataState is ProgressDataState.Done<*>) {
-                        //Save last downloaded headers
-                        appDataState.headers[HEADER_LAST_MODIFIED]?.let {
-                            appDataPreferencesManager.lastModified = it[0]
-                        }
 
                         // runs the whole operation in a transaction.
                         appDatabase.runInTransaction {
@@ -207,6 +203,14 @@ class AppDataManager @Inject constructor(
                                 val artworkSuggestions = searchObject.searchObjects.map { it -> it.toString() }
                                 searchSuggestionDao.setDataObject(ArticSearchSuggestionsObject(searchKeywordSuggestions, artworkSuggestions))
                             }
+
+
+                            // Now that the transaction has reached its end successfully, we may
+                            // save the last-modified date
+                            appDataState.headers[HEADER_LAST_MODIFIED]?.let {
+                                appDataPreferencesManager.lastModified = it[0]
+                            }
+
                         }
 
                     }
