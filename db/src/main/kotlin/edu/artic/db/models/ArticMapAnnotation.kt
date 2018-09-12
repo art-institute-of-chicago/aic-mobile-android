@@ -61,7 +61,7 @@ class ArticMapAmenityType {
         const val WOMANS_ROOM = "Women's Room"
         const val MENS_ROOM = "Men's Room"
         const val ELEVATOR = "Elevator"
-        const val GIFT_SHOP= "Gift Shop"
+        const val GIFT_SHOP = "Gift Shop"
         const val TICKETS = "Tickets"
         const val INFORMATION = "Information"
         const val CHECK_ROOM = "Check Room"
@@ -70,5 +70,17 @@ class ArticMapAmenityType {
         const val DINING = "Dining"
         const val FAMILY_RESTROOM = "Family Restroom"
         const val MEMBERS_LOUNGE = "Members Lounge"
+
+        const val RESTROOMS = "Restrooms"
+
+        fun getAmenityTypes(item: String): List<String> {
+            return if (item == ArticMapAmenityType.RESTROOMS) {
+                listOf(ArticMapAmenityType.MENS_ROOM, ArticMapAmenityType.WOMANS_ROOM, ArticMapAmenityType.FAMILY_RESTROOM)
+            } else {
+                listOf(item)
+            }
+        }
+
     }
 }
+

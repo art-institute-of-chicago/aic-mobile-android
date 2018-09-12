@@ -23,7 +23,7 @@ open class SearchBaseViewModel @Inject constructor(
         data class ExhibitionDetails(val exhibition: ArticExhibition) : NavigationEndpoint()
         data class ArtworkDetails(val articObject: ArticObject) : NavigationEndpoint()
         data class ArtworkOnMap(val articObject: ArticObject) : NavigationEndpoint()
-        object AmenityOnMap : NavigationEndpoint() // TODO: somehting with this?
+        data class AmenityOnMap(val type: SuggestedMapAmenites) : NavigationEndpoint()
         object Web : NavigationEndpoint()
 
     }
@@ -71,7 +71,7 @@ open class SearchBaseViewModel @Inject constructor(
             is SearchAmenitiesCellViewModel -> {
                 navigateTo.onNext(
                         Navigate.Forward(
-                                NavigationEndpoint.AmenityOnMap
+                                NavigationEndpoint.AmenityOnMap(viewModel.type)
                         )
                 )
             }
