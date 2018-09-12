@@ -57,6 +57,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         get() = floor.distinctUntilChanged()
 
     val selectedTourStopMarkerId: Subject<String> = BehaviorSubject.create()
+    val selectedDiningPlace: Subject<Optional<ArticMapAnnotation>> = BehaviorSubject.create()
 
     private val visibleRegionChanges: Subject<VisibleRegion> = BehaviorSubject.create()
 
@@ -146,6 +147,24 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                     displayModeChanged(MapDisplayMode.CurrentFloor)
                 }.disposedBy(disposeBag)
 
+        /**
+         * Update map bounds to focus selected annotation.
+         * Used by dining carousel.
+         */
+
+        searchManager.activeDiningPlace
+                .bindToMain(selectedDiningPlace)
+                .disposedBy(disposeBag)
+
+        searchManager.activeDiningPlace
+                .filterValue()
+                .delay(750, TimeUnit.MILLISECONDS)
+                .subscribe { diningPlace ->
+                    diningPlace.floor?.let {
+                        floorChangedTo(it)
+                    }
+                }
+                .disposedBy(disposeBag)
 
         this.currentMap
                 .bindTo(mapMarkerConstructor.map)
