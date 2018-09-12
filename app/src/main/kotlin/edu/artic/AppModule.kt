@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import edu.artic.analytics.AnalyticsConfig
+import edu.artic.base.utils.customTab.CustomTabManager
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -33,10 +34,8 @@ class AppModule {
         const val VERSION = "VERSION"
         const val DISPLAY_CONFIG = "DISPLAY_CONFIG"
 
-//        @JvmStatic
-//        @Provides
-//        @IntoSet
-//        @Router
-//        fun provideRouter(): ActionToScreenRouter = AppRouter()
+        @JvmStatic
+        @Provides
+        fun provideChromeTabManager(): CustomTabManager = CustomTabManager()
     }
 }
