@@ -216,19 +216,36 @@ class AppDataManager @Inject constructor(
      * [primary stuff][getBlob]. As a side-effect, the injected [serviceProvider]
      * (and not `this` manager) is responsible for determining precisely
      * how many exhibitions and events we parse when this method is called.
+     *
+     * Observers on this should implement `onError` to handle I/O errors. We
+     * use [Observable.onErrorReturn] here to make sure that even if multiple
+     * errors occur at a low-level, only one call would go out to that `onError`.
      */
     private fun loadSecondaryData(): Observable<Int> {
         return Observable.zip(
-                getExhibitions(),
-                getEvents(),
+                getExhibitions()
+                        .onErrorReturn {
+                            ProgressDataState.Interrupted(it)
+                        },
+                getEvents()
+                        .onErrorReturn {
+                            ProgressDataState.Interrupted(it)
+                        },
                 BiFunction<ProgressDataState, ProgressDataState, Int> { exhibitions, events ->
+
+                    // XXX: Instead of just throwing the first error we see, perhaps
+                    // we ought to figure out how to use rx's CompositeException
+
                     var currentDownloads = 0
-                    if (exhibitions is ProgressDataState.Done<*>) {
-                        currentDownloads++
+                    when (exhibitions) {
+                        is ProgressDataState.Done<*> -> currentDownloads++
+                        is ProgressDataState.Interrupted -> throw exhibitions.error
                     }
-                    if (events is ProgressDataState.Done<*>) {
-                        currentDownloads++
+                    when (events) {
+                        is ProgressDataState.Done<*> -> currentDownloads++
+                        is ProgressDataState.Interrupted -> throw events.error
                     }
+
                     return@BiFunction currentDownloads
                 })
 
