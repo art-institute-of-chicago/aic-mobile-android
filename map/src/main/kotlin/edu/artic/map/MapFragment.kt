@@ -72,7 +72,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
 
     private fun getLatestSearchObject(): ArticObject? {
-        return requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+        val data : ArticObject? = requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+        requireActivity().intent?.removeExtra(ARG_SEARCH_OBJECT)
+        return data
     }
 
     private fun getLatestSearchObjectType(): String? {
@@ -252,8 +254,17 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { searchObject ->
                     when (searchObject) {
-                        is MapDisplayMode.Search.ObjectSearch -> displayFragmentInInfoContainer(SearchObjectDetailsFragment.loadArtworkResults(searchObject.item), SEARCH_DETILAS)
-                        is MapDisplayMode.Search.AmenitiesSearch -> displayFragmentInInfoContainer(SearchObjectDetailsFragment.loadAmenitiesByType(searchObject.item), SEARCH_DETILAS)
+                        is MapDisplayMode.Search.ObjectSearch -> {
+                            displayFragmentInInfoContainer(
+                                    SearchObjectDetailsFragment.loadArtworkResults(searchObject.item),
+                                    SEARCH_DETAILS
+                            )
+                        }
+                        is MapDisplayMode.Search.AmenitiesSearch ->
+                            displayFragmentInInfoContainer(
+                                    SearchObjectDetailsFragment.loadAmenitiesByType(searchObject.item),
+                                    SEARCH_DETAILS
+                            )
                     }
                 }
                 .disposedBy(disposeBag)
@@ -265,8 +276,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     when (it) {
-                        is MapDisplayMode.Tour -> hideFragmentInInfoContainer(SEARCH_DETILAS)
-                        is MapDisplayMode.CurrentFloor -> hideFragmentInInfoContainer(SEARCH_DETILAS)
+                        is MapDisplayMode.Tour -> hideFragmentInInfoContainer(SEARCH_DETAILS)
+                        is MapDisplayMode.CurrentFloor -> hideFragmentInInfoContainer(SEARCH_DETAILS)
                         is MapDisplayMode.Search<*> -> hideFragmentInInfoContainer(OBJECT_DETAILS)
                     }
                 }
@@ -495,6 +506,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
-        const val SEARCH_DETILAS = "SEARCH"
+        const val SEARCH_DETAILS = "SEARCH"
     }
 }
