@@ -39,7 +39,7 @@ class MapMarkerConstructor
 
     private val landmarkMapItemRenderer = LandmarkMapItemRenderer(articMapAnnotationDao)
     private val spacesMapItemRenderer = SpacesMapItemRenderer(articMapAnnotationDao)
-    val amenitiesMapItemRenderer = AmenitiesMapItemRenderer(articMapAnnotationDao)
+    private val amenitiesMapItemRenderer = AmenitiesMapItemRenderer(articMapAnnotationDao)
     private val departmentsMapItemRenderer = DepartmentsMapItemRenderer(articMapAnnotationDao)
     private val galleriesMapItemRenderer = GalleriesMapItemRenderer(galleryDao)
     private val tourIntroMapItemRenderer = TourIntroMapItemRenderer()
