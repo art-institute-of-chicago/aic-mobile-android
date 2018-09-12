@@ -23,7 +23,7 @@ open class SearchBaseViewModel @Inject constructor(
         data class ExhibitionDetails(val exhibition: ArticExhibition) : NavigationEndpoint()
         data class ArtworkDetails(val articObject: ArticObject) : NavigationEndpoint()
         data class ArtworkOnMap(val articObject: ArticObject) : NavigationEndpoint()
-        data class AmenityOnMap(val type: SuggestedMapAmenites) : NavigationEndpoint()
+        data class AmenityOnMap(val type: SuggestedMapAmenities) : NavigationEndpoint()
         object Web : NavigationEndpoint()
 
     }
