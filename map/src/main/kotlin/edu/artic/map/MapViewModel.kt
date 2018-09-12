@@ -10,6 +10,7 @@ import com.jakewharton.rxrelay2.Relay
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
+import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
@@ -24,6 +25,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -31,6 +33,7 @@ import javax.inject.Inject
  */
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
+                                       articMapAnnotationDao: ArticMapAnnotationDao,
                                        private val languageSelector: LanguageSelector,
                                        val searchManager: SearchManager,
                                        val analyticsTracker: AnalyticsTracker,
@@ -77,6 +80,35 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .mapOptional()
                 .bindTo(tourProgressManager.selectedTour)
                 .disposedBy(disposeBag)
+
+        /**
+         * Select correct floor for the search display mode.
+         */
+        displayMode
+                .distinctUntilChanged()
+                .filterFlatMap({ it is MapDisplayMode.Search.ObjectSearch }, { (it as MapDisplayMode.Search.ObjectSearch) })
+                .subscribe {
+                    floorChangedTo(it.item.floor)
+                }.disposedBy(disposeBag)
+
+        /**
+         * Select the floor which has at least one amenity.
+         */
+        displayMode
+                .distinctUntilChanged()
+                .filterFlatMap({ it is MapDisplayMode.Search.AmenitiesSearch }, { (it as MapDisplayMode.Search.AmenitiesSearch) })
+                .flatMap { searchMode ->
+                    val amenityType = ArticMapAmenityType.getAmenityTypes(searchMode.item)
+                    articMapAnnotationDao
+                            .getAmenitiesByAmenityType(amenityType)
+                            .toObservable()
+                            .map { annotations -> annotations.first() }
+                }
+                .subscribe { annotation ->
+                    annotation.floor?.let {
+                        floorChangedTo(it)
+                    }
+                }.disposedBy(disposeBag)
 
         displayMode
                 .distinctUntilChanged()
