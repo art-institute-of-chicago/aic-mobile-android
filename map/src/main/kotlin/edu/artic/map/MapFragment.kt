@@ -305,6 +305,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.distinctFloor
                 .withLatestFrom(groundOverlayGenerated)
+                .observeOn(AndroidSchedulers.mainThread())
                 .filter { (floor, generated) -> generated && floor in 0..3 }
                 .withLatestFrom(viewModel.currentMap.filterValue()) { (floor), map -> floor to map }
                 .subscribeBy { (floor, map) ->
