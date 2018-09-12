@@ -103,7 +103,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                         }
                     }
-                }.disposedBy(disposeBag)
+                }.disposedBy(navigationDisposeBag)
     }
 
     companion object {
