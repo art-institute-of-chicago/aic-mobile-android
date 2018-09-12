@@ -58,7 +58,8 @@ buildscript {
                 exo_player_dash         : "com.google.android.exoplayer:exoplayer-dash:$exo_player_version",
                 exo_player_ui           : "com.google.android.exoplayer:exoplayer-ui:$exo_player_version",
                 exo_player_media_session: "com.google.android.exoplayer:extension-mediasession:$exo_player_version",
-                view_indicator          : "com.github.fuzz-productions:CutoutViewIndicator:v0.8.2"
+                view_indicator          : "com.github.fuzz-productions:CutoutViewIndicator:v0.8.2",
+                custom_tabs             : "com.android.support:customtabs:${support_version}"
 
         ]
 
