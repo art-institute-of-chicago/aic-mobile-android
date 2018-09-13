@@ -13,7 +13,6 @@ import edu.artic.db.Playable
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.ui.util.asCDNUri
 import kotlinx.android.parcel.Parcelize
-import java.util.*
 
 @JsonClass(generateAdapter = true)
 @Entity
