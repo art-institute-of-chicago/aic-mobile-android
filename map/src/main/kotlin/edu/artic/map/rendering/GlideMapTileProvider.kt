@@ -25,22 +25,13 @@ class GlideMapTileProvider(private val context: Context,
                 val tileNumber = (y * tileXCount + x).toInt()
                 Timber.d("Tile X Count $tileXCount with number $tileNumber")
 
-                val path = "http://aic-mobile-tours.artic.edu/sites/default/files/floor-maps/tiles/floor$floor/zoom$zoom/tiles-$tileNumber.png"
+                val path = "http://aic-mobile-tours.artic.edu/sites/default/files/floor-maps/tiles/floor$floor/zoom$zoom/tiles-$tileNumber.jpg"
                 return try {
-                    /**
-                     *  PNG decoding of array triggers crash in certain 8.0 and 8.1 devices at the
-                     *  OPENGL level
-                     *  This loading and changing handles this temporarily until JPG's are provided by the endpoint
-                     */
-                    val bitmap = Glide.with(context).asBitmap().load(path).submit(TILE_SIZE.toInt(), TILE_SIZE.toInt()).get()
-                    val newBitmap = bitmap.copy(Bitmap.Config.RGB_565, true)
-                    val stream = ByteArrayOutputStream()
-                    newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                    val array = stream.toByteArray()
-                    stream.reset()
-                    newBitmap.recycle()
-                    // The above flow is temporary until we get JPEG's provided from endpoint,
-                    // which will require an update here.
+                    val array = Glide.with(context)
+                            .`as`(ByteArray::class.java)
+                            .load(path)
+                            .submit(TILE_SIZE.toInt(), TILE_SIZE.toInt())
+                            .get()
                     Tile(TILE_SIZE.toInt(),
                             TILE_SIZE.toInt(),
                             array
