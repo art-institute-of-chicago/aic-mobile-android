@@ -16,7 +16,6 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.search_app_bar_layout.*
-import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
@@ -41,12 +40,8 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
         super.setupBindings(viewModel)
 
         searchEditText.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val imm: InputMethodManager = requireContext()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromInputMethod(v.windowToken, 0)
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.onClickSearch()
-                return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
 
@@ -121,7 +116,7 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
     }
 
     override fun onBackPressed(): Boolean {
-        return if(searchEditText.text.isNotEmpty()) {
+        return if (searchEditText.text.isNotEmpty()) {
             viewModel.onTextChanged("")
             true
         } else {
