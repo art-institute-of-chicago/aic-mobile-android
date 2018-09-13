@@ -22,6 +22,14 @@ abstract class InfoModule {
     @get:ContributesAndroidInjector
     abstract val informationFragment: InformationFragment
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(MuseumInformationViewModel::class)
+    abstract fun museumInformationViewModel(museumInformationViewModel: MuseumInformationViewModel): ViewModel
+
+    @get:ContributesAndroidInjector
+    abstract val museumInformationFragment: MuseumInformationFragment
+
     @get:ContributesAndroidInjector
     abstract val infoActivity: InfoActivity
 
