@@ -7,4 +7,6 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/marginStandard"
     tools:background="#fab"
+    android:lines="1"
+    android:maxLines="1"
     tools:text="Makalu" />
