@@ -2,7 +2,6 @@ package edu.artic.db.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import edu.artic.db.models.ApiSearchContent.SearchedArtwork
 import edu.artic.db.models.ApiSearchContent.SearchedTour
 
 /**
@@ -18,7 +17,7 @@ import edu.artic.db.models.ApiSearchContent.SearchedTour
  */
 @JsonClass(generateAdapter = false)
 data class ApiSearchResult(
-        @Json(name = "artworks") val artworks: List<ArticObject>?,
+        @Json(name = "artworks") val artworks: List<ApiSearchContent.SearchedArtwork>?,
         @Json(name = "tours") val tours: List<SearchedTour>?,
         @Json(name = "exhibitions") val exhibitions: List<ArticExhibition>?
 )
@@ -27,7 +26,7 @@ data class ApiSearchResult(
 
 @JsonClass(generateAdapter = true)
 data class ApiSearchResultRawA(
-        @Json(name = "data") val internalData: List<ArticObject>
+        @Json(name = "data") val internalData: List<ApiSearchContent.SearchedArtwork>
 )
 
 @JsonClass(generateAdapter = true)
@@ -44,13 +43,16 @@ data class ApiSearchResultRawE(
 sealed class ApiSearchContent {
     /**
      * [artworkId] maps directly to [edu.artic.db.models.ArticSearchObject.searchObjects]
-     *
-     * TODO: read more fields if [isOnView] is false, because the entire [ArticObject] will be here in that case
      */
     @JsonClass(generateAdapter = true)
     data class SearchedArtwork(
             @Json(name = "id") val artworkId: Int,
-            @Json(name = "is_on_view") val isOnView: Boolean
+            @Json(name = "is_on_view") val isOnView: Boolean,
+            @Json(name = "title") val title: String,
+            @Json(name = "artist_display") val artist_display: String,
+            @Json(name = "image_id") val image_id: String?,
+            @Json(name = "gallery_id") val gallery_id: String,
+            @Json(name = "latlon") val latlon: String?
     ) : ApiSearchContent()
 
     @JsonClass(generateAdapter = true)
