@@ -15,11 +15,7 @@ import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.daos.DashboardDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.daos.*
-import edu.artic.db.models.ArticAppData
-import edu.artic.db.models.ArticEvent
-import edu.artic.db.models.ArticExhibition
-import edu.artic.db.models.ArticExhibitionCMS
-import edu.artic.db.models.ArticSearchSuggestionsObject
+import edu.artic.db.models.*
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import javax.inject.Inject
@@ -314,11 +310,13 @@ class AppDataManager @Inject constructor(
      */
     private fun getExhibitions(): Observable<ProgressDataState> {
         return serviceProvider.getExhibitions()
-                .flatMap { progressDataState ->
-                    when (progressDataState) {
+                .flatMap { progress ->
+                    when (progress) {
                         is ProgressDataState.Done<*> -> {
-                            val result = progressDataState.result as ArticResult<*>
-                            if (result.data.isNotEmpty() && result.data[0] is ArticExhibition) {
+                            val result = progress.result as ArticResult<*>
+                            val retrieved = result.data
+
+                            if (retrieved.isNotEmpty() && retrieved[0] is ArticExhibition) {
                                 exhibitionDao.clear()
                                 /**
                                  * Update the sort order of the exhibitions according to the ArticExhibitionCMS
@@ -327,23 +325,42 @@ class AppDataManager @Inject constructor(
                                         .getAllCMSExhibitions()
                                         .subscribe { cmsExhibitionList ->
                                             @Suppress("UNCHECKED_CAST")
-                                            val list = (result as ArticResult<ArticExhibition>).data
-                                            val mapExhibitionByID = list.associateBy { it.id.toString() }
+                                            val list = retrieved as List<ArticExhibition>
+
+                                            val exhibitionsById = list.associateBy { it.id.toString() }
+
                                             cmsExhibitionList.forEach { exhibitionCMS: ArticExhibitionCMS ->
-                                                mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
+                                                exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                                 // Override with exhibitions optional images from CMS, if available
                                                 exhibitionCMS.imageUrl?.let {
-                                                    mapExhibitionByID[exhibitionCMS.id]?.legacy_image_mobile_url = it
+                                                    exhibitionsById[exhibitionCMS.id]?.legacy_image_mobile_url = it
                                                 }
-                                                mapExhibitionByID[exhibitionCMS.id]?.order = exhibitionCMS.sort
+                                                exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                             }
+
+
+                                            val desiredIds = exhibitionsById.values.mapNotNull { it.gallery_id }
+                                            val galleries : List<ArticGallery> = galleryDao.getGalleriesForIdList(desiredIds)
+
+                                            val galleriesById: Map<String?, ArticGallery> = galleries.associateBy { it.galleryId }
+
+                                            list.forEach { exhibition ->
+                                                if (exhibition.gallery_id != null) {
+                                                    val gallery = galleriesById[exhibition.gallery_id]
+                                                    if (gallery?.location != null) {
+                                                        exhibition.latitude = gallery.latitude
+                                                        exhibition.longitude = gallery.longitude
+                                                    }
+                                                }
+                                            }
+
                                             exhibitionDao.updateExhibitions(list)
                                         }
                             }
                         }
                     }
 
-                    progressDataState.asObservable()
+                    progress.asObservable()
                 }
     }
 

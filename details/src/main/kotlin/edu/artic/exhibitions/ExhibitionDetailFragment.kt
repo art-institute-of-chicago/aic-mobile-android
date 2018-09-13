@@ -6,6 +6,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asUrlViewIntent
@@ -19,6 +20,12 @@ import timber.log.Timber
 import kotlin.reflect.KClass
 
 
+/**
+ * This is where we show extra information about a specific [ArticExhibition].
+ *
+ * In the UI, it is more frequently called
+ * # On View
+ */
 class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel>() {
 
     override val screenCategory: ScreenCategoryName
@@ -73,6 +80,11 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .bindToMain(buyTickets.text())
                 .disposedBy(disposeBag)
 
+        viewModel.location
+                .map { (lat, long) -> lat != null && long != null }
+                .bindToMain(showOnMap.visibility())
+                .disposedBy(disposeBag)
+
         showOnMap.clicks()
                 .subscribe { viewModel.onClickShowOnMap() }
                 .disposedBy(disposeBag)
@@ -85,16 +97,17 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     override fun setupNavigationBindings(viewModel: ExhibitionDetailViewModel) {
         viewModel.navigateTo
-                .subscribe {
-                    when (it) {
+                .subscribe { navEvent ->
+                    when (navEvent) {
                         is Navigate.Forward -> {
-                            when (it.endpoint) {
+                            val endpoint = navEvent.endpoint
+
+                            when (endpoint) {
                                 is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
                                     Timber.d("Show on map")
                                 }
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
-                                    val endpoint = it.endpoint as ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets
                                     startActivity(endpoint.url.asUrlViewIntent())
                                 }
                             }
@@ -103,7 +116,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                         }
                     }
-                }.disposedBy(disposeBag)
+                }.disposedBy(navigationDisposeBag)
     }
 
     companion object {
