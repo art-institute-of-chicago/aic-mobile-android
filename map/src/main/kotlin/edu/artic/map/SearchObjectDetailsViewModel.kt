@@ -1,155 +1,188 @@
 package edu.artic.map;
 
-import com.fuzz.rx.Optional
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
-import edu.artic.analytics.AnalyticsAction
-import javax.inject.Inject;
-
-import edu.artic.analytics.AnalyticsTracker;
-import edu.artic.analytics.EventCategoryName
-import edu.artic.db.models.ArticObject
-import edu.artic.db.models.AudioFileModel
-import edu.artic.db.models.audioFile
-import edu.artic.localization.LanguageSelector;
+import com.fuzz.rx.*
+import edu.artic.db.Playable
+import edu.artic.db.daos.ArticMapAnnotationDao
+import edu.artic.db.models.*
+import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import javax.inject.Inject
 
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class SearchObjectDetailsViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker,
-                                                       val languageSelector: LanguageSelector,
+class SearchObjectDetailsViewModel @Inject constructor(val languageSelector: LanguageSelector,
+                                                       val articMapAnnotationDao: ArticMapAnnotationDao,
                                                        val searchManager: SearchManager) : BaseViewModel() {
 
-    val title: Subject<String> = BehaviorSubject.create()
-    val image: Subject<String> = BehaviorSubject.create()
-    val galleryLocation: Subject<String> = BehaviorSubject.create()
-
-    private val objectObservable: Subject<ArticObject> = BehaviorSubject.create()
-    val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
-    val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
-
+    val searchedObjectViewModels: Subject<List<SearchObjectBaseViewModel>> = BehaviorSubject.create()
     val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
-    val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
+    val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
+    val playerControl: Subject<SearchObjectBaseViewModel.PlayerAction> = PublishSubject.create()
+    val leftSearchMode: Subject<Boolean> = PublishSubject.create()
+    val currentPage: Subject<Int> = BehaviorSubject.create()
+
+    fun leaveSearchMode() {
+        searchManager.clearSearch()
+    }
+
+    init {
+        searchManager.leaveSearchMode
+                .bindTo(leftSearchMode)
+                .disposedBy(disposeBag)
+
+        currentPage
+                .withLatestFrom(searchedObjectViewModels) { page, pages ->
+                    pages[page]
+                }.filterFlatMap({ it is DiningAnnotationViewModel }, { it as DiningAnnotationViewModel })
+                .distinctUntilChanged()
+                .map { it.item }
+                .mapOptional()
+                .bindTo(searchManager.activeDiningPlace)
+                .disposedBy(disposeBag)
+    }
 
     /**
-     * Use one of these to tell the [AudioPlayerService] to [start playing][Play]
-     * a new track or to [pause playback][Pause] of the current audio.
-     *
-     * This works at a different level from
-     * [PlayBackAction][edu.artic.media.audio.AudioPlayerService.PlayBackAction] -
-     * where that class allows for selection of arbitrary translations and
-     * has low-level functionality like seek or stop, this class can only give two
-     * very specific commands. See docs on [Play] and [Pause] for details.
+     * when the search type is amenities fetch all the amenities and create viewmodels
      */
-    sealed class PlayerAction {
-        /**
-         * Stop playing the current audio (if any) and start playing
-         * [requestedObject]. If [requestedObject] has an associated
-         * audioModel (i.e. because it was already registered
-         * with the [AudioPlayerService]), please provide that
-         * audioModel.
-         *
-         * If it was not associated with an audioModel,
-         * [edu.artic.localization.LanguageSelector] can choose an
-         * appropriate value. Use-sites may wish to call
-         * [edu.artic.db.models.ArticAudioFile.preferredLanguage]
-         * to retrieve that value.
-         */
-        class Play(val requestedObject: ArticObject, val audioModel: AudioFileModel) : PlayerAction()
+    fun viewResumed(requestedSearchObject: ArticObject?, requestedSearchAmenityType: String?) {
 
         /**
-         * Pause playback of the current audio track, if any.
+         * latestTourObject and amenityType are mutually exclusive
          */
+        if (requestedSearchObject != null) {
+            /**
+             * Update carousel to display objects.
+             */
+            Observable.just(requestedSearchObject)
+                    .map { artwork ->
+                        val element = ArtworkViewModel(artwork, languageSelector)
+                        element.playerControl
+                                .bindTo(playerControl)
+                                .disposedBy(element.viewDisposeBag)
+
+                        audioPlayBackStatus
+                                .bindTo(element.audioPlayBackStatus)
+                                .disposedBy(disposeBag)
+
+                        element
+                    }
+                    .map { listOf(it) }
+                    .bindTo(searchedObjectViewModels)
+                    .disposedBy(disposeBag)
+        } else if (requestedSearchAmenityType != null) {
+            /**
+             * Update carousel to display amenities.
+             */
+            if (requestedSearchAmenityType == ArticMapAmenityType.DINING) {
+                val amenityTypes = ArticMapAmenityType.getAmenityTypes(requestedSearchAmenityType)
+                articMapAnnotationDao.getAmenitiesByAmenityType(amenityType = amenityTypes)
+                        .toObservable()
+                        .map { objects ->
+                            objects.map { mapAnnotation ->
+                                DiningAnnotationViewModel(mapAnnotation)
+                            }
+                        }.bindTo(searchedObjectViewModels)
+                        .disposedBy(disposeBag)
+            } else {
+                Observable.just(listOf(AnnotationViewModel(requestedSearchAmenityType, "Close to explore the map.")))
+                        .bindTo(searchedObjectViewModels)
+                        .disposedBy(disposeBag)
+            }
+        }
+    }
+
+}
+
+
+open class SearchObjectBaseViewModel : BaseViewModel() {
+
+    sealed class PlayerAction {
+        class Play(val requestedObject: Playable, val audioFileModel: AudioFileModel? = null) : PlayerAction()
         class Pause : PlayerAction()
     }
 
+    val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
+    val playerControl: Subject<PlayerAction> = PublishSubject.create()
 
-    var articObject: ArticObject? = null
-        set(value) {
-            val isDifferent = (field != value)
+    val title: Subject<String> = BehaviorSubject.create()
+    val imageUrl: Subject<String> = BehaviorSubject.create()
+}
 
-            field = value
-            value?.let {
-                objectObservable.onNext(it)
-            }
-
-            if (isDifferent) {
-                audioFileModel = value?.audioFile?.preferredLanguage(languageSelector)
-            }
-        }
-
-    var audioFileModel: AudioFileModel? = null
+/**
+ * ViewModel for the amenity cell.
+ */
+class DiningAnnotationViewModel(val item: ArticMapAnnotation) : SearchObjectBaseViewModel() {
+    val description: Subject<String> = BehaviorSubject.create()
 
     init {
+        title.onNext(item.label?.replace("\r", "\n") ?: item.amenityType.orEmpty())
+        imageUrl.onNext(item.imageUrl.orEmpty())
+        description.onNext(item.description.orEmpty())
+    }
 
+}
+
+/**
+ * ViewModel for the amenity cell.
+ */
+class AnnotationViewModel(item: String, modelDescription: String) : SearchObjectBaseViewModel() {
+    val description: Subject<String> = BehaviorSubject.create()
+
+    init {
+        title.onNext(item)
+        description.onNext(modelDescription)
+    }
+
+}
+
+/**
+ * ViewModel for the artwork cell.
+ */
+class ArtworkViewModel(val item: ArticObject, val languageSelector: LanguageSelector) : SearchObjectBaseViewModel() {
+
+    val artworkTitle: Subject<String> = BehaviorSubject.createDefault(item.title)
+
+    //TODO:: update the name of author. Currently, there is no author field in [ArticObject].
+    val artistName: Subject<String> = BehaviorSubject.createDefault("Artist")
+
+    //TODO:: Localize Artworks
+    val objectType: Subject<String> = BehaviorSubject.createDefault("Artworks")
+    private val audioFileModel = item.audioFile?.preferredLanguage(languageSelector)
+    val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
+
+    init {
+        imageUrl.onNext(item.thumbUrl.orEmpty())
+
+        /**
+         * Sync the UI with the current audio track.
+         */
         audioPlayBackStatus
                 .filter { playBackState ->
                     playBackState.audio == audioFileModel
                 }.bindTo(playState)
                 .disposedBy(disposeBag)
+    }
 
-
-        objectObservable
-                .map {
-                    it.title
-                }.bindTo(title)
-                .disposedBy(disposeBag)
-
-
-        objectObservable
-                .map {
-                    it.galleryLocation.orEmpty()
-                }.bindTo(galleryLocation)
-                .disposedBy(disposeBag)
-
-
-        objectObservable
-                .map {
-                    it.largeImageUrl.orEmpty()
-                }.bindTo(image)
-                .disposedBy(disposeBag)
-
-        /**
-         * Check and log audio interrupted event if current audio playback is being interrupted.
-         */
-        playerControl
-                .filterFlatMap({ it is PlayerAction.Play }, { it as PlayerAction.Play })
-                .withLatestFrom(currentTrack, objectObservable) { playerAction, currentTrack, articObject ->
-                    val requested = playerAction.audioModel
-                    val isNewTrack = currentTrack.value != requested
-
-                    return@withLatestFrom isNewTrack to articObject
-                }
-                .filter { (isNewTrack: Boolean, _) -> isNewTrack }
-                .subscribe { (_, articObject) ->
-                    analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioMap, articObject.title)
-                }.disposedBy(disposeBag)
+    /**
+     * Play the audio translation for the selected artwork.
+     */
+    fun playAudioTranslation() {
+        playerControl.onNext(PlayerAction.Play(item, audioFileModel))
 
     }
 
-
-    fun playCurrentObject() {
-        articObject?.let { source: ArticObject ->
-            audioFileModel?.let { translation ->
-                playerControl.onNext(PlayerAction.Play(source, translation))
-            }
-        }
-    }
-
-    fun pauseCurrentObject() {
+    fun pauseAudioTranslation() {
         playerControl.onNext(PlayerAction.Pause())
     }
-
-    fun leaveSearchMode(){
-        searchManager.selectedObject.onNext(Optional(null))
-        searchManager.leaveSearchMode.onNext(true)
-    }
 }
+
+

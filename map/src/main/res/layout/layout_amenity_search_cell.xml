@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mapObjectWindowBlue"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/amenityType"
+        style="@style/SectionTitleWhite"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginTriple"
+        android:layout_marginTop="@dimen/marginStandard"
+        android:layout_marginEnd="@dimen/marginTriple"
+        android:ellipsize="end"
+        android:fontFamily="@font/ideal_sans_book"
+        android:lines="1"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="ArtworksArtworksArtworksArtworksArtworksArtworksArtworks" />
+
+    <View
+        android:id="@+id/divider"
+        style="@style/divider"
+        android:layout_width="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="@dimen/marginStandard"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/amenityType" />
+
+    <ImageView
+        android:id="@+id/amenityImage"
+        android:layout_width="72dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginBottom="@dimen/marginSixtyFour"
+        android:contentDescription="@null"
+        android:scaleType="matrix"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:background="@color/brownishOrange" />
+
+    <TextView
+        android:id="@+id/amenityDetails"
+        style="@style/ListItemTitle2White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:layout_marginBottom="@dimen/marginSixtyFour"
+        android:fontFamily="@font/ideal_sans_medium"
+        android:gravity="start"
+        android:lineSpacingMultiplier="0.7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/amenityImage"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintVertical_bias="0"
+        tools:text="Monday Tuesday" />
+
+</android.support.constraint.ConstraintLayout>

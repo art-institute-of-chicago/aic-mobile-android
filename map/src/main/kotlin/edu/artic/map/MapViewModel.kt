@@ -10,6 +10,7 @@ import com.jakewharton.rxrelay2.Relay
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
+import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
@@ -24,6 +25,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -31,6 +33,7 @@ import javax.inject.Inject
  */
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
+                                       articMapAnnotationDao: ArticMapAnnotationDao,
                                        private val languageSelector: LanguageSelector,
                                        val searchManager: SearchManager,
                                        val analyticsTracker: AnalyticsTracker,
@@ -54,6 +57,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         get() = floor.distinctUntilChanged()
 
     val selectedTourStopMarkerId: Subject<String> = BehaviorSubject.create()
+    val selectedDiningPlace: Subject<Optional<ArticMapAnnotation>> = BehaviorSubject.create()
 
     private val visibleRegionChanges: Subject<VisibleRegion> = BehaviorSubject.create()
 
@@ -77,6 +81,35 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .mapOptional()
                 .bindTo(tourProgressManager.selectedTour)
                 .disposedBy(disposeBag)
+
+        /**
+         * Select correct floor for the search display mode.
+         */
+        displayMode
+                .distinctUntilChanged()
+                .filterFlatMap({ it is MapDisplayMode.Search.ObjectSearch }, { (it as MapDisplayMode.Search.ObjectSearch) })
+                .subscribe {
+                    floorChangedTo(it.item.floor)
+                }.disposedBy(disposeBag)
+
+        /**
+         * Select the floor which has at least one amenity.
+         */
+        displayMode
+                .distinctUntilChanged()
+                .filterFlatMap({ it is MapDisplayMode.Search.AmenitiesSearch }, { (it as MapDisplayMode.Search.AmenitiesSearch) })
+                .flatMap { searchMode ->
+                    val amenityType = ArticMapAmenityType.getAmenityTypes(searchMode.item)
+                    articMapAnnotationDao
+                            .getAmenitiesByAmenityType(amenityType)
+                            .toObservable()
+                            .map { annotations -> annotations.first() }
+                }
+                .subscribe { annotation ->
+                    annotation.floor?.let {
+                        floorChangedTo(it)
+                    }
+                }.disposedBy(disposeBag)
 
         displayMode
                 .distinctUntilChanged()
@@ -114,6 +147,24 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                     displayModeChanged(MapDisplayMode.CurrentFloor)
                 }.disposedBy(disposeBag)
 
+        /**
+         * Update map bounds to focus selected annotation.
+         * Used by dining carousel.
+         */
+
+        searchManager.activeDiningPlace
+                .bindToMain(selectedDiningPlace)
+                .disposedBy(disposeBag)
+
+        searchManager.activeDiningPlace
+                .filterValue()
+                .delay(750, TimeUnit.MILLISECONDS)
+                .subscribe { diningPlace ->
+                    diningPlace.floor?.let {
+                        floorChangedTo(it)
+                    }
+                }
+                .disposedBy(disposeBag)
 
         this.currentMap
                 .bindTo(mapMarkerConstructor.map)
@@ -165,7 +216,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindToMain(tourBoundsChanged)
                 .disposedBy(disposeBag)
 
-        articObjectSelected(displayMode.item as ArticObject)
+        if (displayMode.item is ArticObject) {
+            articObjectSelected(displayMode.item)
+        }
     }
 
     private fun animateToTourStopBounds(displayMode: MapDisplayMode.Tour) {
@@ -228,24 +281,34 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * refer [TourProgressManager] for managing the tour state.
      */
     fun loadMapDisplayMode(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?) {
+
         Observables.combineLatest(
                 tourProgressManager.selectedTour,
                 tourProgressManager.proposedTour,
-                searchManager.selectedObject)
+                searchManager.selectedObject,
+                searchManager.selectedAmenityType
+        ) { currentTour, nextTour, lastSearchedObject, annotationType ->
+            val tours = currentTour.value to nextTour.value
+            val search = lastSearchedObject.value to annotationType.value
+            tours to search
+        }
                 .take(1)
-                .subscribeBy { (currentTour, nextTour, lastSearchedObject) ->
-                    val searchObject = lastSearchedObject.value
-                    val activeTour = currentTour.value
-                    val proposedTour  = nextTour.value
+                .subscribeBy { (tours, searchTypes) ->
+                    val (activeTour, proposedTour) = tours
+                    val (searchObject, searchAnnotationType) = searchTypes
 
-                    if (searchObject != null && requestedTour == null) {
+                    if ((searchObject != null || searchAnnotationType != null) && requestedTour == null) {
                         /**
                          * If user requests to load search when tour is active, prompt user to leave tour.
                          */
                         if (activeTour != null) {
                             leaveTourRequest.onNext(true)
                         } else {
-                            displayModeChanged(MapDisplayMode.Search(searchObject))
+                            if (searchObject != null) {
+                                displayModeChanged(MapDisplayMode.Search.ObjectSearch(searchObject))
+                            } else if (searchAnnotationType != null) {
+                                displayModeChanged(MapDisplayMode.Search.AmenitiesSearch(searchAnnotationType))
+                            }
                         }
                     } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
                         /**
@@ -274,7 +337,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     /**
      * Loads display mode for the map.
      */
-    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticObject?) {
+    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticObject?, searchedAnnotationType: String?) {
 
         /**
          * Store the search object to memory.
@@ -287,6 +350,11 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
          */
         searchedObject?.let {
             searchManager.selectedObject.onNext(Optional(searchedObject))
+        }
+
+        searchedAnnotationType?.let {
+            searchManager.selectedObject.onNext(Optional(null))
+            searchManager.selectedAmenityType.onNext(Optional(it))
         }
 
         loadMapDisplayMode(requestedTour, requestedTourStop)

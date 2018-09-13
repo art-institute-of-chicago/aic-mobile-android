@@ -36,4 +36,11 @@ abstract class ArticMapAnnotationDao {
     fun getAmenitiesOnMapForFloor(floor: String): Flowable<List<ArticMapAnnotation>> = getAnnotationByTypeForFloor(ArticMapAnnotationType.AMENITY, floor)
 
     fun getDepartmentOnMapForFloor(floor: String): Flowable<List<ArticMapAnnotation>> = getAnnotationByTypeForFloor(ArticMapAnnotationType.DEPARTMENT, floor)
+
+    @Query("select * from ArticMapAnnotation where amenityType in (:amenityType) and floor = :floor")
+    abstract fun getAmenitiesByAmenityType(amenityType: List<String>, floor: String): Flowable<List<ArticMapAnnotation>>
+
+    @Query("select * from ArticMapAnnotation where amenityType in (:amenityType)")
+    abstract fun getAmenitiesByAmenityType(amenityType: List<String>): Flowable<List<ArticMapAnnotation>>
+
 }

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import edu.artic.db.Floor
 import edu.artic.ui.util.asCDNUri
 
 @JsonClass(generateAdapter = true)
@@ -17,7 +18,7 @@ data class ArticMapAnnotation(
         @Json(name = "location") val location: String?,
         @Json(name = "latitude") val latitude: String?,
         @Json(name = "longitude") val longitude: String?,
-        @Json(name = "floor") val floor: String?,
+        @Floor @Json(name = "floor") val floor: Int?,
         @Json(name = "description") val description: String?,
         @Json(name = "label") val label: String?,
         @Json(name = "annotation_type") val annotationType: String?,
@@ -60,7 +61,7 @@ class ArticMapAmenityType {
         const val WOMANS_ROOM = "Women's Room"
         const val MENS_ROOM = "Men's Room"
         const val ELEVATOR = "Elevator"
-        const val GIFT_SHOP= "Gift Shop"
+        const val GIFT_SHOP = "Gift Shop"
         const val TICKETS = "Tickets"
         const val INFORMATION = "Information"
         const val CHECK_ROOM = "Check Room"
@@ -69,5 +70,17 @@ class ArticMapAmenityType {
         const val DINING = "Dining"
         const val FAMILY_RESTROOM = "Family Restroom"
         const val MEMBERS_LOUNGE = "Members Lounge"
+
+        const val RESTROOMS = "Restrooms"
+
+        fun getAmenityTypes(item: String): List<String> {
+            return if (item == ArticMapAmenityType.RESTROOMS) {
+                listOf(ArticMapAmenityType.MENS_ROOM, ArticMapAmenityType.WOMANS_ROOM, ArticMapAmenityType.FAMILY_RESTROOM)
+            } else {
+                listOf(item)
+            }
+        }
+
     }
 }
+

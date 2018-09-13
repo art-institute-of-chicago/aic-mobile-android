@@ -70,7 +70,7 @@ class SearchCircularCellViewModel(val artWork: ArticObject?) : SearchBaseCellVie
 /**
  * ViewModel for displaying the amenities icons
  */
-class SearchAmenitiesCellViewModel(@DrawableRes val value: Int) : SearchBaseCellViewModel()
+class SearchAmenitiesCellViewModel(@DrawableRes val value: Int, val type: SuggestedMapAmenities) : SearchBaseCellViewModel()
 
 
 

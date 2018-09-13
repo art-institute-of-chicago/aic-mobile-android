@@ -6,6 +6,10 @@ import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.navigation.NavigationConstants
+import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
+import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_search_results_sub.*
 import kotlin.reflect.KClass

@@ -173,5 +173,6 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
                 .filter { it.galleryLocation != null }
                 .map { it.galleryLocation!! }
                 .bindTo(galleryText)
+                .disposedBy(disposeBag)
     }
 }

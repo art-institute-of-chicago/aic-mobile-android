@@ -34,11 +34,14 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                 .combineLatest(
                         dynamicCells,
                         Observable.just(listOf(
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom),
-                                SearchAmenitiesCellViewModel(0))
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant, SuggestedMapAmenities.Dining),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge, SuggestedMapAmenities.MembersLounge),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop, SuggestedMapAmenities.GiftShop),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms),
+                                /**
+                                 * TODO:: Refactor it, used something other than SearchAmenitiesCellViewModel (maybe PaddingAmenitiesCellViewModel)
+                                 * **/
+                                SearchAmenitiesCellViewModel(0,SuggestedMapAmenities.Restrooms))
                         ),
                         suggestedArtworks)
                 { dynamicCells, amenities, suggestedArtworks ->

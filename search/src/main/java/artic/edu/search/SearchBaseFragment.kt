@@ -13,6 +13,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.navigation.NavigationConstants
+import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -96,8 +97,13 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                                     SearchAudioDetailFragment.argsBundle(o)
                             )
                         }
-                        SearchBaseViewModel.NavigationEndpoint.AmenityOnMap -> {
-
+                        is SearchBaseViewModel.NavigationEndpoint.AmenityOnMap -> {
+                            val amenity = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.AmenityOnMap).type
+                            val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
+                                putExtra(ARG_AMENITY_TYPE, amenity.type)
+                                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                            }
+                            startActivity(mapIntent)
                         }
                         SearchBaseViewModel.NavigationEndpoint.Web -> {
 
