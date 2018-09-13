@@ -1,6 +1,7 @@
 package artic.edu.search
 
 import com.fuzz.rx.bindTo
+import com.fuzz.rx.debug
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.ApiSearchContent
@@ -11,6 +12,8 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 /**
  * Handles loading and storage of search results. As well as an abstract way of keeping state of
@@ -31,8 +34,9 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
     init {
         setupTextAvailableSearchFlow()
         setupEmptyTextSearchFlow()
-        Observables.combineLatest(showSuggestions, rawSearchResults)
+        Observables.combineLatest(showSuggestions.distinctUntilChanged(), rawSearchResults)
         { showSuggestions, results ->
+            Timber.d("combineLatest called: $showSuggestions $results")
             if (!showSuggestions) {
                 results.suggestions = emptyList()
             }
@@ -42,18 +46,16 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
 
     private fun setupTextAvailableSearchFlow() {
         currentSearchText
+                .throttleWithTimeout(250, TimeUnit.MILLISECONDS)
                 .filter { it.isNotEmpty() }
                 .flatMap { searchTerm ->
                     Observables.combineLatest(
-                            showSuggestions,
                             getSuggestionsList(searchTerm),
                             loadOtherLists(searchTerm)
                     )
                 }
-                .map { (shouldShowSuggestionText, suggestions, searchResult) ->
-                    if (shouldShowSuggestionText) {
-                        searchResult.suggestions = suggestions
-                    }
+                .map { (suggestions, searchResult) ->
+                    searchResult.suggestions = suggestions
                     return@map searchResult
 
                 }.bindTo(rawSearchResults)
@@ -61,6 +63,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
 
     private fun setupEmptyTextSearchFlow() {
         currentSearchText
+                .throttleWithTimeout(250, TimeUnit.MILLISECONDS)
                 .filter { it.isEmpty() }
                 .map {
                     ArticSearchResult(

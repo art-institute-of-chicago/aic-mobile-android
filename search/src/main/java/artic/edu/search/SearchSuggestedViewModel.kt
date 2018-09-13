@@ -7,6 +7,7 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
+import edu.artic.db.debug
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
@@ -99,7 +100,8 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                             }
 
 
-                }.bindTo(dynamicCells)
+                }
+                .bindTo(dynamicCells)
                 .disposedBy(disposeBag)
     }
 

@@ -13,6 +13,17 @@ open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : BaseViewMo
 
 class SearchTextCellViewModel(val textString: String, highlightedText: String = "") : SearchBaseCellViewModel() {
     val text: Subject<Pair<String,String>> = BehaviorSubject.createDefault(Pair(textString, highlightedText))
+    override fun equals(other: Any?): Boolean {
+        return if(other is SearchTextCellViewModel) {
+            other.textString == textString
+        } else {
+            false
+        }
+    }
+
+    override fun hashCode(): Int {
+        return textString.hashCode()
+    }
 }
 
 class SearchEmptyCellViewModel : SearchBaseCellViewModel()
