@@ -29,7 +29,7 @@
         android:padding="@dimen/marginStandard"
         android:textColor="@color/white"
         android:textColorHint="@color/hintColor"
-        android:imeOptions="actionSearch"
+        android:imeOptions="actionDone"
         android:inputType="text"
 
         />
