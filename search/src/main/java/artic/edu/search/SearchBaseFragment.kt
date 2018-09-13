@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import androidx.navigation.Navigation
-import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
-import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
@@ -17,7 +15,9 @@ import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_search_results_sub.*
+import java.util.concurrent.TimeUnit
 
 abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
     override val title: String = ""
@@ -50,8 +50,23 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
         val adapter = resultsRV.adapter as SearchResultsAdapter
 
         viewModel.cells
-                .bindToMain(adapter.itemChanges())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    adapter.setItemsList(it)
+                }
                 .disposedBy(disposeBag)
+
+        /**
+         * Weird timing issue with setItemList prevents calling scrollToPosition right after setItemList
+         * if tried looks like scrollToPosition just gets forgotten about during layout pass or something
+         * thus a delay of 50 - 100 milliseconds to make the scroll during next layout pass
+         */
+        viewModel.cells
+                .delay(50, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { resultsRV.layoutManager.scrollToPosition(0) }
+                .disposedBy(disposeBag)
+
 
         adapter.itemClicksWithPosition()
                 .subscribe { (pos, vm) ->
