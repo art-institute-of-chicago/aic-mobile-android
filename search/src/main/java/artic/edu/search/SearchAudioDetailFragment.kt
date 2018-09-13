@@ -14,6 +14,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -115,7 +116,7 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
     companion object {
         private val ARG_OBJECT = "${SearchAudioDetailFragment::class.java.simpleName}: object"
 
-        fun argsBundle(event: ArticObject) = Bundle().apply {
+        fun argsBundle(event: ArticSearchArtworkObject) = Bundle().apply {
             putParcelable(ARG_OBJECT, event)
         }
 

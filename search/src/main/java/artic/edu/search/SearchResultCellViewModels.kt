@@ -3,6 +3,7 @@ package artic.edu.search
 import android.support.annotation.DrawableRes
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
 import edu.artic.ui.util.asCDNUri
 import edu.artic.viewmodel.BaseViewModel
@@ -44,13 +45,13 @@ open class SearchBaseListItemViewModel(isHeadphonesVisisble: Boolean = false)
     val isHeadphonesVisible: Subject<Boolean> = BehaviorSubject.createDefault(isHeadphonesVisisble)
 }
 
-class SearchArtworkCellViewModel(val articObject: ArticObject)
+class SearchArtworkCellViewModel(val articObject: ArticSearchArtworkObject)
     : SearchBaseListItemViewModel(isHeadphonesVisisble = true) {
 
     init {
         imageUrl.onNext(articObject.thumbUrl.orEmpty())
         itemTitle.onNext(articObject.title)
-        itemSubTitle.onNext(articObject.galleryLocation.orEmpty())
+        itemSubTitle.onNext(articObject.artistDisplay.orEmpty())
     }
 }
 

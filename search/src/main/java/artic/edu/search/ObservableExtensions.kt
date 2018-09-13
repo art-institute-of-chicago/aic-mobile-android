@@ -14,6 +14,7 @@ import io.reactivex.Observable
 fun <T> Observable<Result<T>>.mapWithDefault(onErrorValue : T) : Observable<T> {
     return map {
         if (it.isError) {
+            it.error().printStackTrace()
             onErrorValue
         } else {
             it.requireValue()

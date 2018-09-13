@@ -96,8 +96,9 @@ abstract class SearchModule {
         fun provideSearchManager(
                 searchService: SearchServiceProvider,
                 tourDao: ArticTourDao,
-                articObjectDao: ArticObjectDao
-        ): SearchResultsManager = SearchResultsManager(searchService, tourDao, articObjectDao)
+                articObjectDao: ArticObjectDao,
+                articDataObjectDao: ArticDataObjectDao
+        ): SearchResultsManager = SearchResultsManager(searchService, tourDao, articObjectDao, articDataObjectDao)
 
         /**
          * NB: We reuse the [ApiModule]'s Retrofit here.

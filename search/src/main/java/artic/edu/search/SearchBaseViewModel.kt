@@ -6,6 +6,7 @@ import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -21,7 +22,7 @@ open class SearchBaseViewModel @Inject constructor(
     sealed class NavigationEndpoint {
         data class TourDetails(val tour: ArticTour) : NavigationEndpoint()
         data class ExhibitionDetails(val exhibition: ArticExhibition) : NavigationEndpoint()
-        data class ArtworkDetails(val articObject: ArticObject) : NavigationEndpoint()
+        data class ArtworkDetails(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
         data class ArtworkOnMap(val articObject: ArticObject) : NavigationEndpoint()
         data class AmenityOnMap(val type: SuggestedMapAmenities) : NavigationEndpoint()
         object Web : NavigationEndpoint()
