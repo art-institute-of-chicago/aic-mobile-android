@@ -2,7 +2,6 @@ package edu.artic.map.rendering
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import com.bumptech.glide.Glide
 import com.google.android.gms.maps.model.Tile
 import timber.log.Timber
@@ -28,9 +27,14 @@ class GlideMapTileProvider(private val context: Context,
 
                 val path = "http://aic-mobile-tours.artic.edu/sites/default/files/floor-maps/tiles/floor$floor/zoom$zoom/tiles-$tileNumber.png"
                 return try {
+                    /**
+                     *  PNG decoding of array triggers crash in certain 8.0 and 8.1 devices at the
+                     *  OPENGL level
+                     *  This loading and changing handles this temporarily until JPG's are provided by the endpoint
+                     */
                     val bitmap = Glide.with(context).asBitmap().load(path).submit(TILE_SIZE.toInt(), TILE_SIZE.toInt()).get()
                     val newBitmap = bitmap.copy(Bitmap.Config.RGB_565, true)
-                     val stream = ByteArrayOutputStream()
+                    val stream = ByteArrayOutputStream()
                     newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                     val array = stream.toByteArray()
                     stream.reset()
