@@ -31,6 +31,13 @@ constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTr
     val buyTicketsButtonText: Subject<String> = BehaviorSubject.createDefault("Buy Tickets")// TODO: replace when special localizer is done
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
+    /**
+     * Pair of `latitude` to `longitude`.
+     *
+     * Either latitude or longitude may be null, but this always has a value
+     * if the [exhibition] is non-null.
+     */
+    val location: Subject<Pair<Double?, Double?>> = BehaviorSubject.create()
     private val exhibitionObservable: Subject<ArticExhibition> = BehaviorSubject.create()
 
 
@@ -58,6 +65,11 @@ constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTr
                 .filter { it.legacy_image_mobile_url != null }
                 .map { it.legacy_image_mobile_url!! }
                 .bindTo(imageUrl)
+                .disposedBy(disposeBag)
+
+        exhibitionObservable
+                .map { it.latitude to it.longitude }
+                .bindTo(location)
                 .disposedBy(disposeBag)
 
         exhibitionObservable

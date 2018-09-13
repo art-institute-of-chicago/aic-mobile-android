@@ -27,12 +27,14 @@
             android:layout_height="match_parent"
             android:background="@color/greyText">
 
-            <android.support.constraint.Guideline
-                android:id="@+id/centerGuide"
-                android:layout_width="@dimen/marginDouble"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent=".5"/>
+            <!--
+
+            Rules: Both 'showOnMap' and 'buyTickets' should be same width,
+            a little under half the window width. Height should be wrap
+            content. If 'showOnMap' is set to VISIBLE, 'buyTickets' should
+            only change position - not size.
+
+            -->
 
             <Button
                 android:id="@+id/showOnMap"
@@ -42,11 +44,15 @@
                 android:layout_marginEnd="@dimen/marginStandard"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
-                android:drawableLeft="@drawable/ic_show_on_map"
+                android:drawableStart="@drawable/ic_show_on_map"
                 android:padding="@dimen/marginStandard"
-                app:layout_constraintEnd_toStartOf="@id/centerGuide"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight=".5"
+                app:layout_constraintEnd_toStartOf="@id/buyTickets"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible"
                 tools:text="Show on Map"/>
 
             <Button
@@ -60,10 +66,32 @@
                 android:drawablePadding="@dimen/marginStandard"
                 android:drawableStart="@drawable/ic_ticket"
                 android:padding="@dimen/marginStandard"
+                app:layout_constraintWidth_percent=".45"
+                app:layout_constraintHorizontal_weight=".5"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/centerGuide"
+                app:layout_constraintStart_toEndOf="@id/showOnMap"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Buy Tickets"/>
+
+            <!--
+
+            The below Barrier is aligned to 'buyTickets', since we
+            don't expect that to be marked GONE at any of the current
+            uses of this file.
+
+            -->
+
+            <android.support.constraint.Barrier
+                android:id="@+id/buttonPanelGuide"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="showOnMap,buyTickets"
+                app:layout_constraintTop_toBottomOf="@id/buyTickets"
+                />
 
             <TextView
                 android:id="@+id/description"
@@ -75,7 +103,7 @@
                 android:layout_marginTop="19dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/showOnMap"
+                app:layout_constraintTop_toBottomOf="@id/buttonPanelGuide"
                 tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate."/>
 
             <TextView

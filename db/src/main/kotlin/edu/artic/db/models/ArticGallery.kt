@@ -14,6 +14,10 @@ data class ArticGallery(
         @Json(name = "status") val status: String?,
         @Json(name = "nid") @PrimaryKey val nid: String,
         @Json(name = "type") val type: String?,
+        /**
+         * If this 'location' field is null, [latitude] and [longitude] should not
+         * be used.
+         */
         @Json(name = "location") val location: String?,
         @Json(name = "latitude") val latitude: Double,
         @Json(name = "longitude") val longitude: Double,
@@ -22,7 +26,7 @@ data class ArticGallery(
          * NB: as established by the iOS codebase, please use [title] instead of this field.
          *
          * In the general sense we expect the two fields to be equivalent and this one may
-         * be removed from the dta model in a future commit.
+         * be removed from the data model in a future commit.
          */
         @Json(name = "title_t") val titleT: String?,
         @Json(name = "gallery_id") val galleryId: String?,
