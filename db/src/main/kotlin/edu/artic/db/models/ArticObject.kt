@@ -87,6 +87,14 @@ data class ArticObject(
             return thumbnailFullPath?.asCDNUri()
         }
 
+    /**
+     * Alias for just the artis
+     */
+    val tombstone: String?
+    get() {
+        return artistCulturePlaceDelim?.replace("|", "/r")
+    }
+
     @Ignore
     constructor() : this(floor = Int.MIN_VALUE)
 
