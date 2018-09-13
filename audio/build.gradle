@@ -12,10 +12,6 @@ dependencies {
 
     implementation libs.design_support
 
-    implementation libs.exo_player_core
-    implementation libs.exo_player_ui
-
-    implementation libs.glide
     implementation project(':base')
     implementation libs.constraint_layout
     implementation project(':ui')

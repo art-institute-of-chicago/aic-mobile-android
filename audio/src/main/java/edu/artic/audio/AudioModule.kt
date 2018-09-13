@@ -6,6 +6,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
+import edu.artic.media.ui.AudioDetailsFragment
+import edu.artic.media.ui.AudioDetailsViewModel
 import edu.artic.viewmodel.ViewModelKey
 
 /**
