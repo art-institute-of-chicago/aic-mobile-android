@@ -32,7 +32,7 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
     override val screenCategory: ScreenCategoryName?
         get() = ScreenCategoryName.ArtworkSearchDetails
 
-    private val articObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_OBJECT) }
+    private val articObject by lazy { arguments!!.getParcelable<ArticSearchArtworkObject>(ARG_OBJECT) }
 
     override fun hasTransparentStatusBar(): Boolean {
         return true
@@ -82,6 +82,10 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
 
         viewModel.playAudioButtonText
                 .bindToMain(playAudio.text())
+                .disposedBy(disposeBag)
+
+        viewModel.authorCulturalPlace
+                .bindToMain(artistCulturePlaceDenim.text())
                 .disposedBy(disposeBag)
 
         showOnMap.clicks()
