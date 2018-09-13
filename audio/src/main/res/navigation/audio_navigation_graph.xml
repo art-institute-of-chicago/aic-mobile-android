@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/audioDetailsFragment"
-        android:name="edu.artic.audio.AudioDetailsFragment"
+        android:name="edu.artic.media.ui.AudioDetailsFragment"
         android:label="audioDetailsFragment"
         />
 

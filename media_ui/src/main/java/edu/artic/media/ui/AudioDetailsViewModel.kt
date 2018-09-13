@@ -1,4 +1,4 @@
-package edu.artic.audio
+package edu.artic.media.ui
 
 import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
