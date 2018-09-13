@@ -25,11 +25,13 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.GlideMapTileProvider
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -70,7 +72,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
 
     private fun getLatestSearchObject(): ArticObject? {
-        return requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+        val data : ArticObject? = requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+        requireActivity().intent?.removeExtra(ARG_SEARCH_OBJECT)
+        return data
+    }
+
+    private fun getLatestSearchObjectType(): String? {
+        val data: String? = requireActivity().intent?.getStringExtra(ARG_AMENITY_TYPE)
+        requireActivity().intent?.removeExtra(ARG_AMENITY_TYPE)
+        return data
     }
 
     private fun getLatestTourObject(): ArticTour? {
@@ -242,7 +252,21 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.displayMode
                 .filterFlatMap({ it is MapDisplayMode.Search<*> }, { it as MapDisplayMode.Search<*> })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (searchObject) -> displayFragmentInInfoContainer(SearchObjectDetailsFragment.create(searchObject as ArticObject), SEARCH_DETILAS) }
+                .subscribeBy { searchObject ->
+                    when (searchObject) {
+                        is MapDisplayMode.Search.ObjectSearch -> {
+                            displayFragmentInInfoContainer(
+                                    SearchObjectDetailsFragment.loadArtworkResults(searchObject.item),
+                                    SEARCH_DETAILS
+                            )
+                        }
+                        is MapDisplayMode.Search.AmenitiesSearch ->
+                            displayFragmentInInfoContainer(
+                                    SearchObjectDetailsFragment.loadAmenitiesByType(searchObject.item),
+                                    SEARCH_DETAILS
+                            )
+                    }
+                }
                 .disposedBy(disposeBag)
 
         /**
@@ -252,8 +276,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     when (it) {
-                        is MapDisplayMode.Tour -> hideFragmentInInfoContainer(SEARCH_DETILAS)
-                        is MapDisplayMode.CurrentFloor -> hideFragmentInInfoContainer(SEARCH_DETILAS)
+                        is MapDisplayMode.Tour -> hideFragmentInInfoContainer(SEARCH_DETAILS)
+                        is MapDisplayMode.CurrentFloor -> hideFragmentInInfoContainer(SEARCH_DETAILS)
                         is MapDisplayMode.Search<*> -> hideFragmentInInfoContainer(OBJECT_DETAILS)
                     }
                 }
@@ -298,6 +322,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.distinctFloor
                 .withLatestFrom(groundOverlayGenerated)
+                .observeOn(AndroidSchedulers.mainThread())
                 .filter { (floor, generated) -> generated && floor in 0..3 }
                 .withLatestFrom(viewModel.currentMap.filterValue()) { (floor), map -> floor to map }
                 .subscribeBy { (floor, map) ->
@@ -329,6 +354,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     val (_, _, marker) = markerHolder
                     val currentZoomLevel = map.cameraPosition.zoom
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position,
+                            Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
+                }
+                .disposedBy(disposeBag)
+
+        viewModel.selectedDiningPlace
+                .filterValue()
+                .withLatestFrom(viewModel.currentMap.filterValue())
+                .subscribeBy { (annotation, map) ->
+                    val currentZoomLevel = map.cameraPosition.zoom
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(annotation.toLatLng(),
                             Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
                 }
                 .disposedBy(disposeBag)
@@ -411,7 +446,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         leaveTourDialog?.dismiss()
         val fm = requireFragmentManager()
         leaveTourDialog = LeaveCurrentTourDialogFragment().apply {
-            attachTourStateListener(object: LeaveCurrentTourDialogFragment.LeaveTourCallback{
+            attachTourStateListener(object : LeaveCurrentTourDialogFragment.LeaveTourCallback {
                 override fun leftTour() {
                     viewModel.leaveCurrentTour()
                 }
@@ -438,8 +473,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        viewModel.onResume(getLatestTourObject(), getStartTourStop(), getLatestSearchObject())
-        viewModel.loadMapDisplayMode(getLatestTourObject(), getStartTourStop())
+        viewModel.onResume(getLatestTourObject(), getStartTourStop(), getLatestSearchObject(), getLatestSearchObjectType())
     }
 
     override fun onPause() {
@@ -472,6 +506,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     companion object {
         const val OBJECT_DETAILS = "object-details"
-        const val SEARCH_DETILAS = "SEARCH"
+        const val SEARCH_DETAILS = "SEARCH"
     }
 }

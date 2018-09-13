@@ -5,8 +5,6 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
-import edu.artic.db.models.ArticObject
-import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -27,10 +25,10 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
 
     private fun getAmenitiesViewModels(): List<SearchBaseCellViewModel> {
         return listOf(
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom))
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant, SuggestedMapAmenities.Dining),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge, SuggestedMapAmenities.MembersLounge),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop, SuggestedMapAmenities.GiftShop),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms))
     }
 
     init {
