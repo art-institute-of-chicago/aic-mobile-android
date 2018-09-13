@@ -15,9 +15,10 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
                                           private val searchResultsManager: SearchResultsManager)
     : NavViewViewModel<SearchViewModel.NavigationEndpoint>() {
 
-    val searchText : Subject<String> = BehaviorSubject.create()
-    val closeButtonVisible : Subject<Boolean> = BehaviorSubject.createDefault(false)
-    val shouldClearTextInput : Subject<Boolean> = BehaviorSubject.createDefault(false)
+    val searchText: Subject<String> = BehaviorSubject.create()
+    val closeButtonVisible: Subject<Boolean> = BehaviorSubject.createDefault(false)
+    val shouldClearTextInput: Subject<Boolean> = BehaviorSubject.createDefault(false)
+
     sealed class NavigationEndpoint {
         object DefaultSearchResults : NavigationEndpoint()
         object DynamicSearchResults : NavigationEndpoint()
@@ -28,6 +29,22 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
                 .distinctUntilChanged()
                 .bindToMain(searchText)
                 .disposedBy(disposeBag)
+
+        searchText
+                .map { it.isNotEmpty() }
+                .bindToMain(closeButtonVisible)
+                .disposedBy(disposeBag)
+
+        searchText
+                .map {
+                    if (it.isEmpty()) {
+                        Navigate.Forward(NavigationEndpoint.DefaultSearchResults)
+                    } else {
+                        Navigate.Forward(NavigationEndpoint.DynamicSearchResults)
+                    }
+                }
+                .bindToMain(navigateTo)
+                .disposedBy(disposeBag)
     }
 
     fun clearText() {
@@ -36,13 +53,6 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
 
     fun onTextChanged(newText: String) {
         searchResultsManager.onChangeSearchText(newText)
-        if (newText.isEmpty()) {
-            closeButtonVisible.onNext(false)
-            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.DefaultSearchResults))
-        } else {
-            closeButtonVisible.onNext(true)
-            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.DynamicSearchResults))
-        }
     }
 
     fun onClickSearch() {
