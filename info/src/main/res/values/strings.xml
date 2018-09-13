@@ -8,4 +8,13 @@
     <string name="location_settings">Location Settings</string>
     <string name="support_by">Support By</string>
     <string name="joinUrl" translatable="false">https://sales.artic.edu/memberships?&amp;utm_medium=mobile-app&amp;utm_source=iphone&amp;utm_campaign=join</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="buyTickets">Buy Tickets</string>
+    <string name="museumAddress" translatable="false">111 S Michigan Ave\nChicago, IL 60603</string>
+    <string name="museumPhoneNumber" translatable="false">+1 312 443 3600</string>
+    <string name="callWith">Select app to call</string>
+    <string name="viewMapWith">Select app to view map</string>
+    <string name="museam_google_map_search_query" translatable="false"><![CDATA[https://www.google.com/maps/search/?api=1&query=The+Art+Institute+of+Chicago]]></string>
+    <string name="versionInfo" translatable="false">Version %1$s</string>
 </resources>
