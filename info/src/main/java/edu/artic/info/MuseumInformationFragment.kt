@@ -84,7 +84,7 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
                                     startActivity(chooser)
                                 }
                                 is MuseumInformationViewModel.NavigationEndpoint.ShowMuseumInMap -> {
-                                    val url = getString(R.string.museam_google_map_search_query)
+                                    val url = getString(R.string.museumGoogleMapSearchQuery)
                                     val intent = Intent(Intent.ACTION_VIEW)
                                     intent.data = Uri.parse(url)
                                     val chooser = Intent.createChooser(intent, resources.getString(R.string.viewMapWith))

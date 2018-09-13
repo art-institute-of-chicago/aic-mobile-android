@@ -70,8 +70,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                             when (it.endpoint) {
                                 InformationViewModel.NavigationEndpoint.AccessMemberCard -> TODO()
                                 InformationViewModel.NavigationEndpoint.MuseumInformation -> {
-                                    val navController = requireActivity().supportFragmentManager.findNavController()
-                                    navController?.navigate(R.id.goToMuseumInformationFragment)
+                                    navController.navigate(R.id.goToMuseumInformationFragment)
                                 }
                                 InformationViewModel.NavigationEndpoint.Search -> {
                                     navController.navigate(R.id.goToSearch)
