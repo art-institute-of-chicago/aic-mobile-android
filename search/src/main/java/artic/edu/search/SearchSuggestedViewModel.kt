@@ -10,6 +10,7 @@ import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.debug
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -105,7 +106,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                 .disposedBy(disposeBag)
     }
 
-    private fun filterArtworkForViewModel(artworkList: List<ArticObject>): List<SearchBaseCellViewModel> {
+    private fun filterArtworkForViewModel(artworkList: List<ArticSearchArtworkObject>): List<SearchBaseCellViewModel> {
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (artworkList.isNotEmpty()) {
             cellList.add(SearchHeaderCellViewModel(Header.Artworks())) //TODO: use localizer

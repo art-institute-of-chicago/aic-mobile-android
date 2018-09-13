@@ -1,13 +1,10 @@
 package artic.edu.search
 
 import com.fuzz.rx.bindTo
-import com.fuzz.rx.debug
+import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticTourDao
-import edu.artic.db.models.ApiSearchContent
-import edu.artic.db.models.ArticExhibition
-import edu.artic.db.models.ArticObject
-import edu.artic.db.models.ArticTour
+import edu.artic.db.models.*
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -22,7 +19,8 @@ import java.util.concurrent.TimeUnit
  */
 class SearchResultsManager(private val searchService: SearchServiceProvider,
                            private val tourDao: ArticTourDao,
-                           private val articObjectDao: ArticObjectDao
+                           private val articObjectDao: ArticObjectDao,
+                           private val articDataObjectDao: ArticDataObjectDao
 ) {
 
 
@@ -36,7 +34,6 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
         setupEmptyTextSearchFlow()
         Observables.combineLatest(showSuggestions.distinctUntilChanged(), rawSearchResults)
         { showSuggestions, results ->
-            Timber.d("combineLatest called: $showSuggestions $results")
             if (!showSuggestions) {
                 results.suggestions = emptyList()
             }
@@ -93,19 +90,13 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 .loadAllMatchingContent(searchTerm)
                 .flatMap { result ->
                     Observables.combineLatest(
-                            if (result.artworks == null)
-                                Observable.just(listOf())
-                            else
-                                Observable.just(
-                                        result.artworks!!
-                                                .filter { it.isOnView != null }
-                                                .filter { it.isOnView!! }),
+                            loadArtwork(result.artworks),
                             loadTours(result.tours),
                             if (result.exhibitions == null)
                                 Observable.just(listOf())
                             else
                                 Observable.just(result.exhibitions!!)
-                    ) { artwork: List<ArticObject>, tours: List<ArticTour>, exhibitions: List<ArticExhibition> ->
+                    ) { artwork: List<ArticSearchArtworkObject>, tours: List<ArticTour>, exhibitions: List<ArticExhibition> ->
                         ArticSearchResult(searchTerm, emptyList(), artwork, tours, exhibitions)
                     }
                 }
@@ -119,12 +110,89 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
         }
     }
 
-    private fun loadArtwork(artwork: List<ApiSearchContent.SearchedArtwork>?): Observable<List<ArticObject>> {
-        return if (artwork == null) {
-            Observable.just(emptyList())
-        } else {
-            articObjectDao.getObjectsByIdList(artwork.map { it.artworkId.toString() }).toObservable()
+    private fun loadArtwork(artwork: List<ApiSearchContent.SearchedArtwork>?): Observable<List<ArticSearchArtworkObject>> {
+        return articDataObjectDao.getDataObject()
+                //Get the base Server url just in case we need it... which we might
+                .map { dataObject -> dataObject.imageServerUrl }
+                .toObservable()
+                .flatMap {
+                    generateArtworkObjectList(it, artwork)
+                }
+
+    }
+
+    private fun generateArtworkObjectList(baseUrl: String,
+                                          artwork: List<ApiSearchContent.SearchedArtwork>?)
+            : Observable<List<ArticSearchArtworkObject>> {
+
+        //Create new observable to handle merging the list and stuff
+        return Observable.create<List<ArticSearchArtworkObject>> { emitter ->
+            val returnList = mutableListOf<ArticSearchArtworkObject>()
+            artwork?.forEach { searchedArtwork ->
+                val artworkId = searchedArtwork.artworkId.toString()
+                val articObject = articObjectDao.getObjectByIdSyncronous(artworkId)
+
+                if (articObject != null) {
+                    returnList.add(
+                            transformArticObjectToArticSearchObject(
+                                    artworkId,
+                                    searchedArtwork,
+                                    articObject
+                            )
+                    )
+                } else if (searchedArtwork.isOnView) {
+                    returnList.add(
+                            transformSearchedArtworkToSearchArtworkObject(searchedArtwork, baseUrl)
+                    )
+                }
+
+            }
+
+            emitter.onNext(returnList)
+            emitter.onComplete()
         }
+    }
+
+    private fun transformSearchedArtworkToSearchArtworkObject(
+            searchedArtwork: ApiSearchContent.SearchedArtwork,
+            baseUrl: String
+            ) : ArticSearchArtworkObject {
+
+        val imageBaseUrl = baseUrl + "/" + searchedArtwork.image_id
+
+        val thumbnailUrl  = "$imageBaseUrl/full/!200,200/0/default.jpg"
+        val imageUrl  = "$imageBaseUrl/full/!800,800/0/default.jpg"
+
+        //TODO; fix floor by basing it on gallery
+        return ArticSearchArtworkObject(
+                searchedArtwork.artworkId.toString(),
+                null,
+                searchedArtwork.title,
+                thumbnailUrl,
+                imageUrl,
+                searchedArtwork.artist_display,
+                searchedArtwork.latlon,
+                0,
+                searchedArtwork.gallery_id
+        )
+    }
+
+    private fun transformArticObjectToArticSearchObject(artworkId: String,
+                                                        searchedArtwork: ApiSearchContent.SearchedArtwork,
+                                                        articObject: ArticObject)
+            : ArticSearchArtworkObject {
+
+        return ArticSearchArtworkObject(
+                artworkId,
+                articObject,
+                articObject.title,
+                articObject.thumbUrl,
+                articObject.image_url,
+                articObject.tombstone ?: "",
+                articObject.location,
+                articObject.floor,
+                searchedArtwork.gallery_id
+        )
     }
 
     fun onChangeSearchText(newText: String) {
@@ -134,7 +202,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
 
     fun search(newText: String? = null) {
         showSuggestions.onNext(false)
-        if(newText != null) {
+        if (newText != null) {
             currentSearchText.onNext(newText)
         }
     }
