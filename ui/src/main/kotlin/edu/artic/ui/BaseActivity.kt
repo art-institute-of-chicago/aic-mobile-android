@@ -6,11 +6,8 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import dagger.android.AndroidInjection
@@ -114,15 +111,3 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
 }
 
-/**
- * Use this to access the [androidx.navigation.NavController] hidden
- * within each of our [FragmentManager]s. Only works while the
- * activity's layout is inflated (i.e. between [BaseActivity.onCreate]
- * and [BaseActivity.onDestroy]).
- *
- * Analogous to [androidx.navigation.fragment.findNavController].
- */
-fun FragmentManager.findNavController(): NavController? {
-    val navFragment = primaryNavigationFragment
-    return (navFragment as? NavHostFragment)?.navController
-}
