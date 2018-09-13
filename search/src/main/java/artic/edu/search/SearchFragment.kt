@@ -112,7 +112,6 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
         textChangesDisposable = searchEditText
                 .afterTextChangeEvents()
                 .skipInitialValue()
-                .throttleLast(250, TimeUnit.MILLISECONDS)
                 .subscribe { event ->
                     event.editable()?.let { editable ->
                         viewModel.onTextChanged(editable.toString())
