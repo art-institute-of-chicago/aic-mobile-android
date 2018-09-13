@@ -62,7 +62,9 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     /**
      * Addition allows main child fragment the ability to handle it's own back press,
-     * if not handled go to default back press
+     * if not handled go to default back press, using the primaryNavigationFragments childManager
+     * was what I found worked with current implementation.
+     * TODO: change name to better explain why we are using this
      */
     override fun onBackPressed() {
         val primaryNavFragmentChildFragmentManager = supportFragmentManager.primaryNavigationFragment.childFragmentManager
