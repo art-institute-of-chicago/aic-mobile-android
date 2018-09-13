@@ -15,10 +15,10 @@
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.CustomToolbar.InfoTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:theme="@style/AppTheme.CustomToolbar.InfoTheme">
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -98,8 +98,7 @@
                     android:fontFamily="@font/ideal_sans_book"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/museumHours"
-                    tools:text="158 Roebling St" />
+                    app:layout_constraintTop_toBottomOf="@id/museumHours" />
 
                 <TextView
                     android:id="@+id/museumPhone"
