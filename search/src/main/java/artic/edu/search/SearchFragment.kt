@@ -120,4 +120,13 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
                 }
                 .disposedBy(disposeBag)
     }
+
+    override fun onBackPressed(): Boolean {
+        return if(searchEditText.text.isNotEmpty()) {
+            viewModel.onTextChanged("")
+            true
+        } else {
+            false
+        }
+    }
 }

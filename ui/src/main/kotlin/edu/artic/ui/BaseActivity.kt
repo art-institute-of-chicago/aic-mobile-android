@@ -60,6 +60,23 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
         disposeBag.clear()
     }
 
+    /**
+     * Addition allows main child fragment the ability to handle it's own back press,
+     * if not handled go to default back press
+     */
+    override fun onBackPressed() {
+        val primaryNavFragmentChildFragmentManager = supportFragmentManager.primaryNavigationFragment.childFragmentManager
+        if (primaryNavFragmentChildFragmentManager.fragments.size <= 0) {
+            super.onBackPressed()
+        } else {
+            val lastFragment = primaryNavFragmentChildFragmentManager.fragments.last()
+            if (lastFragment == null || lastFragment !is BaseFragment || !lastFragment.onBackPressed()) {
+                super.onBackPressed()
+            }
+        }
+
+    }
+
 }
 
 /**
@@ -70,7 +87,7 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
  *
  * Analogous to [androidx.navigation.fragment.findNavController].
  */
-fun FragmentManager.findNavController() : NavController? {
+fun FragmentManager.findNavController(): NavController? {
     val navFragment = primaryNavigationFragment
     return (navFragment as? NavHostFragment)?.navController
 }

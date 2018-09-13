@@ -21,7 +21,7 @@ import edu.artic.base.utils.setWindowFlag
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseFragment : DialogFragment() {
+abstract class BaseFragment : DialogFragment(), OnBackPressedListener{
 
     var toolbar: Toolbar? = null
     var collapsingToolbar: CollapsingToolbarLayout? = null
@@ -204,5 +204,12 @@ abstract class BaseFragment : DialogFragment() {
         super.onDestroy()
     }
 
+    override fun onBackPressed(): Boolean {
+        return false
+    }
 
+}
+
+interface OnBackPressedListener {
+    fun onBackPressed() : Boolean
 }
