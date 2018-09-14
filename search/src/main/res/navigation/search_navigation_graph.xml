@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="artic.edu.search.SearchFragment"
+        android:name="edu.artic.search.SearchFragment"
         android:label="search_fragment">
 
         <action
@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/searchAudioDetailFragment"
-        android:name="artic.edu.search.SearchAudioDetailFragment"
+        android:name="edu.artic.search.SearchAudioDetailFragment"
         android:label="SearchAudioDetailFragment" />
 
     <fragment
