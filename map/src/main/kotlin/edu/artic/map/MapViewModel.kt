@@ -11,6 +11,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticMapAnnotationDao
+import edu.artic.db.daos.ArticMapFloorDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
@@ -24,6 +25,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -35,11 +37,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                                        private val articObjectDao: ArticObjectDao,
                                        articMapAnnotationDao: ArticMapAnnotationDao,
                                        private val languageSelector: LanguageSelector,
+                                       mapFloorDao: ArticMapFloorDao,
                                        val searchManager: SearchManager,
                                        val analyticsTracker: AnalyticsTracker,
                                        val tourProgressManager: TourProgressManager)
     : BaseViewModel() {
 
+    private val articMapFloorMap: Subject<Map<String, ArticMapFloor>> = BehaviorSubject.create()
 
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     private val focus: Subject<MapFocus> = BehaviorSubject.create()
@@ -53,8 +57,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val leftActiveTour: Subject<Boolean> = PublishSubject.create()
     val switchTourRequest: Subject<Pair<ArticTour, ArticTour.TourStop>> = PublishSubject.create()
 
-    val distinctFloor: Observable<Int>
-        get() = floor.distinctUntilChanged()
+    private val distinceFloorInt = floor.distinctUntilChanged().filter { it in 0..3 }
+
+    val distinctFloor: Subject<ArticMapFloor> = BehaviorSubject.create()
 
     val selectedTourStopMarkerId: Subject<String> = BehaviorSubject.create()
     val selectedDiningPlace: Subject<Optional<ArticMapAnnotation>> = BehaviorSubject.create()
@@ -65,7 +70,25 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
     init {
-        mapMarkerConstructor.bindToMapChanges(distinctFloor,
+        articMapFloorMap.subscribe {
+            Timber.d("mapsize: ${it.size}")
+        }.disposedBy(disposeBag)
+
+        mapFloorDao.getMapFloors()
+                .map { floorMap -> floorMap.associateBy { it.label } }
+                .bindTo(articMapFloorMap)
+                .disposedBy(disposeBag)
+
+        Observables
+                .combineLatest(distinceFloorInt, articMapFloorMap)
+                .subscribeBy { (floor, floorMap) ->
+                    floorMap[floor.toString()]?.let {
+                        distinctFloor.onNext(it)
+                    }
+
+                }.disposedBy(disposeBag)
+
+        mapMarkerConstructor.bindToMapChanges(distinctFloor.map { it.label.toInt() },
                 focus.distinctUntilChanged(),
                 displayMode.distinctUntilChanged(),
                 visibleRegionChanges.distinctUntilChanged())
