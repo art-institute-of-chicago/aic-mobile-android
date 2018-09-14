@@ -1,6 +1,7 @@
 package artic.edu.search
 
 import com.fuzz.rx.bindTo
+import edu.artic.db.INVALID_FLOOR
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticObjectDao
@@ -177,7 +178,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 imageUrl,
                 searchedArtwork.artist_display,
                 searchedArtwork.latlon,
-                gallery?.floor ?: 0,
+                gallery?.floor ?: INVALID_FLOOR,
                 gallery
         )
     }
@@ -195,7 +196,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 articObject.image_url,
                 articObject.tombstone ?: "",
                 articObject.location,
-                gallery?.floor ?: 0,
+                gallery?.floor ?: INVALID_FLOOR,
                 gallery
         )
     }
