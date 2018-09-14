@@ -18,10 +18,9 @@ data class ArticSearchArtworkObject(
         val artistDisplay: String?,
         val location: String?,
         val floor: Int,
-        val galleryId: String?
+        val gallery: ArticGallery?
 
 ) : Parcelable {
-
 
     /**
      * Alias for [thumbnailFullPath], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
