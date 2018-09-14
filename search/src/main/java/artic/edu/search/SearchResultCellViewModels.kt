@@ -10,8 +10,22 @@ import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
+/**
+ * Base class for all of the [BaseViewModel]s in this file.
+ *
+ * Each of these corresponds more-or-less directly to a single
+ * [android.support.v7.widget.RecyclerView.ViewHolder] in the list
+ * of search results.
+ */
 open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : BaseViewModel()
 
+/**
+ * Dedicated subclass for plain-text content, like autocomplete suggestions.
+ *
+ * @param textString the text to show on screen
+ * @param highlightedText (optional) a substring that, if present in [textString], should
+ * be highlighted with a color or bolded or something along those lines
+ */
 class SearchTextCellViewModel(val textString: String, highlightedText: String = "") : SearchBaseCellViewModel() {
     val text: Subject<Pair<String,String>> = BehaviorSubject.createDefault(Pair(textString, highlightedText))
     override fun equals(other: Any?): Boolean {
