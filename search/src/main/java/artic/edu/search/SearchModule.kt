@@ -8,6 +8,7 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.db.ApiModule
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.viewmodel.ViewModelKey
@@ -97,8 +98,9 @@ abstract class SearchModule {
                 searchService: SearchServiceProvider,
                 tourDao: ArticTourDao,
                 articObjectDao: ArticObjectDao,
-                articDataObjectDao: ArticDataObjectDao
-        ): SearchResultsManager = SearchResultsManager(searchService, tourDao, articObjectDao, articDataObjectDao)
+                articDataObjectDao: ArticDataObjectDao,
+                articGalleryDao: ArticGalleryDao
+        ): SearchResultsManager = SearchResultsManager(searchService, tourDao, articObjectDao, articDataObjectDao, articGalleryDao)
 
         /**
          * NB: We reuse the [ApiModule]'s Retrofit here.
