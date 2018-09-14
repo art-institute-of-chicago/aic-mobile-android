@@ -1,9 +1,6 @@
 package edu.artic.map
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.view.View
@@ -16,8 +13,6 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.isResourceConstrained
-import edu.artic.base.utils.loadBitmap
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.*
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
@@ -62,9 +57,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Map
 
-    private lateinit var baseGroundOverlay: GroundOverlay
-    private lateinit var tileOverlay: TileOverlay
-    private var groundOverlayGenerated: Subject<Boolean> = BehaviorSubject.createDefault(false)
+    private var tileOverlay: TileOverlay? = null
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
 
@@ -158,7 +151,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }
                 return@setOnMarkerClickListener true
             }
-            groundOverlayGenerated.onNext(true)
         }
     }
 
@@ -180,33 +172,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              * locks us into just that area
              */
             setLatLngBoundsForCameraTarget(museumBounds)
-        }
-    }
-
-    /**
-     * This method returns a simple accessor for the [baseGroundOverlay]'s [Bitmap].
-     * We implicitly pass this over to the Google maps part of Google Play Services
-     * via a [android.os.Binder] call, which is probably why the API doesn't support
-     * vector images or non-Bitmap images.
-     *
-     * On low-end devices, [GoogleMap] will run out of memory rendering all of
-     * its stuff. We can prevent that by loading the aforementioned Bitmap
-     * ourselves at a low sample size - the baseOverlay is by far the largest
-     * image (in terms of resolution) that we're displaying.
-     *
-     * @param host whatever is responsible for displaying this [MapFragment]
-     * @see [GroundOverlayOptions.image]
-     */
-    @AnyThread
-    protected fun deriveBaseOverlayDescriptor(host: Context): BitmapDescriptor {
-        val baseOverlayFilename = "AIC_MapBG.jpg"
-
-        return if (host.isResourceConstrained()) {
-            val baseOverlayBitmap: Bitmap = host.assets.loadBitmap(baseOverlayFilename, 4)
-
-            BitmapDescriptorFactory.fromBitmap(baseOverlayBitmap)
-        } else {
-            BitmapDescriptorFactory.fromAsset(baseOverlayFilename)
         }
     }
 
@@ -310,12 +275,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.distinctFloor
-                .withLatestFrom(groundOverlayGenerated)
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter { (floor, generated) -> generated && floor.label.toInt() in 0..3 }
-                .withLatestFrom(viewModel.currentMap.filterValue()) { (floor), map -> floor to map }
+                .filter { floor -> floor.label.toInt() in 0..3 }
+                .withLatestFrom(viewModel.currentMap.filterValue())
                 .subscribeBy { (floor, map) ->
-                    tileOverlay.remove()
+                    tileOverlay?.remove()
                     tileOverlay = map.addTileOverlay(TileOverlayOptions()
                             .zIndex(0.2f)
                             .tileProvider(GlideMapTileProvider(requireContext(), floor)))
@@ -478,7 +442,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onDestroyView() {
         mapView.onDestroy()
         leaveTourDialog?.dismiss()
-        groundOverlayGenerated.onNext(false)
         super.onDestroyView()
     }
 
