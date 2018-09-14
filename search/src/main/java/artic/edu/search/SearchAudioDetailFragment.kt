@@ -116,7 +116,8 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                                 putExtra(NavigationConstants.ARG_SEARCH_OBJECT, o)
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             }
-                            startActivity(mapIntent)
+                            //TODO: update map to handle ArticSearchArtworkObject
+//                            startActivity(mapIntent)
                         }
                     }
                 }.disposedBy(navigationDisposeBag)
