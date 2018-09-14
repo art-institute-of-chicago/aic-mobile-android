@@ -1,6 +1,5 @@
 package edu.artic
 
-import artic.edu.search.SearchModule
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -8,18 +7,19 @@ import edu.artic.analytics.AnalyticsModule
 import edu.artic.audio.AudioModule
 import edu.artic.db.ApiModule
 import edu.artic.db.DBModule
+import edu.artic.details.DetailsModule
 import edu.artic.events.EventsModule
 import edu.artic.exhibitions.ExhibitionsModule
 import edu.artic.info.InfoModule
 import edu.artic.localization.LocalizerModule
 import edu.artic.map.MapModule
+import edu.artic.media.audio.MediaModule
+import edu.artic.media.ui.MediaUiModule
+import edu.artic.search.SearchModule
 import edu.artic.splash.SplashModule
 import edu.artic.tours.ToursModule
 import edu.artic.viewmodel.ViewModelModule
 import edu.artic.welcome.WelcomeModule
-import edu.artic.media.ui.MediaUiModule
-import edu.artic.media.audio.MediaModule
-import edu.artic.details.DetailsModule
 import javax.inject.Singleton
 
 @Singleton
