@@ -13,7 +13,6 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.updateDetailTitle
-import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.navigation.NavigationConstants
@@ -86,6 +85,13 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
 
         viewModel.authorCulturalPlace
                 .bindToMain(artistCulturePlaceDenim.text())
+                .disposedBy(disposeBag)
+
+        viewModel.showOnMapVisible
+                .bindToMain(showOnMap.visibility())
+                .disposedBy(disposeBag)
+        viewModel.playAudioVisible
+                .bindToMain(playAudio.visibility())
                 .disposedBy(disposeBag)
 
         showOnMap.clicks()

@@ -20,13 +20,13 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
         data class ObjectOnMap(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
     }
 
-    val showMap: Subject<Boolean> = BehaviorSubject.create()
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val title: Subject<String> = BehaviorSubject.createDefault("test")
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
     val showOnMapButtonText: Subject<String> = BehaviorSubject.createDefault("Show on Map") // TODO: replace when special localizer is done
+    val showOnMapVisible: Subject<Boolean> = BehaviorSubject.create()
     val playAudioButtonText: Subject<String> = BehaviorSubject.createDefault("Play Audio")// TODO: replace when special localizer is done
-
+    val playAudioVisible: Subject<Boolean> = BehaviorSubject.create()
     private val articObjectObservable: Subject<ArticSearchArtworkObject> = BehaviorSubject.create()
 
     var articObject: ArticSearchArtworkObject? = null
@@ -38,6 +38,7 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
         }
 
     init {
+
         articObjectObservable
                 .map { it.title }
                 .bindTo(title)
@@ -58,7 +59,21 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
         articObjectObservable
                 .map { it.location.orEmpty() }
                 .map { it.isEmpty() }
-                .bindTo(showMap)
+                .bindTo(showOnMapVisible)
+                .disposedBy(disposeBag)
+
+        articObjectObservable
+                .filter { it.audioObject == null }
+                .map { false }
+                .bindTo(playAudioVisible)
+                .disposedBy(disposeBag)
+
+        articObjectObservable
+                .filterFlatMap({ it.audioObject != null },{it.audioObject!!})
+                .map{
+                    it.audioCommentary.isNotEmpty()
+                }
+                .bindTo(playAudioVisible)
                 .disposedBy(disposeBag)
 
     }
