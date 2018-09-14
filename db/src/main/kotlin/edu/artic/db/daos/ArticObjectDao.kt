@@ -23,7 +23,7 @@ interface ArticObjectDao {
 
     //Must be flowable due to need to use this in 2 places
     @Query("select * from ArticObject where nid = :id")
-    fun getObjectByIdSyncronous(id: String): ArticObject?
+    fun getObjectByIdSynchronously(id: String): ArticObject?
 
     /**
      * Return the object with an audio file given by this number.
