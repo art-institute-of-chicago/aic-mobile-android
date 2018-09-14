@@ -117,12 +117,12 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 .map { dataObject -> dataObject.imageServerUrl }
                 .toObservable()
                 .flatMap {
-                    generateArtworkObjectList(it, artwork)
+                    generateArtworksObjectList(it, artwork)
                 }
 
     }
 
-    private fun generateArtworkObjectList(baseUrl: String,
+    private fun generateArtworksObjectList(baseUrl: String,
                                           artwork: List<ApiSearchContent.SearchedArtwork>?)
             : Observable<List<ArticSearchArtworkObject>> {
 
@@ -131,7 +131,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
             val returnList = mutableListOf<ArticSearchArtworkObject>()
             artwork?.forEach { searchedArtwork ->
                 val artworkId = searchedArtwork.artworkId.toString()
-                val articObject = articObjectDao.getObjectByIdSyncronous(artworkId)
+                val articObject = articObjectDao.getObjectByIdSynchronously(artworkId)
                 val gallery = articGalleryDao.getGalleryForIdSynchronously(searchedArtwork.gallery_id)
                 if (articObject != null) {
                     returnList.add(

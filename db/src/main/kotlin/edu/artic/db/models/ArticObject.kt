@@ -88,11 +88,11 @@ data class ArticObject(
         }
 
     /**
-     * Alias for just the artis
+     * Alias for just the artist
      */
     val tombstone: String?
     get() {
-        return artistCulturePlaceDelim?.replace("|", "/r")
+        return artistCulturePlaceDelim?.replace("|", "\r")
     }
 
     @Ignore
