@@ -2,6 +2,7 @@ package artic.edu.search
 
 import com.fuzz.rx.bindTo
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.*
@@ -9,7 +10,6 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 /**
@@ -20,7 +20,8 @@ import java.util.concurrent.TimeUnit
 class SearchResultsManager(private val searchService: SearchServiceProvider,
                            private val tourDao: ArticTourDao,
                            private val articObjectDao: ArticObjectDao,
-                           private val articDataObjectDao: ArticDataObjectDao
+                           private val articDataObjectDao: ArticDataObjectDao,
+                           private val articGalleryDao: ArticGalleryDao
 ) {
 
 
@@ -131,18 +132,22 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
             artwork?.forEach { searchedArtwork ->
                 val artworkId = searchedArtwork.artworkId.toString()
                 val articObject = articObjectDao.getObjectByIdSyncronous(artworkId)
-
+                val gallery = articGalleryDao.getGalleryForIdSynchronously(searchedArtwork.gallery_id)
                 if (articObject != null) {
                     returnList.add(
                             transformArticObjectToArticSearchObject(
                                     artworkId,
-                                    searchedArtwork,
-                                    articObject
+                                    articObject,
+                                    gallery
                             )
                     )
                 } else if (searchedArtwork.isOnView) {
                     returnList.add(
-                            transformSearchedArtworkToSearchArtworkObject(searchedArtwork, baseUrl)
+                            transformSearchedArtworkToSearchArtworkObject(
+                                    searchedArtwork,
+                                    baseUrl,
+                                    gallery
+                            )
                     )
                 }
 
@@ -155,15 +160,15 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
 
     private fun transformSearchedArtworkToSearchArtworkObject(
             searchedArtwork: ApiSearchContent.SearchedArtwork,
-            baseUrl: String
-            ) : ArticSearchArtworkObject {
+            baseUrl: String,
+            gallery: ArticGallery?
+    ): ArticSearchArtworkObject {
 
         val imageBaseUrl = baseUrl + "/" + searchedArtwork.image_id
 
-        val thumbnailUrl  = "$imageBaseUrl/full/!200,200/0/default.jpg"
-        val imageUrl  = "$imageBaseUrl/full/!800,800/0/default.jpg"
+        val thumbnailUrl = "$imageBaseUrl/full/!200,200/0/default.jpg"
+        val imageUrl = "$imageBaseUrl/full/!800,800/0/default.jpg"
 
-        //TODO; fix floor by basing it on gallery
         return ArticSearchArtworkObject(
                 searchedArtwork.artworkId.toString(),
                 null,
@@ -172,14 +177,14 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 imageUrl,
                 searchedArtwork.artist_display,
                 searchedArtwork.latlon,
-                0,
-                searchedArtwork.gallery_id
+                gallery?.floor ?: 0,
+                gallery
         )
     }
 
     private fun transformArticObjectToArticSearchObject(artworkId: String,
-                                                        searchedArtwork: ApiSearchContent.SearchedArtwork,
-                                                        articObject: ArticObject)
+                                                        articObject: ArticObject,
+                                                        gallery: ArticGallery?)
             : ArticSearchArtworkObject {
 
         return ArticSearchArtworkObject(
@@ -190,8 +195,8 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 articObject.image_url,
                 articObject.tombstone ?: "",
                 articObject.location,
-                articObject.floor,
-                searchedArtwork.gallery_id
+                gallery?.floor ?: 0,
+                gallery
         )
     }
 

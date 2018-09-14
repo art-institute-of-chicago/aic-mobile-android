@@ -13,6 +13,9 @@ interface ArticGalleryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addGalleries(galleries: List<ArticGallery>)
 
+    @Query("select * from ArticGallery where nid = :id")
+    fun getGalleryForIdSynchronously(id: String): ArticGallery?
+
     /**
      * Retrieve all galleries with an id in the given list.
      *
