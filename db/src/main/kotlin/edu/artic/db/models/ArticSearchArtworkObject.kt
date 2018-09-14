@@ -23,7 +23,7 @@ data class ArticSearchArtworkObject(
 ) : Parcelable {
 
     /**
-     * Alias for [thumbnailFullPath], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
+     * Alias for [thumbnailUrl], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
      */
     val thumbUrl: String?
         get() {
@@ -33,7 +33,7 @@ data class ArticSearchArtworkObject(
 
 
     /**
-     * Alias for [largeImageFullPath], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
+     * Alias for [imageUrl], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
      */
     val largeImageUrl: String?
         get() {
