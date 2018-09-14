@@ -152,7 +152,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
         return if (cell is SearchCircularCellViewModel || cell is SearchAmenitiesCellViewModel) {
             1
         } else {
-            SearchResultsAdapter.MAX_ARTWORKS_PER_ROW
+            MAX_ARTWORKS_PER_ROW
         }
     }
 }
