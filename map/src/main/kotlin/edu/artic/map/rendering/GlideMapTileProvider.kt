@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.bumptech.glide.Glide
 import com.google.android.gms.maps.model.Tile
+import edu.artic.db.models.ArticMapFloor
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -13,7 +14,7 @@ import kotlin.math.pow
  * Description:
  */
 class GlideMapTileProvider(private val context: Context,
-                           floor: Int) : BaseMapTileProvider(floor) {
+                           private val floor: ArticMapFloor) : BaseMapTileProvider() {
 
     override fun getAdjustedTile(x: Int, y: Int, zoom: Int): Tile? {
         return when {
@@ -25,7 +26,7 @@ class GlideMapTileProvider(private val context: Context,
                 val tileNumber = (y * tileXCount + x).toInt()
                 Timber.d("Tile X Count $tileXCount with number $tileNumber")
 
-                val path = "http://aic-mobile-tours.artic.edu/sites/default/files/floor-maps/tiles/floor$floor/zoom$zoom/tiles-$tileNumber.jpg"
+                val path = "${floor.tiles}zoom$zoom/tiles-$tileNumber.jpg"
                 return try {
                     val array = Glide.with(context)
                             .`as`(ByteArray::class.java)
