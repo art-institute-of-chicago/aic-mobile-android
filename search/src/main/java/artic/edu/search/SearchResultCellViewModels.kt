@@ -55,7 +55,7 @@ open class SearchBaseListItemViewModel(isHeadphonesVisisble: Boolean = false)
 }
 
 class SearchArtworkCellViewModel(val articObject: ArticSearchArtworkObject)
-    : SearchBaseListItemViewModel(isHeadphonesVisisble = true) {
+    : SearchBaseListItemViewModel(isHeadphonesVisisble = articObject.audioObject?.audioCommentary?.isNotEmpty() ?: false) {
 
     init {
         imageUrl.onNext(articObject.thumbUrl.orEmpty())
