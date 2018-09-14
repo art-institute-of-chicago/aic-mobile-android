@@ -49,7 +49,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                                     .into(image)
                         }.disposedBy(item.viewDisposeBag)
                 item.isHeadphonesVisible
-                        .bindToMain(headphonesIcon.visibility())
+                        .bindToMain(headphonesIcon.visibility(View.INVISIBLE))
                         .disposedBy(item.viewDisposeBag)
 
                 item.itemTitle
