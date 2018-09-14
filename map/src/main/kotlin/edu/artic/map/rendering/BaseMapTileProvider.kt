@@ -37,10 +37,7 @@ internal val evaluatedBoundsMap
             21 to Bounds(minX = 538108, minY = 779412, maxX = 538167, maxY = 779471),
             22 to Bounds(minX = 1076217, minY = 1558824, maxX = 1076334, maxY = 1558942))
 
-/**
- * Description: Provides map asset tiles based on the [floor] from resources.
- */
-abstract class BaseMapTileProvider(protected val floor: Int) : TileProvider {
+abstract class BaseMapTileProvider : TileProvider {
 
     protected val northEast: Point
     protected val southWest: Point

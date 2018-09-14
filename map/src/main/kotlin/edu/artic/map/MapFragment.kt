@@ -19,10 +19,7 @@ import edu.artic.base.utils.fileAsString
 import edu.artic.base.utils.isResourceConstrained
 import edu.artic.base.utils.loadBitmap
 import edu.artic.base.utils.statusBarHeight
-import edu.artic.db.models.ArticMapAnnotation
-import edu.artic.db.models.ArticMapAnnotationType
-import edu.artic.db.models.ArticObject
-import edu.artic.db.models.ArticTour
+import edu.artic.db.models.*
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
@@ -72,7 +69,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
 
     private fun getLatestSearchObject(): ArticObject? {
-        val data : ArticObject? = requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+        val data: ArticObject? = requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
         requireActivity().intent?.removeExtra(ARG_SEARCH_OBJECT)
         return data
     }
@@ -184,14 +181,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              */
             setLatLngBoundsForCameraTarget(museumBounds)
         }
-
-        tileOverlay = map.addTileOverlay(TileOverlayOptions()
-                .zIndex(0.2f)
-                .tileProvider(GlideMapTileProvider(requireContext(),1)))
-
-//        map.addTileOverlay(TileOverlayOptions().zIndex(0.3f)
-//                .transparency(0.5f)
-//                .tileProvider(DebugTileProvider2(requireContext())))
     }
 
     /**
@@ -306,9 +295,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.distinctFloor
-                .subscribeBy { floor: Int ->
+                .subscribeBy { floor: ArticMapFloor ->
                     fun backgroundForState(whichFloor: Int): Int {
-                        return when (floor) {
+                        return when (floor.label.toInt()) {
                             whichFloor -> R.drawable.map_floor_background_selected
                             else -> R.drawable.map_floor_background_default
                         }
@@ -323,7 +312,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.distinctFloor
                 .withLatestFrom(groundOverlayGenerated)
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter { (floor, generated) -> generated && floor in 0..3 }
+                .filter { (floor, generated) -> generated && floor.label.toInt() in 0..3 }
                 .withLatestFrom(viewModel.currentMap.filterValue()) { (floor), map -> floor to map }
                 .subscribeBy { (floor, map) ->
                     tileOverlay.remove()
