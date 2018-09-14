@@ -76,16 +76,11 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                             if (highlightedText.isEmpty()) {
                                 return@map text
                             } else {
-                                val startIndex = text.indexOf(string = highlightedText, ignoreCase = true)
-                                val string = SpannableString(text)
-                                if (startIndex > -1) {
-                                    string.setSpan(
-                                            StyleSpan(Typeface.BOLD),
-                                            startIndex,
-                                            startIndex + highlightedText.length,
-                                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                                }
-                                return@map string
+                                val withSpans = SpannableString(text)
+
+                                applyHighlight(withSpans, highlightedText)
+
+                                return@map withSpans
                             }
                         }
                         .bindTo(suggestedKeyword.text())
@@ -111,6 +106,21 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
             else -> {
 
             }
+        }
+    }
+
+    /**
+     * Marks out the section of [target] matching [highlightedText] in bold.
+     */
+    private fun applyHighlight(target: SpannableString, highlightedText: String) {
+        val startIndex = target.indexOf(string = highlightedText, ignoreCase = true)
+        if (startIndex > -1) {
+            target.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    startIndex,
+                    startIndex + highlightedText.length,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+            )
         }
     }
 
