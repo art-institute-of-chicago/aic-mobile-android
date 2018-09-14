@@ -24,21 +24,16 @@ open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : BaseViewMo
  *
  * @param textString the text to show on screen
  * @param highlightedText (optional) a substring that, if present in [textString], should
- * be highlighted with a color or bolded or something along those lines
+ * be highlighted with a color or made bold or something along those lines
  */
-class SearchTextCellViewModel(val textString: String, highlightedText: String = "") : SearchBaseCellViewModel() {
+class SearchTextCellViewModel(
+        val textString: String,
+        highlightedText: String = ""
+) : SearchBaseCellViewModel() {
     val text: Subject<Pair<String,String>> = BehaviorSubject.createDefault(Pair(textString, highlightedText))
-    override fun equals(other: Any?): Boolean {
-        return if(other is SearchTextCellViewModel) {
-            other.textString == textString
-        } else {
-            false
-        }
-    }
 
-    override fun hashCode(): Int {
-        return textString.hashCode()
-    }
+    // Warning: overriding ::equals or ::hashCode may prevent the screen from updating correctly.
+
 }
 
 class SearchEmptyCellViewModel : SearchBaseCellViewModel()
