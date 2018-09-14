@@ -125,9 +125,13 @@
                 android:layout_marginTop="21dp"
                 android:drawableStart="@drawable/ic_show_on_map"
                 android:padding="@dimen/marginStandard"
-                app:layout_constraintEnd_toStartOf="@id/centerGuide"
+                android:visibility="gone"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight=".5"
+                app:layout_constraintEnd_toStartOf="@id/buyTickets"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible"
                 tools:text="Show on Map"/>
 
             <Button
@@ -139,12 +143,27 @@
                 android:layout_marginStart="@dimen/marginStandard"
                 android:layout_marginTop="21dp"
                 android:drawablePadding="@dimen/marginStandard"
-                android:drawableStart="@drawable/ic_play"
+                android:drawableStart="@drawable/ic_ticket"
                 android:padding="@dimen/marginStandard"
+                app:layout_constraintWidth_percent=".45"
+                app:layout_constraintHorizontal_weight=".5"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/centerGuide"
+                app:layout_constraintStart_toEndOf="@id/showOnMap"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Play Audio"/>
+                tools:text="Buy Tickets"
+                tools:visibility="gone"/>
+
+            <android.support.constraint.Barrier
+                android:id="@+id/buttonPanelGuide"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="showOnMap,playAudio"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
             <TextView
                 android:id="@+id/artistCulturePlaceDenim"
@@ -152,7 +171,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginDouble"
-                app:layout_constraintTop_toBottomOf="@id/showOnMap"
+                app:layout_constraintTop_toBottomOf="@id/buttonPanelGuide"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="Edward hooper" />
