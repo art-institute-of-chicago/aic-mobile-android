@@ -46,16 +46,16 @@ class SearchTextHeaderViewModel(text: String) : SearchBaseCellViewModel() {
     val text: Subject<String> = BehaviorSubject.createDefault(text)
 }
 
-open class SearchBaseListItemViewModel(isHeadphonesVisisble: Boolean = false)
+open class SearchBaseListItemViewModel(isHeadphonesVisible: Boolean = false)
     : SearchBaseCellViewModel(hasDivider = true) {
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val itemTitle: Subject<String> = BehaviorSubject.create()
     val itemSubTitle: Subject<String> = BehaviorSubject.create()
-    val isHeadphonesVisible: Subject<Boolean> = BehaviorSubject.createDefault(isHeadphonesVisisble)
+    val isHeadphonesVisible: Subject<Boolean> = BehaviorSubject.createDefault(isHeadphonesVisible)
 }
 
 class SearchArtworkCellViewModel(val articObject: ArticSearchArtworkObject)
-    : SearchBaseListItemViewModel(isHeadphonesVisisble = true) {
+    : SearchBaseListItemViewModel(isHeadphonesVisible = articObject.audioObject?.audioCommentary?.isNotEmpty() ?: false) {
 
     init {
         imageUrl.onNext(articObject.thumbUrl.orEmpty())
