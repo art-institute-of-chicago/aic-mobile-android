@@ -276,7 +276,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.distinctFloor
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter { floor -> floor.label.toInt() in 0..3 }
+                .filter { floor -> floor.number in 0..3 }
                 .withLatestFrom(viewModel.currentMap.filterValue())
                 .subscribeBy { (floor, map) ->
                     tileOverlay?.remove()

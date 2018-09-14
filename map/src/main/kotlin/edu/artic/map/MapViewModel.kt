@@ -25,7 +25,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -35,15 +34,15 @@ import javax.inject.Inject
  */
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
-                                       articMapAnnotationDao: ArticMapAnnotationDao,
                                        private val languageSelector: LanguageSelector,
-                                       mapFloorDao: ArticMapFloorDao,
-                                       val searchManager: SearchManager,
-                                       val analyticsTracker: AnalyticsTracker,
-                                       val tourProgressManager: TourProgressManager)
-    : BaseViewModel() {
+                                       private val searchManager: SearchManager,
+                                       private val analyticsTracker: AnalyticsTracker,
+                                       private val tourProgressManager: TourProgressManager,
+                                       articMapAnnotationDao: ArticMapAnnotationDao,
+                                       mapFloorDao: ArticMapFloorDao
+) : BaseViewModel() {
 
-    private val articMapFloorMap: Subject<Map<String, ArticMapFloor>> = BehaviorSubject.create()
+    private val articMapFloorMap: Subject<Map<Int, ArticMapFloor>> = BehaviorSubject.create()
 
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     private val focus: Subject<MapFocus> = BehaviorSubject.create()
@@ -57,7 +56,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val leftActiveTour: Subject<Boolean> = PublishSubject.create()
     val switchTourRequest: Subject<Pair<ArticTour, ArticTour.TourStop>> = PublishSubject.create()
 
-    private val distinceFloorInt = floor.distinctUntilChanged().filter { it in 0..3 }
+    private val distinctFloorInt = floor.distinctUntilChanged().filter { it in 0..3 }
 
     val distinctFloor: Subject<ArticMapFloor> = BehaviorSubject.create()
 
@@ -70,28 +69,28 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
     init {
-        articMapFloorMap.subscribe {
-            Timber.d("mapsize: ${it.size}")
-        }.disposedBy(disposeBag)
 
         mapFloorDao.getMapFloors()
-                .map { floorMap -> floorMap.associateBy { it.label } }
+                .map { floorMap -> floorMap.associateBy { it.number } }
                 .bindTo(articMapFloorMap)
                 .disposedBy(disposeBag)
 
         Observables
-                .combineLatest(distinceFloorInt, articMapFloorMap)
+                .combineLatest(distinctFloorInt, articMapFloorMap)
                 .subscribeBy { (floor, floorMap) ->
-                    floorMap[floor.toString()]?.let {
+                    floorMap[floor]?.let {
                         distinctFloor.onNext(it)
                     }
 
                 }.disposedBy(disposeBag)
 
-        mapMarkerConstructor.bindToMapChanges(distinctFloor.map { it.label.toInt() },
-                focus.distinctUntilChanged(),
-                displayMode.distinctUntilChanged(),
-                visibleRegionChanges.distinctUntilChanged())
+        mapMarkerConstructor
+                .bindToMapChanges(
+                        distinctFloor.map { it.number },
+                        focus.distinctUntilChanged(),
+                        displayMode.distinctUntilChanged(),
+                        visibleRegionChanges.distinctUntilChanged()
+                )
 
         // when we change to tour mode, we notify the tourProgressManager.
         displayMode
