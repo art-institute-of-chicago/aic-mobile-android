@@ -15,4 +15,6 @@ data class ArticMapFloor(
         @Json(name = "anchor_location_1") val anchorLocation1: String?,
         @Json(name = "anchor_location_2") val anchorLocation2: String?,
         @Json(name = "tile_images") val tiles: String
-)
+) {
+    val number : Int = label.toInt()
+}
