@@ -38,8 +38,12 @@ class SearchTextCellViewModel(
 
 class SearchEmptyCellViewModel : SearchBaseCellViewModel()
 
-class SearchHeaderCellViewModel(header: Header) : SearchBaseCellViewModel() {
+class SearchHeaderCellViewModel(private val header: Header, private val parentViewModel: SearchBaseViewModel) : SearchBaseCellViewModel() {
     val text: Subject<String> = BehaviorSubject.createDefault(header.title)
+
+    fun onClickSeeAll() {
+        parentViewModel.onClickSeeAll(header)
+    }
 }
 
 class SearchTextHeaderViewModel(text: String) : SearchBaseCellViewModel() {

@@ -4,8 +4,10 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.TextView
+import com.fuzz.rx.disposedBy
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_search_results.*
@@ -68,6 +70,24 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
                 (tab?.customView as TextView?)?.typeface = selectedTypeface
             }
 
+        })
+    }
+
+    override fun setupBindings(viewModel: SearchResultsContainerViewModel) {
+        super.setupBindings(viewModel)
+        viewModel
+                .currentlySelectedPage
+                .distinctUntilChanged()
+                .subscribe {
+                    if(viewPager.currentItem != it) {
+                        viewPager.currentItem = it
+                    }
+                }
+                .disposedBy(disposeBag)
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                viewModel.onPageChanged(position)
+            }
         })
     }
 }

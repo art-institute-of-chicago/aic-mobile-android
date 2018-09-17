@@ -31,7 +31,7 @@ open class SearchBaseViewModel @Inject constructor(
     val cells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
 
 
-    fun onClickItem(pos: Int, viewModel: SearchBaseCellViewModel) {
+    open fun onClickItem(pos: Int, viewModel: SearchBaseCellViewModel) {
         val searchText = (searchResultsManager.currentSearchText as BehaviorSubject<String>).value.orEmpty()
         when (viewModel) {
             is SearchTourCellViewModel -> {
@@ -122,5 +122,9 @@ open class SearchBaseViewModel @Inject constructor(
                 //TODO: handle this case
             }
         }
+    }
+
+    open fun onClickSeeAll(header: Header) {
+
     }
 }
