@@ -110,6 +110,9 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                     }
                 }.disposedBy(item.viewDisposeBag)
 
+                item.hasAudio
+                        .bindToMain(playCurrent.visibility())
+                        .disposedBy(item.viewDisposeBag)
             }
         }
     }
