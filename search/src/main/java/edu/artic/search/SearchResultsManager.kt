@@ -133,7 +133,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
             artwork?.forEach { searchedArtwork ->
                 val artworkId = searchedArtwork.artworkId.toString()
                 val articObject = articObjectDao.getObjectByIdSynchronously(artworkId)
-                val gallery = articGalleryDao.getGalleryForIdSynchronously(searchedArtwork.gallery_id)
+                val gallery = articGalleryDao.getGalleryForGalleryIdSynchronously(searchedArtwork.gallery_id)
                 if (articObject != null) {
                     returnList.add(
                             transformArticObjectToArticSearchObject(
