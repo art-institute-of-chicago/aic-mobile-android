@@ -1,12 +1,9 @@
 package edu.artic.search
 
-import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.ViewPager
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -41,7 +38,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
                 it.setCustomView(R.layout.tab_search_result_container)
                 (it.customView as TextView).apply {
                     text = viewPager.adapter?.getPageTitle(i)
-                    typeface = if(i == 0) {
+                    typeface = if (i == 0) {
                         selectedTypeface
                     } else {
                         defaultTypeface
@@ -49,7 +46,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
                 }
             }
         }
-        tabStrip.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
+        tabStrip.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 (tab?.customView as TextView?)?.typeface = selectedTypeface
             }
