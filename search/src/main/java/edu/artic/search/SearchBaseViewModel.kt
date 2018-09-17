@@ -93,20 +93,21 @@ open class SearchBaseViewModel @Inject constructor(
                 navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Web))
             }
             is SearchCircularCellViewModel -> {
-                viewModel.artWork?.let { arcticObject ->
-                    /* Convert the ArcticObject to ArcticSearchArtworkObject*/
-                    val arcticSearchArtworkObject = ArticSearchArtworkObject(
-                            artworkId = arcticObject.id.toString(),
-                            audioObject = arcticObject,
-                            title = arcticObject.title,
-                            thumbnailUrl = arcticObject.thumbUrl,
-                            imageUrl = arcticObject.largeImageUrl,
-                            artistDisplay = arcticObject.artistCulturePlaceDelim,
-                            location = arcticObject.location,
-                            floor = arcticObject.floor,
-                            gallery = null)
+                viewModel.artWork?.let { articObject ->
+                    /** Convert the [ArticObject] to [ArticSearchArtworkObject] **/
+                    val articSearchArtworkObject = ArticSearchArtworkObject(
+                            artworkId = articObject.id.toString(),
+                            audioObject = articObject,
+                            title = articObject.title,
+                            thumbnailUrl = articObject.thumbUrl,
+                            imageUrl = articObject.largeImageUrl,
+                            artistDisplay = articObject.artistCulturePlaceDelim,
+                            location = articObject.location,
+                            floor = articObject.floor,
+                            gallery = null /* Currently, gallery is not required for search details */
+                    )
 
-                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ArtworkOnMap(arcticSearchArtworkObject)))
+                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ArtworkOnMap(articSearchArtworkObject)))
                 }
             }
             is SearchTextCellViewModel -> {
