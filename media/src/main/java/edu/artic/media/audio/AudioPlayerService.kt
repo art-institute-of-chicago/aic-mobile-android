@@ -64,7 +64,7 @@ import javax.inject.Inject
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class AudioPlayerService : DaggerService() {
+class AudioPlayerService : DaggerService(), PlayerService {
 
     companion object {
         val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
@@ -268,6 +268,7 @@ class AudioPlayerService : DaggerService() {
             setPlayer(player)
             setSmallIcon(R.drawable.icn_notification)
         }
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -369,7 +370,7 @@ class AudioPlayerService : DaggerService() {
      *
      * @see setArticObject
      */
-    fun switchAudioTrack(alternative: AudioFileModel) {
+    override fun switchAudioTrack(alternative: AudioFileModel) {
         playable?.let {
             val playBackState = (audioPlayBackStatus as BehaviorSubject).value
             if (playBackState is Playing) {
@@ -382,11 +383,11 @@ class AudioPlayerService : DaggerService() {
         }
     }
 
-    fun pausePlayer() {
+    override fun pausePlayer() {
         audioControl.onNext(PlayBackAction.Pause())
     }
 
-    fun playPlayer(given: Playable?) {
+    override fun playPlayer(given: Playable?) {
         if (given != null) {
             var audioFile: ArticAudioFile? = null
             when (given) {
@@ -399,15 +400,15 @@ class AudioPlayerService : DaggerService() {
         }
     }
 
-    fun playPlayer(audioFile: Playable, audioModel: AudioFileModel) {
+    override fun playPlayer(audioFile: Playable, audioModel: AudioFileModel) {
         audioControl.onNext(PlayBackAction.Play(audioFile, audioModel))
     }
 
-    fun resumePlayer() {
+    override fun resumePlayer() {
         audioControl.onNext(AudioPlayerService.PlayBackAction.Resume())
     }
 
-    fun stopPlayer() {
+    override fun stopPlayer() {
         analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, (currentTrack as BehaviorSubject).value?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
