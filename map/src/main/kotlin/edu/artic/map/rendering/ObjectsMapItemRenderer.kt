@@ -2,6 +2,7 @@ package edu.artic.map.rendering
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.fuzz.rx.asFlowable
 import com.fuzz.rx.disposedBy
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
@@ -12,15 +13,8 @@ import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticObject
 import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
-import edu.artic.map.ArticObjectMarkerGenerator
-import edu.artic.map.MapChangeEvent
-import edu.artic.map.MapDisplayMode
-import edu.artic.map.MapFocus
-import edu.artic.map.R
-import edu.artic.map.getTourOrderNumberBasedOnDisplayMode
+import edu.artic.map.*
 import edu.artic.map.helpers.toLatLng
-import edu.artic.map.isCloseEnoughToCenter
-import edu.artic.ui.util.asCDNUri
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -140,7 +134,13 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticObject>> = when (displayMode) {
         is MapDisplayMode.CurrentFloor -> objectsDao.getObjectsByFloor(floor = floor)
         is MapDisplayMode.Tour -> objectsDao.getObjectsByIdList(displayMode.tour.tourStops.mapNotNull { it.objectId })
-        is MapDisplayMode.Search.ObjectSearch -> objectsDao.getObjectById(displayMode.item.nid).map { listOf(it) }
+        is MapDisplayMode.Search.ObjectSearch -> {
+            if (displayMode.item.audioObject != null) {
+                listOf(displayMode.item.audioObject as ArticObject).asFlowable()
+            } else {
+                listOf<ArticObject>().asFlowable()
+            }
+        }
         is MapDisplayMode.Search.AmenitiesSearch -> listOf<List<ArticObject>>().toFlowable()
     }
 

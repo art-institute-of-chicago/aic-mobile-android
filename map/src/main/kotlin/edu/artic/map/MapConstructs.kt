@@ -1,6 +1,7 @@
 package edu.artic.map
 
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
 
 data class MapChangeEvent(val focus: MapFocus, val floor: Int, val displayMode: MapDisplayMode)
@@ -51,7 +52,7 @@ sealed class MapDisplayMode {
     data class Tour(val tour: ArticTour, val selectedTourStop: ArticTour.TourStop?) : MapDisplayMode()
     object CurrentFloor : MapDisplayMode()
     sealed class Search<T>(val item: T) : MapDisplayMode() {
-        class ObjectSearch(item: ArticObject) : Search<ArticObject>(item)
+        class ObjectSearch(item: ArticSearchArtworkObject) : Search<ArticSearchArtworkObject>(item)
         class AmenitiesSearch(amenityType: String) : Search<String>(amenityType)
     }
 }

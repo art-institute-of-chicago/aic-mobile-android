@@ -9,6 +9,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
@@ -84,7 +85,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                     val searchNavController = Navigation.findNavController(requireActivity(), R.id.container)
                     when (it.endpoint) {
                         is SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap -> {
-                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap).articObject
+                            val o: ArticSearchArtworkObject = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap).articObject
                             val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                 putExtra(NavigationConstants.ARG_SEARCH_OBJECT, o)
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION

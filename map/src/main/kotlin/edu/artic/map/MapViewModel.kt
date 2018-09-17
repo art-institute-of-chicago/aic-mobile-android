@@ -359,7 +359,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     /**
      * Loads display mode for the map.
      */
-    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticObject?, searchedAnnotationType: String?) {
+    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticSearchArtworkObject?, searchedAnnotationType: String?) {
 
         /**
          * Store the search object to memory.
