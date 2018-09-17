@@ -41,7 +41,7 @@ class LocalizationPreferences(context: Context)
         }
         get() = Locale.forLanguageTag(
                 innerTourLocale ?:
-                Locale.getDefault().toLanguageTag()
+                preferredAppLocale.toLanguageTag()
         ).orFallback(preferredAppLocale)
 }
 
