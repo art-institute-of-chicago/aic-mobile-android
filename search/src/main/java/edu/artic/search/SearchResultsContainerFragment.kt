@@ -42,7 +42,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
                 it.setCustomView(R.layout.tab_search_result_container)
                 (it.customView as TextView).apply {
                     text = viewPager.adapter?.getPageTitle(i)
-                    typeface = if (i == 0) {
+                    typeface = if (it.isSelected) {
                         selectedTypeface
                     } else {
                         defaultTypeface
