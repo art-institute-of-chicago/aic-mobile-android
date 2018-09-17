@@ -1,5 +1,8 @@
 package edu.artic.localization
 
+import android.annotation.TargetApi
+import android.os.Build
+import android.os.LocaleList
 import java.util.*
 
 
@@ -39,6 +42,18 @@ fun Locale.nameOfLanguageForAnalytics(): String {
 
 val SPANISH: Locale
     get() = Locale.forLanguageTag("es")
+
+/**
+ * Converts this [LocaleList] into a standard [MutableList].
+ */
+@TargetApi(Build.VERSION_CODES.N)
+fun LocaleList.asKotlinList(): MutableList<Locale> {
+    val asList = mutableListOf<Locale>()
+    for (i in 0 until size()) {
+        asList.add(this[i])
+    }
+    return asList
+}
 
 /**
  * Check whether our [language][Locale.toLanguageTag] is the 'undefined' constant.
