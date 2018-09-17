@@ -24,6 +24,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
 
     private val dynamicCells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
+    var parentViewModel : SearchResultsContainerViewModel? = null
 
     init {
         setupOnMapSuggestionsBind()
@@ -107,7 +108,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun filterArtworkForViewModel(artworkList: List<ArticSearchArtworkObject>): List<SearchBaseCellViewModel> {
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (artworkList.isNotEmpty()) {
-            cellList.add(SearchHeaderCellViewModel(Header.Artworks())) //TODO: use localizer
+            cellList.add(SearchHeaderCellViewModel(Header.Artworks(), this)) //TODO: use localizer
             cellList.addAll(
                     artworkList
                             .take(3)
@@ -125,7 +126,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
          */
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (list.isNotEmpty()) {
-            cellList.add(SearchHeaderCellViewModel(Header.Exhibitions())) // TODO: use localizer
+            cellList.add(SearchHeaderCellViewModel(Header.Exhibitions(), this)) // TODO: use localizer
             cellList.addAll(
                     list
                             .take(3)
@@ -142,7 +143,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun filterToursForViewModel(list: List<ArticTour>): List<SearchBaseCellViewModel> {
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (list.isNotEmpty()) {
-            cellList.add(SearchHeaderCellViewModel(Header.Tours())) // TODO: use localizer
+            cellList.add(SearchHeaderCellViewModel(Header.Tours(),this)) // TODO: use localizer
             cellList.addAll(
                     list
                             .take(3)
@@ -162,4 +163,9 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
         }
         return l
     }
+
+    override fun onClickSeeAll(header: Header) {
+        parentViewModel?.onClickSeeAll(header)
+    }
+
 }

@@ -21,11 +21,12 @@
         tools:text="Header" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/seeAllText"
         style="@style/BodyCtaTurquoise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/seeAll"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toEndOf="parent" />
 
