@@ -38,7 +38,7 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
      * Returns the locally cached 'app-wide' [Locale].
      */
     fun getAppLocale(): Locale {
-        return appLocaleRef.get()
+        return Locale.forLanguageTag(appLocaleRef.get().language)
     }
 
     fun setTourLanguage(proposedTourLocale: Locale) {
