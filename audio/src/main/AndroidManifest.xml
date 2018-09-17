@@ -21,7 +21,8 @@
         <activity
             android:name=".AudioActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.CustomToolbar.AudioTheme">
+            android:theme="@style/AppTheme.CustomToolbar.AudioTheme"
+            android:screenOrientation="sensorPortrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

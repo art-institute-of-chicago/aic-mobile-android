@@ -2,7 +2,8 @@
     package="edu.artic.splash" >
 
     <application>
-        <activity android:name=".SplashActivity" >
+        <activity android:name=".SplashActivity"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER" />
