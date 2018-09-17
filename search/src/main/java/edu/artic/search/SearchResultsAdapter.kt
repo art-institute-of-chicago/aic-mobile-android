@@ -5,11 +5,14 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.view.View
+import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
@@ -34,6 +37,11 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                 item.text
                         .bindToMain(title.text())
                         .disposedBy(item.viewDisposeBag)
+
+                //Rx version of clicks does not work here for some reason :(
+                seeAllText.setOnClickListener {
+                    item.onClickSeeAll()
+                }
             }
 
             is SearchTextHeaderViewModel -> {
