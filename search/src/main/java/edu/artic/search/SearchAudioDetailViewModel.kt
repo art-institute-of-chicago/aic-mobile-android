@@ -6,15 +6,21 @@ import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.Playable
 import edu.artic.db.models.ArticSearchArtworkObject
+import edu.artic.db.models.audioFile
+import edu.artic.localization.LanguageSelector
+import edu.artic.media.audio.PlayerService
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracker: AnalyticsTracker)
-    : NavViewViewModel<SearchAudioDetailViewModel.NavigationEndpoint>() {
+class SearchAudioDetailViewModel @Inject constructor(
+        private val analyticsTracker: AnalyticsTracker,
+        private val languageSelector: LanguageSelector
+) : NavViewViewModel<SearchAudioDetailViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         data class ObjectOnMap(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
@@ -29,6 +35,8 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
     val playAudioButtonText: Subject<String> = BehaviorSubject.createDefault("Play Audio")// TODO: replace when special localizer is done
     val playAudioVisible: Subject<Boolean> = BehaviorSubject.create()
     private val articObjectObservable: Subject<ArticSearchArtworkObject> = BehaviorSubject.create()
+
+    var playerService : PlayerService? = null
 
     var articObject: ArticSearchArtworkObject? = null
         set(value) {
@@ -98,7 +106,19 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
     }
 
     fun onClickPlayAudio() {
-        //TODO: start playing
+        playerService?.let {playerService ->
+            articObject?.audioObject?.audioFile?.allTranslations()?.let {
+                val articObject = articObject?.audioObject as Playable
+                playerService.playPlayer(articObject, languageSelector.selectFrom(it))
+            }
+
+
+        }
+    }
+
+    override fun cleanup() {
+        super.cleanup()
+        playerService = null
     }
 
 }
