@@ -88,7 +88,7 @@ class SearchAudioDetailViewModel @Inject constructor(
         articObjectObservable
                 .filterFlatMap({it.gallery != null} , {it.gallery!!})
                 .filter { it.number != null }
-                .map { "Gallery ${it.number.toString()}" } // TODO: use localizer
+                .map { it.number.toString() }
                 .bindTo(galleryNumber)
                 .disposedBy(disposeBag)
 
