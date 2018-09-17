@@ -1,6 +1,7 @@
 package edu.artic.search
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
@@ -60,11 +61,15 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
         val options = RequestOptions()
                 .dontAnimate()
                 .dontTransform()
+                .placeholder(ColorDrawable())
+                .error(ColorDrawable())
 
         viewModel.imageUrl
                 .map { it.isNotEmpty() }
                 .bindToMain(audioImage.visibility())
                 .disposedBy(disposeBag)
+
+
 
         viewModel.imageUrl
                 .subscribe {
@@ -73,6 +78,7 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                             .apply(options)
                             .listenerAnimateSharedTransaction(this, audioImage)
                             .into(audioImage)
+
                 }.disposedBy(disposeBag)
 
 

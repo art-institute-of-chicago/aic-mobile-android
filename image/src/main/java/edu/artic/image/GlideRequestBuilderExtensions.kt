@@ -64,7 +64,7 @@ fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(fragment: Fragment
         } else {
             parentWidth
         }
-        if (newHeight != parentWidth) {
+        if (newHeight != parentWidth && newHeight > 0) {
             val animator = ValueAnimator.ofInt(parentWidth, newHeight)
             animator.addUpdateListener { valAnimator ->
                 val params = image.layoutParams
