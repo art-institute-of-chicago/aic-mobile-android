@@ -12,7 +12,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -146,7 +146,7 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
         private val ARG_SEARCH_OBJECT = "ARG_SEARCH_OBJECT"
         private val ARG_AMENITY_TYPE = "ARG_AMENITY_TYPE"
 
-        fun loadArtworkResults(articObject: ArticObject): SearchObjectDetailsFragment {
+        fun loadArtworkResults(articObject: ArticSearchArtworkObject): SearchObjectDetailsFragment {
             return SearchObjectDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_SEARCH_OBJECT, articObject)
@@ -163,8 +163,8 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
         }
     }
 
-    private fun getLatestTourObject(): ArticObject? {
-        val data = arguments?.getParcelable<ArticObject>(ARG_SEARCH_OBJECT)
+    private fun getLatestTourObject(): ArticSearchArtworkObject? {
+        val data = arguments?.getParcelable<ArticSearchArtworkObject>(ARG_SEARCH_OBJECT)
         arguments?.remove(ARG_SEARCH_OBJECT)
         return data
 

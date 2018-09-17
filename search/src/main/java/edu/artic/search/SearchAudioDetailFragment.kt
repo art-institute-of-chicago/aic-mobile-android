@@ -128,13 +128,12 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                 .subscribe {
                     when (it.endpoint) {
                         is SearchAudioDetailViewModel.NavigationEndpoint.ObjectOnMap -> {
-                            val o = (it.endpoint as SearchAudioDetailViewModel.NavigationEndpoint.ObjectOnMap).articObject
+                            val o: ArticSearchArtworkObject = (it.endpoint as SearchAudioDetailViewModel.NavigationEndpoint.ObjectOnMap).articObject
                             val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                 putExtra(NavigationConstants.ARG_SEARCH_OBJECT, o)
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             }
-                            //TODO: update map to handle ArticSearchArtworkObject
-//                            startActivity(mapIntent)
+                            startActivity(mapIntent)
                         }
                     }
                 }.disposedBy(navigationDisposeBag)

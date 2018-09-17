@@ -61,8 +61,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
 
-    private fun getLatestSearchObject(): ArticObject? {
-        val data: ArticObject? = requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+    private fun getLatestSearchObject(): ArticSearchArtworkObject? {
+        val data: ArticSearchArtworkObject? = requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
         requireActivity().intent?.removeExtra(ARG_SEARCH_OBJECT)
         return data
     }

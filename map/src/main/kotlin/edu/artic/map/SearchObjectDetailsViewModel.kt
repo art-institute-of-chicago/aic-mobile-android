@@ -53,7 +53,7 @@ class SearchObjectDetailsViewModel @Inject constructor(val languageSelector: Lan
     /**
      * when the search type is amenities fetch all the amenities and create viewmodels
      */
-    fun viewResumed(requestedSearchObject: ArticObject?, requestedSearchAmenityType: String?) {
+    fun viewResumed(requestedSearchObject: ArticSearchArtworkObject?, requestedSearchAmenityType: String?) {
 
         /**
          * latestTourObject and amenityType are mutually exclusive
@@ -147,7 +147,7 @@ class AnnotationViewModel(item: String, modelDescription: String) : SearchObject
 /**
  * ViewModel for the artwork cell.
  */
-class ArtworkViewModel(val item: ArticObject, val languageSelector: LanguageSelector) : SearchObjectBaseViewModel() {
+class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector: LanguageSelector) : SearchObjectBaseViewModel() {
 
     val artworkTitle: Subject<String> = BehaviorSubject.createDefault(item.title)
 
@@ -156,7 +156,7 @@ class ArtworkViewModel(val item: ArticObject, val languageSelector: LanguageSele
 
     //TODO:: Localize Artworks
     val objectType: Subject<String> = BehaviorSubject.createDefault("Artworks")
-    private val audioFileModel = item.audioFile?.preferredLanguage(languageSelector)
+    private val audioFileModel = item.audioObject?.audioFile?.preferredLanguage(languageSelector)
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
 
     init {
@@ -176,7 +176,9 @@ class ArtworkViewModel(val item: ArticObject, val languageSelector: LanguageSele
      * Play the audio translation for the selected artwork.
      */
     fun playAudioTranslation() {
-        playerControl.onNext(PlayerAction.Play(item, audioFileModel))
+        item.audioObject?.let {
+            playerControl.onNext(PlayerAction.Play(it, audioFileModel))
+        }
 
     }
 
