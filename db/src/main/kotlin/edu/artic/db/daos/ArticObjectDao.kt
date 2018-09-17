@@ -22,7 +22,7 @@ interface ArticObjectDao {
 
 
     //Must be flowable due to need to use this in 2 places
-    @Query("select * from ArticObject where nid = :id")
+    @Query("select * from ArticObject where id = :id")
     fun getObjectByIdSynchronously(id: String): ArticObject?
 
     /**
