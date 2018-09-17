@@ -158,6 +158,7 @@ class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector:
     val objectType: Subject<String> = BehaviorSubject.createDefault("Artworks")
     private val audioFileModel = item.audioObject?.audioFile?.preferredLanguage(languageSelector)
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
+    val hasAudio: Subject<Boolean> = BehaviorSubject.createDefault(item.audioObject != null)
 
     init {
         imageUrl.onNext(item.thumbUrl.orEmpty())
