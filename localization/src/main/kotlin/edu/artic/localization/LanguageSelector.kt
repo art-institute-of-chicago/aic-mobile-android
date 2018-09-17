@@ -26,6 +26,21 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
         }
     }
 
+    /**
+     * Check whether we have defined a value for [LocalizationPreferences.preferredAppLocale] -
+     * when this returns false at app startup, consider asking the user to choose one.
+     */
+    fun isAppLocaleSet(): Boolean {
+        return prefs.getString("application_locale", null) != null
+    }
+
+    /**
+     * Returns the locally cached 'app-wide' [Locale].
+     */
+    fun getAppLocale(): Locale {
+        return Locale.forLanguageTag(appLocaleRef.get().language)
+    }
+
     fun setTourLanguage(proposedTourLocale: Locale) {
         if (proposedTourLocale.hasNoLanguage()) {
             prefs.remove(LocalizationPreferences.PREF_TOUR_LOCALE)

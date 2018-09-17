@@ -1,8 +1,10 @@
 package edu.artic.ui
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.support.annotation.LayoutRes
+import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
@@ -14,6 +16,8 @@ import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
+import edu.artic.localization.LanguageSelector
+import edu.artic.localization.primaryLocale
 import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -30,15 +34,31 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
+    @Inject
+    lateinit var languageSelector: LanguageSelector
+
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentInjector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (useInjection) {
             AndroidInjection.inject(this)
+            ensureConfigIncludesAppLocale()
         }
         super.onCreate(savedInstanceState)
         if (layoutResId != 0) {
             setContentView(layoutResId)
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    @UiThread
+    private fun ensureConfigIncludesAppLocale() {
+        val appLocale = languageSelector.getAppLocale()
+        if (appLocale != resources.configuration.primaryLocale) {
+            resources.updateConfiguration(Configuration().apply {
+                primaryLocale = appLocale
+            }, resources.displayMetrics)
+            recreate()
         }
     }
 
