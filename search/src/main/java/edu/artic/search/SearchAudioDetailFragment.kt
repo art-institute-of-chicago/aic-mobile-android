@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
@@ -92,6 +93,10 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                 .disposedBy(disposeBag)
         viewModel.playAudioVisible
                 .bindToMain(playAudio.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.galleryNumber
+                .bindTo(galleryNumber.text())
                 .disposedBy(disposeBag)
 
         showOnMap.clicks()
