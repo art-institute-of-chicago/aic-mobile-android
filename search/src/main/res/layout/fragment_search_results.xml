@@ -3,7 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyText">
+    android:background="@color/greyText"
+    android:paddingTop="@dimen/marginTriple">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabStrip"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicatorColor="@android:color/transparent"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/white"
+        app:tabGravity="center"
+        />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
@@ -12,13 +28,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/tabStrip">
 
-        <android.support.v4.view.PagerTabStrip
-            android:id="@+id/tabStrip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="40dp" />
+        <!--<android.support.v4.view.PagerTabStrip-->
+        <!--android:id="@+id/tabStrip"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:minHeight="40dp" />-->
 
     </android.support.v4.view.ViewPager>
 </android.support.constraint.ConstraintLayout>
