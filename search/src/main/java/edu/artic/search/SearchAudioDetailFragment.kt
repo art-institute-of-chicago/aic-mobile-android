@@ -17,6 +17,7 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.image.listenerAnimateSharedTransaction
+import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -52,6 +53,10 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
 
     override fun setupBindings(viewModel: SearchAudioDetailViewModel) {
         super.setupBindings(viewModel)
+
+        this.getAudioServiceObservable()
+                .subscribe { viewModel.playerService = it }
+                .disposedBy(disposeBag)
 
         viewModel.title.subscribe {
             expandedTitle.text = it
