@@ -3,6 +3,7 @@ package edu.artic.map
 import com.fuzz.rx.Optional
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticSearchArtworkObject
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -16,7 +17,7 @@ class SearchManager {
     /**
      * Selected ArticObject
      */
-    val selectedObject: Subject<Optional<ArticObject>> = BehaviorSubject.createDefault(Optional(null))
+    val selectedObject: Subject<Optional<ArticSearchArtworkObject>> = BehaviorSubject.createDefault(Optional(null))
     /**
      * Save the last selected tour.
      */
