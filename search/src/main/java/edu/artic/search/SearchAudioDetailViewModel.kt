@@ -46,7 +46,7 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
                 .disposedBy(disposeBag)
 
         articObjectObservable
-                .map { it.largeImageUrl.orEmpty() }
+                .filterFlatMap({ it.largeImageUrl != null }, {it.largeImageUrl!!})
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 
