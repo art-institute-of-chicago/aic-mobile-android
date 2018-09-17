@@ -1,5 +1,6 @@
 package edu.artic.search
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.res.ResourcesCompat
@@ -23,10 +24,13 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
 
         tabStrip.setupWithViewPager(viewPager)
         val adapter = SearchResultsPagerAdapter(childFragmentManager)
-        viewPager.adapter = adapter
-        viewPager.currentItem = 0
-        viewPager.offscreenPageLimit = 1
+        viewPager.apply {
+            this.adapter = adapter
+            this.currentItem = 0
+            this.offscreenPageLimit = 1
+        }
         setupTabStripUi()
+
     }
 
     private fun setupTabStripUi() {
@@ -46,6 +50,11 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
                 }
             }
         }
+        setupOnTabChangedListener(selectedTypeface, defaultTypeface)
+
+    }
+
+    private fun setupOnTabChangedListener(selectedTypeface: Typeface?, defaultTypeface: Typeface?) {
         tabStrip.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 (tab?.customView as TextView?)?.typeface = selectedTypeface
