@@ -21,7 +21,8 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
     }
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
-    val title: Subject<String> = BehaviorSubject.createDefault("test")
+    val title: Subject<String> = BehaviorSubject.create()
+    val galleryNumber : Subject<String> = BehaviorSubject.create()
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
     val showOnMapButtonText: Subject<String> = BehaviorSubject.createDefault("Show on Map") // TODO: replace when special localizer is done
     val showOnMapVisible: Subject<Boolean> = BehaviorSubject.create()
@@ -58,7 +59,7 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
 
         articObjectObservable
                 .map { it.location.orEmpty() }
-                .map { it.isEmpty() }
+                .map { !it.isEmpty() }
                 .bindTo(showOnMapVisible)
                 .disposedBy(disposeBag)
 
@@ -74,6 +75,13 @@ class SearchAudioDetailViewModel @Inject constructor(private val analyticsTracke
                     it.audioCommentary.isNotEmpty()
                 }
                 .bindTo(playAudioVisible)
+                .disposedBy(disposeBag)
+
+        articObjectObservable
+                .filterFlatMap({it.gallery != null} , {it.gallery!!})
+                .filter { it.number != null }
+                .map { "Gallery ${it.number.toString()}" } // TODO: use localizer
+                .bindTo(galleryNumber)
                 .disposedBy(disposeBag)
 
     }
