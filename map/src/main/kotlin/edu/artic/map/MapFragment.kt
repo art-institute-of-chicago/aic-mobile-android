@@ -238,13 +238,25 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.tourBoundsChanged
-                .withLatestFrom(viewModel.currentMap.filterValue())
+                .withLatestFrom(viewModel.currentMap.filterValue(), viewModel.displayMode)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (bounds, map) ->
-                    map.moveCamera(CameraUpdateFactory
-                            .newLatLngBounds(LatLngBounds.builder()
-                                    .includeAll(bounds)
-                                    .build(), 0))
+                .subscribeBy { (bounds, map, mode) ->
+
+                    if (mode is MapDisplayMode.Search<*>) {
+                        // Only need to zoom out all the way. Specific bounds are irrelevant
+                        map.animateCamera(
+                                CameraUpdateFactory.zoomTo(ZOOM_MIN)
+                        )
+                    } else {
+                        // Make sure we can see all of the specified positions
+                        map.moveCamera(CameraUpdateFactory
+                                .newLatLngBounds(
+                                        LatLngBounds.builder()
+                                                .includeAll(bounds)
+                                                .build(),
+                                        0
+                                ))
+                    }
                 }
                 .disposedBy(disposeBag)
 
