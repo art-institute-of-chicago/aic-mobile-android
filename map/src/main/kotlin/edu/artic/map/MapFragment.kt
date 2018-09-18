@@ -272,6 +272,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.distinctFloor
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { floor: ArticMapFloor ->
                     fun backgroundForState(whichFloor: Int): Int {
                         return when (floor.label.toInt()) {
