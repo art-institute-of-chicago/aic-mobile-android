@@ -139,7 +139,7 @@
                     android:layout_marginStart="@dimen/marginStandard"
                     android:layout_marginEnd="@dimen/marginDouble"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_ticket"
+                    android:drawableStart="@drawable/ic_play"
                     android:drawablePadding="@dimen/marginStandard"
                     android:padding="@dimen/marginStandard"
                     tools:text="PlayAudio"
