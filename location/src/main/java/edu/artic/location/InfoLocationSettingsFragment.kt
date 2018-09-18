@@ -70,6 +70,6 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
                             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                         }
                     }
-                }.disposedBy(disposeBag)
+                }.disposedBy(navigationDisposeBag)
     }
 }
