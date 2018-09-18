@@ -15,6 +15,7 @@ dependencies {
     api libs.dagger_android
     api libs.custom_tabs
     api 'javax.annotation:jsr250-api:1.0'
+    api 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 

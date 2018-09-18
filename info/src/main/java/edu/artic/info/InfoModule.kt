@@ -40,6 +40,14 @@ abstract class InfoModule {
     @get:ContributesAndroidInjector
     abstract val museumInformationFragment: MuseumInformationFragment
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(AccessMemberCardViewModel::class)
+    abstract fun accessMemberCardViewModel(accessMemberCardViewModel: AccessMemberCardViewModel): ViewModel
+
+    @get:ContributesAndroidInjector
+    abstract val accessMemberCardFragment: AccessMemberCardFragment
+
     @get:ContributesAndroidInjector
     abstract val infoActivity: InfoActivity
 
