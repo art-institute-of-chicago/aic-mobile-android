@@ -156,9 +156,9 @@ class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector:
 
     //TODO:: Localize Artworks
     val objectType: Subject<String> = BehaviorSubject.createDefault("Artworks")
-    private val audioFileModel = item.audioObject?.audioFile?.preferredLanguage(languageSelector)
+    private val audioFileModel = item.backingObject?.audioFile?.preferredLanguage(languageSelector)
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
-    val hasAudio: Subject<Boolean> = BehaviorSubject.createDefault(item.audioObject != null)
+    val hasAudio: Subject<Boolean> = BehaviorSubject.createDefault(item.backingObject != null)
 
     init {
         imageUrl.onNext(item.thumbUrl.orEmpty())
@@ -177,7 +177,7 @@ class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector:
      * Play the audio translation for the selected artwork.
      */
     fun playAudioTranslation() {
-        item.audioObject?.let {
+        item.backingObject?.let {
             playerControl.onNext(PlayerAction.Play(it, audioFileModel))
         }
 

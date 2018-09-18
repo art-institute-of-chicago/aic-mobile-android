@@ -112,6 +112,10 @@ data class ArticObject(
     }
 }
 
+/**
+ * Returns the primary audio track for this object. If there
+ * is no such audio, this will return null.
+ */
 val ArticObject.audioFile: ArticAudioFile?
     get() = this.audioCommentary.firstOrNull()?.audioFile
 

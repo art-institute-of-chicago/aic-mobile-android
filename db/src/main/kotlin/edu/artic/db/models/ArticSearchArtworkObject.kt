@@ -6,12 +6,24 @@ import com.squareup.moshi.JsonClass
 import edu.artic.ui.util.asCDNUri
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * Every ArticSearchArtworkObject is created off of a representative
+ * [ArticObject].
+ *
+ * In the Swift codebase that field is called `audioObject`, while here
+ * we refer to it as [backingObject].
+ */
 @JsonClass(generateAdapter = true)
 @Entity
 @Parcelize
 data class ArticSearchArtworkObject(
         val artworkId: String = "",
-        val audioObject: ArticObject? = null,
+        /**
+         * Use this to access the associated audio commentaries, if any are present.
+         *
+         * See [ArticObject.audioFile] for details.
+         */
+        val backingObject: ArticObject? = null,
         val title: String,
         val thumbnailUrl: String?,
         val imageUrl: String?,
