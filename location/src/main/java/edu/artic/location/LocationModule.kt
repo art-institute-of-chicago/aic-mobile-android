@@ -1,6 +1,11 @@
 package edu.artic.location
 
+import android.arch.lifecycle.ViewModel
+import dagger.Binds
 import dagger.Module
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
+import edu.artic.viewmodel.ViewModelKey
 
 /**
  * @author Piotr Leja (Fuzz)
@@ -8,14 +13,14 @@ import dagger.Module
 @Module
 abstract class LocationModule {
 
-//    @Binds
-//    @IntoMap
-//    @ViewModelKey(SearchViewModel::class)
-//    abstract fun searchViewModel(splashViewModel: SearchViewModel): ViewModel
-//
-//    @get:ContributesAndroidInjector
-//    abstract val searchFragment: SearchFragment
-//
+    @Binds
+    @IntoMap
+    @ViewModelKey(InfoLocationSettingsViewModel::class)
+    abstract fun infoLocationSettingsViewModel(viewModel: InfoLocationSettingsViewModel): ViewModel
+
+    @get:ContributesAndroidInjector
+    abstract val infoLocationSettingsFragment: InfoLocationSettingsFragment
+
 //    @Module
 //    companion object {
 //
