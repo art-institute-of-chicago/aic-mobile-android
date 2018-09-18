@@ -40,6 +40,7 @@ dependencies {
     implementation project(':image')
     implementation project(':search')
     implementation project(':details')
+    implementation project(':location')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin

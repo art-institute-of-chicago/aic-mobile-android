@@ -1,0 +1,19 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    implementation project(':base')
+
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+
+    implementation libs.rx_helpers
+    implementation libs.rx_kotlin
+    implementation libs.rx
+    implementation libs.rx_android
+    implementation libs.constraint_layout
+    implementation project(':analytics')
+    implementation project(':ui')
+    implementation project(':viewmodel')
+
+}

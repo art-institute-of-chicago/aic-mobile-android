@@ -12,6 +12,7 @@ import edu.artic.events.EventsModule
 import edu.artic.exhibitions.ExhibitionsModule
 import edu.artic.info.InfoModule
 import edu.artic.localization.LocalizerModule
+import edu.artic.location.LocationModule
 import edu.artic.map.MapModule
 import edu.artic.media.audio.MediaModule
 import edu.artic.media.ui.MediaUiModule
@@ -42,7 +43,8 @@ import javax.inject.Singleton
     MediaUiModule::class,
     MediaModule::class,
     SearchModule::class,
-    DetailsModule::class
+    DetailsModule::class,
+    LocationModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {
 

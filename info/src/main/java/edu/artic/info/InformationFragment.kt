@@ -3,10 +3,10 @@ package edu.artic.info
 import android.net.Uri
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.customTab.CustomTabManager
-import edu.artic.ui.findNavController
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -51,6 +51,12 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                     viewModel.onMuseumInformationClicked()
                 }.disposedBy(disposeBag)
 
+        locationSettings.clicks()
+                .defaultThrottle()
+                .subscribeBy {
+                    viewModel.onClickLocationSettings()
+                }.disposedBy(disposeBag)
+
 
         viewModel.buildVersion
                 .subscribe { versionName ->
@@ -64,24 +70,25 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
                 .observeOn(AndroidSchedulers.mainThread())
+                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
                 .subscribe {
                     when (it) {
-                        is Navigate.Forward -> {
-                            when (it.endpoint) {
-                                InformationViewModel.NavigationEndpoint.AccessMemberCard -> TODO()
-                                InformationViewModel.NavigationEndpoint.MuseumInformation -> {
-                                    navController.navigate(R.id.goToMuseumInformationFragment)
-                                }
-                                InformationViewModel.NavigationEndpoint.Search -> {
-                                    navController.navigate(R.id.goToSearch)
-                                }
-                                is InformationViewModel.NavigationEndpoint.JoinNow -> {
-                                    val url = (it.endpoint as InformationViewModel.NavigationEndpoint.JoinNow).url
-                                    customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(url))
-                                }
-                            }
+                        InformationViewModel.NavigationEndpoint.AccessMemberCard -> TODO()
+                        InformationViewModel.NavigationEndpoint.MuseumInformation -> {
+                            navController.navigate(R.id.goToMuseumInformationFragment)
+                        }
+                        InformationViewModel.NavigationEndpoint.Search -> {
+                            navController.navigate(R.id.goToSearch)
+                        }
+                        is InformationViewModel.NavigationEndpoint.JoinNow -> {
+                            val url = it.url
+                            customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(url))
+                        }
+                        InformationViewModel.NavigationEndpoint.LocationSettings -> {
+                            navController.navigate(R.id.goToLocationSettings)
                         }
                     }
+
                 }.disposedBy(navigationDisposeBag)
     }
 

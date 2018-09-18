@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="location_title">Location Settings</string>
+    <string name="locationSettingsHeader">Where Are You?</string>
+    <string name="locationSettingsBody">We’d like to use your location to help you navigate the museum.</string>
+    <string name="locationSettingsLocationServiceOff">Location Service Off</string>
+    <string name="locationSettingsLocationNeverAsked">Location Settings</string>
+    <string name="locationSettingsLocationAllowed">Location Allowed</string>
+    <string name="locationSettingsLocationDenied">Location Denied</string>
+</resources>
