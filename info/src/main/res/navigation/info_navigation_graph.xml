@@ -21,6 +21,9 @@
         <action
             android:id="@+id/goToLocationSettings"
             app:destination="@id/locationSettingsFragment" />
+        <action
+            android:id="@+id/goToAccessMemberCard"
+            app:destination="@id/accessMemberCardFragment" />
     </fragment>
 
     <fragment
@@ -28,6 +31,11 @@
         android:name="edu.artic.info.MuseumInformationFragment"
         android:label="fragment_blank"
         tools:layout="@layout/fragment_museum_information" />
+    <fragment
+        android:id="@+id/accessMemberCardFragment"
+        android:name="edu.artic.info.AccessMemberCardFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_validate_member_information" />
 
     <fragment
         android:id="@+id/locationSettingsFragment"
