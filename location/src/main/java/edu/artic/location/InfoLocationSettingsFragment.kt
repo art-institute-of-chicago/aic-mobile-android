@@ -13,8 +13,6 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_location_settings.*
 import kotlin.reflect.KClass
-import android.net.Uri.fromParts
-
 
 
 class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsViewModel>() {
@@ -28,7 +26,7 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
         super.setupBindings(viewModel)
         viewModel.buttonType
                 .map {
-                    val stringId = when(it) {
+                    val stringId = when (it) {
                         InfoLocationSettingsViewModel.ButtonType.LocationNeverRequested -> {
                             R.string.locationSettingsLocationNeverAsked
                         }
@@ -58,9 +56,9 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
     override fun setupNavigationBindings(viewModel: InfoLocationSettingsViewModel) {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
-                .filterFlatMap({it is Navigate.Forward}, {(it as Navigate.Forward).endpoint})
+                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
                 .subscribe {
-                    when(it) {
+                    when (it) {
                         InfoLocationSettingsViewModel.NavigationEndpoint.Settings -> {
                             val intent = Intent()
                             intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
