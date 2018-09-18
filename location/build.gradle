@@ -10,4 +10,7 @@ dependencies {
     implementation libs.rx_kotlin
     implementation libs.rx
     implementation libs.rx_android
+    implementation project(':viewmodel')
+    implementation project(':analytics')
+    implementation project(':ui')
 }
