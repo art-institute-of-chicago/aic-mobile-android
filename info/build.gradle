@@ -1,6 +1,17 @@
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+def member_validation_url = project.findProperty("member_validation_url")
+def member_validation_token = project.findProperty("member_validation_token")
+
+android{
+
+    defaultConfig{
+        buildConfigField("String", "MEMBER_INFO_API", "\"${member_validation_url}\"")
+        buildConfigField("String", "MEMBER_INFO_API_TOKEN", "\"${member_validation_token}\"")
+    }
+}
+
 dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
