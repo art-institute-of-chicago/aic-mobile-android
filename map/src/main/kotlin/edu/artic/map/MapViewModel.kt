@@ -50,7 +50,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     val displayMode: Subject<MapDisplayMode> = PublishSubject.create()
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
     val individualMapChange: Subject<Optional<Pair<LatLng, MapFocus>>> = PublishSubject.create()
-    val tourBoundsChanged: Relay<List<LatLng>> = PublishRelay.create()
+    val boundsOfInterestChanged: Relay<List<LatLng>> = PublishRelay.create()
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
     val leftActiveTour: Subject<Boolean> = PublishSubject.create()
@@ -237,7 +237,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         Observable.just(displayItem)
                 .filterFlatMap({ it is ArticSearchArtworkObject }, { it as ArticSearchArtworkObject })
                 .map { listOf(it.toLatLng()) }
-                .bindToMain(tourBoundsChanged)
+                .bindToMain(boundsOfInterestChanged)
                 .disposedBy(disposeBag)
 
         if (displayItem is ArticSearchArtworkObject) {
@@ -269,7 +269,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         }
 
         latLongs
-                .bindToMain(tourBoundsChanged)
+                .bindToMain(boundsOfInterestChanged)
                 .disposedBy(disposeBag)
     }
 
