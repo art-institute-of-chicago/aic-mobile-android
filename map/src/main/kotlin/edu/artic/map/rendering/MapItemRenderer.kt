@@ -9,14 +9,9 @@ import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterValue
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.VisibleRegion
+import com.google.android.gms.maps.model.*
 import edu.artic.db.debug
-import edu.artic.map.MapChangeEvent
-import edu.artic.map.MapDisplayMode
-import edu.artic.map.MapFocus
+import edu.artic.map.*
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -87,7 +82,7 @@ abstract class MapItemRenderer<T>(
                                                 tempMarkers -= newMarker
                                             }
                                             // double-check in case marker exists already.
-                                            modifiedMarkers[newMarker.id]?.marker?.remove()
+                                            modifiedMarkers[newMarker.id]?.marker?.tryExpectingFailure(true, Marker::removeWithFadeOut)
                                             modifiedMarkers[newMarker.id] = newMarker
                                         }
                                     }
@@ -357,12 +352,11 @@ abstract class MapItemRenderer<T>(
 
         // trim down items not in the new list
         toBeRemoved.forEach {
-            it.marker.remove()
+            it.marker.tryExpectingFailure(false, Marker::removeWithFadeOut)
         }
 
         // re-associate the existing found items that are still in the list when a change happens.
-        val existingFoundItemsMap = existingFoundItems.associateBy { it.id }
-        return existingFoundItemsMap
+        return existingFoundItems.associateBy { it.id }
     }
 
     /**
