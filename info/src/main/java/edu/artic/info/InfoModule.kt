@@ -64,8 +64,7 @@ abstract class InfoModule {
         @Provides
         @Singleton
         @Named(MEMBER_INFO_API)
-        fun provideRetrofit(baseUrl: String,
-                            @Named(ApiModule.BLOB_CLIENT_API)
+        fun provideRetrofit(@Named(ApiModule.BLOB_CLIENT_API)
                             client: OkHttpClient,
                             executor: Executor,
                             moshi: Moshi): Retrofit =
