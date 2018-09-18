@@ -3,12 +3,14 @@ package edu.artic.db
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.squareup.moshi.Moshi
 import io.reactivex.schedulers.Schedulers
-import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
+import org.simpleframework.xml.convert.AnnotationStrategy
+import org.simpleframework.xml.core.Persister
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.Executor
 
 /**
@@ -36,14 +38,26 @@ inline fun constructRetrofit(
         client: OkHttpClient,
         executor: Executor,
         moshi: Moshi,
+        xml: Boolean = false,
         schedulerFactory: CallAdapter.Factory = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()),
-        customConfiguration: Retrofit.Builder.() -> Unit = {}): Retrofit =
-        Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(client)
-                .callbackExecutor(executor)
-                .addCallAdapterFactory(schedulerFactory)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
-                .apply(customConfiguration)
-                .build()
+        customConfiguration: Retrofit.Builder.() -> Unit = {}): Retrofit {
+
+    val builder = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(client)
+            .callbackExecutor(executor)
+            .addCallAdapterFactory(schedulerFactory)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .apply(customConfiguration)
+
+    if (!xml) {
+        builder.addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+    } else {
+        builder.addConverterFactory(SimpleXmlConverterFactory.createNonStrict(
+                Persister(AnnotationStrategy())
+        ))
+    }
+
+    return builder.build()
+
+}

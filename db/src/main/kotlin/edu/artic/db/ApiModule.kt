@@ -8,18 +8,6 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
-import edu.artic.db.daos.ArticAudioFileDao
-import edu.artic.db.daos.ArticDataObjectDao
-import edu.artic.db.daos.ArticEventDao
-import edu.artic.db.daos.ArticExhibitionCMSDao
-import edu.artic.db.daos.ArticExhibitionDao
-import edu.artic.db.daos.ArticGalleryDao
-import edu.artic.db.daos.ArticMapAnnotationDao
-import edu.artic.db.daos.ArticMapFloorDao
-import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.ArticTourDao
-import edu.artic.db.daos.DashboardDao
-import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.daos.*
 import edu.artic.db.progress.DownloadProgressInterceptor
 import edu.artic.db.progress.ProgressEventBus
@@ -123,6 +111,14 @@ abstract class ApiModule {
             if (BuildConfig.DEBUG) {
                 builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             }
+
+            /**
+             * TODO:: Remove this once the drupal ssl issue is resolved.
+             **/
+            builder.hostnameVerifier { hostname, session ->
+                true
+            }
+
             return builder.build()
 
         }
