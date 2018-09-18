@@ -135,8 +135,8 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
         is MapDisplayMode.CurrentFloor -> objectsDao.getObjectsByFloor(floor = floor)
         is MapDisplayMode.Tour -> objectsDao.getObjectsByIdList(displayMode.tour.tourStops.mapNotNull { it.objectId })
         is MapDisplayMode.Search.ObjectSearch -> {
-            if (displayMode.item.audioObject != null) {
-                listOf(displayMode.item.audioObject as ArticObject).asFlowable()
+            if (displayMode.item.backingObject != null) {
+                listOf(displayMode.item.backingObject as ArticObject).asFlowable()
             } else {
                 listOf<ArticObject>().asFlowable()
             }

@@ -97,7 +97,7 @@ open class SearchBaseViewModel @Inject constructor(
                     /** Convert the [ArticObject] to [ArticSearchArtworkObject] **/
                     val articSearchArtworkObject = ArticSearchArtworkObject(
                             artworkId = articObject.id.toString(),
-                            audioObject = articObject,
+                            backingObject = articObject,
                             title = articObject.title,
                             thumbnailUrl = articObject.thumbUrl,
                             imageUrl = articObject.largeImageUrl,

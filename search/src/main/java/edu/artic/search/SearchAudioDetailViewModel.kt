@@ -72,13 +72,13 @@ class SearchAudioDetailViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         articObjectObservable
-                .filter { it.audioObject == null }
+                .filter { it.backingObject == null }
                 .map { false }
                 .bindTo(playAudioVisible)
                 .disposedBy(disposeBag)
 
         articObjectObservable
-                .filterFlatMap({ it.audioObject != null },{it.audioObject!!})
+                .filterFlatMap({ it.backingObject != null },{it.backingObject!!})
                 .map{
                     it.audioCommentary.isNotEmpty()
                 }
@@ -107,8 +107,8 @@ class SearchAudioDetailViewModel @Inject constructor(
 
     fun onClickPlayAudio() {
         playerService?.let {playerService ->
-            articObject?.audioObject?.audioFile?.allTranslations()?.let {
-                val articObject = articObject?.audioObject as Playable
+            articObject?.backingObject?.audioFile?.allTranslations()?.let {
+                val articObject = articObject?.backingObject as Playable
                 playerService.playPlayer(articObject, languageSelector.selectFrom(it))
             }
 
