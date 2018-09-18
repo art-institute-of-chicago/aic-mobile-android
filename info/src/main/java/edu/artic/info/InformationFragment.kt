@@ -64,6 +64,13 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
+        accessMemberCard.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onAccessMemberCardClicked()
+                }
+                .disposedBy(disposeBag)
+
     }
 
     override fun setupNavigationBindings(viewModel: InformationViewModel) {
@@ -73,7 +80,9 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                 .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
                 .subscribe {
                     when (it) {
-                        InformationViewModel.NavigationEndpoint.AccessMemberCard -> TODO()
+                        InformationViewModel.NavigationEndpoint.AccessMemberCard -> {
+                                    navController.navigate(R.id.goToAccessMemberCard)
+                                }
                         InformationViewModel.NavigationEndpoint.MuseumInformation -> {
                             navController.navigate(R.id.goToMuseumInformationFragment)
                         }
