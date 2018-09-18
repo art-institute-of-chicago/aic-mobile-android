@@ -5,6 +5,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
+import android.view.inputmethod.InputMethodManager
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -103,4 +104,12 @@ fun Context.getThemeColors(colors: IntArray): Array<ColorStateList> {
         typedArray?.recycle()
     }
     return found
+}
+
+fun Activity.hideSoftKeyboard() {
+    if (currentFocus != null) {
+        val inputMethodManager = getSystemService(Context
+                .INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+    }
 }

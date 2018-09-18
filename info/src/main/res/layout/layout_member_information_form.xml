@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="#fab">
+
+    <TextView
+        android:id="@+id/memberIdLabel"
+        style="@style/CardTitleLargeBlack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:text="@string/memberId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/memberId"
+        style="@style/BodySansSerifBlackLeft"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="#F0F0F0"
+        android:fontFamily="@font/ideal_sans_book"
+        android:inputType="number"
+        android:padding="@dimen/marginStandard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memberIdLabel"
+        tools:text="sampleid123" />
+
+    <TextView
+        android:id="@+id/homeZipCode"
+        style="@style/CardTitleLargeBlack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginTriple"
+        android:text="@string/homeZipCode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memberId" />
+
+    <EditText
+        android:id="@+id/zipCode"
+        style="@style/BodySansSerifBlackLeft"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:background="#F0F0F0"
+        android:fontFamily="@font/ideal_sans_book"
+        android:inputType="number"
+        android:padding="@dimen/marginStandard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/homeZipCode"
+        tools:text="222-346-1234" />
+
+    <Button
+        android:id="@+id/signIn"
+        style="@style/DetailButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginQuad"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/sign_in_background"
+        android:text="@string/signIn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/zipCode"
+        tools:background="@color/brownish_orange"
+        tools:enabled="false" />
+
+</android.support.constraint.ConstraintLayout>
