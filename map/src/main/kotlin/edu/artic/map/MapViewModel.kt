@@ -232,14 +232,18 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     }
 
     private fun animateToSearchItemBounds(displayMode: MapDisplayMode.Search<*>) {
-        Observable.just(displayMode.item)
-                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
+        val displayItem = displayMode.item
+
+        Observable.just(displayItem)
+                .filterFlatMap({ it is ArticSearchArtworkObject }, { it as ArticSearchArtworkObject })
                 .map { listOf(it.toLatLng()) }
                 .bindToMain(tourBoundsChanged)
                 .disposedBy(disposeBag)
 
-        if (displayMode.item is ArticObject) {
-            articObjectSelected(displayMode.item)
+        if (displayItem is ArticSearchArtworkObject) {
+            displayItem.backingObject?.let {
+                articObjectSelected(it)
+            }
         }
     }
 
