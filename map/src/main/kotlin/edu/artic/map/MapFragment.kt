@@ -237,7 +237,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
-        viewModel.tourBoundsChanged
+        viewModel.boundsOfInterestChanged
                 .withLatestFrom(viewModel.currentMap.filterValue(), viewModel.displayMode)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (bounds, map, mode) ->
