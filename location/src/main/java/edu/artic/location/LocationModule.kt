@@ -1,11 +1,15 @@
 package edu.artic.location
 
+import android.app.Application
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.viewmodel.ViewModelKey
+import javax.inject.Singleton
 
 /**
  * @author Piotr Leja (Fuzz)
@@ -21,15 +25,22 @@ abstract class LocationModule {
     @get:ContributesAndroidInjector
     abstract val infoLocationSettingsFragment: InfoLocationSettingsFragment
 
-//    @Module
-//    companion object {
-//
-//        @JvmStatic
-//        @Provides
-//        @Singleton
-//        fun provideSearchService(
-//                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit,
-//                dataObjectDao: ArticDataObjectDao
-//        ): SearchServiceProvider = RetrofitSearchServiceProvider(retrofit, dataObjectDao)
-//    }
+    @Module
+    companion object {
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideLocationService(
+                context: Context,
+                locationPreferenceManager: LocationPreferenceManager
+        ): LocationService = LocationServiceImpl(context.applicationContext, locationPreferenceManager)
+
+        @JvmStatic
+        @Provides
+        @Singleton
+        fun provideLocationPreferenceManager(
+                context: Context
+        ): LocationPreferenceManager = LocationPreferenceManager(context)
+    }
 }
