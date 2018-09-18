@@ -26,7 +26,7 @@ dependencies {
 
     api libs.retrofit_moshi
     api libs.moshi_kotlin
-
+    api libs.retrofit_xml_converter
 
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 
