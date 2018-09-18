@@ -1,6 +1,5 @@
 package edu.artic.info
 
-import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
@@ -8,10 +7,8 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -28,6 +25,7 @@ class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
         object Search : NavigationEndpoint()
         class JoinNow(val url: String) : NavigationEndpoint()
         object MuseumInformation : NavigationEndpoint()
+        object LocationSettings : NavigationEndpoint()
     }
 
     val buildVersion: Subject<String> = BehaviorSubject.createDefault(buildVersion)
@@ -52,5 +50,9 @@ class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
 
     fun onMuseumInformationClicked() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.MuseumInformation))
+    }
+
+    fun onClickLocationSettings() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LocationSettings))
     }
 }
