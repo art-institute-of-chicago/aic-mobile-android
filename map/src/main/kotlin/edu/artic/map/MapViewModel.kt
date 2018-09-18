@@ -30,7 +30,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
- * Description:
+ * Description: the primary ViewModel backing [MapFragment].
+ *
+ * Most of the fields are documented, so take a look at those first.
  */
 class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
                                        private val articObjectDao: ArticObjectDao,
@@ -44,18 +46,91 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     private val articMapFloorMap: Subject<Map<Int, ArticMapFloor>> = BehaviorSubject.create()
 
+    /**
+     * Current floor of map to show. Defaults to 1, valid values are
+     *
+     * * 0 (a.k.a. `"LL"`)
+     * * 1
+     * * 2
+     * * 3
+     *
+     * Please compare proposed floors against the [edu.artic.db.INVALID_FLOOR] constant
+     * before setting them to this field.
+     */
     private val floor: Subject<Int> = BehaviorSubject.createDefault(1)
     private val focus: Subject<MapFocus> = BehaviorSubject.create()
 
+    /**
+     * Current mode of display.
+     *
+     * Changes infrequently.
+     *
+     * Defaults to [edu.artic.map.MapDisplayMode.CurrentFloor].
+     */
     val displayMode: Subject<MapDisplayMode> = PublishSubject.create()
+    /**
+     * Current object of interest.
+     *
+     * Set by search or by tapping a marker.
+     *
+     * Not set by default.
+     */
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
+    /**
+     * Position and desired [MapFocus].
+     *
+     * Set when something has been clicked.
+     *
+     * Not set by default.
+     */
     val individualMapChange: Subject<Optional<Pair<LatLng, MapFocus>>> = PublishSubject.create()
+    /**
+     * Points that should be visible on the map.
+     *
+     * Set when the camera needs to move so we can see them.
+     *
+     * Not set by default.
+     */
     val boundsOfInterestChanged: Relay<List<LatLng>> = PublishRelay.create()
+    /**
+     * Reference to the [GoogleMap] we're displaying stuff in.
+     *
+     * Set whenever the [actual widget][android.widget.RemoteViews.RemoteView] boots up.
+     *
+     * Defaults to Optional(null).
+     */
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
+    /**
+     * Proxy link to [TourProgressManager.leaveTourRequest]. Only receives `true` events.
+     *
+     * Called whenever the user wants to switch out of a [MapDisplayMode.Tour].
+     *
+     * Not set by default.
+     */
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
+    /**
+     * Callback to release [MapDisplayMode.Tour]-related resources.
+     *
+     * This is given an event at the end of each call to [leaveCurrentTour].
+     *
+     * Not set by default.
+     */
     val leftActiveTour: Subject<Boolean> = PublishSubject.create()
+    /**
+     * Suggestion that maybe we should leave the current tour and show this one instead.
+     *
+     * Called only if we're already in [MapDisplayMode.Tour] when a new 'Tour' is proposed.
+     *
+     * Not set by default.
+     *
+     * @see loadMapDisplayMode
+     */
     val switchTourRequest: Subject<Pair<ArticTour, ArticTour.TourStop>> = PublishSubject.create()
 
+    /**
+     * Safe and simple reference to [floor]. Only emits when the floor number changes, will
+     * never emit [edu.artic.db.INVALID_FLOOR].
+     */
     private val distinctFloorInt = floor.distinctUntilChanged().filter { it in 0..3 }
 
     val distinctFloor: Subject<ArticMapFloor> = BehaviorSubject.create()
@@ -222,6 +297,12 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         selectedArticObject.onNext(articObject)
     }
 
+    /**
+     * Called (essentially exclusively) by [loadMapDisplayMode].
+     *
+     * Triggers animations as needed so that [selectedArticObject]
+     * etc. is visible on the map.
+     */
     fun displayModeChanged(displayMode: MapDisplayMode) {
         this.displayMode.onNext(displayMode)
         if (displayMode is MapDisplayMode.Tour) {
@@ -305,6 +386,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Updates the display mode of the map.
      * For future search integration, active tour should be canceled before we display the search items in map.
      * refer [TourProgressManager] for managing the tour state.
+     *
+     * If the current [MapDisplayMode] is no longer appropriate, this method will call
+     * [displayModeChanged] to emit the necessary change.
      */
     fun loadMapDisplayMode(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?) {
 
