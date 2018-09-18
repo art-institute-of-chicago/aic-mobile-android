@@ -82,10 +82,12 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                 .filter { it is Navigate.Forward }
                 .map { it as Navigate.Forward }
                 .subscribe {
+                    val endpoint: SearchBaseViewModel.NavigationEndpoint = it.endpoint
+
                     val searchNavController = Navigation.findNavController(requireActivity(), R.id.container)
-                    when (it.endpoint) {
+                    when (endpoint) {
                         is SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap -> {
-                            val o: ArticSearchArtworkObject = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap).articObject
+                            val o: ArticSearchArtworkObject = endpoint.articObject
                             val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                 putExtra(NavigationConstants.ARG_SEARCH_OBJECT, o)
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -93,28 +95,28 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                             startActivity(mapIntent)
                         }
                         is SearchBaseViewModel.NavigationEndpoint.TourDetails -> {
-                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.TourDetails).tour
+                            val o = endpoint.tour
                             searchNavController.navigate(
                                     R.id.goToTourDetails,
                                     TourDetailsFragment.argsBundle(o)
                             )
                         }
                         is SearchBaseViewModel.NavigationEndpoint.ExhibitionDetails -> {
-                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ExhibitionDetails).exhibition
+                            val o = endpoint.exhibition
                             searchNavController.navigate(
                                     R.id.goToExhibitionDetails,
                                     ExhibitionDetailFragment.argsBundle(o)
                             )
                         }
                         is SearchBaseViewModel.NavigationEndpoint.ArtworkDetails -> {
-                            val o = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.ArtworkDetails).articObject
+                            val o = endpoint.articObject
                             searchNavController.navigate(
                                     R.id.goToSearchAudioDetails,
                                     SearchAudioDetailFragment.argsBundle(o)
                             )
                         }
                         is SearchBaseViewModel.NavigationEndpoint.AmenityOnMap -> {
-                            val amenity = (it.endpoint as SearchBaseViewModel.NavigationEndpoint.AmenityOnMap).type
+                            val amenity = endpoint.type
                             val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                 putExtra(ARG_AMENITY_TYPE, amenity.type)
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
