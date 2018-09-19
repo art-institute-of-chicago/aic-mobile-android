@@ -6,13 +6,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
-import edu.artic.db.models.ArticObject
 import edu.artic.base.utils.preventReselection
 import edu.artic.db.models.ArticTour
+import edu.artic.location.LocationService
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_map.*
+import javax.inject.Inject
 
 /**
  * One of the four primary sections of the app. This Activity always hosts a [MapFragment].
@@ -21,6 +22,9 @@ import kotlinx.android.synthetic.main.activity_map.*
  * [NarrowAudioPlayerFragment][edu.artic.audioui.NarrowAudioPlayerFragment].
  */
 class MapActivity : BaseActivity() {
+
+    @Inject
+    lateinit var locationService: LocationService
 
     override val layoutResId: Int
         get() = R.layout.activity_map
@@ -43,7 +47,6 @@ class MapActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         bottomNavigation.apply {
             disableShiftMode(R.color.map_menu_color_list)

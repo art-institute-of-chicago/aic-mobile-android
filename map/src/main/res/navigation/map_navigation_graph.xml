@@ -16,6 +16,16 @@
             android:name="@string/tour_argument_key"
             app:argType="edu.artic.db.models.ArticTour"/>
 
+        <action
+            android:id="@+id/goToLocationPrompt"
+            app:destination="@id/locationPromptFragment"
+            />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/locationPromptFragment"
+        android:name="edu.artic.location.LocationPromptFragment"
+        />
 
 </navigation>

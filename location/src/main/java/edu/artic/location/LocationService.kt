@@ -155,13 +155,13 @@ class LocationServiceImpl(
                     Array(1) { Manifest.permission.ACCESS_FINE_LOCATION },
                     LOCATION_PERMISSION_REQUEST
             )
+            permissionRequested = true
             return true
         }
         return false
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        permissionRequested = true
         calculateAndUpdateStatus(true)
     }
 
