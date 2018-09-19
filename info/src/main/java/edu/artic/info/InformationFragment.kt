@@ -71,6 +71,12 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
+        languageSettings.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickLanguageSettings()
+                }
+                .disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: InformationViewModel) {
@@ -95,6 +101,9 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                         }
                         InformationViewModel.NavigationEndpoint.LocationSettings -> {
                             navController.navigate(R.id.goToLocationSettings)
+                        }
+                        InformationViewModel.NavigationEndpoint.LanguageSettings -> {
+                            navController.navigate(R.id.gotoLanguageSettings)
                         }
                     }
 
