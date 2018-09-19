@@ -17,11 +17,13 @@ import javax.inject.Named
  */
 class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker,
                                                val dataObjectDao: ArticDataObjectDao,
+                                               val service: RetrofitMemberDataProvider,
                                                @Named("VERSION") buildVersion: String)
     : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         object AccessMemberCard : NavigationEndpoint()
+        object SignIn : NavigationEndpoint()
         object Search : NavigationEndpoint()
         class JoinNow(val url: String) : NavigationEndpoint()
         object MuseumInformation : NavigationEndpoint()
@@ -50,6 +52,10 @@ class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
 
     fun onMuseumInformationClicked() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.MuseumInformation))
+    }
+
+    fun onAccessMemberCardClicked() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AccessMemberCard))
     }
 
     fun onClickLocationSettings() {

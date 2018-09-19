@@ -8,24 +8,13 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
-import edu.artic.db.daos.ArticAudioFileDao
-import edu.artic.db.daos.ArticDataObjectDao
-import edu.artic.db.daos.ArticEventDao
-import edu.artic.db.daos.ArticExhibitionCMSDao
-import edu.artic.db.daos.ArticExhibitionDao
-import edu.artic.db.daos.ArticGalleryDao
-import edu.artic.db.daos.ArticMapAnnotationDao
-import edu.artic.db.daos.ArticMapFloorDao
-import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.ArticTourDao
-import edu.artic.db.daos.DashboardDao
-import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.daos.*
 import edu.artic.db.progress.DownloadProgressInterceptor
 import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -108,8 +97,14 @@ abstract class ApiModule {
                             @Named(BLOB_CLIENT_API)
                             client: OkHttpClient,
                             executor: Executor,
-                            moshi: Moshi): Retrofit =
-                constructRetrofit(baseUrl, client, executor, moshi)
+                            moshi: Moshi
+        ): Retrofit = constructRetrofit(
+                baseUrl = baseUrl,
+                client = client,
+                executor = executor,
+                customConfiguration = {
+                    addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+                })
 
         @JvmStatic
         @Provides
@@ -123,6 +118,16 @@ abstract class ApiModule {
             if (BuildConfig.DEBUG) {
                 builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             }
+
+            /**
+             * TODO:: Remove this once the drupal ssl issue is resolved.
+             **/
+            if (BuildConfig.DEBUG) {
+                builder.hostnameVerifier { hostname, session ->
+                    true
+                }
+            }
+
             return builder.build()
 
         }

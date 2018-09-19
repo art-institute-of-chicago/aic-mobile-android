@@ -46,6 +46,7 @@ sealed class EventCategoryName(val eventCategoryName: String) {
     object SearchTour : EventCategoryName("search_tour")
     object SearchExhibition : EventCategoryName("search_exhibition")
     object SearchArtwork : EventCategoryName("search_artwork")
+    object Member : EventCategoryName("member")
 }
 
 
