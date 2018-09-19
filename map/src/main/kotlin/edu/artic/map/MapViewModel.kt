@@ -152,10 +152,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
     init {
-        locationService.hasRequestedPermissionAlready
-                .subscribe {
-                    Timber.d("HasRequestedPermissionAlready: $it")
-                }.disposedBy(disposeBag)
 
         locationService.hasRequestedPermissionAlready
                 .filter { !it }
