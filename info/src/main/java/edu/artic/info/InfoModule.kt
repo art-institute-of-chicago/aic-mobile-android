@@ -50,6 +50,14 @@ abstract class InfoModule {
     @get:ContributesAndroidInjector
     abstract val accessMemberCardFragment: AccessMemberCardFragment
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(LanguageSettingsViewModel::class)
+    abstract fun languageSettingsViewModel(accessMemberCardViewModel: LanguageSettingsViewModel): ViewModel
+
+    @get:ContributesAndroidInjector
+    abstract val languageSettingsFragment: LanguageSettingsFragment
+
     @get:ContributesAndroidInjector
     abstract val infoActivity: InfoActivity
 

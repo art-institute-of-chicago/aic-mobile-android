@@ -28,4 +28,11 @@
     <string name="ok">OK</string>
     <string name="informationBannerSubtitle">Access your member card, see museum hours, or update your app settings.</string>
     <string name="alreadyMember">Already a Member?</string>
+    <string name="whereAreYouLabel">Where are you?</string>
+    <string name="languageSettingsBody">Some content may not be available in your selected language.</string>
+    <string name="english" translatable="false">English</string>
+    <string name="spanish" translatable="false">Español</string>
+    <string name="chinese" translatable="false">中文</string>
+    <string name="choseYourLanguage">Please Choose Your Preferred Language</string>
+
 </resources>
