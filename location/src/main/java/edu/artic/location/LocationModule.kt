@@ -1,6 +1,5 @@
 package edu.artic.location
 
-import android.app.Application
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import dagger.Binds
@@ -22,8 +21,16 @@ abstract class LocationModule {
     @ViewModelKey(InfoLocationSettingsViewModel::class)
     abstract fun infoLocationSettingsViewModel(viewModel: InfoLocationSettingsViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(LocationPromptViewModel::class)
+    abstract fun locationPromptViewModel(viewModel: LocationPromptViewModel): ViewModel
+
     @get:ContributesAndroidInjector
     abstract val infoLocationSettingsFragment: InfoLocationSettingsFragment
+
+    @get:ContributesAndroidInjector
+    abstract val locationPromptFragment: LocationPromptFragment
 
     @Module
     companion object {

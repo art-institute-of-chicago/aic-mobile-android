@@ -15,16 +15,19 @@ import edu.artic.db.daos.ArticMapFloorDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
+import edu.artic.location.LocationService
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MarkerHolder
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -41,8 +44,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                                        private val analyticsTracker: AnalyticsTracker,
                                        private val tourProgressManager: TourProgressManager,
                                        articMapAnnotationDao: ArticMapAnnotationDao,
-                                       mapFloorDao: ArticMapFloorDao
-) : BaseViewModel() {
+                                       mapFloorDao: ArticMapFloorDao,
+                                       locationService: LocationService
+) : NavViewViewModel<MapViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint {
+        object LocationPrompt : NavigationEndpoint()
+    }
 
     private val articMapFloorMap: Subject<Map<Int, ArticMapFloor>> = BehaviorSubject.create()
 
@@ -144,6 +152,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
     init {
+
+        locationService.hasRequestedPermissionAlready
+                .filter { !it }
+                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
+                .delay(1, TimeUnit.SECONDS)
+                .bindTo(navigateTo)
+                .disposedBy(disposeBag)
 
         mapFloorDao.getMapFloors()
                 .map { floorMap -> floorMap.associateBy { it.number } }

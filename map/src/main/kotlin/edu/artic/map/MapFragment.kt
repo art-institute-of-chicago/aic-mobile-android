@@ -32,6 +32,7 @@ import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
@@ -39,6 +40,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 /**
@@ -373,6 +375,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     refreshMapDisplayMode()
                 }
                 .disposedBy(disposeBag)
+    }
+
+    override fun setupNavigationBindings(viewModel: MapViewModel) {
+        super.setupNavigationBindings(viewModel)
+        viewModel.navigateTo
+                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
+                .subscribe {
+                    when(it) {
+                        MapViewModel.NavigationEndpoint.LocationPrompt -> {
+                            navController.navigate(R.id.goToLocationPrompt)
+                        }
+                    }
+                }.disposedBy(navigationDisposeBag)
     }
 
     /**
