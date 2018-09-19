@@ -27,4 +27,5 @@
     <string name="errorDialogTitle">Error</string>
     <string name="ok">OK</string>
     <string name="informationBannerSubtitle">Access your member card, see museum hours, or update your app settings.</string>
+    <string name="alreadyMember">Already a Member?</string>
 </resources>
