@@ -79,7 +79,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                              * TODO:: Updated dialog once design is finalized.
                              */
                             AlertDialog.Builder(requireContext(), R.style.ErrorDialog)
-                                    .setTitle(getString(R.string.error))
+                                    .setTitle(getString(R.string.errorDialogTitle))
                                     .setMessage(loadStatus.error.message)
                                     .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
                                         dialog.dismiss()
@@ -182,7 +182,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
      */
     private fun animateToolbarColor() {
         val fromColor = ContextCompat.getColor(requireContext(), R.color.brownishOrange)
-        val toColor = ContextCompat.getColor(requireContext(), R.color.red)
+        val toColor = ContextCompat.getColor(requireContext(), R.color.infoScreenRed)
 
         toolbarColorAnimator = ValueAnimator.ofArgb(fromColor, toColor)
         toolbarColorAnimator.addUpdateListener { valueAnimator ->
