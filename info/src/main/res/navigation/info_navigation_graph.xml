@@ -24,6 +24,9 @@
         <action
             android:id="@+id/goToAccessMemberCard"
             app:destination="@id/accessMemberCardFragment" />
+        <action
+            android:id="@+id/gotoLanguageSettings"
+            app:destination="@id/languageSettingsFragment" />
     </fragment>
 
     <fragment
@@ -44,5 +47,10 @@
         android:name="edu.artic.location.InfoLocationSettingsFragment"
         android:label="LocationSettings"
         tools:layout="@layout/fragment_location_settings" />
+    <fragment
+        android:id="@+id/languageSettingsFragment"
+        android:name="edu.artic.info.LanguageSettingsFragment"
+        android:label="fragment_language_settings"
+        tools:layout="@layout/fragment_language_settings" />
 
 </navigation>
