@@ -4,15 +4,16 @@ apply plugin: 'kotlin-kapt'
 def member_validation_url = project.findProperty("member_validation_url")
 def member_validation_token = project.findProperty("member_validation_token")
 
-android{
+android {
 
-    defaultConfig{
+    defaultConfig {
         buildConfigField("String", "MEMBER_INFO_API", "\"${member_validation_url}\"")
         buildConfigField("String", "MEMBER_INFO_API_TOKEN", "\"${member_validation_token}\"")
     }
 }
 
 dependencies {
+    implementation 'com.android.support:support-v4:27.1.1'
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
     kapt libs.glide_compiler
@@ -29,6 +30,7 @@ dependencies {
     implementation project(':search')
     implementation project(':db')
     implementation project(':location')
+    implementation project(':localization')
     implementation libs.constraint_layout
     implementation libs.rx_helpers
     implementation libs.rx_kotlin

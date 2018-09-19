@@ -68,6 +68,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginDouble"
+        android:fontFamily="@font/ideal_sans_book"
         android:paddingStart="@dimen/marginDouble"
         android:paddingEnd="@dimen/marginDouble"
         android:text="@string/locationSettingsBody"
