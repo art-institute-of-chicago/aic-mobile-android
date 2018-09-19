@@ -81,8 +81,8 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                 .subscribe {
                     when (it) {
                         InformationViewModel.NavigationEndpoint.AccessMemberCard -> {
-                                    navController.navigate(R.id.goToAccessMemberCard)
-                                }
+                            navController.navigate(R.id.goToAccessMemberCard)
+                        }
                         InformationViewModel.NavigationEndpoint.MuseumInformation -> {
                             navController.navigate(R.id.goToMuseumInformationFragment)
                         }

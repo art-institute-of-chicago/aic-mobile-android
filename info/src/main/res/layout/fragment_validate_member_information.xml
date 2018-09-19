@@ -16,7 +16,6 @@
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.CustomToolbar.InfoTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -73,7 +72,7 @@
             android:id="@+id/mask"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#4D000000"
+            android:background="@color/translucentLoadingScrim"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

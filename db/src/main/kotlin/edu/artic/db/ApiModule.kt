@@ -122,8 +122,10 @@ abstract class ApiModule {
             /**
              * TODO:: Remove this once the drupal ssl issue is resolved.
              **/
-            builder.hostnameVerifier { hostname, session ->
-                true
+            if (BuildConfig.DEBUG) {
+                builder.hostnameVerifier { hostname, session ->
+                    true
+                }
             }
 
             return builder.build()
