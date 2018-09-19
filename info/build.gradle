@@ -13,7 +13,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:27.1.1'
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
     kapt libs.glide_compiler
