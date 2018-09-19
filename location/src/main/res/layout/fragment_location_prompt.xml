@@ -42,6 +42,7 @@
 
 
     <Button
+        style="@style/DetailButton"
         android:id="@+id/promptNotNowButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -60,6 +61,7 @@
 
     <Button
         style="@style/DetailButton"
+        android:id="@+id/promptOkButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginDouble"
