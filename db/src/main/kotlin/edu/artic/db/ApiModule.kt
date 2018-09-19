@@ -14,6 +14,7 @@ import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.Executor
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -96,8 +97,14 @@ abstract class ApiModule {
                             @Named(BLOB_CLIENT_API)
                             client: OkHttpClient,
                             executor: Executor,
-                            moshi: Moshi): Retrofit =
-                constructRetrofit(baseUrl, client, executor, moshi)
+                            moshi: Moshi
+        ): Retrofit = constructRetrofit(
+                baseUrl = baseUrl,
+                client = client,
+                executor = executor,
+                customConfiguration = {
+                    addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+                })
 
         @JvmStatic
         @Provides
