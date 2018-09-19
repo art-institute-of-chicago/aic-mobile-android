@@ -35,6 +35,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         object SeeAllTours : NavigationEndpoint()
         object SeeAllOnView : NavigationEndpoint()
         object SeeAllEvents : NavigationEndpoint()
+        object AccessMemberCard : NavigationEndpoint()
         class TourDetail(val pos: Int, val tour: ArticTour) : NavigationEndpoint()
         class ExhibitionDetail(val pos: Int, val exhibition: ArticExhibition) : NavigationEndpoint()
         class EventDetail(val pos: Int, val event: ArticEvent) : NavigationEndpoint()
@@ -125,6 +126,11 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     fun onClickSearch() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
+
+    fun onAcessMemberCardClickEvent() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AccessMemberCard))
+    }
+
 }
 
 /**

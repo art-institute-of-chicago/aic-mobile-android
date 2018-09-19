@@ -1,5 +1,6 @@
 package edu.artic.welcome
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
@@ -12,8 +13,10 @@ import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
+import edu.artic.navigation.NavigationConstants
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -85,6 +88,13 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
 
         appBarLayout.setOnSearchClickedConsumer(Consumer { viewModel.onClickSearch() })
+
+        memberCardLink.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onAcessMemberCardClickEvent()
+                }.disposedBy(disposeBag)
+
     }
 
     override fun setupBindings(viewModel: WelcomeViewModel) {
@@ -176,6 +186,12 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                             .navigate(
                                                     R.id.goToSearch
                                             )
+                                }
+                                WelcomeViewModel.NavigationEndpoint.AccessMemberCard -> {
+                                    val deepLinkIntent = NavigationConstants.INFO_MEMBER_CARD.asDeepLinkIntent().apply {
+                                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    }
+                                    startActivity(deepLinkIntent)
                                 }
                             }
                         }
