@@ -167,13 +167,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isBuildingsEnabled = false
             isIndoorEnabled = false
             isTrafficEnabled = false
-
             if (ContextCompat.checkSelfPermission(
                             requireContext(),
                             Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED) {
                 isMyLocationEnabled = true
             }
+            this.uiSettings.isCompassEnabled = false
+            this.uiSettings.isMyLocationButtonEnabled = false
+
             setMapStyle(MapStyleOptions(mapStyleOptions))
             setMinZoomPreference(ZOOM_MIN)
             setMaxZoomPreference(ZOOM_MAX)
