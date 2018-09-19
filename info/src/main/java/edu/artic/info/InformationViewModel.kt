@@ -23,7 +23,7 @@ class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
 
     sealed class NavigationEndpoint {
         object AccessMemberCard : NavigationEndpoint()
-        object SignIn : NavigationEndpoint()
+        object LanguageSettings : NavigationEndpoint()
         object Search : NavigationEndpoint()
         class JoinNow(val url: String) : NavigationEndpoint()
         object MuseumInformation : NavigationEndpoint()
@@ -60,5 +60,9 @@ class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
 
     fun onClickLocationSettings() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LocationSettings))
+    }
+
+    fun onClickLanguageSettings() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LanguageSettings))
     }
 }
