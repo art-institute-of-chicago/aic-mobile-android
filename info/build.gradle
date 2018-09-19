@@ -1,16 +1,8 @@
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
-def member_validation_url = ""
-def member_validation_token = ""
-if(project.rootProject.file('local.properties').exists()){
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    member_validation_url = properties.getProperty('member_validation_url')
-    member_validation_token = properties.getProperty('member_validation_token')
-
-}
-
+def member_validation_url = project.findProperty("member_validation_url")
+def member_validation_token = project.findProperty("member_validation_token")
 
 android{
 
