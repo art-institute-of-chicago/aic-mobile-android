@@ -388,11 +388,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         }
                     }
                 }.disposedBy(navigationDisposeBag)
-        viewModel.navigateTo
-                .subscribe {
-                    Timber.d("Navigate to gets something")
-                }
-                .disposedBy(navigationDisposeBag)
     }
 
     /**
