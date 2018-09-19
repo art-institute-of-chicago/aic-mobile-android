@@ -37,8 +37,6 @@ inline fun constructRetrofit(
         baseUrl: String,
         client: OkHttpClient,
         executor: Executor,
-        moshi: Moshi,
-        xml: Boolean = false,
         schedulerFactory: CallAdapter.Factory = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()),
         customConfiguration: Retrofit.Builder.() -> Unit = {}): Retrofit {
 
@@ -49,14 +47,6 @@ inline fun constructRetrofit(
             .addCallAdapterFactory(schedulerFactory)
             .addConverterFactory(ScalarsConverterFactory.create())
             .apply(customConfiguration)
-
-    if (!xml) {
-        builder.addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
-    } else {
-        builder.addConverterFactory(SimpleXmlConverterFactory.createNonStrict(
-                Persister(AnnotationStrategy())
-        ))
-    }
 
     return builder.build()
 

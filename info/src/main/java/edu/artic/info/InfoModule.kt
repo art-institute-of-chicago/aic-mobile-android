@@ -2,7 +2,6 @@ package edu.artic.info
 
 import android.arch.lifecycle.ViewModel
 import android.content.Context
-import com.squareup.moshi.Moshi
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -12,7 +11,10 @@ import edu.artic.db.ApiModule
 import edu.artic.db.constructRetrofit
 import edu.artic.viewmodel.ViewModelKey
 import okhttp3.OkHttpClient
+import org.simpleframework.xml.convert.AnnotationStrategy
+import org.simpleframework.xml.core.Persister
 import retrofit2.Retrofit
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.util.concurrent.Executor
 import javax.inject.Named
 import javax.inject.Singleton
@@ -66,9 +68,16 @@ abstract class InfoModule {
         @Named(MEMBER_INFO_API)
         fun provideRetrofit(@Named(ApiModule.BLOB_CLIENT_API)
                             client: OkHttpClient,
-                            executor: Executor,
-                            moshi: Moshi): Retrofit =
-                constructRetrofit(baseUrl = BuildConfig.MEMBER_INFO_API, client = client, executor = executor, moshi = moshi, xml = true)
+                            executor: Executor)
+                : Retrofit = constructRetrofit(
+                baseUrl = BuildConfig.MEMBER_INFO_API,
+                client = client,
+                executor = executor,
+                customConfiguration = {
+                    addConverterFactory(SimpleXmlConverterFactory.createNonStrict(
+                            Persister(AnnotationStrategy())
+                    ))
+                })
 
         @JvmStatic
         @Provides
