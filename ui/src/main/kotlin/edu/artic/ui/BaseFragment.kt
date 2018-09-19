@@ -171,6 +171,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener{
                 act.window?.statusBarColor = Color.TRANSPARENT
             } else {
                 if (customToolbarColorResource == 0) {
+                    act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                     val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
                     ctx.getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
                         act.window?.statusBarColor = it

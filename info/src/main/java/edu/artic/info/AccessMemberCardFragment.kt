@@ -118,14 +118,17 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 }.disposedBy(disposeBag)
 
         viewModel.selectedCardHolder
+                .observeOn(AndroidSchedulers.mainThread())
                 .bindTo(cardHolder.text())
                 .disposedBy(disposeBag)
 
         viewModel.membership
+                .observeOn(AndroidSchedulers.mainThread())
                 .bindTo(membershipType.text())
                 .disposedBy(disposeBag)
 
         viewModel.expiration
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { expires ->
                     expiration.text = expires
                 }
