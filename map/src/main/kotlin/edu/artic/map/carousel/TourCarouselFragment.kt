@@ -41,6 +41,9 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
     override val screenCategory: ScreenCategoryName?
         get() = null
 
+    override val overrideStatusBarColor: Boolean
+        get() = false
+
     private val adapter = TourCarouselAdapter()
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
     private val tourObject: ArticTour by lazy { arguments!!.getParcelable<ArticTour>(ARG_TOUR_OBJECT) }
