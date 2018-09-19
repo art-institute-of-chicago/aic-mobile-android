@@ -2,6 +2,7 @@ package edu.artic.info
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
@@ -90,13 +91,17 @@ class AccessMemberCardViewModel @Inject constructor(
 
                     memberInfo.primaryConstituentID?.let {
                         displayMode.onNext(DisplayMode.DisplayAccessCard(it))
-                        /**
-                         * Log show_card analytics event.
-                         */
-                        analyticsTracker.reportEvent(EventCategoryName.Member, AnalyticsAction.memberShowCard)
                     }
                 }.disposedBy(disposeBag)
-
+        /**
+         * Log show_card analytics event.
+         */
+        displayMode
+                .distinctUntilChanged()
+                .filterFlatMap({ it is DisplayMode.DisplayAccessCard }, { it as DisplayMode.DisplayAccessCard })
+                .subscribe {
+                    analyticsTracker.reportEvent(EventCategoryName.Member, AnalyticsAction.memberShowCard)
+                }.disposedBy(disposeBag)
 
         val savedMemberID = infoPreferencesManager.memberID
         val savedMemberZipCode = infoPreferencesManager.memberZipCode
