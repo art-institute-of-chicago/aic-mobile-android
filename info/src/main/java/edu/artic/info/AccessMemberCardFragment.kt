@@ -6,6 +6,7 @@ import android.animation.ValueAnimator.INFINITE
 import android.animation.ValueAnimator.REVERSE
 import android.app.AlertDialog
 import android.os.Bundle
+import android.support.annotation.UiThread
 import android.support.v4.content.ContextCompat
 import android.view.View
 import com.fuzz.rx.bindTo
@@ -24,7 +25,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_validate_member_information.*
 import kotlinx.android.synthetic.main.layout_member_access_card.*
 import kotlinx.android.synthetic.main.layout_member_information_form.*
-import timber.log.Timber
 import kotlin.reflect.KClass
 
 
@@ -122,7 +122,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 .disposedBy(disposeBag)
 
         viewModel.membership
-                .bindTo(memberShipType.text())
+                .bindTo(membershipType.text())
                 .disposedBy(disposeBag)
 
         viewModel.expiration
@@ -180,13 +180,13 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
     /**
      * Animates the color of toolbar and StatusBar.
      */
+    @UiThread
     private fun animateToolbarColor() {
         val fromColor = ContextCompat.getColor(requireContext(), R.color.brownishOrange)
         val toColor = ContextCompat.getColor(requireContext(), R.color.infoScreenRed)
 
         toolbarColorAnimator = ValueAnimator.ofArgb(fromColor, toColor)
         toolbarColorAnimator.addUpdateListener { valueAnimator ->
-            Timber.d(valueAnimator.animatedValue.toString())
             requireActivity().window.statusBarColor = valueAnimator.animatedValue as Int
             toolbar?.setBackgroundColor(valueAnimator.animatedValue as Int)
         }

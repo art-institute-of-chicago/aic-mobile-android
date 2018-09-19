@@ -45,7 +45,7 @@ class AccessMemberCardViewModel @Inject constructor(
     /**
      * Emits events for various loading states.
      */
-    var loadStatus: BehaviorSubject<LoadStatus> = BehaviorSubject.createDefault<LoadStatus>(LoadStatus.None())
+    var loadStatus: BehaviorSubject<LoadStatus> = BehaviorSubject.createDefault<LoadStatus>(LoadStatus.None)
 
     /**
      * Form field events.
@@ -110,7 +110,7 @@ class AccessMemberCardViewModel @Inject constructor(
          * If the Membership data is available in shared pref file, validate it automatically.
          */
         if (!savedMemberID.isNullOrBlank() && !savedMemberZipCode.isNullOrBlank()) {
-            loadStatus.onNext(LoadStatus.Loading())
+            loadStatus.onNext(LoadStatus.Loading)
             service.getMemberData(savedMemberID!!, savedMemberZipCode!!)
                     .subscribeBy(
                             onNext = { serverResponse ->
@@ -121,7 +121,7 @@ class AccessMemberCardViewModel @Inject constructor(
                                 loadStatus.onNext(LoadStatus.Error(it))
                             },
                             onComplete = {
-                                loadStatus.onNext(LoadStatus.None())
+                                loadStatus.onNext(LoadStatus.None)
                             })
                     .disposedBy(disposeBag)
         } else {
@@ -137,7 +137,7 @@ class AccessMemberCardViewModel @Inject constructor(
         Observables.combineLatest(zipCode, memberID)
                 .take(1)
                 .flatMap { (zipCode, memberID) ->
-                    loadStatus.onNext(LoadStatus.Loading())
+                    loadStatus.onNext(LoadStatus.Loading)
                     service.getMemberData(memberID, zipCode)
                             .withLatestFrom(Observable.just(memberID to zipCode))
                 }
@@ -170,13 +170,13 @@ class AccessMemberCardViewModel @Inject constructor(
                             }
                         },
                         onComplete = {
-                            loadStatus.onNext(LoadStatus.None())
+                            loadStatus.onNext(LoadStatus.None)
                         })
                 .disposedBy(disposeBag)
     }
 
     private fun onMemberInformationValidated(serverResponse: SOAPMemberInfoResponse) {
-        loadStatus.onNext(LoadStatus.None())
+        loadStatus.onNext(LoadStatus.None)
 
         serverResponse.responseBody?.soapResponse?.memberResponseObject?.let { memberResponseObject ->
             val accountMembers = mutableListOf<MemberInfo>()

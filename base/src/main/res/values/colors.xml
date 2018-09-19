@@ -47,4 +47,6 @@
     <color name="audioBufferingColor">#868686</color>
     <color name="audioDurationTextColor">#FFBEBEBE</color>
     <color name="hintColor">#9b9b9b</color>
+    <color name="infoInputFieldWhite">#F0F0F0</color>
+    <color name="translucentLoadingScrim">#4D000000</color>
 </resources>
