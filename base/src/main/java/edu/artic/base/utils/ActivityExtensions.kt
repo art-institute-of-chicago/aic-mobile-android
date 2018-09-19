@@ -5,6 +5,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
+import android.view.inputmethod.InputMethodManager
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -36,7 +37,7 @@ fun Activity.setWindowFlag(bits: Int, on: Boolean) {
  * number is more like 250MB. These are just hints, of course,
  * but we want to err on the side of caution when we can.
  */
-internal const val MIN_MEMORY_FOR_HIGH_QUALITY : Long = 175 * 1_000_000
+internal const val MIN_MEMORY_FOR_HIGH_QUALITY: Long = 175 * 1_000_000
 
 /**
  * Determine whether we need to limit memory and CPU usage.
@@ -60,18 +61,18 @@ internal const val MIN_MEMORY_FOR_HIGH_QUALITY : Long = 175 * 1_000_000
  * If you're wondering about that last check, the amount of RAM we'd prefer to
  * use is noticeably higher than AOSP's 'low RAM' threshold.
  */
-fun Context.isResourceConstrained() : Boolean {
+fun Context.isResourceConstrained(): Boolean {
     val am = (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?)
 
     val retVal =
-            // Restricted Contexts can't cache stuff on the filesystem
+    // Restricted Contexts can't cache stuff on the filesystem
             isRestricted or
-            // Low RAM devices have under 1GB of RAM
-            (am != null && am.isLowRamDevice) or
-            // If there's only one CPU core available for us, we need to be lean
-            (Runtime.getRuntime().availableProcessors() == 1) or
-            // Our VM might not have high priority. Less than this much memory and performance might suffer
-            (Runtime.getRuntime().maxMemory() < MIN_MEMORY_FOR_HIGH_QUALITY)
+                    // Low RAM devices have under 1GB of RAM
+                    (am != null && am.isLowRamDevice) or
+                    // If there's only one CPU core available for us, we need to be lean
+                    (Runtime.getRuntime().availableProcessors() == 1) or
+                    // Our VM might not have high priority. Less than this much memory and performance might suffer
+                    (Runtime.getRuntime().maxMemory() < MIN_MEMORY_FOR_HIGH_QUALITY)
 
     return retVal
 }
@@ -103,4 +104,12 @@ fun Context.getThemeColors(colors: IntArray): Array<ColorStateList> {
         typedArray?.recycle()
     }
     return found
+}
+
+fun Activity.hideSoftKeyboard() {
+    currentFocus?.let { focus ->
+        val inputMethodManager = getSystemService(Context
+                .INPUT_METHOD_SERVICE) as InputMethodManager?
+        inputMethodManager?.hideSoftInputFromWindow(focus.windowToken, 0)
+    }
 }
