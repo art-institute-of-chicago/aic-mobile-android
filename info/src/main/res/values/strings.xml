@@ -24,7 +24,7 @@
     <string name="changeInformation">Change Information</string>
     <string name="switchCardHolder">Switch Cardholder</string>
     <string name="memberCard">Member Card</string>
-    <string name="error">Error</string>
+    <string name="errorDialogTitle">Error</string>
     <string name="ok">OK</string>
     <string name="informationBannerSubtitle">Access your member card, see museum hours, or update your app settings.</string>
 </resources>
