@@ -9,8 +9,6 @@ import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
-import edu.artic.base.utils.asDeepLinkIntent
-import edu.artic.navigation.NavigationConstants
 import edu.artic.ui.R
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
@@ -20,8 +18,8 @@ import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
  * this app.
  */
 class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : AppBarLayout(context, attrs) {
-    private val disposeBag : DisposeBag = DisposeBag()
-    private var clickConsumer : Consumer<Unit>? = null
+    private val disposeBag: DisposeBag = DisposeBag()
+    private var clickConsumer: Consumer<Unit>? = null
 
     init {
         View.inflate(context, R.layout.view_app_bar_layout, this)
@@ -35,6 +33,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             )
             setIcon(a.getResourceId(R.styleable.ArticMainAppBarLayout_icon, 0))
             setBackgroundImage(a.getResourceId(R.styleable.ArticMainAppBarLayout_backgroundImage, 0))
+            subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
         }
 
         // update our content when offset changes.
@@ -43,6 +42,11 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             searchIcon.background.alpha = (progress * 255).toInt()
             icon.drawable.alpha = (progress * 255).toInt()
             expandedImage.drawable.alpha = (progress * 255).toInt()
+            subTitle.alpha = progress.toFloat()
+        }
+
+        post {
+            collapsingToolbar.expandedTitleMarginBottom = container.getChildAt(2).height
         }
 
     }
@@ -55,7 +59,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
         expandedImage.setImageResource(imageId)
     }
 
-    fun setOnSearchClickedConsumer(clickConsumer : Consumer<Unit>) {
+    fun setOnSearchClickedConsumer(clickConsumer: Consumer<Unit>) {
         this.clickConsumer = clickConsumer
     }
 
