@@ -1,14 +1,20 @@
 package edu.artic.map
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.View
 import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.TileOverlay
+import com.google.android.gms.maps.model.TileOverlayOptions
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
 import edu.artic.analytics.ScreenCategoryName
@@ -160,6 +166,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isIndoorEnabled = false
             isTrafficEnabled = false
 
+            if (ContextCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED) {
+                isMyLocationEnabled = true
+            }
             setMapStyle(MapStyleOptions(mapStyleOptions))
             setMinZoomPreference(ZOOM_MIN)
             setMaxZoomPreference(ZOOM_MAX)
