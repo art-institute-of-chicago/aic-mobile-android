@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
-import android.widget.Spinner
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -15,18 +14,14 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.adapter.BaseRecyclerViewAdapter
-import edu.artic.adapter.BaseViewHolder
-import edu.artic.adapter.baseRecyclerViewAdapter
-import edu.artic.adapter.itemChanges
-import edu.artic.adapter.toBaseAdapter
+import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.AudioFileModel
 import edu.artic.image.listenerAnimateSharedTransaction
-import edu.artic.media.audio.AudioPlayerService
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
+import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -81,6 +76,17 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
             boundService?.let {
                 audioPlayer.player = it.player
                 it.player.refreshPlayBackState()
+
+                // Register for updates
+                it.currentTrack
+                        .subscribeBy { translation ->
+                            viewModel.chosenAudioModel.onNext(translation)
+                        }.disposedBy(disposeBag)
+
+                if (it.hasNoTrack()) {
+                    // Set up the default language selection.
+                    viewModel.chooseDefaultLanguage()
+                }
             }
         }
     }
