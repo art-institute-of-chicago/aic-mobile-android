@@ -165,6 +165,7 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
      */
     private fun chooseDefaultLanguage() {
         availableTranslations
+                .take(1)
                 .map {
                     // TODO: inject 'edu.artic.map.carousel.TourProgressManager', use that state as boolean
                     languageSelector.selectFrom(it, true)
