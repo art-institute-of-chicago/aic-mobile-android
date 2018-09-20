@@ -3,6 +3,7 @@ package edu.artic.info
 import com.fuzz.rx.disposedBy
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.LocalizationPreferences
+import edu.artic.localization.SPANISH
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -38,7 +39,7 @@ class LanguageSettingsViewModel @Inject constructor(
     }
 
     fun onSpanishLanguageSelected() {
-        selectedLanguage.onNext(Locale("es"))
+        selectedLanguage.onNext(SPANISH)
     }
 
     fun onChineseLanguageSelected() {

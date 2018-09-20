@@ -14,10 +14,6 @@ import java.util.*
 class LocalizationPreferences(context: Context)
     : BasePreferencesManager(context, "localization") {
 
-    companion object {
-        const val PREF_TOUR_LOCALE = "tour_locale"
-    }
-
     var preferredAppLocale: Locale
         set(given) = putString(
                 "application_locale",
