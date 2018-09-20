@@ -105,7 +105,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
             floor: Int,
             id: String
     ): MarkerHolder<ArticObject>? {
-        val position = item.toLatLng()
+        val position = getAdjustedLocationFromItem(item)
         var requestDisposable: Disposable? = null
 
         // slightly different logic than the above method. If close enough to center or on tour, enqueue and show loading.
