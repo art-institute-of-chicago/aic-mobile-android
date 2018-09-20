@@ -26,7 +26,7 @@
     <string name="searchContent">Search Content</string>
     <string name="looking_for_artwork">Looking for Artwork?</string>
     <string name="suggested">Suggested</string>
-    <string name="on_the_map">Suggested</string>
+    <string name="on_the_map">On the map</string>
     <string name="play_tour_introduction">Play Tour Introduction</string>
     <!--use this string resource if empty string required-->
     <string name="noTitle" translatable="false"></string>
@@ -34,4 +34,5 @@
     <string name="map">Map</string>
     <string name="audio">Audio</string>
     <string name="info">Info</string>
+    <string name="startTour">Start Tour</string>
 </resources>

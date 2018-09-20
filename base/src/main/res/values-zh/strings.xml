@@ -5,7 +5,7 @@
     <string name="welcomePrompt">利用个人袖珍导游探索博物馆。如果您是会员，请登录以获得高级访问权限。</string>
     <string name="play_tour_introduction">播放游览简介</string>
     <string name="suggested">推荐项目</string>
-    <string name="on_the_map">推荐项目</string>
+    <string name="on_the_map">在地图上</string>
     <string name="accessYourMemberCard">访问您的会员卡。</string>
     <string name="tours">游览</string>
     <string name="onView">当前展览</string>
@@ -22,4 +22,6 @@
     <string name="map">地图</string>
     <string name="info">信息</string>
     <string name="audio">音频</string>
+    <string name="looking_for_artwork">寻找艺术品？</string>
+    <string name="startTour">开始游览</string>
 </resources>
