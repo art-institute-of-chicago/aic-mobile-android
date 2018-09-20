@@ -22,7 +22,6 @@ import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.media.audio.AudioPlayerService
-import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -150,7 +149,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
     private fun bindTranslationSelector(viewModel: AudioDetailsViewModel) {
 
-        viewModel.chosenAudioModel
+        viewModel.audioTrackToUse
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { chosen ->
                     exo_translation_selector.setSelection(translationsAdapter.itemIndexOf(chosen))

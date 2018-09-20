@@ -32,7 +32,7 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
     val title: Subject<String> = BehaviorSubject.create()
     val image: Subject<String> = BehaviorSubject.create()
     val availableTranslations: Subject<List<AudioFileModel>> = BehaviorSubject.create()
-    val chosenAudioModel: Subject<AudioFileModel> = BehaviorSubject.create()
+    val audioTrackToUse: Subject<AudioFileModel> = BehaviorSubject.create()
     val transcript: Subject<String> = BehaviorSubject.create()
     val credits: Subject<String> = BehaviorSubject.create()
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
@@ -41,7 +41,7 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
 
     /**
      * [Disposable] representing the stream of events from [AudioPlayerService.currentTrack]
-     * to [chosenAudioModel].
+     * to [audioTrackToUse].
      *
      * Only to be touched by [disposeBag], [onServiceConnected] and [onServiceDisconnected].
      */
@@ -95,15 +95,15 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
                 .disposedBy(disposeBag)
 
 
-        // Lastly, we need to attach the translatable audio properties. These come from 'chosenAudioModel'.
+        // Lastly, we need to attach the translatable audio properties. These come from 'audioTrackToUse'.
 
-        chosenAudioModel
+        audioTrackToUse
                 .map {
                     // TODO: default to playable.title, perhaps?
                     it.title.orEmpty()
                 }.bindTo(title)
                 .disposedBy(disposeBag)
-        chosenAudioModel
+        audioTrackToUse
                 .map {
                     it.transcript.orEmpty()
                 }.bindTo(transcript)
@@ -112,6 +112,11 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
 
     }
 
+    /**
+     * Call this whenever the [AudioDetailsFragment] connects to an [AudioPlayerService].
+     *
+     * We define [playable] and [audioTrackToUse] here.
+     */
     @UiThread
     fun onServiceConnected(service: AudioPlayerService) {
         playable = service.playable
@@ -120,7 +125,7 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
         // Register for updates
         trackDisposable = service.currentTrack
                 .subscribeBy { translation ->
-                    chosenAudioModel.onNext(translation)
+                    audioTrackToUse.onNext(translation)
                 }.disposedBy(disposeBag)
 
         if (service.hasNoTrack()) {
@@ -130,7 +135,7 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
     }
 
     /**
-     * Call this whenever the [AudioDetailsFragment]'s disconnects from its [AudioPlayerService].
+     * Call this whenever the [AudioDetailsFragment] disconnects from its [AudioPlayerService].
      *
      * We won't see any further events to [trackDisposable] (unless the service is re-connected),
      * so it's safe to dispose it now.
@@ -146,21 +151,24 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
      * This override lasts solely for the current object audio; it
      * does not transfer to other objects in the tour or persist
      * into app- or system-settings.
+     *
+     * The caller is responsible for sending `audioModel` to an
+     * [AudioPlayerService] (if one is available).
      */
     fun setTranslationOverride(audioModel: AudioFileModel) {
-        chosenAudioModel.onNext(audioModel)
+        audioTrackToUse.onNext(audioModel)
     }
 
     /**
      * Only call this if the [edu.artic.media.audio.AudioPlayerService] itself is not
      * defining the language for us.
      */
-    fun chooseDefaultLanguage() {
+    private fun chooseDefaultLanguage() {
         availableTranslations
                 .map {
                     // TODO: inject 'edu.artic.map.carousel.TourProgressManager', use that state as boolean
                     languageSelector.selectFrom(it, true)
-                }.bindTo(chosenAudioModel)
+                }.bindTo(audioTrackToUse)
                 .disposedBy(disposeBag)
     }
 
