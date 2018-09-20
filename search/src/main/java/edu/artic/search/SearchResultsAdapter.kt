@@ -15,6 +15,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
+import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
@@ -35,7 +36,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
 
             is SearchHeaderCellViewModel -> {
                 item.text
-                        .bindToMain(title.text())
+                        .bindToMain(title.textRes())
                         .disposedBy(item.viewDisposeBag)
 
                 //Rx version of clicks does not work here for some reason :(
@@ -46,7 +47,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
 
             is SearchTextHeaderViewModel -> {
                 item.text
-                        .bindToMain(headerText.text())
+                        .bindToMain(headerText.textRes())
                         .disposedBy(item.viewDisposeBag)
             }
             is SearchBaseListItemViewModel -> {
