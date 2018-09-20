@@ -1,8 +1,10 @@
 package edu.artic.map
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -19,6 +21,8 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
+import edu.artic.base.utils.removeAndReturnParcelable
+import edu.artic.base.utils.removeAndReturnString
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.*
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
@@ -31,6 +35,8 @@ import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
+import edu.artic.navigation.NavigationConstants.Companion.ARG_TOUR
+import edu.artic.navigation.NavigationConstants.Companion.ARG_TOUR_START_STOP
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -40,7 +46,6 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
-import timber.log.Timber
 import kotlin.reflect.KClass
 
 /**
@@ -70,27 +75,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
 
     private fun getLatestSearchObject(): ArticSearchArtworkObject? {
-        val data: ArticSearchArtworkObject? = requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
-        requireActivity().intent?.removeExtra(ARG_SEARCH_OBJECT)
-        return data
+        return requireActivity().intent.removeAndReturnParcelable(ARG_SEARCH_OBJECT)
     }
 
     private fun getLatestSearchObjectType(): String? {
-        val data: String? = requireActivity().intent?.getStringExtra(ARG_AMENITY_TYPE)
-        requireActivity().intent?.removeExtra(ARG_AMENITY_TYPE)
-        return data
+        return requireActivity().intent.removeAndReturnString(ARG_AMENITY_TYPE)
     }
 
     private fun getLatestTourObject(): ArticTour? {
-        val tour: ArticTour? = requireActivity().intent?.getParcelableExtra(MapActivity.ARG_TOUR)
-        requireActivity().intent?.extras?.remove(MapActivity.ARG_TOUR)
-        return tour
+        return requireActivity().intent.removeAndReturnParcelable(ARG_TOUR)
     }
 
     private fun getStartTourStop(): ArticTour.TourStop? {
-        val startStop: ArticTour.TourStop? = requireActivity().intent?.getParcelableExtra(MapActivity.ARG_TOUR_START_STOP)
-        requireActivity().intent?.extras?.remove(MapActivity.ARG_TOUR_START_STOP)
-        return startStop
+        return requireActivity().intent.removeAndReturnParcelable(ARG_TOUR_START_STOP)
     }
 
 
@@ -384,7 +381,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.navigateTo
                 .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
                 .subscribe {
-                    when(it) {
+                    when (it) {
                         MapViewModel.NavigationEndpoint.LocationPrompt -> {
                             navController.navigate(R.id.goToLocationPrompt)
                         }
