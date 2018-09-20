@@ -10,7 +10,7 @@
     <fragment
         android:id="@+id/informationFragment"
         android:name="edu.artic.info.InformationFragment"
-        android:label="fragment_information"
+        android:label="@string/fragment_information_label"
         tools:layout="@layout/fragment_information">
         <action
             android:id="@+id/goToSearch"
