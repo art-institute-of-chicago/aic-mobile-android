@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="name_of_this_language">English</string>
+    <string name="welcome">Welcome</string>
+    <string name="welcomePrompt">Explore the museum with your personal, pocket-sized guide.</string>
+    <string name="play_tour_introduction">Play Tour Introduction</string>
+    <string name="suggested">Suggested</string>
+    <string name="on_the_map">Suggested</string>
+    <string name="accessYourMemberCard">Access your member card</string>
+    <string name="tours">Tours</string>
+    <string name="onView">On View</string>
+    <string name="seeAll">See All</string>
+    <string name="stops">%s Stops</string>
+    <string name="events">Events</string>
+    <string name="infoPrompt">Access your member card, see museum hours, or update your app settings.</string>
+    <string name="channel_name">Audio</string>
+    <string name="transcript">Transcript</string>
+    <string name="credits">Credits</string>
+    <string name="leaveCurrentTour">Leave Current Tour</string>
+    <string name="leaveTour">Leave Tour</string>
+    <string name="home">Home</string>
+    <string name="info">Info</string>
+    <string name="map">Map</string>
+    <string name="audio">Audio</string>
 </resources>
