@@ -72,20 +72,12 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
 
 
         // Retrieve a list of all translations we have available for this object
-        val known = objectObservable
+        objectObservable
                 .filterFlatMap({ it is ArticObject }, { it as ArticObject })
                 .map {
                     it.audioFile?.allTranslations().orEmpty()
-                }.share()
-
-        known.bindTo(availableTranslations)
-                .disposedBy(disposeBag)
-
-        // Set up the default language selection.
-        known.map {
-            // TODO: inject 'edu.artic.map.carousel.TourProgressManager', use that state as boolean
-            languageSelector.selectFrom(it, true)
-        }.bindTo(chosenAudioModel)
+                }
+                .bindTo(availableTranslations)
                 .disposedBy(disposeBag)
 
 
@@ -113,6 +105,19 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
      */
     fun setTranslationOverride(audioModel: AudioFileModel) {
         chosenAudioModel.onNext(audioModel)
+    }
+
+    /**
+     * Only call this if the [edu.artic.media.audio.AudioPlayerService] itself is not
+     * defining the language for us.
+     */
+    fun chooseDefaultLanguage() {
+        availableTranslations
+                .map {
+                    // TODO: inject 'edu.artic.map.carousel.TourProgressManager', use that state as boolean
+                    languageSelector.selectFrom(it, true)
+                }.bindTo(chosenAudioModel)
+                .disposedBy(disposeBag)
     }
 
 }
