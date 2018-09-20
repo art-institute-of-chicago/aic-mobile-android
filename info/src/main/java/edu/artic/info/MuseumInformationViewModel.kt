@@ -6,6 +6,7 @@ import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
@@ -17,7 +18,8 @@ import javax.inject.Inject
  */
 class MuseumInformationViewModel @Inject constructor(
         generalInfoDao: GeneralInfoDao,
-        dataObjectDao: ArticDataObjectDao
+        dataObjectDao: ArticDataObjectDao,
+        languageSelector: LanguageSelector
 ) : NavViewViewModel<MuseumInformationViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -33,8 +35,10 @@ class MuseumInformationViewModel @Inject constructor(
 
     init {
 
-        generalInfoDao.getGeneralInfo()
+        generalInfoDao
+                .getGeneralInfo()
                 .toObservable()
+                .map { it -> languageSelector.selectFrom(it.allTranslations()) }
                 .map {
                     it.museumHours
                 }.bindTo(museumHours)

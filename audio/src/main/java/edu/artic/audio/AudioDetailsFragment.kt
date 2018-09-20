@@ -46,8 +46,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override val viewModelClass: KClass<AudioDetailsViewModel>
         get() = AudioDetailsViewModel::class
 
-    override val title: String
-        get() = ""
+    override val title = R.string.noTitle
 
     override val layoutResId: Int
         get() = R.layout.fragment_audio_details

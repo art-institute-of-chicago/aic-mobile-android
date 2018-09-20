@@ -3,6 +3,7 @@ package edu.artic.ui
 import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.LayoutRes
+import android.support.annotation.StringRes
 import android.support.annotation.UiThread
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.DialogFragment
@@ -26,7 +27,8 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener{
     var toolbar: Toolbar? = null
     var collapsingToolbar: CollapsingToolbarLayout? = null
 
-    protected abstract val title: String
+    @get:StringRes
+    protected abstract val title: Int
 
     @get:LayoutRes
     protected abstract val layoutResId: Int
@@ -108,7 +110,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener{
                 setDisplayShowHomeEnabled(true)
             }
 
-            baseActivity.title = title
+            baseActivity.title = getString(title)
         }
 
         collapsingToolbar = view.findViewById(R.id.collapsingToolbar)
@@ -182,12 +184,6 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener{
             }
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        baseActivity.title = title
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

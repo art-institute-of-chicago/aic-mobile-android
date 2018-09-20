@@ -26,8 +26,8 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         get() = AllToursViewModel::class
     override val layoutResId: Int
         get() = R.layout.fragment_all_tours
-    override val title: String
-        get() = "Tours" // TODO: add to strings or figure out language stuff
+
+    override val title = R.string.tours
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
