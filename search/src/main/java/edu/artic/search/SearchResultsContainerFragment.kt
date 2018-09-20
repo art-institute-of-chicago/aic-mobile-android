@@ -25,7 +25,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
         super.onViewCreated(view, savedInstanceState)
 
         tabStrip.setupWithViewPager(viewPager)
-        val adapter = SearchResultsPagerAdapter(childFragmentManager)
+        val adapter = SearchResultsPagerAdapter(childFragmentManager, requireContext())
         viewPager.apply {
             this.adapter = adapter
             this.currentItem = 0
