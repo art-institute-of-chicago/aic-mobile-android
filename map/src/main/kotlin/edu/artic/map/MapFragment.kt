@@ -29,6 +29,7 @@ import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -82,14 +83,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     private fun getLatestTourObject(): ArticTour? {
-        val tour: ArticTour? = requireActivity().intent?.getParcelableExtra(MapActivity.ARG_TOUR)
-        requireActivity().intent?.extras?.remove(MapActivity.ARG_TOUR)
+        val tour: ArticTour? = requireActivity().intent?.getParcelableExtra(NavigationConstants.ARG_TOUR)
+        requireActivity().intent?.removeExtra(NavigationConstants.ARG_TOUR)
         return tour
     }
 
     private fun getStartTourStop(): ArticTour.TourStop? {
-        val startStop: ArticTour.TourStop? = requireActivity().intent?.getParcelableExtra(MapActivity.ARG_TOUR_START_STOP)
-        requireActivity().intent?.extras?.remove(MapActivity.ARG_TOUR_START_STOP)
+        val startStop: ArticTour.TourStop? = requireActivity().intent?.getParcelableExtra(NavigationConstants.ARG_TOUR_START_STOP)
+        requireActivity().intent?.removeExtra(NavigationConstants.ARG_TOUR_START_STOP)
         return startStop
     }
 
