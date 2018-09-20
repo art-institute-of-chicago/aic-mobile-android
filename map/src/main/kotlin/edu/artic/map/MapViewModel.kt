@@ -24,10 +24,10 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -192,6 +192,21 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 }
                 .mapOptional()
                 .bindTo(tourProgressManager.selectedTour)
+                .disposedBy(disposeBag)
+        /**
+         * Update the floor if the selected tour stop is not in current floor.
+         */
+        Observables.combineLatest(tourProgressManager.selectedTour, tourProgressManager.selectedStop)
+                .filterFlatMap({ (tour, stop) -> tour.value != null },
+                        { (tour, stop) -> tour.value!! to stop })
+                .flatMap { (tour, stopID) ->
+                    articObjectDao.getObjectById(stopID).toObservable()
+                }.withLatestFrom(floor)
+                .subscribeBy { (tourStop, floor) ->
+                    if (tourStop.floor != floor) {
+                        floorChangedTo(tourStop.floor)
+                    }
+                }
                 .disposedBy(disposeBag)
 
         /**
