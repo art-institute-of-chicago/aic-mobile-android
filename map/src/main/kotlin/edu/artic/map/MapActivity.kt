@@ -29,22 +29,6 @@ class MapActivity : BaseActivity() {
     override val layoutResId: Int
         get() = R.layout.activity_map
 
-    companion object {
-        val ARG_TOUR = "ARG_TOUR"
-        val ARG_TOUR_START_STOP = "ARG_TOUR_START_STOP"
-
-        fun launchMapForTour(tour: ArticTour, articTourStop: ArticTour.TourStop): Intent {
-            return NavigationConstants.MAP.asDeepLinkIntent().apply {
-                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                putExtras(Bundle().apply {
-                    putParcelable(ARG_TOUR, tour)
-                    articTourStop.let { putParcelable(ARG_TOUR_START_STOP, it) }
-                })
-            }
-        }
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
