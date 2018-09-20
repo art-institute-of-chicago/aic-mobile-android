@@ -10,6 +10,7 @@ import com.fuzz.rx.filterValue
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+import edu.artic.db.INVALID_FLOOR
 import edu.artic.db.debug
 import edu.artic.map.*
 import io.reactivex.BackpressureStrategy
@@ -40,7 +41,7 @@ abstract class MapItemRenderer<T>(
 
     protected val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
     private val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
-    private var currentFloor: Int = Int.MIN_VALUE
+    private var currentFloor: Int = INVALID_FLOOR
 
     protected val imageQueueDisposeBag = DisposeBag()
     private val imageFetcherDisposeBag = DisposeBag()
