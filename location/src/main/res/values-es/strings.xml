@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="location_title">Location Settings ES</string>
-    <string name="locationSettingsHeader">Where Are You? ES</string>
-    <string name="locationSettingsBody">We’d like to use your location to help you navigate the museum.</string>
+    <string name="location_title">Configuración de ubicación</string>
+    <string name="locationSettingsHeader">¿Dónde está usted?</string>
+    <string name="locationSettingsBody">Nos gustaría usar su ubicación para ayudarle a navegar por el museo.</string>
+    <string name="locationSettingsLocationDenied">Ubicación deshabilitada</string>
+    <string name="locationSettingsLocationAllowed">Ubicación habilitada</string>
+    <string name="locationPromptNotNow">No ahora</string>
 </resources>

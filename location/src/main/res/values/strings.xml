@@ -4,9 +4,9 @@
     <string name="locationSettingsHeader">Where Are You?</string>
     <string name="locationSettingsBody">We’d like to use your location to help you navigate the museum.</string>
     <string name="locationSettingsLocationServiceOff">Location Service Off</string>
-    <string name="locationSettingsLocationNeverAsked">Location Settings</string>
-    <string name="locationSettingsLocationAllowed">Location Allowed</string>
-    <string name="locationSettingsLocationDenied">Location Denied</string>
+    <string name="locationSettingsLocationNeverAsked">Location Service Off</string>
+    <string name="locationSettingsLocationAllowed">Location Enabled</string>
+    <string name="locationSettingsLocationDenied">Location Disabled</string>
     <string name="locationPromptNotNow">Now Right Now</string>
     <string name="locationPromptOk">OK, Use My Location</string>
 </resources>
