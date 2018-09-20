@@ -13,7 +13,7 @@
     <string name="events" tools:ignore="ExtraTranslation">Events</string>
     <string name="through">Through %s</string>
     <string name="infoPrompt">Access your member card, see museum hours, or update your app settings.</string>
-    <string name="channel_name">audio</string>
+    <string name="channel_name">Audio</string>
 
     <!-- Audio screen and the Media service -->
     <string name="transcript">Transcript</string>
@@ -30,4 +30,8 @@
     <string name="play_tour_introduction">Play Tour Introduction</string>
     <!--use this string resource if empty string required-->
     <string name="noTitle" translatable="false"></string>
+    <string name="home">Home</string>
+    <string name="map">Map</string>
+    <string name="audio">Audio</string>
+    <string name="info">Info</string>
 </resources>

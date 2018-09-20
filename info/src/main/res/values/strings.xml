@@ -16,7 +16,7 @@
 
     <!-- Since we heavily depend on the google maps api we are considering google map to handle the museum location search.-->
     <string name="museumGoogleMapSearchQuery" translatable="false"><![CDATA[https://www.google.com/maps/search/?api=1&query=The+Art+Institute+of+Chicago]]></string>
-    <string name="versionInfo" translatable="false">Version %1$s</string>
+    <string name="versionInfo">Version %1$s</string>
 
     <string name="signIn">Sign In</string>
     <string name="homeZipCode">Zip Code</string>
