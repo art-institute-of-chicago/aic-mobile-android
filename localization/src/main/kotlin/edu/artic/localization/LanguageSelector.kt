@@ -1,5 +1,7 @@
 package edu.artic.localization
 
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
@@ -23,8 +25,11 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
         } else {
             prefs.preferredAppLocale = lang
             appLocaleRef.set(lang)
+            currentLanguage.onNext(lang)
         }
     }
+
+    val currentLanguage : Subject<Locale> = PublishSubject.create()
 
     /**
      * Check whether we have defined a value for [LocalizationPreferences.preferredAppLocale] -
