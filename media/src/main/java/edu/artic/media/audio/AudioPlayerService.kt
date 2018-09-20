@@ -157,6 +157,9 @@ class AudioPlayerService : DaggerService(), PlayerService {
     lateinit var languageSelector: LanguageSelector
 
 
+    /**
+     * Something with one or more audio tracks. See [currentTrack] and [AudioFileModel].
+     */
     var playable: Playable? = null
         private set
 
@@ -359,6 +362,17 @@ class AudioPlayerService : DaggerService(), PlayerService {
         playerNotificationManager.setPlayer(null)
         player.release()
         disposeBag.dispose()
+    }
+
+    /**
+     * Counterpart to [switchAudioTrack]. When this returns true
+     *
+     * 1. [playable] is null
+     * 2. we expect (but do not guarantee) that [player] is in
+     * the [idle state][Player.STATE_IDLE]
+     */
+    fun hasNoTrack(): Boolean {
+        return !(currentTrack as BehaviorSubject).hasValue()
     }
 
     /**
