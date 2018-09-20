@@ -5,7 +5,7 @@
     <string name="welcomePrompt">Explore el museo con su guía de bolsillo personalizada.Si es miembro, regístrese para obtener un acceso mejorado.</string>
     <string name="play_tour_introduction">Reproducir la Presentación del Tour</string>
     <string name="suggested">Sugeridos</string>
-    <string name="on_the_map">Sugeridos</string>
+    <string name="on_the_map">Mapa</string>
     <string name="accessYourMemberCard">Acceda a su tarjeta para miembros</string>
     <string name="tours">Visitas</string>
     <string name="onView">En vista</string>
@@ -22,4 +22,6 @@
     <string name="map">Mapa</string>
     <string name="info">Información</string>
     <string name="audio">Audio</string>
+    <string name="looking_for_artwork">Buscando obras de arte?</string>
+    <string name="startTour">Comenzar visita</string>
 </resources>
