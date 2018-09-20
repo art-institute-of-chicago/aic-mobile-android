@@ -43,7 +43,7 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
 
     fun setTourLanguage(proposedTourLocale: Locale) {
         if (proposedTourLocale.hasNoLanguage()) {
-            prefs.remove(LocalizationPreferences.PREF_TOUR_LOCALE)
+            prefs.tourLocale = Locale.ROOT
         } else {
             prefs.tourLocale = proposedTourLocale
         }
