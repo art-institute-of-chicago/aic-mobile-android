@@ -7,6 +7,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.localization.SPANISH
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_language_settings.*
@@ -53,7 +54,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                         Locale.ENGLISH -> {
                             englishLanguage.isChecked = true
                         }
-                        Locale("es") -> {
+                        SPANISH -> {
                             spanishLanguage.isChecked = true
                         }
                         Locale.CHINESE -> {
