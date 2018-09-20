@@ -119,15 +119,6 @@ abstract class ApiModule {
                 builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             }
 
-            /**
-             * TODO:: Remove this once the drupal ssl issue is resolved.
-             **/
-            if (BuildConfig.DEBUG) {
-                builder.hostnameVerifier { hostname, session ->
-                    true
-                }
-            }
-
             return builder.build()
 
         }

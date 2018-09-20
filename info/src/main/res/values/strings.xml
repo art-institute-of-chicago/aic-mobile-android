@@ -34,5 +34,7 @@
     <string name="spanish" translatable="false">Español</string>
     <string name="chinese" translatable="false">中文</string>
     <string name="choseYourLanguage">Please Choose Your Preferred Language</string>
+    <string name="accessMemberCardLabel" translatable="false">Access Member Card</string>
+    <string name="fragment_information_label" translatable="false">fragment_information</string>
 
 </resources>

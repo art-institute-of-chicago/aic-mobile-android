@@ -2,7 +2,6 @@ package edu.artic.info
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.navigation.findNavController
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.base.utils.preventReselection
 import edu.artic.location.LocationService
@@ -10,6 +9,7 @@ import edu.artic.location.LocationServiceImpl
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
+import edu.artic.ui.findNavController
 import kotlinx.android.synthetic.main.activity_info.*
 import javax.inject.Inject
 
@@ -49,7 +49,33 @@ class InfoActivity : BaseActivity() {
          * So we need to handle it manually.
          */
         when (intent.data?.toString()?.replace("artic://", "")) {
-            NavigationConstants.INFO_MEMBER_CARD -> findNavController(R.id.container).navigate(R.id.goToAccessMemberCard)
+            NavigationConstants.INFO_MEMBER_CARD -> {
+
+                val navController = supportFragmentManager.findNavController()
+
+                val currentDestination = navController
+                        ?.currentDestination
+                        ?.label
+                        ?.toString()
+
+                /**
+                 * Go to access member card iff current destination's label is not [R.string.accessMemberCardLabel].
+                 * Label for [AccessMemberCardFragment] is [R.string.accessMemberCardLabel].
+                 */
+                if (currentDestination != resources.getString(R.string.accessMemberCardLabel)) {
+
+                    /**
+                     * If the active fragment is not the start_destination navController can't find
+                     * accessMemberCardLabel.
+                     */
+                    if (currentDestination != resources.getString(R.string.fragment_information_label)) {
+                        navController?.navigateUp()
+                    }
+
+                    navController?.navigate(R.id.goToAccessMemberCard)
+                }
+            }
+
         }
     }
 }
