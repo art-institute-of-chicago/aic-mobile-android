@@ -1,5 +1,7 @@
 package edu.artic.audio
 
+import android.support.annotation.AnyThread
+import android.support.annotation.UiThread
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
@@ -8,7 +10,11 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
+import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.refreshPlayBackState
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -32,6 +38,14 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
 
     private val objectObservable: Subject<Playable> = BehaviorSubject.create()
+
+    /**
+     * [Disposable] representing the stream of events from [AudioPlayerService.currentTrack]
+     * to [chosenAudioModel].
+     *
+     * Only to be touched by [disposeBag], [onServiceConnected] and [onServiceDisconnected].
+     */
+    private var trackDisposable: Disposable? = null
 
 
     var playable: Playable? = null
@@ -97,6 +111,36 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
 
 
     }
+
+    @UiThread
+    fun onServiceConnected(service: AudioPlayerService) {
+        playable = service.playable
+        service.player.refreshPlayBackState()
+
+        // Register for updates
+        trackDisposable = service.currentTrack
+                .subscribeBy { translation ->
+                    chosenAudioModel.onNext(translation)
+                }.disposedBy(disposeBag)
+
+        if (service.hasNoTrack()) {
+            // Set up the default language selection.
+            chooseDefaultLanguage()
+        }
+    }
+
+    /**
+     * Call this whenever the [AudioDetailsFragment]'s disconnects from its [AudioPlayerService].
+     *
+     * We won't see any further events to [trackDisposable] (unless the service is re-connected),
+     * so it's safe to dispose it now.
+     */
+    @AnyThread
+    fun onServiceDisconnected() {
+        playable = null
+        trackDisposable?.dispose()
+    }
+
 
     /**
      * This override lasts solely for the current object audio; it
