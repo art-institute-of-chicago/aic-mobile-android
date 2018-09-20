@@ -53,7 +53,6 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
         viewModel.selectedLanguage
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    (requireActivity() as BaseActivity).ensureConfigIncludesAppLocale()
                     requireActivity().title = resources.getString(R.string.language_settings)
                     when (it) {
                         Locale.ENGLISH -> {
