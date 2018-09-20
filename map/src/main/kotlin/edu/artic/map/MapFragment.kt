@@ -71,26 +71,30 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
 
     private fun getLatestSearchObject(): ArticSearchArtworkObject? {
-        val data: ArticSearchArtworkObject? = requireActivity().intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
-        requireActivity().intent?.removeExtra(ARG_SEARCH_OBJECT)
+        val intent = requireActivity().intent
+        val data: ArticSearchArtworkObject? = intent?.getParcelableExtra(ARG_SEARCH_OBJECT)
+        intent?.removeExtra(ARG_SEARCH_OBJECT)
         return data
     }
 
     private fun getLatestSearchObjectType(): String? {
-        val data: String? = requireActivity().intent?.getStringExtra(ARG_AMENITY_TYPE)
-        requireActivity().intent?.removeExtra(ARG_AMENITY_TYPE)
+        val intent = requireActivity().intent
+        val data: String? = intent?.getStringExtra(ARG_AMENITY_TYPE)
+        intent?.removeExtra(ARG_AMENITY_TYPE)
         return data
     }
 
     private fun getLatestTourObject(): ArticTour? {
-        val tour: ArticTour? = requireActivity().intent?.getParcelableExtra(NavigationConstants.ARG_TOUR)
-        requireActivity().intent?.removeExtra(NavigationConstants.ARG_TOUR)
+        val intent = requireActivity().intent
+        val tour: ArticTour? = intent?.getParcelableExtra(NavigationConstants.ARG_TOUR)
+        intent?.removeExtra(NavigationConstants.ARG_TOUR)
         return tour
     }
 
     private fun getStartTourStop(): ArticTour.TourStop? {
-        val startStop: ArticTour.TourStop? = requireActivity().intent?.getParcelableExtra(NavigationConstants.ARG_TOUR_START_STOP)
-        requireActivity().intent?.removeExtra(NavigationConstants.ARG_TOUR_START_STOP)
+        val intent = requireActivity().intent
+        val startStop: ArticTour.TourStop? = intent?.getParcelableExtra(NavigationConstants.ARG_TOUR_START_STOP)
+        intent?.removeExtra(NavigationConstants.ARG_TOUR_START_STOP)
         return startStop
     }
 
