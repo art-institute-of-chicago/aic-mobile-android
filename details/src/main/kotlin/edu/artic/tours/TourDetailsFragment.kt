@@ -35,8 +35,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         get() = TourDetailsViewModel::class
     override val layoutResId: Int
         get() = R.layout.fragment_tour_details
-    override val title: String
-        get() = ""
+
+    override val title = R.string.noTitle
 
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.TourDetails

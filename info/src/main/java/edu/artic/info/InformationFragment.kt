@@ -28,8 +28,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
     override val viewModelClass: KClass<InformationViewModel>
         get() = InformationViewModel::class
 
-    override val title: String
-        get() = "Information"
+    override val title = R.string.information
 
     override fun hasTransparentStatusBar(): Boolean = true
 
@@ -77,6 +76,8 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                     viewModel.onClickLanguageSettings()
                 }
                 .disposedBy(disposeBag)
+
+        requireActivity().title = resources.getString(R.string.information)
     }
 
     override fun setupNavigationBindings(viewModel: InformationViewModel) {

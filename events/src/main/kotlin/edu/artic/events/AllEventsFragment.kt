@@ -25,8 +25,8 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         get() = AllEventsViewModel::class
     override val layoutResId: Int
         get() = R.layout.fragment_all_events
-    override val title: String
-        get() = "Events" // TODO: add to strings or figure out language stuff
+
+    override val title = R.string.events
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

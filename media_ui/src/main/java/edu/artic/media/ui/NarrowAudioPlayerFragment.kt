@@ -39,8 +39,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
     override val viewModelClass: KClass<NarrowAudioPlayerViewModel>
         get() = NarrowAudioPlayerViewModel::class
 
-    override val title: String
-        get() = ""
+    override val title = R.string.noTitle
 
     override val layoutResId: Int
         get() = R.layout.fragment_bottom_audio_player

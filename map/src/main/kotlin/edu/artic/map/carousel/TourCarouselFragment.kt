@@ -32,8 +32,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
     override val viewModelClass: KClass<TourCarouselViewModel>
         get() = TourCarouselViewModel::class
 
-    override val title: String
-        get() = ""
+    override val title = R.string.noTitle
 
     override val layoutResId: Int
         get() = R.layout.fragment_tour_carousel

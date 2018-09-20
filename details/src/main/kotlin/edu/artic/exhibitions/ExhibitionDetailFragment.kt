@@ -35,8 +35,8 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
         get() = ExhibitionDetailViewModel::class
     override val layoutResId: Int
         get() = R.layout.fragment_exhibition_details
-    override val title: String
-        get() = ""
+
+    override val title = R.string.noTitle
 
     override fun hasTransparentStatusBar() = true
 

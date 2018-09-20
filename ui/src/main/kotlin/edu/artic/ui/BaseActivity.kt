@@ -50,9 +50,16 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (useInjection) {
+            ensureConfigIncludesAppLocale()
+        }
+    }
+
     @Suppress("DEPRECATION")
     @UiThread
-    private fun ensureConfigIncludesAppLocale() {
+    fun ensureConfigIncludesAppLocale() {
         val appLocale = languageSelector.getAppLocale()
         if (appLocale != resources.configuration.primaryLocale) {
             resources.updateConfiguration(Configuration().apply {
