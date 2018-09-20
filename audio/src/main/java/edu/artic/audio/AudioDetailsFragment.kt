@@ -65,28 +65,17 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
             boundService = null
-            viewModel.playable = null
+            viewModel.onServiceDisconnected()
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as AudioPlayerService.AudioPlayerServiceBinder
             boundService = binder.getService()
-            viewModel.playable = boundService?.playable
 
             boundService?.let {
                 audioPlayer.player = it.player
-                it.player.refreshPlayBackState()
 
-                // Register for updates
-                it.currentTrack
-                        .subscribeBy { translation ->
-                            viewModel.chosenAudioModel.onNext(translation)
-                        }.disposedBy(disposeBag)
-
-                if (it.hasNoTrack()) {
-                    // Set up the default language selection.
-                    viewModel.chooseDefaultLanguage()
-                }
+                viewModel.onServiceConnected(it)
             }
         }
     }
