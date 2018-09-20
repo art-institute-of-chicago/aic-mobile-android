@@ -51,8 +51,9 @@ class InfoActivity : BaseActivity() {
         when (intent.data?.toString()?.replace("artic://", "")) {
             NavigationConstants.INFO_MEMBER_CARD -> {
 
-                val currentDestination = supportFragmentManager
-                        .findNavController()
+                val navController = supportFragmentManager.findNavController()
+
+                val currentDestination = navController
                         ?.currentDestination
                         ?.label
                         ?.toString()
@@ -62,9 +63,16 @@ class InfoActivity : BaseActivity() {
                  * Label for [AccessMemberCardFragment] is [R.string.accessMemberCardLabel].
                  */
                 if (currentDestination != resources.getString(R.string.accessMemberCardLabel)) {
-                    supportFragmentManager
-                            .findNavController()
-                            ?.navigate(R.id.goToAccessMemberCard)
+
+                    /**
+                     * If the active fragment is not the start_destination navController can't find
+                     * accessMemberCardLabel.
+                     */
+                    if (currentDestination != resources.getString(R.string.fragment_information_label)) {
+                        navController?.navigateUp()
+                    }
+
+                    navController?.navigate(R.id.goToAccessMemberCard)
                 }
             }
 
