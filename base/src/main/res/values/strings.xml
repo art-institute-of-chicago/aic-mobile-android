@@ -5,6 +5,7 @@
 
     <!-- Welcome/Home screen -->
     <string name="welcomePrompt">Explore the museum with your personal, pocket-sized guide.</string>
+    <string name="welcome">Welcome</string>
     <string name="tours">Tours</string>
     <string name="onView">On View</string>
     <string name="seeAll">See All</string>
@@ -12,7 +13,6 @@
     <string name="events" tools:ignore="ExtraTranslation">Events</string>
     <string name="through">Through %s</string>
     <string name="infoPrompt">Access your member card, see museum hours, or update your app settings.</string>
-    <string name="accessMemberCard">Access Member Card</string>
     <string name="channel_name">audio</string>
 
     <!-- Audio screen and the Media service -->
@@ -28,4 +28,6 @@
     <string name="suggested">Suggested</string>
     <string name="on_the_map">Suggested</string>
     <string name="play_tour_introduction">Play Tour Introduction</string>
+    <!--use this string resource if empty string required-->
+    <string name="noTitle" translatable="false"></string>
 </resources>
