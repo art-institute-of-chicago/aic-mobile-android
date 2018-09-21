@@ -19,6 +19,14 @@ import edu.artic.map.rendering.ALPHA_VISIBLE
 
 
 /**
+ * Preferred default duration for fading in/out [MARKER_ALPHA].
+ *
+ * Since we're using [ObjectAnimator]s, this overrides the default
+ * of `300 milliseconds`.
+ */
+internal const val MARKER_FADE_DURATION: Long = 500L
+
+/**
  * Reference instance of [AlphaProperty]. Use this
  * to animate [Marker.setAlpha] and [Marker.getAlpha].
  *
@@ -106,6 +114,7 @@ fun <T> Marker.tryExpectingFailure(retry: Boolean = false, action: (Marker) -> T
 @UiThread
 fun Marker.fadeIn(finalAlpha: Float = ALPHA_VISIBLE) {
     val fadeIn: ObjectAnimator = ObjectAnimator.ofFloat(this, MARKER_ALPHA, alpha, finalAlpha)
+    fadeIn.duration = MARKER_FADE_DURATION
     fadeIn.start()
 }
 
@@ -125,6 +134,7 @@ fun Marker.removeWithFadeOut() {
             }
         }
     })
+    fadeOut.duration = MARKER_FADE_DURATION
     fadeOut.start()
 }
 
