@@ -118,6 +118,20 @@ fun TileOverlay.removeWithFadeOut() {
     animator.start()
 }
 
+/**
+ * Fade this [TileOverlay] in to its most opaque state ([TRANSPARENCY_VISIBLE]).
+ *
+ * **NB: [TRANSPARENCY_VISIBLE] is not the same as [ALPHA_VISIBLE].**
+ *
+ * This is _not_ called `fadeIn`, because there's already
+ * [a boolean property on TileOverlay with that name][TileOverlay.setFadeIn].
+ */
+@UiThread
+fun TileOverlay.graduallyFadeIn() {
+    val animator: ObjectAnimator = ObjectAnimator.ofFloat(this, OVERLAY_TRANSPARENCY, transparency, TRANSPARENCY_VISIBLE)
+    animator.duration = OVERLAY_FADE_DURATION
+    animator.start()
+}
 
 /**
  * Google's Map API throws exceptions if a marker is used when either
