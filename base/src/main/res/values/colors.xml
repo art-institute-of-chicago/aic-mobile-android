@@ -49,4 +49,7 @@
     <color name="hintColor">#9b9b9b</color>
     <color name="infoInputFieldWhite">#F0F0F0</color>
     <color name="translucentLoadingScrim">#4D000000</color>
+
+    <color name="splashGradientStart">#1c515e</color>
+    <color name="splashGradientEnd">#2ea1a2</color>
 </resources>
