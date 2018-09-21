@@ -381,20 +381,26 @@ abstract class MapItemRenderer<T>(
             loadedBitmap: Boolean,
             requestDisposable: Disposable?
     ): MarkerHolder<T> {
+        val targetAlpha = getMarkerAlpha(floor,
+                displayMode,
+                item)
+
         val options = MarkerOptions()
                 .zIndex(zIndex)
                 .position(getAdjustedLocationFromItem(item))
                 .icon(bitmap)
-                .alpha(getMarkerAlpha(floor,
-                        displayMode,
-                        item)
-                )
-        return MarkerHolder(
+                .alpha(0f)
+
+        val markerHolder = MarkerHolder(
                 id,
                 item,
                 map.addMarker(options).apply {
                     tag = MarkerMetaData(item, loadedBitmap, requestDisposable)
                 })
+
+        markerHolder.marker.fadeIn(targetAlpha)
+
+        return markerHolder
     }
 
 }
