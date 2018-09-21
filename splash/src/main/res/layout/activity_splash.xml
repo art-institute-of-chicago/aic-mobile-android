@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash_gradient"
     android:orientation="vertical">
 
     <ImageView
@@ -72,7 +71,7 @@
         android:maxLines="6"
         android:text="Supported by"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/bloomBergLogo"
+        app:layout_constraintBottom_toTopOf="@id/bloombergLogo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +79,7 @@
 
 
     <ImageView
-        android:id="@+id/bloomBergLogo"
+        android:id="@+id/bloombergLogo"
         android:layout_width="136dp"
         android:layout_height="43dp"
         android:layout_marginStart="@dimen/marginDouble"

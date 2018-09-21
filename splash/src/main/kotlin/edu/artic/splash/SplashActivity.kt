@@ -25,6 +25,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+        window?.statusBarColor = Color.TRANSPARENT
+
         viewModel.percentage
                 .map {
                     "Percentage : %.2f".format(it * 100)
@@ -50,12 +53,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         progressBar.setProgress((it * 100).toInt(), true)
                     } else {
-                        progressBar.progress = it.toInt()
+                        progressBar.progress = (it * 100).toInt()
                     }
                 }.disposedBy(disposeBag)
-
-        setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-        window?.statusBarColor = Color.TRANSPARENT
     }
 
     override fun onStart() {
