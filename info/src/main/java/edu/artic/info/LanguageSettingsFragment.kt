@@ -8,7 +8,6 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.localization.SPANISH
-import edu.artic.ui.BaseActivity
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_language_settings.*
@@ -17,7 +16,7 @@ import kotlin.reflect.KClass
 
 class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel>() {
     override val viewModelClass: KClass<LanguageSettingsViewModel> = LanguageSettingsViewModel::class
-    override val title = R.string.language_settings
+    override val title = R.string.languageSettings
     override val layoutResId: Int = R.layout.fragment_language_settings
     override val screenCategory: ScreenCategoryName? = ScreenCategoryName.LanguageSettings
 
@@ -48,12 +47,12 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
     override fun setupBindings(viewModel: LanguageSettingsViewModel) {
         super.setupBindings(viewModel)
 
-        requireActivity().title = resources.getString(R.string.language_settings)
+        requireActivity().title = resources.getString(R.string.languageSettings)
 
         viewModel.selectedLanguage
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    requireActivity().title = resources.getString(R.string.language_settings)
+                    requireActivity().title = resources.getString(R.string.languageSettings)
                     when (it) {
                         Locale.ENGLISH -> {
                             englishLanguage.isChecked = true

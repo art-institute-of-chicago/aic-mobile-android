@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="chooseYourLanguage">Elija su idioma de preferencia</string>
-    <string name="language_settings">Configuración de idiomas</string>
-    <string name="become_a_member">Hágase miembro</string>
-    <string name="enjoy_free_year_long_admission">Disfrute de admisión gratuita durante todo el año.</string>
-    <string name="join_now">Unirse ahora mismo</string>
-    <string name="museum_information">Información sobre el museo</string>
-    <string name="location_settings">Configuración de ubicación</string>
-    <string name="support_by">Patrocinado por</string>
+    <string name="languageSettings">Configuración de idiomas</string>
+    <string name="becomeAMember">Hágase miembro</string>
+    <string name="enjoyFreeYearLongAdmission">Disfrute de admisión gratuita durante todo el año.</string>
+    <string name="joinNow">Unirse ahora mismo</string>
+    <string name="museumInformation">Información sobre el museo</string>
+    <string name="locationSettings">Configuración de ubicación</string>
+    <string name="supportBy">Patrocinado por</string>
     <string name="buyTickets">Comprar boletos</string>
     <string name="signIn">Iniciar sesión</string>
     <string name="versionInfo">Versión %1$s</string>
