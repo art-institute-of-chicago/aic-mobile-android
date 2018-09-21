@@ -14,7 +14,17 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.ArticObject
+import edu.artic.map.rendering.ALPHA_INVISIBLE
+import edu.artic.map.rendering.ALPHA_VISIBLE
 
+
+/**
+ * Preferred default duration for fading in/out [MARKER_ALPHA].
+ *
+ * Since we're using [ObjectAnimator]s, this overrides the default
+ * of `300 milliseconds`.
+ */
+internal const val MARKER_FADE_DURATION: Long = 500L
 
 /**
  * Reference instance of [AlphaProperty]. Use this
@@ -95,14 +105,28 @@ fun <T> Marker.tryExpectingFailure(retry: Boolean = false, action: (Marker) -> T
 }
 
 /**
- * This calls [Marker.remove] after animating the [alpha][MARKER_ALPHA] to 0 -
- * essentially, fully fading it out.
+ * Fade this Marker from its current alpha/transparency value to [finalAlpha].
+ *
+ * May be paired with [removeWithFadeOut]. Always starts with
+ * [the current value][MARKER_ALPHA], so for a complete fade-in effect you should set
+ * that to [ALPHA_INVISIBLE] before calling this.
+ */
+@UiThread
+fun Marker.fadeIn(finalAlpha: Float = ALPHA_VISIBLE) {
+    val fadeIn: ObjectAnimator = ObjectAnimator.ofFloat(this, MARKER_ALPHA, alpha, finalAlpha)
+    fadeIn.duration = MARKER_FADE_DURATION
+    fadeIn.start()
+}
+
+/**
+ * This calls [Marker.remove] after animating the [alpha][MARKER_ALPHA] to [ALPHA_INVISIBLE] -
+ * essentially, fully fading it out. Counterpart to [fadeIn].
  *
  * Similar concept to [android.transition.Fade].
  */
 @UiThread
 fun Marker.removeWithFadeOut() {
-    val fadeOut: ObjectAnimator = ObjectAnimator.ofFloat(this, MARKER_ALPHA, 1f, 0f)
+    val fadeOut: ObjectAnimator = ObjectAnimator.ofFloat(this, MARKER_ALPHA, alpha, ALPHA_INVISIBLE)
     fadeOut.addListener(object : AnimatorListenerAdapter() {
         override fun onAnimationEnd(animation: Animator?) {
             tryExpectingFailure(true) {
@@ -110,6 +134,7 @@ fun Marker.removeWithFadeOut() {
             }
         }
     })
+    fadeOut.duration = MARKER_FADE_DURATION
     fadeOut.start()
 }
 

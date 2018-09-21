@@ -7,6 +7,9 @@ import edu.artic.db.models.ArticTour
 
 /**
  * See [convertToLatLng].
+ *
+ * When interacting with [MapItemRenderers][edu.artic.map.rendering.MapItemRenderer],
+ * consider using `getAdjustedLocationFromItem` instead.
  */
 fun ArticObject.toLatLng(): LatLng {
     return convertToLatLng(location)

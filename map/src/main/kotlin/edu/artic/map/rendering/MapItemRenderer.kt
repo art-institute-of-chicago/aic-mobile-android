@@ -1,6 +1,8 @@
 package edu.artic.map.rendering
 
 import android.content.Context
+import android.support.annotation.AnyThread
+import android.support.annotation.UiThread
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.asFlowable
@@ -10,6 +12,7 @@ import com.fuzz.rx.filterValue
 import com.fuzz.rx.optionalOf
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+import edu.artic.db.INVALID_FLOOR
 import edu.artic.db.debug
 import edu.artic.map.*
 import io.reactivex.BackpressureStrategy
@@ -40,7 +43,7 @@ abstract class MapItemRenderer<T>(
 
     protected val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
     private val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
-    private var currentFloor: Int = Int.MIN_VALUE
+    private var currentFloor: Int = INVALID_FLOOR
 
     protected val imageQueueDisposeBag = DisposeBag()
     private val imageFetcherDisposeBag = DisposeBag()
@@ -145,6 +148,7 @@ abstract class MapItemRenderer<T>(
      * but depending on mode, this might be [ALPHA_DIMMED]. If for example, we're on tour and displaying
      * a different floor than current.
      */
+    @AnyThread
     open fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: T): Float = ALPHA_VISIBLE
 
     fun getMarkerHolderById(id: String): Observable<Optional<MarkerHolder<T>>> =
@@ -241,6 +245,7 @@ abstract class MapItemRenderer<T>(
      * any delayed markers with [enqueueBitmapFetch]. If marker exists on map currently we reuse it
      * and adjust alpha, if needed.
      */
+    @UiThread
     private fun mapAndFetchDisplayMarkers(foundItemsMap: Map<String, MarkerHolder<T>>,
                                           mapRenderEvent: MapItemRendererEvent<T>,
                                           visibleRegion: VisibleRegion): List<MarkerHolder<T>> {
@@ -265,12 +270,14 @@ abstract class MapItemRenderer<T>(
     /**
      * Perform custom marker changes when visible.
      */
+    @UiThread
     protected open fun adjustVisibleMarker(
             existing: MarkerHolder<T>,
             visibleRegion: VisibleRegion,
             mapChangeEvent: MapChangeEvent
     ) = Unit
 
+    @UiThread
     protected open fun displayMarker(item: T,
                                      mapChangeEvent: MapChangeEvent,
                                      visibleRegion: VisibleRegion,
@@ -363,6 +370,7 @@ abstract class MapItemRenderer<T>(
      * Constructs the [MarkerHolder] based on a few parameters. Also adds the [MarkerHolder] to
      * the [GoogleMap].
      */
+    @UiThread
     internal fun constructAndAddMarkerHolder(
             item: T,
             bitmap: BitmapDescriptor?,
@@ -373,20 +381,26 @@ abstract class MapItemRenderer<T>(
             loadedBitmap: Boolean,
             requestDisposable: Disposable?
     ): MarkerHolder<T> {
+        val targetAlpha = getMarkerAlpha(floor,
+                displayMode,
+                item)
+
         val options = MarkerOptions()
                 .zIndex(zIndex)
                 .position(getAdjustedLocationFromItem(item))
                 .icon(bitmap)
-                .alpha(getMarkerAlpha(floor,
-                        displayMode,
-                        item)
-                )
-        return MarkerHolder(
+                .alpha(0f)
+
+        val markerHolder = MarkerHolder(
                 id,
                 item,
                 map.addMarker(options).apply {
                     tag = MarkerMetaData(item, loadedBitmap, requestDisposable)
                 })
+
+        markerHolder.marker.fadeIn(targetAlpha)
+
+        return markerHolder
     }
 
 }

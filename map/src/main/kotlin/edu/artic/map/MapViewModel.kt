@@ -387,6 +387,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     fun visibleRegionChanged(visibleRegion: VisibleRegion) {
         // only emit if visible region is not locked.
         lockVisibleRegion
+                .take(1)
                 .filter { !it }
                 .subscribeBy {
                     visibleRegionChanges.onNext(visibleRegion)
