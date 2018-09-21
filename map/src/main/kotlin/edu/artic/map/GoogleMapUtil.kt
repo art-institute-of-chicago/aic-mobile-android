@@ -12,12 +12,22 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.TileOverlay
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.ArticObject
 import edu.artic.map.rendering.ALPHA_INVISIBLE
 import edu.artic.map.rendering.ALPHA_VISIBLE
+import edu.artic.map.rendering.TRANSPARENCY_INVISIBLE
+import edu.artic.map.rendering.TRANSPARENCY_VISIBLE
 
 
+/**
+ * Preferred default duration for fading in/out [OVERLAY_TRANSPARENCY].
+ *
+ * Since we're using [ObjectAnimator]s, this overrides the default
+ * of `300 milliseconds`.
+ */
+internal const val OVERLAY_FADE_DURATION: Long = 900L
 /**
  * Preferred default duration for fading in/out [MARKER_ALPHA].
  *
@@ -34,6 +44,12 @@ internal const val MARKER_FADE_DURATION: Long = 500L
  */
 val MARKER_ALPHA: Property<Marker, Float> = AlphaProperty()
 
+/**
+ * Reference instance of [TransparencyProperty]. Use this
+ * to animate [TileOverlay.setTransparency] and [TileOverlay.getTransparency].
+ */
+val OVERLAY_TRANSPARENCY: Property<TileOverlay, Float> = TransparencyProperty()
+
 internal class AlphaProperty : Property<Marker, Float>(Float::class.java, "alpha") {
     override fun get(given: Marker?): Float {
         return given?.alpha ?: Float.NaN
@@ -44,6 +60,15 @@ internal class AlphaProperty : Property<Marker, Float>(Float::class.java, "alpha
     }
 }
 
+internal class TransparencyProperty : Property<TileOverlay, Float>(Float::class.java, "transparency") {
+    override fun get(given: TileOverlay?): Float {
+        return given?.transparency ?: Float.NaN
+    }
+
+    override fun set(given: TileOverlay?, value: Float) {
+        given?.transparency = value
+    }
+}
 
 /**
  * We only want to display [ArticObject] annotations that are within 15 meters
