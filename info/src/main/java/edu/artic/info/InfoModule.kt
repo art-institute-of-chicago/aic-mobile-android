@@ -90,7 +90,7 @@ abstract class InfoModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideMemberInfoService(@Named(MEMBER_INFO_API) retrofit: Retrofit) = RetrofitMemberDataProvider(retrofit)
+        fun provideMemberInfoService(@Named(MEMBER_INFO_API) retrofit: Retrofit): MemberDataProvider = RetrofitMemberDataProvider(retrofit)
 
         const val MEMBER_INFO_API = "MEMBER_INFO_API"
     }
