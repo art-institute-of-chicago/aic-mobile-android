@@ -5,27 +5,32 @@ import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticTour
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class AllToursViewModel @Inject constructor(generalInfoDao: GeneralInfoDao,
-        toursDao : ArticTourDao)  : NavViewViewModel<AllToursViewModel.NavigationEndpoint>() {
+class AllToursViewModel @Inject constructor(
+        languageSelector: LanguageSelector,
+        generalInfoDao: GeneralInfoDao,
+        toursDao: ArticTourDao) : NavViewViewModel<AllToursViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         data class TourDetails(val pos: Int, val tour: ArticTour) : NavigationEndpoint()
     }
 
-    val tours : Subject<List<AllToursCellViewModel>> = BehaviorSubject.create()
-    val intro : Subject<String> = BehaviorSubject.createDefault("")
+    val tours: Subject<List<AllToursCellViewModel>> = BehaviorSubject.create()
+    val intro: Subject<String> = BehaviorSubject.createDefault("")
+
     init {
         toursDao.getTours()
                 .map { list ->
                     val viewModelList = ArrayList<AllToursCellViewModel>()
-                    list.forEach{ tour ->
+                    list.forEach { tour ->
                         viewModelList.add(AllToursCellViewModel(tour))
                     }
                     return@map viewModelList
@@ -35,8 +40,19 @@ class AllToursViewModel @Inject constructor(generalInfoDao: GeneralInfoDao,
 
         generalInfoDao
                 .getGeneralInfo()
-                .map {
-                    it.seeAllToursIntro
+                .map { generalObject ->
+                    languageSelector.selectFrom(generalObject.allTranslations()).seeAllToursIntro
+                }.bindTo(intro)
+                .disposedBy(disposeBag)
+
+        /**
+         * Subscribe to locale change event.
+         */
+        languageSelector
+                .currentLanguage
+                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+                .map { (_, generalObject) ->
+                    languageSelector.selectFrom(generalObject.allTranslations()).seeAllToursIntro
                 }.bindTo(intro)
                 .disposedBy(disposeBag)
     }
@@ -46,7 +62,7 @@ class AllToursViewModel @Inject constructor(generalInfoDao: GeneralInfoDao,
     }
 }
 
-class AllToursCellViewModel(val tour : ArticTour) : BaseViewModel() {
+class AllToursCellViewModel(val tour: ArticTour) : BaseViewModel() {
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
     val tourStops: Subject<String> = BehaviorSubject.createDefault("${tour.tourStops.count()}")
