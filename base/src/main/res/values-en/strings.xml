@@ -24,4 +24,7 @@
     <string name="audio">Audio</string>
     <string name="looking_for_artwork">Looking for Artwork?</string>
     <string name="startTour">Start Tour</string>
+    <string name="throughDate">Through %s</string>
+    <string name="buyTickets">Buy Tickets</string>
+    <string name="showOnMap" translatable="false">Show on Map</string>
 </resources>

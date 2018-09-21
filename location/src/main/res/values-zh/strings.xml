@@ -6,4 +6,7 @@
     <string name="locationSettingsLocationDenied">禁用定位服务</string>
     <string name="locationSettingsLocationAllowed">启用定位服务</string>
     <string name="locationPromptNotNow">不是现在</string>
+    <string name="locationSettingsLocationNeverAsked">位置设置</string>
+    <string name="locationPromptOk">好的，使用我的位置</string>
+    <string name="locationSettingsLocationServiceOff">位置服務關閉</string>
 </resources>

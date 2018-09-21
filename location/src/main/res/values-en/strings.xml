@@ -8,5 +8,5 @@
     <string name="locationPromptNotNow">Now Right Now</string>
     <string name="locationPromptOk">OK, Use My Location</string>
     <string name="locationSettingsLocationServiceOff">Location Service Off</string>
-    <string name="locationSettingsLocationNeverAsked">Location Service Off</string>
+    <string name="locationSettingsLocationNeverAsked">Location Settings</string>
 </resources>

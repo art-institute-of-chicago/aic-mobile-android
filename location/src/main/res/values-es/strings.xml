@@ -5,5 +5,8 @@
     <string name="locationSettingsBody">Nos gustaría usar su ubicación para ayudarle a navegar por el museo.</string>
     <string name="locationSettingsLocationDenied">Ubicación deshabilitada</string>
     <string name="locationSettingsLocationAllowed">Ubicación habilitada</string>
-    <string name="locationPromptNotNow">No ahora</string>
+    <string name="locationPromptNotNow">No Ahora</string>
+    <string name="locationSettingsLocationNeverAsked">Ajustes de ubicación</string>
+    <string name="locationPromptOk">OK, usa mi ubicación</string>
+    <string name="locationSettingsLocationServiceOff">Servicio de ubicación desactivado</string>
 </resources>

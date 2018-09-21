@@ -9,7 +9,7 @@
     <string name="locationSettings">地点设置</string>
     <string name="supportBy">技术支持</string>
     <string name="buyTickets">购票</string>
-    <string name="versionInfo">" 版本 %1$s"</string>
+    <string name="versionInfo">版本 %1$s</string>
     <string name="signIn">登录</string>
     <string name="homeZipCode">邮编</string>
     <string name="memberId">会员账号</string>
