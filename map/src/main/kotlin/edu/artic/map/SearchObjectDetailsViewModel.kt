@@ -150,12 +150,9 @@ class AnnotationViewModel(item: String, modelDescription: String) : SearchObject
 class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector: LanguageSelector) : SearchObjectBaseViewModel() {
 
     val artworkTitle: Subject<String> = BehaviorSubject.createDefault(item.title)
+    val artistName: Subject<String> = BehaviorSubject.create()
 
-    //TODO:: update the name of author. Currently, there is no author field in [ArticObject].
-    val artistName: Subject<String> = BehaviorSubject.createDefault("Artist")
-
-    //TODO:: Localize Artworks
-    val objectType: Subject<String> = BehaviorSubject.createDefault("Artworks")
+    val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.artworks)
     private val audioFileModel = item.backingObject?.audioFile?.preferredLanguage(languageSelector)
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val hasAudio: Subject<Boolean> = BehaviorSubject.createDefault(item.backingObject != null)
@@ -171,6 +168,10 @@ class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector:
                     playBackState.audio == audioFileModel
                 }.bindTo(playState)
                 .disposedBy(disposeBag)
+
+        item.artistDisplay?.let {
+            artistName.onNext(it)
+        }
     }
 
     /**

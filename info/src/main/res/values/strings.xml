@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="become_a_member">Become a Member</string>
-    <string name="enjoy_free_year_long_admission">Enjoy free, year long admission.</string>
-    <string name="join_now">Join Now</string>
-    <string name="museum_information">Museum Information</string>
-    <string name="language_settings">Language Settings</string>
-    <string name="location_settings">Location Settings</string>
-    <string name="support_by">Support By</string>
+    <string name="becomeAMember">Become a Member</string>
+    <string name="enjoyFreeYearLongAdmission">Enjoy free, year long admission.</string>
+    <string name="joinNow">Join Now</string>
+    <string name="museumInformation">Museum Information</string>
+    <string name="languageSettings">Language Settings</string>
+    <string name="locationSettings">Location Settings</string>
+    <string name="supportBy">Support By</string>
     <string name="joinUrl" translatable="false">https://sales.artic.edu/memberships?&amp;utm_medium=mobile-app&amp;utm_source=iphone&amp;utm_campaign=join</string>
     <string name="buyTickets">Buy Tickets</string>
     <string name="museumAddress" translatable="false">111 S Michigan Ave\nChicago, IL 60603</string>
     <string name="museumPhoneNumber" translatable="false">+1 312 443 3600</string>
     <string name="callWith">Select app to call</string>
     <string name="viewMapWith">Select app to view map</string>
+.
 
     <!-- Since we heavily depend on the google maps api we are considering google map to handle the museum location search.-->
     <string name="museumGoogleMapSearchQuery" translatable="false"><![CDATA[https://www.google.com/maps/search/?api=1&query=The+Art+Institute+of+Chicago]]></string>
-    <string name="versionInfo" translatable="false">Version %1$s</string>
+    <string name="versionInfo">Version %1$s</string>
 
     <string name="signIn">Sign In</string>
-    <string name="homeZipCode">Home Zip Code</string>
+    <string name="homeZipCode">Zip Code</string>
     <string name="memberId">Member ID</string>
     <string name="changeInformation">Change Information</string>
     <string name="switchCardHolder">Switch Cardholder</string>
     <string name="memberCard">Member Card</string>
     <string name="errorDialogTitle">Error</string>
-    <string name="ok">OK</string>
+    <string name="ok" translatable="false">@android:string/ok</string>
     <string name="informationBannerSubtitle">Access your member card, see museum hours, or update your app settings.</string>
     <string name="alreadyMember">Already a Member?</string>
     <string name="whereAreYouLabel">Where are you?</string>
@@ -33,8 +34,8 @@
     <string name="english" translatable="false">English</string>
     <string name="spanish" translatable="false">Español</string>
     <string name="chinese" translatable="false">中文</string>
-    <string name="choseYourLanguage">Please Choose Your Preferred Language</string>
-    <string name="accessMemberCardLabel" translatable="false">Access Member Card</string>
-    <string name="fragment_information_label" translatable="false">fragment_information</string>
-
+    <string name="chooseYourLanguage">Please Choose Your Preferred Language</string>
+    <string name="accessMemberCardLabel">Access Member Card</string>
+    <string name="fragmentInformationLabel" translatable="false">fragment_information</string>
+    <string name="information">Information</string>
 </resources>

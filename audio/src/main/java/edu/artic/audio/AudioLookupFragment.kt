@@ -43,8 +43,9 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
     override val viewModelClass: KClass<AudioLookupViewModel>
         get() = AudioLookupViewModel::class
-    override val title: String
-        get() = ""
+
+    override val title = R.string.noTitle
+
     override val layoutResId: Int
         get() = R.layout.fragment_audio_lookup
     override val screenCategory: ScreenCategoryName

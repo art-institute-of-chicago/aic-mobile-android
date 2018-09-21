@@ -26,8 +26,7 @@ import kotlin.reflect.KClass
 class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewModel>() {
     override val viewModelClass: KClass<SearchAudioDetailViewModel>
         get() = SearchAudioDetailViewModel::class
-    override val title: String
-        get() = ""
+    override val title = R.string.noTitle
     override val layoutResId: Int
         get() = R.layout.fragment_search_audio_detail
     override val screenCategory: ScreenCategoryName?

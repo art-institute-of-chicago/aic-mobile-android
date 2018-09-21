@@ -11,12 +11,15 @@ import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -28,6 +31,8 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                                            private val toursDao: ArticTourDao,
                                            private val eventsDao: ArticEventDao,
                                            private val exhibitionDao: ArticExhibitionDao,
+                                           generalInfoDao: GeneralInfoDao,
+                                           languageSelector: LanguageSelector,
                                            val analyticsTracker: AnalyticsTracker) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -46,6 +51,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     val tours: Subject<List<WelcomeTourCellViewModel>> = BehaviorSubject.create()
     val exhibitions: Subject<List<WelcomeExhibitionCellViewModel>> = BehaviorSubject.create()
     val events: Subject<List<WelcomeEventCellViewModel>> = BehaviorSubject.create()
+    val welcomePrompt : Subject<String> = BehaviorSubject.create()
 
     init {
         shouldPeekTourSummary.distinctUntilChanged()
@@ -67,7 +73,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 .map {
                     val viewModelList = ArrayList<WelcomeExhibitionCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeExhibitionCellViewModel(it))
+                        viewModelList.add(WelcomeExhibitionCellViewModel(it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(exhibitions)
@@ -77,10 +83,28 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 .map {
                     val viewModelList = ArrayList<WelcomeEventCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeEventCellViewModel(it))
+                        viewModelList.add(WelcomeEventCellViewModel(it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(events)
+                .disposedBy(disposeBag)
+
+        generalInfoDao
+                .getGeneralInfo()
+                .map { generalObject ->
+                    languageSelector.selectFrom(generalObject.allTranslations()).homeMemberPromptText
+                }.bindTo(welcomePrompt)
+                .disposedBy(disposeBag)
+
+        /**
+         * Subscribe to locale change event.
+         */
+        languageSelector
+                .currentLanguage
+                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+                .map { (_, generalObject) ->
+                    languageSelector.selectFrom(generalObject.allTranslations()).homeMemberPromptText
+                }.bindTo(welcomePrompt)
                 .disposedBy(disposeBag)
 
 
@@ -148,22 +172,40 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
 /**
  * ViewModel responsible for building the `On View` list (i.e. list of exhibition).
  */
-class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition) : BaseViewModel() {
+class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val languageSelector: LanguageSelector) : BaseViewModel() {
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-    private val throughDateString = exhibition.endTime.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)
+    val formatter = DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER.withLocale(languageSelector.getAppLocale())
+    private val throughDateString = exhibition.endTime.format(formatter)
             .toString()
     val exhibitionDate: Subject<String> = BehaviorSubject.createDefault(throughDateString)
     val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url.orEmpty())
+
+    init {
+
+        languageSelector.currentLanguage
+                .subscribe {
+                    exhibitionDate.onNext(exhibition.endTime.format(formatter.withLocale(it)))
+                }.disposedBy(disposeBag)
+
+    }
 }
 
 /**
  * ViewModel responsible for building the tour summary list.
  */
-class WelcomeEventCellViewModel(val event: ArticEvent) : BaseViewModel() {
+class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: LanguageSelector) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
-    private val eventDate = event.startTime.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
+    val formatter = DateTimeHelper.HOME_EVENT_DATE_FORMATTER.withLocale(languageSelector.getAppLocale())
+    private val eventDate = event.startTime.format(formatter)
             .toString()
     val eventTime: Subject<String> = BehaviorSubject.createDefault(eventDate)
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
+
+    init {
+        languageSelector.currentLanguage
+                .subscribe {
+                    eventTime.onNext(event.startTime.format(formatter.withLocale(it)))
+                }.disposedBy(disposeBag)
+    }
 }

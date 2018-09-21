@@ -1,10 +1,11 @@
 package edu.artic.search
 
+import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 
-class SearchResultsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+class SearchResultsPagerAdapter(fm: FragmentManager, var context: Context) : FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         return when(position) {
@@ -27,20 +28,19 @@ class SearchResultsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter
         return 4
     }
 
-    ;
     override fun getPageTitle(position: Int): CharSequence? {
         return when(position) {
             1 -> {
-                "Artworks"
+                context.resources.getString(R.string.artworks)
             }
             2 -> {
-                "Tours"
+                context.resources.getString(R.string.tours)
             }
             3 -> {
-                "Exhibitions"
+                context.resources.getString(R.string.exhibitions)
             }
             else -> {
-                "Suggested"
+                context.resources.getString(R.string.suggested)
             }
         }
     }

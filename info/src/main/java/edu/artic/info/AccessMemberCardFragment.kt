@@ -36,7 +36,7 @@ import kotlin.reflect.KClass
  */
 class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel>() {
     override val viewModelClass: KClass<AccessMemberCardViewModel> = AccessMemberCardViewModel::class
-    override val title: String = "Access Member Card"
+    override val title = R.string.accessMemberCardLabel
     override val layoutResId: Int = R.layout.fragment_validate_member_information
     override val screenCategory: ScreenCategoryName? = null
 
@@ -44,7 +44,6 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
 
     override fun setupBindings(viewModel: AccessMemberCardViewModel) {
         super.setupBindings(viewModel)
-
         viewModel.isValid
                 .subscribeBy {
                     signIn.isEnabled = it
@@ -99,7 +98,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                         AccessMemberCardViewModel.DisplayMode.DisplayForm -> {
                             memberInfoFormLayout.visibility = View.VISIBLE
                             memberAccessCardLayout.visibility = View.GONE
-                            requireActivity().setTitle(R.string.accessMemberCard)
+                            requireActivity().setTitle(R.string.accessMemberCardLabel)
                         }
                         is AccessMemberCardViewModel.DisplayMode.DisplayAccessCard -> {
                             memberInfoFormLayout.visibility = View.GONE
@@ -110,7 +109,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                         is AccessMemberCardViewModel.DisplayMode.UpdateForm -> {
                             memberInfoFormLayout.visibility = View.VISIBLE
                             memberAccessCardLayout.visibility = View.GONE
-                            requireActivity().setTitle(R.string.accessMemberCard)
+                            requireActivity().setTitle(R.string.accessMemberCardLabel)
                             zipCode.setText(it.zipCode)
                             memberId.setText(it.memberID)
                         }

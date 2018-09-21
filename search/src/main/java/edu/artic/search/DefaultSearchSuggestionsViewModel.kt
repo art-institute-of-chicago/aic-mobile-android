@@ -62,9 +62,9 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
         { artworks, keywords ->
             mutableListOf<SearchBaseCellViewModel>()
                     .apply {
-                        add(0, SearchTextHeaderViewModel("Suggested")) //TODO: use localizer
+                        add(0, SearchTextHeaderViewModel(R.string.suggested))
                         addAll(keywords)
-                        add(SearchTextHeaderViewModel("On the Map"))
+                        add(SearchTextHeaderViewModel(R.string.on_the_map))
                         addAll(getAmenitiesViewModels())
                         add(RowPaddingViewModel())
                         addAll(artworks)

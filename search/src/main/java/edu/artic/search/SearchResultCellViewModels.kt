@@ -1,6 +1,7 @@
 package edu.artic.search
 
 import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject
@@ -39,15 +40,15 @@ class SearchTextCellViewModel(
 class SearchEmptyCellViewModel : SearchBaseCellViewModel()
 
 class SearchHeaderCellViewModel(private val header: Header, private val parentViewModel: SearchBaseViewModel) : SearchBaseCellViewModel() {
-    val text: Subject<String> = BehaviorSubject.createDefault(header.title)
+    val text: Subject<Int> = BehaviorSubject.createDefault(header.title)
 
     fun onClickSeeAll() {
         parentViewModel.onClickSeeAll(header)
     }
 }
 
-class SearchTextHeaderViewModel(text: String) : SearchBaseCellViewModel() {
-    val text: Subject<String> = BehaviorSubject.createDefault(text)
+class SearchTextHeaderViewModel(@StringRes text: Int) : SearchBaseCellViewModel() {
+    val text: Subject<Int> = BehaviorSubject.createDefault(text)
 }
 
 open class SearchBaseListItemViewModel(isHeadphonesVisible: Boolean = false)
@@ -109,8 +110,8 @@ class SearchAmenitiesCellViewModel(@DrawableRes val value: Int, val type: Sugges
 class RowPaddingViewModel : SearchBaseCellViewModel()
 
 
-sealed class Header(val title : String) {
-    class Artworks(title: String = "Artwork") : Header(title)
-    class Tours(title: String = "Tours") : Header(title)
-    class Exhibitions(title: String = "Exhibitions") : Header(title)
+sealed class Header(@StringRes val title : Int) {
+    class Artworks(title: Int = R.string.artworks) : Header(title)
+    class Tours(title: Int = R.string.tours) : Header(title)
+    class Exhibitions(title: Int = R.string.exhibitions) : Header(title)
 }

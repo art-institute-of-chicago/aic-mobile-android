@@ -25,7 +25,7 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
 
     override val viewModelClass: KClass<MuseumInformationViewModel> = MuseumInformationViewModel::class
 
-    override val title: String = "Museum Information"
+    override val title = R.string.museumInformation
 
     override val layoutResId: Int = R.layout.fragment_museum_information
 
@@ -61,6 +61,8 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
                 .subscribe {
                     viewModel.onBuyTicketClicked()
                 }.disposedBy(disposeBag)
+
+        requireActivity().title = resources.getString(R.string.museumInformation)
 
     }
 

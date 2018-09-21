@@ -5,6 +5,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.getIntroStop
+import edu.artic.details.R
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.viewmodel.BaseViewModel
@@ -28,7 +29,7 @@ class TourDetailsViewModel @Inject constructor(
     val stopsText: Subject<String> = BehaviorSubject.create()
     val timeText: Subject<String> = BehaviorSubject.create()
     val availableTranslations: Subject<List<SpecifiesLanguage>> = BehaviorSubject.create()
-    val startTourButtonText: Subject<String> = BehaviorSubject.createDefault("Start Tour")
+    val startTourButtonText: Subject<Int> = BehaviorSubject.createDefault(R.string.startTour)
     val description: Subject<String> = BehaviorSubject.create()
     val intro: Subject<String> = BehaviorSubject.create()
     val stops: Subject<List<TourDetailsStopCellViewModel>> = BehaviorSubject.create()
@@ -70,9 +71,9 @@ class TourDetailsViewModel @Inject constructor(
                 .bindTo(availableTranslations)
                 .disposedBy(disposeBag)
 
-        //TODO: replace Stops with localized string when localizer is created
+
         tourObservable
-                .map { "${it.tourStops.count()} Stops" }
+                .map { "${it.tourStops.count()}" }
                 .bindTo(stopsText)
                 .disposedBy(disposeBag)
 

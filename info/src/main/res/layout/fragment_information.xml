@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/become_a_member"
+                android:text="@string/becomeAMember"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/enjoy_free_year_long_admission"
+                android:text="@string/enjoyFreeYearLongAdmission"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dividerBelowBecomeMember" />
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/join_now"
+                android:text="@string/joinNow"
                 android:textColor="@color/brownish_orange"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -92,7 +92,7 @@
                 android:layout_marginTop="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:background="@color/brownishOrange"
-                android:text="@string/accessMemberCard"
+                android:text="@string/accessMemberCardLabel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/alreadyAMember" />
@@ -115,7 +115,7 @@
                 android:paddingBottom="@dimen/marginStandard"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/museum_information"
+                android:text="@string/museumInformation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dividerBelowAccessMemberCard" />
@@ -138,7 +138,7 @@
                 android:layout_marginTop="@dimen/marginDouble"
                 android:paddingTop="@dimen/marginStandard"
                 android:paddingBottom="@dimen/marginStandard"
-                android:text="@string/language_settings"
+                android:text="@string/languageSettings"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dividerBelowMuseumInformation" />
@@ -161,7 +161,7 @@
                 android:paddingBottom="@dimen/marginStandard"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/location_settings"
+                android:text="@string/locationSettings"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dividerBelowLanguageSettings" />
@@ -192,7 +192,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/marginDouble"
                     android:layout_marginTop="70dp"
-                    android:text="@string/support_by"
+                    android:text="@string/supportBy"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

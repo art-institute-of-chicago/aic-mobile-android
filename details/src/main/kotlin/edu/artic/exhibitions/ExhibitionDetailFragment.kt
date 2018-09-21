@@ -8,6 +8,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
+import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.db.models.ArticExhibition
@@ -35,8 +36,8 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
         get() = ExhibitionDetailViewModel::class
     override val layoutResId: Int
         get() = R.layout.fragment_exhibition_details
-    override val title: String
-        get() = ""
+
+    override val title = R.string.noTitle
 
     override fun hasTransparentStatusBar() = true
 
@@ -69,15 +70,16 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .disposedBy(disposeBag)
 
         viewModel.throughDate
+                .map { getString(R.string.throughDate, it) }
                 .bindToMain(throughDate.text())
                 .disposedBy(disposeBag)
 
         viewModel.showOnMapButtonText
-                .bindToMain(showOnMap.text())
+                .bindToMain(showOnMap.textRes())
                 .disposedBy(disposeBag)
 
         viewModel.buyTicketsButtonText
-                .bindToMain(buyTickets.text())
+                .bindToMain(buyTickets.textRes())
                 .disposedBy(disposeBag)
 
         viewModel.location

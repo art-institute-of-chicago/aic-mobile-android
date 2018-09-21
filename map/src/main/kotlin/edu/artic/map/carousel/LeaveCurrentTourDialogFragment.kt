@@ -23,8 +23,7 @@ class LeaveCurrentTourDialogFragment : BaseFragment() {
         callback = listener
     }
 
-    override val title: String
-        get() = ""
+    override val title = R.string.noTitle
 
     override val screenCategory: ScreenCategoryName?
         get() = null

@@ -8,6 +8,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
+import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.media.audio.AudioPlayerService
@@ -78,7 +79,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                         .disposedBy(item.viewDisposeBag)
 
                 item.objectType
-                        .bindToMain(objectType.text())
+                        .bindToMain(objectType.textRes())
                         .disposedBy(item.viewDisposeBag)
 
                 playCurrent.clicks()

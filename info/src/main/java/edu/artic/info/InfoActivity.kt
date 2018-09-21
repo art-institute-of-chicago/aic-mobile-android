@@ -68,7 +68,7 @@ class InfoActivity : BaseActivity() {
                      * If the active fragment is not the start_destination navController can't find
                      * accessMemberCardLabel.
                      */
-                    if (currentDestination != resources.getString(R.string.fragment_information_label)) {
+                    if (currentDestination != resources.getString(R.string.fragmentInformationLabel)) {
                         navController?.navigateUp()
                     }
 

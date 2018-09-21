@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 
 class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContainerViewModel>() {
     override val viewModelClass: KClass<SearchResultsContainerViewModel> = SearchResultsContainerViewModel::class
-    override val title: String = ""
+    override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_search_results
     override val screenCategory: ScreenCategoryName? = ScreenCategoryName.Search
 
@@ -25,7 +25,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
         super.onViewCreated(view, savedInstanceState)
 
         tabStrip.setupWithViewPager(viewPager)
-        val adapter = SearchResultsPagerAdapter(childFragmentManager)
+        val adapter = SearchResultsPagerAdapter(childFragmentManager, requireContext())
         viewPager.apply {
             this.adapter = adapter
             this.currentItem = 0
