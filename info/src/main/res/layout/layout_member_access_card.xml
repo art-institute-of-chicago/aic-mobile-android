@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginQuad"
         android:layout_marginTop="@dimen/marginDouble"
-        android:text="@string/become_a_member"
+        android:text="@string/becomeAMember"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"

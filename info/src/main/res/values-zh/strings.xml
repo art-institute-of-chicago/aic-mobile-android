@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="chooseYourLanguage">请选择您的首选语言</string>
-    <string name="language_settings">语言设置</string>
-    <string name="become_a_member">成为会员</string>
-    <string name="enjoy_free_year_long_admission">享受免费的年票。</string>
-    <string name="join_now">现在加入</string>
-    <string name="museum_information">博物馆信息</string>
-    <string name="location_settings">地点设置</string>
-    <string name="support_by">技术支持</string>
+    <string name="languageSettings">语言设置</string>
+    <string name="becomeAMember">成为会员</string>
+    <string name="enjoyFreeYearLongAdmission">享受免费的年票。</string>
+    <string name="joinNow">现在加入</string>
+    <string name="museumInformation">博物馆信息</string>
+    <string name="locationSettings">地点设置</string>
+    <string name="supportBy">技术支持</string>
     <string name="buyTickets">购票</string>
     <string name="versionInfo">" 版本 %1$s"</string>
     <string name="signIn">登录</string>
