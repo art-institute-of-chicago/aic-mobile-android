@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SplashTheme" parent="AppTheme.CustomToolbar">
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:windowBackground">@drawable/splash_gradient</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
+</resources>
