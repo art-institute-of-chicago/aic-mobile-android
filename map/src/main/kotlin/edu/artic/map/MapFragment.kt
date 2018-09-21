@@ -306,10 +306,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .filter { floor -> floor.number in 0..3 }
                 .withLatestFrom(viewModel.currentMap.filterValue())
                 .subscribeBy { (floor, map) ->
-                    tileOverlay?.remove()
-                    tileOverlay = map.addTileOverlay(TileOverlayOptions()
+
+                    // We want to add the new `TileOverlay` before removing the old one
+                    val nextFloorPlan = map.addTileOverlay(TileOverlayOptions()
                             .zIndex(0.2f)
                             .tileProvider(GlideMapTileProvider(requireContext(), floor)))
+
+                    tileOverlay?.remove()
+                    tileOverlay = nextFloorPlan
                 }
                 .disposedBy(disposeBag)
 
