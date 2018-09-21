@@ -1,20 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:background="@drawable/splash_gradient"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_height="118dp"
+        tools:layout_width="118dp" />
+
+
+    <TextView
+        android:id="@+id/welcome"
+        style="@style/CardTitleLargeBlack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/ideal_sans_medium"
+        android:gravity="center"
+        android:maxLines="6"
+        android:text="@string/welcome"
+        android:textColor="@color/white"
+        android:textSize="43sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="170dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/marginTriple"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/welcome" />
 
     <TextView
         android:id="@+id/percentText"
         style="@style/CardTitleLargeBlack"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginTriple"
         android:gravity="center"
         android:maxLines="6"
-        tools:text="100%"
-        />
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        tools:text="100%" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/supportedBy"
+        style="@style/MetadataSmallWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginTriple"
+        android:layout_marginBottom="@dimen/marginStandard"
+        android:gravity="center"
+        android:maxLines="6"
+        android:text="Supported by"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/bloomBergLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText" />
+
+
+    <ImageView
+        android:id="@+id/bloomBergLogo"
+        android:layout_width="136dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginBottom="@dimen/marginDouble"
+        android:background="@drawable/bloomberg_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
