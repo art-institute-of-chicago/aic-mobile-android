@@ -25,3 +25,18 @@ interface MemberDataProvider {
      */
     fun getMemberData(memberID: String, zipCode: String): Observable<SOAPMemberInfoResponse>
 }
+
+/**
+ * One of the two bundled implementations of [MemberDataProvider]. The other is
+ * [RetrofitMemberDataProvider].
+ *
+ * Returns [MemberDataForbiddenException] to everything that tries to subscribe
+ * to [getMemberData].
+ */
+object NoContentMemberDataProvider: MemberDataProvider {
+    override fun getMemberData(memberID: String, zipCode: String): Observable<SOAPMemberInfoResponse> {
+        return Observable.error {
+            MemberDataForbiddenException
+        }
+    }
+}
