@@ -38,5 +38,4 @@
     <string name="accessMemberCardLabel">Access Member Card</string>
     <string name="fragmentInformationLabel" translatable="false">fragment_information</string>
     <string name="information">Information</string>
-
 </resources>

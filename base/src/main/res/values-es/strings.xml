@@ -24,4 +24,7 @@
     <string name="audio">Audio</string>
     <string name="looking_for_artwork">Buscando obras de arte?</string>
     <string name="startTour">Comenzar visita</string>
+    <string name="throughDate">Hasta %s</string>
+    <string name="showOnMap">Ver mapa</string>
+    <string name="buyTickets">Comprar boletos</string>
 </resources>
