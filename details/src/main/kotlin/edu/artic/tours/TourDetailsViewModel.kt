@@ -71,7 +71,7 @@ class TourDetailsViewModel @Inject constructor(
                 .bindTo(availableTranslations)
                 .disposedBy(disposeBag)
 
-        //TODO: replace Stops with localized string when localizer is created
+
         tourObservable
                 .map { "${it.tourStops.count()}" }
                 .bindTo(stopsText)

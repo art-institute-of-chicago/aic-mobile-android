@@ -13,6 +13,7 @@
     <string name="museumPhoneNumber" translatable="false">+1 312 443 3600</string>
     <string name="callWith">Select app to call</string>
     <string name="viewMapWith">Select app to view map</string>
+.
 
     <!-- Since we heavily depend on the google maps api we are considering google map to handle the museum location search.-->
     <string name="museumGoogleMapSearchQuery" translatable="false"><![CDATA[https://www.google.com/maps/search/?api=1&query=The+Art+Institute+of+Chicago]]></string>

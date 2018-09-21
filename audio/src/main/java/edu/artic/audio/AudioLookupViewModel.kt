@@ -119,13 +119,6 @@ class AudioLookupViewModel @Inject constructor(
                 .bindToMain(lookupFailures)
                 .disposedBy(disposeBag)
 
-
-        generalInfoDao.getGeneralInfo()
-                .map {
-                    languageSelector.selectFrom(it.allTranslations())
-                }.bindTo(chosenInfo)
-                .disposedBy(disposeBag)
-
         generalInfoDao
                 .getGeneralInfo()
                 .map { generalObject ->
