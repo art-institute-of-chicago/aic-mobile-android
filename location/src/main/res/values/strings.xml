@@ -7,6 +7,6 @@
     <string name="locationSettingsLocationNeverAsked">Location Settings</string>
     <string name="locationSettingsLocationAllowed">Location Enabled</string>
     <string name="locationSettingsLocationDenied">Location Disabled</string>
-    <string name="locationPromptNotNow">Now Right Now</string>
+    <string name="locationPromptNotNow">Not Right Now</string>
     <string name="locationPromptOk">OK, Use My Location</string>
 </resources>

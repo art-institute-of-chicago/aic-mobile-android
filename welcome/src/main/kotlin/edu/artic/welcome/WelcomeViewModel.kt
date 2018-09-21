@@ -11,12 +11,15 @@ import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -28,6 +31,8 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                                            private val toursDao: ArticTourDao,
                                            private val eventsDao: ArticEventDao,
                                            private val exhibitionDao: ArticExhibitionDao,
+                                           generalInfoDao: GeneralInfoDao,
+                                           languageSelector: LanguageSelector,
                                            val analyticsTracker: AnalyticsTracker) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -46,6 +51,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     val tours: Subject<List<WelcomeTourCellViewModel>> = BehaviorSubject.create()
     val exhibitions: Subject<List<WelcomeExhibitionCellViewModel>> = BehaviorSubject.create()
     val events: Subject<List<WelcomeEventCellViewModel>> = BehaviorSubject.create()
+    val welcomePrompt : Subject<String> = BehaviorSubject.create()
 
     init {
         shouldPeekTourSummary.distinctUntilChanged()
@@ -81,6 +87,24 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                     }
                     return@map viewModelList
                 }.bindTo(events)
+                .disposedBy(disposeBag)
+
+        generalInfoDao
+                .getGeneralInfo()
+                .map { generalObject ->
+                    languageSelector.selectFrom(generalObject.allTranslations()).homeMemberPromptText
+                }.bindTo(welcomePrompt)
+                .disposedBy(disposeBag)
+
+        /**
+         * Subscribe to locale change event.
+         */
+        languageSelector
+                .currentLanguage
+                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+                .map { (_, generalObject) ->
+                    languageSelector.selectFrom(generalObject.allTranslations()).homeMemberPromptText
+                }.bindTo(welcomePrompt)
                 .disposedBy(disposeBag)
 
 

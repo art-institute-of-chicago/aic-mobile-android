@@ -10,6 +10,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
@@ -94,6 +95,9 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     viewModel.onAcessMemberCardClickEvent()
                 }.disposedBy(disposeBag)
 
+        viewModel.welcomePrompt
+                .bindToMain(welcomeMessage.text())
+                .disposedBy(disposeBag)
     }
 
     override fun setupBindings(viewModel: WelcomeViewModel) {
