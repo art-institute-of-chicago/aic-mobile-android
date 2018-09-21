@@ -20,6 +20,7 @@ import edu.artic.map.helpers.toLatLng
 import io.reactivex.Flowable
 import io.reactivex.Observable
 
+internal const val ALPHA_INVISIBLE = 0.0f
 internal const val ALPHA_DIMMED = 0.6f
 internal const val ALPHA_VISIBLE = 1.0f
 
