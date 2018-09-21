@@ -323,7 +323,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         /**
          * Center the full object marker in the map.
-         * When we are in [DisplayMode.Tour] and if the item is being centered, always reset the zoom level to MapZoomLevel.Three
+         *
+         * When we are in [MapDisplayMode.Tour] and the item is being centered, we always
+         * need to reset the zoom level to [ZOOM_INDIVIDUAL] - we subscribe to
+         * [MapViewModel.selectedTourStopMarkerId] here to detect that scenario.
+         *
+         * Other [MapDisplayMode]s share the [MapViewModel.selectedArticObject] field, so
+         * a single subscription on [MapViewModel.boundsOfInterestChanged] higher-up in
+         * this function handles all that.
          */
         viewModel
                 .selectedTourStopMarkerId
