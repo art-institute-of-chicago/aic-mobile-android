@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gallery">Galería %s</string>
+    <string name="artworks">Obras de arte</string>
+    <string name="couldnt_find_top_text">Lo sentimos, no encontramos resultados</string>
+    <string name="couldnt_find_bottom_text">Para obtener ayuda, visite al representante del museo más cercano o [visite nuestro sitio web].</string>
+    <string name="exhibitions">Exhibiciones</string>
+</resources>

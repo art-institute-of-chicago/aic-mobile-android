@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chooseYourLanguage">请选择您的首选语言</string>
+    <string name="languageSettings">语言设置</string>
+    <string name="becomeAMember">成为会员</string>
+    <string name="enjoyFreeYearLongAdmission">享受免费的年票。</string>
+    <string name="joinNow">现在加入</string>
+    <string name="museumInformation">博物馆信息</string>
+    <string name="locationSettings">地点设置</string>
+    <string name="supportBy">技术支持</string>
+    <string name="buyTickets">购票</string>
+    <string name="versionInfo">版本 %1$s</string>
+    <string name="signIn">登录</string>
+    <string name="homeZipCode">邮编</string>
+    <string name="memberId">会员账号</string>
+    <string name="changeInformation">更改信息</string>
+    <string name="switchCardHolder">交换持卡人</string>
+    <string name="memberCard">会员卡</string>
+    <string name="informationBannerSubtitle">访问您的会员卡，查看博物馆开放时间，或更新应用程序设置。</string>
+    <string name="alreadyMember">已经是会员？</string>
+    <string name="whereAreYouLabel">您在哪里？</string>
+    <string name="languageSettingsBody">某些内容可能不提供您所选择的语言版本。</string>
+    <string name="accessMemberCardLabel">访问会员卡</string>
+    <string name="information">信息</string>
+</resources>

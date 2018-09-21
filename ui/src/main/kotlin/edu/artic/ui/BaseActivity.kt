@@ -12,12 +12,14 @@ import android.view.MenuItem
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.disposedBy
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.primaryLocale
+import java.util.*
 import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -42,7 +44,11 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (useInjection) {
             AndroidInjection.inject(this)
-            ensureConfigIncludesAppLocale()
+            languageSelector.currentLanguage
+                    .subscribe {
+                        ensureConfigIncludesAppLocale()
+                        recreate()
+                    }.disposedBy(disposeBag)
         }
         super.onCreate(savedInstanceState)
         if (layoutResId != 0) {
@@ -50,15 +56,21 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (useInjection) {
+            ensureConfigIncludesAppLocale()
+        }
+    }
+
     @Suppress("DEPRECATION")
     @UiThread
-    private fun ensureConfigIncludesAppLocale() {
+    fun ensureConfigIncludesAppLocale() {
         val appLocale = languageSelector.getAppLocale()
         if (appLocale != resources.configuration.primaryLocale) {
             resources.updateConfiguration(Configuration().apply {
                 primaryLocale = appLocale
             }, resources.displayMetrics)
-            recreate()
         }
     }
 

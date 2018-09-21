@@ -26,8 +26,8 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
         get() = EventDetailViewModel::class
     override val layoutResId: Int
         get() = R.layout.fragment_event_details
-    override val title: String
-        get() = ""
+
+    override val title = R.string.noTitle
 
     private val event by lazy { arguments!!.getParcelable<ArticEvent>(ARG_EVENT) }
 
@@ -72,6 +72,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.throughDate
+                .map { getString(R.string.throughDate, it) }
                 .bindToMain(throughDate.text())
                 .disposedBy(disposeBag)
 

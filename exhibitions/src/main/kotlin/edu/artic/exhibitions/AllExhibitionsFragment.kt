@@ -25,8 +25,8 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
         get() = AllExhibitionsViewModel::class
     override val layoutResId: Int
         get() = R.layout.fragment_all_exhibitions
-    override val title: String
-        get() = "On View" // TODO: add to strings or figure out language stuff
+
+    override val title = R.string.onView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

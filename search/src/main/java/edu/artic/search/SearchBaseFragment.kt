@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_search_results_sub.*
 import java.util.concurrent.TimeUnit
 
 abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
-    override val title: String = ""
+    override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_search_results_sub
     override val screenCategory: ScreenCategoryName? = null
 

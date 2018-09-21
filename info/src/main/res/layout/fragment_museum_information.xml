@@ -60,7 +60,7 @@
                     android:layout_marginStart="@dimen/marginDouble"
                     android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginEnd="@dimen/marginDouble"
-                    android:text="@string/museum_information"
+                    android:text="@string/museumInformation"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

@@ -8,13 +8,16 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.models.ArticEvent
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker)
+class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker,
+                                               languageSelector: LanguageSelector)
     : NavViewViewModel<EventDetailViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -71,7 +74,24 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         eventObservable
-                .map { "Through ${it.endTime.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
+                .map { event ->
+                    val formatter = DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER
+                            .withLocale(languageSelector.getAppLocale())
+                    event.endTime.format(formatter)
+                }
+                .bindTo(throughDate)
+                .disposedBy(disposeBag)
+
+        /**
+         * Listen for language changes.
+         */
+        languageSelector.currentLanguage
+                .withLatestFrom(eventObservable)
+                .map { (locale, event) ->
+                    val formatter = DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER
+                            .withLocale(locale)
+                    event.endTime.format(formatter)
+                }
                 .bindTo(throughDate)
                 .disposedBy(disposeBag)
 

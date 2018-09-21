@@ -11,6 +11,7 @@ import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
+import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
@@ -35,8 +36,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         get() = TourDetailsViewModel::class
     override val layoutResId: Int
         get() = R.layout.fragment_tour_details
-    override val title: String
-        get() = ""
+
+    override val title = R.string.noTitle
 
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.TourDetails
@@ -95,18 +96,23 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.stopsText
+                .map { resources.getString(R.string.stops, it) }
                 .bindToMain(tourStops.text())
                 .disposedBy(disposeBag)
+
         viewModel.timeText
                 .bindToMain(tourTime.text())
                 .disposedBy(disposeBag)
+
         viewModel.startTourButtonText
-                .bindToMain(startTourButtonText.text())
+                .bindToMain(startTourButtonText.textRes())
                 .disposedBy(disposeBag)
+
         viewModel.description
                 .map { it.fromHtml() }
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)
+
         viewModel.intro
                 .map { it.fromHtml() }
                 .bindToMain(intro.text())

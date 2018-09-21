@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gallery">画廊 %s</string>
+    <string name="artworks">艺术作品</string>
+    <string name="couldnt_find_top_text">抱歉，我们无法找到。</string>
+    <string name="couldnt_find_bottom_text">如需帮助，请咨询最近的博物馆人员或[访问我们的网站]。</string>
+    <string name="exhibitions">展览</string>
+</resources>

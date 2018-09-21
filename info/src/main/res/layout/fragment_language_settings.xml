@@ -54,7 +54,7 @@
                 android:layout_marginTop="@dimen/marginTriple"
                 android:paddingStart="@dimen/marginDouble"
                 android:paddingEnd="@dimen/marginDouble"
-                android:text="@string/choseYourLanguage"
+                android:text="@string/chooseYourLanguage"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

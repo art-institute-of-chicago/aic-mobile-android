@@ -33,8 +33,7 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
     override val viewModelClass: KClass<SearchObjectDetailsViewModel>
         get() = SearchObjectDetailsViewModel::class
 
-    override val title: String
-        get() = "Artworks"
+    override val title = R.string.artworks
 
     override val layoutResId: Int
         get() = R.layout.fragment_search_object_details

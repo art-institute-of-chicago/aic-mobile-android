@@ -19,6 +19,7 @@ import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -118,10 +119,21 @@ class AudioLookupViewModel @Inject constructor(
                 .bindToMain(lookupFailures)
                 .disposedBy(disposeBag)
 
+        generalInfoDao
+                .getGeneralInfo()
+                .map { generalObject ->
+                    languageSelector.selectFrom(generalObject.allTranslations())
+                }.bindTo(chosenInfo)
+                .disposedBy(disposeBag)
 
-        generalInfoDao.getGeneralInfo()
-                .map {
-                    languageSelector.selectFrom(it.allTranslations())
+        /**
+         * Subscribe to locale change event.
+         */
+        languageSelector
+                .currentLanguage
+                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+                .map { (_, generalObject) ->
+                    languageSelector.selectFrom(generalObject.allTranslations())
                 }.bindTo(chosenInfo)
                 .disposedBy(disposeBag)
     }

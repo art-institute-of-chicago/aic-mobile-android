@@ -26,8 +26,7 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override val viewModelClass: KClass<MapObjectDetailsViewModel>
         get() = MapObjectDetailsViewModel::class
 
-    override val title: String
-        get() = ""
+    override val title = R.string.noTitle
 
     override val layoutResId: Int
         get() = R.layout.fragment_map_object_details

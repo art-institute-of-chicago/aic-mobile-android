@@ -9,16 +9,21 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticExhibition
+import edu.artic.details.R
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 class ExhibitionDetailViewModel
 @Inject
-constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTracker)
-    : NavViewViewModel<ExhibitionDetailViewModel.NavigationEndpoint>() {
+constructor(dataObjectDao: ArticDataObjectDao,
+            val analyticsTracker: AnalyticsTracker,
+            languageSelector: LanguageSelector
+) : NavViewViewModel<ExhibitionDetailViewModel.NavigationEndpoint>() {
     sealed class NavigationEndpoint {
         class ShowOnMap(val exhibition: ArticExhibition) : NavigationEndpoint()
         class BuyTickets(val url: String) : NavigationEndpoint()
@@ -27,8 +32,8 @@ constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTr
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val title: Subject<String> = BehaviorSubject.createDefault("test")
     val metaData: Subject<String> = BehaviorSubject.createDefault("")
-    val showOnMapButtonText: Subject<String> = BehaviorSubject.createDefault("Show on Map") // TODO: replace when special localizer is done
-    val buyTicketsButtonText: Subject<String> = BehaviorSubject.createDefault("Buy Tickets")// TODO: replace when special localizer is done
+    val showOnMapButtonText: Subject<Int> = BehaviorSubject.createDefault(R.string.showOnMap)
+    val buyTicketsButtonText: Subject<Int> = BehaviorSubject.createDefault(R.string.buyTickets)
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     /**
@@ -79,8 +84,23 @@ constructor(dataObjectDao: ArticDataObjectDao, val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         exhibitionObservable
-                .map { "Through ${it.endTime.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)}" }
+                .map { exhibition ->
+                    val formatter = DateTimeHelper
+                            .HOME_EXHIBITION_DATE_FORMATTER
+                            .withLocale(languageSelector.getAppLocale())
+                    exhibition.endTime.format(formatter)
+                }
                 .bindTo(throughDate)
+                .disposedBy(disposeBag)
+
+        languageSelector.currentLanguage
+                .withLatestFrom(exhibitionObservable)
+                .map { (locale, exhibition) ->
+                    exhibition.endTime.format(DateTimeHelper
+                            .HOME_EXHIBITION_DATE_FORMATTER
+                            .withLocale(locale)
+                    )
+                }.bindTo(throughDate)
                 .disposedBy(disposeBag)
     }
 
