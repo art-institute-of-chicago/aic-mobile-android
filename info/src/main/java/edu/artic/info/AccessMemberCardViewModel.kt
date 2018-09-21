@@ -31,7 +31,7 @@ import javax.inject.Inject
  * @author Sameer Dhakal (Fuzz)
  */
 class AccessMemberCardViewModel @Inject constructor(
-        private val service: RetrofitMemberDataProvider,
+        private val service: MemberDataProvider,
         private val infoPreferencesManager: MemberInfoPreferencesManager,
         private val analyticsTracker: AnalyticsTracker
 ) : BaseViewModel() {
