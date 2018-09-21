@@ -23,7 +23,7 @@ class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewMod
 
         item.exhibitionDate
                 .subscribe {
-                    exhibitionDate.text = context.getString(R.string.through, it)
+                    exhibitionDate.text = context.getString(R.string.throughDate, it)
                 }
                 .disposedBy(item.viewDisposeBag)
 

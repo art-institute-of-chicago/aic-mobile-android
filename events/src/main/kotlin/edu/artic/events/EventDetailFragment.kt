@@ -72,6 +72,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.throughDate
+                .map { getString(R.string.throughDate, it) }
                 .bindToMain(throughDate.text())
                 .disposedBy(disposeBag)
 
