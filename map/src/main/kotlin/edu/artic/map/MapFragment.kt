@@ -31,6 +31,7 @@ import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.GlideMapTileProvider
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.rendering.MarkerMetaData
+import edu.artic.map.rendering.TRANSPARENCY_INVISIBLE
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
@@ -310,9 +311,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     // We want to add the new `TileOverlay` before removing the old one
                     val nextFloorPlan = map.addTileOverlay(TileOverlayOptions()
                             .zIndex(0.2f)
+                            .fadeIn(false)
+                            .transparency(TRANSPARENCY_INVISIBLE)
                             .tileProvider(GlideMapTileProvider(requireContext(), floor)))
 
-                    tileOverlay?.remove()
+                    nextFloorPlan.graduallyFadeIn()
+
+                    tileOverlay?.removeWithFadeOut()
                     tileOverlay = nextFloorPlan
                 }
                 .disposedBy(disposeBag)

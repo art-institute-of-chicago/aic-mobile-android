@@ -114,7 +114,8 @@ fun TileOverlay.removeWithFadeOut() {
             remove()
         }
     })
-    animator.duration = OVERLAY_FADE_DURATION
+    // Removal should be slower than addition, to minimize chances of showing the raw background
+    animator.duration = OVERLAY_FADE_DURATION * 2
     animator.start()
 }
 
