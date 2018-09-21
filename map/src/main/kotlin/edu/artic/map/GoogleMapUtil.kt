@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.Marker
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.ArticObject
 import edu.artic.map.rendering.ALPHA_INVISIBLE
+import edu.artic.map.rendering.ALPHA_VISIBLE
 
 
 /**
@@ -96,8 +97,21 @@ fun <T> Marker.tryExpectingFailure(retry: Boolean = false, action: (Marker) -> T
 }
 
 /**
+ * Fade this Marker from its current alpha/transparency value to [finalAlpha].
+ *
+ * May be paired with [removeWithFadeOut]. Always starts with
+ * [the current value][MARKER_ALPHA], so for a complete fade-in effect you should set
+ * that to [ALPHA_INVISIBLE] before calling this.
+ */
+@UiThread
+fun Marker.fadeIn(finalAlpha: Float = ALPHA_VISIBLE) {
+    val fadeIn: ObjectAnimator = ObjectAnimator.ofFloat(this, MARKER_ALPHA, alpha, finalAlpha)
+    fadeIn.start()
+}
+
+/**
  * This calls [Marker.remove] after animating the [alpha][MARKER_ALPHA] to [ALPHA_INVISIBLE] -
- * essentially, fully fading it out.
+ * essentially, fully fading it out. Counterpart to [fadeIn].
  *
  * Similar concept to [android.transition.Fade].
  */
