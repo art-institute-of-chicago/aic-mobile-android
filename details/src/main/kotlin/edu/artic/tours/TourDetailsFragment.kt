@@ -96,7 +96,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.stopsText
-                .map { resources.getString(R.string.stops, tourStops.text()) }
+                .map { resources.getString(R.string.stops, it) }
                 .bindToMain(tourStops.text())
                 .disposedBy(disposeBag)
 
