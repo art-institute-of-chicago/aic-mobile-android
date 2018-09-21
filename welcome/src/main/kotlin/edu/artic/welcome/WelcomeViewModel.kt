@@ -73,7 +73,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 .map {
                     val viewModelList = ArrayList<WelcomeExhibitionCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeExhibitionCellViewModel(it))
+                        viewModelList.add(WelcomeExhibitionCellViewModel(it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(exhibitions)
@@ -83,7 +83,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 .map {
                     val viewModelList = ArrayList<WelcomeEventCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeEventCellViewModel(it))
+                        viewModelList.add(WelcomeEventCellViewModel(it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(events)
@@ -172,22 +172,40 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
 /**
  * ViewModel responsible for building the `On View` list (i.e. list of exhibition).
  */
-class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition) : BaseViewModel() {
+class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val languageSelector: LanguageSelector) : BaseViewModel() {
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-    private val throughDateString = exhibition.endTime.format(DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER)
+    val formatter = DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER.withLocale(languageSelector.getAppLocale())
+    private val throughDateString = exhibition.endTime.format(formatter)
             .toString()
     val exhibitionDate: Subject<String> = BehaviorSubject.createDefault(throughDateString)
     val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url.orEmpty())
+
+    init {
+
+        languageSelector.currentLanguage
+                .subscribe {
+                    exhibitionDate.onNext(exhibition.endTime.format(formatter.withLocale(it)))
+                }.disposedBy(disposeBag)
+
+    }
 }
 
 /**
  * ViewModel responsible for building the tour summary list.
  */
-class WelcomeEventCellViewModel(val event: ArticEvent) : BaseViewModel() {
+class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: LanguageSelector) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
-    private val eventDate = event.startTime.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
+    val formatter = DateTimeHelper.HOME_EVENT_DATE_FORMATTER.withLocale(languageSelector.getAppLocale())
+    private val eventDate = event.startTime.format(formatter)
             .toString()
     val eventTime: Subject<String> = BehaviorSubject.createDefault(eventDate)
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
+
+    init {
+        languageSelector.currentLanguage
+                .subscribe {
+                    eventTime.onNext(event.startTime.format(formatter.withLocale(it)))
+                }.disposedBy(disposeBag)
+    }
 }
