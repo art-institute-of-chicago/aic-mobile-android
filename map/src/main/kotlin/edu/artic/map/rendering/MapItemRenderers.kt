@@ -23,6 +23,14 @@ import io.reactivex.Observable
 internal const val ALPHA_INVISIBLE = 0.0f
 internal const val ALPHA_DIMMED = 0.6f
 internal const val ALPHA_VISIBLE = 1.0f
+/**
+ * The amount of transparency needed for a `TileOverlay` to be invisible.
+ */
+internal const val TRANSPARENCY_INVISIBLE = ALPHA_VISIBLE
+/**
+ * The amount of transparency needed for a `TileOverlay` to be fully opaque.
+ */
+internal const val TRANSPARENCY_VISIBLE = ALPHA_INVISIBLE
 
 
 /**
