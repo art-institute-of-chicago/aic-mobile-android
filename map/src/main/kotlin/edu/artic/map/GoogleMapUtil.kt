@@ -47,6 +47,8 @@ val MARKER_ALPHA: Property<Marker, Float> = AlphaProperty()
 /**
  * Reference instance of [TransparencyProperty]. Use this
  * to animate [TileOverlay.setTransparency] and [TileOverlay.getTransparency].
+ *
+ * @see [TileOverlay.removeWithFadeOut]
  */
 val OVERLAY_TRANSPARENCY: Property<TileOverlay, Float> = TransparencyProperty()
 
@@ -97,6 +99,25 @@ fun LatLng.distanceTo(other: LatLng): Float {
     )
     return results[0]
 }
+
+
+/**
+ * Fade this [TileOverlay] out, then [remove] it from the map.
+ *
+ * **NB: [TRANSPARENCY_INVISIBLE] is not the same as [ALPHA_INVISIBLE].**
+ */
+@UiThread
+fun TileOverlay.removeWithFadeOut() {
+    val animator: ObjectAnimator = ObjectAnimator.ofFloat(this, OVERLAY_TRANSPARENCY, transparency, TRANSPARENCY_INVISIBLE)
+    animator.addListener(object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator?) {
+            remove()
+        }
+    })
+    animator.duration = OVERLAY_FADE_DURATION
+    animator.start()
+}
+
 
 /**
  * Google's Map API throws exceptions if a marker is used when either
