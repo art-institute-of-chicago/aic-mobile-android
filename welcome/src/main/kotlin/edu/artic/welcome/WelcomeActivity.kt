@@ -3,7 +3,6 @@ package edu.artic.welcome
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.navigation.Navigation
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.base.utils.preventReselection
 import edu.artic.navigation.NavigationSelectListener
@@ -43,8 +42,7 @@ class WelcomeActivity : BaseActivity() {
 
     override fun onBackPressed() {
         if (!isTaskRoot && supportFragmentManager.backStackEntryCount == 0) {
-            val navigationController = Navigation.findNavController(this, R.id.container)
-            if (navigationController.currentDestination?.id == R.id.welcomeFragment) {
+            if (navController.currentDestination?.id == R.id.welcomeFragment) {
                 startActivity(quitIntent(this))
                 finish()
                 return
