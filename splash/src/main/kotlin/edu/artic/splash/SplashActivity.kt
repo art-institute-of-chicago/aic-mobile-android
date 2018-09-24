@@ -1,6 +1,7 @@
 package edu.artic.splash
 
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
 import android.os.Build
@@ -19,8 +20,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlin.reflect.KClass
 
-class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.SurfaceTextureListener {
 
+class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.SurfaceTextureListener {
     private var mMediaPlayer: MediaPlayer? = null
 
     override val layoutResId: Int
@@ -75,10 +76,10 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                         is Navigate.Forward -> {
                             when (it.endpoint) {
                                 is SplashViewModel.NavigationEndpoint.Loading -> {
-                                    splashChrome.post {
-                                        splashChrome.animate().alpha(0f).start()
-                                    }
                                     mMediaPlayer!!.start()
+                                    splashChrome.postDelayed(Runnable {
+                                        splashChrome.animate().alpha(0f).start()
+                                    }, 200)
                                 }
                             }
                         }
@@ -119,13 +120,23 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
             mediaPlayer.setSurface(s)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnCompletionListener {
+                //TODO (Sameer) add language here and use Model
                 var intent = NavigationConstants.HOME.asDeepLinkIntent()
                 startActivity(intent)
                 finish()
             }
             mMediaPlayer = mediaPlayer
+            updateTextureViewSize(p1, p2)
         } catch (e: Throwable) {
             e.printStackTrace()
         }
+    }
+
+    private fun updateTextureViewSize(width: Int, height: Int) {
+        val matrix = Matrix()
+        var ratioOfScreen = height.toFloat() / width.toFloat()
+        var ratio = (16f/9f) / ratioOfScreen
+        matrix.setScale(1.0f, ratio, width/2f, height/2f)
+        textureView.setTransform(matrix)
     }
 }

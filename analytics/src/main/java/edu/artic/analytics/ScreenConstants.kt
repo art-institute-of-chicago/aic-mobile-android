@@ -11,7 +11,6 @@ package edu.artic.analytics
  */
 sealed class ScreenCategoryName(val screenName: String) {
     object Home : ScreenCategoryName("Home")
-    object None : ScreenCategoryName("")
     object AudioGuide : ScreenCategoryName("Audio Guide")
     object Map : ScreenCategoryName("Map")
     object Information : ScreenCategoryName("Information")

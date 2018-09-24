@@ -12,10 +12,10 @@
         android:id="@+id/textureView"/>
 
     <android.support.constraint.ConstraintLayout
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:id="@+id/splashChrome"
-                                                 android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/splashChrome"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/logo"
