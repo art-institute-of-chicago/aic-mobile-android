@@ -7,8 +7,10 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.Playable
 import edu.artic.db.daos.ArticAudioFileDao
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.hasObjectWithId
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
+import edu.artic.map.BuildConfig
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,6 +20,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -95,7 +98,8 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
                                     .disposedBy(element.viewDisposeBag)
 
                             list.add(element)
-                        } else {
+                        } else if (objectDao.hasObjectWithId(tourStop.objectId)) {
+
                             val element = TourCarousalStopCellViewModel(tourStop, objectDao, languageSelector)
 
                             element.playerControl
@@ -111,6 +115,11 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
                                     .disposedBy(disposeBag)
 
                             list.add(element)
+                        } else {
+                            // Objects satisfying this condition should be filtered out at data-retrieval time (c.f. AppDataManager)
+                            if (BuildConfig.DEBUG) {
+                                Timber.i("Tour stop ${tourStop.objectId} not available at this time.")
+                            }
                         }
 
                     }
@@ -190,7 +199,6 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
-    val stopNumber: Subject<String> = BehaviorSubject.createDefault("${tourStop.order + 1}.")
     val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
 
 
