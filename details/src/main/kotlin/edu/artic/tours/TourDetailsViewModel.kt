@@ -155,7 +155,6 @@ class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Arti
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
-    val stopNumber: Subject<String> = BehaviorSubject.createDefault("${tourStop.order + 1}.")
     val tourStop: Subject<ArticTour.TourStop> = BehaviorSubject.createDefault(tourStop)
 
     val articObjectObservable = objectDao.getObjectById(tourStop.objectId.toString())
