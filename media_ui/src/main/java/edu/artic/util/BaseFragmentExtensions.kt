@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHost
+import edu.artic.ui.BaseActivity
 import edu.artic.ui.BaseFragment
 
 /**
@@ -40,6 +41,9 @@ fun BaseFragment.findContainingNavController(@IdRes destOrNodeId: Int): NavContr
 
     activity?.let {
         if (it is NavHost) {
+            controllers.add(it.navController)
+        }
+        if (controllers.isEmpty() && it is BaseActivity) {
             controllers.add(it.navController)
         }
     }
