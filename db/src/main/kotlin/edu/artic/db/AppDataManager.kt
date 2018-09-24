@@ -194,7 +194,15 @@ class AppDataManager @Inject constructor(
                                             }
                                         }
                                         // Filter out stops without known objectIds (so-called 'ghost' stops)
-                                        tour.tourStops.filter { objectDao.hasObjectWithId(it.objectId) }
+                                        val iterator = tour.tourStops.iterator()
+                                        while (iterator.hasNext()) {
+                                            val tourStop = iterator.next()
+                                            if (objectDao.hasObjectWithId(tourStop.objectId)) {
+                                                continue
+                                            } else {
+                                                iterator.remove()
+                                            }
+                                        }
                                     }
 
                                 }
