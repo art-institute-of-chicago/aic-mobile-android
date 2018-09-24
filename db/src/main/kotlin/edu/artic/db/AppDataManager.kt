@@ -187,10 +187,14 @@ class AppDataManager @Inject constructor(
                                 tourDao.clear()
                                 tours.forEach { tour ->
                                     // assign the first stop's floor to tour if tour's floor is invalid
-                                    if (tour.floorAsInt == INVALID_FLOOR && tour.tourStops.isNotEmpty()) {
-                                        tour.tourStops.first().objectId?.let { firstTourStopId ->
-                                            tour.floor = objects?.get(firstTourStopId)?.floor ?: INVALID_FLOOR
+                                    if (tour.tourStops.isNotEmpty()) {
+                                        if (tour.floorAsInt == INVALID_FLOOR) {
+                                            tour.tourStops.first().objectId?.let { firstTourStopId ->
+                                                tour.floor = objects?.get(firstTourStopId)?.floor ?: INVALID_FLOOR
+                                            }
                                         }
+                                        // Filter out stops without known objectIds (so-called 'ghost' stops)
+                                        tour.tourStops.filter { objectDao.hasObjectWithId(it.objectId) }
                                     }
 
                                 }
