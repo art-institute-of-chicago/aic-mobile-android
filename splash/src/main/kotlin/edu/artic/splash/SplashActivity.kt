@@ -1,8 +1,12 @@
 package edu.artic.splash
 
 import android.graphics.Color
+import android.graphics.SurfaceTexture
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.view.Surface
+import android.view.TextureView
 import android.view.View
 import android.view.WindowManager
 import com.fuzz.rx.disposedBy
@@ -15,7 +19,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlin.reflect.KClass
 
-class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
+class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.SurfaceTextureListener {
+
+    private var mMediaPlayer: MediaPlayer? = null
+
     override val layoutResId: Int
         get() = R.layout.activity_splash
 
@@ -27,6 +34,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
 
         setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
         window?.statusBarColor = Color.TRANSPARENT
+
+        textureView.surfaceTextureListener = this
 
         viewModel.percentage
                 .map {
@@ -65,10 +74,11 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
                     when (it) {
                         is Navigate.Forward -> {
                             when (it.endpoint) {
-                                is SplashViewModel.NavigationEndpoint.Welcome -> {
-                                    val intent = NavigationConstants.HOME.asDeepLinkIntent()
-                                    startActivity(intent)
-                                    finish()
+                                is SplashViewModel.NavigationEndpoint.Loading -> {
+                                    splashChrome.post {
+                                        splashChrome.animate().alpha(0f).start()
+                                    }
+                                    mMediaPlayer!!.start()
                                 }
                             }
                         }
@@ -87,5 +97,35 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>() {
     override fun onDestroy() {
         super.onDestroy()
         disposeBag.clear()
+    }
+
+    override fun onSurfaceTextureSizeChanged(p0: SurfaceTexture?, p1: Int, p2: Int) {
+    }
+
+    override fun onSurfaceTextureUpdated(p0: SurfaceTexture?) {
+    }
+
+    override fun onSurfaceTextureDestroyed(p0: SurfaceTexture?): Boolean {
+        return true
+    }
+
+    override fun onSurfaceTextureAvailable(p0: SurfaceTexture?, p1: Int, p2: Int) {
+        val s = Surface(p0)
+
+        try {
+            val afd = assets.openFd("splash.mp4")
+            val mediaPlayer = MediaPlayer()
+            mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length);
+            mediaPlayer.setSurface(s)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.setOnCompletionListener {
+                var intent = NavigationConstants.HOME.asDeepLinkIntent()
+                startActivity(intent)
+                finish()
+            }
+            mMediaPlayer = mediaPlayer
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
     }
 }
