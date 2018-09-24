@@ -77,12 +77,13 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                             /**
                              * Designs does not exist for error dialogs yet.
                              * Temporarily using [AlertDialog].
-                             * TODO:: Updated dialog once design is finalized.
+                             *
+                             * TODO:: Upgrade to DialogFragment once design is finalized.
                              */
                             AlertDialog.Builder(requireContext(), R.style.ErrorDialog)
                                     .setTitle(getString(R.string.errorDialogTitle))
                                     .setMessage(loadStatus.error.message)
-                                    .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                                    .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
                                         dialog.dismiss()
                                     }.show()
                         }
