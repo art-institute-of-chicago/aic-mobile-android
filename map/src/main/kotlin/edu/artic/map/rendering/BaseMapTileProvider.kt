@@ -64,10 +64,22 @@ abstract class BaseMapTileProvider : TileProvider {
     override fun getTile(x: Int, y: Int, zoom: Int): Tile? {
         val bounds = boundsMap[zoom] ?: throw IllegalStateException("Illegal zoom found $zoom")
         val tileLevel = (zoom - ZOOM_MIN + 2).toInt()
-        val adjustedX = x - bounds.minX - 1
-        val adjustedY = y - bounds.minY
-        Timber.d("Looking for adjusted tile from (x: $adjustedX,y: $adjustedY, z: $tileLevel)")
-        return getAdjustedTile(adjustedX, adjustedY, tileLevel)
+        val adjustedX = if(x >=  bounds.minX && x <= bounds.maxX) x - bounds.minX - 1 else -1
+        val adjustedY = if(y >= bounds.minY && y <= bounds.maxY) y - bounds.minY else -1
+
+        Timber.d("GetTile x: $x y: $y adjustedX : $adjustedX adjustedY: $adjustedY")
+
+        return getAdjustedTileWrapper(x, y, zoom, adjustedX, adjustedY, tileLevel)
+    }
+
+    protected open fun getAdjustedTileWrapper(
+            originalX: Int,
+            originalY: Int,
+            originalZoom: Int,
+            x: Int,
+            y: Int,
+            zoom: Int): Tile? {
+        return getAdjustedTile(x, y, zoom)
     }
 
     abstract fun getAdjustedTile(x: Int, y: Int, zoom: Int): Tile?
