@@ -39,7 +39,8 @@ abstract class MapItemRenderer<T>(
         /**
          * Minor optimization to register or not register the bitmap queue within a subclass.
          */
-        protected val useBitmapQueue: Boolean = false) {
+        protected val useBitmapQueue: Boolean = false
+) {
 
     protected val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
     private val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
@@ -56,7 +57,6 @@ abstract class MapItemRenderer<T>(
     lateinit var context: Context
 
     private val tempMarkers: MutableList<MarkerHolder<T>> = mutableListOf()
-    private val mapProjectionHelper = MapProjectionHelper()
 
     init {
         if (useBitmapQueue) {
@@ -124,7 +124,7 @@ abstract class MapItemRenderer<T>(
     /**
      * Use this method directly to get proper adjusted world position based on our map taking over the world.
      */
-    fun getAdjustedLocationFromItem(item: T) = mapProjectionHelper.toSmallMapLatLng(getLocationFromItem(item))
+    fun getAdjustedLocationFromItem(item: T) = getLocationFromItem(item)
 
     /**
      * Returns the item's id. Since our objects are mostly different without common interfaces, this method exists.
