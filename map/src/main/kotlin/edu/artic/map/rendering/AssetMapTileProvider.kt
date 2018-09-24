@@ -13,7 +13,7 @@ import kotlin.math.pow
 /**
  * Description:
  */
-class GlideMapTileProvider(private val context: Context,
+class AssetMapTileProvider(private val context: Context,
                            private val floor: ArticMapFloor) : BaseMapTileProvider() {
 
     override fun getAdjustedTile(x: Int, y: Int, zoom: Int): Tile? {
@@ -26,17 +26,15 @@ class GlideMapTileProvider(private val context: Context,
                 val tileNumber = (y * tileXCount + x).toInt()
                 Timber.d("Tile X Count $tileXCount with number $tileNumber")
 
-                val path = "${floor.tiles}zoom$zoom/tiles-$tileNumber.jpg"
+                val path = "floor${floor.number}/zoom$zoom/tiles-$tileNumber.jpg"
                 return try {
-                    val array = Glide.with(context)
-                            .`as`(ByteArray::class.java)
-                            .load(path)
-                            .submit(TILE_SIZE.toInt(), TILE_SIZE.toInt())
-                            .get()
+                    val array = context.assets.open(path).readBytes()
                     Tile(TILE_SIZE.toInt(),
                             TILE_SIZE.toInt(),
                             array
-                    )
+                    ).also {
+                        Timber.d("Loaded tile with path $path")
+                    }
                 } catch (e: IOException) {
                     Timber.e("Could not find tile with $path")
                     null

@@ -1,10 +1,8 @@
 package edu.artic.map.rendering
 
-import android.content.Context
-import android.graphics.Bitmap
-import com.bumptech.glide.Glide
+import android.graphics.*
 import com.google.android.gms.maps.model.Tile
-import edu.artic.db.models.ArticMapFloor
+import com.google.android.gms.maps.model.TileProvider
 import timber.log.Timber
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -13,8 +11,12 @@ import kotlin.math.pow
 /**
  * Description:
  */
-class AssetMapTileProvider(private val context: Context,
-                           private val floor: ArticMapFloor) : BaseMapTileProvider() {
+class DebugMapTileProvider : BaseMapTileProvider() {
+
+    private val paint = Paint().apply {
+        this.strokeWidth = 5.0f
+        this.color = Color.BLACK
+    }
 
     override fun getAdjustedTile(x: Int, y: Int, zoom: Int): Tile? {
         return when {
@@ -26,22 +28,28 @@ class AssetMapTileProvider(private val context: Context,
                 val tileNumber = (y * tileXCount + x).toInt()
                 Timber.d("Tile X Count $tileXCount with number $tileNumber")
 
-                val path = "floor${floor.number}/zoom$zoom/tiles-$tileNumber.jpg"
                 return try {
-                    val array = context.assets.open(path).readBytes()
+
+                    val bitmap = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_4444)
+                    val canvas = Canvas(bitmap)
+                    paint.style = Paint.Style.STROKE
+                    canvas.drawRect(Rect(0, 0, 512, 512), paint)
+                    paint.textSize = 40f
+                    paint.style = Paint.Style.FILL
+                    canvas.drawText("$tileNumber - $zoom", 250f, 250f, paint)
+                    val stream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    val array = stream.toByteArray()
                     Tile(TILE_SIZE.toInt(),
                             TILE_SIZE.toInt(),
                             array
-                    ).also {
-                        Timber.d("Loaded tile with path $path")
-                    }
+                    )
                 } catch (e: IOException) {
-                    Timber.e("Could not find tile with $path")
-                    null
+                    TileProvider.NO_TILE
                 }
             }
             else -> {
-                null
+                TileProvider.NO_TILE
             }
         }
     }

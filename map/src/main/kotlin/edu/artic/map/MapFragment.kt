@@ -29,7 +29,6 @@ import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.*
-import edu.artic.map.tutorial.TutorialFragment
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
@@ -137,6 +136,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     .filterTo<MapDisplayMode, MapDisplayMode.CurrentFloor>()
                     .subscribeBy { hideFragmentInInfoContainer() }
                     .disposedBy(disposeBag)
+
+            map.addTileOverlay(TileOverlayOptions()
+                    .zIndex(5f)
+                    .tileProvider(DebugMapTileProvider()))
 
             map.setOnMarkerClickListener { marker ->
                 val markerTag = marker.tag
@@ -344,13 +347,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .filter { floor -> floor.number in 0..3 }
                 .withLatestFrom(viewModel.currentMap.filterValue())
                 .subscribeBy { (floor, map) ->
-
                     // We want to add the new `TileOverlay` before removing the old one
                     val nextFloorPlan = map.addTileOverlay(TileOverlayOptions()
                             .zIndex(0.2f)
                             .fadeIn(false)
                             .transparency(TRANSPARENCY_INVISIBLE)
-                            .tileProvider(GlideMapTileProvider(requireContext(), floor)))
+                            .tileProvider(AssetMapTileProvider(requireContext(), floor)))
 
                     nextFloorPlan.graduallyFadeIn()
 
