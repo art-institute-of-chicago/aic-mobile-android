@@ -20,9 +20,9 @@ class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCell
         item.galleryText
                 .bindToMain(tourStopGallery.text())
                 .disposedBy(item.viewDisposeBag)
-        item.stopNumber
-                .bindToMain(tourNumber.text())
-                .disposedBy(item.viewDisposeBag)
+
+        tourNumber.text = position.toString()
+
         item.imageUrl
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
