@@ -56,8 +56,8 @@ constructor(dataObjectDao: ArticDataObjectDao,
 
     init {
         dataObjectDao.getDataObject()
-                .filter { it.ticketsUrl != null }
-                .map { it.ticketsUrl!! }
+                .map {it.ticketsUrlAndroid }
+                .filter { it.isNotEmpty() }
                 .subscribe {
                     ticketsUrl = it
                 }.disposedBy(disposeBag)

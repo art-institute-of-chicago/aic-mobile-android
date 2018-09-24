@@ -46,7 +46,7 @@ class MuseumInformationViewModel @Inject constructor(
 
         dataObjectDao.getDataObject()
                 .toObservable()
-                .filterFlatMap({ it.ticketsUrl != null }, { it.ticketsUrl!! })
+                .map { it.ticketsUrlAndroid }
                 .bindTo(ticketUrl)
 
     }
