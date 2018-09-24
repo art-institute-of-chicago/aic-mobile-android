@@ -13,6 +13,12 @@ import kotlinx.android.synthetic.main.tour_carousel_cell.view.*
 import kotlinx.android.synthetic.main.tour_carousel_intro_cell.view.*
 
 /**
+ * Designed for a horizontally-scrolling list of
+ * [tour stops][edu.artic.db.models.ArticTour.TourStop].
+ *
+ * The carousel counterpart to `edu.artic.tours.TourDetailsStopAdapter` in
+ * the `:details` module.
+ *
  * @author Sameer Dhakal (Fuzz)
  */
 class TourCarouselAdapter : AutoHolderRecyclerViewAdapter<TourCarousalBaseViewModel>() {
