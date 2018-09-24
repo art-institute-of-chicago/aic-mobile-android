@@ -47,26 +47,35 @@ abstract class MembershipModule {
         @Provides
         @Singleton
         @Named(MEMBER_INFO_API)
-        fun provideRetrofit(
-                @Named(ApiModule.BLOB_CLIENT_API)
-                client: OkHttpClient,
-                executor: Executor
-        ): Retrofit = constructRetrofit(
-                baseUrl = BuildConfig.MEMBER_INFO_API,
-                client = client,
-                executor = executor,
-                customConfiguration = {
-                    addConverterFactory(SimpleXmlConverterFactory.createNonStrict(
-                            Persister(AnnotationStrategy())
-                    ))
-                })
+        fun provideRetrofit(@Named(ApiModule.BLOB_CLIENT_API)
+                            client: OkHttpClient,
+                            executor: Executor)
+                : Retrofit? {
+            return if (BuildConfig.MEMBER_INFO_API.contains("https")) {
+                constructRetrofit(
+                        baseUrl = BuildConfig.MEMBER_INFO_API,
+                        client = client,
+                        executor = executor,
+                        customConfiguration = {
+                            addConverterFactory(SimpleXmlConverterFactory.createNonStrict(
+                                    Persister(AnnotationStrategy())
+                            ))
+                        })
+            } else {
+                null
+            }
+        }
 
         @JvmStatic
         @Provides
         @Singleton
-        fun provideMemberInfoService(
-                @Named(MEMBER_INFO_API) retrofit: Retrofit
-        ) = RetrofitMemberDataProvider(retrofit)
+        fun provideMemberInfoService(@Named(MEMBER_INFO_API) retrofit: Retrofit?): MemberDataProvider {
+            return if (retrofit == null) {
+                NoContentMemberDataProvider
+            } else {
+                RetrofitMemberDataProvider(retrofit)
+            }
+        }
 
         const val MEMBER_INFO_API = "MEMBER_INFO_API"
     }
