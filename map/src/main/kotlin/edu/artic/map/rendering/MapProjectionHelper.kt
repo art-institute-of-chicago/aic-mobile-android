@@ -15,6 +15,6 @@ class MapProjectionHelper {
     private val differenceLon = end.longitude - start.longitude
 
     fun toSmallMapLatLng(latLng: LatLng): LatLng {
-        return LatLng(latLng.latitude + differenceLat, latLng.longitude + differenceLon)
+        return LatLng(latLng.latitude, latLng.longitude)
     }
 }
