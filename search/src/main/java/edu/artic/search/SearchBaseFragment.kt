@@ -84,7 +84,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                 .subscribe {
                     val endpoint: SearchBaseViewModel.NavigationEndpoint = it.endpoint
 
-                    val searchNavController = Navigation.findNavController(requireActivity(), R.id.container)
+                    val searchNavController = baseActivity.navController
                     when (endpoint) {
                         is SearchBaseViewModel.NavigationEndpoint.ArtworkOnMap -> {
                             val o: ArticSearchArtworkObject = endpoint.articObject

@@ -122,10 +122,10 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                         is Navigate.Forward -> {
                             when(it.endpoint) {
                                 AudioLookupViewModel.NavigationEndpoint.Search -> {
-                                    Navigation.findNavController(requireActivity(), R.id.container).navigate(R.id.goToSearch)
+                                    baseActivity.navController.navigate(R.id.goToSearch)
                                 }
                                 AudioLookupViewModel.NavigationEndpoint.AudioDetails -> {
-                                    Navigation.findNavController(requireActivity(), R.id.container).navigate(R.id.peekAudioDetails)
+                                    baseActivity.navController.navigate(R.id.peekAudioDetails)
                                 }
                             }
                         }
