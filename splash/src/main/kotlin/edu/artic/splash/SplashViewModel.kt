@@ -15,6 +15,8 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavV
 
     sealed class NavigationEndpoint {
         class Welcome : NavigationEndpoint()
+        class Language: NavigationEndpoint()
+        class Loading: NavigationEndpoint()
     }
 
 
@@ -43,7 +45,7 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavV
     }
 
     private fun goToWelcome() {
-        Navigate.Forward(NavigationEndpoint.Welcome())
+        Navigate.Forward(NavigationEndpoint.Loading())
                 .asObservable().delay(1, TimeUnit.SECONDS)
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)
