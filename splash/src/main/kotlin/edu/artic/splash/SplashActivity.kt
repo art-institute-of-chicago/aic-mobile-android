@@ -120,16 +120,20 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
             mediaPlayer.setSurface(s)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnCompletionListener {
-                //TODO (Sameer) add language here and use Model
-                var intent = NavigationConstants.HOME.asDeepLinkIntent()
-                startActivity(intent)
-                finish()
+                handleAnimationCompletion()
             }
             mMediaPlayer = mediaPlayer
             updateTextureViewSize(p1, p2)
         } catch (e: Throwable) {
-            e.printStackTrace()
+            handleAnimationCompletion()
         }
+    }
+
+    private fun handleAnimationCompletion() {
+        //TODO (Sameer) add language here and use Model
+        var intent = NavigationConstants.HOME.asDeepLinkIntent()
+        startActivity(intent)
+        finish()
     }
 
     private fun updateTextureViewSize(width: Int, height: Int) {
