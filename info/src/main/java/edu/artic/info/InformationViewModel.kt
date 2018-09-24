@@ -17,7 +17,6 @@ import javax.inject.Named
  */
 class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker,
                                                val dataObjectDao: ArticDataObjectDao,
-                                               val service: MemberDataProvider,
                                                @Named("VERSION") buildVersion: String)
     : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
 
