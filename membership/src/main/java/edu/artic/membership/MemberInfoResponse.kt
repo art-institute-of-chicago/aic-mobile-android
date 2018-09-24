@@ -1,4 +1,4 @@
-package edu.artic.info
+package edu.artic.membership
 
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Namespace

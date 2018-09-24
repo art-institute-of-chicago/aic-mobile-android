@@ -1,4 +1,4 @@
-package edu.artic.info
+package edu.artic.base
 
 /**
  * @author Sameer Dhakal (Fuzz)

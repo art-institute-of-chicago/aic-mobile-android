@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="signIn">登录</string>
+    <string name="homeZipCode">邮编</string>
+    <string name="memberId">会员账号</string>
+    <string name="changeInformation">更改信息</string>
+    <string name="switchCardHolder">交换持卡人</string>
+    <string name="memberCard">会员卡</string>
+    <string name="accessMemberCardLabel">访问会员卡</string>
+    <string name="expires">截止 %s</string>
+</resources>
