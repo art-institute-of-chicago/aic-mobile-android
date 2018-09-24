@@ -41,7 +41,7 @@ class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
         dataObjectDao.getDataObject()
                 .toObservable()
                 .take(1)
-                .map { it.memberShipUrlAndroid }
+                .map { it.membershipUrlAndroid }
                 .filter { it.isNotEmpty() }
                 .map { Navigate.Forward(NavigationEndpoint.JoinNow(it)) }
                 .subscribe {

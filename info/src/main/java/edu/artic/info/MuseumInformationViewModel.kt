@@ -47,6 +47,7 @@ class MuseumInformationViewModel @Inject constructor(
         dataObjectDao.getDataObject()
                 .toObservable()
                 .map { it.ticketsUrlAndroid }
+                .filter { it.isNotEmpty() }
                 .bindTo(ticketUrl)
 
     }
