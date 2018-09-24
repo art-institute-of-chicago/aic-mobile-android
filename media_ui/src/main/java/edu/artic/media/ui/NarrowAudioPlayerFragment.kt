@@ -15,6 +15,7 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.navigation.NavigationConstants
 import edu.artic.ui.BaseFragment
+import edu.artic.ui.findFragmentInHierarchy
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -172,6 +173,6 @@ fun BaseFragment.getAudioServiceObservable(
         fragmentId: Int = R.id.newPlayer,
         fm: FragmentManager = requireActivity().supportFragmentManager
 ): Subject<AudioPlayerService> {
-    val audioFragment = fm.findFragmentById(fragmentId) as NarrowAudioPlayerFragment
+    val audioFragment: NarrowAudioPlayerFragment = findFragmentInHierarchy(fm, fragmentId)!!
     return audioFragment.observableAudioService
 }
