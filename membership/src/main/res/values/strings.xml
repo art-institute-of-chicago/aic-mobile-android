@@ -3,6 +3,7 @@
     <string name="spanish" translatable="false">Español</string>
     <string name="chinese" translatable="false">中文</string>
 
+    <string name="becomeAMember">Become a Member</string>
     <string name="signIn">Sign In</string>
     <string name="homeZipCode">Zip Code</string>
     <string name="memberId">Member ID</string>

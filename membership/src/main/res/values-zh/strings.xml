@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="becomeAMember">成为会员</string>
     <string name="signIn">登录</string>
     <string name="homeZipCode">邮编</string>
     <string name="memberId">会员账号</string>
