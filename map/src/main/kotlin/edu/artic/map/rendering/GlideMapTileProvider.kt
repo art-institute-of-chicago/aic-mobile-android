@@ -24,7 +24,6 @@ class GlideMapTileProvider(private val context: Context,
 
                 // grab which tile based on row, what y number it is in the tile list, x position
                 val tileNumber = (y * tileXCount + x).toInt()
-                Timber.d("Tile X Count $tileXCount with number $tileNumber")
 
                 val path = "${floor.tiles}zoom$zoom/tiles-$tileNumber.jpg"
                 return try {
@@ -43,7 +42,18 @@ class GlideMapTileProvider(private val context: Context,
                 }
             }
             else -> {
-                null
+                try {
+                    val array = context.assets.open("tiles/blank-tile.jpg").readBytes()
+                    Tile(TILE_SIZE.toInt(),
+                            TILE_SIZE.toInt(),
+                            array
+                    ).also {
+                        Timber.d("Loaded blank tile")
+                    }
+                } catch (e: IOException) {
+                    Timber.e("Could not load blank tile")
+                    null
+                }
             }
         }
     }
