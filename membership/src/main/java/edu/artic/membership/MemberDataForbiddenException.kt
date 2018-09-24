@@ -1,4 +1,4 @@
-package edu.artic.info
+package edu.artic.membership
 
 /**
  * Specialized [RuntimeException] for when [BuildConfig.MEMBER_INFO_API] does not conform
