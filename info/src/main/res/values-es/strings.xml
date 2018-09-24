@@ -9,13 +9,7 @@
     <string name="locationSettings">Configuración de ubicación</string>
     <string name="supportBy">Patrocinado por</string>
     <string name="buyTickets">Comprar boletos</string>
-    <string name="signIn">Iniciar sesión</string>
     <string name="versionInfo">Versión %1$s</string>
-    <string name="homeZipCode">Código postal</string>
-    <string name="memberId">Identificación del Miembro…</string>
-    <string name="changeInformation">Cambiar información</string>
-    <string name="switchCardHolder">Cambiar titular de tarjeta</string>
-    <string name="memberCard">Tarjeta del Miembro</string>
     <string name="informationBannerSubtitle">Acceda a su tarjeta de miembro, consulte el horario del museo o actualice la configuración de su aplicación.</string>
     <string name="alreadyMember">¿Ya es miembro?</string>
     <string name="whereAreYouLabel">¿Dónde está usted?</string>
