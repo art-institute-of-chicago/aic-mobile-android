@@ -29,7 +29,6 @@ dependencies {
     implementation project(':navigation')
     implementation project(':search')
     implementation project(':db')
-    implementation project(':location')
     implementation project(':localization')
     implementation libs.constraint_layout
     implementation libs.rx_helpers
