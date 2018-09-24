@@ -27,7 +27,7 @@ data class ArticDataObject(
         @PrimaryKey val id: Int = 0
 ) {
 
-    val memberShipUrlAndroid: String
+    val membershipUrlAndroid: String
         get() {
             return membershipUrl
                     .orEmpty()
