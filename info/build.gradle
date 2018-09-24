@@ -27,6 +27,7 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':navigation')
     implementation project(':search')
+    implementation project(':media_ui')
     implementation project(':db')
     implementation project(':location')
     implementation project(':localization')
