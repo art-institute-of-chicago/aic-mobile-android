@@ -1,4 +1,4 @@
-package edu.artic.info
+package edu.artic.membership
 
 import android.content.Context
 import edu.artic.base.BasePreferencesManager

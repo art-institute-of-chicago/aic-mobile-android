@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ErrorDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/off_blue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+</resources>
