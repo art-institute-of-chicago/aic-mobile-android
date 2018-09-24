@@ -16,6 +16,7 @@ import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
 import edu.artic.localization.LanguageSelector
+import edu.artic.membership.MemberInfoPreferencesManager
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -33,6 +34,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                                            private val exhibitionDao: ArticExhibitionDao,
                                            generalInfoDao: GeneralInfoDao,
                                            languageSelector: LanguageSelector,
+                                           private val memberInfoPreferencesManager: MemberInfoPreferencesManager,
                                            val analyticsTracker: AnalyticsTracker) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -51,7 +53,8 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     val tours: Subject<List<WelcomeTourCellViewModel>> = BehaviorSubject.create()
     val exhibitions: Subject<List<WelcomeExhibitionCellViewModel>> = BehaviorSubject.create()
     val events: Subject<List<WelcomeEventCellViewModel>> = BehaviorSubject.create()
-    val welcomePrompt : Subject<String> = BehaviorSubject.create()
+    val welcomePrompt: Subject<String> = BehaviorSubject.create()
+    val currentCardHolder: Subject<String> = BehaviorSubject.create()
 
     init {
         shouldPeekTourSummary.distinctUntilChanged()
@@ -115,6 +118,14 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         shouldPeekTourSummary.onNext(welcomePreferencesManager.shouldPeekTourSummary)
     }
 
+    fun updateData() {
+        val activeCardHolder = memberInfoPreferencesManager.activeCardHolder
+        activeCardHolder?.let { cardHolder ->
+            if (cardHolder.isNotEmpty()) {
+                currentCardHolder.onNext(activeCardHolder)
+            }
+        }
+    }
 
     fun onPeekedTour() {
         false.asObservable()
