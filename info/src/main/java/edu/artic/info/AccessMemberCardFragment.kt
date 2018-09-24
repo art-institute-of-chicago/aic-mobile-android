@@ -10,6 +10,7 @@ import android.support.annotation.UiThread
 import android.support.v4.content.ContextCompat
 import android.view.View
 import com.fuzz.rx.bindTo
+import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.google.zxing.BarcodeFormat
@@ -127,10 +128,8 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 .disposedBy(disposeBag)
 
         viewModel.expiration
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { expires ->
-                    expiration.text = expires
-                }
+                .map{ resources.getString(R.string.expires, it)}
+                .bindToMain(expiration.text())
                 .disposedBy(disposeBag)
 
         switchCardHolder.clicks()
