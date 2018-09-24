@@ -8,6 +8,8 @@ import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import dagger.android.AndroidInjection
@@ -16,7 +18,6 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.primaryLocale
-import java.util.*
 import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
@@ -35,6 +36,13 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var languageSelector: LanguageSelector
+
+    /**
+     * Utility function for retrieving the primary [NavController] of
+     * this [android.app.Activity].
+     */
+    val navController: NavController
+        get() = Navigation.findNavController(this, R.id.container)
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentInjector
 
