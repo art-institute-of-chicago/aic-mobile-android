@@ -16,6 +16,7 @@ import edu.artic.location.LocationModule
 import edu.artic.map.MapModule
 import edu.artic.media.audio.MediaModule
 import edu.artic.media.ui.MediaUiModule
+import edu.artic.membership.MembershipModule
 import edu.artic.search.SearchModule
 import edu.artic.splash.SplashModule
 import edu.artic.tours.ToursModule
@@ -44,7 +45,8 @@ import javax.inject.Singleton
     MediaModule::class,
     SearchModule::class,
     DetailsModule::class,
-    LocationModule::class
+    LocationModule::class,
+    MembershipModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {
 

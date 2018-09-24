@@ -10,6 +10,7 @@ android {
         buildConfigField("String", "MEMBER_INFO_API", "\"${member_validation_url}\"")
         buildConfigField("String", "MEMBER_INFO_API_TOKEN", "\"${member_validation_token}\"")
     }
+
 }
 
 dependencies {
@@ -28,10 +29,10 @@ dependencies {
     implementation project(':navigation')
     implementation project(':search')
     implementation project(':db')
-    implementation project(':membership')
-    implementation project(':location')
     implementation project(':localization')
     implementation libs.constraint_layout
     implementation libs.rx_helpers
     implementation libs.rx_kotlin
+    implementation libs.zxing_core
+    implementation libs.zxing_android_embedded
 }

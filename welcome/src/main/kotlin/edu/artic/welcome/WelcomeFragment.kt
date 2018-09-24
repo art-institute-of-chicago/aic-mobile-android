@@ -137,6 +137,19 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     viewModel.onClickTour(pos, model.tour)
                 }
                 .disposedBy(disposeBag)
+
+        viewModel.currentCardHolder
+                .subscribe { cardHolder ->
+                    val firstName = cardHolder.split(" ").first()
+                    val title = resources.getString(R.string.welcomeUser, firstName)
+                    requestTitleUpdate(title)
+                }
+                .disposedBy(disposeBag)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateData()
     }
 
     override fun setupNavigationBindings(viewModel: WelcomeViewModel) {

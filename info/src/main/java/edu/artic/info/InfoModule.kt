@@ -44,14 +44,6 @@ abstract class InfoModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(AccessMemberCardViewModel::class)
-    abstract fun accessMemberCardViewModel(accessMemberCardViewModel: AccessMemberCardViewModel): ViewModel
-
-    @get:ContributesAndroidInjector
-    abstract val accessMemberCardFragment: AccessMemberCardFragment
-
-    @Binds
-    @IntoMap
     @ViewModelKey(LanguageSettingsViewModel::class)
     abstract fun languageSettingsViewModel(accessMemberCardViewModel: LanguageSettingsViewModel): ViewModel
 
@@ -61,50 +53,5 @@ abstract class InfoModule {
     @get:ContributesAndroidInjector
     abstract val infoActivity: InfoActivity
 
-
-    @Module
-    companion object {
-
-        @JvmStatic
-        @Provides
-        fun provideMemberInfoPreferencesManager(context: Context): MemberInfoPreferencesManager = MemberInfoPreferencesManager(context)
-
-
-        @JvmStatic
-        @Provides
-        @Singleton
-        @Named(MEMBER_INFO_API)
-        fun provideRetrofit(@Named(ApiModule.BLOB_CLIENT_API)
-                            client: OkHttpClient,
-                            executor: Executor)
-                : Retrofit? {
-            return if (BuildConfig.MEMBER_INFO_API.contains("https")) {
-                constructRetrofit(
-                        baseUrl = BuildConfig.MEMBER_INFO_API,
-                        client = client,
-                        executor = executor,
-                        customConfiguration = {
-                            addConverterFactory(SimpleXmlConverterFactory.createNonStrict(
-                                    Persister(AnnotationStrategy())
-                            ))
-                        })
-            } else {
-                null
-            }
-        }
-
-        @JvmStatic
-        @Provides
-        @Singleton
-        fun provideMemberInfoService(@Named(MEMBER_INFO_API) retrofit: Retrofit?): MemberDataProvider {
-            return if (retrofit == null) {
-                NoContentMemberDataProvider
-            } else {
-                RetrofitMemberDataProvider(retrofit)
-            }
-        }
-
-        const val MEMBER_INFO_API = "MEMBER_INFO_API"
-    }
 
 }

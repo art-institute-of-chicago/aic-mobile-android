@@ -23,6 +23,7 @@ dependencies {
     implementation project(':image')
     implementation project(':search')
     implementation project(':details')
+    implementation project(':membership')
     implementation libs.exo_player_core
     implementation libs.exo_player_ui
 }

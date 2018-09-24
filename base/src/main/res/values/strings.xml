@@ -6,6 +6,7 @@
     <!-- Welcome/Home screen -->
     <string name="welcomePrompt">Explore the museum with your personal, pocket-sized guide.</string>
     <string name="welcome">Welcome</string>
+    <string name="welcomeUser">Welcome, %s</string>
     <string name="tours">Tours</string>
     <string name="onView">On View</string>
     <string name="seeAll">See All</string>

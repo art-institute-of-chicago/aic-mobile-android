@@ -1,4 +1,4 @@
-package edu.artic.info
+package edu.artic.membership
 
 import io.reactivex.Observable
 import retrofit2.http.*
