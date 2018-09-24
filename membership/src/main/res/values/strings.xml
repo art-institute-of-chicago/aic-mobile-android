@@ -11,7 +11,6 @@
     <string name="switchCardHolder">Switch Cardholder</string>
     <string name="memberCard">Member Card</string>
     <string name="errorDialogTitle">Error</string>
-    <string name="ok" translatable="false">@android:string/ok</string>
     <string name="accessMemberCardLabel">Access Member Card</string>
     <string name="expires">Expires %s</string>
 </resources>
