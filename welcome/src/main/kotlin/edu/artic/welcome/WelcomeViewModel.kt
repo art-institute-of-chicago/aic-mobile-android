@@ -32,9 +32,9 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                                            private val toursDao: ArticTourDao,
                                            private val eventsDao: ArticEventDao,
                                            private val exhibitionDao: ArticExhibitionDao,
+                                           private val memberInfoPreferencesManager: MemberInfoPreferencesManager,
                                            generalInfoDao: GeneralInfoDao,
                                            languageSelector: LanguageSelector,
-                                           private val memberInfoPreferencesManager: MemberInfoPreferencesManager,
                                            val analyticsTracker: AnalyticsTracker) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {

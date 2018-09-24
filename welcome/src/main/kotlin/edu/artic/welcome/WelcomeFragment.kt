@@ -24,7 +24,6 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_welcome.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
