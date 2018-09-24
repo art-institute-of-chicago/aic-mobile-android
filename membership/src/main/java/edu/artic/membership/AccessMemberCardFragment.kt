@@ -129,7 +129,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 .disposedBy(disposeBag)
 
         viewModel.expiration
-                .map{ resources.getString(R.string.expires, it)}
+                .map { resources.getString(R.string.expires, it) }
                 .bindToMain(expiration.text())
                 .disposedBy(disposeBag)
 

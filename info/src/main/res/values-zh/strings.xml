@@ -21,5 +21,4 @@
     <string name="whereAreYouLabel">您在哪里？</string>
     <string name="languageSettingsBody">某些内容可能不提供您所选择的语言版本。</string>
     <string name="information">信息</string>
-    <string name="expires">截止 %s</string>
 </resources>

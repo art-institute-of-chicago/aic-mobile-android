@@ -26,5 +26,4 @@
     <string name="chooseYourLanguage">Please Choose Your Preferred Language</string>
     <string name="fragmentInformationLabel" translatable="false">fragment_information</string>
     <string name="information">Information</string>
-    <string name="expires">Expires %s</string>
 </resources>
