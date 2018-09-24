@@ -11,6 +11,13 @@ import edu.artic.details.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
 
+/**
+ * Adapter for [tour stops][edu.artic.db.models.ArticTour.TourStop]. Does not include
+ * the so-called 'tour intro'; that is handled by the [TourDetailsFragment].
+ *
+ * For the carousel screen, see `edu.artic.map.carousel.TourCarouselAdapter` in
+ * the `:map` module.
+ */
 class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCellViewModel>() {
 
     override fun View.onBindView(item: TourDetailsStopCellViewModel, position: Int) {
@@ -21,7 +28,9 @@ class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCell
                 .bindToMain(tourStopGallery.text())
                 .disposedBy(item.viewDisposeBag)
 
-        tourNumber.text = position.toString()
+        // The TourIntro (which would be labeled 0) is bound by the fragment separately.
+        // TODO: Integrate that transform of the `ArticTour` as a separate ViewModel.
+        tourNumber.text = (position + 1).toString()
 
         item.imageUrl
                 .observeOn(AndroidSchedulers.mainThread())
