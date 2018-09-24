@@ -17,4 +17,8 @@ class MemberInfoPreferencesManager(context: Context)
     var memberID: String?
         set(value) = putString("memberID", value)
         get() = getString("memberID")
+
+    var activeCardHolder: String?
+        set(value) = putString("cardHolder", value)
+        get() = getString("cardHolder")
 }
