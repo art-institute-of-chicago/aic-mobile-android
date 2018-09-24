@@ -14,13 +14,6 @@
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
     </style>
 
-    <style name="ErrorDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:background">@color/off_blue</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:colorAccent">@color/white</item>
-        <item name="android:textColorPrimary">@color/white</item>
-    </style>
-
     <style name="LanguageButton">
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:textAllCaps">false</item>

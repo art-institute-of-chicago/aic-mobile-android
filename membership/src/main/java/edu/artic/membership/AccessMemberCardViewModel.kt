@@ -1,4 +1,4 @@
-package edu.artic.info
+package edu.artic.membership
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
@@ -6,7 +6,8 @@ import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.info.AccessMemberCardViewModel.DisplayMode
+import edu.artic.base.LoadStatus
+import edu.artic.membership.AccessMemberCardViewModel.DisplayMode
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables

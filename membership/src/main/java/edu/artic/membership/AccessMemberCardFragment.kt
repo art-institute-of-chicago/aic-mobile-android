@@ -1,4 +1,4 @@
-package edu.artic.info
+package edu.artic.membership
 
 
 import android.animation.ValueAnimator
@@ -19,6 +19,7 @@ import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.LoadStatus
 import edu.artic.base.utils.hideSoftKeyboard
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers

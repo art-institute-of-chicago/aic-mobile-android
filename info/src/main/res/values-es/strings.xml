@@ -20,7 +20,6 @@
     <string name="alreadyMember">¿Ya es miembro?</string>
     <string name="whereAreYouLabel">¿Dónde está usted?</string>
     <string name="languageSettingsBody">Es posible que cierta información no esté disponible en el idioma seleccionado.</string>
-    <string name="accessMemberCardLabel">Tarjeta de acceso para miembros</string>
     <string name="information">Información</string>
     <string name="expires">Vence %s</string>
 </resources>

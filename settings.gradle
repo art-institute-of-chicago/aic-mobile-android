@@ -1,4 +1,4 @@
-include ':adapter',
+include ':adapter', ':membership',
         ':analytics',
         ':app',
         ':audio',
