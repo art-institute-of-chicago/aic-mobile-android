@@ -24,6 +24,7 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_welcome.*
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -137,6 +138,19 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     viewModel.onClickTour(pos, model.tour)
                 }
                 .disposedBy(disposeBag)
+
+        viewModel.currentCardHolder
+                .subscribe { cardHolder ->
+                    val firstName = cardHolder.split(" ").first()
+                    val title = resources.getString(R.string.welcomeUser, firstName)
+                    requestTitleUpdate(title)
+                }
+                .disposedBy(disposeBag)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateData()
     }
 
     override fun setupNavigationBindings(viewModel: WelcomeViewModel) {

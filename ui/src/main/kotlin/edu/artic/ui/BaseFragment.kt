@@ -7,7 +7,6 @@ import android.support.annotation.StringRes
 import android.support.annotation.UiThread
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.Toolbar
@@ -22,13 +21,30 @@ import edu.artic.base.utils.setWindowFlag
 import timber.log.Timber
 import javax.inject.Inject
 
-abstract class BaseFragment : DialogFragment(), OnBackPressedListener{
+abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
 
     var toolbar: Toolbar? = null
     var collapsingToolbar: CollapsingToolbarLayout? = null
 
     @get:StringRes
     protected abstract val title: Int
+
+    private var requestedTitle: String? = null
+
+    fun requestTitleUpdate(proposedTitle: String) {
+        this.requestedTitle = proposedTitle
+        baseActivity.title = proposedTitle
+
+        /**
+         * BaseActivity.title does not update the title for the fragments with collapsing toolbar title.
+         */
+
+        collapsingToolbar?.title = proposedTitle
+    }
+
+    private fun getToolbarTitle(): String {
+        return requestedTitle ?: getString(title)
+    }
 
     @get:LayoutRes
     protected abstract val layoutResId: Int
@@ -208,5 +224,5 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener{
 }
 
 interface OnBackPressedListener {
-    fun onBackPressed() : Boolean
+    fun onBackPressed(): Boolean
 }
