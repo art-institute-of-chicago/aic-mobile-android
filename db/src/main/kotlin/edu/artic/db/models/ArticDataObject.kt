@@ -24,5 +24,28 @@ data class ArticDataObject(
         @Json(name = "membership_url") val membershipUrl: String?,
         @Json(name = "website_url") val websiteUrl: String?,
         @Json(name = "tickets_url") val ticketsUrl: String?,
-        @PrimaryKey val id : Int = 0
-)
+        @PrimaryKey val id: Int = 0
+) {
+
+    val memberShipUrlAndroid: String
+        get() {
+            return membershipUrl
+                    .orEmpty()
+                    .replace("utm_source=iphone", "utm_source=android")
+        }
+
+    val websiteUrlAndroid: String
+        get() {
+            return websiteUrl
+                    .orEmpty()
+                    .replace("utm_source=iphone", "utm_source=android")
+        }
+
+    val ticketsUrlAndroid: String
+        get() {
+            return ticketsUrl
+                    .orEmpty()
+                    .replace("utm_source=iphone", "utm_source=android")
+        }
+
+}
