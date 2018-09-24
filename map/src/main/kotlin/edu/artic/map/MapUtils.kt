@@ -41,9 +41,6 @@ fun ArticObject.getTourOrderNumberBasedOnDisplayMode(displayMode: MapDisplayMode
         /**
          * If map's display mode is Tour, get the order number of the stop.
          */
-        /**
-         * If map's display mode is Tour, get the order number of the stop.
-         */
         val index = displayMode.tour
                 .tourStops
                 .indexOfFirst { it.objectId == nid }

@@ -197,9 +197,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
          * Update the floor if the selected tour stop is not in current floor.
          */
         Observables.combineLatest(tourProgressManager.selectedTour, tourProgressManager.selectedStop)
-                .filterFlatMap({ (tour, stop) -> tour.value != null },
+                .filterFlatMap({ (tour, _) -> tour.value != null },
                         { (tour, stop) -> tour.value!! to stop })
-                .flatMap { (tour, stopID) ->
+                .flatMap { (_, stopID) ->
                     articObjectDao.getObjectById(stopID).toObservable()
                 }.withLatestFrom(floor)
                 .subscribeBy { (tourStop, floor) ->
