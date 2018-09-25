@@ -18,9 +18,6 @@ class AudioTutorialViewModel @Inject constructor() : NavViewViewModel<AudioTutor
     }
 
     fun onOkClicked() {
-        /**
-         * TODO:: inject pref manager to keep track of audio tutorial
-         */
         Navigate.Forward(NavigationEndpoint.Finish)
                 .asObservable()
                 .bindTo(navigateTo)

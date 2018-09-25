@@ -13,18 +13,14 @@ class AudioServiceHook {
     /**
      * Event will be emitted when user attempts to play the audio translation for the first time.
      */
-    val playbackStartedForFirstTime: Subject<Boolean> = PublishSubject.create()
+    val displayAudioTutorial: Subject<Boolean> = PublishSubject.create()
 }
 
-
-/**
- * @author Sameer Dhakal (Fuzz)
- */
 
 class AudioPrefManager(context: Context)
     : BasePreferencesManager(context, "audio_playback") {
 
-    var hasPlayedAudioBefore: Boolean
-        set(value) = putBoolean("hasPlayedAudioBefore", value)
-        get() = getBoolean("hasPlayedAudioBefore", false)
+    var hasSeenAudioTutorial: Boolean
+        set(value) = putBoolean("hasSeenAudioTutorial", value)
+        get() = getBoolean("hasSeenAudioTutorial", false)
 }
