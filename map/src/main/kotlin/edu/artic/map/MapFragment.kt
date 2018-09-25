@@ -12,12 +12,10 @@ import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.TileOverlay
-import com.google.android.gms.maps.model.TileOverlayOptions
+import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
+import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
 import edu.artic.base.utils.removeAndReturnParcelable
@@ -210,6 +208,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         floorThree.clicks()
                 .subscribe { viewModel.floorChangedTo(3) }
                 .disposedBy(disposeBag)
+
+        compass.clicks()
+                .subscribeBy {
+                    viewModel.onClickCompass()
+                }.disposedBy(disposeBag)
 
         viewModel.displayMode
                 .filterTo<MapDisplayMode, MapDisplayMode.Tour>()
@@ -406,6 +409,33 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }.disposedBy(disposeBag)
 
         viewModel.showCompass
+                .bindToMain(compass.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.focusToTracking
+                .distinctUntilChanged()
+                .subscribe {(map, wrapped) ->
+                    if(wrapped.value != null) {
+                        compass.rotation = 0.0f
+                        compass.alpha = 1.0f
+                        map.uiSettings.setAllGesturesEnabled(false)
+                        val location = wrapped.value!!
+                        map.animateCamera(
+                                CameraUpdateFactory
+                                        .newCameraPosition(
+                                                CameraPosition.Builder(map.cameraPosition)
+                                                        .bearing(location.bearing)
+                                                        .target(LatLng(location.latitude, location.longitude))
+                                                        .build()
+                                        )
+                        )
+                    } else {
+                        map.uiSettings.setAllGesturesEnabled(true)
+                        compass.rotation = 30f
+                        compass.alpha = .5f
+                    }
+                }
+                .disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: MapViewModel) {
