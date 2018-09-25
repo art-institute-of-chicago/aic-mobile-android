@@ -147,7 +147,10 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
             when (displayMode) {
                 is MapDisplayMode.Tour -> MapFocus.values().toSet()
-                is MapDisplayMode.Search<*> -> MapFocus.values().toSet()
+                is MapDisplayMode.Search.ObjectSearch -> MapFocus.values().toSet()
+                // Objects NEVER show up in the AmenitiesSearch mode.
+                is MapDisplayMode.Search.AmenitiesSearch -> emptySet()
+                // 'else' includes CurrentFloor at this time.
                 else -> setOf(MapFocus.Individual)
             }
 
