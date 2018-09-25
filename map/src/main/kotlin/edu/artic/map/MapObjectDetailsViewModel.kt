@@ -11,6 +11,8 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
+import edu.artic.map.MapObjectDetailsViewModel.PlayerAction.Pause
+import edu.artic.map.MapObjectDetailsViewModel.PlayerAction.Play
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel
@@ -36,6 +38,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
     val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
+    var type: MapObjectDetailsFragment.Type? = null
 
 
     /**
@@ -129,7 +132,18 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
                 }
                 .filter { (isNewTrack: Boolean, _) -> isNewTrack }
                 .subscribe { (_, articObject) ->
-                    analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioMap, articObject.title)
+                    when(type) {
+                        MapObjectDetailsFragment.Type.Map -> {
+                            analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioMap, articObject.title)
+                        }
+                        MapObjectDetailsFragment.Type.Search -> {
+                            analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioSearch, articObject.title)
+                        }
+                        MapObjectDetailsFragment.Type.Tour -> {
+                            analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioTour, articObject.title)
+                        }
+                    }
+
                 }.disposedBy(disposeBag)
 
     }

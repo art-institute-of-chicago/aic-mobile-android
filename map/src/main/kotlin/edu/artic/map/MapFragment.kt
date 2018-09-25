@@ -330,9 +330,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.selectedArticObject
                 .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
-                .filterFlatMap({ (_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor }, { (selected) -> selected })
-                .subscribeBy { selected ->
-                    displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
+                .filterFlatMap({(_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor },{(selectedObject, mapMode) -> selectedObject to mapMode as MapDisplayMode.CurrentFloor})
+                .subscribeBy { (selected, displayMode) ->
+                    displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected, displayMode))
                 }
                 .disposedBy(disposeBag)
 
