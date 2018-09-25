@@ -9,4 +9,6 @@
     <string name="memberCard">会员卡</string>
     <string name="accessMemberCardLabel">访问会员卡</string>
     <string name="expires">截止 %s</string>
+    <string name="zipCodeHint">输入您家庭所在的邮编</string>
+    <string name="memberIdHint">输入您的会员账号</string>
 </resources>
