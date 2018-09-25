@@ -127,16 +127,16 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         try {
             val afd = assets.openFd("splash.mp4")
             val mediaPlayer = MediaPlayer()
-            mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length);
+            mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
             mediaPlayer.setSurface(s)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnCompletionListener {
                 handleAnimationCompletion()
             }
-            mMediaPlayer = mediaPlayer
             updateTextureViewSize(p1, p2)
-        } catch (e: Throwable) {
-            handleAnimationCompletion()
+            mMediaPlayer = mediaPlayer
+        } catch (ignored: Throwable) {
+            ///TODO: instead, handle errors when we receive the Navigate.Forward event (i.e. when the progressBar is full)
         }
     }
 
