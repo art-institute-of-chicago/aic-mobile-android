@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="becomeAMember">Become a Member</string>
     <string name="signIn">Sign In</string>
@@ -9,6 +10,6 @@
     <string name="errorDialogTitle">Error</string>
     <string name="accessMemberCardLabel">Access Member Card</string>
     <string name="expires">Expires: %s</string>
-    <string name="zipCodeHint">Enter your home zip code...</string>
-    <string name="memberIdHint">Enter your Member ID...</string>
+    <string name="zipCodeHint">Enter your home zip code…</string>
+    <string name="memberIdHint">Enter your Member ID…</string>
 </resources>
