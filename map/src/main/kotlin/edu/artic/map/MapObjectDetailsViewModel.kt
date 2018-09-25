@@ -38,7 +38,6 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
     val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
-    var type: MapObjectDetailsFragment.Type? = null
 
 
     /**
@@ -132,18 +131,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
                 }
                 .filter { (isNewTrack: Boolean, _) -> isNewTrack }
                 .subscribe { (_, articObject) ->
-                    when(type) {
-                        MapObjectDetailsFragment.Type.Map -> {
-                            analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioMap, articObject.title)
-                        }
-                        MapObjectDetailsFragment.Type.Search -> {
-                            analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioSearch, articObject.title)
-                        }
-                        MapObjectDetailsFragment.Type.Tour -> {
-                            analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioTour, articObject.title)
-                        }
-                    }
-
+                    analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioMap, articObject.title)
                 }.disposedBy(disposeBag)
 
     }

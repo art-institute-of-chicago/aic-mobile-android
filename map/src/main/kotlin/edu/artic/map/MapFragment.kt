@@ -331,8 +331,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.selectedArticObject
                 .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
                 .filterFlatMap({(_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor },{(selectedObject, mapMode) -> selectedObject to mapMode as MapDisplayMode.CurrentFloor})
-                .subscribeBy { (selected, displayMode) ->
-                    displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected, displayMode))
+                .subscribeBy { (selected, _) ->
+                    displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
                 }
                 .disposedBy(disposeBag)
 
