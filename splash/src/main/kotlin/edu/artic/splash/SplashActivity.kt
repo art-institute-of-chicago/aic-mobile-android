@@ -6,10 +6,8 @@ import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
-import android.view.Surface
-import android.view.TextureView
-import android.view.View
-import android.view.WindowManager
+import android.view.*
+import android.view.animation.AccelerateDecelerateInterpolator
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.setWindowFlag
@@ -29,6 +27,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
 
     override val viewModelClass: KClass<SplashViewModel>
         get() = SplashViewModel::class
+
+    private lateinit var fadeInAnimation: ViewPropertyAnimator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +66,16 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                         progressBar.progress = (it * 100).toInt()
                     }
                 }.disposedBy(disposeBag)
+
+        welcome.alpha = 0f
+
+        fadeInAnimation = welcome.animate()
+                .alpha(1f)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .setDuration(1000)
+                .setStartDelay(500)
+
+        fadeInAnimation.start()
     }
 
     override fun onStart() {
@@ -98,6 +108,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     override fun onDestroy() {
         super.onDestroy()
         disposeBag.clear()
+        fadeInAnimation.cancel()
     }
 
     override fun onSurfaceTextureSizeChanged(p0: SurfaceTexture?, p1: Int, p2: Int) {
@@ -139,8 +150,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     private fun updateTextureViewSize(width: Int, height: Int) {
         val matrix = Matrix()
         var ratioOfScreen = height.toFloat() / width.toFloat()
-        var ratio = (16f/9f) / ratioOfScreen
-        matrix.setScale(1.0f, ratio, width/2f, height/2f)
+        var ratio = (16f / 9f) / ratioOfScreen
+        matrix.setScale(1.0f, ratio, width / 2f, height / 2f)
         textureView.setTransform(matrix)
     }
 }
