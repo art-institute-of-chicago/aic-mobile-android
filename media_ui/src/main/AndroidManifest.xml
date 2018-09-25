@@ -3,7 +3,20 @@
     package="edu.artic.media.ui">
 
     <application>
-        <activity android:name=".AudioTutorialActivity"/>
+        <activity
+            android:name=".AudioTutorialActivity"
+            android:theme="@style/AudioTutorialTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="edu.artic.media.audio_tutorial"
+                    android:scheme="artic" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

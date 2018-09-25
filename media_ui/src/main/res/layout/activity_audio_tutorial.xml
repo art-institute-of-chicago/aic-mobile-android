@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/ugly_blue"
+    android:fitsSystemWindows="true"
     tools:context=".AudioTutorialActivity">
 
     <ImageView
@@ -23,6 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
+        android:text="@string/listenIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/listen"
@@ -39,8 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/listenLabel"
-        tools:text="Use your headphones to listen.
-Don’t have headphones? Hold the phone close to your ear." />
+        android:text="@string/audioGuide" />
 
     <Button
         android:id="@+id/ok"
@@ -52,6 +53,7 @@ Don’t have headphones? Hold the phone close to your ear." />
         android:layout_marginBottom="42dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:text="@android:string/ok"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Ok" />
 
