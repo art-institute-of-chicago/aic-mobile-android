@@ -1,7 +1,6 @@
 package edu.artic.map
 
 import android.location.Location
-import android.util.Log
 import com.fuzz.rx.*
 import com.fuzz.rx.Optional
 import com.google.android.gms.maps.GoogleMap
@@ -333,11 +332,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
         locationService.currentUserLocation
                 .map {
-                    val minLat = 41.878355
-                    val maxLat = 41.880831
-                    val minLong = -87.624293
-                    val maxLong = -87.620688
-                    return@map it.latitude > minLat && it.latitude < maxLat && it.longitude > minLong && it.longitude < maxLong
+                    isLocationInMuseum(it)
                 }
                 .bindTo(isUserInMuseum)
                 .disposedBy(disposeBag)
@@ -351,7 +346,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 shouldFollowUserDistinct,
                 currentMap
         ) { currentLocation, shouldFollowUser, map ->
-            Timber.d("current Location: ${currentLocation.latitude} ${currentLocation.longitude}, ${currentLocation.bearing}" )
+            Timber.d("current Location: ${currentLocation.latitude} ${currentLocation.longitude}, ${currentLocation.bearing}")
             return@combineLatest if (map.value != null && shouldFollowUser) {
                 map.value to Optional(currentLocation)
             } else {
@@ -370,7 +365,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     fun onClickCompass() {
         shouldFollowUser = !shouldFollowUser
 
-        if(shouldFollowUser) {
+        if (shouldFollowUser) {
             analyticsTracker.reportEvent(EventCategoryName.Location, AnalyticsAction.headingEnabled)
         }
     }

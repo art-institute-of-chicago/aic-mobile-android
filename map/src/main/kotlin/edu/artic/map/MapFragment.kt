@@ -165,10 +165,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isIndoorEnabled = false
             isTrafficEnabled = false
             this.uiSettings.isMyLocationButtonEnabled = false
-            if(ContextCompat.checkSelfPermission(
+            if (ContextCompat.checkSelfPermission(
                             requireContext(),
                             Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED){
+                    == PackageManager.PERMISSION_GRANTED) {
                 this.isMyLocationEnabled = true
             }
             setMapStyle(MapStyleOptions(mapStyleOptions))
@@ -414,12 +414,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.focusToTracking
                 .distinctUntilChanged()
-                .subscribe {(map, wrapped) ->
-                    if(wrapped.value != null) {
+                .subscribe { (map, wrapped) ->
+                    val location = wrapped.value
+                    if (location != null) {
                         compass.rotation = 0.0f
                         compass.alpha = 1.0f
                         map.uiSettings.setAllGesturesEnabled(false)
-                        val location = wrapped.value!!
+
                         map.animateCamera(
                                 CameraUpdateFactory
                                         .newCameraPosition(
