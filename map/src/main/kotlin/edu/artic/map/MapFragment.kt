@@ -165,6 +165,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isIndoorEnabled = false
             isTrafficEnabled = false
             this.uiSettings.isMyLocationButtonEnabled = false
+            this.uiSettings.isCompassEnabled = false
             if (ContextCompat.checkSelfPermission(
                             requireContext(),
                             Manifest.permission.ACCESS_FINE_LOCATION)
