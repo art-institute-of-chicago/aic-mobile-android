@@ -127,16 +127,16 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         try {
             val afd = assets.openFd("splash.mp4")
             val mediaPlayer = MediaPlayer()
-            mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length);
+            mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
             mediaPlayer.setSurface(s)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnCompletionListener {
                 handleAnimationCompletion()
             }
-            mMediaPlayer = mediaPlayer
             updateTextureViewSize(p1, p2)
+            mMediaPlayer = mediaPlayer
         } catch (e: Throwable) {
-            handleAnimationCompletion()
+            //Do nothing handle after progress bar is done loading
         }
     }
 
