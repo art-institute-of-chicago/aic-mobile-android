@@ -19,6 +19,7 @@ import edu.artic.location.LocationService
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MarkerHolder
+import edu.artic.util.waitForASecondOfCalmIn
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
@@ -153,9 +154,11 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     init {
 
+        // It is crucial that this navigation event does not conflict with `displayMode` emissions.
         locationService.hasRequestedPermissionAlready
                 .filter { !it }
                 .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
+                .waitForASecondOfCalmIn(displayMode)
                 .delay(1, TimeUnit.SECONDS)
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)
@@ -346,8 +349,12 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         val displayItem = displayMode.item
 
         Observable.just(displayItem)
-                .filterFlatMap({ it is ArticSearchArtworkObject }, { it as ArticSearchArtworkObject })
-                .map { listOf(it.toLatLng()) }
+                .map {
+                    when (it) {
+                        is ArticSearchArtworkObject -> listOf(it.toLatLng())
+                        else -> emptyList()
+                    }
+                }
                 .bindToMain(boundsOfInterestChanged)
                 .disposedBy(disposeBag)
 
