@@ -369,6 +369,10 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     fun onClickCompass() {
         shouldFollowUser = !shouldFollowUser
+
+        if(shouldFollowUser) {
+            analyticsTracker.reportEvent(EventCategoryName.Location, AnalyticsAction.headingEnabled)
+        }
     }
 
 
