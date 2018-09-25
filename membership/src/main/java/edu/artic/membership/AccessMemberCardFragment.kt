@@ -15,6 +15,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.widget.hintRes
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textChanges
 import com.journeyapps.barcodescanner.BarcodeEncoder
@@ -146,6 +147,13 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                     viewModel.onUpdateInformationClicked()
                 }.disposedBy(disposeBag)
 
+        viewModel.zipCodeHint
+                .bindToMain(zipCode.hintRes())
+                .disposedBy(disposeBag)
+
+        viewModel.memberIdHint
+                .bindToMain(memberId.hintRes())
+                .disposedBy(disposeBag)
     }
 
     /**
