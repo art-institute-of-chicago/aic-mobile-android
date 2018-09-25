@@ -20,6 +20,7 @@ import edu.artic.base.utils.getThemeColors
 import edu.artic.base.utils.setWindowFlag
 import javax.inject.Inject
 
+
 abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
 
     var toolbar: Toolbar? = null
@@ -182,19 +183,28 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
             // change for the duration of this call.
             val act = requireActivity()
             val ctx = requireContext()
-            val decorView = act.window?.decorView
+            val decorView = act.window.decorView
 
             if (hasTransparentStatusBar()) {
-                decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+
+                var uiOptions = decorView.systemUiVisibility
+                uiOptions =
+                        uiOptions or
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                         View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
                 act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                 act.window?.statusBarColor = Color.TRANSPARENT
+                decorView.systemUiVisibility = uiOptions
+
             } else {
-                decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                /**
+                 * Reset the decor to display the status bar.
+                 */
+                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+                act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+
                 if (customToolbarColorResource == 0) {
-                    act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                     val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
                     ctx.getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
                         act.window?.statusBarColor = it
