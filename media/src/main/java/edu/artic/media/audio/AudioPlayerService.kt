@@ -40,6 +40,7 @@ import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -153,9 +154,15 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
+
     @Inject
     lateinit var languageSelector: LanguageSelector
 
+    @Inject
+    lateinit var audioServiceHook: AudioServiceHook
+
+    @Inject
+    lateinit var audioPrefManager: AudioPrefManager
 
     /**
      * Something with one or more audio tracks. See [currentTrack] and [AudioFileModel].
@@ -195,7 +202,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 is PlayBackAction.Play -> {
                     // No need to seek here; that'll be done in 'setArticObject' if needed
                     setArticObject(playBackAction.audioFile, playBackAction.audioModel)
-                    player.playWhenReady = true
+                    if (!audioPrefManager.hasPlayedAudioBefore) {
+                        audioServiceHook.playbackStartedForFirstTime.onNext(true)
+                    } else {
+                        player.playWhenReady = true
+                    }
                 }
 
                 is PlayBackAction.Resume -> {
