@@ -8,10 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import com.fuzz.rx.bindTo
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -30,11 +32,13 @@ interface LocationService {
         data class LocationDenied(val shouldRequestRationale: Boolean, val fromRequest: Boolean) : AuthorizationStatus()
     }
 
-    val hasRequestedPermissionAlready: Observable<Boolean>
+    val hasRequestedPermissionAlready: Subject<Boolean>
     val authorizationStatusDistinct: Observable<AuthorizationStatus>
     val deviceLocationEnabledDistinct: Observable<Boolean>
-
+    val currentUserLocation: Subject<Location>
+    val isTrackingUserLocation: Subject<Boolean>
     fun requestLocationPermissions(): Boolean
+    fun requestTrackingUserLocation()
 }
 
 class LocationServiceImpl(
@@ -57,23 +61,40 @@ class LocationServiceImpl(
 
     private val deviceLocationEnabled: Subject<Boolean> = BehaviorSubject.create()
 
-    override var hasRequestedPermissionAlready: Observable<Boolean> = BehaviorSubject.createDefault(permissionRequested)
+    private var currentActivity: Activity? = null
 
-    override val authorizationStatusDistinct: Observable<LocationService.AuthorizationStatus> = authorizationStatus.distinctUntilChanged()
-
-    override val deviceLocationEnabledDistinct: Observable<Boolean> = deviceLocationEnabled.distinctUntilChanged()
-
-    var currentActivity: Activity? = null
-
-    private var locationModeChangeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private val locationModeChangeReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             calculateAndUpdateStatus()
         }
     }
 
+    private val locationProvider: LocationProvider
+
+    override var hasRequestedPermissionAlready: Subject<Boolean> = BehaviorSubject.createDefault(permissionRequested)
+
+    override val authorizationStatusDistinct: Observable<LocationService.AuthorizationStatus> = authorizationStatus.distinctUntilChanged()
+
+    override val deviceLocationEnabledDistinct: Observable<Boolean> = deviceLocationEnabled.distinctUntilChanged()
+
+    override val currentUserLocation: Subject<Location> = BehaviorSubject.create()
+
+    override val isTrackingUserLocation: Subject<Boolean> = BehaviorSubject.create()
+
+
     init {
+        locationProvider = FuzedLocationProvider(app)
+
+        locationProvider.currentLocation
+                .bindTo(currentUserLocation)
+
+        locationProvider.isTrackingLocationChanges
+                .bindTo(isTrackingUserLocation)
+
+
         val app = app as Application
+
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity?) {
 
@@ -146,6 +167,10 @@ class LocationServiceImpl(
         } else {
             authorizationStatus.onNext(LocationService.AuthorizationStatus.LocationAllowed)
         }
+    }
+
+    override fun requestTrackingUserLocation() {
+        locationProvider.startLocationTracking()
     }
 
     override fun requestLocationPermissions(): Boolean {
