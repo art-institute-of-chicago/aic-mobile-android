@@ -211,13 +211,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.displayMode
-                .filterFlatMap({ it is MapDisplayMode.Tour }, { it as MapDisplayMode.Tour })
+                .filterTo<MapDisplayMode, MapDisplayMode.Tour>()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (tour) -> displayFragmentInInfoContainer(TourCarouselFragment.create(tour)) }
                 .disposedBy(disposeBag)
 
         viewModel.displayMode
-                .filterFlatMap({ it is MapDisplayMode.Search<*> }, { it as MapDisplayMode.Search<*> })
+                .filterTo<MapDisplayMode, MapDisplayMode.Search<*>>()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { searchObject ->
                     when (searchObject) {
@@ -258,7 +258,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     if (mode is MapDisplayMode.Search<*>) {
                         // Only need to zoom out all the way. Specific bounds are irrelevant
                         map.animateCamera(
-                                CameraUpdateFactory.zoomTo(ZOOM_MIN)
+                                CameraUpdateFactory.newLatLngZoom(
+                                        defaultMapPosition,
+                                        ZOOM_MIN
+                                )
                         )
                     } else {
                         // Make sure we can see all of the specified positions
