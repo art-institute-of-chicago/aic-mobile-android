@@ -16,6 +16,20 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.search_app_bar_layout.*
 import kotlin.reflect.KClass
 
+/**
+ * One of the primary fragments of the app. This does not have its own entry in
+ * the bottom navigation bar, unlike `WelcomeActivity`, `AudioActivity`,
+ * `MapActivity`, and `InfoActivity`. Instead, an instance may appear under any
+ * of those sections.
+ *
+ * Callers should not normally need to load this into a [SearchActivity].
+ *
+ * This class is backed by a single [SearchViewModel], which in turn delegates
+ * some important functions to a global [SearchResultsManager].
+ *
+ * See [bindSearchText] for a little more info about how the input events are
+ * hooked up.
+*/
 class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
     lateinit var textChangesDisposable: Disposable
@@ -50,7 +64,7 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
                 .subscribe {
                     if (searchEditText.text.toString() != it) {
                         // It is important to dispose here as otherwise we would get into
-                        // an infinte loop of text updated, update edit text,
+                        // an infinite loop of text updated, update edit text,
                         // notify edit text updated etc etc
                         textChangesDisposable.dispose()
                         searchEditText.setText(it)
@@ -100,6 +114,13 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
                 .disposedBy(disposeBag)
     }
 
+    /**
+     * The [android.widget.EditText] which provides the text
+     *
+     * 1. comes from this fragment's layout
+     * 2. is inflated inside the [toolbar]
+     * 3. must default to being empty (we skip the initial value under that assumption)
+     */
     private fun bindSearchText() {
         textChangesDisposable = searchEditText
                 .afterTextChangeEvents()
