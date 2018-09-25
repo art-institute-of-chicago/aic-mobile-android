@@ -23,6 +23,12 @@ import kotlin.reflect.KClass
  */
 class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel>() {
 
+    enum class Type {
+        Map,
+        Search,
+        Tour
+    }
+
     override val viewModelClass: KClass<MapObjectDetailsViewModel>
         get() = MapObjectDetailsViewModel::class
 
@@ -36,9 +42,11 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
         get() = ScreenCategoryName.OnViewDetails
 
     private val mapObject: ArticObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+    private val type: Type by lazy { Type.valueOf(arguments!!.getString(ARG_TYPE)) }
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
     override fun onRegisterViewModel(viewModel: MapObjectDetailsViewModel) {
+        viewModel.type = type
         viewModel.articObject = mapObject
     }
 
@@ -141,10 +149,17 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
 
     companion object {
         private val ARG_MAP_OBJECT = MapObjectDetailsFragment::class.java.simpleName
+        private val ARG_TYPE = Type::class.java.simpleName
 
-        fun create(articObject: ArticObject): MapObjectDetailsFragment {
+        fun create(articObject: ArticObject, mode: MapDisplayMode): MapObjectDetailsFragment {
+            var type: Type = Type.Map
+            when(mode) {
+                is MapDisplayMode.Tour -> type = Type.Tour
+                is MapDisplayMode.Search<*> -> type = Type.Search
+            }
             return MapObjectDetailsFragment().apply {
                 arguments = Bundle().apply {
+                    putString(ARG_TYPE, type.name)
                     putParcelable(ARG_MAP_OBJECT, articObject)
                 }
             }

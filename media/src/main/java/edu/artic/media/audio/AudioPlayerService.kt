@@ -423,7 +423,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
     }
 
     override fun stopPlayer() {
-        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, (currentTrack as BehaviorSubject).value?.title.orEmpty())
+        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playAudioTourStop, (currentTrack as BehaviorSubject).value?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 }
