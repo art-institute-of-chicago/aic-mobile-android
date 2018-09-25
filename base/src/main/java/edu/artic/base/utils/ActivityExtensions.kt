@@ -5,6 +5,9 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
+import android.graphics.Color
+import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
 /**
@@ -21,6 +24,12 @@ fun Activity.setWindowFlag(bits: Int, on: Boolean) {
         winParams.flags = winParams.flags and bits.inv()
     }
     win.attributes = winParams
+}
+
+fun Activity.makeStatusBarTransparent() {
+    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+    window.statusBarColor = Color.TRANSPARENT
 }
 
 /**
