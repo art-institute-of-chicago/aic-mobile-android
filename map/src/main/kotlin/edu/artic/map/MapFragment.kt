@@ -404,7 +404,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe { (inMuseum, currentMap) ->
                     val map = currentMap.value!!
                     if (map.isMyLocationEnabled != inMuseum) {
-                        currentMap.value!!.isMyLocationEnabled = inMuseum
+                        map.isMyLocationEnabled = inMuseum
                     }
                 }.disposedBy(disposeBag)
 
