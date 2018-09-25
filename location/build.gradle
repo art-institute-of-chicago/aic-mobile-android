@@ -11,6 +11,7 @@ dependencies {
     implementation libs.rx_kotlin
     implementation libs.rx
     implementation libs.rx_android
+    implementation libs.location
     implementation libs.constraint_layout
     implementation project(':analytics')
     implementation project(':ui')
