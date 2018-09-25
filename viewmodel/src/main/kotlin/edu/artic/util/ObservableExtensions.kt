@@ -1,4 +1,4 @@
-package edu.artic.search
+package edu.artic.util
 
 import com.fuzz.retrofit.rx.requireValue
 import com.jakewharton.retrofit2.adapter.rxjava2.Result
