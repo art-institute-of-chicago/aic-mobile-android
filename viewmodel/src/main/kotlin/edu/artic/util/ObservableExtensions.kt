@@ -3,7 +3,10 @@ package edu.artic.util
 import com.fuzz.retrofit.rx.requireValue
 import com.jakewharton.retrofit2.adapter.rxjava2.Result
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.zipWith
+import io.reactivex.subjects.Subject
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 /**
  * Perform a simple [map] call over the emitted [Result]s.
@@ -21,4 +24,21 @@ fun <T> Observable<Result<T>>.mapWithDefault(onErrorValue : T) : Observable<T> {
             it.requireValue()
         }
     }
+}
+
+
+/**
+ * Delay this observable until the point when
+ *
+ * 1. [other] has emitted at least one value since this method call, and
+ * 2. [other] is not currently emitting, and
+ * 3. the last emission from [other] was at least 1 second in the past
+ *
+ * *Be careful*: if [other] does not ever emit, the observable will
+ * wait forever. Consider registering an [Observable.timeout] on
+ * the returned object to address that concern.
+ */
+fun <T> Observable<T>.waitForASecondOfCalmIn(other: Subject<*>): Observable<T> {
+    return zipWith(other.debounce(1, TimeUnit.SECONDS))
+            .map { (original, _) -> original }
 }
