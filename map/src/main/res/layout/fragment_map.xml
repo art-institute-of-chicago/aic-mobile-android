@@ -61,6 +61,22 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <ImageView
+        android:id="@+id/compass"
+        style="@style/MapFloor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/lowerLevel"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:src="@drawable/ic_active"
+        android:background="@null"
+        android:rotation="30"
+        android:alpha=".5"
+        android:visibility="invisible"
+        tools:visibility="visible"/>
+
     <FrameLayout
         android:id="@+id/infocontainer"
         android:layout_width="0dp"

@@ -1,5 +1,7 @@
 package edu.artic.map
 
+import android.location.Location
+import android.util.Log
 import com.fuzz.rx.*
 import com.fuzz.rx.Optional
 import com.google.android.gms.maps.GoogleMap
@@ -141,6 +143,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     val showCompass: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
+    val focusToTracking: Subject<Pair<GoogleMap, Optional<Location>>> = BehaviorSubject.create()
+
     /**
      * Safe and simple reference to [floor]. Only emits when the floor number changes, will
      * never emit [edu.artic.db.INVALID_FLOOR].
@@ -156,6 +160,15 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     // when set, normal visible region changes are locked until, say the map move completes.
     private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)
+
+    private var shouldFollowUserObservable: Subject<Boolean> = BehaviorSubject.createDefault(false)
+    private var shouldFollowUserDistinct: Observable<Boolean> = shouldFollowUserObservable.distinctUntilChanged()
+
+    private var shouldFollowUser: Boolean = false
+        set(value) {
+            field = value
+            shouldFollowUserObservable.onNext(value)
+        }
 
 
     init {
@@ -329,18 +342,33 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindTo(isUserInMuseum)
                 .disposedBy(disposeBag)
 
-        locationService.currentUserLocation
-                .subscribeBy {
-                    Timber.d("currentUserLocation: $it")
-                }.disposedBy(disposeBag)
-
         isUserInMuseum
                 .bindTo(showCompass)
                 .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                locationService.currentUserLocation,
+                shouldFollowUserDistinct,
+                currentMap
+        ) { currentLocation, shouldFollowUser, map ->
+            Timber.d("current Location: ${currentLocation.latitude} ${currentLocation.longitude}, ${currentLocation.bearing}" )
+            return@combineLatest if (map.value != null && shouldFollowUser) {
+                map.value to Optional(currentLocation)
+            } else {
+                map.value to Optional(null)
+            }
+        }
+                .filterFlatMap(
+                        { (map, _) -> map != null },
+                        { (map, optional) -> map!! to optional }
+                )
+                .bindTo(focusToTracking)
+                .disposedBy(disposeBag)
+
     }
 
     fun onClickCompass() {
-
+        shouldFollowUser = !shouldFollowUser
     }
 
 
