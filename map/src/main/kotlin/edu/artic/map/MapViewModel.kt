@@ -349,8 +349,12 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         val displayItem = displayMode.item
 
         Observable.just(displayItem)
-                .filterFlatMap({ it is ArticSearchArtworkObject }, { it as ArticSearchArtworkObject })
-                .map { listOf(it.toLatLng()) }
+                .map {
+                    when (it) {
+                        is ArticSearchArtworkObject -> listOf(it.toLatLng())
+                        else -> emptyList()
+                    }
+                }
                 .bindToMain(boundsOfInterestChanged)
                 .disposedBy(disposeBag)
 
