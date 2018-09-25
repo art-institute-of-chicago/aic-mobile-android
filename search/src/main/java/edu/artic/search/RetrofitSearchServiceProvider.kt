@@ -6,6 +6,7 @@ import edu.artic.db.ApiBodyGenerator
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ApiSearchResult
 import edu.artic.db.models.ArticDataObject
+import edu.artic.util.mapWithDefault
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
