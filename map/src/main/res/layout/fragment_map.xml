@@ -66,16 +66,16 @@
         style="@style/MapFloor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/lowerLevel"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/marginDouble"
-        android:src="@drawable/ic_active"
+        android:alpha=".5"
         android:background="@null"
         android:rotation="30"
-        android:alpha=".5"
+        android:src="@drawable/ic_compass"
         android:visibility="invisible"
-        tools:visibility="visible"/>
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lowerLevel"
+        tools:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/infocontainer"
