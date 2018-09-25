@@ -16,23 +16,9 @@ android {
 dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
-    kapt libs.glide_compiler
 
-    implementation libs.arch_navigation
-    implementation libs.arch_navigation_ui
-
-    api libs.design_support
-    implementation libs.glide
-    implementation project(':base')
-    implementation project(':ui')
-    implementation project(':viewmodel')
-    implementation project(':navigation')
-    implementation project(':search')
+    api project(':base')
     implementation project(':db')
-    implementation project(':localization')
-    implementation libs.constraint_layout
     implementation libs.rx_helpers
     implementation libs.rx_kotlin
-    implementation libs.zxing_core
-    implementation libs.zxing_android_embedded
 }
