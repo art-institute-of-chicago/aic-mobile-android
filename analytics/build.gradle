@@ -3,6 +3,8 @@ apply plugin: 'kotlin-kapt'
 dependencies {
     kapt libs.dagger_compiler
     implementation libs.dagger
+    implementation project(":localization")
+    implementation project(":membership")
 
     api libs.kotlin
     api libs.ga
