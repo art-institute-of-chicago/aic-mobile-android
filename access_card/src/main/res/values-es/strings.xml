@@ -8,7 +8,7 @@
     <string name="switchCardHolder">Cambiar titular de tarjeta</string>
     <string name="memberCard">Tarjeta del Miembro</string>
     <string name="accessMemberCardLabel">Tarjeta de acceso para miembros</string>
-    <string name="expires">Vence %s</string>
+    <string name="expires">Vence: %s</string>
     <string name="zipCodeHint">Ingrese su código postal…</string>
     <string name="memberIdHint">Ingrese la Identificación del Miembro...</string>
 </resources>
