@@ -181,7 +181,6 @@ class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector:
         item.backingObject?.let {
             playerControl.onNext(PlayerAction.Play(it, audioFileModel))
         }
-
     }
 
     fun pauseAudioTranslation() {
