@@ -135,8 +135,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
             }
             updateTextureViewSize(p1, p2)
             mMediaPlayer = mediaPlayer
-        } catch (e: Throwable) {
-            //Do nothing handle after progress bar is done loading
+        } catch (ignored: Throwable) {
+            ///TODO: instead, handle errors when we receive the Navigate.Forward event (i.e. when the progressBar is full)
         }
     }
 
