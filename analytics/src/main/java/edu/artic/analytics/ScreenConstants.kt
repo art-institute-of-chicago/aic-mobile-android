@@ -47,6 +47,7 @@ sealed class EventCategoryName(val eventCategoryName: String) {
     object SearchExhibition : EventCategoryName("search_exhibition")
     object SearchArtwork : EventCategoryName("search_artwork")
     object Member : EventCategoryName("member")
+    object Location : EventCategoryName("location")
 }
 
 
@@ -101,6 +102,8 @@ object AnalyticsAction {
     const val searchCategorySwitched = "category_switched"
 
     const val errorsAudioGuideFail = "audio_guide_fail"
+
+    const val headingEnabled = "headingEnabled"
 }
 
 object AnalyticsLabel {

@@ -1,6 +1,7 @@
 package edu.artic.map
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.annotation.UiThread
@@ -11,12 +12,10 @@ import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.TileOverlay
-import com.google.android.gms.maps.model.TileOverlayOptions
+import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
+import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
 import edu.artic.base.utils.removeAndReturnParcelable
@@ -39,6 +38,7 @@ import edu.artic.navigation.NavigationConstants.Companion.ARG_TOUR_START_STOP
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
@@ -164,15 +164,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isBuildingsEnabled = false
             isIndoorEnabled = false
             isTrafficEnabled = false
+            this.uiSettings.isMyLocationButtonEnabled = false
+            this.uiSettings.isCompassEnabled = false
             if (ContextCompat.checkSelfPermission(
                             requireContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED) {
-                isMyLocationEnabled = true
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                this.isMyLocationEnabled = true
             }
-            this.uiSettings.isCompassEnabled = false
-            this.uiSettings.isMyLocationButtonEnabled = false
-
             setMapStyle(MapStyleOptions(mapStyleOptions))
             setMinZoomPreference(ZOOM_MIN)
             setMaxZoomPreference(ZOOM_MAX)
@@ -188,6 +187,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun setupBindings(viewModel: MapViewModel) {
 
         getAudioServiceObservable()
@@ -209,6 +209,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         floorThree.clicks()
                 .subscribe { viewModel.floorChangedTo(3) }
                 .disposedBy(disposeBag)
+
+        compass.clicks()
+                .subscribeBy {
+                    viewModel.onClickCompass()
+                }.disposedBy(disposeBag)
 
         viewModel.displayMode
                 .filterTo<MapDisplayMode, MapDisplayMode.Tour>()
@@ -390,6 +395,47 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     service.stopPlayer()
                     hideFragmentInInfoContainer()
                     refreshMapDisplayMode()
+                }
+                .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                viewModel.isUserInMuseum,
+                viewModel.currentMap
+        ).filter { (_, currentMap) -> currentMap.value != null }
+                .subscribe { (inMuseum, currentMap) ->
+                    val map = currentMap.value!!
+                    if (map.isMyLocationEnabled != inMuseum) {
+                        map.isMyLocationEnabled = inMuseum
+                    }
+                }.disposedBy(disposeBag)
+
+        viewModel.showCompass
+                .bindToMain(compass.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.focusToTracking
+                .distinctUntilChanged()
+                .subscribe { (map, wrapped) ->
+                    val location = wrapped.value
+                    if (location != null) {
+                        compass.rotation = 0.0f
+                        compass.alpha = 1.0f
+                        map.uiSettings.setAllGesturesEnabled(false)
+
+                        map.animateCamera(
+                                CameraUpdateFactory
+                                        .newCameraPosition(
+                                                CameraPosition.Builder(map.cameraPosition)
+                                                        .bearing(location.bearing)
+                                                        .target(LatLng(location.latitude, location.longitude))
+                                                        .build()
+                                        )
+                        )
+                    } else {
+                        map.uiSettings.setAllGesturesEnabled(true)
+                        compass.rotation = 30f
+                        compass.alpha = .5f
+                    }
                 }
                 .disposedBy(disposeBag)
     }

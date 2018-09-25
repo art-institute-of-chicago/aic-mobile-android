@@ -1,5 +1,6 @@
 package edu.artic.map
 
+import android.location.Location
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -40,3 +41,7 @@ internal val museumBounds: LatLngBounds = LatLngBounds(
         // northeast
         LatLng(41.883309, -87.617464)
 )
+
+fun isLocationInMuseum(location : Location) : Boolean {
+    return museumBounds.contains(LatLng(location.latitude, location.longitude))
+}

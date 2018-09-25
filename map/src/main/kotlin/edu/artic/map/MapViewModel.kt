@@ -1,5 +1,6 @@
 package edu.artic.map
 
+import android.location.Location
 import com.fuzz.rx.*
 import com.fuzz.rx.Optional
 import com.google.android.gms.maps.GoogleMap
@@ -29,6 +30,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -44,9 +46,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                                        private val searchManager: SearchManager,
                                        private val analyticsTracker: AnalyticsTracker,
                                        private val tourProgressManager: TourProgressManager,
+                                       private val locationService: LocationService,
                                        articMapAnnotationDao: ArticMapAnnotationDao,
-                                       mapFloorDao: ArticMapFloorDao,
-                                       locationService: LocationService
+                                       mapFloorDao: ArticMapFloorDao
 ) : NavViewViewModel<MapViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -136,6 +138,12 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      */
     val switchTourRequest: Subject<Pair<ArticTour, ArticTour.TourStop>> = PublishSubject.create()
 
+    val isUserInMuseum: Subject<Boolean> = BehaviorSubject.createDefault(false)
+
+    val showCompass: Subject<Boolean> = BehaviorSubject.createDefault(false)
+
+    val focusToTracking: Subject<Pair<GoogleMap, Optional<Location>>> = BehaviorSubject.create()
+
     /**
      * Safe and simple reference to [floor]. Only emits when the floor number changes, will
      * never emit [edu.artic.db.INVALID_FLOOR].
@@ -152,16 +160,19 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     // when set, normal visible region changes are locked until, say the map move completes.
     private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
+    private var shouldFollowUserObservable: Subject<Boolean> = BehaviorSubject.createDefault(false)
+    private var shouldFollowUserDistinct: Observable<Boolean> = shouldFollowUserObservable.distinctUntilChanged()
+
+    private var shouldFollowUser: Boolean = false
+        set(value) {
+            field = value
+            shouldFollowUserObservable.onNext(value)
+        }
+
+
     init {
 
-        // It is crucial that this navigation event does not conflict with `displayMode` emissions.
-        locationService.hasRequestedPermissionAlready
-                .filter { !it }
-                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
-                .waitForASecondOfCalmIn(displayMode)
-                .delay(1, TimeUnit.SECONDS)
-                .bindTo(navigateTo)
-                .disposedBy(disposeBag)
+        setupLocationServiceBindings()
 
         mapFloorDao.getMapFloors()
                 .map { floorMap -> floorMap.associateBy { it.number } }
@@ -308,6 +319,57 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindTo(tourProgressManager.proposedTour)
                 .disposedBy(disposeBag)
     }
+
+    private fun setupLocationServiceBindings() {
+
+        locationService.hasRequestedPermissionAlready
+                .filter { !it }
+                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
+                .waitForASecondOfCalmIn(displayMode)
+                .delay(1, TimeUnit.SECONDS)
+                .bindTo(navigateTo)
+                .disposedBy(disposeBag)
+
+        locationService.currentUserLocation
+                .map {
+                    isLocationInMuseum(it)
+                }
+                .bindTo(isUserInMuseum)
+                .disposedBy(disposeBag)
+
+        isUserInMuseum
+                .bindTo(showCompass)
+                .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                locationService.currentUserLocation,
+                shouldFollowUserDistinct,
+                currentMap
+        ) { currentLocation, shouldFollowUser, map ->
+            Timber.d("current Location: ${currentLocation.latitude} ${currentLocation.longitude}, ${currentLocation.bearing}")
+            return@combineLatest if (map.value != null && shouldFollowUser) {
+                map.value to Optional(currentLocation)
+            } else {
+                map.value to Optional(null)
+            }
+        }
+                .filterFlatMap(
+                        { (map, _) -> map != null },
+                        { (map, optional) -> map!! to optional }
+                )
+                .bindTo(focusToTracking)
+                .disposedBy(disposeBag)
+
+    }
+
+    fun onClickCompass() {
+        shouldFollowUser = !shouldFollowUser
+
+        if (shouldFollowUser) {
+            analyticsTracker.reportEvent(EventCategoryName.Location, AnalyticsAction.headingEnabled)
+        }
+    }
+
 
     fun setMap(map: GoogleMap) {
         currentMap.onNext(optionalOf(map))
@@ -486,6 +548,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Loads display mode for the map.
      */
     fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticSearchArtworkObject?, searchedAnnotationType: String?) {
+
+        locationService.requestTrackingUserLocation()
 
         /**
          * Store the search object to memory.

@@ -56,6 +56,7 @@ buildscript {
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",
                 ga                      : "com.google.android.gms:play-services-analytics:${firebase_version}",
                 maps                    : "com.google.android.gms:play-services-maps:15.0.1",
+                location                : "com.google.android.gms:play-services-location:15.0.1",
                 exo_player_core         : "com.google.android.exoplayer:exoplayer-core:$exo_player_version",
                 exo_player_dash         : "com.google.android.exoplayer:exoplayer-dash:$exo_player_version",
                 exo_player_ui           : "com.google.android.exoplayer:exoplayer-ui:$exo_player_version",
