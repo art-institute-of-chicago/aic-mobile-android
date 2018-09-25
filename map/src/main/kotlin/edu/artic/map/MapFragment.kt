@@ -1,6 +1,7 @@
 package edu.artic.map
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.annotation.UiThread
@@ -39,6 +40,7 @@ import edu.artic.navigation.NavigationConstants.Companion.ARG_TOUR_START_STOP
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
@@ -164,15 +166,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isBuildingsEnabled = false
             isIndoorEnabled = false
             isTrafficEnabled = false
-            if (ContextCompat.checkSelfPermission(
-                            requireContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED) {
-                isMyLocationEnabled = true
-            }
-            this.uiSettings.isCompassEnabled = false
             this.uiSettings.isMyLocationButtonEnabled = false
-
+            if(ContextCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED){
+                this.isMyLocationEnabled = true
+            }
             setMapStyle(MapStyleOptions(mapStyleOptions))
             setMinZoomPreference(ZOOM_MIN)
             setMaxZoomPreference(ZOOM_MAX)
@@ -188,6 +188,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun setupBindings(viewModel: MapViewModel) {
 
         getAudioServiceObservable()
@@ -392,6 +393,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     refreshMapDisplayMode()
                 }
                 .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                viewModel.isUserInMuseum,
+                viewModel.currentMap
+        ).filter { (_, currentMap) -> currentMap.value != null }
+                .subscribe { (inMuseum, currentMap) ->
+                    val map = currentMap.value!!
+                    if (map.isMyLocationEnabled != inMuseum) {
+                        currentMap.value!!.isMyLocationEnabled = inMuseum
+                    }
+                }.disposedBy(disposeBag)
+
+        viewModel.showCompass
     }
 
     override fun setupNavigationBindings(viewModel: MapViewModel) {

@@ -29,6 +29,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -44,9 +45,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                                        private val searchManager: SearchManager,
                                        private val analyticsTracker: AnalyticsTracker,
                                        private val tourProgressManager: TourProgressManager,
+                                       private val locationService: LocationService,
                                        articMapAnnotationDao: ArticMapAnnotationDao,
-                                       mapFloorDao: ArticMapFloorDao,
-                                       locationService: LocationService
+                                       mapFloorDao: ArticMapFloorDao
 ) : NavViewViewModel<MapViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -136,6 +137,10 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      */
     val switchTourRequest: Subject<Pair<ArticTour, ArticTour.TourStop>> = PublishSubject.create()
 
+    val isUserInMuseum: Subject<Boolean> = BehaviorSubject.createDefault(false)
+
+    val showCompass: Subject<Boolean> = BehaviorSubject.createDefault(false)
+
     /**
      * Safe and simple reference to [floor]. Only emits when the floor number changes, will
      * never emit [edu.artic.db.INVALID_FLOOR].
@@ -152,16 +157,10 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     // when set, normal visible region changes are locked until, say the map move completes.
     private val lockVisibleRegion: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
+
     init {
 
-        // It is crucial that this navigation event does not conflict with `displayMode` emissions.
-        locationService.hasRequestedPermissionAlready
-                .filter { !it }
-                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
-                .waitForASecondOfCalmIn(displayMode)
-                .delay(1, TimeUnit.SECONDS)
-                .bindTo(navigateTo)
-                .disposedBy(disposeBag)
+        setupLocationServiceBindings()
 
         mapFloorDao.getMapFloors()
                 .map { floorMap -> floorMap.associateBy { it.number } }
@@ -308,6 +307,42 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindTo(tourProgressManager.proposedTour)
                 .disposedBy(disposeBag)
     }
+
+    private fun setupLocationServiceBindings() {
+
+        locationService.hasRequestedPermissionAlready
+                .filter { !it }
+                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
+                .waitForASecondOfCalmIn(displayMode)
+                .delay(1, TimeUnit.SECONDS)
+                .bindTo(navigateTo)
+                .disposedBy(disposeBag)
+
+        locationService.currentUserLocation
+                .map {
+                    val minLat = 41.878355
+                    val maxLat = 41.880831
+                    val minLong = -87.624293
+                    val maxLong = -87.620688
+                    return@map it.latitude > minLat && it.latitude < maxLat && it.longitude > minLong && it.longitude < maxLong
+                }
+                .bindTo(isUserInMuseum)
+                .disposedBy(disposeBag)
+
+        locationService.currentUserLocation
+                .subscribeBy {
+                    Timber.d("currentUserLocation: $it")
+                }.disposedBy(disposeBag)
+
+        isUserInMuseum
+                .bindTo(showCompass)
+                .disposedBy(disposeBag)
+    }
+
+    fun onClickCompass() {
+
+    }
+
 
     fun setMap(map: GoogleMap) {
         currentMap.onNext(optionalOf(map))
@@ -486,6 +521,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Loads display mode for the map.
      */
     fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticSearchArtworkObject?, searchedAnnotationType: String?) {
+
+        locationService.requestTrackingUserLocation()
 
         /**
          * Store the search object to memory.
