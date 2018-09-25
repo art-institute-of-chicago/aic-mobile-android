@@ -185,6 +185,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
             val ctx = requireContext()
 
             if (hasTransparentStatusBar()) {
+                act.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                 act.window?.statusBarColor = Color.TRANSPARENT
             } else {
