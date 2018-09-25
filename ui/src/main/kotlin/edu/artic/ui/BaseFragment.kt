@@ -18,7 +18,6 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.getThemeColors
 import edu.artic.base.utils.setWindowFlag
-import timber.log.Timber
 import javax.inject.Inject
 
 abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
@@ -183,12 +182,17 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
             // change for the duration of this call.
             val act = requireActivity()
             val ctx = requireContext()
+            val decorView = act.window?.decorView
 
             if (hasTransparentStatusBar()) {
-                act.window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                 act.window?.statusBarColor = Color.TRANSPARENT
             } else {
+                decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 if (customToolbarColorResource == 0) {
                     act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                     val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
