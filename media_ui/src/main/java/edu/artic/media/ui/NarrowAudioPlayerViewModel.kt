@@ -23,7 +23,7 @@ class NarrowAudioPlayerViewModel @Inject constructor(
     val resumeAudioPlayBack: Subject<Boolean> = PublishSubject.create()
 
     fun userSawAudioTutorial() {
-        audioPrefManager.hasPlayedAudioBefore = true
+        audioPrefManager.hasSeenAudioTutorial = true
         resumeAudioPlayBack.onNext(true)
     }
 
@@ -33,7 +33,7 @@ class NarrowAudioPlayerViewModel @Inject constructor(
 
 
     init {
-        audioServiceHook.playbackStartedForFirstTime
+        audioServiceHook.displayAudioTutorial
                 .filter { it }
                 .subscribe {
                     navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioTutorial))

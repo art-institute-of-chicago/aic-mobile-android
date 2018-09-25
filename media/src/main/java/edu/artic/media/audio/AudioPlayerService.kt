@@ -40,7 +40,6 @@ import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -202,8 +201,13 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 is PlayBackAction.Play -> {
                     // No need to seek here; that'll be done in 'setArticObject' if needed
                     setArticObject(playBackAction.audioFile, playBackAction.audioModel)
-                    if (!audioPrefManager.hasPlayedAudioBefore) {
-                        audioServiceHook.playbackStartedForFirstTime.onNext(true)
+                    /**
+                     * If the audio is being played for the first time, make sure we invoke
+                     * [AudioServiceHook.displayAudioTutorial] event.
+                     * This hook is used for displaying the Audio Tutorial Screen.
+                     */
+                    if (!audioPrefManager.hasSeenAudioTutorial) {
+                        audioServiceHook.displayAudioTutorial.onNext(true)
                     } else {
                         player.playWhenReady = true
                     }
