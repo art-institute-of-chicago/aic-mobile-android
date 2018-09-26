@@ -3,7 +3,6 @@ package edu.artic.events
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
-import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
@@ -102,8 +101,9 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
     }
 
     fun onClickRegisterToday() {
-        analyticsTracker.reportEvent(ScreenCategoryName.Events, AnalyticsAction.linkPressed, event?.title
-                ?: AnalyticsLabel.Empty)
-        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LoadUrl(event!!.buttonURL)))
+        event?.let {
+            analyticsTracker.reportEvent(ScreenCategoryName.Events, AnalyticsAction.linkPressed, it.title)
+            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LoadUrl(it.buttonURL)))
+        }
     }
 }
