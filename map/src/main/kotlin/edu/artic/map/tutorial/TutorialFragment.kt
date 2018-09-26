@@ -2,10 +2,12 @@ package edu.artic.map.tutorial
 
 import android.os.Bundle
 import android.support.v4.view.ViewPager
+import android.view.MotionEvent
 import android.view.View
 import com.fuzz.indicator.OffSetHint
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
@@ -14,6 +16,7 @@ import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.map.R
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_tutorial.*
 import kotlin.reflect.KClass
 
@@ -27,7 +30,12 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.setOnTouchListener { _, _ -> true }
+        view.setOnTouchListener { _, event ->
+            if(event.action == MotionEvent.ACTION_DOWN) {
+                viewModel.touched()
+            }
+            true
+        }
 
         viewPager.adapter = adapter.toPagerAdapter()
         viewPagerIndicator.setViewPager(viewPager)
@@ -82,6 +90,15 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     viewModel.onPopupBackClick()
                 }
                 .disposedBy(disposeBag)
+    }
+
+    override fun setupNavigationBindings(viewModel: TutorialViewModel) {
+        super.setupNavigationBindings(viewModel)
+        viewModel.navigateTo
+                .filterFlatMap({ it is Navigate.Back }, { it as Navigate.Back })
+                .subscribe {
+                    activity?.onBackPressed()
+                }.disposedBy(navigationDisposeBag)
     }
 
 }
