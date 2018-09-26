@@ -14,6 +14,8 @@
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="languageSettingsBackgroundColor">@color/white</item>
         <item name="languageSettingsButtonTextColor">@color/radiobutton_text_color_list</item>
+        <item name="languageSettingsButtonBackground">@drawable/language_radio_button_background</item>
+        <item name="languageSettingsContainsToolbar">true</item>
     </style>
 
     <style name="LanguageButton">
