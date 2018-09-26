@@ -55,9 +55,9 @@ fun <T> Observable<T>.handleNetworkError(context: Context): Observable<T> {
     return this.onErrorResumeNext { t: Throwable ->
         var exception = t
         if (t is UnknownHostException) {
-            exception = NetworkException(context.getString(R.string.noInternetConnection))
+            exception = NetworkException(context.getString(R.string.noInternetConnection), t)
         } else if (t is SocketTimeoutException) {
-            exception = NetworkException(context.getString(R.string.networkTimedOut))
+            exception = NetworkException(context.getString(R.string.networkTimedOut), t)
         }
         Observable.error(exception)
     }
