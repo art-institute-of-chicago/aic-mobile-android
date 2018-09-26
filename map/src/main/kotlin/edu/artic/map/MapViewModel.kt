@@ -343,8 +343,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         locationService.hasRequestedPermissionAlready
                 .filter { !it }
                 .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
-                .waitForASecondOfCalmIn(displayMode)
-                .delay(1, TimeUnit.SECONDS)
+                .delay (500, TimeUnit.MILLISECONDS)
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)
 

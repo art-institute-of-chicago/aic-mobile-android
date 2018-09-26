@@ -22,6 +22,7 @@ import edu.artic.base.utils.removeAndReturnParcelable
 import edu.artic.base.utils.removeAndReturnString
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.*
+import edu.artic.location.LocationPromptFragment
 import edu.artic.location.museumBounds
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
@@ -396,7 +397,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .switchTourRequest
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (currentTour, startStop) ->
+                .subscribeBy { (_, _) ->
                     displayLeaveTourConfirmation()
                 }.disposedBy(disposeBag)
 
@@ -462,7 +463,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe {
                     when (it) {
                         MapViewModel.NavigationEndpoint.LocationPrompt -> {
-                            navController.navigate(R.id.goToLocationPrompt)
+                            requireActivity().supportFragmentManager
+                                    ?.beginTransaction()
+                                    ?.replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
+                                    ?.addToBackStack("LocationPromptFragment")
+                                    ?.commit()
                         }
                     }
                 }.disposedBy(navigationDisposeBag)

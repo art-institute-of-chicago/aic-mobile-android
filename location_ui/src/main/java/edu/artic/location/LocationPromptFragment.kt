@@ -40,7 +40,7 @@ class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() 
         viewModel.navigateTo
                 .filter { it is Navigate.Back }
                 .subscribe {
-                    navController.popBackStack()
+                    activity?.onBackPressed()
                 }.disposedBy(navigationDisposeBag)
     }
 }
