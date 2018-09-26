@@ -76,7 +76,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                             }.show()
 
                 }).disposedBy(disposeBag)
-                .disposedBy(disposeBag)
+
 
         welcome.alpha = 0f
 
