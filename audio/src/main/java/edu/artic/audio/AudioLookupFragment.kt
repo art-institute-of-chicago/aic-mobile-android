@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.EditText
-import androidx.navigation.Navigation
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -16,8 +15,10 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicks
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticObject
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -125,7 +126,8 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                                     baseActivity.navController.navigate(R.id.goToSearch)
                                 }
                                 AudioLookupViewModel.NavigationEndpoint.AudioDetails -> {
-                                    baseActivity.navController.navigate(R.id.peekAudioDetails)
+                                    val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
+                                    startActivity(intent)
                                 }
                             }
                         }

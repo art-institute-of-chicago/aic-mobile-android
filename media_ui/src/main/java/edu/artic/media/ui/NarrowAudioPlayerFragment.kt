@@ -105,8 +105,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         }?.disposedBy(disposeBag)
 
         trackTitle.setOnClickListener {
-            val intent = NavigationConstants.AUDIO.asDeepLinkIntent()
-            intent.putExtras(argsBundle(true))
+            val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
             startActivity(intent)
         }
     }

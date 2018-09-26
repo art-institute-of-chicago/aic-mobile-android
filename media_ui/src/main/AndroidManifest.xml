@@ -17,6 +17,21 @@
                     android:scheme="artic" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".AudioDetailsActivity"
+            android:theme="@style/AudioTutorialTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="edu.artic.media.audio_details"
+                    android:scheme="artic" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

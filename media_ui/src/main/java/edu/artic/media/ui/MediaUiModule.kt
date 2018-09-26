@@ -30,4 +30,7 @@ abstract class MediaUiModule {
     @get:ContributesAndroidInjector
     abstract val audioTutorialActivity: AudioTutorialActivity
 
+    @get:ContributesAndroidInjector
+    abstract val audioDetailsActivity: AudioDetailsActivity
+
 }
