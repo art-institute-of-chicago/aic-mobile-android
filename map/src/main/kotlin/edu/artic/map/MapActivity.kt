@@ -33,6 +33,7 @@ class MapActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         bottomNavigation.apply {
+
             disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map
             preventReselection()
