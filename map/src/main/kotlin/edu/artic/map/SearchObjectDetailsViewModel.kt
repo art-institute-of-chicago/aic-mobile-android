@@ -53,7 +53,9 @@ class SearchObjectDetailsViewModel @Inject constructor(val languageSelector: Lan
     /**
      * when the search type is amenities fetch all the amenities and create viewmodels
      */
-    fun viewResumed(requestedSearchObject: ArticSearchArtworkObject?, requestedSearchAmenityType: String?) {
+    fun viewResumed(requestedSearchObject: ArticSearchArtworkObject?,
+                    requestedSearchAmenityType: String?,
+                    exhibition: ArticExhibition?) {
 
         /**
          * latestTourObject and amenityType are mutually exclusive
@@ -97,6 +99,12 @@ class SearchObjectDetailsViewModel @Inject constructor(val languageSelector: Lan
                         .bindTo(searchedObjectViewModels)
                         .disposedBy(disposeBag)
             }
+        } else if (exhibition != null) {
+            Observable.just(exhibition)
+                    .map { exhibition -> ExhibitionViewModel(exhibition) }
+                    .map { listOf(it) }
+                    .bindTo(searchedObjectViewModels)
+                    .disposedBy(disposeBag)
         }
     }
 
@@ -185,6 +193,22 @@ class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector:
 
     fun pauseAudioTranslation() {
         playerControl.onNext(PlayerAction.Pause())
+    }
+}
+
+/**
+ * ViewModel for the Exhibition cell.
+ */
+class ExhibitionViewModel(val item: ArticExhibition) : SearchObjectBaseViewModel() {
+    val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.artworks)
+    val description: Subject<String> = BehaviorSubject.create()
+
+    init {
+        title.onNext(item.title?.replace("\r", "\n"))
+        item.legacy_image_mobile_url?.let {
+            imageUrl.onNext(it)
+        }
+        description.onNext(item.short_description.orEmpty())
     }
 }
 

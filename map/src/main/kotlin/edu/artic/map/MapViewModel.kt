@@ -88,6 +88,14 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      */
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
     /**
+     * Current object of interest.
+     *
+     * Set by search or by tapping a marker.
+     *
+     * Not set by default.
+     */
+    val selectedExhibition: Subject<ArticExhibition> = BehaviorSubject.create()
+    /**
      * Position and desired [MapFocus].
      *
      * Set when something has been clicked.
@@ -307,6 +315,14 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 }
                 .disposedBy(disposeBag)
 
+        selectedExhibition
+                .subscribe { exhibition ->
+                    exhibition.floor?.let {
+                        floorChangedTo(it)
+                    }
+                }
+                .disposedBy(disposeBag)
+
         this.currentMap
                 .bindTo(mapMarkerConstructor.map)
                 .disposedBy(disposeBag)
@@ -392,6 +408,11 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         selectedArticObject.onNext(articObject)
     }
 
+    fun exhibitionSelected(exhibition: ArticExhibition) {
+        lockVisibleRegion.onNext(true)
+        selectedExhibition.onNext(exhibition)
+    }
+
     /**
      * Called (essentially exclusively) by [loadMapDisplayMode].
      *
@@ -414,6 +435,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .map {
                     when (it) {
                         is ArticSearchArtworkObject -> listOf(it.toLatLng())
+                        is ArticExhibition -> listOf(it.toLatLng())
                         else -> emptyList()
                     }
                 }
@@ -424,6 +446,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
             displayItem.backingObject?.let {
                 articObjectSelected(it)
             }
+        }
+        if (displayItem is ArticExhibition) {
+            exhibitionSelected(displayItem)
         }
     }
 
@@ -496,18 +521,19 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 tourProgressManager.selectedTour,
                 tourProgressManager.proposedTour,
                 searchManager.selectedObject,
-                searchManager.selectedAmenityType
-        ) { currentTour, nextTour, lastSearchedObject, annotationType ->
+                searchManager.selectedAmenityType,
+                searchManager.selectedExhibition
+        ) { currentTour, nextTour, lastSearchedObject, annotationType, exhibition ->
             val tours = currentTour.value to nextTour.value
-            val search = lastSearchedObject.value to annotationType.value
+            val search = Triple(lastSearchedObject.value, annotationType.value, exhibition.value)
             tours to search
         }
                 .take(1)
                 .subscribeBy { (tours, searchTypes) ->
                     val (activeTour, proposedTour) = tours
-                    val (searchObject, searchAnnotationType) = searchTypes
+                    val (searchObject, searchAnnotationType, searchExhibition) = searchTypes
 
-                    if ((searchObject != null || searchAnnotationType != null) && requestedTour == null) {
+                    if ((searchObject != null || searchAnnotationType != null || searchExhibition != null) && requestedTour == null) {
                         /**
                          * If user requests to load search when tour is active, prompt user to leave tour.
                          */
@@ -518,6 +544,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                                 displayModeChanged(MapDisplayMode.Search.ObjectSearch(searchObject))
                             } else if (searchAnnotationType != null) {
                                 displayModeChanged(MapDisplayMode.Search.AmenitiesSearch(searchAnnotationType))
+                            } else if (searchExhibition != null) {
+                                displayModeChanged(MapDisplayMode.Search.ExhibitionSearch(searchExhibition))
                             }
                         }
                     } else if (requestedTour != null && activeTour != null && requestedTour != activeTour) {
@@ -547,7 +575,11 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     /**
      * Loads display mode for the map.
      */
-    fun onResume(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?, searchedObject: ArticSearchArtworkObject?, searchedAnnotationType: String?) {
+    fun onResume(requestedTour: ArticTour?,
+                 requestedTourStop: ArticTour.TourStop?,
+                 searchedObject: ArticSearchArtworkObject?,
+                 searchedAnnotationType: String?,
+                 searchExhibition: ArticExhibition?) {
 
         locationService.requestTrackingUserLocation()
 
@@ -562,11 +594,20 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
          */
         searchedObject?.let {
             searchManager.selectedObject.onNext(Optional(searchedObject))
+            searchManager.selectedAmenityType.onNext(Optional(null))
+            searchManager.selectedExhibition.onNext(Optional(null))
         }
 
         searchedAnnotationType?.let {
             searchManager.selectedObject.onNext(Optional(null))
             searchManager.selectedAmenityType.onNext(Optional(it))
+            searchManager.selectedExhibition.onNext(Optional(null))
+        }
+
+        searchExhibition?.let {
+            searchManager.selectedObject.onNext(Optional(null))
+            searchManager.selectedAmenityType.onNext(Optional(null))
+            searchManager.selectedExhibition.onNext(Optional(it))
         }
 
         loadMapDisplayMode(requestedTour, requestedTourStop)

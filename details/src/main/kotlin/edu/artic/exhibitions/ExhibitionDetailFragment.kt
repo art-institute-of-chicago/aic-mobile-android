@@ -1,5 +1,6 @@
 package edu.artic.exhibitions
 
+import android.content.Intent
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -9,15 +10,17 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
+import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.details.R
 import edu.artic.image.listenerSetHeight
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_exhibition_details.*
-import timber.log.Timber
 import kotlin.reflect.KClass
 
 
@@ -106,7 +109,12 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                             when (endpoint) {
                                 is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
-                                    Timber.d("Show on map")
+                                    analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowExhibition, exhibition.title)
+                                    val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
+                                        putExtra(NavigationConstants.ARG_EXHIBITION_OBJECT, exhibition)
+                                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                                    }
+                                    startActivity(mapIntent)
                                 }
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {

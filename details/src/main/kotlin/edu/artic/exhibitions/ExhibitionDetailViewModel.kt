@@ -8,6 +8,7 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.details.R
 import edu.artic.localization.LanguageSelector
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class ExhibitionDetailViewModel
 @Inject
 constructor(dataObjectDao: ArticDataObjectDao,
+            val galleryDao: ArticGalleryDao,
             val analyticsTracker: AnalyticsTracker,
             languageSelector: LanguageSelector
 ) : NavViewViewModel<ExhibitionDetailViewModel.NavigationEndpoint>() {
