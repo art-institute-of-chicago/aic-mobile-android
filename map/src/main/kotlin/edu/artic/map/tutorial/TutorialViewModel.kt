@@ -10,7 +10,8 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class TutorialViewModel @Inject constructor() : NavViewViewModel<TutorialViewModel.NavigationEndpoint>() {
+class TutorialViewModel @Inject constructor(tutorialPreferencesManager: TutorialPreferencesManager)
+    : NavViewViewModel<TutorialViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
 
@@ -48,6 +49,7 @@ class TutorialViewModel @Inject constructor() : NavViewViewModel<TutorialViewMod
                         R.string.tutorial_audio_pins_title
                 }.bindTo(tutorialTitle)
                 .disposedBy(disposeBag)
+        tutorialPreferencesManager.hasSeenTutorial = true
 
     }
 
@@ -71,7 +73,7 @@ class TutorialViewModel @Inject constructor() : NavViewViewModel<TutorialViewMod
 
     fun touched() {
         val stage = (currentTutorialStage as BehaviorSubject).value
-        if(stage == Stage.Two) {
+        if (stage == Stage.Two) {
             navigateTo.onNext(Navigate.Back())
         }
     }

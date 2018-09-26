@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/marine"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:layout_marginBottom="@dimen/design_bottom_navigation_height">
 
     <ImageView
         android:id="@+id/promptTopIcon"
