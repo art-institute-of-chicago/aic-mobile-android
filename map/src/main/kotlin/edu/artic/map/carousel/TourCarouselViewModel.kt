@@ -158,8 +158,12 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
 }
 
 open class TourCarousalBaseViewModel : BaseViewModel() {
+    enum class Type {
+        Stop,
+        Overview
+    }
     sealed class PlayerAction {
-        class Play(val requestedObject: Playable, val audioFileModel: AudioFileModel? = null) : PlayerAction()
+        class Play(val requestedObject: Playable, val audioFileModel: AudioFileModel? = null, val type: Type) : PlayerAction()
         class Pause : PlayerAction()
     }
 
@@ -185,7 +189,8 @@ class TourCarousalIntroViewModel(val languageSelector: LanguageSelector,
                     .toObservable()
                     .take(1)
                     .subscribe { audioFileModel ->
-                        playerControl.onNext(PlayerAction.Play(tour, languageSelector.selectFrom(audioFileModel.allTranslations(), true)))
+                        val fileMode = languageSelector.selectFrom(audioFileModel.allTranslations(), true)
+                        playerControl.onNext(PlayerAction.Play(tour, fileMode, Type.Overview))
                     }
         }
     }
@@ -260,7 +265,8 @@ class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: Art
                 .take(1)
                 .subscribe { articObject ->
                     articObject.audioFile?.let {
-                        playerControl.onNext(PlayerAction.Play(articObject, languageSelector.selectFrom(it.allTranslations(), true)))
+                        val fileMode = languageSelector.selectFrom(it.allTranslations(), true)
+                        playerControl.onNext(PlayerAction.Play(articObject, fileMode, Type.Stop))
                     }
 
                 }.disposedBy(disposeBag)

@@ -6,7 +6,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
@@ -146,7 +146,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     }
 
     fun onClickTour(pos: Int, tour: ArticTour) {
-        analyticsTracker.reportEvent(ScreenCategoryName.Tours, AnalyticsAction.OPENED, tour.title)
+        analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.OPENED, tour.title)
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.TourDetail(pos, tour)))
     }
 

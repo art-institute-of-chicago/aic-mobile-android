@@ -111,11 +111,19 @@ open class SearchBaseViewModel @Inject constructor(
                 }
             }
             is SearchTextCellViewModel -> {
-                analyticsTracker.reportEvent(
-                        ScreenCategoryName.Search,
-                        AnalyticsAction.searchAutocomplete,
-                        viewModel.textString
-                )
+                if (this is DefaultSearchSuggestionsViewModel) {
+                    analyticsTracker.reportEvent(
+                            EventCategoryName.Search,
+                            AnalyticsAction.searchPromoted,
+                            viewModel.textString
+                    )
+                } else {
+                    analyticsTracker.reportEvent(
+                            EventCategoryName.Search,
+                            AnalyticsAction.searchAutocomplete,
+                            viewModel.textString
+                    )
+                }
                 searchResultsManager.search(viewModel.textString)
             }
             is SearchHeaderCellViewModel -> {

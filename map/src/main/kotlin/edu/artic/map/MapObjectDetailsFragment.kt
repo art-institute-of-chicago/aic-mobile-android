@@ -23,6 +23,12 @@ import kotlin.reflect.KClass
  */
 class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel>() {
 
+    enum class Type {
+        Map,
+        Search,
+        Tour
+    }
+
     override val viewModelClass: KClass<MapObjectDetailsViewModel>
         get() = MapObjectDetailsViewModel::class
 
