@@ -4,7 +4,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticExhibition
@@ -25,6 +25,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private val dynamicCells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
     var parentViewModel : SearchResultsContainerViewModel? = null
+    var lastSearchTerm: String = ""
 
     init {
         setupOnMapSuggestionsBind()
@@ -90,10 +91,19 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                                 if (isEmpty()) {
                                     add(SearchEmptyCellViewModel())
                                     analyticsTracker.reportEvent(
-                                            ScreenCategoryName.Search,
+                                            EventCategoryName.Search,
                                             AnalyticsAction.searchNoResults,
                                             result.searchTerm
                                     )
+                                } else {
+                                    if (lastSearchTerm != result.searchTerm && result.searchTerm.trim().length > 3) {
+                                        analyticsTracker.reportEvent(
+                                                EventCategoryName.Search,
+                                                AnalyticsAction.searchLoaded,
+                                                result.searchTerm
+                                        )
+                                        lastSearchTerm = result.searchTerm.trim()
+                                    }
                                 }
 
                                 addAll(filterExhibitionsForViewModel(result.exhibitions))
