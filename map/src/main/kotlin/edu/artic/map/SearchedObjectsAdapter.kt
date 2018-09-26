@@ -25,30 +25,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
     override fun View.onBindView(item: SearchObjectBaseViewModel, position: Int) {
         when (item) {
             is DiningAnnotationViewModel -> {
-
-                item.imageUrl
-                        .map { it.isNotEmpty() }
-                        .bindToMain(amenityImage.visibility())
-                        .disposedBy(item.viewDisposeBag)
-
-                item.imageUrl
-                        .filter { it.isNotEmpty() }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            Glide.with(this)
-                                    .load(it)
-                                    .into(amenityImage)
-                        }
-                        .disposedBy(item.viewDisposeBag)
-
-                item.title
-                        .bindToMain(amenityType.text())
-                        .disposedBy(item.viewDisposeBag)
-
-                item.description
-                        .bindToMain(amenityDetails.text())
-                        .disposedBy(item.viewDisposeBag)
-
+                bindDiningAnnotationView(item, this)
             }
             is AnnotationViewModel -> {
                 item.title
@@ -60,80 +37,112 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                         .disposedBy(item.viewDisposeBag)
             }
             is ExhibitionViewModel -> {
-                item.imageUrl
-                        .filter { it.isNotEmpty() }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            Glide.with(this)
-                                    .load(it)
-                                    .into(exhibitionImage)
-                        }
-                        .disposedBy(item.viewDisposeBag)
-                item.title
-                        .bindToMain(exhibitionTitle.text())
-                        .disposedBy(item.viewDisposeBag)
-                item.description
-                        .bindToMain(exhibitionDetails.text())
-                        .disposedBy(item.viewDisposeBag)
+                bindExhibitionView(item, this)
             }
             is ArtworkViewModel -> {
-
-                item.imageUrl
-                        .filter { it.isNotEmpty() }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            Glide.with(this)
-                                    .load(it)
-                                    .into(objectImage)
-                        }
-                        .disposedBy(item.viewDisposeBag)
-
-                item.artworkTitle
-                        .bindToMain(objectTitle.text())
-                        .disposedBy(item.viewDisposeBag)
-
-                item.artistName
-                        .bindToMain(artist.text())
-                        .disposedBy(item.viewDisposeBag)
-
-                item.objectType
-                        .bindToMain(objectType.textRes())
-                        .disposedBy(item.viewDisposeBag)
-
-                playCurrent.clicks()
-                        .defaultThrottle()
-                        .subscribe {
-                            item.playAudioTranslation()
-                        }.disposedBy(item.viewDisposeBag)
-
-                pauseCurrent.clicks()
-                        .defaultThrottle()
-                        .subscribe {
-                            item.pauseAudioTranslation()
-                        }.disposedBy(item.viewDisposeBag)
-
-                item.playState.subscribe {playBackState->
-                    when (playBackState) {
-                        is AudioPlayerService.PlayBackState.Playing -> {
-                            playCurrent.visibility = View.INVISIBLE
-                            pauseCurrent.visibility = View.VISIBLE
-                        }
-                        is AudioPlayerService.PlayBackState.Paused -> {
-                            playCurrent.visibility = View.VISIBLE
-                            pauseCurrent.visibility = View.INVISIBLE
-                        }
-                        is AudioPlayerService.PlayBackState.Stopped -> {
-                            playCurrent.visibility = View.VISIBLE
-                            pauseCurrent.visibility = View.INVISIBLE
-                        }
-                    }
-                }.disposedBy(item.viewDisposeBag)
-
-                item.hasAudio
-                        .bindToMain(playCurrent.visibility())
-                        .disposedBy(item.viewDisposeBag)
+                bindArtworkView(item, this)
             }
         }
+    }
+
+    fun bindDiningAnnotationView(item: DiningAnnotationViewModel, view: View) {
+        item.imageUrl
+                .map { it.isNotEmpty() }
+                .bindToMain(view.amenityImage.visibility())
+                .disposedBy(item.viewDisposeBag)
+
+        item.imageUrl
+                .filter { it.isNotEmpty() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Glide.with(view)
+                            .load(it)
+                            .into(view.amenityImage)
+                }
+                .disposedBy(item.viewDisposeBag)
+
+        item.title
+                .bindToMain(view.amenityType.text())
+                .disposedBy(item.viewDisposeBag)
+
+        item.description
+                .bindToMain(view.amenityDetails.text())
+                .disposedBy(item.viewDisposeBag)
+    }
+
+    fun bindExhibitionView(item: ExhibitionViewModel, view: View) {
+        item.imageUrl
+                .filter { it.isNotEmpty() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Glide.with(view)
+                            .load(it)
+                            .into(view.exhibitionImage)
+                }
+                .disposedBy(item.viewDisposeBag)
+        item.title
+                .bindToMain(view.exhibitionTitle.text())
+                .disposedBy(item.viewDisposeBag)
+        item.description
+                .bindToMain(view.exhibitionDetails.text())
+                .disposedBy(item.viewDisposeBag)
+    }
+
+    fun bindArtworkView(item: ArtworkViewModel, view: View) {
+        item.imageUrl
+                .filter { it.isNotEmpty() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    Glide.with(view)
+                            .load(it)
+                            .into(view.objectImage)
+                }
+                .disposedBy(item.viewDisposeBag)
+
+        item.artworkTitle
+                .bindToMain(view.objectTitle.text())
+                .disposedBy(item.viewDisposeBag)
+
+        item.artistName
+                .bindToMain(view.artist.text())
+                .disposedBy(item.viewDisposeBag)
+
+        item.objectType
+                .bindToMain(view.objectType.textRes())
+                .disposedBy(item.viewDisposeBag)
+
+        view.playCurrent.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    item.playAudioTranslation()
+                }.disposedBy(item.viewDisposeBag)
+
+        view.pauseCurrent.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    item.pauseAudioTranslation()
+                }.disposedBy(item.viewDisposeBag)
+
+        item.playState.subscribe {playBackState->
+            when (playBackState) {
+                is AudioPlayerService.PlayBackState.Playing -> {
+                    view.playCurrent.visibility = View.INVISIBLE
+                    view.pauseCurrent.visibility = View.VISIBLE
+                }
+                is AudioPlayerService.PlayBackState.Paused -> {
+                    view.playCurrent.visibility = View.VISIBLE
+                    view.pauseCurrent.visibility = View.INVISIBLE
+                }
+                is AudioPlayerService.PlayBackState.Stopped -> {
+                    view.playCurrent.visibility = View.VISIBLE
+                    view.pauseCurrent.visibility = View.INVISIBLE
+                }
+            }
+        }.disposedBy(item.viewDisposeBag)
+
+        item.hasAudio
+                .bindToMain(view.playCurrent.visibility())
+                .disposedBy(item.viewDisposeBag)
     }
 
     override fun getLayoutResId(position: Int): Int {
