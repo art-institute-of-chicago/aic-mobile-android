@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="tutorial_mark_first_floor">You are on Floor 1</string>
+    <string name="tutorial_mark_compass">Tap to Orient Map</string>
+
+</resources>
