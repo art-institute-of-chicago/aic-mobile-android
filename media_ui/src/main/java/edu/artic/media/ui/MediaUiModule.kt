@@ -22,4 +22,12 @@ abstract class MediaUiModule {
     @get:ContributesAndroidInjector
     abstract val narrowAudioPlayerFragment: NarrowAudioPlayerFragment
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(AudioTutorialViewModel::class)
+    abstract fun audioTutorialViewModel(audioTutorialViewModel: AudioTutorialViewModel): ViewModel
+
+    @get:ContributesAndroidInjector
+    abstract val audioTutorialActivity: AudioTutorialActivity
+
 }

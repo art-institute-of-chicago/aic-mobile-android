@@ -1,16 +1,18 @@
 package edu.artic.splash
 
-import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.view.Surface
+import android.view.TextureView
+import android.view.View
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.asDeepLinkIntent
-import edu.artic.base.utils.setWindowFlag
+import edu.artic.base.utils.makeStatusBarTransparent
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
@@ -32,9 +34,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-        window?.statusBarColor = Color.TRANSPARENT
+        makeStatusBarTransparent()
 
         textureView.surfaceTextureListener = this
 

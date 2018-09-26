@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.app.FragmentManager
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -17,6 +18,7 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.ui.BaseFragment
 import edu.artic.ui.findFragmentInHierarchy
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_bottom_audio_player.*
@@ -109,6 +111,45 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         }
     }
 
+    override fun setupBindings(viewModel: NarrowAudioPlayerViewModel) {
+        super.setupBindings(viewModel)
+
+        /**
+         * Resume the audio translation.
+         */
+        viewModel.resumeAudioPlayBack
+                .filter { it }
+                .subscribe {
+                    boundService?.resumePlayer()
+                }.disposedBy(disposeBag)
+    }
+
+    override fun setupNavigationBindings(viewModel: NarrowAudioPlayerViewModel) {
+        super.setupNavigationBindings(viewModel)
+        viewModel.navigateTo
+                .subscribe {
+                    when (it) {
+                        is Navigate.Forward -> {
+                            when (it.endpoint) {
+                                is NarrowAudioPlayerViewModel.NavigationEndpoint.AudioTutorial -> {
+                                    val intent = NavigationConstants.AUDIO_TUTORIAL.asDeepLinkIntent()
+                                    startActivityForResult(intent, AUDIO_CONFIRMATION)
+                                }
+                            }
+                        }
+                    }
+                }.disposedBy(navigationDisposeBag)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == AppCompatActivity.RESULT_OK) {
+            if (requestCode == AUDIO_CONFIRMATION) {
+                viewModel.userSawAudioTutorial()
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         requireActivity().unbindService(serviceConnection)
@@ -118,7 +159,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
      * Binds the current track info and audio control actions with the service.
      */
     private fun setUpAudioServiceBindings() {
-        
+
         boundService?.let { audioService ->
             audioService.currentTrack
                     .subscribe { audioFile ->
@@ -144,6 +185,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
 
     companion object {
         const val ARG_SKIP_TO_DETAILS = "ARG_SKIP_TO_DETAILS"
+        const val AUDIO_CONFIRMATION = 777
 
         /**
          * Use this to modify an [Intent] for launching the AudioActivity's
