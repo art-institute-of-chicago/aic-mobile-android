@@ -38,6 +38,6 @@ class MapItemModel(
         backingObject?.let {
             return backingObject.getTourOrderNumberBasedOnDisplayMode(mode)
         }
-        return "1"
+        return null
     }
 }

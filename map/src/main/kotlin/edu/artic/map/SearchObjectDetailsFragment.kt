@@ -163,7 +163,7 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
             }
         }
 
-        fun loadExhibitonResults(exhibition: ArticExhibition): SearchObjectDetailsFragment {
+        fun loadExhibitionResults(exhibition: ArticExhibition): SearchObjectDetailsFragment {
             return SearchObjectDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_EXHIBITION_OBJECT, exhibition)
