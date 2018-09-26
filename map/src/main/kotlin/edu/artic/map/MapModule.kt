@@ -7,6 +7,8 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.map.carousel.*
+import edu.artic.map.tutorial.TutorialFragment
+import edu.artic.map.tutorial.TutorialViewModel
 import edu.artic.viewmodel.ViewModelKey
 import javax.inject.Singleton
 
@@ -32,6 +34,17 @@ abstract class MapModule {
     @ViewModelKey(SearchObjectDetailsViewModel::class)
     abstract fun searchObjectDetailsViewModel(mapViewModel: SearchObjectDetailsViewModel): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(TourCarouselViewModel::class)
+    abstract fun tourCarouselViewModel(tourCarouselViewModel: TourCarouselViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TutorialViewModel::class)
+    abstract fun tutorialViewModel(viewModel: TutorialViewModel): ViewModel
+
+
     @get:ContributesAndroidInjector
     abstract val mapActivity: MapActivity
 
@@ -50,10 +63,8 @@ abstract class MapModule {
     @get:ContributesAndroidInjector
     abstract val tourCarouselFragment: TourCarouselFragment
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(TourCarouselViewModel::class)
-    abstract fun tourCarouselViewModel(tourCarouselViewModel: TourCarouselViewModel): ViewModel
+    @get:ContributesAndroidInjector
+    abstract val tutorialFragment: TutorialFragment
 
     @Module
     companion object {
