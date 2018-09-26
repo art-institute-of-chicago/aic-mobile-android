@@ -38,4 +38,6 @@
     <string name="throughDate">Through %s</string>
     <string name="showOnMap" translatable="false">Show on Map</string>
     <string name="buyTickets">Buy Tickets</string>
+    <string name="errorDialogTitle">Error</string>
+
 </resources>

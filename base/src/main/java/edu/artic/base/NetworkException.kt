@@ -1,6 +1,6 @@
 package edu.artic.base
 
 /**
- * @author Philip Cohn-Cort (Fuzz)
+ * @author Sameer Dhakal (Fuzz)
  */
 class NetworkException(override var message: String) : Exception(message)
