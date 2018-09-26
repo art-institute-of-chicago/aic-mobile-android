@@ -31,7 +31,12 @@ data class ArticExhibition(
          * This value is defined by the associated [ArticGallery], associated
          * by [gallery_id].
          */
-        var longitude: Double? = null
+        var longitude: Double? = null,
+        /**
+         * This value is defined by the associated [ArticGallery], associated
+         * by [gallery_id].
+         */
+        var floor: Int? = null
 ) : Parcelable {
 
     val startTime: ZonedDateTime

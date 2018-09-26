@@ -32,6 +32,7 @@ import edu.artic.map.rendering.TRANSPARENCY_INVISIBLE
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
+import edu.artic.navigation.NavigationConstants.Companion.ARG_EXHIBITION_OBJECT
 import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
 import edu.artic.navigation.NavigationConstants.Companion.ARG_TOUR
 import edu.artic.navigation.NavigationConstants.Companion.ARG_TOUR_START_STOP
@@ -80,6 +81,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     private fun getLatestSearchObjectType(): String? {
         return requireActivity().intent.removeAndReturnString(ARG_AMENITY_TYPE)
+    }
+
+    private fun getLatestExhibitionObject(): ArticExhibition? {
+        return requireActivity().intent.removeAndReturnParcelable(ARG_EXHIBITION_OBJECT)
     }
 
     private fun getLatestTourObject(): ArticTour? {
@@ -237,6 +242,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     SearchObjectDetailsFragment.loadAmenitiesByType(searchObject.item),
                                     SEARCH_DETAILS
                             )
+                        is MapDisplayMode.Search.ExhibitionSearch ->
+                            displayFragmentInInfoContainer(
+                                    SearchObjectDetailsFragment.loadExhibitionResults(searchObject.item),
+                                    SEARCH_DETAILS
+                            )
                     }
                 }
                 .disposedBy(disposeBag)
@@ -335,7 +345,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
                 }
                 .disposedBy(disposeBag)
-
         /**
          * Center the full object marker in the map.
          *
@@ -518,7 +527,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     private fun refreshMapDisplayMode(requestedTour: ArticTour? = null, requestedStop: ArticTour.TourStop? = null) {
-        viewModel.loadMapDisplayMode(requestedTour, requestedStop)
+        viewModel.loadMapDisplayMode(requestedTour to requestedStop)
     }
 
     override fun onStart() {
@@ -529,7 +538,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        viewModel.onResume(getLatestTourObject(), getStartTourStop(), getLatestSearchObject(), getLatestSearchObjectType())
+        viewModel.onResume(getLatestTourObject() to getStartTourStop(),
+                getLatestSearchObject(),
+                getLatestSearchObjectType(),
+                getLatestExhibitionObject())
     }
 
     override fun onPause() {

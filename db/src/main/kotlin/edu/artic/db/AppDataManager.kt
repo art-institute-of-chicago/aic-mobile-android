@@ -2,18 +2,6 @@ package edu.artic.db
 
 import android.support.annotation.WorkerThread
 import com.fuzz.rx.asObservable
-import edu.artic.db.daos.ArticAudioFileDao
-import edu.artic.db.daos.ArticDataObjectDao
-import edu.artic.db.daos.ArticEventDao
-import edu.artic.db.daos.ArticExhibitionCMSDao
-import edu.artic.db.daos.ArticExhibitionDao
-import edu.artic.db.daos.ArticGalleryDao
-import edu.artic.db.daos.ArticMapAnnotationDao
-import edu.artic.db.daos.ArticMapFloorDao
-import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.ArticTourDao
-import edu.artic.db.daos.DashboardDao
-import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.daos.*
 import edu.artic.db.models.*
 import io.reactivex.Observable
@@ -362,6 +350,7 @@ class AppDataManager @Inject constructor(
                                                     if (gallery?.location != null) {
                                                         exhibition.latitude = gallery.latitude
                                                         exhibition.longitude = gallery.longitude
+                                                        exhibition.floor = gallery.floor
                                                     }
                                                 }
                                             }
