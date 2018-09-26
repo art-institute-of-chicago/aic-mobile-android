@@ -12,6 +12,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="languageSettingsBackgroundColor">@color/white</item>
     </style>
 
     <style name="LanguageButton">
