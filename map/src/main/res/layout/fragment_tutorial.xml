@@ -113,7 +113,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:background="@color/off_blue"
+        android:background="@drawable/tutorial_popup_background"
         android:elevation="3dp"
         android:orientation="vertical"
         android:padding="10dp"
@@ -136,30 +136,33 @@
             android:minHeight="40dp">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                tools:ignore="UseCompoundDrawables"
-                >
+                android:orientation="vertical"
+                tools:ignore="UseCompoundDrawables">
+
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="52dp"
                     android:layout_marginBottom="15dp"
-                    android:contentDescription="@null" />
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows" />
+
                 <TextView
                     style="@style/IdealSansBook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Pinch to explore the map."/>
+                    android:text="@string/tutorial_explore_text"
+                    tools:text="Pinch to explore the map." />
 
             </LinearLayout>
 
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
@@ -167,11 +170,12 @@
                     android:layout_height="52dp"
                     android:layout_marginBottom="15dp"
                     android:contentDescription="@null" />
+
                 <TextView
                     style="@style/IdealSansBook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Transparent pins indicate audio on a differerent floor."/>
+                    tools:text="Transparent pins indicate audio on a differerent floor." />
 
             </LinearLayout>
 
