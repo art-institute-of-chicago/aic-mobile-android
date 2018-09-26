@@ -1,4 +1,4 @@
-package edu.artic.info
+package artic.edu.localization.ui
 
 
 import android.os.Bundle

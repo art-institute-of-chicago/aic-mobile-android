@@ -64,6 +64,7 @@ dependencies {
     implementation project(':location_ui')
     implementation project(':membership')
     implementation project(':access_card')
+    implementation project(':localization_ui')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
     //Dagger
