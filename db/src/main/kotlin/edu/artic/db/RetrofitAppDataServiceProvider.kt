@@ -127,7 +127,7 @@ class RetrofitAppDataServiceProvider(
             dataObject.subscribeBy(
                     onError = { observer.onError(it) },
                     onNext = { dataObject ->
-                var url = dataObject.dataApiUrl + dataObject.eventsEndpoint
+                var url = dataObject.dataApiUrl + dataObject.newEventsEndpoint
                 if (!url.contains("/search")) {
                     url += "/search"
                 }

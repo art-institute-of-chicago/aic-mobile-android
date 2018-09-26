@@ -47,5 +47,4 @@ data class ArticDataObject(
                     .orEmpty()
                     .replace("utm_source=iphone", "utm_source=android")
         }
-
 }
