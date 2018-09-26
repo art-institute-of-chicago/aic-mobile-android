@@ -77,8 +77,8 @@
                 style="@style/BodySansSerifBlackLeft"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ideal_sans_book"
                 android:layout_marginTop="@dimen/marginDouble"
+                android:fontFamily="@font/ideal_sans_book"
                 android:paddingStart="@dimen/marginDouble"
                 android:paddingEnd="@dimen/marginDouble"
                 android:text="@string/languageSettingsBody"
@@ -106,6 +106,7 @@
                     android:background="@drawable/language_radio_button_background"
                     android:button="@null"
                     android:text="@string/english"
+                    android:textColor="?attr/languageSettingsButtonTextColor"
                     tools:checked="true" />
 
                 <RadioButton
@@ -119,6 +120,7 @@
                     android:background="@drawable/language_radio_button_background"
                     android:button="@null"
                     android:text="@string/spanish"
+                    android:textColor="?attr/languageSettingsButtonTextColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/englishLanguage" />
@@ -134,6 +136,7 @@
                     android:background="@drawable/language_radio_button_background"
                     android:button="@null"
                     android:text="@string/chinese"
+                    android:textColor="?attr/languageSettingsButtonTextColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/spanishLanguage" />
