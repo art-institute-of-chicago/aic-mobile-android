@@ -89,7 +89,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      */
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
     /**
-     * Current object of interest.
+     * Current exhibition of interest.
      *
      * Set by search or by tapping a marker.
      *
