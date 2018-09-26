@@ -123,7 +123,8 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                         is Navigate.Forward -> {
                             when(it.endpoint) {
                                 AudioLookupViewModel.NavigationEndpoint.Search -> {
-                                    baseActivity.navController.navigate(R.id.goToSearch)
+                                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                                    startActivity(intent)
                                 }
                                 AudioLookupViewModel.NavigationEndpoint.AudioDetails -> {
                                     val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()

@@ -133,6 +133,9 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             }
                             startActivity(mapIntent)
+                            if (requireActivity().javaClass.simpleName.equals("SearchActivity")) {
+                                requireActivity().finish()
+                            }
                         }
                     }
                 }.disposedBy(navigationDisposeBag)
