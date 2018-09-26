@@ -1,12 +1,16 @@
 package edu.artic.map.tutorial
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v4.view.ViewPager
 import android.view.View
-import com.fuzz.rx.bindTo
+import com.fuzz.indicator.OffSetHint
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
+import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
+import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
+import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.map.R
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -19,23 +23,56 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
     override val layoutResId: Int = R.layout.fragment_tutorial
     override val screenCategory: ScreenCategoryName? = null
 
+    private val adapter = TutorialPopupAdapter()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.setOnTouchListener { _, _ -> true }
 
+        viewPager.adapter = adapter.toPagerAdapter()
+        viewPagerIndicator.setViewPager(viewPager)
+        viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
 
-        recyclerView.apply {
-            adapter = TutorialPopupAdapter()
-            layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
-        }
-
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                viewModel.onTutorialPageChanged(position)
+            }
+        })
     }
 
     override fun setupBindings(viewModel: TutorialViewModel) {
         super.setupBindings(viewModel)
-        val adapter = recyclerView.adapter as TutorialPopupAdapter
+
         viewModel.cells
                 .bindToMain(adapter.itemChanges())
+                .disposedBy(disposeBag)
+
+        viewModel.tutorialPopupCurrentPage
+                .subscribe {
+                    if (viewPager.currentItem != it) {
+                        viewPager.currentItem = it
+                    }
+                }.disposedBy(disposeBag)
+
+        viewModel.tutorialTitle
+                .map { getString(it) }
+                .bindToMain(tutorialPopupTitle.text())
+                .disposedBy(disposeBag)
+
+        viewModel.showBack
+                .bindToMain(tutorialBack.visibility(View.INVISIBLE))
+                .disposedBy(disposeBag)
+
+        tutorialNext.clicks()
+                .subscribe {
+                    viewModel.onPopupNextClick()
+                }
+                .disposedBy(disposeBag)
+
+        tutorialBack.clicks()
+                .subscribe {
+                    viewModel.onPopupBackClick()
+                }
                 .disposedBy(disposeBag)
     }
 
