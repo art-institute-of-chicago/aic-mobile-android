@@ -6,6 +6,7 @@ import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import edu.artic.base.utils.toCurrentTimeZone
+import edu.artic.db.BuildConfig
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
 
@@ -14,6 +15,7 @@ import org.threeten.bp.ZonedDateTime
 @Parcelize
 data class ArticEvent(
         @Json(name = "short_description") val short_description: String?,
+        @Deprecated("This valud is used in the current event api and will be replaced by `image_url`")
         @Json(name = "image") val image: String?,
         @Json(name = "image_url") val imageUrl: String?,
         @Json(name = "end_at") val end_at: ZonedDateTime,
@@ -43,6 +45,6 @@ data class ArticEvent(
 
     val buttonURL: String
         get() {
-            return button_url ?: "https://sales.artic.edu/" //Default URL for purchases
+            return button_url ?: BuildConfig.DEFAULT_BUY_URL //Default URL for purchases
         }
 }
