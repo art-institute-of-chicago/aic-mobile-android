@@ -4,11 +4,15 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.map.R
 import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class TutorialViewModel @Inject constructor() : BaseViewModel() {
+class TutorialViewModel @Inject constructor() : NavViewViewModel<TutorialViewModel.NavigationEndpoint>() {
+
+    sealed class NavigationEndpoint
 
     sealed class Stage {
         object One : Stage()
@@ -63,6 +67,13 @@ class TutorialViewModel @Inject constructor() : BaseViewModel() {
     fun onPopupBackClick() {
         // The only time that the back button will be available is if we are in the second screen
         tutorialPopupCurrentPage.onNext(0)
+    }
+
+    fun touched() {
+        val stage = (currentTutorialStage as BehaviorSubject).value
+        if(stage == Stage.Two) {
+            navigateTo.onNext(Navigate.Back())
+        }
     }
 
 
