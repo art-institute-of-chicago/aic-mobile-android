@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/tutorial_text_shape"
+        android:end="10dp"
+        android:left="0dp"
+        android:right="20dp"
+        android:start="0dp" />
+
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/warmGrey" />
+            <size
+                android:width="5dp"
+                android:height="5dp" />
+        </shape>
+
+    </item>
+
+</layer-list>

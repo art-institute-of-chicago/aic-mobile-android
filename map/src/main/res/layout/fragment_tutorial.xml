@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black60alpha">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/tutorialLevelTwo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/lowerLevel"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LL"
+            app:layout_constraintBottom_toBottomOf="@id/guideline"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/floorOne"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            app:layout_constraintBottom_toTopOf="@id/lowerLevel"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/floorTwo"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            app:layout_constraintBottom_toTopOf="@id/floorOne"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/floorThree"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            app:layout_constraintBottom_toTopOf="@id/floorTwo"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/compass"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginDouble"
+            android:alpha=".5"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:rotation="30"
+            android:src="@drawable/ic_compass"
+            android:visibility="invisible"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lowerLevel"
+            tools:visibility="visible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/marginDouble"
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/marginHalf"
+            android:paddingEnd="@dimen/marginHalf"
+            app:layout_constraintBottom_toBottomOf="@id/floorOne"
+            app:layout_constraintEnd_toStartOf="@id/floorOne"
+            app:layout_constraintTop_toTopOf="@id/floorOne"
+            tools:text="This is the first floor" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/marginDouble"
+            android:background=""
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/marginHalf"
+            android:paddingEnd="@dimen/marginHalf"
+            app:layout_constraintBottom_toBottomOf="@id/compass"
+            app:layout_constraintEnd_toStartOf="@id/compass"
+            app:layout_constraintTop_toTopOf="@id/compass"
+            tools:text="This is the first floor" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/tutorialLevelOne"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@color/off_blue"
+        android:elevation="3dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/SectionTitleWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/marginDouble"
+            tools:text="Explore The Map" />
+
+        <ViewSwitcher
+            android:id="@+id/viewSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:ignore="UseCompoundDrawables"
+                >
+                <ImageView
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginBottom="15dp"
+                    android:contentDescription="@null" />
+                <TextView
+                    style="@style/IdealSansBook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Pinch to explore the map."/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_marginBottom="15dp"
+                    android:contentDescription="@null" />
+                <TextView
+                    style="@style/IdealSansBook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Transparent pins indicate audio on a differerent floor."/>
+
+            </LinearLayout>
+
+        </ViewSwitcher>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tutorialBack"
+                style="@style/IdealSansBook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Back" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tutorialNext"
+                style="@style/IdealSansBook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Next" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</FrameLayout>
