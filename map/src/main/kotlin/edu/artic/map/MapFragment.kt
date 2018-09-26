@@ -214,6 +214,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     @SuppressLint("MissingPermission")
     override fun setupBindings(viewModel: MapViewModel) {
 
+        searchIcon.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
+                }
+                .disposedBy(disposeBag)
+
         getAudioServiceObservable()
                 .bindTo(audioService)
                 .disposedBy(disposeBag)
@@ -504,6 +511,9 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     ?.replace(R.id.overlayContainer, TutorialFragment(), "TutorialFragment")
                                     ?.addToBackStack("TutorialFragment")
                                     ?.commit()
+                        }
+                        MapViewModel.NavigationEndpoint.Search -> {
+                            navController.navigate(R.id.search_navigation_graph)
                         }
                     }
                 }.disposedBy(navigationDisposeBag)

@@ -6,6 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/mapFragment">
 
+    <include app:graph="@navigation/search_navigation_graph" />
+
     <fragment
         android:id="@+id/mapFragment"
         android:name="edu.artic.map.MapFragment"
@@ -19,6 +21,11 @@
         <action
             android:id="@+id/goToLocationPrompt"
             app:destination="@id/locationPromptFragment"
+            />
+
+        <action
+            android:id="@+id/goToSearch"
+            app:destination="@id/search_navigation_graph"
             />
 
     </fragment>

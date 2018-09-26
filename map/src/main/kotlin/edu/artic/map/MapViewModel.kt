@@ -59,6 +59,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     sealed class NavigationEndpoint {
         object LocationPrompt : NavigationEndpoint()
         object Tutorial : NavigationEndpoint()
+        object Search : NavigationEndpoint()
     }
 
     private val articMapFloorMap: Subject<Map<Int, ArticMapFloor>> = BehaviorSubject.create()
@@ -546,6 +547,10 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     override fun onCleared() {
         super.onCleared()
         mapMarkerConstructor.cleanup()
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(endpoint = NavigationEndpoint.Search))
     }
 
 
