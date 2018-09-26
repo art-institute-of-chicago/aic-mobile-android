@@ -19,6 +19,7 @@ import edu.artic.localization.LanguageSelector
 import edu.artic.location.LocationService
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
+import edu.artic.map.rendering.MapItemModel
 import edu.artic.map.rendering.MarkerHolder
 import edu.artic.util.waitForASecondOfCalmIn
 import edu.artic.viewmodel.NavViewViewModel
@@ -497,7 +498,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     /**
      * Retrieve an object from the [MapMarkerConstructor]
      */
-    fun retrieveObjectById(nid: String): Observable<Optional<MarkerHolder<ArticObject>>> {
+    fun retrieveObjectById(nid: String): Observable<Optional<MarkerHolder<MapItemModel>>> {
         return mapMarkerConstructor.objectsMapItemRenderer.getMarkerHolderById(nid)
     }
 
@@ -515,7 +516,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * If the current [MapDisplayMode] is no longer appropriate, this method will call
      * [displayModeChanged] to emit the necessary change.
      */
-    fun loadMapDisplayMode(requestedTour: ArticTour?, requestedTourStop: ArticTour.TourStop?) {
+    fun loadMapDisplayMode(requestedTourInfo: Pair<ArticTour?,ArticTour.TourStop?>) {
 
         Observables.combineLatest(
                 tourProgressManager.selectedTour,
@@ -532,6 +533,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .subscribeBy { (tours, searchTypes) ->
                     val (activeTour, proposedTour) = tours
                     val (searchObject, searchAnnotationType, searchExhibition) = searchTypes
+                    val (requestedTour, requestedTourStop) = requestedTourInfo
 
                     if ((searchObject != null || searchAnnotationType != null || searchExhibition != null) && requestedTour == null) {
                         /**
@@ -575,8 +577,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     /**
      * Loads display mode for the map.
      */
-    fun onResume(requestedTour: ArticTour?,
-                 requestedTourStop: ArticTour.TourStop?,
+    fun onResume(tourInfo: Pair<ArticTour?, ArticTour.TourStop?>,
                  searchedObject: ArticSearchArtworkObject?,
                  searchedAnnotationType: String?,
                  searchExhibition: ArticExhibition?) {
@@ -610,7 +611,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
             searchManager.selectedExhibition.onNext(Optional(it))
         }
 
-        loadMapDisplayMode(requestedTour, requestedTourStop)
+        loadMapDisplayMode(tourInfo)
     }
 
     /**

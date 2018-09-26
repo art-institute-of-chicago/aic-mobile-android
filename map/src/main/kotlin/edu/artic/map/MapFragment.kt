@@ -527,7 +527,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     private fun refreshMapDisplayMode(requestedTour: ArticTour? = null, requestedStop: ArticTour.TourStop? = null) {
-        viewModel.loadMapDisplayMode(requestedTour, requestedStop)
+        viewModel.loadMapDisplayMode(requestedTour to requestedStop)
     }
 
     override fun onStart() {
@@ -538,8 +538,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onResume() {
         super.onResume()
         mapView.onResume()
-        viewModel.onResume(getLatestTourObject(),
-                getStartTourStop(),
+        viewModel.onResume(getLatestTourObject() to getStartTourStop(),
                 getLatestSearchObject(),
                 getLatestSearchObjectType(),
                 getLatestExhibitionObject())
