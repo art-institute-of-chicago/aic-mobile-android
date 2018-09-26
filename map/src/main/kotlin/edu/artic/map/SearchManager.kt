@@ -1,8 +1,8 @@
 package edu.artic.map
 
 import com.fuzz.rx.Optional
+import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticMapAnnotation
-import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -19,6 +19,10 @@ class SearchManager {
      */
     val selectedObject: Subject<Optional<ArticSearchArtworkObject>> = BehaviorSubject.createDefault(Optional(null))
     /**
+     * Selected Exhibition
+     */
+    val selectedExhibition: Subject<Optional<ArticExhibition>> = BehaviorSubject.createDefault(Optional(null))
+    /**
      * Save the last selected tour.
      */
     val selectedAmenityType: Subject<Optional<String>> = BehaviorSubject.createDefault(Optional(null))
@@ -30,6 +34,7 @@ class SearchManager {
     fun clearSearch() {
         selectedObject.onNext(Optional(null))
         selectedAmenityType.onNext(Optional(null))
+        selectedExhibition.onNext(Optional(null))
         activeDiningPlace.onNext(Optional(null))
         leaveSearchMode.onNext(true)
     }

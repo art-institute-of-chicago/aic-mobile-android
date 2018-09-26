@@ -113,6 +113,8 @@ class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : M
         return when (displayMode) {
             is MapDisplayMode.Search.ObjectSearch ->
                 listOf<ArticMapAnnotation>().asFlowable()
+            is MapDisplayMode.Search.ExhibitionSearch ->
+                listOf<ArticMapAnnotation>().asFlowable()
             is MapDisplayMode.Search.AmenitiesSearch -> {
                 val amenityType = ArticMapAmenityType.getAmenityTypes(displayMode.item)
                 if (displayMode.item == ArticMapAmenityType.DINING) {
