@@ -57,8 +57,7 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         eventObservable
-                .filter { it.image != null }
-                .map { it.image!! }
+                .map { it.imageURL }
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 
@@ -103,10 +102,8 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
     }
 
     fun onClickRegisterToday() {
-        event?.button_url?.let { url ->
-            analyticsTracker.reportEvent(ScreenCategoryName.Events, AnalyticsAction.linkPressed, event?.title
-                    ?: AnalyticsLabel.Empty)
-            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LoadUrl(url)))
-        }
+        analyticsTracker.reportEvent(ScreenCategoryName.Events, AnalyticsAction.linkPressed, event?.title
+                ?: AnalyticsLabel.Empty)
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LoadUrl(event!!.buttonURL)))
     }
 }

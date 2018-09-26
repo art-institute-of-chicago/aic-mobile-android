@@ -136,6 +136,7 @@ sealed class ApiBodyGenerator {
                     "description",
                     "short_description",
                     "image",
+                    "image_url",
                     "location",
                     "start_at",
                     "end_at",
