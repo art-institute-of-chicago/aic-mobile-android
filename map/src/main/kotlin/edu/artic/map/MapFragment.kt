@@ -25,10 +25,7 @@ import edu.artic.db.models.*
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
-import edu.artic.map.rendering.GlideMapTileProvider
-import edu.artic.map.rendering.MapItemRenderer
-import edu.artic.map.rendering.MarkerMetaData
-import edu.artic.map.rendering.TRANSPARENCY_INVISIBLE
+import edu.artic.map.rendering.*
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
@@ -149,10 +146,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                     }
                                 }
                             }
+                            //TODO remove once ArticObject is verified to not be used anymore
                             is ArticObject -> {
                                 val mapObject = markerTag.item
                                 viewModel.articObjectSelected(mapObject)
                                 map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
+                            }
+                            is MapItemModel -> {
+                                val backing = markerTag.item.backingObject
+                                backing?.let {
+                                    viewModel.articObjectSelected(backing)
+                                    map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
+                                }
                             }
                             else -> map.animateCamera(CameraUpdateFactory.newLatLng(marker.position))
                         }
