@@ -5,8 +5,10 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:windowBackground">@drawable/splash_gradient</item>
         <item name="colorAccent">@color/white</item>
-        <item name="languageSettingsBackgroundColor">@color/colorPrimary</item>
+        <item name="languageSettingsBackgroundColor">@color/ugly_blue</item>
         <item name="languageSettingsButtonTextColor">@color/white</item>
+        <item name="languageSettingsButtonBackground">@drawable/splash_language_radio_button_background</item>
+        <item name="languageSettingsContainsToolbar">false</item>
     </style>
 
     <style name="ErrorDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
