@@ -16,6 +16,12 @@
         <item name="languageSettingsButtonTextColor">@color/radiobutton_text_color_list</item>
         <item name="languageSettingsButtonBackground">@drawable/language_radio_button_background</item>
         <item name="languageSettingsContainsToolbar">true</item>
+        <item name="languageSettingsBodyTextColor">@color/black</item>
+        <item name="languageSettingsTitleTextColor">@color/darkGrey</item>
+        <item name="languageSettingsButtonVerticalBias">0</item>
+        <item name="languageSettingsHasDivider">true</item>
+        <item name="languageSettingsTitleTextAppearance">@style/CardTitleLargeBlack</item>
+        <item name="languageSettingsBodyTextAppearance">@style/BodySansSerifBlackLeft</item>
     </style>
 
     <style name="LanguageButton">

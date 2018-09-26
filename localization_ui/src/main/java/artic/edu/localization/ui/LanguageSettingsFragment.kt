@@ -53,23 +53,26 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                 R.styleable.LanguageSettings
         )
         val hasToolbar = a.getBoolean(R.styleable.LanguageSettings_languageSettingsContainsToolbar, true)
-//        val gravity = a.getBoolean(R.styleable.LanguageSettings_languageSettingsButtonGroupGravityBottom, true)
+        val hasDivider = a.getBoolean(R.styleable.LanguageSettings_languageSettingsHasDivider, true)
+        val verticalBias = a.getFloat(R.styleable.LanguageSettings_languageSettingsButtonVerticalBias, 0f)
         a.recycle()
+
         if (hasToolbar) {
-            toolbar?.visibility = View.VISIBLE
+            appBar?.visibility = View.VISIBLE
         } else {
-            toolbar?.visibility = View.GONE
+            appBar?.visibility = View.GONE
+        }
+
+        if (hasDivider) {
+            divider.visibility = View.VISIBLE
+        } else {
+            divider.visibility = View.GONE
         }
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(constraintContainer)
-        constraintSet.setVerticalBias(R.id.languageSelectionButtons, 0.5f)
+        constraintSet.setVerticalBias(R.id.languageSelectionButtons, verticalBias)
         constraintSet.applyTo(constraintContainer)
-//        if (gravity) {
-//            //languageSelectionButtons.horizonB
-//        } else {
-//
-//        }
     }
 
     override fun setupBindings(viewModel: LanguageSettingsViewModel) {

@@ -51,9 +51,10 @@
 
             <TextView
                 android:id="@+id/choseYourLanguage"
-                style="@style/CardTitleLargeBlack"
+                style="?attr/languageSettingsTitleTextAppearance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/languageSettingsTitleTextColor"
                 android:layout_marginTop="@dimen/marginTriple"
                 android:paddingStart="@dimen/marginDouble"
                 android:paddingEnd="@dimen/marginDouble"
@@ -77,12 +78,13 @@
 
             <TextView
                 android:id="@+id/languageSettingsBody"
-                style="@style/BodySansSerifBlackLeft"
+                style="?attr/languageSettingsBodyTextAppearance"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:fontFamily="@font/ideal_sans_book"
                 android:paddingStart="@dimen/marginDouble"
+                android:textColor="?attr/languageSettingsBodyTextColor"
                 android:paddingEnd="@dimen/marginDouble"
                 android:text="@string/languageSettingsBody"
                 app:layout_constraintEnd_toEndOf="parent"
