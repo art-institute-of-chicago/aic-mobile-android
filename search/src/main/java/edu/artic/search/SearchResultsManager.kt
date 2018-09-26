@@ -7,6 +7,7 @@ import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.*
+import edu.artic.util.mapWithDefault
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
@@ -16,6 +17,10 @@ import java.util.concurrent.TimeUnit
 /**
  * Handles loading and storage of search results. As well as an abstract way of keeping state of
  * current view visible
+ *
+ * Search queries arrive via [currentSearchText]; the corresponding results are emitted
+ * as they resolve by [currentSearchResults].
+ *
  * @author Piotr Leja (FUZZ)
  */
 class SearchResultsManager(private val searchService: SearchServiceProvider,
@@ -78,13 +83,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
 
     private fun getSuggestionsList(searchTerm: String): Observable<List<String>> {
         return searchService.getSuggestions(searchTerm)
-                .map {
-                    if (it.response().body() == null) {
-                        emptyList()
-                    } else {
-                        it.response().body()
-                    }
-                }
+                .mapWithDefault(emptyList())
     }
 
     private fun loadOtherLists(searchTerm: String): Observable<ArticSearchResult> {
