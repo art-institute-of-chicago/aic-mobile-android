@@ -16,7 +16,7 @@ import edu.artic.location.LocationModule
 import edu.artic.map.MapModule
 import edu.artic.media.audio.MediaModule
 import edu.artic.media.ui.MediaUiModule
-import edu.artic.membership.AccessMemberModule
+import edu.artic.accesscard.AccessMemberModule
 import edu.artic.membership.MembershipModule
 import edu.artic.search.SearchModule
 import edu.artic.splash.SplashModule

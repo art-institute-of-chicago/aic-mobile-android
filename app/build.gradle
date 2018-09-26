@@ -42,7 +42,7 @@ dependencies {
     implementation project(':details')
     implementation project(':location')
     implementation project(':membership')
-    implementation project(':membership_ui')
+    implementation project(':access_card')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
     //Dagger
