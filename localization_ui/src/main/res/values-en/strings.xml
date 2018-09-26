@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="languageSettings">Language Settings</string>
+    <string name="languageSettingsBody">Some content may not be available in your selected language.</string>
+    <string name="chooseYourLanguage">Please Choose Your Preferred Language</string>
+</resources>

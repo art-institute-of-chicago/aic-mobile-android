@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chooseYourLanguage">请选择您的首选语言</string>
+    <string name="languageSettings">语言设置</string>
+    <string name="languageSettingsBody">某些内容可能不提供您所选择的语言版本。</string>
+</resources>
