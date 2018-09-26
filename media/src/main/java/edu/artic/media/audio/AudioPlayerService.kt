@@ -153,9 +153,15 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
+
     @Inject
     lateinit var languageSelector: LanguageSelector
 
+    @Inject
+    lateinit var audioServiceHook: AudioServiceHook
+
+    @Inject
+    lateinit var audioPrefManager: AudioPrefManager
 
     /**
      * Something with one or more audio tracks. See [currentTrack] and [AudioFileModel].
@@ -195,7 +201,16 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 is PlayBackAction.Play -> {
                     // No need to seek here; that'll be done in 'setArticObject' if needed
                     setArticObject(playBackAction.audioFile, playBackAction.audioModel)
-                    player.playWhenReady = true
+                    /**
+                     * If the audio is being played for the first time, make sure we invoke
+                     * [AudioServiceHook.displayAudioTutorial] event.
+                     * This hook is used for displaying the Audio Tutorial Screen.
+                     */
+                    if (!audioPrefManager.hasSeenAudioTutorial) {
+                        audioServiceHook.displayAudioTutorial.onNext(true)
+                    } else {
+                        player.playWhenReady = true
+                    }
                 }
 
                 is PlayBackAction.Resume -> {
