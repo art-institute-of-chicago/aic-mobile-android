@@ -1,6 +1,8 @@
 package edu.artic.splash
 
 import android.app.AlertDialog
+import android.app.DialogFragment.STYLE_NO_FRAME
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
@@ -11,11 +13,13 @@ import android.view.TextureView
 import android.view.View
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
+import artic.edu.localization.ui.LanguageSettingsFragment
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.makeStatusBarTransparent
 import edu.artic.navigation.NavigationConstants
 import edu.artic.util.handleNetworkError
+import edu.artic.base.utils.setWindowFlag
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -152,10 +156,12 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     }
 
     private fun handleAnimationCompletion() {
-        //TODO (Sameer) add language here and use Model
-        var intent = NavigationConstants.HOME.asDeepLinkIntent()
-        startActivity(intent)
-        finish()
+        val fragment = LanguageSettingsFragment()
+        fragment.setStyle(STYLE_NO_FRAME, R.style.SplashTheme)
+        fragment.show(supportFragmentManager,"language_settings")
+//        var intent = NavigationConstants.HOME.asDeepLinkIntent()
+//        startActivity(intent)
+//        finish()
     }
 
     private fun updateTextureViewSize(width: Int, height: Int) {
