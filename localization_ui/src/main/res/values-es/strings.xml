@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chooseYourLanguage">Elija su idioma de preferencia</string>
+    <string name="languageSettings">Configuración de idiomas</string>
+    <string name="languageSettingsBody">Es posible que cierta información no esté disponible en el idioma seleccionado.</string>
+</resources>

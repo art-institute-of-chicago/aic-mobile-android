@@ -1,5 +1,6 @@
 package edu.artic
 
+import artic.edu.localization.ui.LocalizationUiModule
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -49,6 +50,7 @@ import javax.inject.Singleton
     DetailsModule::class,
     LocationModule::class,
     LocationUIModule::class,
+    LocalizationUiModule::class,
     MembershipModule::class,
     AccessMemberModule::class
 ])

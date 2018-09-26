@@ -49,7 +49,7 @@
         tools:layout="@layout/fragment_location_settings" />
     <fragment
         android:id="@+id/languageSettingsFragment"
-        android:name="edu.artic.info.LanguageSettingsFragment"
+        android:name="artic.edu.localization.ui.LanguageSettingsFragment"
         android:label="fragment_language_settings"
         tools:layout="@layout/fragment_language_settings" />
 

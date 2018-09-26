@@ -33,6 +33,7 @@ dependencies {
     implementation project(':access_card')
     implementation project(':location')
     implementation project(':localization')
+    implementation project(':localization_ui')
     implementation libs.constraint_layout
     implementation libs.rx_helpers
     implementation libs.rx_kotlin
