@@ -1,8 +1,10 @@
 package edu.artic.util
 
+import android.content.Context
 import com.fuzz.retrofit.rx.requireValue
 import com.jakewharton.retrofit2.adapter.rxjava2.Result
 import edu.artic.base.NetworkException
+import edu.artic.viewmodel.R
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.Subject
@@ -18,7 +20,7 @@ import java.util.concurrent.TimeUnit
  * - Else, if the api call [succeeded][com.fuzz.retrofit.rx.isSuccess] we map to its
  * [internal content][Result.requireValue].
  */
-fun <T> Observable<Result<T>>.mapWithDefault(onErrorValue : T) : Observable<T> {
+fun <T> Observable<Result<T>>.mapWithDefault(onErrorValue: T): Observable<T> {
     return map {
         if (it.isError) {
             Timber.w(it.error())
@@ -48,16 +50,14 @@ fun <T> Observable<T>.waitForASecondOfCalmIn(other: Subject<*>): Observable<T> {
 
 /**
  * Extension method for handling network errors.
- *
- * TODO: localize the error message
  */
-fun <T> Observable<T>.handleNetworkError(): Observable<T> {
+fun <T> Observable<T>.handleNetworkError(context: Context): Observable<T> {
     return this.onErrorResumeNext { t: Throwable ->
         var exception = t
         if (t is UnknownHostException) {
-            exception = NetworkException("No internet connection.")
+            exception = NetworkException(context.getString(R.string.noInternetConnection))
         } else if (t is SocketTimeoutException) {
-            exception = NetworkException("Network time out. Please try again.")
+            exception = NetworkException(context.getString(R.string.networkTimedOut))
         }
         Observable.error(exception)
     }
