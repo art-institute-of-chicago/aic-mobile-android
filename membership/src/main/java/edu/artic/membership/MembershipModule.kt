@@ -1,15 +1,10 @@
 package edu.artic.membership
 
-import android.arch.lifecycle.ViewModel
 import android.content.Context
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
 import edu.artic.db.ApiModule
 import edu.artic.db.constructRetrofit
-import edu.artic.viewmodel.ViewModelKey
 import okhttp3.OkHttpClient
 import org.simpleframework.xml.convert.AnnotationStrategy
 import org.simpleframework.xml.core.Persister
@@ -24,15 +19,6 @@ import javax.inject.Singleton
  */
 @Module
 abstract class MembershipModule {
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(AccessMemberCardViewModel::class)
-    abstract fun accessMemberCardViewModel(accessMemberCardViewModel: AccessMemberCardViewModel):
-            ViewModel
-
-    @get:ContributesAndroidInjector
-    abstract val accessMemberCardFragment: AccessMemberCardFragment
 
     @Module
     companion object {

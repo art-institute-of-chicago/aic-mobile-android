@@ -11,6 +11,8 @@ import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
+import edu.artic.map.MapObjectDetailsViewModel.PlayerAction.Pause
+import edu.artic.map.MapObjectDetailsViewModel.PlayerAction.Play
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel

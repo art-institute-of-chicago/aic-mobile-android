@@ -4,7 +4,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.EventCategoryName
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
@@ -48,7 +48,8 @@ class SearchViewModel @Inject constructor(private val analyticsTracker: Analytic
     }
 
     fun clearText() {
-        analyticsTracker.reportEvent(ScreenCategoryName.Search, AnalyticsAction.searchAbandoned)
+        val text = searchText.blockingMostRecent("").first()
+        analyticsTracker.reportEvent(EventCategoryName.Search, AnalyticsAction.searchAbandoned, text)
     }
 
     fun onTextChanged(newText: String) {

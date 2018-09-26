@@ -11,7 +11,10 @@ import com.jakewharton.rxbinding2.support.v4.view.pageSelections
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.adapter.toPagerAdapter
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
@@ -75,9 +78,14 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
                         is SearchObjectBaseViewModel.PlayerAction.Play -> {
                             if (playControl.audioFileModel != null) {
                                 service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
+                                analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioSearch, playControl.audioFileModel.title!!)
                             } else {
                                 service.playPlayer(playControl.requestedObject)
+                                when(playControl.requestedObject) {
+                                    is ArticObject -> analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioSearch, playControl.requestedObject.title)
+                                }
                             }
+
                         }
                         is SearchObjectBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
                     }

@@ -9,7 +9,10 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.R
 import edu.artic.media.audio.AudioPlayerService
@@ -94,10 +97,19 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                     val service = pair.second
                     when (playControl) {
                         is TourCarousalBaseViewModel.PlayerAction.Play -> {
+                            var actionType = AnalyticsAction.playAudioTour;
+                            when(playControl.type) {
+                                TourCarousalBaseViewModel.Type.Stop -> actionType = AnalyticsAction.playAudioTourStop
+                                TourCarousalBaseViewModel.Type.Overview -> actionType = AnalyticsAction.playAudioTour
+                            }
                             if (playControl.audioFileModel != null) {
                                 service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
+                                analyticsTracker.reportEvent(EventCategoryName.PlayAudio, actionType, playControl.audioFileModel.title!!)
                             } else {
                                 service.playPlayer(playControl.requestedObject)
+                                when(playControl.requestedObject) {
+                                    is ArticObject -> analyticsTracker.reportEvent(EventCategoryName.PlayAudio, actionType, playControl.requestedObject.title)
+                                }
                             }
                         }
                         is TourCarousalBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
