@@ -13,12 +13,12 @@
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="languageSettingsBackgroundColor">@color/white</item>
+        <item name="languageSettingsButtonTextColor">@color/radiobutton_text_color_list</item>
     </style>
 
     <style name="LanguageButton">
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/radiobutton_text_color_list</item>
         <item name="android:textSize">15sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textAlignment">center</item>
