@@ -2,6 +2,7 @@ package artic.edu.localization.ui
 
 
 import android.os.Bundle
+import android.support.constraint.ConstraintSet
 import android.view.View
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -52,12 +53,23 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                 R.styleable.LanguageSettings
         )
         val hasToolbar = a.getBoolean(R.styleable.LanguageSettings_languageSettingsContainsToolbar, true)
+//        val gravity = a.getBoolean(R.styleable.LanguageSettings_languageSettingsButtonGroupGravityBottom, true)
         a.recycle()
         if (hasToolbar) {
-            appBar.visibility = View.VISIBLE
+            toolbar?.visibility = View.VISIBLE
         } else {
-            appBar.visibility = View.GONE
+            toolbar?.visibility = View.GONE
         }
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintContainer)
+        constraintSet.setVerticalBias(R.id.languageSelectionButtons, 0.5f)
+        constraintSet.applyTo(constraintContainer)
+//        if (gravity) {
+//            //languageSelectionButtons.horizonB
+//        } else {
+//
+//        }
     }
 
     override fun setupBindings(viewModel: LanguageSettingsViewModel) {

@@ -38,13 +38,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/languageSettingsBackgroundColor"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/languageSettingsBackgroundColor"
-            android:fitsSystemWindows="true">
+            android:fitsSystemWindows="true"
+            tools:background="#fab">
 
             <TextView
                 android:id="@+id/choseYourLanguage"
@@ -87,12 +90,16 @@
                 app:layout_constraintTop_toBottomOf="@id/divider" />
 
             <RadioGroup
+                android:id="@+id/languageSelectionButtons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/marginDouble"
                 android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/languageSettingsBody">
+                app:layout_constraintTop_toBottomOf="@id/languageSettingsBody"
+                >
 
                 <RadioButton
                     android:id="@+id/englishLanguage"

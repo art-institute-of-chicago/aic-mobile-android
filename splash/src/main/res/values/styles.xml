@@ -9,6 +9,7 @@
         <item name="languageSettingsButtonTextColor">@color/white</item>
         <item name="languageSettingsButtonBackground">@drawable/splash_language_radio_button_background</item>
         <item name="languageSettingsContainsToolbar">false</item>
+        <item name="languageSettingsButtonGroupGravityBottom">true</item>
     </style>
 
     <style name="ErrorDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
