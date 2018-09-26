@@ -14,7 +14,6 @@ import edu.artic.db.models.ArticObject
 import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
 import edu.artic.map.*
-import edu.artic.map.helpers.toLatLng
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -28,7 +27,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
-    : MapItemRenderer<ArticObject>(useBitmapQueue = true) {
+    : MapItemRenderer<MapItemModel>(useBitmapQueue = true) {
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
@@ -69,7 +68,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
      * We shouldn't hold the image in memory, so we must reload the image after it's been collapsed.
      */
     override fun adjustVisibleMarker(
-            existing: MarkerHolder<ArticObject>,
+            existing: MarkerHolder<MapItemModel>,
             visibleRegion: VisibleRegion,
             mapChangeEvent: MapChangeEvent) {
         val position = getAdjustedLocationFromItem(existing.item)
@@ -97,14 +96,14 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     }
 
     override fun displayMarker(
-            item: ArticObject,
+            item: MapItemModel,
             mapChangeEvent: MapChangeEvent,
             visibleRegion: VisibleRegion,
             displayMode: MapDisplayMode,
             map: GoogleMap,
             floor: Int,
             id: String
-    ): MarkerHolder<ArticObject>? {
+    ): MarkerHolder<MapItemModel>? {
         val position = getAdjustedLocationFromItem(item)
         var requestDisposable: Disposable? = null
 
@@ -131,17 +130,28 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                 requestDisposable = requestDisposable)
     }
 
-    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticObject>> = when (displayMode) {
-        is MapDisplayMode.CurrentFloor -> objectsDao.getObjectsByFloor(floor = floor)
-        is MapDisplayMode.Tour -> objectsDao.getObjectsByIdList(displayMode.tour.tourStops.mapNotNull { it.objectId })
-        is MapDisplayMode.Search.ObjectSearch -> {
-            if (displayMode.item.backingObject != null) {
-                listOf(displayMode.item.backingObject as ArticObject).asFlowable()
-            } else {
-                listOf<ArticObject>().asFlowable()
+    override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<MapItemModel>> = when (displayMode) {
+        is MapDisplayMode.CurrentFloor -> objectsDao.getObjectsByFloor(floor = floor).map {
+            it.map {
+                MapItemModel.fromArticObject(it)
             }
         }
-        is MapDisplayMode.Search.AmenitiesSearch -> listOf<List<ArticObject>>().toFlowable()
+        is MapDisplayMode.Tour -> objectsDao.getObjectsByIdList(displayMode.tour.tourStops.mapNotNull { it.objectId }).map {
+            it.map {
+                MapItemModel.fromArticObject(it)
+            }
+        }
+        is MapDisplayMode.Search.ObjectSearch -> {
+            if (displayMode.item.backingObject != null) {
+                listOf(MapItemModel.fromArticObject(displayMode.item.backingObject as ArticObject)).asFlowable()
+            } else {
+                listOf<List<MapItemModel>>().toFlowable()
+            }
+        }
+        is MapDisplayMode.Search.ExhibitionSearch -> {
+            listOf(MapItemModel.fromExhibition(displayMode.item)).asFlowable()
+        }
+        is MapDisplayMode.Search.AmenitiesSearch -> listOf<List<MapItemModel>>().toFlowable()
     }
 
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
@@ -150,26 +160,26 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                 is MapDisplayMode.Search.ObjectSearch -> MapFocus.values().toSet()
                 // Objects NEVER show up in the AmenitiesSearch mode.
                 is MapDisplayMode.Search.AmenitiesSearch -> emptySet()
+                is MapDisplayMode.Search.ExhibitionSearch -> MapFocus.values().toSet()
                 // 'else' includes CurrentFloor at this time.
                 else -> setOf(MapFocus.Individual)
             }
 
-    override fun getLocationFromItem(item: ArticObject): LatLng = item.toLatLng()
+    override fun getLocationFromItem(item: MapItemModel): LatLng = item.latLng
 
-    override fun getIdFromItem(item: ArticObject): String = item.nid
+    override fun getIdFromItem(item: MapItemModel): String = item.id
 
-    override fun getFastBitmap(item: ArticObject, displayMode: MapDisplayMode): BitmapDescriptor? =
+    override fun getFastBitmap(item: MapItemModel, displayMode: MapDisplayMode): BitmapDescriptor? =
             loadingBitmap
 
-    override fun getBitmapFetcher(item: ArticObject, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? {
+    override fun getBitmapFetcher(item: MapItemModel, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? {
         val imageSize = context.resources.getDimension(R.dimen.artic_object_map_image_size).toInt()
         return Glide.with(context)
                 .asBitmap()
                 .apply(RequestOptions().disallowHardwareConfig())
                 .loadWithThumbnail(
-                        item.thumbUrl,
-                        // Prefer standard 'image_url', fall back to 'large image' if necessary.
-                        item.standardImageUrl ?: item.largeImageUrl
+                        item.thumbURL,
+                        item.imageURL
                 )
                 .asRequestObservable(context,
                         width = imageSize,
@@ -183,7 +193,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     override val zIndex: Float = 2.0f
 
-    override fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticObject): Float {
+    override fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: MapItemModel): Float {
         // on tour, set the alpha depending on current floor.
         return if (mapDisplayMode is MapDisplayMode.Tour || mapDisplayMode is MapDisplayMode.Search.ObjectSearch) {
             if (item.floor == floor) ALPHA_VISIBLE else ALPHA_DIMMED

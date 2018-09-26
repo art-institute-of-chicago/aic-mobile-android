@@ -15,6 +15,7 @@ import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.layout_amenity_search_cell.view.*
 import kotlinx.android.synthetic.main.layout_artwork_search_cell.view.*
+import kotlinx.android.synthetic.main.layout_exhibition_search_cell.view.*
 
 /**
 @author Sameer Dhakal (Fuzz)
@@ -56,6 +57,23 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
 
                 item.description
                         .bindToMain(amenityDetails.text())
+                        .disposedBy(item.viewDisposeBag)
+            }
+            is ExhibitionViewModel -> {
+                item.imageUrl
+                        .filter { it.isNotEmpty() }
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            Glide.with(this)
+                                    .load(it)
+                                    .into(exhibitionImage)
+                        }
+                        .disposedBy(item.viewDisposeBag)
+                item.title
+                        .bindToMain(exhibitionTitle.text())
+                        .disposedBy(item.viewDisposeBag)
+                item.description
+                        .bindToMain(exhibitionDetails.text())
                         .disposedBy(item.viewDisposeBag)
             }
             is ArtworkViewModel -> {
@@ -124,6 +142,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
             is DiningAnnotationViewModel -> R.layout.layout_amenity_search_cell
             is AnnotationViewModel -> R.layout.layout_amenity_search_cell
             is ArtworkViewModel -> R.layout.layout_artwork_search_cell
+            is ExhibitionViewModel -> R.layout.layout_exhibition_search_cell
             else -> {
                 0
                 /* should never reach here*/

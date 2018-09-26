@@ -14,6 +14,7 @@ import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.media.audio.AudioPlayerService
@@ -124,7 +125,7 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
          * Bind the searched object or type to viewModel.
          * Search Object and Search type are mutually exclusive.
          */
-        viewModel.viewResumed(getLatestTourObject(), getAmenityType())
+        viewModel.viewResumed(getLatestTourObject(), getAmenityType(), getLatestExhibition())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,12 +152,21 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
 
     companion object {
         private val ARG_SEARCH_OBJECT = "ARG_SEARCH_OBJECT"
+        private val ARG_EXHIBITION_OBJECT = "ARG_EXHIBITION_OBJECT"
         private val ARG_AMENITY_TYPE = "ARG_AMENITY_TYPE"
 
         fun loadArtworkResults(articObject: ArticSearchArtworkObject): SearchObjectDetailsFragment {
             return SearchObjectDetailsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_SEARCH_OBJECT, articObject)
+                }
+            }
+        }
+
+        fun loadExhibitonResults(exhibition: ArticExhibition): SearchObjectDetailsFragment {
+            return SearchObjectDetailsFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ARG_EXHIBITION_OBJECT, exhibition)
                 }
             }
         }
@@ -180,6 +190,12 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
     private fun getAmenityType(): String? {
         val data = arguments?.getString(ARG_AMENITY_TYPE)
         arguments?.remove(ARG_AMENITY_TYPE)
+        return data
+    }
+
+    private fun getLatestExhibition(): ArticExhibition? {
+        val data = arguments?.getParcelable<ArticExhibition>(ARG_EXHIBITION_OBJECT)
+        arguments?.remove(ARG_EXHIBITION_OBJECT)
         return data
     }
 

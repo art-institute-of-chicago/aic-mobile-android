@@ -1,6 +1,6 @@
 package edu.artic.map
 
-import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
 
@@ -54,5 +54,6 @@ sealed class MapDisplayMode {
     sealed class Search<T>(val item: T) : MapDisplayMode() {
         class ObjectSearch(item: ArticSearchArtworkObject) : Search<ArticSearchArtworkObject>(item)
         class AmenitiesSearch(amenityType: String) : Search<String>(amenityType)
+        class ExhibitionSearch(item: ArticExhibition) : Search<ArticExhibition>(item)
     }
 }
