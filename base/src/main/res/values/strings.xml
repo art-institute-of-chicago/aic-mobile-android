@@ -38,6 +38,9 @@
     <string name="throughDate">Through %s</string>
     <string name="showOnMap" translatable="false">Show on Map</string>
     <string name="buyTickets">Buy Tickets</string>
+
     <string name="errorDialogTitle">Error</string>
+    <string name="noInternetConnection">No internet connection.</string>
+    <string name="networkTimedOut">Network time out. Please try again.</string>
 
 </resources>

@@ -41,9 +41,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         makeStatusBarTransparent()
 
         textureView.surfaceTextureListener = this
-
         viewModel.percentage
-                .handleNetworkError()
+                .handleNetworkError(this)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(onNext = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
