@@ -1,4 +1,4 @@
-package edu.artic.membership
+package edu.artic.accesscard
 
 import android.arch.lifecycle.ViewModel
 import dagger.Binds

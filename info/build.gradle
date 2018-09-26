@@ -30,7 +30,7 @@ dependencies {
     implementation project(':media_ui')
     implementation project(':db')
     implementation project(':membership')
-    implementation project(':membership_ui')
+    implementation project(':access_card')
     implementation project(':location')
     implementation project(':localization')
     implementation libs.constraint_layout

@@ -1,6 +1,6 @@
 include ':adapter',
         ':membership',
-        ':membership_ui',
+        ':access_card',
         ':analytics',
         ':app',
         ':audio',

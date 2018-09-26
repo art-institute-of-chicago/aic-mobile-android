@@ -1,5 +1,4 @@
-package edu.artic.membership
-
+package edu.artic.accesscard
 
 import android.animation.ValueAnimator
 import android.animation.ValueAnimator.INFINITE

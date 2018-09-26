@@ -36,7 +36,7 @@
         tools:layout="@layout/fragment_museum_information" />
     <fragment
         android:id="@+id/accessMemberCardFragment"
-        android:name="edu.artic.membership.AccessMemberCardFragment"
+        android:name="edu.artic.accesscard.AccessMemberCardFragment"
         android:label="@string/accessMemberCardLabel"
         tools:layout="@layout/fragment_validate_member_information">
         <deepLink app:uri="artic://edu.artic.info/accessMemberCard" />

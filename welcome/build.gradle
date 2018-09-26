@@ -24,7 +24,7 @@ dependencies {
     implementation project(':search')
     implementation project(':details')
     implementation project(':membership')
-    implementation project(':membership_ui')
+    implementation project(':access_card')
     implementation libs.exo_player_core
     implementation libs.exo_player_ui
 }
