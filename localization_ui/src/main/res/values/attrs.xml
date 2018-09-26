@@ -5,6 +5,11 @@
         <attr name="languageSettingsButtonTextColor" format="reference|color" />
         <attr name="languageSettingsButtonBackground" format="reference|color" />
         <attr name="languageSettingsContainsToolbar" format="boolean" />
-        <attr name="languageSettingsButtonGroupGravityBottom" format="boolean" />
+        <attr name="languageSettingsButtonVerticalBias" format="float" />
+        <attr name="languageSettingsBodyTextColor" format="reference|color" />
+        <attr name="languageSettingsTitleTextColor" format="reference|color" />
+        <attr name="languageSettingsHasDivider" format="boolean" />
+        <attr name="languageSettingsTitleTextAppearance" format="reference" />
+        <attr name="languageSettingsBodyTextAppearance" format="reference" />
     </declare-styleable>
 </resources>
