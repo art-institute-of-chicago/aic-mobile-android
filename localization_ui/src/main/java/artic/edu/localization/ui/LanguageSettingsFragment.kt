@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_language_settings.*
 import java.util.*
 import kotlin.reflect.KClass
 
+
 class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel>() {
     override val viewModelClass: KClass<LanguageSettingsViewModel> = LanguageSettingsViewModel::class
     override val title = R.string.languageSettings
@@ -42,6 +43,21 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                     viewModel.onChineseLanguageSelected()
                 }.disposedBy(disposeBag)
 
+        configureToolbar()
+    }
+
+    private fun configureToolbar() {
+
+        val a = requireContext().theme.obtainStyledAttributes(
+                R.styleable.LanguageSettings
+        )
+        val hasToolbar = a.getBoolean(R.styleable.LanguageSettings_languageSettingsContainsToolbar, true)
+        a.recycle()
+        if (hasToolbar) {
+            appBar.visibility = View.VISIBLE
+        } else {
+            appBar.visibility = View.GONE
+        }
     }
 
     override fun setupBindings(viewModel: LanguageSettingsViewModel) {

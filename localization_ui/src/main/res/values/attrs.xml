@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="languageSettingsBackgroundColor" format="reference|color" />
-    <attr name="languageSettingsButtonTextColor" format="reference|color" />
+    <declare-styleable name="LanguageSettings">
+        <attr name="languageSettingsBackgroundColor" format="reference|color" />
+        <attr name="languageSettingsButtonTextColor" format="reference|color" />
+        <attr name="languageSettingsButtonBackground" format="reference|color" />
+        <attr name="languageSettingsContainsToolbar" format="boolean" />
+    </declare-styleable>
 </resources>
