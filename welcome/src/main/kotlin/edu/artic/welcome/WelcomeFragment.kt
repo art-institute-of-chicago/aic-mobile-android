@@ -198,10 +198,8 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                             )
                                 }
                                 WelcomeViewModel.NavigationEndpoint.Search -> {
-                                    navController
-                                            .navigate(
-                                                    R.id.goToSearch
-                                            )
+                                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                                    startActivity(intent)
                                 }
                                 WelcomeViewModel.NavigationEndpoint.AccessMemberCard -> {
                                     val deepLinkIntent = NavigationConstants.INFO_MEMBER_CARD.asDeepLinkIntent().apply {

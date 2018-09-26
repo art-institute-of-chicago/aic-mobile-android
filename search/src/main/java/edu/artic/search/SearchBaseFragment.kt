@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
-import androidx.navigation.Navigation
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
@@ -93,6 +92,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             }
                             startActivity(mapIntent)
+                            requireActivity().finish()
                         }
                         is SearchBaseViewModel.NavigationEndpoint.TourDetails -> {
                             val o = endpoint.tour
@@ -122,6 +122,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                             }
                             startActivity(mapIntent)
+                            requireActivity().finish()
                         }
                         SearchBaseViewModel.NavigationEndpoint.Web -> {
 

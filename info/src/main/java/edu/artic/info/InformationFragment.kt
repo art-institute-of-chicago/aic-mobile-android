@@ -6,7 +6,9 @@ import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -94,7 +96,8 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                             navController.navigate(R.id.goToMuseumInformationFragment)
                         }
                         InformationViewModel.NavigationEndpoint.Search -> {
-                            navController.navigate(R.id.goToSearch)
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
                         }
                         is InformationViewModel.NavigationEndpoint.JoinNow -> {
                             val url = it.url

@@ -181,6 +181,9 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     }
                             )
+                            if (requireActivity().javaClass.simpleName.equals("SearchActivity")) {
+                                requireActivity().finish()
+                            }
                         }
                     }
 
