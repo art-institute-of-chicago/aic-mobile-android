@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/black60alpha">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/tutorialLevelTwo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/design_bottom_navigation_height"
         android:visibility="gone">
 
         <TextView
@@ -70,11 +72,9 @@
             android:contentDescription="@null"
             android:rotation="30"
             android:src="@drawable/ic_compass"
-            android:visibility="invisible"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lowerLevel"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@id/lowerLevel" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -87,6 +87,7 @@
             app:layout_constraintBottom_toBottomOf="@id/floorOne"
             app:layout_constraintEnd_toStartOf="@id/floorOne"
             app:layout_constraintTop_toTopOf="@id/floorOne"
+            android:text="@string/tutorial_mark_first_floor"
             tools:text="This is the first floor" />
 
 
@@ -101,6 +102,7 @@
             app:layout_constraintBottom_toBottomOf="@id/compass"
             app:layout_constraintEnd_toStartOf="@id/compass"
             app:layout_constraintTop_toTopOf="@id/compass"
+            android:text="@string/tutorial_mark_compass"
             tools:text="This is the first floor" />
 
     </android.support.constraint.ConstraintLayout>

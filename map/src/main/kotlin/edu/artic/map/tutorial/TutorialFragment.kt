@@ -63,6 +63,14 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 .bindToMain(tutorialBack.visibility(View.INVISIBLE))
                 .disposedBy(disposeBag)
 
+        viewModel.currentTutorialStage
+                .map { it == TutorialViewModel.Stage.One }
+                .subscribe {
+                    tutorialLevelOne.visibility = if (it) View.VISIBLE else View.GONE
+                    tutorialLevelTwo.visibility = if (it) View.GONE else View.VISIBLE
+                }
+                .disposedBy(disposeBag)
+
         tutorialNext.clicks()
                 .subscribe {
                     viewModel.onPopupNextClick()

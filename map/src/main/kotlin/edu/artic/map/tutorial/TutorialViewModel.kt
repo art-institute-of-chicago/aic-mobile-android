@@ -10,6 +10,12 @@ import javax.inject.Inject
 
 class TutorialViewModel @Inject constructor() : BaseViewModel() {
 
+    sealed class Stage {
+        object One : Stage()
+        object Two : Stage()
+
+    }
+
     val cells: Subject<List<TutorialPopupItemViewModel>> = BehaviorSubject.createDefault(
             listOf(
                     TutorialPopupItemViewModel(R.drawable.arrows, R.string.tutorial_explore_text),
@@ -17,11 +23,13 @@ class TutorialViewModel @Inject constructor() : BaseViewModel() {
             )
     )
 
-    val tutorialTitle : Subject<Int> = BehaviorSubject.create()
+    val tutorialTitle: Subject<Int> = BehaviorSubject.create()
 
-    val showBack : Subject<Boolean> = BehaviorSubject.createDefault(false)
+    val showBack: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
-    val tutorialPopupCurrentPage : Subject<Int> = BehaviorSubject.createDefault(0)
+    val tutorialPopupCurrentPage: Subject<Int> = BehaviorSubject.createDefault(0)
+
+    val currentTutorialStage: Subject<Stage> = BehaviorSubject.createDefault(Stage.One)
 
     init {
         tutorialPopupCurrentPage
@@ -30,7 +38,7 @@ class TutorialViewModel @Inject constructor() : BaseViewModel() {
                 .disposedBy(disposeBag)
         tutorialPopupCurrentPage
                 .map {
-                    return@map if(it == 0)
+                    return@map if (it == 0)
                         R.string.tutorial_explore_title
                     else
                         R.string.tutorial_audio_pins_title
@@ -45,10 +53,10 @@ class TutorialViewModel @Inject constructor() : BaseViewModel() {
 
     fun onPopupNextClick() {
         val currentPage = tutorialPopupCurrentPage as BehaviorSubject
-        if(currentPage.value == 0) {
+        if (currentPage.value == 0) {
             tutorialPopupCurrentPage.onNext(1)
         } else {
-            //TODO: close popup
+            (currentTutorialStage as BehaviorSubject).onNext(Stage.Two)
         }
     }
 
