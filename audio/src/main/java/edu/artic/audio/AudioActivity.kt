@@ -1,15 +1,11 @@
 package edu.artic.audio
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.UiThread
-import android.support.v4.app.FragmentManager
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.base.utils.preventReselection
 import edu.artic.media.ui.NarrowAudioPlayerFragment
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
-import edu.artic.ui.findNavController
 import kotlinx.android.synthetic.main.activity_audio.*
 
 /**
@@ -26,18 +22,8 @@ class AudioActivity : BaseActivity() {
     override val layoutResId: Int
         get() = R.layout.activity_audio
 
-    /**
-     * Lifecycle-check set by [AudioActivity.onCreate] and consumed by [AudioActivity.onStart].
-     *
-     * Always reset to false by [AudioActivity.onDestroy].
-     */
-    private var willNavigate = false
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        detectDetailsScreenLink(intent)
 
         bottomNavigation.apply {
             disableShiftMode(R.color.audio_menu_color_list)
@@ -45,42 +31,5 @@ class AudioActivity : BaseActivity() {
             preventReselection()
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
-    }
-
-    /**
-     * This catches deep links from the [NarrowAudioPlayerFragment] within this Activity.
-     *
-     * [onResume] is called just after, and that actually does the navigation.
-     */
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-
-        detectDetailsScreenLink(intent)
-    }
-
-    @UiThread
-    private fun detectDetailsScreenLink(intent: Intent) {
-        val extras: Bundle = intent.extras ?: Bundle.EMPTY
-
-        willNavigate = extras.getBoolean(NarrowAudioPlayerFragment.ARG_SKIP_TO_DETAILS, false)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        navigateToAudioDetailsScreen(supportFragmentManager)
-    }
-
-    @UiThread
-    private fun navigateToAudioDetailsScreen(fm: FragmentManager) {
-        if (willNavigate) {
-            willNavigate = false
-            fm.findNavController()?.navigate(R.id.seeCurrentAudioDetails)
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        willNavigate = false
     }
 }
