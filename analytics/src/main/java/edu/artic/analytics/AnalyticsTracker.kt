@@ -41,7 +41,7 @@ class AnalyticsTrackerImpl(context: Context,
                 .setAction(action)
                 .setCustomDimension(2, (if (memberId != null) "Member" else "None"))
                 .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
-                .setCustomDimension(4, Locale.getDefault().toString())
+                .setCustomDimension(4, Locale.getDefault().toLanguageTag())
                 .setLabel(label).build())
     }
 
@@ -53,7 +53,7 @@ class AnalyticsTrackerImpl(context: Context,
             send(HitBuilders.ScreenViewBuilder()
                     .setCustomDimension(2, (if (memberId != null) "Member" else "None"))
                     .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
-                    .setCustomDimension(4, Locale.getDefault().toString())
+                    .setCustomDimension(4, Locale.getDefault().toLanguageTag())
                     .build())
         }
     }
