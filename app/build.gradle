@@ -2,6 +2,21 @@
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+String buildMetadata
+
+if (project.hasProperty('build_number')) {
+    /**
+     * This is typically the build number produced by the CI service.
+     */
+    buildMetadata = project.getProperty('build_number')
+} else {
+    buildMetadata = 'SNAPSHOT'
+}
+
+String majorAndMinorVersion = "0.1"
+Integer patchVersionCode = 1000
+
+
 android {
     compileSdkVersion sdk
     defaultConfig {
@@ -9,8 +24,8 @@ android {
         minSdkVersion minSdk
         targetSdkVersion sdk
         multiDexEnabled true
-        versionCode 1000
-        versionName "0.1.000"
+        versionCode patchVersionCode
+        versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
