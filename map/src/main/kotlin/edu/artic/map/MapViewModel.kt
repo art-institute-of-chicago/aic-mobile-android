@@ -16,13 +16,14 @@ import edu.artic.db.daos.ArticMapFloorDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
+import edu.artic.location.LocationPreferenceManager
 import edu.artic.location.LocationService
 import edu.artic.location.isLocationInMuseum
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MapItemModel
 import edu.artic.map.rendering.MarkerHolder
-import edu.artic.util.waitForASecondOfCalmIn
+import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
@@ -49,12 +50,15 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                                        private val analyticsTracker: AnalyticsTracker,
                                        private val tourProgressManager: TourProgressManager,
                                        private val locationService: LocationService,
+                                       private val tutorialPreferencesManager: TutorialPreferencesManager,
+                                       private val locationPreferenceManager: LocationPreferenceManager,
                                        articMapAnnotationDao: ArticMapAnnotationDao,
                                        mapFloorDao: ArticMapFloorDao
 ) : NavViewViewModel<MapViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         object LocationPrompt : NavigationEndpoint()
+        object Tutorial : NavigationEndpoint()
     }
 
     private val articMapFloorMap: Subject<Map<Int, ArticMapFloor>> = BehaviorSubject.create()
@@ -183,6 +187,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     init {
 
         setupLocationServiceBindings()
+
+        setupPreferenceBindings()
 
         mapFloorDao.getMapFloors()
                 .map { floorMap -> floorMap.associateBy { it.number } }
@@ -340,13 +346,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     private fun setupLocationServiceBindings() {
 
-        locationService.hasRequestedPermissionAlready
-                .filter { !it }
-                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
-                .delay (500, TimeUnit.MILLISECONDS)
-                .bindTo(navigateTo)
-                .disposedBy(disposeBag)
-
         locationService.currentUserLocation
                 .map {
                     isLocationInMuseum(it)
@@ -375,6 +374,18 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         { (map, optional) -> map!! to optional }
                 )
                 .bindTo(focusToTracking)
+                .disposedBy(disposeBag)
+
+    }
+
+    private fun setupPreferenceBindings() {
+
+        locationPreferenceManager
+                .hasSeenLocationPromptObservable
+                .filter { !it }
+                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
+                .delay(500, TimeUnit.MILLISECONDS)
+                .bindTo(navigateTo)
                 .disposedBy(disposeBag)
 
     }

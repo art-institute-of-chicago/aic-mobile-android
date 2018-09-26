@@ -1,6 +1,7 @@
 package edu.artic.map
 
 import android.arch.lifecycle.ViewModel
+import android.content.Context
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -8,6 +9,7 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.map.carousel.*
 import edu.artic.map.tutorial.TutorialFragment
+import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.map.tutorial.TutorialViewModel
 import edu.artic.viewmodel.ViewModelKey
 import javax.inject.Singleton
@@ -78,6 +80,11 @@ abstract class MapModule {
         @Provides
         @Singleton
         fun searchManager(): SearchManager = SearchManager()
+
+        @JvmStatic
+        @Provides
+        fun provideWelcomePreferenceManager(context : Context) : TutorialPreferencesManager
+                = TutorialPreferencesManager(context)
 
     }
 }

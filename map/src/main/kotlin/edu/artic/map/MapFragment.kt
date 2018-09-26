@@ -466,8 +466,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         MapViewModel.NavigationEndpoint.LocationPrompt -> {
                             requireActivity().supportFragmentManager
                                     ?.beginTransaction()
-                                    ?.replace(R.id.overlayContainer, TutorialFragment(), "LocationPromptFragment")
+                                    ?.replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
                                     ?.addToBackStack("LocationPromptFragment")
+                                    ?.commit()
+                        }
+                        MapViewModel.NavigationEndpoint.Tutorial -> {
+                            requireActivity().supportFragmentManager
+                                    ?.beginTransaction()
+                                    ?.replace(R.id.overlayContainer, TutorialFragment(), "TutorialFragment")
+                                    ?.addToBackStack("TutorialFragment")
                                     ?.commit()
                         }
                     }

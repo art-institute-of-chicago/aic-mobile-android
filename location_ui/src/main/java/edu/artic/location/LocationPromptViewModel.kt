@@ -4,9 +4,16 @@ import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import javax.inject.Inject
 
-class LocationPromptViewModel @Inject constructor(private val locationService: LocationService) : NavViewViewModel<LocationPromptViewModel.NavigationEndpoint>() {
+class LocationPromptViewModel @Inject constructor(
+        private val locationService: LocationService,
+        locationPreferenceManager: LocationPreferenceManager
+) : NavViewViewModel<LocationPromptViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
+
+    init {
+        locationPreferenceManager.hasSeenLocationPrompt = true
+    }
 
     fun onClickNotNowButton() {
         navigateTo.onNext(Navigate.Back())
