@@ -244,7 +244,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                             )
                         is MapDisplayMode.Search.ExhibitionSearch ->
                             displayFragmentInInfoContainer(
-                                    SearchObjectDetailsFragment.loadExhibitonResults(searchObject.item),
+                                    SearchObjectDetailsFragment.loadExhibitionResults(searchObject.item),
                                     SEARCH_DETAILS
                             )
                     }
