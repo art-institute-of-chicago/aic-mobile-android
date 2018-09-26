@@ -27,8 +27,13 @@ android {
         versionCode patchVersionCode
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "VERSION_NAME"
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

@@ -17,9 +17,12 @@ class AppModule {
     @Provides
     fun provideApplication(): Context = ArticApp.app
 
+    /**
+     * This value is used by [edu.artic.info.InformationViewModel].
+     */
     @Provides
     @Named(VERSION)
-    fun getBuildVersion(): String = BuildConfig.VERSION_NAME
+    fun getBuildVersion(): String = BuildConfig.VERSION_NAME_FOR_DISPLAY
 
     @Provides
     @Named(DISPLAY_CONFIG)
