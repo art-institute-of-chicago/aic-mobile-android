@@ -1,5 +1,6 @@
 package edu.artic.splash
 
+import android.app.AlertDialog
 import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
@@ -14,9 +15,11 @@ import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.makeStatusBarTransparent
 import edu.artic.navigation.NavigationConstants
+import edu.artic.util.handleNetworkError
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlin.reflect.KClass
 
@@ -31,41 +34,48 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         get() = SplashViewModel::class
 
     private lateinit var fadeInAnimation: ViewPropertyAnimator
+    private var errorDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         makeStatusBarTransparent()
 
         textureView.surfaceTextureListener = this
-
         viewModel.percentage
-                .map {
-                    "Percentage : %.2f".format(it * 100)
-                }
-                .onErrorReturn {
-                    "Error: ${it.localizedMessage}"
-                }
+                .handleNetworkError(this)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    if (BuildConfig.DEBUG) {
-                        if (it.contains("Error")) {
-                            percentText.text = it
-                            percentText.visibility = View.VISIBLE
-                        } else {
-                            percentText.visibility = View.GONE
-                        }
-                    }
-                }
-                .disposedBy(disposeBag)
-
-        viewModel.percentage
-                .subscribe {
+                .subscribeBy(onNext = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         progressBar.setProgress((it * 100).toInt(), true)
                     } else {
                         progressBar.progress = (it * 100).toInt()
                     }
-                }.disposedBy(disposeBag)
+                }, onError = {
+                    /**
+                     * Display error message below the progressbar.
+                     */
+                    val errorMessage = it.localizedMessage
+
+                    if (BuildConfig.DEBUG) {
+                        percentText.visibility = View.VISIBLE
+                        percentText.text = errorMessage
+                    }
+
+                    /**
+                     * Display alert with error message.
+                     *
+                     * TODO: localize the error strings.
+                     */
+                    errorDialog?.dismiss()
+                    errorDialog = AlertDialog.Builder(this, R.style.ErrorDialog)
+                            .setTitle(resources.getString(R.string.errorDialogTitle))
+                            .setMessage(errorMessage)
+                            .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
+                                dialog.dismiss()
+                            }.show()
+
+                }).disposedBy(disposeBag)
+
 
         welcome.alpha = 0f
 
@@ -109,6 +119,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         super.onDestroy()
         disposeBag.clear()
         fadeInAnimation.cancel()
+        errorDialog?.dismiss()
     }
 
     override fun onSurfaceTextureSizeChanged(p0: SurfaceTexture?, p1: Int, p2: Int) {
