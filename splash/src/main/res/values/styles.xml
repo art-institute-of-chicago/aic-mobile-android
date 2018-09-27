@@ -13,8 +13,12 @@
         <item name="languageSettingsTitleTextColor">@color/white</item>
         <item name="languageSettingsHasDivider">false</item>
         <item name="languageSettingsButtonVerticalBias">0.5</item>
-        <item name="languageSettingsTitleTextAppearance">@style/PageTitleRegularWhite</item>
+        <item name="languageSettingsTitleTextAppearance">@style/LanguageSettingsText</item>
         <item name="languageSettingsBodyTextAppearance">@style/BodySansSerifWhiteCentered</item>
+    </style>
+
+    <style name="LanguageSettingsText" parent="@style/PageTitleRegularWhite">
+        <item name="android:paddingTop">96dp</item>
     </style>
 
     <style name="ErrorDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
