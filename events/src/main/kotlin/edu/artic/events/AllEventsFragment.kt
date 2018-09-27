@@ -92,7 +92,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
                     //Nothing in vm requires back
                 }
             }
-        }.disposedBy(disposeBag)
+        }.disposedBy(navigationDisposeBag)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
