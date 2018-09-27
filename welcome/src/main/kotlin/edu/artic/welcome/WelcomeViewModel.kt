@@ -211,7 +211,7 @@ class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: Lan
     private val eventDate = event.startTime.format(formatter)
             .toString()
     val eventTime: Subject<String> = BehaviorSubject.createDefault(eventDate)
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL.orEmpty())
 
     init {
         languageSelector.currentLanguage

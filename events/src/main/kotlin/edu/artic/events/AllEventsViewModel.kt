@@ -66,7 +66,7 @@ class AllEventsCellHeaderViewModel(event: ArticEvent) : AllEventsCellBaseViewMod
 class AllEventsCellViewModel(event: ArticEvent, val headerPosition: Int) : AllEventsCellBaseViewModel(event) {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.image.orEmpty())
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL.orEmpty())
     val eventDateTime: Subject<String> = BehaviorSubject.createDefault(
             event.startTime.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
     )
