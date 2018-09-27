@@ -16,7 +16,6 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
-import com.jakewharton.rxbinding2.view.touches
 import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.fileAsString
@@ -231,7 +230,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 }.disposedBy(disposeBag)
 
         mapFirstRunHeader.setOnTouchListener { _, event ->
-            if(event.action == MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 viewModel.onTouchWithHeader()
             }
             return@setOnTouchListener false
@@ -361,7 +360,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.selectedArticObject
                 .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
-                .filterFlatMap({(_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor }, { (selected) -> selected })
+                .filterFlatMap({ (_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor }, { (selected) -> selected })
                 .subscribeBy { selected ->
                     displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
                 }
@@ -479,6 +478,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         MapViewModel.NavigationEndpoint.LocationPrompt -> {
                             requireActivity().supportFragmentManager
                                     ?.beginTransaction()
+
                                     ?.replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
                                     ?.addToBackStack("LocationPromptFragment")
                                     ?.commit()
