@@ -15,14 +15,12 @@ import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(
         appDataManager: AppDataManager,
-        private val languageSettingsPrefManager: LanguageSettingsPrefManager,
-        analyticsTracker: AnalyticsTracker
+        analyticsTracker: AnalyticsTracker,
+        private val languageSettingsPrefManager: LanguageSettingsPrefManager
 ) : NavViewViewModel<SplashViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
-        class Welcome : NavigationEndpoint()
-        class Language : NavigationEndpoint()
-        class Loading(val displayLanguageSettings: Boolean) : NavigationEndpoint()
+        class StartVideo(val displayLanguageSettings: Boolean) : NavigationEndpoint()
     }
 
 
@@ -40,10 +38,10 @@ class SplashViewModel @Inject constructor(
                             percentage.onNext(it.progress)
                         }
                         is ProgressDataState.Done<*> -> {
-                            goToWelcome()
+                            startVideo()
                         }
                         is ProgressDataState.Empty -> {
-                            goToWelcome()
+                            startVideo()
                         }
                     }
                 }, {
@@ -51,9 +49,12 @@ class SplashViewModel @Inject constructor(
                 }, {}).disposedBy(disposeBag)
     }
 
-    private fun goToWelcome() {
+    /**
+     * Play the museum floor animation video.
+     */
+    private fun startVideo() {
         val seenLanguageSettingsDialogBefore = languageSettingsPrefManager.seenLanguageSettingsDialog
-        Navigate.Forward(NavigationEndpoint.Loading(!seenLanguageSettingsDialogBefore))
+        Navigate.Forward(NavigationEndpoint.StartVideo(!seenLanguageSettingsDialogBefore))
                 .asObservable().delay(1, TimeUnit.SECONDS)
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)

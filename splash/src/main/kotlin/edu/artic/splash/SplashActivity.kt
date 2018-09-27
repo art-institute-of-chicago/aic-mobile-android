@@ -19,12 +19,10 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.makeStatusBarTransparent
 import edu.artic.navigation.NavigationConstants
 import edu.artic.util.handleNetworkError
-import edu.artic.base.utils.setWindowFlag
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -110,11 +108,11 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                     when (navigation) {
                         is Navigate.Forward -> {
                             when (navigation.endpoint) {
-                                is SplashViewModel.NavigationEndpoint.Loading -> {
+                                is SplashViewModel.NavigationEndpoint.StartVideo -> {
                                     mMediaPlayer?.start()
                                     splashChrome.postDelayed({
                                         splashChrome.animate().alpha(0f).start()
-                                        val endpoint = navigation.endpoint as SplashViewModel.NavigationEndpoint.Loading
+                                        val endpoint = navigation.endpoint as SplashViewModel.NavigationEndpoint.StartVideo
                                         val displayDialog = endpoint.displayLanguageSettings
                                         if (displayDialog) {
                                             pauseVideo(4)
