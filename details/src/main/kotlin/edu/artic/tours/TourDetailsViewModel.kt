@@ -16,6 +16,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import java.util.*
 import javax.inject.Inject
 
 class TourDetailsViewModel @Inject constructor(
@@ -44,7 +45,7 @@ class TourDetailsViewModel @Inject constructor(
         }
 
     sealed class NavigationEndpoint {
-        class Map(val tour: ArticTour, val stop: ArticTour.TourStop) : NavigationEndpoint()
+        class Map(val tour: ArticTour, val stop: ArticTour.TourStop, val locale: Locale) : NavigationEndpoint()
     }
 
     init {
@@ -137,16 +138,17 @@ class TourDetailsViewModel @Inject constructor(
                 .take(1)
                 .subscribeBy { (tour, locale) ->
                     languageSelector.setTourLanguage(locale)
-                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, tour.getIntroStop())))
+                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, tour.getIntroStop(), locale)))
                 }
                 .disposedBy(disposeBag)
     }
 
     fun tourStopClicked(viewModel: TourDetailsStopCellViewModel) {
-        Observables.combineLatest(tourObservable, viewModel.tourStop)
+        Observables.combineLatest(tourObservable, viewModel.tourStop, chosenTranslation.map { it.underlyingLocale() })
                 .take(1)
-                .subscribeBy { (tour, tourStop) ->
-                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, tourStop)))
+                .subscribeBy { (tour, tourStop, locale) ->
+                    languageSelector.setTourLanguage(locale)
+                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, tourStop, locale)))
                 }.disposedBy(disposeBag)
     }
 }

@@ -5,7 +5,9 @@ dependencies {
     implementation libs.dagger
     implementation project(":localization")
     implementation project(":membership")
+    implementation project(":location")
 
     api libs.kotlin
     api libs.ga
+    implementation libs.rx_kotlin
 }

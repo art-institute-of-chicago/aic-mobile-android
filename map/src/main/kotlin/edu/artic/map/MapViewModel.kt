@@ -17,6 +17,7 @@ import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.location.LocationService
+import edu.artic.location.isLocationInMuseum
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MapItemModel

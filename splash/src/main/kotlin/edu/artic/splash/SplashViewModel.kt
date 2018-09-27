@@ -3,6 +3,7 @@ package edu.artic.splash
 import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.AppDataManager
 import edu.artic.db.ProgressDataState
 import edu.artic.viewmodel.NavViewViewModel
@@ -11,7 +12,9 @@ import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavViewViewModel<SplashViewModel.NavigationEndpoint>() {
+class SplashViewModel @Inject constructor(appDataManager: AppDataManager,
+                                          analyticsTracker: AnalyticsTracker) :
+        NavViewViewModel<SplashViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         class Welcome : NavigationEndpoint()
@@ -23,6 +26,7 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager) : NavV
     val percentage: PublishSubject<Float> = PublishSubject.create()
 
     init {
+        analyticsTracker.clearSession()
         appDataManager.loadData()
                 .subscribe({
                     when (it) {
