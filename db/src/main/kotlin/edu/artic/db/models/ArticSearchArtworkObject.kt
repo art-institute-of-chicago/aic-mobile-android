@@ -27,6 +27,7 @@ data class ArticSearchArtworkObject(
         val title: String,
         val thumbnailUrl: String?,
         val imageUrl: String?,
+        val artistTitle: String?,
         val artistDisplay: String?,
         val location: String?,
         val floor: Int,

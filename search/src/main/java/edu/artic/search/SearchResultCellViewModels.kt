@@ -65,7 +65,7 @@ class SearchArtworkCellViewModel(val articObject: ArticSearchArtworkObject)
     init {
         imageUrl.onNext(articObject.thumbUrl.orEmpty())
         itemTitle.onNext(articObject.title)
-        itemSubTitle.onNext(articObject.artistDisplay.orEmpty())
+        itemSubTitle.onNext(articObject.artistTitle.orEmpty())
     }
 }
 
