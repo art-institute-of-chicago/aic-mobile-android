@@ -22,6 +22,7 @@ import edu.artic.base.utils.removeAndReturnParcelable
 import edu.artic.base.utils.removeAndReturnString
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.*
+import edu.artic.location.museumBounds
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng

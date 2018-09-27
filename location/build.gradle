@@ -8,7 +8,7 @@ dependencies {
     kapt libs.dagger_android_compiler
 
     api libs.maps
-    implementation libs.maps_utils
+    api libs.maps_utils
     implementation libs.rx_helpers
     implementation libs.rx_kotlin
     implementation libs.rx
