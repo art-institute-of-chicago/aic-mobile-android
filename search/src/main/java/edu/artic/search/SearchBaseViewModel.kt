@@ -101,6 +101,7 @@ open class SearchBaseViewModel @Inject constructor(
                             title = articObject.title,
                             thumbnailUrl = articObject.thumbUrl,
                             imageUrl = articObject.largeImageUrl,
+                            artistTitle = articObject.tombstone,
                             artistDisplay = articObject.artistCulturePlaceDelim,
                             location = articObject.location,
                             floor = articObject.floor,
