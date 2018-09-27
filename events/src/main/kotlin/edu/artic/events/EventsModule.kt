@@ -22,13 +22,4 @@ abstract class EventsModule {
     @get:ContributesAndroidInjector
     abstract val allEventsFragment: AllEventsFragment
 
-    @Binds
-    @IntoMap
-    @ViewModelKey(EventDetailViewModel::class)
-    abstract fun eventDetailViewModel(eventDetailViewModel: EventDetailViewModel): ViewModel
-
-
-    @get:ContributesAndroidInjector
-    abstract val eventDetailFragment: EventDetailFragment
-
 }

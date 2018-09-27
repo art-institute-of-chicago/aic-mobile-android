@@ -8,9 +8,11 @@ import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.adapter.itemClicksWithPosition
+import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.events.recyclerview.AllEventsItemDecoration
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_all_events.*
@@ -79,10 +81,10 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
                     val endpoint = navigation.endpoint
                     when (endpoint) {
                         is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
-                            navController.navigate(
-                                    R.id.goToEventDetailsAction,
-                                    EventDetailFragment.argsBundle(endpoint.event)
-                            )
+                            val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                                putExtras(EventDetailFragment.argsBundle(endpoint.event))
+                            }
+                            startActivity(intent)
                         }
                     }
                 }

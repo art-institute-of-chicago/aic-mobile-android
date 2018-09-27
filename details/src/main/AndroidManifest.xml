@@ -1,2 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="edu.artic.details" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="edu.artic.details" >
+
+    <application>
+        <activity
+            android:name=".DetailsActivity"
+            android:theme="@style/DetailsTheme"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="sensorPortrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="edu.artic.details"
+                    android:scheme="artic" />
+            </intent-filter>
+
+        </activity>
+    </application>
+
+</manifest>
