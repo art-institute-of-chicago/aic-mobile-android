@@ -27,8 +27,8 @@ class MapItemModel(
         fun fromExhibition(item: ArticExhibition): MapItemModel {
             return MapItemModel(item.id.toString(),
                     item.floor ?: 1,
-                    item.legacy_image_mobile_url ?: "",
-                    item.legacy_image_mobile_url ?: "",
+                    item.legacyImageUrl ?: "",
+                    item.legacyImageUrl ?: "",
                     null,
                     item.toLatLng())
         }

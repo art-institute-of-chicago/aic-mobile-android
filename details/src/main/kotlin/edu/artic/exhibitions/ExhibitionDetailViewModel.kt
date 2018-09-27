@@ -69,8 +69,8 @@ constructor(dataObjectDao: ArticDataObjectDao,
                 .disposedBy(disposeBag)
 
         exhibitionObservable
-                .filter { it.legacy_image_mobile_url != null }
-                .map { it.legacy_image_mobile_url!! }
+                .filter { it.legacyImageUrl != null }
+                .map { it.legacyImageUrl!! }
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 

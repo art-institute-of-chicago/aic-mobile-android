@@ -71,7 +71,7 @@ class SearchArtworkCellViewModel(val artwork: ArticSearchArtworkObject)
 
 class SearchExhibitionCellViewModel (val articExhibition: ArticExhibition) : SearchBaseListItemViewModel() {
     init {
-        imageUrl.onNext(articExhibition.legacy_image_mobile_url.orEmpty())
+        imageUrl.onNext(articExhibition.legacyImageUrl.orEmpty())
         itemTitle.onNext(articExhibition.title)
     }
 }

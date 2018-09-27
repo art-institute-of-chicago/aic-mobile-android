@@ -189,7 +189,7 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val langua
     private val throughDateString = exhibition.endTime.format(formatter)
             .toString()
     val exhibitionDate: Subject<String> = BehaviorSubject.createDefault(throughDateString)
-    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacy_image_mobile_url.orEmpty())
+    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacyImageUrl.orEmpty())
 
     init {
 
