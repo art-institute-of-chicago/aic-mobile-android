@@ -1,7 +1,7 @@
 package edu.artic.location
 
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import android.view.View
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
@@ -17,6 +17,12 @@ class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() 
     override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_location_prompt
     override val screenCategory: ScreenCategoryName? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //Do not allow any touch events to go below this view
+        view.setOnTouchListener { _, _ -> true }
+    }
 
     override fun setupBindings(viewModel: LocationPromptViewModel) {
         super.setupBindings(viewModel)
@@ -40,7 +46,7 @@ class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() 
         viewModel.navigateTo
                 .filter { it is Navigate.Back }
                 .subscribe {
-                    navController.popBackStack()
+                    activity?.onBackPressed()
                 }.disposedBy(navigationDisposeBag)
     }
 }

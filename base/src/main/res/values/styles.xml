@@ -263,20 +263,21 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-
-
     <style name="IdealSansMediumItalic">
         <item name="android:fontFamily">@font/ideal_sans_medium_italic</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
-
-
-
     <style name="IdealSansBookItalic">
-        <item name="android:fontFamily">@font/ideal_sans_medium_italic</item>
+        <item name="android:fontFamily">@font/ideal_sans_book_italic</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">#52e3e7</item>
+    </style>
+
+    <style name="IdealSansBook">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>

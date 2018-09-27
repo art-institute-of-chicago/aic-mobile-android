@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="tutorial_mark_first_floor">You are on Floor 1</string>
+    <string name="tutorial_mark_compass">Tap to Orient Map</string>
+    <string name="tutorial_explore_title">Explore The Map</string>
+    <string name="tutorial_explore_text">Pinch to explore the map.</string>
+    <string name="tutorial_audio_pins_title">Tap Audio Pins to Listen</string>
+    <string name="tutorial_audio_pins_text">Transparent pins indicate audio on a different floor.</string>
+    <string name="map_header_overlay_title">Find Your Way</string>
+    <string name="map_header_overlay_body">Use the map to find food, facilities, and audio-enhanced artworks.</string>
+</resources>
