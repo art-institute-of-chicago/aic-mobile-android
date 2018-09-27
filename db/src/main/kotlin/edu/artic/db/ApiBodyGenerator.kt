@@ -72,6 +72,7 @@ sealed class ApiBodyGenerator {
                     "id",
                     "is_on_view",
                     "title",
+                    "artist_title",
                     "artist_display",
                     "image_id",
                     "gallery_id",
