@@ -169,33 +169,24 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.TourDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.TourDetail
-                                    navController
-                                            .navigate(
-                                                    R.id.goToTourDetailsAction,
-                                                    TourDetailsFragment.argsBundle(
-                                                            endpoint.tour
-                                                    )
-                                            )
+                                    val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                                        putExtras(TourDetailsFragment.argsBundle(endpoint.tour))
+                                    }
+                                    startActivity(intent)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
-                                    navController
-                                            .navigate(
-                                                    R.id.goToExhibitionDetailsAction,
-                                                    ExhibitionDetailFragment.argsBundle(
-                                                            endpoint.exhibition
-                                                    )
-                                            )
+                                    val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                                        putExtras(ExhibitionDetailFragment.argsBundle(endpoint.exhibition))
+                                    }
+                                    startActivity(intent)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.EventDetail -> {
                                     val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.EventDetail
-                                    navController
-                                            .navigate(
-                                                    R.id.goToEventDetailsAction,
-                                                    EventDetailFragment.argsBundle(
-                                                            endpoint.event
-                                                    )
-                                            )
+                                    val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                                        putExtras(EventDetailFragment.argsBundle(endpoint.event))
+                                    }
+                                    startActivity(intent)
                                 }
                                 WelcomeViewModel.NavigationEndpoint.Search -> {
                                     val intent = NavigationConstants.SEARCH.asDeepLinkIntent()

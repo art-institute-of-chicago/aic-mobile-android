@@ -13,6 +13,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticEvent
+import edu.artic.details.R
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -29,7 +30,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     override val title = R.string.noTitle
 
-    private val event by lazy { arguments!!.getParcelable<ArticEvent>(ARG_EVENT) }
+    private val event by lazy { requireActivity().intent.getParcelableExtra<ArticEvent>(ARG_EVENT) }
 
     override fun hasTransparentStatusBar() = true
 
@@ -114,7 +115,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     }
 
     companion object {
-        private val ARG_EVENT = "${EventDetailFragment::class.java.simpleName}: event"
+        public val ARG_EVENT = "${EventDetailFragment::class.java.simpleName}: event"
 
         fun argsBundle(event: ArticEvent) = Bundle().apply {
             putParcelable(ARG_EVENT, event)
