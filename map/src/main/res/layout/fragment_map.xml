@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:animateLayoutChanges="true"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
@@ -49,8 +49,9 @@
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintGuide_percent="0.5"
-        android:orientation="horizontal" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
     <TextView
         android:id="@+id/floorThree"
         style="@style/MapFloor"
@@ -69,6 +70,7 @@
         android:layout_marginTop="@dimen/marginDouble"
         android:alpha=".5"
         android:background="@null"
+        android:contentDescription="@null"
         android:rotation="30"
         android:src="@drawable/ic_compass"
         android:visibility="invisible"
@@ -78,13 +80,57 @@
         tools:visibility="visible" />
 
     <FrameLayout
+        android:id="@+id/mapFirstRunHeader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/marine"
+            android:gravity="center_horizontal"
+            android:minHeight="240dp"
+            android:orientation="vertical"
+            android:paddingTop="40dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_map_header" />
+
+            <TextView
+                style="@style/PageTitleRegularWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:text="@string/map_header_overlay_title"
+                tools:text="Find Your Way" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/marginOneHalf"
+                android:fontFamily="@font/amiri_regular"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="4sp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:text="@string/map_header_overlay_body"
+                tools:text="Use the map to find food, facilities, and audio-enhanced artworks. " />
+        </LinearLayout>
+    </FrameLayout>
+
+
+    <FrameLayout
         android:id="@+id/infocontainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:backgroud="#fab"
-        />
+        tools:backgroud="#fab" />
 
 </android.support.constraint.ConstraintLayout>

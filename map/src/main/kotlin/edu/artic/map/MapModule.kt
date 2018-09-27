@@ -83,7 +83,8 @@ abstract class MapModule {
 
         @JvmStatic
         @Provides
-        fun provideWelcomePreferenceManager(context : Context) : TutorialPreferencesManager
+        @Singleton
+        fun provideTutorialPreferencesManager(context : Context) : TutorialPreferencesManager
                 = TutorialPreferencesManager(context)
 
     }

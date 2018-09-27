@@ -8,9 +8,10 @@ import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import javax.inject.Inject
 
-class TutorialViewModel @Inject constructor(tutorialPreferencesManager: TutorialPreferencesManager)
+class TutorialViewModel @Inject constructor(private val tutorialPreferencesManager: TutorialPreferencesManager)
     : NavViewViewModel<TutorialViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
@@ -78,6 +79,11 @@ class TutorialViewModel @Inject constructor(tutorialPreferencesManager: Tutorial
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Timber.d("closedTutorial onClearedTutorialViewModel")
+        tutorialPreferencesManager.hasClosedTutorialOnce = true
+    }
 
 }
 
