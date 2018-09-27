@@ -98,6 +98,14 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         viewModel.welcomePrompt
                 .bindToMain(welcomeMessage.text())
                 .disposedBy(disposeBag)
+
+        viewModel.currentCardHolder
+                .subscribe { cardHolder ->
+                    val firstName = cardHolder.split(" ").first()
+                    val title = resources.getString(R.string.welcomeUser, firstName)
+                    requestTitleUpdate(title)
+                }
+                .disposedBy(disposeBag)
     }
 
     override fun setupBindings(viewModel: WelcomeViewModel) {
@@ -135,14 +143,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         toursAdapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickTour(pos, model.tour)
-                }
-                .disposedBy(disposeBag)
-
-        viewModel.currentCardHolder
-                .subscribe { cardHolder ->
-                    val firstName = cardHolder.split(" ").first()
-                    val title = resources.getString(R.string.welcomeUser, firstName)
-                    requestTitleUpdate(title)
                 }
                 .disposedBy(disposeBag)
     }
