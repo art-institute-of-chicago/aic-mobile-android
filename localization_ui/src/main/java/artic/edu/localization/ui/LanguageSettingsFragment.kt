@@ -57,10 +57,6 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                 }.disposedBy(disposeBag)
 
         configureToolbar()
-
-        if (splashMode) {
-            viewModel.userSawLanguageSettingsDialog()
-        }
     }
 
     /**
@@ -139,6 +135,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
          */
         fun getLanguageSettingsDialogForSplash(): LanguageSettingsFragment {
             return LanguageSettingsFragment().apply {
+                isCancelable = false
                 arguments = Bundle().apply {
                     putBoolean(ARG_LANGUAGE_SETTINGS, true)
                 }

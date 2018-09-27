@@ -53,7 +53,7 @@ class SplashViewModel @Inject constructor(
      * Play the museum floor animation video.
      */
     private fun startVideo() {
-        val seenLanguageSettingsDialogBefore = languageSettingsPrefManager.seenLanguageSettingsDialog
+        val seenLanguageSettingsDialogBefore = languageSettingsPrefManager.userSelectedLanguage
         Navigate.Forward(NavigationEndpoint.StartVideo(!seenLanguageSettingsDialogBefore))
                 .asObservable().delay(1, TimeUnit.SECONDS)
                 .bindTo(navigateTo)
