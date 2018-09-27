@@ -31,7 +31,7 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     open val useInjection: Boolean
         get() = true
 
-    open val refreshLanguageUponChange: Boolean
+    open val shouldRecreateUponLanguageChange: Boolean
         get() = true
 
     @Inject
@@ -52,7 +52,7 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (useInjection) {
             AndroidInjection.inject(this)
-            if (refreshLanguageUponChange) {
+            if (shouldRecreateUponLanguageChange) {
                 languageSelector.currentLanguage
                         .subscribe {
                             ensureConfigIncludesAppLocale()
