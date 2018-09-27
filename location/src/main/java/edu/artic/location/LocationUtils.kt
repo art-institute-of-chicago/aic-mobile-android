@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLngBounds
  * the museum grounds, as we allow panning and zooming a decent amount away from the
  * buildings themselves.
  */
-internal val museumBounds: LatLngBounds = LatLngBounds(
+val museumBounds: LatLngBounds = LatLngBounds(
         // southwest
         LatLng(41.875815, -87.627528),
 

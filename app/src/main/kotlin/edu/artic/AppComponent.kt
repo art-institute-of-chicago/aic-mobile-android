@@ -3,6 +3,7 @@ package edu.artic
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
+import edu.artic.accesscard.AccessMemberModule
 import edu.artic.analytics.AnalyticsModule
 import edu.artic.audio.AudioModule
 import edu.artic.db.ApiModule
@@ -13,10 +14,10 @@ import edu.artic.exhibitions.ExhibitionsModule
 import edu.artic.info.InfoModule
 import edu.artic.localization.LocalizerModule
 import edu.artic.location.LocationModule
+import edu.artic.location.LocationUIModule
 import edu.artic.map.MapModule
 import edu.artic.media.audio.MediaModule
 import edu.artic.media.ui.MediaUiModule
-import edu.artic.accesscard.AccessMemberModule
 import edu.artic.membership.MembershipModule
 import edu.artic.search.SearchModule
 import edu.artic.splash.SplashModule
