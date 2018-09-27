@@ -59,12 +59,12 @@ open class SearchBaseViewModel @Inject constructor(
             is SearchArtworkCellViewModel -> {
                 analyticsTracker.reportEvent(
                         EventCategoryName.SearchArtwork,
-                        viewModel.articObject.title,
+                        viewModel.artwork.title,
                         searchText
                 )
                 navigateTo.onNext(
                         Navigate.Forward(
-                                NavigationEndpoint.ArtworkDetails(viewModel.articObject)
+                                NavigationEndpoint.ArtworkDetails(viewModel.artwork)
                         )
                 )
             }
@@ -93,7 +93,7 @@ open class SearchBaseViewModel @Inject constructor(
                 navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Web))
             }
             is SearchCircularCellViewModel -> {
-                viewModel.artWork?.let { articObject ->
+                viewModel.artwork?.let { articObject ->
                     /** Convert the [ArticObject] to [ArticSearchArtworkObject] **/
                     val articSearchArtworkObject = ArticSearchArtworkObject(
                             artworkId = articObject.id.toString(),

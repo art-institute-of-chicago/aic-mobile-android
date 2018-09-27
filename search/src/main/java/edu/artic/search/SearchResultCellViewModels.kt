@@ -59,13 +59,13 @@ open class SearchBaseListItemViewModel(isHeadphonesVisible: Boolean = false)
     val isHeadphonesVisible: Subject<Boolean> = BehaviorSubject.createDefault(isHeadphonesVisible)
 }
 
-class SearchArtworkCellViewModel(val articObject: ArticSearchArtworkObject)
-    : SearchBaseListItemViewModel(isHeadphonesVisible = articObject.backingObject?.audioCommentary?.isNotEmpty() ?: false) {
+class SearchArtworkCellViewModel(val artwork: ArticSearchArtworkObject)
+    : SearchBaseListItemViewModel(isHeadphonesVisible = artwork.backingObject?.audioCommentary?.isNotEmpty() ?: false) {
 
     init {
-        imageUrl.onNext(articObject.thumbUrl.orEmpty())
-        itemTitle.onNext(articObject.title)
-        itemSubTitle.onNext(articObject.artistTitle.orEmpty())
+        imageUrl.onNext(artwork.thumbUrl.orEmpty())
+        itemTitle.onNext(artwork.title)
+        itemSubTitle.onNext(artwork.artistTitle.orEmpty())
     }
 }
 
@@ -86,10 +86,10 @@ class SearchTourCellViewModel(val articTour: ArticTour) : SearchBaseListItemView
 /**
  * ViewModel for displaying the circular artwork image under "On the map" section.
  */
-class SearchCircularCellViewModel(val artWork: ArticObject?) : SearchBaseCellViewModel() {
+class SearchCircularCellViewModel(val artwork: ArticObject?) : SearchBaseCellViewModel() {
 
     val imageUrl: Subject<String> = BehaviorSubject.createDefault(
-            artWork?.thumbnailFullPath?.asCDNUri().orEmpty()
+            artwork?.thumbnailFullPath?.asCDNUri().orEmpty()
     )
 }
 
