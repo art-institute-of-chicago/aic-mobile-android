@@ -314,7 +314,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
         if (isDifferentAudio) {
             analyticsTracker.reportEvent(
-                    EventCategoryName.Language,
+                    EventCategoryName.LanguageAudio,
                     audio.underlyingLocale().nameOfLanguageForAnalytics(),
                     audio.title.orEmpty()
             )

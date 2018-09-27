@@ -47,6 +47,7 @@ import javax.inject.Singleton
     SearchModule::class,
     DetailsModule::class,
     LocationModule::class,
+    LocationUIModule::class,
     MembershipModule::class,
     AccessMemberModule::class
 ])
