@@ -8,6 +8,9 @@ import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.location.LocationService
 import edu.artic.location.isLocationInMuseum
 import edu.artic.membership.MemberInfoPreferencesManager
+import io.reactivex.rxkotlin.Observables
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import java.util.*
 
 /**
@@ -39,22 +42,28 @@ class AnalyticsTrackerImpl(context: Context,
     private val analytics = GoogleAnalytics.getInstance(context)
     private val tracker = analytics.newTracker(analyticsConfig.trackingId)
     private var atMusuem = false
-    private var reportLocationAnalytic = true
+    private var reportLocationAnalytic: Subject<Boolean> = BehaviorSubject.createDefault(true)
 
     init {
         locationService.requestTrackingUserLocation()
-        locationService.currentUserLocation
-                .subscribe() {
-                    atMusuem = isLocationInMuseum(it)
-                    if (atMusuem && reportLocationAnalytic) {
-                        reportLocationAnalytic = false
-                        reportEvent(EventCategoryName.Location, AnalyticsAction.locationOnSite)
-                    }
-                }.dispose()
+        val isInMuseum = locationService.currentUserLocation.map{isLocationInMuseum(it)}
+        isInMuseum
+                .distinctUntilChanged()
+                .subscribe {
+                    atMusuem = it
+                }
+
+        Observables.combineLatest(isInMuseum, reportLocationAnalytic)
+                .filter { (inMuseum, shouldReport) ->
+                    inMuseum && shouldReport
+                }.subscribe {
+                    reportLocationAnalytic.onNext(false)
+                    reportEvent(EventCategoryName.Location, AnalyticsAction.locationOnSite)
+                }
     }
 
     override fun clearSession() {
-        reportLocationAnalytic = true
+        reportLocationAnalytic.onNext(true)
     }
 
     override fun reportEvent(category: String, action: String, label: String) {
