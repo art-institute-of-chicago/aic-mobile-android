@@ -38,7 +38,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
         /**
          * BaseActivity.title does not update the title for the fragments with collapsing toolbar title.
          */
-
+        updateToolbar(requireView())
         collapsingToolbar?.title = proposedTitle
     }
 
