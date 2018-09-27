@@ -4,9 +4,9 @@ apply plugin: 'com.android.library'
 
 android {
     defaultConfig {
-        buildConfigField("String", "BLOB_URL", 'http://aic-mobile-tours.artic.edu/sites/default/files/"')
+        buildConfigField("String", "BLOB_URL", '"http://aic-mobile-tours.artic.edu/sites/default/files/"')
         buildConfigField("String", "DEFAULT_BUY_URL", '"https://sales.artic.edu/"')
-        buildConfigField("String", "OFFICIAL_IMAGE_HOST", 'lakeimagesweb.artic.edu"')
+        buildConfigField("String", "OFFICIAL_IMAGE_HOST", '"lakeimagesweb.artic.edu"')
         buildConfigField("String", "CDN_HOST", '"www-2018.artic.edu"')
     }
 }
