@@ -41,13 +41,11 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     override val viewModelClass: KClass<SplashViewModel>
         get() = SplashViewModel::class
 
-    override val refreshLanguageUponChange = false
+    override val shouldRecreateUponLanguageChange = false
 
     private lateinit var fadeInAnimation: ViewPropertyAnimator
     private var errorDialog: AlertDialog? = null
 
-    private var height: Int = 0
-    private var width: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -150,11 +148,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         return true
     }
 
-    override fun onSurfaceTextureAvailable(p0: SurfaceTexture?, p1: Int, p2: Int) {
+    override fun onSurfaceTextureAvailable(p0: SurfaceTexture?, width: Int, height: Int) {
         surface = Surface(p0)
-        width = p1
-        height = p2
-        updateTextureViewSize()
+        updateTextureViewSize(width, height)
 
         try {
             val afd = assets.openFd("splash.mp4")
@@ -226,7 +222,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     /**
      * Scale the size of the [TextureView].
      */
-    private fun updateTextureViewSize() {
+    private fun updateTextureViewSize(width: Int, height: Int) {
         val matrix = Matrix()
         val ratioOfScreen = height.toFloat() / width.toFloat()
         val ratio = (16f / 9f) / ratioOfScreen
