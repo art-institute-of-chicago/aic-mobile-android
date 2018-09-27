@@ -23,6 +23,7 @@ dependencies {
     implementation project(':adapter')
     implementation project(':image')
     implementation project(':location')
+    implementation project(':location_ui')
     implementation libs.rx_kotlin
 
     implementation libs.constraint_layout
