@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class LocationPromptViewModel @Inject constructor(
         private val locationService: LocationService,
-        locationPreferenceManager: LocationPreferenceManager
+        private val locationPreferenceManager: LocationPreferenceManager
 ) : NavViewViewModel<LocationPromptViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
@@ -22,5 +22,10 @@ class LocationPromptViewModel @Inject constructor(
     fun onClickOk() {
         locationService.requestLocationPermissions()
         navigateTo.onNext(Navigate.Back())
+    }
+
+    override fun cleanup() {
+        super.cleanup()
+        locationPreferenceManager.hasClosedLocationPromptOnce = true
     }
 }
