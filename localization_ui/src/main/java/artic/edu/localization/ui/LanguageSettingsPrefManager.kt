@@ -9,9 +9,9 @@ import edu.artic.base.BasePreferencesManager
 class LanguageSettingsPrefManager(context: Context)
     : BasePreferencesManager(context, "language_settings") {
 
-    var seenLanguageSettingsDialog: Boolean
-        set(value) = putBoolean("saw_language_settings_dialog", value)
-        get() = getBoolean("saw_language_settings_dialog")
+    var userSelectedLanguage: Boolean
+        set(value) = putBoolean("user_selected_language", value)
+        get() = getBoolean("user_selected_language")
 }
 
 

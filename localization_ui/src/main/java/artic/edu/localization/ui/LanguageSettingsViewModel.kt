@@ -33,11 +33,6 @@ class LanguageSettingsViewModel @Inject constructor(
         appLocale
                 .distinctUntilChanged()
                 .subscribe {
-                    analyticsTracker.reportEvent(
-                            EventCategoryName.Language,
-                            AnalyticsAction.languageSelected,
-                            it.nameOfLanguageForAnalytics()
-                    )
                     languageSelector.setDefaultLanguageForApplication(it)
 
                 }.disposedBy(disposeBag)
@@ -45,6 +40,17 @@ class LanguageSettingsViewModel @Inject constructor(
     }
 
     private fun changeLocale(locale: Locale) {
+        /**
+         * Log language selected event.
+         */
+        if (!languageSettingsPrefManager.userSelectedLanguage) {
+            analyticsTracker.reportEvent(
+                    EventCategoryName.Language,
+                    AnalyticsAction.languageSelected,
+                    locale.nameOfLanguageForAnalytics()
+            )
+            languageSettingsPrefManager.userSelectedLanguage = true
+        }
         appLocale.onNext(locale)
         selectedLocale.onNext(locale)
     }
@@ -59,9 +65,5 @@ class LanguageSettingsViewModel @Inject constructor(
 
     fun onChineseLanguageSelected() {
         changeLocale(Locale.CHINESE)
-    }
-
-    fun userSawLanguageSettingsDialog() {
-        languageSettingsPrefManager.seenLanguageSettingsDialog = true
     }
 }
