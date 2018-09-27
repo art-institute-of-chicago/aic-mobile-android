@@ -404,12 +404,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)
 
-        tutorialPreferencesManager
-                .hasClosedTutorialObservable
-                .subscribeBy {
-                    Timber.d("Subscribe to closedTutorialObservables response: $it")
-                }.disposedBy(disposeBag)
-
         Observables
                 .combineLatest(
                         tutorialPreferencesManager.hasClosedTutorialObservable,
@@ -417,7 +411,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         hasSeenHeaderThisSession.distinctUntilChanged()
                 ) { hasClosedTutorial, displayMode, hasSeenHeader ->
                     val shouldShowHeader = hasClosedTutorial && !hasSeenHeader && displayMode == MapDisplayMode.CurrentFloor
-                    Timber.d("\nHasClosedTutorial: $hasClosedTutorial \ndisplayMode: $displayMode \nhasSeenHeader $hasSeenHeader, \nshouldShowHeader: $shouldShowHeader" )
                     if(shouldShowHeader || (hasClosedTutorial && !hasSeenHeader && displayMode != MapDisplayMode.CurrentFloor))
                         hasSeenHeaderThisSession.onNext(true)
                     return@combineLatest shouldShowHeader
