@@ -61,6 +61,7 @@ dependencies {
     implementation project(':search')
     implementation project(':details')
     implementation project(':location')
+    implementation project(':location_ui')
     implementation project(':membership')
     implementation project(':access_card')
     implementation fileTree(include: ['*.jar'], dir: 'libs')

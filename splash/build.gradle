@@ -10,6 +10,7 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':db')
     implementation project(':navigation')
+    implementation project(':analytics')
     implementation libs.constraint_layout
     api libs.arch_runtime
     api libs.arch_extensions

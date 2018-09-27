@@ -39,6 +39,8 @@ sealed class EventCategoryName(val eventCategoryName: String) {
      * NB: actions in this category may be `Locale.nameOfLanguageForAnalytics()` instead of a constant from this file.
      */
     object Language : EventCategoryName("language")
+    object LanguageTour : EventCategoryName("language_tour")
+    object LanguageAudio : EventCategoryName("language_audio")
 
     object PlayAudio : EventCategoryName("play_audio")
     object PlayBack : EventCategoryName("playback")
@@ -66,7 +68,7 @@ object AnalyticsAction {
     const val locationNotNowPressed = "not_now_pressed"
     const val locationHeadingEnabled = "heading_enabled"
 
-    const val playAudioTour = "tour"
+    const val playAudioTour = "tour" //Audio and Language
     const val playAudioTourStop = "tour_stop"
     const val playAudioAudioGuide = "audio_guide"
     const val playAudioMap = "map"

@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.*
+import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.fromHtml
@@ -21,6 +22,7 @@ import edu.artic.details.R
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
+import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -184,6 +186,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                     val endpoint = forward.endpoint
                     when (endpoint) {
                         is TourDetailsViewModel.NavigationEndpoint.Map -> {
+                            analyticsTracker.reportEvent(EventCategoryName.LanguageTour, endpoint.locale.nameOfLanguageForAnalytics(), endpoint.tour.title)
                             startActivity(NavigationConstants.MAP.asDeepLinkIntent()
                                     .apply {
                                         putExtra(NavigationConstants.ARG_TOUR, endpoint.tour)
