@@ -6,7 +6,7 @@
     <string name="languageSettings">Language Settings</string>
     <string name="locationSettings">Location Settings</string>
     <string name="supportBy">Supported By</string>
-    <string name="joinUrl" translatable="false">https://sales.artic.edu/memberships?&amp;utm_medium=mobile-app&amp;utm_source=iphone&amp;utm_campaign=join</string>
+    <string name="joinUrl" translatable="false">https://sales.artic.edu/memberships?&amp;utm_medium=mobile-app&amp;utm_source=android&amp;utm_campaign=join</string>
     <string name="buyTickets">Buy Tickets</string>
     <string name="museumAddress" translatable="false">111 S Michigan Ave\nChicago, IL 60603</string>
     <string name="museumPhoneNumber" translatable="false">+1 312 443 3600</string>

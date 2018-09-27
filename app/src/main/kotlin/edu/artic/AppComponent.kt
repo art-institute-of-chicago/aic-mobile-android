@@ -1,6 +1,6 @@
 package edu.artic
 
-import artic.edu.localization.ui.LocalizationUiModule
+import edu.artic.localization.ui.LocalizationUiModule
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule

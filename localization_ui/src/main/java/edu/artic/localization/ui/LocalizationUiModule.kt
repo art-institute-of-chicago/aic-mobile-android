@@ -1,4 +1,4 @@
-package artic.edu.localization.ui
+package edu.artic.localization.ui
 
 import android.arch.lifecycle.ViewModel
 import android.content.Context

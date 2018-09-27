@@ -13,7 +13,7 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
-import artic.edu.localization.ui.LanguageSettingsFragment
+import edu.artic.localization.ui.LanguageSettingsFragment
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.makeStatusBarTransparent

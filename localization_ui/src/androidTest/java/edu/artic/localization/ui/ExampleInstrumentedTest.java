@@ -1,4 +1,4 @@
-package artic.edu.localization.ui;
+package edu.artic.localization.ui;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("artic.edu.localization.ui.test", appContext.getPackageName());
+        assertEquals("edu.artic.localization.ui.test", appContext.getPackageName());
     }
 }
