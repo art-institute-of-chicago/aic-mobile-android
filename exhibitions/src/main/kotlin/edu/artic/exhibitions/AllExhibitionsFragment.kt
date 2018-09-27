@@ -8,8 +8,10 @@ import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.adapter.itemClicksWithPosition
+import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.navigation.NavigationConstants
 import edu.artic.tours.recyclerview.AllExhibitionsItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -66,12 +68,10 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
                     when (it.endpoint) {
                         is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {
                             val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
-                            navController.navigate(
-                                    R.id.goToExhibitionDetailsAction,
-                                    ExhibitionDetailFragment.argsBundle(
-                                            endpoint.exhibition
-                                    )
-                            )
+                            val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                                putExtras(ExhibitionDetailFragment.argsBundle(endpoint.exhibition))
+                            }
+                            startActivity(intent)
                         }
                     }
                 }

@@ -49,6 +49,9 @@ data class ArticSearchArtworkObject(
      */
     val largeImageUrl: String?
         get() {
-            return imageUrl?.asCDNUri()
+            imageUrl?.let {
+                return it.asCDNUri()
+            }
+            return thumbnailUrl?.asCDNUri()
         }
 }

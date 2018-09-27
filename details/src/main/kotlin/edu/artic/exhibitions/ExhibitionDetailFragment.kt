@@ -44,7 +44,14 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     override fun hasTransparentStatusBar() = true
 
-    private val exhibition by lazy { arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION) }
+    private val exhibition by lazy {
+        //Support arguments from the search activity
+        if (arguments?.containsKey(ARG_EXHIBITION) == true) {
+            arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION)
+        } else {
+            requireActivity().intent.extras.getParcelable<ArticExhibition>(ARG_EXHIBITION)
+        }
+    }
 
     override fun onRegisterViewModel(viewModel: ExhibitionDetailViewModel) {
         viewModel.exhibition = exhibition
@@ -115,9 +122,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     }
                                     startActivity(mapIntent)
-                                    if (requireActivity().javaClass.simpleName.equals("SearchActivity")) {
-                                        requireActivity().finish()
-                                    }
+                                    requireActivity().finish()
                                 }
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
@@ -133,7 +138,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     }
 
     companion object {
-        private const val ARG_EXHIBITION = "exhibition"
+        public const val ARG_EXHIBITION = "exhibition"
 
         fun argsBundle(exhibition: ArticExhibition) = Bundle().apply {
             putParcelable(ARG_EXHIBITION, exhibition)
