@@ -4,8 +4,8 @@ import com.google.android.gms.maps.model.Tile
 import com.google.android.gms.maps.model.TileProvider
 import com.google.maps.android.geometry.Point
 import com.google.maps.android.projection.SphericalMercatorProjection
+import edu.artic.location.museumBounds
 import edu.artic.map.ZOOM_MIN
-import edu.artic.map.museumBounds
 import timber.log.Timber
 
 data class Bounds(val minX: Int, val minY: Int, val maxX: Int, val maxY: Int)
