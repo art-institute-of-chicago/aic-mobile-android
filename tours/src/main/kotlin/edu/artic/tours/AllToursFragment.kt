@@ -11,6 +11,8 @@ import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.navigation.NavigationConstants
 import edu.artic.tours.recyclerview.AllToursItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -80,10 +82,10 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
                                 is AllToursViewModel.NavigationEndpoint.TourDetails -> {
                                     val endpoint = it.endpoint as AllToursViewModel.NavigationEndpoint.TourDetails
-                                    navController.navigate(
-                                            R.id.goToTourDetailsAction,
-                                            TourDetailsFragment.argsBundle(endpoint.tour)
-                                            )
+                                    val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                                        putExtras(TourDetailsFragment.argsBundle(endpoint.tour))
+                                    }
+                                    startActivity(intent)
                                 }
                             }
                         }
@@ -92,7 +94,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
                         }
                     }
                 }
-                .disposedBy(disposeBag)
+                .disposedBy(navigationDisposeBag)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

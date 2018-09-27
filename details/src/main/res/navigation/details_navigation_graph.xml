@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/details_navigation_graph"
+            app:startDestination="@+id/emptyFragment">
+
+    <fragment
+        android:id="@+id/emptyFragment"
+        android:name="edu.artic.details.EmptyDetailsFragment"
+        android:label="empty_details_fragment">
+
+        <action
+            android:id="@+id/goToEventDetails"
+            app:destination="@id/eventDetailsFragment"
+            app:clearTask="true"/>
+
+        <action
+            android:id="@+id/goToTourDetails"
+            app:destination="@id/tourDetailsFragment"
+            app:clearTask="true"/>
+
+        <action
+            android:id="@+id/goToExhibitionDetails"
+            app:destination="@id/exhibitionDetailsFragment"
+            app:clearTask="true"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/tourDetailsFragment"
+        android:name="edu.artic.tours.TourDetailsFragment"
+        android:label="TourDetailsFragment" />
+
+    <fragment
+        android:id="@+id/exhibitionDetailsFragment"
+        android:name="edu.artic.exhibitions.ExhibitionDetailFragment"
+        android:label="ExhibitionDetailsFragment" />
+
+    <fragment
+        android:id="@+id/eventDetailsFragment"
+        android:name="edu.artic.events.EventDetailFragment"
+        android:label="EventDetailFragment" />
+
+</navigation>

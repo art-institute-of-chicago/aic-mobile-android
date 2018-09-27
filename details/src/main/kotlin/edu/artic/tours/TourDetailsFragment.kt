@@ -45,7 +45,14 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
     override fun hasTransparentStatusBar() = true
 
 
-    private val tour: ArticTour get() = arguments!!.getParcelable(ARG_TOUR)
+    private val tour by lazy {
+        //Support arguments from the search activity
+        if (arguments?.containsKey(ARG_TOUR) == true) {
+            arguments!!.getParcelable<ArticTour>(ARG_TOUR)
+        } else {
+            requireActivity().intent.getParcelableExtra<ArticTour>(ARG_TOUR)
+        }
+    }
 
     private val translationsAdapter: BaseRecyclerViewAdapter<SpecifiesLanguage, BaseViewHolder>
         get() = languageSelector.adapter.baseRecyclerViewAdapter()
@@ -65,6 +72,9 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
         languageSelector.adapter = LanguageAdapter().toBaseAdapter()
 
+        //Fix for the scrollview starting mid-scroll on the recyclerview
+        recyclerView.isFocusable = false
+        languageSelector.requestFocus()
     }
 
     override fun onRegisterViewModel(viewModel: TourDetailsViewModel) {
@@ -181,17 +191,15 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     }
                             )
-                            if (requireActivity().javaClass.simpleName.equals("SearchActivity")) {
-                                requireActivity().finish()
-                            }
+                            requireActivity().finish()
                         }
                     }
 
-                }.disposedBy(disposeBag)
+                }.disposedBy(navigationDisposeBag)
     }
 
     companion object {
-        private val ARG_TOUR = "${TourDetailsFragment::class.java.simpleName}:TOUR"
+        public val ARG_TOUR = "${TourDetailsFragment::class.java.simpleName}:TOUR"
 
         fun argsBundle(tour: ArticTour) = Bundle().apply {
             putParcelable(ARG_TOUR, tour)

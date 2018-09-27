@@ -10,6 +10,7 @@ class NavigationConstants {
         const val MAP: String = "edu.artic.map"
         const val SEARCH: String = "edu.artic.search"
         const val AUDIO: String = "edu.artic.audio"
+        const val DETAILS: String = "edu.artic.details"
         const val AUDIO_DETAILS: String = "edu.artic.media.audio_details"
         const val AUDIO_TUTORIAL: String = "edu.artic.media.audio_tutorial"
         const val INFO: String = "edu.artic.info"
