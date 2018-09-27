@@ -1,5 +1,6 @@
 package edu.artic.splash
 
+import artic.edu.localization.ui.LanguageSettingsPrefManager
 import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
@@ -12,14 +13,16 @@ import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class SplashViewModel @Inject constructor(appDataManager: AppDataManager,
-                                          analyticsTracker: AnalyticsTracker) :
-        NavViewViewModel<SplashViewModel.NavigationEndpoint>() {
+class SplashViewModel @Inject constructor(
+        appDataManager: AppDataManager,
+        private val languageSettingsPrefManager: LanguageSettingsPrefManager,
+        analyticsTracker: AnalyticsTracker
+) : NavViewViewModel<SplashViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         class Welcome : NavigationEndpoint()
-        class Language: NavigationEndpoint()
-        class Loading: NavigationEndpoint()
+        class Language : NavigationEndpoint()
+        class Loading(val displayLanguageSettings: Boolean) : NavigationEndpoint()
     }
 
 
@@ -49,7 +52,8 @@ class SplashViewModel @Inject constructor(appDataManager: AppDataManager,
     }
 
     private fun goToWelcome() {
-        Navigate.Forward(NavigationEndpoint.Loading())
+        val seenLanguageSettingsDialogBefore = languageSettingsPrefManager.seenLanguageSettingsDialog
+        Navigate.Forward(NavigationEndpoint.Loading(!seenLanguageSettingsDialogBefore))
                 .asObservable().delay(1, TimeUnit.SECONDS)
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)
