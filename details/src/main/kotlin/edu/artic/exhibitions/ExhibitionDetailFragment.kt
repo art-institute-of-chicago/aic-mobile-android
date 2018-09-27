@@ -49,7 +49,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
         if (arguments?.containsKey(ARG_EXHIBITION) == true) {
             arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION)
         } else {
-            requireActivity().intent.extras.getParcelable<ArticExhibition>(ARG_EXHIBITION)
+            requireActivity().intent.getParcelableExtra<ArticExhibition>(ARG_EXHIBITION)
         }
     }
 

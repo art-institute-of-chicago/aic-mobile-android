@@ -2,12 +2,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/details_navigation_graph"
-            app:startDestination="@+id/detailsFragment">
+            app:startDestination="@+id/emptyFragment">
 
     <fragment
-        android:id="@+id/detailsFragment"
-        android:name="edu.artic.details.DetailsFragment"
-        android:label="search_fragment">
+        android:id="@+id/emptyFragment"
+        android:name="edu.artic.details.EmptyDetailsFragment"
+        android:label="empty_details_fragment">
 
         <action
             android:id="@+id/goToEventDetails"

@@ -47,6 +47,6 @@ abstract class DetailsModule {
     abstract val detailsActivity: DetailsActivity
 
     @get:ContributesAndroidInjector
-    abstract val detailsFragment: DetailsFragment
+    abstract val detailsFragment: EmptyDetailsFragment
 
 }
