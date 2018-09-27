@@ -31,6 +31,9 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     open val useInjection: Boolean
         get() = true
 
+    open val refreshLanguageUponChange: Boolean
+        get() = true
+
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
@@ -49,11 +52,13 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (useInjection) {
             AndroidInjection.inject(this)
-            languageSelector.currentLanguage
-                    .subscribe {
-                        ensureConfigIncludesAppLocale()
-                        recreate()
-                    }.disposedBy(disposeBag)
+            if (refreshLanguageUponChange) {
+                languageSelector.currentLanguage
+                        .subscribe {
+                            ensureConfigIncludesAppLocale()
+                            recreate()
+                        }.disposedBy(disposeBag)
+            }
         }
         super.onCreate(savedInstanceState)
         if (layoutResId != 0) {
