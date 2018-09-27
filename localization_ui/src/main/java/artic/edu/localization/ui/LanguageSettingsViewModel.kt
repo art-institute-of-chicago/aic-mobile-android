@@ -9,6 +9,7 @@ import edu.artic.localization.SPANISH
 import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.util.*
 import javax.inject.Inject
@@ -22,13 +23,14 @@ class LanguageSettingsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
 
-    val selectedLanguage: Subject<Locale> = BehaviorSubject.create()
+    val appLocale: Subject<Locale> = BehaviorSubject.create()
+    val selectedLocale: Subject<Locale> = PublishSubject.create()
 
     init {
 
-        selectedLanguage.onNext(languageSelector.getAppLocale())
+        appLocale.onNext(languageSelector.getAppLocale())
 
-        selectedLanguage
+        appLocale
                 .distinctUntilChanged()
                 .subscribe {
                     analyticsTracker.reportEvent(
@@ -42,17 +44,21 @@ class LanguageSettingsViewModel @Inject constructor(
 
     }
 
+    private fun changeLocale(locale: Locale) {
+        appLocale.onNext(locale)
+        selectedLocale.onNext(locale)
+    }
 
     fun onEnglishLanguageSelected() {
-        selectedLanguage.onNext(Locale.ENGLISH)
+        changeLocale(Locale.ENGLISH)
     }
 
     fun onSpanishLanguageSelected() {
-        selectedLanguage.onNext(SPANISH)
+        changeLocale(SPANISH)
     }
 
     fun onChineseLanguageSelected() {
-        selectedLanguage.onNext(Locale.CHINESE)
+        changeLocale(Locale.CHINESE)
     }
 
 }
