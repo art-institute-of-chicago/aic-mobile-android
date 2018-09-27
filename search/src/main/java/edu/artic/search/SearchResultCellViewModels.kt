@@ -89,7 +89,7 @@ class SearchTourCellViewModel(val articTour: ArticTour) : SearchBaseListItemView
 class SearchCircularCellViewModel(val artwork: ArticObject?) : SearchBaseCellViewModel() {
 
     val imageUrl: Subject<String> = BehaviorSubject.createDefault(
-            artwork?.thumbnailFullPath?.asCDNUri().orEmpty()
+            artwork?.thumbUrl.orEmpty()
     )
 }
 
