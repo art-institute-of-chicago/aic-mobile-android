@@ -22,6 +22,8 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
     override val layoutResId: Int = R.layout.fragment_language_settings
     override val screenCategory: ScreenCategoryName? = ScreenCategoryName.LanguageSettings
 
+    private val splashMode by lazy { arguments!!.getBoolean(ARG_LANGUAGE_SETTINGS) }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -55,6 +57,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
         val hasToolbar = a.getBoolean(R.styleable.LanguageSettings_languageSettingsContainsToolbar, true)
         val hasDivider = a.getBoolean(R.styleable.LanguageSettings_languageSettingsHasDivider, true)
         val verticalBias = a.getFloat(R.styleable.LanguageSettings_languageSettingsButtonVerticalBias, 0f)
+
         a.recycle()
 
         if (hasToolbar) {
@@ -96,6 +99,21 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                         }
                     }
                 }.disposedBy(disposeBag)
+    }
+
+    companion object {
+        private const val ARG_LANGUAGE_SETTINGS = "ARG_LANGUAGE_SETTINGS"
+
+        /**
+         * Factory method for the creating DialogFragment.
+         */
+        fun makeFragmentForSplashMode(splashMode: Boolean): LanguageSettingsFragment {
+            return LanguageSettingsFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_LANGUAGE_SETTINGS, splashMode)
+                }
+            }
+        }
     }
 
 }
