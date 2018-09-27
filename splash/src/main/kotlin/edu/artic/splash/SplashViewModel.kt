@@ -1,6 +1,6 @@
 package edu.artic.splash
 
-import artic.edu.localization.ui.LanguageSettingsPrefManager
+import edu.artic.localization.ui.LanguageSettingsPrefManager
 import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy

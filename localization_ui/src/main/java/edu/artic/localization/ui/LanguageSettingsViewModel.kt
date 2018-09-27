@@ -1,4 +1,4 @@
-package artic.edu.localization.ui
+package edu.artic.localization.ui
 
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
