@@ -13,10 +13,10 @@ class DetailsActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
 
         when {
-            intent.extras[EventDetailFragment.ARG_EVENT] != null -> {
+            intent.hasExtra(EventDetailFragment.ARG_EVENT) -> {
                 navController.navigate(R.id.goToEventDetails)
             }
-            intent.extras[TourDetailsFragment.ARG_TOUR] != null -> {
+            intent.hasExtra(TourDetailsFragment.ARG_TOUR) -> {
                 navController.navigate(R.id.goToTourDetails)
             }
             else -> {

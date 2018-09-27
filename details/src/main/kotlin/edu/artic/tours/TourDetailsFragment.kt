@@ -50,7 +50,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         if (arguments?.containsKey(ARG_TOUR) == true) {
             arguments!!.getParcelable<ArticTour>(ARG_TOUR)
         } else {
-            requireActivity().intent.extras.getParcelable<ArticTour>(ARG_TOUR)
+            requireActivity().intent.getParcelableExtra<ArticTour>(ARG_TOUR)
         }
     }
 

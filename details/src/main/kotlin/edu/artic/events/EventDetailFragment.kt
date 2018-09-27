@@ -30,7 +30,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     override val title = R.string.noTitle
 
-    private val event by lazy { requireActivity().intent.extras.getParcelable<ArticEvent>(ARG_EVENT) }
+    private val event by lazy { requireActivity().intent.getParcelableExtra<ArticEvent>(ARG_EVENT) }
 
     override fun hasTransparentStatusBar() = true
 

@@ -19,7 +19,6 @@
         android:layout_height="match_parent"
         android:background="@color/darkGrey"
         android:fillViewport="true"
-        android:tag="TourScrollView"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.constraint.ConstraintLayout

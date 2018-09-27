@@ -52,6 +52,6 @@ data class ArticSearchArtworkObject(
             imageUrl?.let {
                 return it.asCDNUri()
             }
-            return thumbnailUrl?.asCDNUri()
+            return thumbUrl
         }
 }
