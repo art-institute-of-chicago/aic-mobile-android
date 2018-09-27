@@ -22,7 +22,17 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
     override val layoutResId: Int = R.layout.fragment_language_settings
     override val screenCategory: ScreenCategoryName? = ScreenCategoryName.LanguageSettings
 
+    /**
+     * Represents [LanguageSettingsFragment] is loaded in Splash.
+     * Normally, when user selects app locale using this fragment, we recreate the host activity
+     * to update the activity with selected locale.
+     * No need to recreate the activity in splash mode ([LanguageSettingsFragment] is dismissed
+     * upon language selection).
+     */
     private val splashMode by lazy { arguments!!.getBoolean(ARG_LANGUAGE_SETTINGS) }
+
+    override val overrideStatusBarColor: Boolean
+        get() = !splashMode
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,8 +57,15 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                 }.disposedBy(disposeBag)
 
         configureToolbar()
+
+        if (splashMode) {
+            viewModel.userSawLanguageSettingsDialog()
+        }
     }
 
+    /**
+     * Configure the fragment based on current theme.
+     */
     private fun configureToolbar() {
 
         val a = requireContext().theme.obtainStyledAttributes(
@@ -103,12 +120,14 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
         /**
          * Only listen to new locale change.
          */
-        viewModel.selectedLocale
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    callback?.languageSelected()
-                    dismiss()
-                }.disposedBy(disposeBag)
+        if (splashMode) {
+            viewModel.selectedLocale
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        callback?.languageSelected()
+                        dismiss()
+                    }.disposedBy(disposeBag)
+        }
     }
 
 
@@ -118,10 +137,10 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
         /**
          * Factory method for the creating DialogFragment.
          */
-        fun makeFragmentForSplashMode(splashMode: Boolean): LanguageSettingsFragment {
+        fun getLanguageSettingsDialogForSplash(): LanguageSettingsFragment {
             return LanguageSettingsFragment().apply {
                 arguments = Bundle().apply {
-                    putBoolean(ARG_LANGUAGE_SETTINGS, splashMode)
+                    putBoolean(ARG_LANGUAGE_SETTINGS, true)
                 }
             }
         }

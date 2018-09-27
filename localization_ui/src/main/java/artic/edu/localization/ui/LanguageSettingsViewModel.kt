@@ -19,7 +19,8 @@ import javax.inject.Inject
  */
 class LanguageSettingsViewModel @Inject constructor(
         val languageSelector: LanguageSelector,
-        private val analyticsTracker: AnalyticsTracker
+        private val analyticsTracker: AnalyticsTracker,
+        val languageSettingsPrefManager: LanguageSettingsPrefManager
 ) : BaseViewModel() {
 
 
@@ -27,7 +28,6 @@ class LanguageSettingsViewModel @Inject constructor(
     val selectedLocale: Subject<Locale> = PublishSubject.create()
 
     init {
-
         appLocale.onNext(languageSelector.getAppLocale())
 
         appLocale
@@ -61,4 +61,7 @@ class LanguageSettingsViewModel @Inject constructor(
         changeLocale(Locale.CHINESE)
     }
 
+    fun userSawLanguageSettingsDialog() {
+        languageSettingsPrefManager.seenLanguageSettingsDialog = true
+    }
 }
