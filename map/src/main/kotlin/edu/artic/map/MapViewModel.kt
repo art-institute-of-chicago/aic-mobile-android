@@ -16,13 +16,14 @@ import edu.artic.db.daos.ArticMapFloorDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
+import edu.artic.location.LocationPreferenceManager
 import edu.artic.location.LocationService
 import edu.artic.location.isLocationInMuseum
 import edu.artic.map.carousel.TourProgressManager
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MapItemModel
 import edu.artic.map.rendering.MarkerHolder
-import edu.artic.util.waitForASecondOfCalmIn
+import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
@@ -49,12 +50,15 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                                        private val analyticsTracker: AnalyticsTracker,
                                        private val tourProgressManager: TourProgressManager,
                                        private val locationService: LocationService,
+                                       private val tutorialPreferencesManager: TutorialPreferencesManager,
+                                       private val locationPreferenceManager: LocationPreferenceManager,
                                        articMapAnnotationDao: ArticMapAnnotationDao,
                                        mapFloorDao: ArticMapFloorDao
 ) : NavViewViewModel<MapViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         object LocationPrompt : NavigationEndpoint()
+        object Tutorial : NavigationEndpoint()
     }
 
     private val articMapFloorMap: Subject<Map<Int, ArticMapFloor>> = BehaviorSubject.create()
@@ -154,11 +158,15 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     val focusToTracking: Subject<Pair<GoogleMap, Optional<Location>>> = BehaviorSubject.create()
 
+    val showFirstRunHeader : Subject<Boolean> = BehaviorSubject.create()
+
     /**
      * Safe and simple reference to [floor]. Only emits when the floor number changes, will
      * never emit [edu.artic.db.INVALID_FLOOR].
      */
     private val distinctFloorInt = floor.distinctUntilChanged().filter { it in 0..3 }
+
+
 
     val distinctFloor: Subject<ArticMapFloor> = BehaviorSubject.create()
 
@@ -172,7 +180,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     private var shouldFollowUserObservable: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var shouldFollowUserDistinct: Observable<Boolean> = shouldFollowUserObservable.distinctUntilChanged()
-
+    private val hasSeenHeaderThisSession: Subject<Boolean> = BehaviorSubject.createDefault(false)
     private var shouldFollowUser: Boolean = false
         set(value) {
             field = value
@@ -183,6 +191,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     init {
 
         setupLocationServiceBindings()
+
+        setupPreferenceBindings()
 
         mapFloorDao.getMapFloors()
                 .map { floorMap -> floorMap.associateBy { it.number } }
@@ -270,6 +280,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindTo(tourProgressManager.selectedStop)
                 .disposedBy(disposeBag)
 
+
         /**
          * Sync the selected tour stop with the carousel.
          */
@@ -340,14 +351,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     private fun setupLocationServiceBindings() {
 
-        locationService.hasRequestedPermissionAlready
-                .filter { !it }
-                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
-                .waitForASecondOfCalmIn(displayMode)
-                .delay(1, TimeUnit.SECONDS)
-                .bindTo(navigateTo)
-                .disposedBy(disposeBag)
-
         locationService.currentUserLocation
                 .map {
                     isLocationInMuseum(it)
@@ -364,7 +367,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 shouldFollowUserDistinct,
                 currentMap
         ) { currentLocation, shouldFollowUser, map ->
-            Timber.d("current Location: ${currentLocation.latitude} ${currentLocation.longitude}, ${currentLocation.bearing}")
             return@combineLatest if (map.value != null && shouldFollowUser) {
                 map.value to Optional(currentLocation)
             } else {
@@ -376,6 +378,45 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         { (map, optional) -> map!! to optional }
                 )
                 .bindTo(focusToTracking)
+                .disposedBy(disposeBag)
+
+    }
+
+    private fun setupPreferenceBindings() {
+
+        locationPreferenceManager
+                .hasSeenLocationPromptObservable
+                .filter { !it }
+                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
+                .delay(500, TimeUnit.MILLISECONDS)
+                .bindTo(navigateTo)
+                .disposedBy(disposeBag)
+
+
+        Observables
+                .combineLatest(
+                        locationPreferenceManager.hasClosedLocationPromptObservable,
+                        tutorialPreferencesManager.hasSeenTutorialObservable
+                ).filter { (hasClosedLocation, hasSeenTutorial) ->
+                    hasClosedLocation && !hasSeenTutorial
+                }.map { Navigate.Forward(NavigationEndpoint.Tutorial) }
+                .delay(500, TimeUnit.MILLISECONDS)
+                .bindTo(navigateTo)
+                .disposedBy(disposeBag)
+
+        Observables
+                .combineLatest(
+                        tutorialPreferencesManager.hasClosedTutorialObservable,
+                        displayMode.distinctUntilChanged(),
+                        hasSeenHeaderThisSession.distinctUntilChanged()
+                ) { hasClosedTutorial, displayMode, hasSeenHeader ->
+                    val shouldShowHeader = hasClosedTutorial && !hasSeenHeader && displayMode == MapDisplayMode.CurrentFloor
+                    if(shouldShowHeader || (hasClosedTutorial && !hasSeenHeader && displayMode != MapDisplayMode.CurrentFloor))
+                        hasSeenHeaderThisSession.onNext(true)
+                    return@combineLatest shouldShowHeader
+                }.distinctUntilChanged()
+                .filter { it }
+                .bindTo(showFirstRunHeader)
                 .disposedBy(disposeBag)
 
     }
@@ -655,5 +696,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     fun stayWithCurrentTour() {
         searchManager.selectedObject.onNext(Optional(null))
         tourProgressManager.proposedTour.onNext(Optional(null))
+    }
+
+    fun onTouchWithHeader() {
+        showFirstRunHeader.onNext(false)
     }
 }

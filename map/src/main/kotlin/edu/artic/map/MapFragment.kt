@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.view.MotionEvent
 import android.view.View
 import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -22,11 +23,13 @@ import edu.artic.base.utils.removeAndReturnParcelable
 import edu.artic.base.utils.removeAndReturnString
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.*
+import edu.artic.location.LocationPromptFragment
 import edu.artic.location.museumBounds
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.*
+import edu.artic.map.tutorial.TutorialFragment
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
@@ -226,6 +229,17 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     viewModel.onClickCompass()
                 }.disposedBy(disposeBag)
 
+        mapFirstRunHeader.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                viewModel.onTouchWithHeader()
+            }
+            return@setOnTouchListener false
+        }
+
+        viewModel.showFirstRunHeader
+                .bindToMain(mapFirstRunHeader.visibility())
+                .disposedBy(disposeBag)
+
         viewModel.displayMode
                 .filterTo<MapDisplayMode, MapDisplayMode.Tour>()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -346,7 +360,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel.selectedArticObject
                 .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
-                .filterFlatMap({(_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor }, { (selected) -> selected })
+                .filterFlatMap({ (_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor }, { (selected) -> selected })
                 .subscribeBy { selected ->
                     displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
                 }
@@ -396,7 +410,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .switchTourRequest
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (currentTour, startStop) ->
+                .subscribeBy { (_, _) ->
                     displayLeaveTourConfirmation()
                 }.disposedBy(disposeBag)
 
@@ -462,7 +476,19 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe {
                     when (it) {
                         MapViewModel.NavigationEndpoint.LocationPrompt -> {
-                            navController.navigate(R.id.goToLocationPrompt)
+                            requireActivity().supportFragmentManager
+                                    ?.beginTransaction()
+
+                                    ?.replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
+                                    ?.addToBackStack("LocationPromptFragment")
+                                    ?.commit()
+                        }
+                        MapViewModel.NavigationEndpoint.Tutorial -> {
+                            requireActivity().supportFragmentManager
+                                    ?.beginTransaction()
+                                    ?.replace(R.id.overlayContainer, TutorialFragment(), "TutorialFragment")
+                                    ?.addToBackStack("TutorialFragment")
+                                    ?.commit()
                         }
                     }
                 }.disposedBy(navigationDisposeBag)

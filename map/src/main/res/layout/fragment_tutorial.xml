@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/black60alpha">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/tutorialLevelTwo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/design_bottom_navigation_height"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/lowerLevel"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LL"
+            app:layout_constraintBottom_toBottomOf="@id/guideline"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/floorOne"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            app:layout_constraintBottom_toTopOf="@id/lowerLevel"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/floorTwo"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            app:layout_constraintBottom_toTopOf="@id/floorOne"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/floorThree"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            app:layout_constraintBottom_toTopOf="@id/floorTwo"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/compass"
+            style="@style/MapFloor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginDouble"
+            android:alpha=".5"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:rotation="30"
+            android:src="@drawable/ic_compass"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lowerLevel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/marginDouble"
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/marginHalf"
+            android:paddingEnd="@dimen/marginHalf"
+            app:layout_constraintBottom_toBottomOf="@id/floorOne"
+            app:layout_constraintEnd_toStartOf="@id/floorOne"
+            app:layout_constraintTop_toTopOf="@id/floorOne"
+            android:text="@string/tutorial_mark_first_floor"
+            tools:text="This is the first floor" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/marginDouble"
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/marginHalf"
+            android:paddingEnd="@dimen/marginHalf"
+            app:layout_constraintBottom_toBottomOf="@id/compass"
+            app:layout_constraintEnd_toStartOf="@id/compass"
+            app:layout_constraintTop_toTopOf="@id/compass"
+            android:text="@string/tutorial_mark_compass"
+            tools:text="This is the first floor" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/tutorialLevelOne"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/tutorial_popup_background"
+        android:elevation="3dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="visible"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tutorialPopupTitle"
+            style="@style/SectionTitleWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/marginDouble"
+            android:layout_marginTop="@dimen/marginDouble"
+            tools:text="Explore The Map" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:overScrollMode="never"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tutorialBack"
+                style="@style/IdealSansBook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                tools:text="Back" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <com.fuzz.indicator.CutoutViewIndicator
+                android:id="@+id/viewPagerIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tourCarousel"
+                app:rcv_drawable="@drawable/icn_indicator_selected"
+                app:rcv_drawable_unselected="@drawable/icn_indicator"
+                app:rcv_internal_margin="8dp"
+                app:rcv_tools_indicator_count="2" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tutorialNext"
+                style="@style/IdealSansBook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next"
+                tools:text="Next" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</FrameLayout>
