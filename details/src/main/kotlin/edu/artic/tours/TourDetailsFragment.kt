@@ -72,6 +72,9 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
         languageSelector.adapter = LanguageAdapter().toBaseAdapter()
 
+        //Fix for the scrollview starting mid-scroll on the recyclerview
+        recyclerView.isFocusable = false
+        languageSelector.requestFocus()
     }
 
     override fun onRegisterViewModel(viewModel: TourDetailsViewModel) {
@@ -192,7 +195,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                         }
                     }
 
-                }.disposedBy(disposeBag)
+                }.disposedBy(navigationDisposeBag)
     }
 
     companion object {

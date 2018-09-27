@@ -14,15 +14,18 @@
         android:layout_height="wrap_content"/>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/tourScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/darkGrey"
         android:fillViewport="true"
+        android:tag="TourScrollView"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:descendantFocusability="afterDescendants"
             android:paddingEnd="@dimen/marginDouble"
             android:paddingStart="@dimen/marginDouble"
             android:paddingTop="@dimen/marginDouble">
@@ -148,6 +151,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:id="@+id/recyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:focusable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/introCellBottomDivider"/>

@@ -94,7 +94,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
                         }
                     }
                 }
-                .disposedBy(disposeBag)
+                .disposedBy(navigationDisposeBag)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
