@@ -388,6 +388,18 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)
 
+
+        Observables
+                .combineLatest(
+                        locationPreferenceManager.hasClosedLocationPromptObservable,
+                        tutorialPreferencesManager.hasSeenTutorialObservable
+                ).filter { (hasClosedLocation, hasSeenTutorial) ->
+                    hasClosedLocation && !hasSeenTutorial
+                }.map { Navigate.Forward(NavigationEndpoint.Tutorial) }
+                .delay(500, TimeUnit.MILLISECONDS)
+                .bindTo(navigateTo)
+                .disposedBy(disposeBag)
+
     }
 
     fun onClickCompass() {
