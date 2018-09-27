@@ -83,7 +83,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
 
         requireActivity().title = resources.getString(R.string.languageSettings)
 
-        viewModel.selectedLanguage
+        viewModel.appLocale
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     requireActivity().title = resources.getString(R.string.languageSettings)
@@ -99,7 +99,18 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                         }
                     }
                 }.disposedBy(disposeBag)
+
+        /**
+         * Only listen to new locale change.
+         */
+        viewModel.selectedLocale
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    callback?.languageSelected()
+                    dismiss()
+                }.disposedBy(disposeBag)
     }
+
 
     companion object {
         private const val ARG_LANGUAGE_SETTINGS = "ARG_LANGUAGE_SETTINGS"
@@ -116,4 +127,13 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
         }
     }
 
+    interface LanguageSelectionListener {
+        fun languageSelected()
+    }
+
+    private var callback: LanguageSelectionListener? = null
+
+    fun attachTourStateListener(listener: LanguageSelectionListener) {
+        callback = listener
+    }
 }
