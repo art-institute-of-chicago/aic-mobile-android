@@ -71,7 +71,7 @@ class AnalyticsTrackerImpl(context: Context,
         tracker.send(HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)
-                .setCustomDimension(2, (if (memberId != null) "Member" else "None"))
+                .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
                 .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
                 .setCustomDimension(4, Locale.getDefault().toLanguageTag())
                 .setCustomDimension(5, atMusuem.toString())
@@ -84,7 +84,7 @@ class AnalyticsTrackerImpl(context: Context,
         tracker.apply {
             setScreenName(name)
             send(HitBuilders.ScreenViewBuilder()
-                    .setCustomDimension(2, (if (memberId != null) "Member" else "None"))
+                    .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
                     .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
                     .setCustomDimension(4, Locale.getDefault().toLanguageTag())
                     .setCustomDimension(5, atMusuem.toString())
