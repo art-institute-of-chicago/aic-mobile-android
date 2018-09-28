@@ -2,6 +2,7 @@ package edu.artic.localization.ui
 
 
 import android.os.Bundle
+import android.support.annotation.UiThread
 import android.support.constraint.ConstraintSet
 import android.view.View
 import com.fuzz.rx.defaultThrottle
@@ -13,6 +14,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_language_settings.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 
@@ -120,10 +122,22 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
             viewModel.selectedLocale
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        callback?.languageSelected()
-                        dismiss()
+                        dismissDialog()
                     }.disposedBy(disposeBag)
         }
+    }
+
+    @UiThread
+    private fun dismissDialog() {
+        requireView()
+                .animate()
+                .alpha(0f)
+                .setDuration(1000)
+                .withEndAction {
+                    callback?.languageSelected()
+                    dismiss()
+                }
+
     }
 
 
