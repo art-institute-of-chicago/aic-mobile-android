@@ -8,4 +8,8 @@ class AppDataPreferencesManager(context: Context) : BasePreferencesManager(conte
     var lastModified: String
         set(value) = putString("last_modified", value)
         get() = getString("last_modified", "").orEmpty()
+
+    var downloadedNecessaryData: Boolean
+        set(value) = putBoolean("last_modified", value)
+        get() = getBoolean("last_modified", false)
 }
