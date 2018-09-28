@@ -55,6 +55,10 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
         icon.setImageResource(iconId)
     }
 
+    fun setSubtitleText(text: String?) {
+        subTitle.text = text
+    }
+
     fun setBackgroundImage(@DrawableRes imageId: Int) {
         expandedImage.setImageResource(imageId)
     }

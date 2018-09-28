@@ -1,12 +1,17 @@
 package edu.artic.info
 
+import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.db.models.ArticGeneralInfo
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -15,9 +20,13 @@ import javax.inject.Named
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker,
-                                               val dataObjectDao: ArticDataObjectDao,
-                                               @Named("VERSION") buildVersion: String)
+class InformationViewModel @Inject constructor(
+        private val analyticsTracker: AnalyticsTracker,
+        private val languageSelector: LanguageSelector,
+        private val dataObjectDao: ArticDataObjectDao,
+        private val generalInfoDao: GeneralInfoDao,
+        @Named("VERSION") buildVersion: String
+)
     : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -30,6 +39,25 @@ class InformationViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
     }
 
     val buildVersion: Subject<String> = BehaviorSubject.createDefault(buildVersion)
+    val generalInfo: Subject<ArticGeneralInfo.Translation> = BehaviorSubject.create()
+
+    init {
+        generalInfoDao
+                .getGeneralInfo()
+                .map { generalObject ->
+                    languageSelector.selectFrom(generalObject.allTranslations())
+                }.bindTo(generalInfo)
+                .disposedBy(disposeBag)
+
+        languageSelector
+                .currentLanguage
+                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+                .map { (_, generalInfo) ->
+                    languageSelector.selectFrom(generalInfo.allTranslations())
+                }
+                .bindTo(generalInfo)
+                .disposedBy(disposeBag)
+    }
 
     fun onClickSearch() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
