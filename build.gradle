@@ -63,8 +63,7 @@ buildscript {
                 exo_player_media_session: "com.google.android.exoplayer:extension-mediasession:$exo_player_version",
                 view_indicator          : "com.github.fuzz-productions:CutoutViewIndicator:v0.8.2",
                 custom_tabs             : "com.android.support:customtabs:${support_version}",
-                zxing_core              : 'com.google.zxing:core:3.3.0',
-                zxing_android_embedded  : 'com.journeyapps:zxing-android-embedded:3.6.0'
+                zxing_core              : 'com.google.zxing:core:3.3.0'
 
         ]
 
