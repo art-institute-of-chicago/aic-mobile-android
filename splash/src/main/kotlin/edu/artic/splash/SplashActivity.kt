@@ -1,5 +1,6 @@
 package edu.artic.splash
 
+import android.accounts.NetworkErrorException
 import android.app.AlertDialog
 import android.app.DialogFragment.STYLE_NO_FRAME
 import android.graphics.Matrix
@@ -13,10 +14,10 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
-import edu.artic.localization.ui.LanguageSettingsFragment
 import com.fuzz.rx.disposedBy
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.makeStatusBarTransparent
+import edu.artic.localization.ui.LanguageSettingsFragment
 import edu.artic.navigation.NavigationConstants
 import edu.artic.util.handleNetworkError
 import edu.artic.viewmodel.BaseViewModelActivity
@@ -74,8 +75,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
 
                     /**
                      * Display alert with error message.
-                     *
-                     * TODO: localize the error strings.
                      */
                     errorDialog?.dismiss()
                     errorDialog = AlertDialog.Builder(this, R.style.ErrorDialog)
@@ -83,8 +82,10 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                             .setMessage(errorMessage)
                             .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
                                 dialog.dismiss()
+                                if (it is NetworkErrorException) {
+                                    viewModel.onNetworkErrorDialogDismissed()
+                                }
                             }.show()
-
                 }).disposedBy(disposeBag)
 
 
@@ -117,6 +118,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                                         }
                                     }, 200)
                                 }
+                                is SplashViewModel.NavigationEndpoint.Welcome ->
+                                    goToWelcomeActivity()
                             }
                         }
                         is Navigate.Back -> {
