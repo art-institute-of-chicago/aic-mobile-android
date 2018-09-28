@@ -9,9 +9,9 @@
     <string name="supportBy">Patrocinado por</string>
     <string name="buyTickets">Comprar boletos</string>
     <string name="versionInfo">Versión %1$s</string>
-    <string name="informationBannerSubtitle">Acceda a su tarjeta de miembro, consulte el horario del museo o actualice la configuración de su aplicación.</string>
+
     <string name="alreadyMember">¿Ya es miembro?</string>
     <string name="whereAreYouLabel">¿Dónde está usted?</string>
     <string name="languageSettingsBody">Es posible que cierta información no esté disponible en el idioma seleccionado.</string>
-    <string name="information">Información</string>
+
 </resources>
