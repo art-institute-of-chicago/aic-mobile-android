@@ -3,6 +3,7 @@ package edu.artic.map;
 import com.fuzz.rx.*
 import edu.artic.db.Playable
 import edu.artic.db.daos.ArticMapAnnotationDao
+import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
@@ -19,10 +20,14 @@ import javax.inject.Inject
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class SearchObjectDetailsViewModel @Inject constructor(val languageSelector: LanguageSelector,
-                                                       val articMapAnnotationDao: ArticMapAnnotationDao,
-                                                       val searchManager: SearchManager) : BaseViewModel() {
+class SearchObjectDetailsViewModel @Inject constructor(
+        val languageSelector: LanguageSelector,
+        private val articMapAnnotationDao: ArticMapAnnotationDao,
+        private val searchManager: SearchManager,
+        generalInfoDao: GeneralInfoDao
+) : BaseViewModel() {
 
+    private val generalInfo: Subject<ArticGeneralInfo.Translation> = BehaviorSubject.create()
     val searchedObjectViewModels: Subject<List<SearchObjectBaseViewModel>> = BehaviorSubject.create()
     val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
@@ -47,6 +52,23 @@ class SearchObjectDetailsViewModel @Inject constructor(val languageSelector: Lan
                 .map { it.item }
                 .mapOptional()
                 .bindTo(searchManager.activeDiningPlace)
+                .disposedBy(disposeBag)
+
+        generalInfoDao
+                .getGeneralInfo()
+                .map { generalObject ->
+                    languageSelector.selectFrom(generalObject.allTranslations())
+                }.bindTo(generalInfo)
+                .disposedBy(disposeBag)
+
+        // This detects subsequent changes in the app language
+        languageSelector
+                .currentLanguage
+                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+                .map { (_, generalInfo) ->
+                    languageSelector.selectFrom(generalInfo.allTranslations())
+                }
+                .bindTo(generalInfo)
                 .disposedBy(disposeBag)
     }
 
@@ -95,7 +117,12 @@ class SearchObjectDetailsViewModel @Inject constructor(val languageSelector: Lan
                         }.bindTo(searchedObjectViewModels)
                         .disposedBy(disposeBag)
             } else {
-                Observable.just(listOf(AnnotationViewModel(requestedSearchAmenityType, "Close to explore the map.")))
+                generalInfo
+                        .map {
+                            val amenityTitle: String = ArticMapAmenityType.titleFor(it, requestedSearchAmenityType)
+                            val amenityDescription: String = ArticMapAmenityType.textFor(it, requestedSearchAmenityType)
+                            listOf(AnnotationViewModel(amenityTitle, amenityDescription))
+                        }
                         .bindTo(searchedObjectViewModels)
                         .disposedBy(disposeBag)
             }
