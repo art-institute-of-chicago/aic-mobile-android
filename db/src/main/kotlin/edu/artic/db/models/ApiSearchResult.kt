@@ -13,7 +13,7 @@ import edu.artic.db.models.ApiSearchContent.SearchedTour
  * which are not provided directly.
  *
  * @author Philip Cohn-Cort (Fuzz)
- * @see SearchResultAdapter
+ * @see edu.artic.search.SearchResultsManager
  */
 @JsonClass(generateAdapter = false)
 data class ApiSearchResult(
@@ -49,6 +49,15 @@ sealed class ApiSearchContent {
             @Json(name = "id") val artworkId: Int,
             @Json(name = "is_on_view") val isOnView: Boolean,
             @Json(name = "title") val title: String,
+            /**
+             * Just the name of the artist.
+             *
+             * Analogous to [ArticObject.tombstone].
+             */
+            @Json(name = "artist_title") val artistTitle: String,
+            /**
+             * The name of the artist, followed by other relevant info.
+             */
             @Json(name = "artist_display") val artist_display: String,
             @Json(name = "image_id") val image_id: String?,
             @Json(name = "gallery_id") val gallery_id: String,
