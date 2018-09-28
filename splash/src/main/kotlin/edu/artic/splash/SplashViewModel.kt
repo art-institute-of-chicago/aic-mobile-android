@@ -1,12 +1,13 @@
 package edu.artic.splash
 
-import edu.artic.localization.ui.LanguageSettingsPrefManager
 import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.AppDataManager
+import edu.artic.db.AppDataPreferencesManager
 import edu.artic.db.ProgressDataState
+import edu.artic.localization.ui.LanguageSettingsPrefManager
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.PublishSubject
@@ -16,11 +17,13 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
         appDataManager: AppDataManager,
         analyticsTracker: AnalyticsTracker,
+        private val appDaPrefManager: AppDataPreferencesManager,
         private val languageSettingsPrefManager: LanguageSettingsPrefManager
 ) : NavViewViewModel<SplashViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         class StartVideo(val displayLanguageSettings: Boolean) : NavigationEndpoint()
+        object Welcome : NavigationEndpoint()
     }
 
 
@@ -39,6 +42,7 @@ class SplashViewModel @Inject constructor(
                         }
                         is ProgressDataState.Done<*> -> {
                             startVideo()
+                            appDaPrefManager.downloadedNecessaryData = true
                         }
                         is ProgressDataState.Empty -> {
                             startVideo()
@@ -58,5 +62,15 @@ class SplashViewModel @Inject constructor(
                 .asObservable().delay(1, TimeUnit.SECONDS)
                 .bindTo(navigateTo)
                 .disposedBy(disposeBag)
+    }
+
+    
+    fun onNetworkErrorDialogDismissed() {
+        if (appDaPrefManager.downloadedNecessaryData) {
+            Navigate.Forward(NavigationEndpoint.Welcome)
+                    .asObservable()
+                    .bindTo(navigateTo)
+                    .disposedBy(disposeBag)
+        }
     }
 }
