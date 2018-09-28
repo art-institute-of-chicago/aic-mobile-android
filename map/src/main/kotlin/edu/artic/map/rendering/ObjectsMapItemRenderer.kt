@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.VisibleRegion
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticObject
 import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
@@ -195,10 +196,17 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     override fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: MapItemModel): Float {
         // on tour, set the alpha depending on current floor.
-        return if (mapDisplayMode is MapDisplayMode.Tour || mapDisplayMode is MapDisplayMode.Search.ObjectSearch) {
+        return if (shouldShowMarkerOnAllFloors(mapDisplayMode)) {
             if (item.floor == floor) ALPHA_VISIBLE else ALPHA_DIMMED
         } else {
             ALPHA_VISIBLE
         }
+    }
+
+    private fun shouldShowMarkerOnAllFloors(mode: MapDisplayMode): Boolean {
+        return mode is MapDisplayMode.Tour ||
+                mode is MapDisplayMode.Search.ObjectSearch ||
+                mode is MapDisplayMode.Search.ExhibitionSearch ||
+                (mode is MapDisplayMode.Search.AmenitiesSearch && mode.item == ArticMapAmenityType.DINING)
     }
 }
