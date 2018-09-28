@@ -17,11 +17,11 @@
     <string name="museumGoogleMapSearchQuery" translatable="false"><![CDATA[https://www.google.com/maps/search/?api=1&query=The+Art+Institute+of+Chicago]]></string>
     <string name="versionInfo">Version %1$s</string>
 
-    <string name="informationBannerSubtitle">Access your member card, see museum hours, or update your app settings.</string>
+
     <string name="alreadyMember">Already a Member?</string>
     <string name="whereAreYouLabel">Where are you?</string>
     <string name="languageSettingsBody">Some content may not be available in your selected language.</string>
     <string name="chooseYourLanguage">Please Choose Your Preferred Language</string>
     <string name="fragmentInformationLabel" translatable="false">fragment_information</string>
-    <string name="information">Information</string>
+
 </resources>
