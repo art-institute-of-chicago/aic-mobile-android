@@ -10,6 +10,6 @@ class AppDataPreferencesManager(context: Context) : BasePreferencesManager(conte
         get() = getString("last_modified", "").orEmpty()
 
     var downloadedNecessaryData: Boolean
-        set(value) = putBoolean("last_modified", value)
-        get() = getBoolean("last_modified", false)
+        set(value) = putBoolean("downloaded_necessary_data", value)
+        get() = getBoolean("downloaded_necessary_data", false)
 }
