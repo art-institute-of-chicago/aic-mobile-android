@@ -23,5 +23,4 @@ dependencies {
     implementation libs.rx_helpers
     implementation libs.rx_kotlin
     implementation libs.zxing_core
-    implementation libs.zxing_android_embedded
 }
