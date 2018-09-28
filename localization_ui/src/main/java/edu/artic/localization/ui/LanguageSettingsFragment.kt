@@ -13,6 +13,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_language_settings.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 
@@ -118,6 +119,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
          */
         if (splashMode) {
             viewModel.selectedLocale
+                    .delay(300, TimeUnit.MILLISECONDS)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         callback?.languageSelected()

@@ -213,7 +213,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     @UiThread
     private fun resumeVideo() {
         try {
-            mMediaPlayer?.start()
+            splashChrome.postDelayed({ mMediaPlayer?.start() }, 400)
         } catch (exception: Exception) {
             exception.printStackTrace()
         }
