@@ -40,16 +40,6 @@ class LanguageSettingsViewModel @Inject constructor(
                     languageSelector.setDefaultLanguageForApplication(it)
                 }.disposedBy(disposeBag)
 
-        /**
-         * Log analytics language changed event when user switches the language.
-         */
-        selectedLocale.subscribeBy {locale->
-            analyticsTracker.reportEvent(
-                    EventCategoryName.Language,
-                    AnalyticsAction.languageChanged,
-                    locale.nameOfLanguageForAnalytics()
-            )
-        }.disposedBy(disposeBag)
 
     }
 
@@ -68,9 +58,17 @@ class LanguageSettingsViewModel @Inject constructor(
             )
             languageSettingsPrefManager.userSelectedLanguage = true
         } else {
-            selectedLocale.onNext(locale)
+            /**
+             * Log analytics language changed event when user switches the language.
+             */
+            analyticsTracker.reportEvent(
+                    EventCategoryName.Language,
+                    AnalyticsAction.languageChanged,
+                    locale.nameOfLanguageForAnalytics()
+            )
         }
 
+        selectedLocale.onNext(locale)
     }
 
     fun onEnglishLanguageSelected() {
