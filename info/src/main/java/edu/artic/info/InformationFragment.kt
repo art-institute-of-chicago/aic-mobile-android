@@ -8,6 +8,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
+import edu.artic.localization.LanguageSelector
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -23,6 +24,8 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
 
     @Inject
     lateinit var customTabManager: CustomTabManager
+    @Inject
+    lateinit var languageSelector: LanguageSelector
 
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Information
@@ -30,7 +33,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
     override val viewModelClass: KClass<InformationViewModel>
         get() = InformationViewModel::class
 
-    override val title = R.string.information
+    override val title = R.string.noTitle
 
     override fun hasTransparentStatusBar(): Boolean = true
 
@@ -65,6 +68,14 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
+
+        viewModel.generalInfo
+                .subscribeBy {
+                    appBarLayout.setSubtitleText(it.infoSubtitle)
+                    requestTitleUpdate(it.infoTitle)
+                }
+                .disposedBy(disposeBag)
+
         accessMemberCard.clicks()
                 .defaultThrottle()
                 .subscribe {
@@ -78,8 +89,6 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                     viewModel.onClickLanguageSettings()
                 }
                 .disposedBy(disposeBag)
-
-        requireActivity().title = resources.getString(R.string.information)
     }
 
     override fun setupNavigationBindings(viewModel: InformationViewModel) {
