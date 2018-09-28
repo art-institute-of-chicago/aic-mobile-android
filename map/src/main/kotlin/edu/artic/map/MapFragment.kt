@@ -117,9 +117,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             map.setOnCameraMoveListener { viewModel.visibleRegionChanged(map.projection.visibleRegion) }
 
             map.moveCamera(initialMapCameraPosition())
+            //Initial Camera position doesn't load to the actual map position so re-center to center of musuem
+            map.moveCamera(CameraUpdateFactory.newLatLng(defaultMapPosition))
             // initial visible region
             viewModel.visibleRegionChanged(map.projection.visibleRegion)
-
 
             /**
              * Funneling map click event into the mapClicks Observer so that it could be combined
