@@ -14,7 +14,7 @@ data class ArticMapAnnotation(
         @Json(name = "status") val status: String?,
         @Json(name = "nid") @PrimaryKey val nid: String,
         @Json(name = "type") val type: String?,
-//        @Json(name = "translations") val translations: List<Any>, TODO: add when object type is shown
+//        @Json(name = "translations") val translations: List<Any>, TODO: add when the API stops returning empty arrays for this field
         @Json(name = "location") val location: String?,
         @Json(name = "latitude") val latitude: String?,
         @Json(name = "longitude") val longitude: String?,
@@ -78,6 +78,26 @@ class ArticMapAmenityType {
                 listOf(ArticMapAmenityType.MENS_ROOM, ArticMapAmenityType.WOMANS_ROOM, ArticMapAmenityType.FAMILY_RESTROOM)
             } else {
                 listOf(item)
+            }
+        }
+
+
+        fun titleFor(info: ArticGeneralInfo.Translation, amenityType: String): String {
+            return when (amenityType) {
+                GIFT_SHOP -> info.giftShopsTitle
+                MEMBERS_LOUNGE -> info.membersLoungeTitle
+                RESTROOMS -> info.restroomsTitle
+                else -> amenityType
+            }
+        }
+
+        fun textFor(info: ArticGeneralInfo.Translation, amenityType: String): String {
+            return when (amenityType) {
+                GIFT_SHOP -> info.giftShopsText
+                MEMBERS_LOUNGE -> info.membersLoungeText
+                RESTROOMS -> info.restroomsText
+                // Hardcoded english default so we don't crash
+                else -> "Close to explore the map."
             }
         }
 
