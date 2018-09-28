@@ -2,6 +2,7 @@ package edu.artic.exhibitions
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.AnalyticsTracker
@@ -69,8 +70,7 @@ constructor(dataObjectDao: ArticDataObjectDao,
                 .disposedBy(disposeBag)
 
         exhibitionObservable
-                .filter { it.legacy_image_mobile_url != null }
-                .map { it.legacy_image_mobile_url!! }
+                .filterFlatMap({ it.legacyImageUrl != null }, { it.legacyImageUrl!! })
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 

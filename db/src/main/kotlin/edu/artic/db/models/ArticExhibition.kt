@@ -5,6 +5,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import edu.artic.base.utils.toCurrentTimeZone
+import edu.artic.ui.util.asCDNUri
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
 
@@ -38,6 +39,11 @@ data class ArticExhibition(
          */
         var floor: Int? = null
 ) : Parcelable {
+
+    val legacyImageUrl: String?
+        get() {
+            return legacy_image_mobile_url?.asCDNUri()
+        }
 
     val startTime: ZonedDateTime
         get() {

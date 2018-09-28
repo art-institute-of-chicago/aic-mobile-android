@@ -205,7 +205,7 @@ class ExhibitionViewModel(val item: ArticExhibition) : SearchObjectBaseViewModel
 
     init {
         title.onNext(item.title?.replace("\r", "\n"))
-        item.legacy_image_mobile_url?.let {
+        item.legacyImageUrl?.let {
             imageUrl.onNext(it)
         }
         description.onNext(item.short_description.orEmpty())
