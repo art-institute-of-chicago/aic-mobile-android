@@ -1,10 +1,11 @@
-package edu.artic.map.carousel
+package edu.artic.tours.manager
 
 import com.fuzz.rx.Optional
 import edu.artic.db.models.ArticTour
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+
 
 
 /**
