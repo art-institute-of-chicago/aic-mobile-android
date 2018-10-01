@@ -47,7 +47,6 @@ class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewM
         super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
-            onCleared()
         }
     }
 

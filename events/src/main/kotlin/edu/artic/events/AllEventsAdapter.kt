@@ -63,7 +63,6 @@ class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellBaseViewMode
         super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
-            onCleared()
         }
     }
 

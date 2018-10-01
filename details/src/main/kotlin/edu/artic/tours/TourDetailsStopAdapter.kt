@@ -48,7 +48,6 @@ class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCell
         super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
-            onCleared()
         }
     }
 }
