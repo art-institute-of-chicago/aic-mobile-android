@@ -157,10 +157,12 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { tours ->
                     if (tours.isEmpty()) {
+                        relatedTourTitle.visibility = View.GONE
                         relatedToursView.visibility = View.GONE
                         dividerBelowRelatedTours.visibility = View.GONE
                     } else {
                         relatedToursView.removeAllViews()
+                        relatedTourTitle.visibility = View.VISIBLE
                         relatedToursView.visibility = View.VISIBLE
                         dividerBelowRelatedTours.visibility = View.VISIBLE
                         addRelatedToursToView(tours)
@@ -171,9 +173,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
     @UiThread
     fun addRelatedToursToView(tours: List<ArticTour>) {
-        val textView = TextView(requireContext())
-        textView.text = resources.getString(R.string.relatedTours)
-        TextViewCompat.setTextAppearance(textView, R.style.SectionTitleWhite)
 
         /**
          * Apply margin to related tour title. It is not defined in [R.style.SectionTitleWhite]
@@ -184,16 +183,14 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                     setMargins(doubleMargin, doubleMargin, doubleMargin, 0)
                 }
 
-        textView.layoutParams = params
-        relatedToursView.addView(textView)
-
         /**
          * Add related tour titles to relatedToursView [LinearLayout]
          */
-        tours.forEach { tour->
+        tours.forEach { tour ->
             val tourTextView = TextView(requireContext())
             tourTextView.text = tour.title
             TextViewCompat.setTextAppearance(tourTextView, R.style.RelatedTourTitleStyle)
+
             tourTextView.layoutParams = params
             tourTextView.setOnClickListener {
                 startActivity(NavigationConstants.MAP.asDeepLinkIntent()
