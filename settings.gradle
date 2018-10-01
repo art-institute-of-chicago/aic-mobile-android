@@ -22,6 +22,7 @@ include ':adapter',
         ':search',
         ':splash',
         ':tours',
+        ':tour_manager',
         ':ui',
         ':viewmodel',
         ':welcome'
