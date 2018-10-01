@@ -19,11 +19,12 @@ import edu.artic.localization.LanguageSelector
 import edu.artic.location.LocationPreferenceManager
 import edu.artic.location.LocationService
 import edu.artic.location.isLocationInMuseum
-import edu.artic.map.carousel.TourProgressManager
+
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MapItemModel
 import edu.artic.map.rendering.MarkerHolder
 import edu.artic.map.tutorial.TutorialPreferencesManager
+import edu.artic.tours.manager.TourProgressManager
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
@@ -33,7 +34,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -158,14 +158,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     val focusToTracking: Subject<Pair<GoogleMap, Optional<Location>>> = BehaviorSubject.create()
 
-    val showFirstRunHeader : Subject<Boolean> = BehaviorSubject.create()
+    val showFirstRunHeader: Subject<Boolean> = BehaviorSubject.create()
 
     /**
      * Safe and simple reference to [floor]. Only emits when the floor number changes, will
      * never emit [edu.artic.db.INVALID_FLOOR].
      */
     private val distinctFloorInt = floor.distinctUntilChanged().filter { it in 0..3 }
-
 
 
     val distinctFloor: Subject<ArticMapFloor> = BehaviorSubject.create()
@@ -411,7 +410,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         hasSeenHeaderThisSession.distinctUntilChanged()
                 ) { hasClosedTutorial, displayMode, hasSeenHeader ->
                     val shouldShowHeader = hasClosedTutorial && !hasSeenHeader && displayMode == MapDisplayMode.CurrentFloor
-                    if(shouldShowHeader || (hasClosedTutorial && !hasSeenHeader && displayMode != MapDisplayMode.CurrentFloor))
+                    if (shouldShowHeader || (hasClosedTutorial && !hasSeenHeader && displayMode != MapDisplayMode.CurrentFloor))
                         hasSeenHeaderThisSession.onNext(true)
                     return@combineLatest shouldShowHeader
                 }.distinctUntilChanged()
@@ -558,7 +557,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * If the current [MapDisplayMode] is no longer appropriate, this method will call
      * [displayModeChanged] to emit the necessary change.
      */
-    fun loadMapDisplayMode(requestedTourInfo: Pair<ArticTour?,ArticTour.TourStop?>) {
+    fun loadMapDisplayMode(requestedTourInfo: Pair<ArticTour?, ArticTour.TourStop?>) {
 
         Observables.combineLatest(
                 tourProgressManager.selectedTour,

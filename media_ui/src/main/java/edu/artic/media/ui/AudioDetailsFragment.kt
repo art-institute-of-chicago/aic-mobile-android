@@ -3,10 +3,15 @@ package edu.artic.media.ui
 
 import android.content.ComponentName
 import android.content.Context.BIND_AUTO_CREATE
+import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.support.annotation.UiThread
+import android.support.v4.widget.TextViewCompat
 import android.view.View
+import android.widget.LinearLayout.LayoutParams
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -16,12 +21,16 @@ import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.updateDetailTitle
+import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
+import edu.artic.db.models.getIntroStop
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -143,6 +152,57 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .subscribe {
                     credit.setContentText(it)
                 }.disposedBy(disposeBag)
+
+        viewModel.relatedTours
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { tours ->
+                    if (tours.isEmpty()) {
+                        relatedTourTitle.visibility = View.GONE
+                        relatedToursView.visibility = View.GONE
+                        dividerBelowRelatedTours.visibility = View.GONE
+                    } else {
+                        relatedToursView.removeAllViews()
+                        relatedTourTitle.visibility = View.VISIBLE
+                        relatedToursView.visibility = View.VISIBLE
+                        dividerBelowRelatedTours.visibility = View.VISIBLE
+                        addRelatedToursToView(tours)
+                    }
+                }
+                .disposedBy(disposeBag)
+    }
+
+    @UiThread
+    fun addRelatedToursToView(tours: List<ArticTour>) {
+
+        /**
+         * Apply margin to related tour title. It is not defined in [R.style.SectionTitleWhite]
+         */
+        val doubleMargin = resources.getDimensionPixelSize(R.dimen.marginDouble)
+        val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+                .apply {
+                    setMargins(doubleMargin, doubleMargin, doubleMargin, 0)
+                }
+
+        /**
+         * Add related tour titles to relatedToursView [LinearLayout]
+         */
+        tours.forEach { tour ->
+            val tourTextView = TextView(requireContext())
+            tourTextView.text = tour.title
+            TextViewCompat.setTextAppearance(tourTextView, R.style.RelatedTourTitleStyle)
+
+            tourTextView.layoutParams = params
+            tourTextView.setOnClickListener {
+                startActivity(NavigationConstants.MAP.asDeepLinkIntent()
+                        .apply {
+                            putExtra(NavigationConstants.ARG_TOUR, tour)
+                            putExtra(NavigationConstants.ARG_TOUR_START_STOP, tour.getIntroStop())
+                            flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                        }
+                )
+            }
+            relatedToursView.addView(tourTextView)
+        }
     }
 
 

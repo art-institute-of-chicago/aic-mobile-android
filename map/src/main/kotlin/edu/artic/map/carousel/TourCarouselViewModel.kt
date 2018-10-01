@@ -12,6 +12,7 @@ import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.map.BuildConfig
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.tours.manager.TourProgressManager
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables

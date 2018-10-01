@@ -186,6 +186,12 @@
         <item name="android:textColor">#ffffff</item>
     </style>
 
+    <style name="RelatedTourTitleStyle">
+        <item name="android:textSize">21sp</item>
+        <item name="android:layout_marginTop">@dimen/marginStandard</item>
+        <item name="android:textColor">@color/greeny_blue</item>
+    </style>
+
     <style name="BodyCtaOrange">
         <item name="android:gravity">end</item>
         <item name="android:textSize">15sp</item>

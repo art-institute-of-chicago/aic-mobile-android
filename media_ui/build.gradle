@@ -19,4 +19,5 @@ dependencies {
     implementation project(':viewmodel')
     implementation project(':adapter')
     implementation project(':image')
+    implementation project(':tour_manager')
 }
