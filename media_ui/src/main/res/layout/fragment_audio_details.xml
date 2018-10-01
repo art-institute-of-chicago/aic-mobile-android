@@ -145,6 +145,17 @@
                 style="@style/divider"
                 android:layout_width="match_parent" />
 
+            <TextView
+                android:id="@+id/relatedTourTitle"
+                style="@style/SectionTitleWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:text="@string/relatedTours"
+                tools:text="@string/relatedTours" />
+
             <LinearLayout
                 android:id="@+id/relatedToursView"
                 android:layout_width="match_parent"
