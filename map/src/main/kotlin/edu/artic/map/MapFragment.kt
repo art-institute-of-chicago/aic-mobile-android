@@ -18,10 +18,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
 import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.fileAsString
-import edu.artic.base.utils.removeAndReturnParcelable
-import edu.artic.base.utils.removeAndReturnString
-import edu.artic.base.utils.statusBarHeight
+import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.location.LocationPromptFragment
 import edu.artic.location.museumBounds
@@ -181,10 +178,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isTrafficEnabled = false
             this.uiSettings.isMyLocationButtonEnabled = false
             this.uiSettings.isCompassEnabled = false
-            if (ContextCompat.checkSelfPermission(
-                            requireContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
+            if (requireActivity().hasFineLocationPermission()) {
                 this.isMyLocationEnabled = true
             }
             setMapStyle(MapStyleOptions(mapStyleOptions))
@@ -477,12 +471,17 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe {
                     when (it) {
                         MapViewModel.NavigationEndpoint.LocationPrompt -> {
-                            requireActivity().supportFragmentManager
-                                    ?.beginTransaction()
+                            /**
+                             * Display location prompt iff location permission is not granted.
+                             */
+                            if (!requireActivity().hasFineLocationPermission()) {
+                                requireActivity().supportFragmentManager
+                                        ?.beginTransaction()
 
-                                    ?.replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
-                                    ?.addToBackStack("LocationPromptFragment")
-                                    ?.commit()
+                                        ?.replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
+                                        ?.addToBackStack("LocationPromptFragment")
+                                        ?.commit()
+                            }
                         }
                         MapViewModel.NavigationEndpoint.Tutorial -> {
                             requireActivity().supportFragmentManager
