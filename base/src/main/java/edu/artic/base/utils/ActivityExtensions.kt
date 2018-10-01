@@ -1,11 +1,14 @@
 package edu.artic.base.utils
 
+import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.TypedArray
 import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -121,4 +124,11 @@ fun Activity.hideSoftKeyboard() {
                 .INPUT_METHOD_SERVICE) as InputMethodManager?
         inputMethodManager?.hideSoftInputFromWindow(focus.windowToken, 0)
     }
+}
+
+fun Activity.hasFineLocationPermission(): Boolean {
+    return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
 }
