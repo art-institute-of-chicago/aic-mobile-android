@@ -1,6 +1,5 @@
 package edu.artic
 
-import edu.artic.localization.ui.LocalizationUiModule
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -14,6 +13,7 @@ import edu.artic.events.EventsModule
 import edu.artic.exhibitions.ExhibitionsModule
 import edu.artic.info.InfoModule
 import edu.artic.localization.LocalizerModule
+import edu.artic.localization.ui.LocalizationUiModule
 import edu.artic.location.LocationModule
 import edu.artic.location.LocationUIModule
 import edu.artic.map.MapModule
@@ -23,6 +23,7 @@ import edu.artic.membership.MembershipModule
 import edu.artic.search.SearchModule
 import edu.artic.splash.SplashModule
 import edu.artic.tours.ToursModule
+import edu.artic.tours.manager.TourManagerModule
 import edu.artic.viewmodel.ViewModelModule
 import edu.artic.welcome.WelcomeModule
 import javax.inject.Singleton
@@ -52,7 +53,8 @@ import javax.inject.Singleton
     LocationUIModule::class,
     LocalizationUiModule::class,
     MembershipModule::class,
-    AccessMemberModule::class
+    AccessMemberModule::class,
+    TourManagerModule::class
 ])
 interface AppComponent : AndroidInjector<ArticApp> {
 
