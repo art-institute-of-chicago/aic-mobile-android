@@ -8,6 +8,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.DateTimeHelper
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.models.ArticEvent
+import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -15,9 +16,17 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
+/**
+ * ViewModel for the 'all events' screen.
+ *
+ * Each event is given an [AllEventsCellViewModel], and for each set of those that occur
+ * on the same date there is one [AllEventsCellHeaderViewModel] immediately preceding.
+ */
 class AllEventsViewModel @Inject constructor(
-        eventsDao: ArticEventDao, val analyticsTracker: AnalyticsTracker)
-    : NavViewViewModel<AllEventsViewModel.NavigationEndpoint>() {
+        private val analyticsTracker: AnalyticsTracker,
+        private val languageSelector: LanguageSelector,
+        eventsDao: ArticEventDao
+) : NavViewViewModel<AllEventsViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         class EventDetail(val pos: Int, val event: ArticEvent) : NavigationEndpoint()
@@ -37,10 +46,10 @@ class AllEventsViewModel @Inject constructor(
                         if (prevMonth != startsAt.monthValue || prevDayOfMonth != startsAt.dayOfMonth) {
                             prevDayOfMonth = startsAt.dayOfMonth
                             prevMonth = startsAt.monthValue
-                            viewModelList.add(AllEventsCellHeaderViewModel(tour))
+                            viewModelList.add(AllEventsCellHeaderViewModel(languageSelector, tour))
                             lastHeaderPosition = viewModelList.size - 1
                         }
-                        viewModelList.add(AllEventsCellViewModel(tour, lastHeaderPosition))
+                        viewModelList.add(AllEventsCellViewModel(languageSelector, tour, lastHeaderPosition))
                     }
                     return@map viewModelList
                 }
@@ -57,17 +66,36 @@ class AllEventsViewModel @Inject constructor(
 
 open class AllEventsCellBaseViewModel(val event: ArticEvent) : BaseViewModel()
 
-class AllEventsCellHeaderViewModel(event: ArticEvent) : AllEventsCellBaseViewModel(event) {
+class AllEventsCellHeaderViewModel(
+        languageSelector: LanguageSelector,
+        event: ArticEvent
+) : AllEventsCellBaseViewModel(event) {
     val text: Subject<String> = BehaviorSubject.createDefault(
-            event.startTime.format(DateTimeHelper.MONTH_DAY_FORMATTER)
+            event.startTime
+                    .format(
+                            DateTimeHelper.obtainFormatter(
+                                    DateTimeHelper.Purpose.MonthThenDay,
+                                    languageSelector.getAppLocale()
+                            )
+                    )
     )
 }
 
-class AllEventsCellViewModel(event: ArticEvent, val headerPosition: Int) : AllEventsCellBaseViewModel(event) {
+class AllEventsCellViewModel(
+        languageSelector: LanguageSelector,
+        event: ArticEvent,
+        val headerPosition: Int
+) : AllEventsCellBaseViewModel(event) {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL.orEmpty())
     val eventDateTime: Subject<String> = BehaviorSubject.createDefault(
-            event.startTime.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER)
+            event.startTime
+                    .format(
+                            DateTimeHelper.obtainFormatter(
+                                    DateTimeHelper.Purpose.HomeEvent,
+                                    languageSelector.getAppLocale()
+                            )
+                    )
     )
 }
