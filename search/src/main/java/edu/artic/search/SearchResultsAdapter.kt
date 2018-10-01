@@ -5,14 +5,11 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.view.View
-import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
-import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
-import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
@@ -148,8 +145,8 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
     }
 
 
-    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
-        super.onItemViewDetachedFromWindow(holder, position)
+    override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
+        super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
             onCleared()

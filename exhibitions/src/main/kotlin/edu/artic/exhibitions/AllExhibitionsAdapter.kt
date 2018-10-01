@@ -33,8 +33,8 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
                 .bindToMain(description.text())
                 .disposedBy(item.viewDisposeBag)
     }
-    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
-        super.onItemViewDetachedFromWindow(holder, position)
+    override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
+        super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
             onCleared()
