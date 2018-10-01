@@ -2,4 +2,5 @@
 <resources>
     <string name="listenIn">Escuche.</string>
     <string name="audioGuide">Use los auriculares. ¿No tiene? Coloque el teléfono cerca del oído.</string>
+    <string name="relatedTours">Visitas relacionadas</string>
 </resources>
