@@ -43,7 +43,6 @@ class WelcomeToursAdapter : AutoHolderRecyclerViewAdapter<WelcomeTourCellViewMod
         super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
-            onCleared()
         }
     }
 

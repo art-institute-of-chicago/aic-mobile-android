@@ -149,7 +149,6 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
         super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
-            onCleared()
         }
     }
 

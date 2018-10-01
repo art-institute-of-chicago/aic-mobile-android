@@ -37,7 +37,6 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
         super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
-            onCleared()
         }
     }
 
