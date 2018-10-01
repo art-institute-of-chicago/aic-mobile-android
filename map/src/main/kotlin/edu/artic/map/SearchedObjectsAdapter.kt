@@ -162,7 +162,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
     override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
         super.onItemViewHolderRecycled(holder, position)
         getItemOrNull(position)?.apply {
-            onCleared()
+            cleanup()
         }
     }
 }

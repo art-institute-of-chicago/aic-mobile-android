@@ -60,7 +60,6 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
         super.onItemViewHolderRecycled(holder, position)
         getItemOrNull(position)?.apply {
             cleanup()
-            onCleared()
         }
     }
 
