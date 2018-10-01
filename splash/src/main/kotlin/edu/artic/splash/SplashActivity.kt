@@ -80,12 +80,15 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                     errorDialog = AlertDialog.Builder(this, R.style.ErrorDialog)
                             .setTitle(resources.getString(R.string.errorDialogTitle))
                             .setMessage(errorMessage)
-                            .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
-                                dialog.dismiss()
+                            .setOnDismissListener { _ ->
                                 if (it is NetworkException) {
                                     viewModel.onNetworkErrorDialogDismissed()
                                 }
-                            }.show()
+                            }
+                            .setPositiveButton(getString(android.R.string.ok)) { dialog, _->
+                                dialog.dismiss()
+                            }
+                            .show()
                 }).disposedBy(disposeBag)
 
 
