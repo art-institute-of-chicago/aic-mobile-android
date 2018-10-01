@@ -22,8 +22,6 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
                     .into(image)
         }.disposedBy(item.viewDisposeBag)
 
-        item.updateEndText()
-
         item.exhibitionTitle.bindToMain(title.text()).disposedBy(item.viewDisposeBag)
         item.exhibitionTitle.subscribe{image.transitionName = it}.disposedBy(item.viewDisposeBag)
         item.exhibitionEndDate
