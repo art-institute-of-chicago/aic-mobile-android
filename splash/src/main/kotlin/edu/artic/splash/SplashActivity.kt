@@ -1,6 +1,5 @@
 package edu.artic.splash
 
-import android.accounts.NetworkErrorException
 import android.app.AlertDialog
 import android.app.DialogFragment.STYLE_NO_FRAME
 import android.graphics.Matrix
@@ -15,6 +14,7 @@ import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.fuzz.rx.disposedBy
+import edu.artic.base.NetworkException
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.makeStatusBarTransparent
 import edu.artic.localization.ui.LanguageSettingsFragment
@@ -82,7 +82,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                             .setMessage(errorMessage)
                             .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
                                 dialog.dismiss()
-                                if (it is NetworkErrorException) {
+                                if (it is NetworkException) {
                                     viewModel.onNetworkErrorDialogDismissed()
                                 }
                             }.show()
