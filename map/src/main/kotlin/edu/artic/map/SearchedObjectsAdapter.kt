@@ -159,8 +159,8 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
         }
     }
 
-    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
-        super.onItemViewDetachedFromWindow(holder, position)
+    override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
+        super.onItemViewHolderRecycled(holder, position)
         getItemOrNull(position)?.apply {
             onCleared()
         }
