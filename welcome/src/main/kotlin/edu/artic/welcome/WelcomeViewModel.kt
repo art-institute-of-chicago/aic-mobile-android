@@ -3,6 +3,7 @@ package edu.artic.welcome
 import android.arch.lifecycle.LifecycleOwner
 import com.fuzz.rx.asObservable
 import com.fuzz.rx.bindTo
+import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
@@ -23,6 +24,7 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**
@@ -185,23 +187,40 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
  */
 class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val languageSelector: LanguageSelector) : BaseViewModel() {
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-    val formatter = DateTimeHelper.obtainFormatter(
-            DateTimeHelper.Purpose.HomeExhibition,
-            languageSelector.getAppLocale()
-    )
-    private val throughDateString = exhibition.endTime.format(formatter)
-            .toString()
-    val exhibitionDate: Subject<String> = BehaviorSubject.createDefault(throughDateString)
+
+    private val timeFormat: Subject<DateTimeFormatter> = BehaviorSubject.create()
+
+    val exhibitionDate: Subject<String> = BehaviorSubject.create()
     val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacyImageUrl.orEmpty())
 
     init {
 
+        timeFormat.onNext(
+                DateTimeHelper.obtainFormatter(
+                        DateTimeHelper.Purpose.HomeExhibition,
+                        languageSelector.getAppLocale()
+                )
+        )
+
         languageSelector.currentLanguage
-                .subscribe {
-                    exhibitionDate.onNext(exhibition.endTime.format(formatter.withLocale(it)))
-                }.disposedBy(disposeBag)
+                .map {
+                    DateTimeHelper.obtainFormatter(
+                            DateTimeHelper.Purpose.HomeExhibition,
+                            it
+                    )
+                }
+                .bindTo(timeFormat)
+                .disposedBy(disposeBag)
+
+        timeFormat
+                .map {
+                    exhibition.endTime.format(it)
+                }
+                .bindToMain(exhibitionDate)
+                .disposedBy(disposeBag)
 
     }
+
 }
 
 /**
