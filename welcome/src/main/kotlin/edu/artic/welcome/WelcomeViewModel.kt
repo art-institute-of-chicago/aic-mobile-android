@@ -185,7 +185,10 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
  */
 class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val languageSelector: LanguageSelector) : BaseViewModel() {
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-    val formatter = DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER.withLocale(languageSelector.getAppLocale())
+    val formatter = DateTimeHelper.obtainFormatter(
+            DateTimeHelper.Purpose.HomeExhibition,
+            languageSelector.getAppLocale()
+    )
     private val throughDateString = exhibition.endTime.format(formatter)
             .toString()
     val exhibitionDate: Subject<String> = BehaviorSubject.createDefault(throughDateString)
@@ -207,7 +210,10 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val langua
 class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: LanguageSelector) : BaseViewModel() {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
-    val formatter = DateTimeHelper.HOME_EVENT_DATE_FORMATTER.withLocale(languageSelector.getAppLocale())
+    val formatter = DateTimeHelper.obtainFormatter(
+            DateTimeHelper.Purpose.HomeEvent,
+            languageSelector.getAppLocale()
+    )
     private val eventDate = event.startTime.format(formatter)
             .toString()
     val eventTime: Subject<String> = BehaviorSubject.createDefault(eventDate)
