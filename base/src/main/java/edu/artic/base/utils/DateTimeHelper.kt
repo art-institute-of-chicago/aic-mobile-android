@@ -7,12 +7,25 @@ import org.threeten.bp.format.DateTimeFormatterBuilder
 import org.threeten.bp.format.SignStyle
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoField.*
+import java.util.Locale
 
 /**
-@author Sameer Dhakal (Fuzz)
+ * Helper class for determining how dates should be parsed from the API and/or displayed on screen.
+ *
+ * @author Sameer Dhakal (Fuzz)
  */
 
 class DateTimeHelper {
+
+    /**
+     * The intended use of a given [DateTimeFormatter].
+     */
+    sealed class Purpose {
+        object MonthThenDay : Purpose()
+        object HomeExhibition : Purpose()
+        object HomeEvent : Purpose()
+    }
+
     companion object {
 
         val DEFAULT_FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
@@ -40,6 +53,19 @@ class DateTimeHelper {
                 .appendLiteral(' ')
                 .appendText(AMPM_OF_DAY)
                 .toFormatter()
+
+        /**
+         * Obtain the best [DateTimeFormatter] for the given purpose in the given locals.
+         *
+         * Different languages have different conventions for displaying this data.
+         */
+        fun obtainFormatter(purpose: Purpose, locale: Locale): DateTimeFormatter {
+            return when (purpose) {
+                Purpose.MonthThenDay -> MONTH_DAY_FORMATTER.withLocale(locale)
+                Purpose.HomeExhibition -> HOME_EXHIBITION_DATE_FORMATTER.withLocale(locale)
+                Purpose.HomeEvent -> HOME_EVENT_DATE_FORMATTER.withLocale(locale)
+            }
+        }
     }
 }
 
