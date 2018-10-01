@@ -6,14 +6,18 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import edu.artic.db.Playable
+import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
+import edu.artic.tours.manager.TourProgressManager
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -28,7 +32,11 @@ import javax.inject.Inject
  * @author Sameer Dhakal (Fuzz)
  * @see AudioFileModel
  */
-class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSelector) : BaseViewModel() {
+class AudioDetailsViewModel @Inject constructor(
+        val languageSelector: LanguageSelector,
+        val articTourDao: ArticTourDao,
+        val tourProgressManager: TourProgressManager
+) : BaseViewModel() {
     val title: Subject<String> = BehaviorSubject.create()
     val image: Subject<String> = BehaviorSubject.create()
     val availableTranslations: Subject<List<AudioFileModel>> = BehaviorSubject.create()
@@ -36,8 +44,8 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
     val transcript: Subject<String> = BehaviorSubject.create()
     val credits: Subject<String> = BehaviorSubject.create()
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
-
     private val objectObservable: Subject<Playable> = BehaviorSubject.create()
+    val relatedTours: Subject<List<ArticTour>> = BehaviorSubject.create()
 
     /**
      * [Disposable] representing the stream of events from [AudioPlayerService.currentTrack]
@@ -57,6 +65,33 @@ class AudioDetailsViewModel @Inject constructor(val languageSelector: LanguageSe
         }
 
     init {
+
+        /**
+         * Get related tours for current [ArticObject].
+         */
+        Observables
+                .combineLatest(
+                        objectObservable.filterFlatMap({ it is ArticObject }, { it as ArticObject }),
+                        articTourDao.getTours().toObservable(),
+                        tourProgressManager.selectedTour
+                ).map { (currentObject, tours, currentTour) ->
+
+                    /**
+                     * Get all the tours containing currentObject.
+                     */
+                    val rTours = mutableListOf<ArticTour>()
+                    rTours.addAll(tours.filter { t ->
+                        t.tourStops.find { tourStop -> tourStop.objectId == currentObject.nid } != null
+                    })
+
+                    /**
+                     * Removes current tour from related tours.
+                     * */
+                    rTours.remove(currentTour.value)
+                    rTours
+
+                }.bindTo(relatedTours)
+                .disposedBy(disposeBag)
 
         // Just bind all the properties that aren't specific to the audioModel so
         // that we don't need to worry about them later
