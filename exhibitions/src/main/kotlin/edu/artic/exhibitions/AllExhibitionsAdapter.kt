@@ -4,7 +4,6 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
-import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
@@ -25,7 +24,10 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
 
         item.exhibitionTitle.bindToMain(title.text()).disposedBy(item.viewDisposeBag)
         item.exhibitionTitle.subscribe{image.transitionName = it}.disposedBy(item.viewDisposeBag)
-        item.exhibitionDescription
+        item.exhibitionEndDate
+                .map {
+                    context.getString(R.string.throughDate, it)
+                }
                 .bindToMain(description.text())
                 .disposedBy(item.viewDisposeBag)
     }
