@@ -271,21 +271,26 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun onViewDetachedFromWindow(holder: BaseViewHolder) {
-        super.onViewDetachedFromWindow(holder)
+    override fun onViewRecycled(holder: BaseViewHolder) {
+        super.onViewRecycled(holder)
         val position = holder.itemView.getTag(R.id.tag_position) as Int
         when {
-            isPositionItem(position) -> onItemViewDetachedFromWindow(holder as VH, position)
-            isHeaderPosition(position) -> onHeaderViewDetachedFromWindow(holder, position)
-            else -> onFooterViewDetachedFromWindow(holder, position)
+            isPositionItem(position) -> onItemViewHolderRecycled(holder as VH, position)
+            isHeaderPosition(position) -> onHeaderViewHolderRecycled(holder, position)
+            else -> onFooterViewHolderRecycled(holder, position)
         }
     }
 
-    open fun onItemViewDetachedFromWindow(holder: VH, position: Int) = Unit
+    /**
+     * Release temporary resources here. Implementations using
+     * [android.arch.lifecycle.ViewModel]s in particular may want
+     * to perform some custom logic here.
+     */
+    open fun onItemViewHolderRecycled(holder: VH, position: Int) = Unit
 
-    open fun onHeaderViewDetachedFromWindow(holder: BaseViewHolder, position: Int) = Unit
+    open fun onHeaderViewHolderRecycled(holder: BaseViewHolder, position: Int) = Unit
 
-    open fun onFooterViewDetachedFromWindow(holder: BaseViewHolder, position: Int) = Unit
+    open fun onFooterViewHolderRecycled(holder: BaseViewHolder, position: Int) = Unit
 
     fun getItemOrNull(position: Int): TModel? {
         if (position < 0 || position >= itemsListCount) {

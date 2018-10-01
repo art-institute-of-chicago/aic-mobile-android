@@ -3,9 +3,7 @@ package edu.artic.welcome
 import android.view.View
 import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
-import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
-import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
@@ -45,8 +43,8 @@ class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewM
 
     }
 
-    override fun onItemViewDetachedFromWindow(holder: BaseViewHolder, position: Int) {
-        super.onItemViewDetachedFromWindow(holder, position)
+    override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
+        super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {
             cleanup()
             onCleared()
