@@ -10,26 +10,27 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     api libs.design_support
-    implementation project(':base')
-    implementation project(':ui')
-    implementation project(':viewmodel')
-    implementation project(':navigation')
-    implementation project(':db')
-    implementation libs.exo_player_core
-    implementation libs.exo_player_ui
-    implementation project(':media')
-    implementation project(':audio')
-    implementation project(':media_ui')
+
     implementation project(':adapter')
+    implementation project(':audio')
+    implementation project(':base')
+    implementation project(':db')
     implementation project(':image')
     implementation project(':location')
     implementation project(':location_ui')
-    implementation libs.rx_kotlin
+    implementation project(':media')
+    implementation project(':media_ui')
+    implementation project(':navigation')
+    implementation project(':tour_manager')
+    implementation project(':ui')
+    implementation project(':viewmodel')
 
-    implementation libs.constraint_layout
     implementation libs.arch_navigation
     implementation libs.arch_navigation_ui
+    implementation libs.constraint_layout
+    implementation libs.exo_player_core
+    implementation libs.exo_player_ui
     implementation libs.glide
+    implementation libs.rx_kotlin
     implementation libs.view_indicator
-    implementation project(':tour_manager')
 }
