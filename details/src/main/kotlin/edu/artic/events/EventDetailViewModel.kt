@@ -15,9 +15,10 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker,
-                                               languageSelector: LanguageSelector)
-    : NavViewViewModel<EventDetailViewModel.NavigationEndpoint>() {
+class EventDetailViewModel @Inject constructor(
+        val analyticsTracker: AnalyticsTracker,
+        languageSelector: LanguageSelector
+) : NavViewViewModel<EventDetailViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         class LoadUrl(val url: String) : NavigationEndpoint()
@@ -61,7 +62,14 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
                 .disposedBy(disposeBag)
 
         eventObservable
-                .map { it.startTime.format(DateTimeHelper.HOME_EVENT_DATE_FORMATTER) }
+                .map {
+                    it.startTime.format(
+                        DateTimeHelper.obtainFormatter(
+                                DateTimeHelper.Purpose.HomeEvent,
+                                languageSelector.getAppLocale()
+                        )
+                    )
+                }
                 .bindTo(metaData)
                 .disposedBy(disposeBag)
 
@@ -73,8 +81,11 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
 
         eventObservable
                 .map { event ->
-                    val formatter = DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER
-                            .withLocale(languageSelector.getAppLocale())
+                    val formatter = DateTimeHelper
+                            .obtainFormatter(
+                                    DateTimeHelper.Purpose.HomeExhibition,
+                                    languageSelector.getAppLocale()
+                            )
                     event.endTime.format(formatter)
                 }
                 .bindTo(throughDate)
@@ -86,8 +97,11 @@ class EventDetailViewModel @Inject constructor(val analyticsTracker: AnalyticsTr
         languageSelector.currentLanguage
                 .withLatestFrom(eventObservable)
                 .map { (locale, event) ->
-                    val formatter = DateTimeHelper.HOME_EXHIBITION_DATE_FORMATTER
-                            .withLocale(locale)
+                    val formatter = DateTimeHelper
+                            .obtainFormatter(
+                                    DateTimeHelper.Purpose.HomeExhibition,
+                                    locale
+                            )
                     event.endTime.format(formatter)
                 }
                 .bindTo(throughDate)

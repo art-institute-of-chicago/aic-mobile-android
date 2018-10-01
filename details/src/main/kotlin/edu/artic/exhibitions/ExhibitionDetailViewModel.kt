@@ -88,8 +88,10 @@ constructor(dataObjectDao: ArticDataObjectDao,
         exhibitionObservable
                 .map { exhibition ->
                     val formatter = DateTimeHelper
-                            .HOME_EXHIBITION_DATE_FORMATTER
-                            .withLocale(languageSelector.getAppLocale())
+                            .obtainFormatter(
+                                    DateTimeHelper.Purpose.HomeExhibition,
+                                    languageSelector.getAppLocale()
+                            )
                     exhibition.endTime.format(formatter)
                 }
                 .bindTo(throughDate)
@@ -99,8 +101,10 @@ constructor(dataObjectDao: ArticDataObjectDao,
                 .withLatestFrom(exhibitionObservable)
                 .map { (locale, exhibition) ->
                     exhibition.endTime.format(DateTimeHelper
-                            .HOME_EXHIBITION_DATE_FORMATTER
-                            .withLocale(locale)
+                            .obtainFormatter(
+                                    DateTimeHelper.Purpose.HomeExhibition,
+                                    locale
+                            )
                     )
                 }.bindTo(throughDate)
                 .disposedBy(disposeBag)
