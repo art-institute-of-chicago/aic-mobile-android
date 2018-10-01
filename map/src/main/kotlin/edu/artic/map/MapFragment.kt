@@ -29,6 +29,7 @@ import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.*
+import edu.artic.map.tutorial.TutorialFragment
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
