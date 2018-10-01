@@ -103,10 +103,10 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/greyText">
+            android:background="@color/greyText"
+            android:orientation="vertical">
 
             <!--
 
@@ -140,9 +140,22 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginDouble"
                 tools:text="Edward hooper" />
+
             <View
                 style="@style/divider"
                 android:layout_width="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/relatedToursView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <View
+                android:id="@+id/dividerBelowRelatedTours"
+                style="@style/divider"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/marginQuad" />
 
             <edu.artic.view.DropdownTextView
                 android:id="@+id/transcript"
@@ -150,6 +163,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/greyText"
                 app:content_text_color="@color/white"
+                app:panel_padding="@dimen/marginDouble"
                 app:title_text="@string/transcript"
                 app:title_text_color="@color/white" />
 
