@@ -14,23 +14,25 @@ generateZoomLevels(){
 
   # calculated width of the image from the pdf to be used to cover the museum bounds within the Tile matrix
   # this value is scaled from the OUTPUT_SIZE (currently 0.905)
-  SCALED_WIDTH=$(bc <<< "scale=0; (${OUTPUT_SIZE}*0.905)/1")
-
-  # calculated height of the image from the pdf to be used to cover the museum bounds within the Tile matrix
-  # this value is scaled from the OUTPUT_SIZE (currently 0.8974)
-  SCALED_HEIGHT=$(bc <<< "scale=0; (${OUTPUT_SIZE}*0.8974)/1")
+  IMG_SIZE=$(bc <<< "scale=0; (${OUTPUT_SIZE}*0.907)/1")
+  echo $IMG_SIZE
 
   #generate a scaled down and rotated by -1 degree image from PDF
-  magick convert -density 300 $FILENAME -scale "${SCALED_WIDTH}x${SCALED_HEIGHT}!" -background "rgb(82,122,157)" -rotate "-1" scaledAndRotated.jpg
+  magick convert -density 300 $FILENAME -scale "${IMG_SIZE}x${IMG_SIZE}" -background "rgb(82,122,157)" -rotate "-1.00" scaledAndRotated.jpg
+
+  # used to calculate half pixels in calculations belows
+  HALF_PIXEL=$(((1*(2**(${ZOOM_LEVEL}-1)))))
 
   # chop off a portion of the image to push the image down into it's correct position on Google Maps
   # The left side is to the west on Google Maps and will be flush with the full scale image at OUTPUT_SIZE
   LEFT_CHOP_AMOUNT_SCALED=$(((31*(2**${ZOOM_LEVEL}))))
+  LEFT_CHOP_AMOUNT_SCALED=$((${LEFT_CHOP_AMOUNT_SCALED}+${HALF_PIXEL}))
   magick convert scaledAndRotated.jpg -chop "${LEFT_CHOP_AMOUNT_SCALED}x0" chopped.jpg
 
-  # composite the previously chopped image on to the generated tileBg image
+  # composite the previously chopped image on to  the generated tileBg image
   # the chopped image is offset vertically by this offset to adjust for the north/south offset
-  VERTICAL_OFFSET_MODIFIER=$((34*(2**$ZOOM_LEVEL)))
+  VERTICAL_OFFSET_MODIFIER=$((31*(2**$ZOOM_LEVEL)))
+  #VERTICAL_OFFSET_MODIFIER=$((${VERTICAL_OFFSET_MODIFIER}-${HALF_PIXEL}))
   magick composite -gravity northWest -geometry "+0+${VERTICAL_OFFSET_MODIFIER}" chopped.jpg tileBg.jpg tile.jpg
 
   # create directory if not already created
