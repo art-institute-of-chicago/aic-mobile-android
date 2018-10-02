@@ -14,6 +14,7 @@ class SearchExhibitionsViewModel @Inject constructor(
 
     init {
         searchManager.currentSearchResults
+                .filter { !it.searchTerm.isBlank() }
                 .map { it.exhibitions }
                 .map { list ->
                     if (list.isEmpty()) {

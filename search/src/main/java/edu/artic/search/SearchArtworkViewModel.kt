@@ -14,6 +14,7 @@ class SearchArtworkViewModel @Inject constructor(
 
     init {
         searchManager.currentSearchResults
+                .filter { !it.searchTerm.isBlank() }
                 .map { it.artworks }
                 .map { list ->
                     if (list.isEmpty()) {
