@@ -13,11 +13,12 @@ generateZoomLevels(){
   magick convert -size "${OUTPUT_SIZE}x${OUTPUT_SIZE}" xc:"rgb(82,122,157)" tileBg.jpg
 
   # calculated width of the image from the pdf to be used to cover the museum bounds within the Tile matrix
-  # this value is scaled from the OUTPUT_SIZE (currently 0.905)
+  # this value is scaled from the OUTPUT_SIZE (currently 0.907)
+  # increasing or decreasing this value by 0.001 will add/subtract 2 pixels from IMG_SIZE
   IMG_SIZE=$(bc <<< "scale=0; (${OUTPUT_SIZE}*0.907)/1")
-  echo $IMG_SIZE
 
   #generate a scaled down and rotated by -1 degree image from PDF
+  # This accounts for the slight angle that the museum is at in relation to the google map tiles
   magick convert -density 300 $FILENAME -scale "${IMG_SIZE}x${IMG_SIZE}" -background "rgb(82,122,157)" -rotate "-1.00" scaledAndRotated.jpg
 
   # used to calculate half pixels in calculations belows
@@ -25,12 +26,14 @@ generateZoomLevels(){
 
   # chop off a portion of the image to push the image down into it's correct position on Google Maps
   # The left side is to the west on Google Maps and will be flush with the full scale image at OUTPUT_SIZE
+  # if you need to add or subtract a half pixel do so
   LEFT_CHOP_AMOUNT_SCALED=$(((31*(2**${ZOOM_LEVEL}))))
   LEFT_CHOP_AMOUNT_SCALED=$((${LEFT_CHOP_AMOUNT_SCALED}+${HALF_PIXEL}))
   magick convert scaledAndRotated.jpg -chop "${LEFT_CHOP_AMOUNT_SCALED}x0" chopped.jpg
 
   # composite the previously chopped image on to  the generated tileBg image
   # the chopped image is offset vertically by this offset to adjust for the north/south offset
+  # if you need to add or subtract a half pixel do so
   VERTICAL_OFFSET_MODIFIER=$((31*(2**$ZOOM_LEVEL)))
   #VERTICAL_OFFSET_MODIFIER=$((${VERTICAL_OFFSET_MODIFIER}-${HALF_PIXEL}))
   magick composite -gravity northWest -geometry "+0+${VERTICAL_OFFSET_MODIFIER}" chopped.jpg tileBg.jpg tile.jpg
