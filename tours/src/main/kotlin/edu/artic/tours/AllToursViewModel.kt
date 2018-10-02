@@ -43,7 +43,7 @@ class AllToursViewModel @Inject constructor(
          * Subscribe to locale change event.
          */
         Observables.combineLatest(
-                languageSelector.appLanguageWithUpdates(disposeBag),
+                languageSelector.appLanguageWithUpdates(),
                 generalInfoDao.getGeneralInfo().toObservable()
         )
                 .map { (_, generalObject) ->
