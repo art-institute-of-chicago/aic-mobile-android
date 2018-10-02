@@ -18,7 +18,7 @@ import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
 import edu.artic.localization.LanguageSelector
 import edu.artic.membership.MemberInfoPreferencesManager
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
@@ -167,7 +167,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 /**
  * ViewModel responsible for building the tour summary list.
  */
-class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
+class WelcomeTourCellViewModel(val tour: ArticTour) : CellViewModel() {
 
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
@@ -179,7 +179,7 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
 /**
  * ViewModel responsible for building the `On View` list (i.e. list of exhibition).
  */
-class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val languageSelector: LanguageSelector) : BaseViewModel() {
+class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val languageSelector: LanguageSelector) : CellViewModel() {
 
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionDate: Subject<String> = BehaviorSubject.create()
@@ -204,7 +204,7 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val langua
 /**
  * ViewModel responsible for building the event summary list.
  */
-class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: LanguageSelector) : BaseViewModel() {
+class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: LanguageSelector) : CellViewModel() {
 
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())

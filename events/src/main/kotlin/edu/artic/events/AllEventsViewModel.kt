@@ -9,7 +9,7 @@ import edu.artic.base.utils.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.models.ArticEvent
 import edu.artic.localization.LanguageSelector
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
@@ -64,7 +64,7 @@ class AllEventsViewModel @Inject constructor(
 
 }
 
-open class AllEventsCellBaseViewModel(val event: ArticEvent) : BaseViewModel()
+open class AllEventsCellBaseViewModel(val event: ArticEvent) : CellViewModel()
 
 class AllEventsCellHeaderViewModel(
         languageSelector: LanguageSelector,

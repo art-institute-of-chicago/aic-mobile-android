@@ -6,7 +6,7 @@ import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticTour
 import edu.artic.localization.LanguageSelector
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
@@ -57,7 +57,7 @@ class AllToursViewModel @Inject constructor(
     }
 }
 
-class AllToursCellViewModel(val tour: ArticTour) : BaseViewModel() {
+class AllToursCellViewModel(val tour: ArticTour) : CellViewModel() {
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
     val tourStops: Subject<String> = BehaviorSubject.createDefault("${tour.tourStops.count()}")

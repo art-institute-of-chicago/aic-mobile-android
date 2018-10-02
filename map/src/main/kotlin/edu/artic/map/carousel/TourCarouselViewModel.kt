@@ -14,6 +14,7 @@ import edu.artic.map.BuildConfig
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.tours.manager.TourProgressManager
 import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.CellViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
@@ -158,7 +159,7 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
     }
 }
 
-open class TourCarousalBaseViewModel : BaseViewModel() {
+open class TourCarousalBaseViewModel : CellViewModel() {
     enum class Type {
         Stop,
         Overview
