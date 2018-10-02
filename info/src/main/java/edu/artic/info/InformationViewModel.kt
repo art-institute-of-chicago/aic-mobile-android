@@ -11,7 +11,7 @@ import edu.artic.db.models.ArticGeneralInfo
 import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -42,16 +42,11 @@ class InformationViewModel @Inject constructor(
     val generalInfo: Subject<ArticGeneralInfo.Translation> = BehaviorSubject.create()
 
     init {
-        generalInfoDao
-                .getGeneralInfo()
-                .map { generalObject ->
-                    languageSelector.selectFrom(generalObject.allTranslations())
-                }.bindTo(generalInfo)
-                .disposedBy(disposeBag)
 
-        languageSelector
-                .currentLanguage
-                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+        Observables.combineLatest(
+                languageSelector.appLanguageWithUpdates(disposeBag),
+                generalInfoDao.getGeneralInfo().toObservable()
+        )
                 .map { (_, generalInfo) ->
                     languageSelector.selectFrom(generalInfo.allTranslations())
                 }

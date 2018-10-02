@@ -60,16 +60,7 @@ class AllExhibitionsCellViewModel(
 
     init {
 
-        exhibitionEndDate.onNext(
-                exhibition.endTime.format(
-                        DateTimeHelper.obtainFormatter(
-                                DateTimeHelper.Purpose.HomeExhibition,
-                                languageSelector.getAppLocale()
-                        )
-                )
-        )
-
-        languageSelector.currentLanguage
+        languageSelector.appLanguageWithUpdates(disposeBag)
                 .map {
                     exhibition.endTime.format(
                             DateTimeHelper.obtainFormatter(
