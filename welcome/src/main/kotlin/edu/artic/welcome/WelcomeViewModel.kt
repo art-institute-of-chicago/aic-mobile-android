@@ -181,33 +181,20 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : BaseViewModel() {
  * ViewModel responsible for building the `On View` list (i.e. list of exhibition).
  */
 class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val languageSelector: LanguageSelector) : BaseViewModel() {
+
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-
-    private val timeFormat: Subject<DateTimeFormatter> = BehaviorSubject.create()
-
     val exhibitionDate: Subject<String> = BehaviorSubject.create()
     val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacyImageUrl.orEmpty())
 
     init {
 
-        timeFormat.onNext(
-                DateTimeHelper.obtainFormatter(
-                        DateTimeHelper.Purpose.HomeExhibition,
-                        languageSelector.getAppLocale()
-                )
-        )
-
-        languageSelector.currentLanguage
+        languageSelector.appLanguageWithUpdates(disposeBag)
                 .map {
                     DateTimeHelper.obtainFormatter(
                             DateTimeHelper.Purpose.HomeExhibition,
                             it
                     )
                 }
-                .bindTo(timeFormat)
-                .disposedBy(disposeBag)
-
-        timeFormat
                 .map {
                     exhibition.endTime.format(it)
                 }
