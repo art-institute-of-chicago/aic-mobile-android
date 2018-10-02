@@ -10,7 +10,7 @@ import edu.artic.base.utils.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.localization.LanguageSelector
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
@@ -52,7 +52,7 @@ class AllExhibitionsViewModel @Inject constructor(
 class AllExhibitionsCellViewModel(
         val languageSelector: LanguageSelector,
         val exhibition: ArticExhibition
-) : BaseViewModel() {
+) : CellViewModel() {
 
     val exhibitionTitle: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionEndDate: Subject<String> = BehaviorSubject.create()
