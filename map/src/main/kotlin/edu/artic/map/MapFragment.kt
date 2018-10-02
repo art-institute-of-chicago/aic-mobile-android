@@ -181,7 +181,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private fun configureMap(map: GoogleMap, mapStyleOptions: String) {
         map.apply {
             isBuildingsEnabled = false
-            isIndoorEnabled = false
+            isIndoorEnabled = true
             isTrafficEnabled = false
             this.uiSettings.isMyLocationButtonEnabled = false
             this.uiSettings.isCompassEnabled = false
