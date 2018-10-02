@@ -2,10 +2,7 @@ package edu.artic.base.utils
 
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.DateTimeFormatterBuilder
-import org.threeten.bp.format.SignStyle
-import org.threeten.bp.format.TextStyle
+import org.threeten.bp.format.*
 import org.threeten.bp.temporal.ChronoField.*
 import java.util.Locale
 
@@ -22,22 +19,41 @@ class DateTimeHelper {
      */
     sealed class Purpose {
 
+        @Suppress("PropertyName")
+        internal val SPANISH = Locale("es")
+
         object MonthThenDay : Purpose() {
             override fun obtainFormatter(locale: Locale): DateTimeFormatter {
-                return MONTH_DAY_FORMATTER.withLocale(locale)
+                return when (locale) {
+                    Locale.ENGLISH -> MONTH_DAY_FORMATTER
+                    SPANISH -> DAY_MONTH_FORMATTER
+                    else -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                }.withLocale(locale)
             }
         }
         object HomeExhibition : Purpose() {
             override fun obtainFormatter(locale: Locale): DateTimeFormatter {
-                return HOME_EXHIBITION_DATE_FORMATTER.withLocale(locale)
+                return when (locale) {
+                    Locale.ENGLISH -> HOME_EXHIBITION_DATE_FORMATTER
+                    Locale.CHINESE -> DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                    else -> DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)
+                }.withLocale(locale)
             }
         }
         object HomeEvent : Purpose() {
             override fun obtainFormatter(locale: Locale): DateTimeFormatter {
+                val timeFormat = when (locale) {
+                    Locale.ENGLISH -> HOME_EVENT_TIME_AM_PM_POSTFIX_FORMATTER
+                    Locale.CHINESE -> HOME_EVENT_TIME_AM_PM_PREFIX_FORMATTER
+                    SPANISH -> HOME_EVENT_TIME_AM_PM_POSTFIX_FORMATTER
+                    else -> DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)
+                }
+                val dateFormat = MonthThenDay.obtainFormatter(locale)
+
                 return DateTimeFormatterBuilder()
-                        .append(MonthThenDay.obtainFormatter(locale))
+                        .append(dateFormat)
                         .appendLiteral("   ")
-                        .append(HOME_EVENT_TIME_FORMATTER)
+                        .append(timeFormat)
                         .toFormatter(locale)
             }
         }
@@ -60,6 +76,15 @@ class DateTimeHelper {
                 .appendValue(DAY_OF_MONTH)
                 .toFormatter()
 
+        private val DAY_MONTH_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
+                .appendValue(DAY_OF_MONTH)
+                .appendLiteral(' ')
+                .appendText(MONTH_OF_YEAR, TextStyle.FULL)
+                .toFormatter()
+
+        /**
+         * Preferred month-day-year formatter for [Locale.US].
+         */
         private val HOME_EXHIBITION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
                 .appendText(MONTH_OF_YEAR, TextStyle.FULL)
                 .appendLiteral(' ')
@@ -68,12 +93,27 @@ class DateTimeHelper {
                 .appendValue(YEAR, 4)
                 .toFormatter()
 
-        private val HOME_EVENT_TIME_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
+        private val HOME_EVENT_TIME_ONLY_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
                 .appendValue(CLOCK_HOUR_OF_AMPM, 1, 2, SignStyle.NORMAL)
                 .appendLiteral(':')
                 .appendValue(MINUTE_OF_HOUR, 2)
+                .toFormatter()
+
+        /**
+         * Preferred time-formatter for [Locale.ENGLISH] (among others).
+         */
+        private val HOME_EVENT_TIME_AM_PM_POSTFIX_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
+                .append(HOME_EVENT_TIME_ONLY_FORMATTER)
                 .appendLiteral(' ')
                 .appendText(AMPM_OF_DAY)
+                .toFormatter()
+
+        /**
+         * Preferred time-formatter for [Locale.CHINESE] (among others).
+         */
+        private val HOME_EVENT_TIME_AM_PM_PREFIX_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
+                .appendText(AMPM_OF_DAY)
+                .append(HOME_EVENT_TIME_ONLY_FORMATTER)
                 .toFormatter()
 
     }
