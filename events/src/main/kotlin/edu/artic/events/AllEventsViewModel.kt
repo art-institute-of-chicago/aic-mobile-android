@@ -70,15 +70,24 @@ class AllEventsCellHeaderViewModel(
         languageSelector: LanguageSelector,
         event: ArticEvent
 ) : AllEventsCellBaseViewModel(event) {
-    val text: Subject<String> = BehaviorSubject.createDefault(
-            event.startTime
-                    .format(
-                            DateTimeHelper.obtainFormatter(
-                                    DateTimeHelper.Purpose.MonthThenDay,
-                                    languageSelector.getAppLocale()
-                            )
+    val text: Subject<String> = BehaviorSubject.create()
+
+
+    init {
+        languageSelector
+                .appLanguageWithUpdates(disposeBag)
+                .map {
+                    DateTimeHelper.obtainFormatter(
+                            DateTimeHelper.Purpose.MonthThenDay,
+                            it
                     )
-    )
+                }
+                .map {
+                    event.startTime.format(it)
+                }
+                .bindTo(text)
+                .disposedBy(disposeBag)
+    }
 }
 
 class AllEventsCellViewModel(
@@ -88,14 +97,23 @@ class AllEventsCellViewModel(
 ) : AllEventsCellBaseViewModel(event) {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL.orEmpty())
-    val eventDateTime: Subject<String> = BehaviorSubject.createDefault(
-            event.startTime
-                    .format(
-                            DateTimeHelper.obtainFormatter(
-                                    DateTimeHelper.Purpose.HomeEvent,
-                                    languageSelector.getAppLocale()
-                            )
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL)
+    val eventDateTime: Subject<String> = BehaviorSubject.create()
+
+    init {
+        languageSelector
+                .appLanguageWithUpdates(disposeBag)
+                .map {
+                    DateTimeHelper.obtainFormatter(
+                            DateTimeHelper.Purpose.HomeEvent,
+                            it
                     )
-    )
+                }
+                .map {
+                    event.startTime.format(it)
+                }
+                .bindTo(eventDateTime)
+                .disposedBy(disposeBag)
+
+    }
 }
