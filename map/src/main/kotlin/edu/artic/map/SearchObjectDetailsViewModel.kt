@@ -9,6 +9,7 @@ import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.CellViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
@@ -134,7 +135,7 @@ class SearchObjectDetailsViewModel @Inject constructor(
 }
 
 
-open class SearchObjectBaseViewModel : BaseViewModel() {
+open class SearchObjectBaseViewModel : CellViewModel() {
 
     sealed class PlayerAction {
         class Play(val requestedObject: Playable, val audioFileModel: AudioFileModel? = null) : PlayerAction()

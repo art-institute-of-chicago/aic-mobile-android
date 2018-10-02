@@ -6,19 +6,18 @@ import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
-import edu.artic.ui.util.asCDNUri
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.CellViewModel
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
 /**
- * Base class for all of the [BaseViewModel]s in this file.
+ * Base class for all of the [CellViewModel]s in this file.
  *
  * Each of these corresponds more-or-less directly to a single
  * [android.support.v7.widget.RecyclerView.ViewHolder] in the list
  * of search results.
  */
-open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : BaseViewModel()
+open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : CellViewModel()
 
 /**
  * Dedicated subclass for plain-text content, like autocomplete suggestions.

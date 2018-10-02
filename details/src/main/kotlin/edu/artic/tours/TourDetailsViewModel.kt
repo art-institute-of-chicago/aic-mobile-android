@@ -8,7 +8,7 @@ import edu.artic.db.models.getIntroStop
 import edu.artic.details.R
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.SpecifiesLanguage
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
@@ -153,7 +153,7 @@ class TourDetailsViewModel @Inject constructor(
     }
 }
 
-class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : BaseViewModel() {
+class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : CellViewModel() {
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()
