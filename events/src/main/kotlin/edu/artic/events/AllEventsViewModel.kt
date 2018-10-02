@@ -89,7 +89,7 @@ class AllEventsCellHeaderViewModel(
 
     init {
         languageSelector
-                .appLanguageWithUpdates(disposeBag)
+                .appLanguageWithUpdates()
                 .map {
                     MonthThenDay.obtainFormatter(it)
                 }
@@ -114,7 +114,7 @@ class AllEventsCellViewModel(
 
     init {
         languageSelector
-                .appLanguageWithUpdates(disposeBag)
+                .appLanguageWithUpdates()
                 .map {
                     HomeEvent.obtainFormatter(it)
                 }

@@ -53,7 +53,9 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
         if (useInjection) {
             AndroidInjection.inject(this)
             if (shouldRecreateUponLanguageChange) {
-                languageSelector.currentLanguage
+                languageSelector.appLanguageWithUpdates()
+                        // Ignore current value; we only want to receive updates
+                        .skip(1)
                         .subscribe {
                             ensureConfigIncludesAppLocale()
                             recreate()
