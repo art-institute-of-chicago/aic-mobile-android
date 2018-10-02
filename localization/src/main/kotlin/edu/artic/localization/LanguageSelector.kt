@@ -1,5 +1,7 @@
 package edu.artic.localization
 
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -29,7 +31,14 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
         }
     }
 
-    val currentLanguage : Subject<Locale> = PublishSubject.create()
+    /**
+     * Broadcast point for changes in the current language.
+     *
+     * See [getAppLocale] for the language _right now_ and
+     * [appLanguageWithUpdates] if you need both that and
+     * the live updates.
+     */
+    val currentLanguage: Subject<Locale> = PublishSubject.create()
 
     /**
      * Check whether we have defined a value for [LocalizationPreferences.preferredAppLocale] -
@@ -52,6 +61,29 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
         } else {
             prefs.tourLocale = proposedTourLocale
         }
+    }
+
+    /**
+     * The returned object is given an initial value of [getAppLocale], and it will
+     * reflect the value of the latest event published via [currentLanguage] after that point.
+     *
+     * TODO: This and some of the ::onViewRecycled code used with the :adapter module really belong in a dedicated file. For now, though, this can stay here.
+     *
+     * @param disposeBag this should be the same composite that you'll use to dispose of
+     * subscriptions on the returned object. We use it here to hook up [currentLanguage]
+     * with your existing lifecycle callbacks
+     */
+    fun appLanguageWithUpdates(disposeBag: CompositeDisposable): BehaviorSubject<Locale> {
+        val subject: BehaviorSubject<Locale> = BehaviorSubject.createDefault(getAppLocale())
+
+        val disposable: Disposable = currentLanguage
+                .subscribe {
+                    subject.onNext(it)
+                }
+
+        disposeBag.add(disposable)
+
+        return subject
     }
 
     /**
