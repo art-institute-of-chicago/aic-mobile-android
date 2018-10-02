@@ -34,7 +34,11 @@ class DateTimeHelper {
         }
         object HomeEvent : Purpose() {
             override fun obtainFormatter(locale: Locale): DateTimeFormatter {
-                return HOME_EVENT_DATE_FORMATTER.withLocale(locale)
+                return DateTimeFormatterBuilder()
+                        .append(MonthThenDay.obtainFormatter(locale))
+                        .appendLiteral("   ")
+                        .append(HOME_EVENT_TIME_FORMATTER)
+                        .toFormatter(locale)
             }
         }
 
@@ -64,9 +68,7 @@ class DateTimeHelper {
                 .appendValue(YEAR, 4)
                 .toFormatter()
 
-        private val HOME_EVENT_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
-                .append(MONTH_DAY_FORMATTER)
-                .appendLiteral("   ")
+        private val HOME_EVENT_TIME_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
                 .appendValue(CLOCK_HOUR_OF_AMPM, 1, 2, SignStyle.NORMAL)
                 .appendLiteral(':')
                 .appendValue(MINUTE_OF_HOUR, 2)
