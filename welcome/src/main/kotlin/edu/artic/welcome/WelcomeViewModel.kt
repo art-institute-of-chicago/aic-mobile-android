@@ -1,10 +1,7 @@
 package edu.artic.welcome
 
 import android.arch.lifecycle.LifecycleOwner
-import com.fuzz.rx.asObservable
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.bindToMain
-import com.fuzz.rx.disposedBy
+import com.fuzz.rx.*
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
@@ -77,7 +74,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 .map {
                     val viewModelList = ArrayList<WelcomeExhibitionCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeExhibitionCellViewModel(it, languageSelector))
+                        viewModelList.add(WelcomeExhibitionCellViewModel(disposeBag, it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(exhibitions)
@@ -87,7 +84,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 .map {
                     val viewModelList = ArrayList<WelcomeEventCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeEventCellViewModel(it, languageSelector))
+                        viewModelList.add(WelcomeEventCellViewModel(disposeBag, it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(events)
@@ -167,7 +164,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 /**
  * ViewModel responsible for building the tour summary list.
  */
-class WelcomeTourCellViewModel(val tour: ArticTour) : CellViewModel() {
+class WelcomeTourCellViewModel(val tour: ArticTour) : CellViewModel(null) {
 
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
@@ -179,7 +176,11 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : CellViewModel() {
 /**
  * ViewModel responsible for building the `On View` list (i.e. list of exhibition).
  */
-class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val languageSelector: LanguageSelector) : CellViewModel() {
+class WelcomeExhibitionCellViewModel(
+        adapterDisposeBag: DisposeBag,
+        val exhibition: ArticExhibition,
+        val languageSelector: LanguageSelector
+) : CellViewModel(adapterDisposeBag) {
 
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionDate: Subject<String> = BehaviorSubject.create()
@@ -204,7 +205,11 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val langua
 /**
  * ViewModel responsible for building the event summary list.
  */
-class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: LanguageSelector) : CellViewModel() {
+class WelcomeEventCellViewModel(
+        adapterDisposeBag: DisposeBag,
+        val event: ArticEvent,
+        val languageSelector: LanguageSelector
+) : CellViewModel(adapterDisposeBag) {
 
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())

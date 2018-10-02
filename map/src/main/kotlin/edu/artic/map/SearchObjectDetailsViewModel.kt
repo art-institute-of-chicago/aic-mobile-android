@@ -85,7 +85,7 @@ class SearchObjectDetailsViewModel @Inject constructor(
              */
             Observable.just(requestedSearchObject)
                     .map { artwork ->
-                        val element = ArtworkViewModel(artwork, languageSelector)
+                        val element = ArtworkViewModel(viewDisposeBag, artwork, languageSelector)
                         element.playerControl
                                 .bindTo(playerControl)
                                 .disposedBy(element.viewDisposeBag)
@@ -109,7 +109,7 @@ class SearchObjectDetailsViewModel @Inject constructor(
                         .toObservable()
                         .map { objects ->
                             objects.map { mapAnnotation ->
-                                DiningAnnotationViewModel(mapAnnotation)
+                                DiningAnnotationViewModel(viewDisposeBag, mapAnnotation)
                             }
                         }.bindTo(searchedObjectViewModels)
                         .disposedBy(disposeBag)
@@ -118,7 +118,7 @@ class SearchObjectDetailsViewModel @Inject constructor(
                         .map {
                             val amenityTitle: String = ArticMapAmenityType.titleFor(it, requestedSearchAmenityType)
                             val amenityDescription: String = ArticMapAmenityType.textFor(it, requestedSearchAmenityType)
-                            listOf(AnnotationViewModel(amenityTitle, amenityDescription))
+                            listOf(AnnotationViewModel(viewDisposeBag, amenityTitle, amenityDescription))
                         }
                         .bindTo(searchedObjectViewModels)
                         .disposedBy(disposeBag)
@@ -135,7 +135,9 @@ class SearchObjectDetailsViewModel @Inject constructor(
 }
 
 
-open class SearchObjectBaseViewModel : CellViewModel() {
+open class SearchObjectBaseViewModel(
+        adapterDisposeBag: DisposeBag?
+) : CellViewModel(adapterDisposeBag) {
 
     sealed class PlayerAction {
         class Play(val requestedObject: Playable, val audioFileModel: AudioFileModel? = null) : PlayerAction()
@@ -152,7 +154,10 @@ open class SearchObjectBaseViewModel : CellViewModel() {
 /**
  * ViewModel for the amenity cell.
  */
-class DiningAnnotationViewModel(val item: ArticMapAnnotation) : SearchObjectBaseViewModel() {
+class DiningAnnotationViewModel(
+        adapterDisposeBag: DisposeBag,
+        val item: ArticMapAnnotation
+) : SearchObjectBaseViewModel(adapterDisposeBag) {
     val description: Subject<String> = BehaviorSubject.create()
 
     init {
@@ -166,7 +171,11 @@ class DiningAnnotationViewModel(val item: ArticMapAnnotation) : SearchObjectBase
 /**
  * ViewModel for the amenity cell.
  */
-class AnnotationViewModel(item: String, modelDescription: String) : SearchObjectBaseViewModel() {
+class AnnotationViewModel(
+        adapterDisposeBag: DisposeBag,
+        item: String,
+        modelDescription: String
+) : SearchObjectBaseViewModel(adapterDisposeBag) {
     val description: Subject<String> = BehaviorSubject.create()
 
     init {
@@ -179,7 +188,11 @@ class AnnotationViewModel(item: String, modelDescription: String) : SearchObject
 /**
  * ViewModel for the artwork cell.
  */
-class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector: LanguageSelector) : SearchObjectBaseViewModel() {
+class ArtworkViewModel(
+        adapterDisposeBag: DisposeBag,
+        val item: ArticSearchArtworkObject,
+        val languageSelector: LanguageSelector
+) : SearchObjectBaseViewModel(adapterDisposeBag) {
 
     val artworkTitle: Subject<String> = BehaviorSubject.createDefault(item.title)
     val artistName: Subject<String> = BehaviorSubject.create()
@@ -223,7 +236,7 @@ class ArtworkViewModel(val item: ArticSearchArtworkObject, val languageSelector:
 /**
  * ViewModel for the Exhibition cell.
  */
-class ExhibitionViewModel(val item: ArticExhibition) : SearchObjectBaseViewModel() {
+class ExhibitionViewModel(val item: ArticExhibition) : SearchObjectBaseViewModel(null) {
     val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.artworks)
     val description: Subject<String> = BehaviorSubject.create()
 

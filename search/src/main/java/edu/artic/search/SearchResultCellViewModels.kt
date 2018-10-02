@@ -17,7 +17,7 @@ import io.reactivex.subjects.Subject
  * [android.support.v7.widget.RecyclerView.ViewHolder] in the list
  * of search results.
  */
-open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : CellViewModel()
+open class SearchBaseCellViewModel(var hasDivider: Boolean = false) : CellViewModel(null)
 
 /**
  * Dedicated subclass for plain-text content, like autocomplete suggestions.

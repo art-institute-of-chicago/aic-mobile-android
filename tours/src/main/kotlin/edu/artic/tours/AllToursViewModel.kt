@@ -57,7 +57,7 @@ class AllToursViewModel @Inject constructor(
     }
 }
 
-class AllToursCellViewModel(val tour: ArticTour) : CellViewModel() {
+class AllToursCellViewModel(val tour: ArticTour) : CellViewModel(null) {
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
     val tourStops: Subject<String> = BehaviorSubject.createDefault("${tour.tourStops.count()}")
