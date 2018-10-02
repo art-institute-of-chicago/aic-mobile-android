@@ -5,7 +5,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.DateTimeHelper
+import edu.artic.base.utils.DateTimeHelper.Purpose.*
 import edu.artic.db.models.ArticEvent
 import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.NavViewViewModel
@@ -67,10 +67,7 @@ class EventDetailViewModel @Inject constructor(
         )
                 .map { (locale, event) ->
                     event.startTime.format(
-                        DateTimeHelper.obtainFormatter(
-                                DateTimeHelper.Purpose.HomeEvent,
-                                locale
-                        )
+                            HomeEvent.obtainFormatter(locale)
                     )
                 }
                 .bindTo(metaData)
@@ -91,11 +88,7 @@ class EventDetailViewModel @Inject constructor(
                 eventObservable
         )
                 .map { (locale, event) ->
-                    val formatter = DateTimeHelper
-                            .obtainFormatter(
-                                    DateTimeHelper.Purpose.HomeExhibition,
-                                    locale
-                            )
+                    val formatter = HomeExhibition.obtainFormatter(locale)
                     event.endTime.format(formatter)
                 }
                 .bindTo(throughDate)

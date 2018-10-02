@@ -5,7 +5,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.DateTimeHelper
+import edu.artic.base.utils.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.models.ArticEvent
 import edu.artic.localization.LanguageSelector
@@ -77,10 +77,7 @@ class AllEventsCellHeaderViewModel(
         languageSelector
                 .appLanguageWithUpdates(disposeBag)
                 .map {
-                    DateTimeHelper.obtainFormatter(
-                            DateTimeHelper.Purpose.MonthThenDay,
-                            it
-                    )
+                    MonthThenDay.obtainFormatter(it)
                 }
                 .map {
                     event.startTime.format(it)
@@ -104,10 +101,7 @@ class AllEventsCellViewModel(
         languageSelector
                 .appLanguageWithUpdates(disposeBag)
                 .map {
-                    DateTimeHelper.obtainFormatter(
-                            DateTimeHelper.Purpose.HomeEvent,
-                            it
-                    )
+                    HomeEvent.obtainFormatter(it)
                 }
                 .map {
                     event.startTime.format(it)
