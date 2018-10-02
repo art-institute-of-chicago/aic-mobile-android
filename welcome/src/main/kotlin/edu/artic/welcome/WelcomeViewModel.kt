@@ -95,7 +95,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
          * Subscribe to locale change event.
          */
         Observables.combineLatest(
-                languageSelector.appLanguageWithUpdates(),
+                languageSelector.currentLanguage,
                 generalInfoDao.getGeneralInfo().toObservable()
         )
                 .map { (_, generalObject) ->
@@ -188,7 +188,7 @@ class WelcomeExhibitionCellViewModel(
 
     init {
 
-        languageSelector.appLanguageWithUpdates()
+        languageSelector.currentLanguage
                 .map {
                     HomeExhibition.obtainFormatter(it)
                 }
@@ -217,7 +217,7 @@ class WelcomeEventCellViewModel(
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL)
 
     init {
-        languageSelector.appLanguageWithUpdates()
+        languageSelector.currentLanguage
                 .map {
                     HomeEvent.obtainFormatter(it)
                 }
