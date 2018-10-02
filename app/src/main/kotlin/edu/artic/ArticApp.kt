@@ -4,14 +4,17 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.lifecycle.ProcessLifecycleOwner
+import com.crashlytics.android.Crashlytics
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.DaggerApplication
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
+import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import javax.inject.Inject
+
+
 
 class ArticApp : DaggerApplication(), LifecycleObserver {
 
