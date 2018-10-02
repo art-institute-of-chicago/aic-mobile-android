@@ -53,7 +53,7 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
         if (useInjection) {
             AndroidInjection.inject(this)
             if (shouldRecreateUponLanguageChange) {
-                languageSelector.appLanguageWithUpdates()
+                languageSelector.currentLanguage
                         // Ignore current value; we only want to receive updates
                         .skip(1)
                         .subscribe {

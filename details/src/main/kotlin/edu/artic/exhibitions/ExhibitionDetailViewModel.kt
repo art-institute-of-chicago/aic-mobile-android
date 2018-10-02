@@ -88,7 +88,7 @@ constructor(dataObjectDao: ArticDataObjectDao,
 
 
         Observables.combineLatest(
-                languageSelector.appLanguageWithUpdates(),
+                languageSelector.currentLanguage,
                 exhibitionObservable
         )
                 .map { (locale, exhibition) ->

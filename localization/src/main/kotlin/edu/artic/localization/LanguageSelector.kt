@@ -19,11 +19,14 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
     /**
      * Broadcast point for changes in the current language.
      *
-     * See [getAppLocale] for the language _right now_ and
-     * [appLanguageWithUpdates] if you need both that and
-     * the live updates.
+     * The returned object is given an initial value of [getAppLocale],
+     * and it will reflect the value of the latest event published via
+     * [setDefaultLanguageForApplication] after that point.
+     *
+     * See [selectFrom] if you just need to choose the best language out
+     * of a limited set of options.
      */
-    private val currentLanguage: Subject<Locale> = BehaviorSubject.createDefault(getAppLocale())
+    val currentLanguage: Subject<Locale> = BehaviorSubject.createDefault(getAppLocale())
 
 
     fun setDefaultLanguageForApplication(lang: Locale) {
@@ -59,20 +62,6 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
         } else {
             prefs.tourLocale = proposedTourLocale
         }
-    }
-
-    /**
-     * The returned object is given an initial value of [getAppLocale], and it will
-     * reflect the value of the latest event published via [currentLanguage] after that point.
-     *
-     * TODO: This and some of the ::onViewRecycled code used with the :adapter module really belong in a dedicated file. For now, though, this can stay here.
-     *
-     * @param disposeBag this should be the same composite that you'll use to dispose of
-     * subscriptions on the returned object. We use it here to hook up [currentLanguage]
-     * with your existing lifecycle callbacks
-     */
-    fun appLanguageWithUpdates(): BehaviorSubject<Locale> {
-        return currentLanguage as BehaviorSubject<Locale>
     }
 
     /**

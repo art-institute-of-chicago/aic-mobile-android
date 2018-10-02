@@ -66,7 +66,7 @@ class AllExhibitionsCellViewModel(
 
     init {
 
-        languageSelector.appLanguageWithUpdates()
+        languageSelector.currentLanguage
                 .map {
                     exhibition.endTime.format(
                             HomeExhibition.obtainFormatter(it)
