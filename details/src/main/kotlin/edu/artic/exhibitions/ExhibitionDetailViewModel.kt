@@ -15,7 +15,7 @@ import edu.artic.details.R
 import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -85,20 +85,12 @@ constructor(dataObjectDao: ArticDataObjectDao,
                 .bindTo(description)
                 .disposedBy(disposeBag)
 
-        exhibitionObservable
-                .map { exhibition ->
-                    val formatter = DateTimeHelper
-                            .obtainFormatter(
-                                    DateTimeHelper.Purpose.HomeExhibition,
-                                    languageSelector.getAppLocale()
-                            )
-                    exhibition.endTime.format(formatter)
-                }
-                .bindTo(throughDate)
-                .disposedBy(disposeBag)
 
-        languageSelector.currentLanguage
-                .withLatestFrom(exhibitionObservable)
+
+        Observables.combineLatest(
+                languageSelector.appLanguageWithUpdates(disposeBag),
+                exhibitionObservable
+        )
                 .map { (locale, exhibition) ->
                     exhibition.endTime.format(DateTimeHelper
                             .obtainFormatter(

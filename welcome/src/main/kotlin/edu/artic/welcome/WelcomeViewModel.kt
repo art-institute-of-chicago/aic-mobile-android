@@ -21,7 +21,7 @@ import edu.artic.membership.MemberInfoPreferencesManager
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import org.threeten.bp.format.DateTimeFormatter
@@ -94,19 +94,14 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 }.bindTo(events)
                 .disposedBy(disposeBag)
 
-        generalInfoDao
-                .getGeneralInfo()
-                .map { generalObject ->
-                    languageSelector.selectFrom(generalObject.allTranslations()).homeMemberPromptText
-                }.bindTo(welcomePrompt)
-                .disposedBy(disposeBag)
 
         /**
          * Subscribe to locale change event.
          */
-        languageSelector
-                .currentLanguage
-                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+        Observables.combineLatest(
+                languageSelector.appLanguageWithUpdates(disposeBag),
+                generalInfoDao.getGeneralInfo().toObservable()
+        )
                 .map { (_, generalObject) ->
                     languageSelector.selectFrom(generalObject.allTranslations()).homeMemberPromptText
                 }.bindTo(welcomePrompt)
