@@ -21,22 +21,29 @@ class DateTimeHelper {
      * The intended use of a given [DateTimeFormatter].
      */
     sealed class Purpose {
-        object MonthThenDay : Purpose()
-        object HomeExhibition : Purpose()
-        object HomeEvent : Purpose()
+
+        object MonthThenDay : Purpose() {
+            override fun obtainFormatter(locale: Locale): DateTimeFormatter {
+                return MONTH_DAY_FORMATTER.withLocale(locale)
+            }
+        }
+        object HomeExhibition : Purpose() {
+            override fun obtainFormatter(locale: Locale): DateTimeFormatter {
+                return HOME_EXHIBITION_DATE_FORMATTER.withLocale(locale)
+            }
+        }
+        object HomeEvent : Purpose() {
+            override fun obtainFormatter(locale: Locale): DateTimeFormatter {
+                return HOME_EVENT_DATE_FORMATTER.withLocale(locale)
+            }
+        }
 
         /**
          * Obtain the best [DateTimeFormatter] for the given purpose in the given locals.
          *
          * Different languages have different conventions for displaying this data.
          */
-        fun obtainFormatter(locale: Locale): DateTimeFormatter {
-            return when (this) {
-                Purpose.MonthThenDay -> MONTH_DAY_FORMATTER.withLocale(locale)
-                Purpose.HomeExhibition -> HOME_EXHIBITION_DATE_FORMATTER.withLocale(locale)
-                Purpose.HomeEvent -> HOME_EVENT_DATE_FORMATTER.withLocale(locale)
-            }
-        }
+        abstract fun obtainFormatter(locale: Locale): DateTimeFormatter
     }
 
     companion object {
