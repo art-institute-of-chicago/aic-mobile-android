@@ -54,7 +54,7 @@ sealed class ApiSearchContent {
              *
              * Analogous to [ArticObject.tombstone].
              */
-            @Json(name = "artist_title") val artistTitle: String,
+            @Json(name = "artist_title") val artistTitle: String?,
             /**
              * The name of the artist, followed by other relevant info.
              */
