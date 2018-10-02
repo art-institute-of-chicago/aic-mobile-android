@@ -59,7 +59,7 @@ class SearchObjectDetailsViewModel @Inject constructor(
 
         // This detects subsequent changes in the app language
         Observables.combineLatest(
-                languageSelector.appLanguageWithUpdates(),
+                languageSelector.currentLanguage,
                 generalInfoDao.getGeneralInfo().toObservable()
         )
                 .map { (_, generalInfo) ->
