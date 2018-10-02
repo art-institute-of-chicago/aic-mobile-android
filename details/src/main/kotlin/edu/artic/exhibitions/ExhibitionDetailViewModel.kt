@@ -7,7 +7,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.DateTimeHelper
+import edu.artic.base.utils.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.models.ArticExhibition
@@ -92,9 +92,8 @@ constructor(dataObjectDao: ArticDataObjectDao,
                 exhibitionObservable
         )
                 .map { (locale, exhibition) ->
-                    exhibition.endTime.format(DateTimeHelper
-                            .obtainFormatter(
-                                    DateTimeHelper.Purpose.HomeExhibition,
+                    exhibition.endTime.format(
+                            HomeExhibition.obtainFormatter(
                                     locale
                             )
                     )
