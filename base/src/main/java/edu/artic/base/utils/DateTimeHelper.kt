@@ -30,13 +30,13 @@ class DateTimeHelper {
 
         val DEFAULT_FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
 
-        val MONTH_DAY_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
+        private val MONTH_DAY_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
                 .appendText(MONTH_OF_YEAR, TextStyle.FULL)
                 .appendLiteral(' ')
                 .appendValue(DAY_OF_MONTH)
                 .toFormatter()
 
-        val HOME_EXHIBITION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
+        private val HOME_EXHIBITION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
                 .appendText(MONTH_OF_YEAR, TextStyle.FULL)
                 .appendLiteral(' ')
                 .appendValue(DAY_OF_MONTH)
@@ -44,7 +44,7 @@ class DateTimeHelper {
                 .appendValue(YEAR, 4)
                 .toFormatter()
 
-        val HOME_EVENT_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
+        private val HOME_EVENT_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
                 .append(MONTH_DAY_FORMATTER)
                 .appendLiteral("   ")
                 .appendValue(CLOCK_HOUR_OF_AMPM, 1, 2, SignStyle.NORMAL)
