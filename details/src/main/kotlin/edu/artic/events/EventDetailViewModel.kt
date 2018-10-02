@@ -61,12 +61,15 @@ class EventDetailViewModel @Inject constructor(
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 
-        eventObservable
-                .map {
-                    it.startTime.format(
+        Observables.combineLatest(
+                languageSelector.appLanguageWithUpdates(disposeBag),
+                eventObservable
+        )
+                .map { (locale, event) ->
+                    event.startTime.format(
                         DateTimeHelper.obtainFormatter(
                                 DateTimeHelper.Purpose.HomeEvent,
-                                languageSelector.getAppLocale()
+                                locale
                         )
                     )
                 }
