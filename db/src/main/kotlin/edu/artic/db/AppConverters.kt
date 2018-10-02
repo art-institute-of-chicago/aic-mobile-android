@@ -70,9 +70,6 @@ class AppConverters {
         )
     }
 
-    private val dateTimeFormatte: DateTimeFormatter by lazy {
-        DateTimeHelper.DEFAULT_FORMATTER
-    }
 
     @TypeConverter
     fun stringToList(data: String?): List<String> {
@@ -147,9 +144,7 @@ class AppConverters {
     }
 
     @TypeConverter
-    fun fromDateTime(input: ZonedDateTime?): String? = input?.let {
-        it.toString()
-    }
+    fun fromDateTime(input: ZonedDateTime?): String? = input?.toString()
 
     @TypeConverter
     fun toDateTime(time: String?): ZonedDateTime? = time?.let { DateTimeFormatter.ISO_DATE_TIME.parse(it, ZonedDateTime.FROM) }
