@@ -1,5 +1,6 @@
 package edu.artic.tours
 
+import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.ArticObjectDao
@@ -121,7 +122,11 @@ class TourDetailsViewModel @Inject constructor(
                 .map {
                     val list = mutableListOf<TourDetailsStopCellViewModel>()
                     it.forEach { tourStop ->
-                        list.add(TourDetailsStopCellViewModel(tourStop, objectDao))
+                        list.add(TourDetailsStopCellViewModel(
+                                viewDisposeBag,
+                                tourStop,
+                                objectDao
+                        ))
                     }
                     return@map list
                 }.bindTo(stops)
@@ -153,7 +158,11 @@ class TourDetailsViewModel @Inject constructor(
     }
 }
 
-class TourDetailsStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao) : CellViewModel() {
+class TourDetailsStopCellViewModel(
+        adapterDisposeBag: DisposeBag,
+        tourStop: ArticTour.TourStop,
+        objectDao: ArticObjectDao
+) : CellViewModel(adapterDisposeBag) {
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
     val galleryText: Subject<String> = BehaviorSubject.create()

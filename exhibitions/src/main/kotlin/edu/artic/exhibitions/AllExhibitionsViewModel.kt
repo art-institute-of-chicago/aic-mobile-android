@@ -1,5 +1,6 @@
 package edu.artic.exhibitions
 
+import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -34,7 +35,11 @@ class AllExhibitionsViewModel @Inject constructor(
                 .map { list ->
                     val viewModelList = ArrayList<AllExhibitionsCellViewModel>()
                     list.forEach { exhibition ->
-                        viewModelList.add(AllExhibitionsCellViewModel(languageSelector, exhibition))
+                        viewModelList.add(AllExhibitionsCellViewModel(
+                                disposeBag,
+                                languageSelector,
+                                exhibition
+                        ))
                     }
                     return@map viewModelList
                 }
@@ -50,9 +55,10 @@ class AllExhibitionsViewModel @Inject constructor(
 }
 
 class AllExhibitionsCellViewModel(
+        adapterDisposeBag: DisposeBag,
         val languageSelector: LanguageSelector,
         val exhibition: ArticExhibition
-) : CellViewModel() {
+) : CellViewModel(adapterDisposeBag) {
 
     val exhibitionTitle: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionEndDate: Subject<String> = BehaviorSubject.create()

@@ -1,5 +1,6 @@
 package edu.artic.map.carousel
 
+import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
@@ -93,7 +94,12 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
                     val list = mutableListOf<TourCarousalBaseViewModel>()
                     tourStops.forEach { tourStop ->
                         if (tourStop.objectId === "INTRO") {
-                            val element = TourCarousalIntroViewModel(languageSelector, tour, audioObjectDao)
+                            val element = TourCarousalIntroViewModel(
+                                    viewDisposeBag,
+                                    languageSelector,
+                                    tour,
+                                    audioObjectDao
+                            )
 
                             element.playerControl
                                     .bindTo(playerControl)
@@ -102,7 +108,12 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
                             list.add(element)
                         } else if (objectDao.hasObjectWithId(tourStop.objectId)) {
 
-                            val element = TourCarousalStopCellViewModel(tourStop, objectDao, languageSelector)
+                            val element = TourCarousalStopCellViewModel(
+                                    viewDisposeBag,
+                                    tourStop,
+                                    objectDao,
+                                    languageSelector
+                            )
 
                             element.playerControl
                                     .bindTo(playerControl)
@@ -159,7 +170,9 @@ class TourCarouselViewModel @Inject constructor(private val languageSelector: La
     }
 }
 
-open class TourCarousalBaseViewModel : CellViewModel() {
+open class TourCarousalBaseViewModel(
+        adapterDisposeBag: DisposeBag
+) : CellViewModel(adapterDisposeBag) {
     enum class Type {
         Stop,
         Overview
@@ -179,9 +192,12 @@ open class TourCarousalBaseViewModel : CellViewModel() {
  * ViewModel for the tour intro layout.
  * Play pause the tour introduction.
  */
-class TourCarousalIntroViewModel(val languageSelector: LanguageSelector,
-                                 val tour: ArticTour,
-                                 val audioObjectDao: ArticAudioFileDao) : TourCarousalBaseViewModel() {
+class TourCarousalIntroViewModel(
+        adapterDisposeBag: DisposeBag,
+        val languageSelector: LanguageSelector,
+        val tour: ArticTour,
+        val audioObjectDao: ArticAudioFileDao
+) : TourCarousalBaseViewModel(adapterDisposeBag) {
 
     val isPlaying: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
@@ -201,7 +217,12 @@ class TourCarousalIntroViewModel(val languageSelector: LanguageSelector,
 }
 
 
-class TourCarousalStopCellViewModel(tourStop: ArticTour.TourStop, objectDao: ArticObjectDao, val languageSelector: LanguageSelector) : TourCarousalBaseViewModel() {
+class TourCarousalStopCellViewModel(
+        adapterDisposeBag: DisposeBag,
+        tourStop: ArticTour.TourStop,
+        objectDao: ArticObjectDao,
+        val languageSelector: LanguageSelector
+) : TourCarousalBaseViewModel(adapterDisposeBag) {
     val currentAudioTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()

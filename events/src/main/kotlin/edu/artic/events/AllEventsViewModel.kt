@@ -1,5 +1,6 @@
 package edu.artic.events
 
+import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
@@ -46,10 +47,19 @@ class AllEventsViewModel @Inject constructor(
                         if (prevMonth != startsAt.monthValue || prevDayOfMonth != startsAt.dayOfMonth) {
                             prevDayOfMonth = startsAt.dayOfMonth
                             prevMonth = startsAt.monthValue
-                            viewModelList.add(AllEventsCellHeaderViewModel(languageSelector, tour))
+                            viewModelList.add(AllEventsCellHeaderViewModel(
+                                    viewDisposeBag,
+                                    languageSelector,
+                                    tour
+                            ))
                             lastHeaderPosition = viewModelList.size - 1
                         }
-                        viewModelList.add(AllEventsCellViewModel(languageSelector, tour, lastHeaderPosition))
+                        viewModelList.add(AllEventsCellViewModel(
+                                viewDisposeBag,
+                                languageSelector,
+                                tour,
+                                lastHeaderPosition
+                        ))
                     }
                     return@map viewModelList
                 }
@@ -64,12 +74,16 @@ class AllEventsViewModel @Inject constructor(
 
 }
 
-open class AllEventsCellBaseViewModel(val event: ArticEvent) : CellViewModel()
+open class AllEventsCellBaseViewModel(
+        adapterDisposeBag: DisposeBag,
+        val event: ArticEvent
+) : CellViewModel(adapterDisposeBag)
 
 class AllEventsCellHeaderViewModel(
+        adapterDisposeBag: DisposeBag,
         languageSelector: LanguageSelector,
         event: ArticEvent
-) : AllEventsCellBaseViewModel(event) {
+) : AllEventsCellBaseViewModel(adapterDisposeBag, event) {
     val text: Subject<String> = BehaviorSubject.create()
 
 
@@ -88,10 +102,11 @@ class AllEventsCellHeaderViewModel(
 }
 
 class AllEventsCellViewModel(
+        adapterDisposeBag: DisposeBag,
         languageSelector: LanguageSelector,
         event: ArticEvent,
         val headerPosition: Int
-) : AllEventsCellBaseViewModel(event) {
+) : AllEventsCellBaseViewModel(adapterDisposeBag, event) {
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL)
