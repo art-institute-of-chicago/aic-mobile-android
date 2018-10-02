@@ -24,7 +24,6 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**
@@ -206,24 +205,27 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val langua
 }
 
 /**
- * ViewModel responsible for building the tour summary list.
+ * ViewModel responsible for building the event summary list.
  */
 class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: LanguageSelector) : BaseViewModel() {
+
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
-    val formatter = DateTimeHelper.obtainFormatter(
-            DateTimeHelper.Purpose.HomeEvent,
-            languageSelector.getAppLocale()
-    )
-    private val eventDate = event.startTime.format(formatter)
-            .toString()
-    val eventTime: Subject<String> = BehaviorSubject.createDefault(eventDate)
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL.orEmpty())
+    val eventTime: Subject<String> = BehaviorSubject.create()
+    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL)
 
     init {
-        languageSelector.currentLanguage
-                .subscribe {
-                    eventTime.onNext(event.startTime.format(formatter.withLocale(it)))
-                }.disposedBy(disposeBag)
+        languageSelector.appLanguageWithUpdates(disposeBag)
+                .map {
+                    DateTimeHelper.obtainFormatter(
+                            DateTimeHelper.Purpose.HomeEvent,
+                            it
+                    )
+                }
+                .map {
+                    event.startTime.format(it)
+                }
+                .bindTo(eventTime)
+                .disposedBy(disposeBag)
     }
 }
