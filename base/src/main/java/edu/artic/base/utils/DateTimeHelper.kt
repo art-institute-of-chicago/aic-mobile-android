@@ -68,7 +68,6 @@ class DateTimeHelper {
 
     companion object {
 
-        val DEFAULT_FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
 
         private val MONTH_DAY_FORMATTER: DateTimeFormatter = DateTimeFormatterBuilder()
                 .appendText(MONTH_OF_YEAR, TextStyle.FULL)
