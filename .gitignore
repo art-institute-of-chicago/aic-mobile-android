@@ -125,6 +125,8 @@ obj/
 .idea/encodings.xml
 .idea/misc.xml
 .idea/modules.xml
+# Nav Editor is only available in versions 3.2+; it's like workspace.xml, only specialized for the @navigation design editor
+.idea/navEditor.xml
 .idea/scopes/scope_settings.xml
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
