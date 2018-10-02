@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit
 import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
+import edu.artic.base.utils.hideSoftKeyboard
 
 
 abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
@@ -129,12 +130,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                             requireActivity().finish()
                         }
                         SearchBaseViewModel.NavigationEndpoint.HideKeyboard -> {
-                            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                            var view = requireActivity().currentFocus
-                            if (view == null) {
-                                view = View(activity)
-                            }
-                            imm.hideSoftInputFromWindow(view.windowToken, 0)
+                            requireActivity().hideSoftKeyboard()
                         }
                         SearchBaseViewModel.NavigationEndpoint.Web -> {
 
