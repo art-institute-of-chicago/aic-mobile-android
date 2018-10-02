@@ -10,6 +10,7 @@ import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
@@ -54,17 +55,12 @@ class SearchObjectDetailsViewModel @Inject constructor(
                 .bindTo(searchManager.activeDiningPlace)
                 .disposedBy(disposeBag)
 
-        generalInfoDao
-                .getGeneralInfo()
-                .map { generalObject ->
-                    languageSelector.selectFrom(generalObject.allTranslations())
-                }.bindTo(generalInfo)
-                .disposedBy(disposeBag)
 
         // This detects subsequent changes in the app language
-        languageSelector
-                .currentLanguage
-                .withLatestFrom(generalInfoDao.getGeneralInfo().toObservable())
+        Observables.combineLatest(
+                languageSelector.appLanguageWithUpdates(disposeBag),
+                generalInfoDao.getGeneralInfo().toObservable()
+        )
                 .map { (_, generalInfo) ->
                     languageSelector.selectFrom(generalInfo.allTranslations())
                 }

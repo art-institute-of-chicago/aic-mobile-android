@@ -10,7 +10,7 @@ import edu.artic.db.models.ArticEvent
 import edu.artic.localization.LanguageSelector
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -79,23 +79,14 @@ class EventDetailViewModel @Inject constructor(
                 .bindTo(description)
                 .disposedBy(disposeBag)
 
-        eventObservable
-                .map { event ->
-                    val formatter = DateTimeHelper
-                            .obtainFormatter(
-                                    DateTimeHelper.Purpose.HomeExhibition,
-                                    languageSelector.getAppLocale()
-                            )
-                    event.endTime.format(formatter)
-                }
-                .bindTo(throughDate)
-                .disposedBy(disposeBag)
 
         /**
          * Listen for language changes.
          */
-        languageSelector.currentLanguage
-                .withLatestFrom(eventObservable)
+        Observables.combineLatest(
+                languageSelector.appLanguageWithUpdates(disposeBag),
+                eventObservable
+        )
                 .map { (locale, event) ->
                     val formatter = DateTimeHelper
                             .obtainFormatter(
