@@ -24,6 +24,7 @@ open class SearchBaseViewModel @Inject constructor(
         data class ArtworkDetails(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
         data class ArtworkOnMap(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
         data class AmenityOnMap(val type: SuggestedMapAmenities) : NavigationEndpoint()
+        object HideKeyboard: NavigationEndpoint()
         object Web : NavigationEndpoint()
 
     }
@@ -125,6 +126,11 @@ open class SearchBaseViewModel @Inject constructor(
                             viewModel.textString
                     )
                 }
+                navigateTo.onNext(
+                        Navigate.Forward(
+                                NavigationEndpoint.HideKeyboard
+                        )
+                )
                 searchResultsManager.search(viewModel.textString)
             }
             is SearchHeaderCellViewModel -> {
