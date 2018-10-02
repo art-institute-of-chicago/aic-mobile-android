@@ -44,7 +44,7 @@ class InformationViewModel @Inject constructor(
     init {
 
         Observables.combineLatest(
-                languageSelector.appLanguageWithUpdates(disposeBag),
+                languageSelector.appLanguageWithUpdates(),
                 generalInfoDao.getGeneralInfo().toObservable()
         )
                 .map { (_, generalInfo) ->

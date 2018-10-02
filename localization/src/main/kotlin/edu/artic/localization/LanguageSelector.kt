@@ -1,9 +1,6 @@
 package edu.artic.localization
 
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
@@ -19,6 +16,16 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
 
     private val appLocaleRef: AtomicReference<Locale> = AtomicReference(prefs.preferredAppLocale)
 
+    /**
+     * Broadcast point for changes in the current language.
+     *
+     * See [getAppLocale] for the language _right now_ and
+     * [appLanguageWithUpdates] if you need both that and
+     * the live updates.
+     */
+    private val currentLanguage: Subject<Locale> = BehaviorSubject.createDefault(getAppLocale())
+
+
     fun setDefaultLanguageForApplication(lang: Locale) {
         if (lang.hasNoLanguage()) {
             if (BuildConfig.DEBUG) {
@@ -30,15 +37,6 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
             currentLanguage.onNext(lang)
         }
     }
-
-    /**
-     * Broadcast point for changes in the current language.
-     *
-     * See [getAppLocale] for the language _right now_ and
-     * [appLanguageWithUpdates] if you need both that and
-     * the live updates.
-     */
-    val currentLanguage: Subject<Locale> = PublishSubject.create()
 
     /**
      * Check whether we have defined a value for [LocalizationPreferences.preferredAppLocale] -
@@ -73,17 +71,8 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
      * subscriptions on the returned object. We use it here to hook up [currentLanguage]
      * with your existing lifecycle callbacks
      */
-    fun appLanguageWithUpdates(disposeBag: CompositeDisposable): BehaviorSubject<Locale> {
-        val subject: BehaviorSubject<Locale> = BehaviorSubject.createDefault(getAppLocale())
-
-        val disposable: Disposable = currentLanguage
-                .subscribe {
-                    subject.onNext(it)
-                }
-
-        disposeBag.add(disposable)
-
-        return subject
+    fun appLanguageWithUpdates(): BehaviorSubject<Locale> {
+        return currentLanguage as BehaviorSubject<Locale>
     }
 
     /**

@@ -62,7 +62,7 @@ class EventDetailViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         Observables.combineLatest(
-                languageSelector.appLanguageWithUpdates(disposeBag),
+                languageSelector.appLanguageWithUpdates(),
                 eventObservable
         )
                 .map { (locale, event) ->
@@ -84,7 +84,7 @@ class EventDetailViewModel @Inject constructor(
          * Listen for language changes.
          */
         Observables.combineLatest(
-                languageSelector.appLanguageWithUpdates(disposeBag),
+                languageSelector.appLanguageWithUpdates(),
                 eventObservable
         )
                 .map { (locale, event) ->
