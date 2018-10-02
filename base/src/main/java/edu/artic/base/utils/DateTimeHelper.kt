@@ -24,6 +24,19 @@ class DateTimeHelper {
         object MonthThenDay : Purpose()
         object HomeExhibition : Purpose()
         object HomeEvent : Purpose()
+
+        /**
+         * Obtain the best [DateTimeFormatter] for the given purpose in the given locals.
+         *
+         * Different languages have different conventions for displaying this data.
+         */
+        fun obtainFormatter(locale: Locale): DateTimeFormatter {
+            return when (this) {
+                Purpose.MonthThenDay -> MONTH_DAY_FORMATTER.withLocale(locale)
+                Purpose.HomeExhibition -> HOME_EXHIBITION_DATE_FORMATTER.withLocale(locale)
+                Purpose.HomeEvent -> HOME_EVENT_DATE_FORMATTER.withLocale(locale)
+            }
+        }
     }
 
     companion object {
@@ -54,18 +67,6 @@ class DateTimeHelper {
                 .appendText(AMPM_OF_DAY)
                 .toFormatter()
 
-        /**
-         * Obtain the best [DateTimeFormatter] for the given purpose in the given locals.
-         *
-         * Different languages have different conventions for displaying this data.
-         */
-        fun obtainFormatter(purpose: Purpose, locale: Locale): DateTimeFormatter {
-            return when (purpose) {
-                Purpose.MonthThenDay -> MONTH_DAY_FORMATTER.withLocale(locale)
-                Purpose.HomeExhibition -> HOME_EXHIBITION_DATE_FORMATTER.withLocale(locale)
-                Purpose.HomeEvent -> HOME_EVENT_DATE_FORMATTER.withLocale(locale)
-            }
-        }
     }
 }
 

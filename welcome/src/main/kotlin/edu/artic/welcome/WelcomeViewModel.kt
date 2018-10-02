@@ -8,7 +8,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.base.utils.DateTimeHelper
+import edu.artic.base.utils.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.daos.ArticTourDao
@@ -189,10 +189,7 @@ class WelcomeExhibitionCellViewModel(val exhibition: ArticExhibition, val langua
 
         languageSelector.appLanguageWithUpdates(disposeBag)
                 .map {
-                    DateTimeHelper.obtainFormatter(
-                            DateTimeHelper.Purpose.HomeExhibition,
-                            it
-                    )
+                    HomeExhibition.obtainFormatter(it)
                 }
                 .map {
                     exhibition.endTime.format(it)
@@ -217,10 +214,7 @@ class WelcomeEventCellViewModel(val event: ArticEvent, val languageSelector: Lan
     init {
         languageSelector.appLanguageWithUpdates(disposeBag)
                 .map {
-                    DateTimeHelper.obtainFormatter(
-                            DateTimeHelper.Purpose.HomeEvent,
-                            it
-                    )
+                    HomeEvent.obtainFormatter(it)
                 }
                 .map {
                     event.startTime.format(it)
