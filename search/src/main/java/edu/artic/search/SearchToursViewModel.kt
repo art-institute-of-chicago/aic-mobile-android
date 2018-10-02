@@ -14,6 +14,7 @@ class SearchToursViewModel @Inject constructor(
 
     init {
         searchManager.currentSearchResults
+                .filter { !it.searchTerm.isBlank() }
                 .map { it.tours }
                 .map { result ->
                     if (result.isEmpty()) {

@@ -77,6 +77,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
 
     private fun setupResultsBind() {
         manager.currentSearchResults
+                .filter { !it.searchTerm.isBlank() }
                 .map { result ->
                     mutableListOf<SearchBaseCellViewModel>()
                             .apply {
