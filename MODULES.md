@@ -49,6 +49,22 @@ Google's `GoogleMap` class to display the museum, but we do not depend
 on the Google Map API for map tiles. All floor-plans should be provided
 by the `AppData` `DAO` in the `db` module.
 
+There is a testing branch named `mapTesting` which will load up a Debugging `MapTiler` 
+so you can see the tiles being rendered. Secondly it also contains an `AssetMapTileProvider`
+so that you load your tiles locally and test them prior to uploading them to a server
+and using the `GlideMapTileProvider`. 
+
+To help in using the `TileProvider` we have included a script in this module named `Tiler.sh`
+This script with take a PDF image and cut it up into the right sizes for google maps at various 
+zoom levels
+
+To run this script simply do so as follows:
+
+`sh tiler.sh PDF_FILE FLOOR_NUMBER`
+
+This will generate a folder named `floorFLOOR_NUMBER` where all the zoom level can be found for 
+that floor.
+
 ### `tours`
 
 Provides custom tours with unique audio content that work in tandem with
