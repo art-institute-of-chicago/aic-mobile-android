@@ -178,9 +178,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
             isTrafficEnabled = false
             this.uiSettings.isMyLocationButtonEnabled = false
             this.uiSettings.isCompassEnabled = false
-            if (requireActivity().hasFineLocationPermission()) {
-                this.isMyLocationEnabled = true
-            }
+            enableLocation()
             setMapStyle(MapStyleOptions(mapStyleOptions))
             setMinZoomPreference(ZOOM_MIN)
             setMaxZoomPreference(ZOOM_MAX)
@@ -193,6 +191,23 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              * locks us into just that area
              */
             setLatLngBoundsForCameraTarget(museumBounds)
+        }
+    }
+
+    /**
+     * # Request that this map track the user's location.
+     * If the fine location permission was not granted, it does nothing.
+     *
+     * ## NB:
+     * _This is a separate method because `lint`'s `MissingPermission` check cannot
+     * detect permission checks proxied through non-support-library functions like
+     * [hasFineLocationPermission]. Hence, we suppress that check on this function alone
+     * to prevent spurious `lint` failures._
+     */
+    @SuppressLint("MissingPermission")
+    private fun GoogleMap.enableLocation() {
+        if (requireActivity().hasFineLocationPermission()) {
+            this.isMyLocationEnabled = true
         }
     }
 

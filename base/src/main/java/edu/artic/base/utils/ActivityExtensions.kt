@@ -126,6 +126,12 @@ fun Activity.hideSoftKeyboard() {
     }
 }
 
+/**
+ * Confirm that this context has been [granted][PackageManager.PERMISSION_GRANTED]
+ * the ['fine location' permission][Manifest.permission.ACCESS_FINE_LOCATION].
+ *
+ * This method is intended for use by the `:map` module.
+ */
 fun Activity.hasFineLocationPermission(): Boolean {
     return ContextCompat.checkSelfPermission(
             this,
