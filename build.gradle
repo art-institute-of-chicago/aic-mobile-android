@@ -17,6 +17,7 @@ buildscript {
         room_version = '1.1.1'
         glide_version = '4.4.0'
         firebase_version = '16.0.1'
+        crashlytics_version = '2.9.5'
         exo_player_version = '2.8.2'
 
         libs = [
@@ -55,6 +56,8 @@ buildscript {
                 glide                   : "com.github.bumptech.glide:glide:${glide_version}",
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",
                 ga                      : "com.google.android.gms:play-services-analytics:${firebase_version}",
+                firebase_core           : "com.google.firebase:firebase-core:${firebase_version}",
+                crashlytics             : "com.crashlytics.sdk.android:crashlytics:${crashlytics_version}",
                 maps                    : "com.google.android.gms:play-services-maps:15.0.1",
                 location                : "com.google.android.gms:play-services-location:15.0.1",
                 exo_player_core         : "com.google.android.exoplayer:exoplayer-core:$exo_player_version",
@@ -71,12 +74,16 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.0-alpha07'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath 'com.google.gms:google-services:4.1.0'
+        classpath 'io.fabric.tools:gradle:1.26.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -84,6 +91,9 @@ buildscript {
 
 subprojects {
     repositories {
+        maven {
+            url 'https://maven.google.com/'
+        }
         google()
         jcenter()
         maven { url "https://www.jitpack.io" }
@@ -129,6 +139,8 @@ subprojects {
         mapDiagnosticLocations = true
         correctErrorTypes = true
     }
+
+    apply plugin: 'com.google.gms.google-services'
 }
 
 task clean(type: Delete) {
