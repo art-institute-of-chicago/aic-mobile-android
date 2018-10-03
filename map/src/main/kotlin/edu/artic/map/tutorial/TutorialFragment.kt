@@ -9,7 +9,6 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
-import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
@@ -17,6 +16,8 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.map.R
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_tutorial.*
 import kotlin.reflect.KClass
 
@@ -42,6 +43,10 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
         viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
 
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                viewModel.showBack.onNext(position + positionOffset)
+            }
+
             override fun onPageSelected(position: Int) {
                 viewModel.onTutorialPageChanged(position)
             }
@@ -68,7 +73,12 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.showBack
-                .bindToMain(tutorialBack.visibility(View.INVISIBLE))
+                // Defensive coding: we really only expect values from 0f to 1f (both inclusive).
+                .filter { it >= 0 }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    tutorialBack.alpha = Math.min(it, 1f)
+                }
                 .disposedBy(disposeBag)
 
         viewModel.currentTutorialStage
