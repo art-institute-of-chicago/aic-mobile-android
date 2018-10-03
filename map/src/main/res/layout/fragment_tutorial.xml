@@ -78,17 +78,10 @@
             app:layout_constraintTop_toBottomOf="@id/lowerLevel"/>
 
         <TextView
-            style="@style/MetadataMediumWhite"
+            style="@style/MetadataMediumWhite.Tutorial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginDouble"
-            android:background="@drawable/tutorial_text_shape"
-            android:elevation="2dp"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/tutorialTextStartMargin"
-            android:paddingTop="@dimen/tutorialTextVerticalMargin"
-            android:paddingEnd="@dimen/marginTriple"
-            android:paddingBottom="@dimen/tutorialTextVerticalMargin"
             android:text="@string/tutorial_mark_first_floor"
             app:layout_constraintBottom_toBottomOf="@id/floorOne"
             app:layout_constraintEnd_toStartOf="@id/floorOne"
@@ -97,17 +90,10 @@
 
 
         <TextView
-            style="@style/MetadataMediumWhite"
+            style="@style/MetadataMediumWhite.Tutorial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginDouble"
-            android:background="@drawable/tutorial_text_shape"
-            android:elevation="2dp"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/tutorialTextStartMargin"
-            android:paddingTop="@dimen/tutorialTextVerticalMargin"
-            android:paddingEnd="@dimen/marginTriple"
-            android:paddingBottom="@dimen/tutorialTextVerticalMargin"
             android:text="@string/tutorial_mark_compass"
             app:layout_constraintBottom_toBottomOf="@id/compass"
             app:layout_constraintEnd_toStartOf="@id/compass"
