@@ -11,7 +11,10 @@ import com.google.android.gms.maps.model.LatLng
  *
  * This is _NOT_ the same as the center of [museumBounds] (although it is pretty close).
  */
-internal val defaultMapPosition = LatLng(41.879592, -87.622491)
+//40.714044,-73.9586605 NYC
+//41.879592, -87.622491 AIC
+//internal val defaultMapPosition = LatLng(41.879592, -87.622491)
+internal val defaultMapPosition = LatLng(40.714044,-73.9586605)
 
 /**
  * Camera update enforcing display of first visible content when a [MapFragment] loads.

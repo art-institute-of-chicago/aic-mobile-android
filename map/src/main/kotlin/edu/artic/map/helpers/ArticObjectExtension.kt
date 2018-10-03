@@ -28,19 +28,18 @@ fun ArticTour.toLatLng(): LatLng {
 }
 
 fun ArticExhibition.toLatLng(): LatLng {
-    return LatLng(
-            latitude ?: 0.0,
-            longitude ?: 0.0
-    )
+    return LatLng((latitude!! - 41.879592) + 40.714044, (longitude!! - -87.622491) + -73.9586605)
 }
 
 fun ArticGallery.toLatLng() : LatLng{
-    return LatLng(latitude, longitude)
+    return LatLng((latitude - 41.879592) + 40.714044, (longitude - -87.622491) + -73.9586605)
 }
 
 fun ArticMapAnnotation.toLatLng(): LatLng {
+    val lat = latitude?.toDouble() ?: 0.0
+    val lon = longitude?.toDouble() ?: 0.0
     return LatLng(
-            latitude?.toDouble() ?: 0.0,
-            longitude?.toDouble() ?: 0.0
+            (lat - 41.879592) + 40.714044,
+            (lon - -87.622491) + -73.9586605
     )
 }

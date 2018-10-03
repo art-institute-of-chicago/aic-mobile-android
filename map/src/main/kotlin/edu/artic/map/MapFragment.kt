@@ -1,12 +1,9 @@
 package edu.artic.map
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.view.MotionEvent
 import android.view.View
 import com.fuzz.rx.*

@@ -28,14 +28,25 @@ private fun tileCoordinateForWorldPosition(zoom: Int, value: Double): Int {
     return d.toInt()
 }
 
+//40.714044,-73.9586605 NYC
+//41.879592, -87.622491 AIC
+//internal val evaluatedBoundsMap
+//    get() = mapOf(
+//            17 to Bounds(minX = 33631, minY = 48713, maxX = 33635, maxY = 48716),
+//            18 to Bounds(minX = 67263, minY = 97426, maxX = 67270, maxY = 97433),
+//            19 to Bounds(minX = 134527, minY = 194852, maxX = 134541, maxY = 194868),
+//            20 to Bounds(minX = 269055, minY = 389704, maxX = 269084, maxY = 389733),
+//            21 to Bounds(minX = 538108, minY = 779412, maxX = 538167, maxY = 779471),
+//            22 to Bounds(minX = 1076217, minY = 1558824, maxX = 1076334, maxY = 1558942))
+
 internal val evaluatedBoundsMap
     get() = mapOf(
-            17 to Bounds(minX = 33631, minY = 48713, maxX = 33635, maxY = 48716),
-            18 to Bounds(minX = 67263, minY = 97426, maxX = 67270, maxY = 97433),
-            19 to Bounds(minX = 134527, minY = 194852, maxX = 134541, maxY = 194868),
-            20 to Bounds(minX = 269055, minY = 389704, maxX = 269084, maxY = 389733),
-            21 to Bounds(minX = 538108, minY = 779412, maxX = 538167, maxY = 779471),
-            22 to Bounds(minX = 1076217, minY = 1558824, maxX = 1076334, maxY = 1558942))
+            17 to Bounds(minX = 38606, minY = 49278, maxX = 38606+4, maxY = 49278+3),
+            18 to Bounds(minX = 77213, minY = 98556, maxX = 77213+7, maxY = 98556+7),
+            19 to Bounds(minX = 154426, minY = 197112, maxX = 154426+14, maxY = 197112+16),
+            20 to Bounds(minX = 308854, minY = 394223, maxX = 308854+29, maxY = 394223+29),
+            21 to Bounds(minX = 617706, minY = 788450, maxX = 617706+59, maxY = 788450+59),
+            22 to Bounds(minX = 1235412, minY = 1576901, maxX = 1235412+117, maxY = 1576901+118))
 
 abstract class BaseMapTileProvider : TileProvider {
 
