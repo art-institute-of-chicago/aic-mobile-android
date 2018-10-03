@@ -184,6 +184,7 @@
         <item name="android:textSize">21sp</item>
         <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
     </style>
 
     <style name="RelatedTourTitleStyle">
