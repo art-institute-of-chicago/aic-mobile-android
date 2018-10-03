@@ -8,6 +8,8 @@ import android.content.SharedPreferences
  * @author Sameer Dhakal (Fuzz)
  */
 interface PreferencesManager {
+    fun clear()
+
     fun putLong(key: String, value: Long)
 
     fun putString(key: String, value: String?)
@@ -38,6 +40,10 @@ open class BasePreferencesManager : PreferencesManager {
 
     constructor(sharedPreferences: SharedPreferences) {
         this.sharedPreferences = sharedPreferences
+    }
+
+    override fun clear() {
+        edit().clear().commit()
     }
 
     override fun putLong(key: String, value: Long) {
