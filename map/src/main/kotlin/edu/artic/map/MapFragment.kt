@@ -459,7 +459,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     if (location != null) {
                         compass.rotation = 0.0f
                         compass.alpha = 1.0f
-                        map.uiSettings.setAllGesturesEnabled(false)
+                        map.uiSettings.isRotateGesturesEnabled = false
+                        map.uiSettings.isScrollGesturesEnabled = false
 
                         map.animateCamera(
                                 CameraUpdateFactory
@@ -471,7 +472,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                         )
                         )
                     } else {
-                        map.uiSettings.setAllGesturesEnabled(true)
+                        map.uiSettings.isRotateGesturesEnabled = true
+                        map.uiSettings.isScrollGesturesEnabled = true
                         compass.rotation = 30f
                         compass.alpha = .5f
                     }
