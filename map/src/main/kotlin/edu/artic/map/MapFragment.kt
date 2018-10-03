@@ -418,7 +418,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         viewModel
                 .switchTourRequest
-                .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (_, _) ->
                     displayLeaveTourConfirmation()
