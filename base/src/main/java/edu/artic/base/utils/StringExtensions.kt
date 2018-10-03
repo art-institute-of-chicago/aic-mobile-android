@@ -36,3 +36,16 @@ fun String.asUrlViewIntent(action: String = Intent.ACTION_VIEW): Intent {
     }
     return Intent(action, Uri.parse(fullUrl))
 }
+
+/**
+ * Decodes html encoded strings preserving new line chars.
+ */
+fun String.filterHtmlEncodedText(): String {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        Html.fromHtml(replace("\n", "<br>"), Html.FROM_HTML_MODE_LEGACY).toString()
+    } else {
+        Html.fromHtml(replace("\n", "<br>")).toString()
+    }.apply {
+        replace("\\</br.*?>", "\\\n")
+    }
+}
