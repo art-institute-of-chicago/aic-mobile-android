@@ -78,7 +78,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                             emptyList()
                     )
                 }
-                .bindTo(currentSearchResults)
+                .bindTo(rawSearchResults)
     }
 
     private fun getSuggestionsList(searchTerm: String): Observable<List<String>> {
