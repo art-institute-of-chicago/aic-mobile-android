@@ -6,6 +6,13 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import timber.log.Timber
 
+/**
+ * Preferences related to showing some visual guides on
+ * how to use the map.
+ *
+ * For the 'location permission' stuff, see
+ * [edu.artic.location.LocationPreferenceManager].
+ */
 class TutorialPreferencesManager(context: Context) : BasePreferencesManager(context, "tutorialPreferences") {
 
     var hasSeenTutorial: Boolean
