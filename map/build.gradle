@@ -2,6 +2,17 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
 
+android {
+    buildTypes {
+        debug {
+            manifestPlaceholders = [google_maps_api_key:"${envVariable("google_maps_api_key", false)}"]
+        }
+        release {
+            manifestPlaceholders = [google_maps_api_key:"${envVariable("google_maps_api_key", true)}"]
+        }
+    }
+}
+
 dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     kapt libs.dagger_compiler

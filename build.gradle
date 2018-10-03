@@ -69,21 +69,16 @@ buildscript {
                 zxing_core              : 'com.google.zxing:core:3.3.0'
 
         ]
-
     }
     repositories {
         google()
         jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.0-alpha07'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath 'com.google.gms:google-services:4.1.0'
-        classpath 'io.fabric.tools:gradle:1.26.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -91,9 +86,6 @@ buildscript {
 
 subprojects {
     repositories {
-        maven {
-            url 'https://maven.google.com/'
-        }
         google()
         jcenter()
         maven { url "https://www.jitpack.io" }
@@ -108,6 +100,24 @@ subprojects {
     apply plugin: 'kotlin-kapt'
 
     android {
+        ext.envVariable = { String key, boolean isRelease ->
+            Properties properties = new Properties()
+            File localProperties = rootProject.file('local.properties')
+            File releaseProperties = rootProject.file('release.env')
+            File devProperties = rootProject.file('debug.env')
+            if (isRelease && releaseProperties.exists()) {
+                properties.load(releaseProperties.newDataInputStream())
+                return properties.getProperty(key)
+            } else if (!isRelease && devProperties.exists()) {
+                properties.load(devProperties.newDataInputStream())
+                return properties.getProperty(key)
+            } else if (localProperties.exists()) {
+                properties.load(localProperties.newDataInputStream())
+                return properties.getProperty(key)
+            } else {
+                return project.findProperty(key)
+            }
+        }
         compileSdkVersion sdk
         defaultConfig {
             minSdkVersion minSdk
@@ -139,8 +149,6 @@ subprojects {
         mapDiagnosticLocations = true
         correctErrorTypes = true
     }
-
-    apply plugin: 'com.google.gms.google-services'
 }
 
 task clean(type: Delete) {
