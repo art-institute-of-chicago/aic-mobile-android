@@ -90,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="@id/floorOne"
             app:layout_constraintEnd_toStartOf="@id/floorOne"
             app:layout_constraintTop_toTopOf="@id/floorOne"
-            tools:text="This is the first floor"/>
+            />
 
 
         <TextView
@@ -106,7 +106,7 @@
             app:layout_constraintBottom_toBottomOf="@id/compass"
             app:layout_constraintEnd_toStartOf="@id/compass"
             app:layout_constraintTop_toTopOf="@id/compass"
-            tools:text="This is the first floor"/>
+            />
 
     </android.support.constraint.ConstraintLayout>
 
@@ -122,7 +122,7 @@
         android:orientation="vertical"
         android:padding="10dp"
         android:visibility="visible"
-        tools:visibility="visible">
+        >
 
         <TextView
             android:id="@+id/tutorialPopupTitle"
@@ -181,7 +181,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/next"
-                tools:text="Next"/>
+                />
 
         </LinearLayout>
 
