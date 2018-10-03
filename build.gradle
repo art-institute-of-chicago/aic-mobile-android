@@ -73,16 +73,12 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.0-alpha07'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath 'com.google.gms:google-services:4.1.0'
-        classpath 'io.fabric.tools:gradle:1.26.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -90,9 +86,6 @@ buildscript {
 
 subprojects {
     repositories {
-        maven {
-            url 'https://maven.google.com/'
-        }
         google()
         jcenter()
         maven { url "https://www.jitpack.io" }
@@ -110,10 +103,10 @@ subprojects {
         ext.envVariable = { String key, boolean isRelease ->
             Properties properties = new Properties()
             File localProperties = rootProject.file('local.properties')
-            File prodProperties = rootProject.file('prod.env')
+            File releaseProperties = rootProject.file('release.env')
             File devProperties = rootProject.file('debug.env')
-            if (isRelease && prodProperties.exists()) {
-                properties.load(prodProperties.newDataInputStream())
+            if (isRelease && releaseProperties.exists()) {
+                properties.load(releaseProperties.newDataInputStream())
                 return properties.getProperty(key)
             } else if (!isRelease && devProperties.exists()) {
                 properties.load(devProperties.newDataInputStream())
@@ -156,8 +149,6 @@ subprojects {
         mapDiagnosticLocations = true
         correctErrorTypes = true
     }
-
-    apply plugin: 'com.google.gms.google-services'
 }
 
 task clean(type: Delete) {

@@ -28,14 +28,7 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
             Timber.plant(Timber.DebugTree())
         }
         AndroidThreeTen.init(this)
-        FirebaseApp.initializeApp(this, FirebaseOptions.Builder()
-                .setApiKey(BuildConfig.FB_API_KEY)
-                .setApplicationId(BuildConfig.FB_APPLICATION_ID)
-                .setGaTrackingId(BuildConfig.GA_TRACKING_ID)
-                .setGcmSenderId(BuildConfig.GCM_SENDER_ID)
-                .setProjectId(BuildConfig.FB_PROJECT_ID)
-                .setStorageBucket(BuildConfig.FB_STORAGE_BUCKET)
-                .build())
+        FirebaseApp.initializeApp(this, firebaseOptions())
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         val fabric = Fabric.Builder(this)
@@ -45,6 +38,17 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
     }
 
     override fun applicationInjector() = seedBuilder(DaggerAppComponent.builder())
+
+    fun firebaseOptions(): FirebaseOptions {
+        return FirebaseOptions.Builder()
+                .setApiKey(BuildConfig.FB_API_KEY)
+                .setApplicationId(BuildConfig.FB_APPLICATION_ID)
+                .setGaTrackingId(BuildConfig.GA_TRACKING_ID)
+                .setGcmSenderId(BuildConfig.GCM_SENDER_ID)
+                .setProjectId(BuildConfig.FB_PROJECT_ID)
+                .setStorageBucket(BuildConfig.FB_STORAGE_BUCKET)
+                .build()
+    }
 
     fun seedBuilder(builder: AppComponent.Builder): AppComponent {
         builder.seedInstance(this)
