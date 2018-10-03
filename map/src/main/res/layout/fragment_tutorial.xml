@@ -110,7 +110,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/tutorial_popup_background"
-        android:elevation="3dp"
+        android:elevation="12dp"
         android:orientation="vertical"
         android:padding="10dp"
         android:visibility="visible"
