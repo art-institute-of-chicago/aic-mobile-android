@@ -137,9 +137,9 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <Button
                 android:id="@+id/tutorialBack"
-                style="@style/IdealSansBook"
+                style="@style/Widget.AppCompat.Button.Borderless.IdealSansBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/back"
@@ -167,9 +167,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <TextView
+            <Button
                 android:id="@+id/tutorialNext"
-                style="@style/IdealSansBook"
+                style="@style/Widget.AppCompat.Button.Borderless.IdealSansBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/next"
