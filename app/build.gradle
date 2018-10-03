@@ -1,20 +1,6 @@
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-        maven {
-            url 'https://maven.fabric.io/public'
-        }
-    }
-    dependencies {
-        classpath 'com.google.gms:google-services:4.1.0'
-    }
-}
-
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
 
 String buildMetadata
 
@@ -29,7 +15,6 @@ if (project.hasProperty('build_number')) {
 
 String majorAndMinorVersion = "0.6"
 Integer patchVersionCode = 1000
-
 
 android {
     compileSdkVersion sdk
@@ -46,12 +31,22 @@ android {
     }
     buildTypes {
         debug {
+            buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",false)}\""
+            buildConfigField "String", "FB_API_KEY", "\"${envVariable("fb_api_key",false)}\""
+            buildConfigField "String", "GA_TRACKING_ID", "\"${envVariable("ga_tracking_id", false)}\""
+            buildConfigField "String", "GCM_SENDER_ID", "\"${envVariable("gcm_sender_id", false)}\""
+            buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id",false)}\""
+            buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",false)}\""
             buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
             ext.enableCrashlytics = false
-            manifestPlaceholders = [crashlyticsEnabled: false]
         }
         release {
-            manifestPlaceholders = [crashlyticsEnabled: true]
+            buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",true)}\""
+            buildConfigField "String", "FB_API_KEY", "\"${envVariable("fb_api_key",true)}\""
+            buildConfigField "String", "GA_TRACKING_ID", "\"${envVariable("ga_tracking_id", true)}\""
+            buildConfigField "String", "GCM_SENDER_ID", "\"${envVariable("gcm_sender_id", true)}\""
+            buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id",true)}\""
+            buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",true)}\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -101,5 +96,3 @@ dependencies {
         exclude group: 'com.jakewharton.threetenabp', module: 'threetenabp'
     }
 }
-
-apply plugin: 'com.google.gms.google-services'

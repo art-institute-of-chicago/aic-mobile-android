@@ -5,6 +5,8 @@ import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.lifecycle.ProcessLifecycleOwner
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.android.DaggerApplication
 import edu.artic.analytics.AnalyticsAction
@@ -13,8 +15,6 @@ import edu.artic.analytics.EventCategoryName
 import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 import javax.inject.Inject
-
-
 
 class ArticApp : DaggerApplication(), LifecycleObserver {
 
@@ -28,7 +28,20 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
             Timber.plant(Timber.DebugTree())
         }
         AndroidThreeTen.init(this)
+        FirebaseApp.initializeApp(this, FirebaseOptions.Builder()
+                .setApiKey(BuildConfig.FB_API_KEY)
+                .setApplicationId(BuildConfig.FB_APPLICATION_ID)
+                .setGaTrackingId(BuildConfig.GA_TRACKING_ID)
+                .setGcmSenderId(BuildConfig.GCM_SENDER_ID)
+                .setProjectId(BuildConfig.FB_PROJECT_ID)
+                .setStorageBucket(BuildConfig.FB_STORAGE_BUCKET)
+                .build())
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
+        val fabric = Fabric.Builder(this)
+                .kits(Crashlytics())
+                .build()
+        Fabric.with(fabric)
     }
 
     override fun applicationInjector() = seedBuilder(DaggerAppComponent.builder())

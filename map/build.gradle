@@ -2,6 +2,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
 
+android {
+    defaultConfig {
+        manifestPlaceholders = [google_maps_api_key:"${envVariable("google_maps_api_key")}"]
+    }
+}
+
 dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     kapt libs.dagger_compiler

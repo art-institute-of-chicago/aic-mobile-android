@@ -69,7 +69,6 @@ buildscript {
                 zxing_core              : 'com.google.zxing:core:3.3.0'
 
         ]
-
     }
     repositories {
         google()
@@ -108,6 +107,24 @@ subprojects {
     apply plugin: 'kotlin-kapt'
 
     android {
+        ext.envVariable = { String key, boolean isRelease ->
+            Properties properties = new Properties()
+            File localProperties = rootProject.file('local.properties')
+            File prodProperties = rootProject.file('prod.env')
+            File devProperties = rootProject.file('debug.env')
+            if (isRelease && prodProperties.exists()) {
+                properties.load(prodProperties.newDataInputStream())
+                return properties.getProperty(key)
+            } else if (!isRelease && devProperties.exists()) {
+                properties.load(devProperties.newDataInputStream())
+                return properties.getProperty(key)
+            } else if (localProperties.exists()) {
+                properties.load(localProperties.newDataInputStream())
+                return properties.getProperty(key)
+            } else {
+                return project.findProperty(key)
+            }
+        }
         compileSdkVersion sdk
         defaultConfig {
             minSdkVersion minSdk
