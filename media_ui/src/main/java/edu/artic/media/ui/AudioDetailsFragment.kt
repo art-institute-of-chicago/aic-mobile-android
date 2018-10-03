@@ -22,6 +22,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.base.utils.filterHtmlEncodedText
 import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
@@ -129,6 +130,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.authorCulturalPlace
+                .map { it.filterHtmlEncodedText() }
                 .bindToMain(artistCulturePlaceDenim.text())
                 .disposedBy(disposeBag)
 
@@ -139,7 +141,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.transcript
                 .subscribe {
-                    transcript.setContentText(it)
+                    transcript.setContentText(it.filterHtmlEncodedText())
                 }.disposedBy(disposeBag)
 
         viewModel.credits
@@ -150,7 +152,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.credits
                 .subscribe {
-                    credit.setContentText(it)
+                    credit.setContentText(it.filterHtmlEncodedText())
                 }.disposedBy(disposeBag)
 
         viewModel.relatedTours
