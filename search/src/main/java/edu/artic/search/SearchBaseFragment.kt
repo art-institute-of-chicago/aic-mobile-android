@@ -18,6 +18,11 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_search_results_sub.*
 import java.util.concurrent.TimeUnit
+import android.app.Activity
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+import edu.artic.base.utils.hideSoftKeyboard
+
 
 abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
     override val title = R.string.noTitle
@@ -123,6 +128,9 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                             }
                             startActivity(mapIntent)
                             requireActivity().finish()
+                        }
+                        SearchBaseViewModel.NavigationEndpoint.HideKeyboard -> {
+                            requireActivity().hideSoftKeyboard()
                         }
                         SearchBaseViewModel.NavigationEndpoint.Web -> {
 
