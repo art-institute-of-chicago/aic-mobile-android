@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid
-        android:color="@color/off_blue"/>
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:viewportHeight="24"
+    android:viewportWidth="72"
+    android:height="24dp"
+    android:width="72dp"
+    >
+
+    <!-- Essentially, it should look like a tag pointing out something in the middle, on the right -->
+
+    <path
+        android:fillColor="@color/off_blue"
+        android:pathData="M 0,0 L 68,0 L 68,8 L 72,12 L 68,16 L 68,24 L 0,24 z"
+        />
 
 
-</shape>
+</vector>
