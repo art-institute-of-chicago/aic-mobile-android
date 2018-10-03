@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="tutorialTextStartMargin">10dp</dimen>
+    <dimen name="tutorialTextVerticalMargin">7dp</dimen>
     <dimen name="artic_object_map_image_size">49dp</dimen>
     <dimen name="leave_tour_title_button_padding">120dp</dimen>
 </resources>
