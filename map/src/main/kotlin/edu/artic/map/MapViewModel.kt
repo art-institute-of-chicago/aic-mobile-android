@@ -191,7 +191,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
         setupLocationServiceBindings()
 
-        setupPreferenceBindings()
 
         mapFloorDao.getMapFloors()
                 .map { floorMap -> floorMap.associateBy { it.number } }
@@ -381,7 +380,9 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     }
 
-    private fun setupPreferenceBindings() {
+    fun setupPreferenceBindings(lifetimeDisposeBag: DisposeBag) {
+
+        // TODO: Remove 'delay' invocations, as they're no longer desirable.
 
         locationPreferenceManager
                 .hasSeenLocationPromptObservable
@@ -389,7 +390,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
                 .delay(500, TimeUnit.MILLISECONDS)
                 .bindTo(navigateTo)
-                .disposedBy(disposeBag)
+                .disposedBy(lifetimeDisposeBag)
 
 
         Observables
@@ -401,7 +402,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 }.map { Navigate.Forward(NavigationEndpoint.Tutorial) }
                 .delay(500, TimeUnit.MILLISECONDS)
                 .bindTo(navigateTo)
-                .disposedBy(disposeBag)
+                .disposedBy(lifetimeDisposeBag)
 
         Observables
                 .combineLatest(
@@ -416,7 +417,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 }.distinctUntilChanged()
                 .filter { it }
                 .bindTo(showFirstRunHeader)
-                .disposedBy(disposeBag)
+                .disposedBy(lifetimeDisposeBag)
 
     }
 

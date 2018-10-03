@@ -506,6 +506,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         }
                     }
                 }.disposedBy(navigationDisposeBag)
+
+        viewModel.setupPreferenceBindings(navigationDisposeBag)
     }
 
     /**
