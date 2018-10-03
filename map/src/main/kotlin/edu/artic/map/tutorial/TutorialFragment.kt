@@ -21,6 +21,16 @@ import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_tutorial.*
 import kotlin.reflect.KClass
 
+/**
+ * This is designed to show an overlay on top of [edu.artic.map.MapFragment].
+ *
+ * It consists of a 'popup dialog' and some 'metadata tags'. In a practical
+ * sense these are (respectively)
+ *
+ * * a [android.view.ViewGroup] with high [elevation][View.getElevation] and
+ * a cool shadow
+ * * a few little [TextViews][android.widget.TextView] on top of a translucent scrim
+ */
 class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
     override val viewModelClass: KClass<TutorialViewModel> = TutorialViewModel::class
     override val title: Int = 0

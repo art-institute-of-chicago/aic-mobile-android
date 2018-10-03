@@ -5,6 +5,15 @@ import edu.artic.base.BasePreferencesManager
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
+/**
+ * Preferences related to asking for permission to access
+ * [system location info][android.location.LocationManager].
+ *
+ * Ui is handled by the ':location_ui' module.
+ *
+ * For the 'map tutorial' stuff, check the ':map' module
+ * for `edu.artic.map.tutorial.TutorialPreferencesManager`.
+ */
 class LocationPreferenceManager(context: Context)
     : BasePreferencesManager(context, "location") {
 
