@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.view.MotionEvent
 import android.view.View
 import com.fuzz.rx.*
@@ -483,26 +484,29 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         viewModel.navigateTo
                 .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
                 .subscribe {
+
+                    val act = requireActivity()
+                    val manager: FragmentManager = act.supportFragmentManager ?: return@subscribe
+
                     when (it) {
                         MapViewModel.NavigationEndpoint.LocationPrompt -> {
                             /**
                              * Display location prompt iff location permission is not granted.
                              */
-                            if (!requireActivity().hasFineLocationPermission()) {
-                                requireActivity().supportFragmentManager
-                                        ?.beginTransaction()
-
-                                        ?.replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
-                                        ?.addToBackStack("LocationPromptFragment")
-                                        ?.commit()
+                            if (!act.hasFineLocationPermission()) {
+                                manager
+                                        .beginTransaction()
+                                        .replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
+                                        .addToBackStack("LocationPromptFragment")
+                                        .commit()
                             }
                         }
                         MapViewModel.NavigationEndpoint.Tutorial -> {
-                            requireActivity().supportFragmentManager
-                                    ?.beginTransaction()
-                                    ?.replace(R.id.overlayContainer, TutorialFragment(), "TutorialFragment")
-                                    ?.addToBackStack("TutorialFragment")
-                                    ?.commit()
+                            manager
+                                    .beginTransaction()
+                                    .replace(R.id.overlayContainer, TutorialFragment(), "TutorialFragment")
+                                    .addToBackStack("TutorialFragment")
+                                    .commit()
                         }
                     }
                 }.disposedBy(navigationDisposeBag)
