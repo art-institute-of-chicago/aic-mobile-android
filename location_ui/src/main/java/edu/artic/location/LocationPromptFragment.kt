@@ -12,6 +12,10 @@ import kotlinx.android.synthetic.main.fragment_location_prompt.*
 import kotlin.reflect.KClass
 
 
+/**
+ * One of the three primary `edu.artic.map.MapActivity` fragments, along
+ * with `MapFragment` and `TutorialFragment`.
+ */
 class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() {
     override val viewModelClass: KClass<LocationPromptViewModel> = LocationPromptViewModel::class
     override val title = R.string.noTitle
