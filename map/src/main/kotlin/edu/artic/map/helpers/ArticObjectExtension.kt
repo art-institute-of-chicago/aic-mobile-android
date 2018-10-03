@@ -1,10 +1,7 @@
 package edu.artic.map.helpers
 
 import com.google.android.gms.maps.model.LatLng
-import edu.artic.db.models.ArticExhibition
-import edu.artic.db.models.ArticObject
-import edu.artic.db.models.ArticSearchArtworkObject
-import edu.artic.db.models.ArticTour
+import edu.artic.db.models.*
 
 /**
  * See [convertToLatLng].
@@ -31,5 +28,19 @@ fun ArticTour.toLatLng(): LatLng {
 }
 
 fun ArticExhibition.toLatLng(): LatLng {
-    return LatLng(latitude!!, longitude!!)
+    return LatLng(
+            latitude ?: 0.0,
+            longitude ?: 0.0
+    )
+}
+
+fun ArticGallery.toLatLng() : LatLng{
+    return LatLng(latitude, longitude)
+}
+
+fun ArticMapAnnotation.toLatLng(): LatLng {
+    return LatLng(
+            latitude?.toDouble() ?: 0.0,
+            longitude?.toDouble() ?: 0.0
+    )
 }
