@@ -1,6 +1,8 @@
 package edu.artic.map
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
@@ -41,10 +43,14 @@ class MapActivity : BaseActivity() {
             disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map
             if (BuildConfig.DEBUG) {
+                // Make sure we don't accidentally leak the activity.
+                val ctx: Context = applicationContext
                 setOnNavigationItemReselectedListener {
-                    resetPrefs()
-                    Toast.makeText(context, "Map preference data erased.", Toast.LENGTH_SHORT).show()
                     finish()
+                    Handler().postDelayed({
+                        resetPrefs()
+                        Toast.makeText(ctx, "Map preference data erased.", Toast.LENGTH_SHORT).show()
+                    }, 200L)
                 }
             } else {
                 preventReselection()
