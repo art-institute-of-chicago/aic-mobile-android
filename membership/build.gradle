@@ -2,9 +2,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    defaultConfig {
-        buildConfigField("String", "MEMBER_INFO_API", "\"${envVariable("member_validation_url")}\"")
-        buildConfigField("String", "MEMBER_INFO_API_TOKEN", "\"${envVariable("member_validation_token")}\"")
+    buildTypes {
+        debug {
+            buildConfigField("String", "MEMBER_INFO_API", "\"${envVariable("member_validation_url", false)}\"")
+            buildConfigField("String", "MEMBER_INFO_API_TOKEN", "\"${envVariable("member_validation_token", false)}\"")
+        }
+        release {
+            buildConfigField("String", "MEMBER_INFO_API", "\"${envVariable("member_validation_url", true)}\"")
+            buildConfigField("String", "MEMBER_INFO_API_TOKEN", "\"${envVariable("member_validation_token", true)}\"")
+        }
     }
 }
 

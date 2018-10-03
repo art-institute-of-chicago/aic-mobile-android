@@ -3,8 +3,13 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
 
 android {
-    defaultConfig {
-        manifestPlaceholders = [google_maps_api_key:"${envVariable("google_maps_api_key")}"]
+    buildTypes {
+        debug {
+            manifestPlaceholders = [google_maps_api_key:"${envVariable("google_maps_api_key", false)}"]
+        }
+        release {
+            manifestPlaceholders = [google_maps_api_key:"${envVariable("google_maps_api_key", true)}"]
+        }
     }
 }
 
