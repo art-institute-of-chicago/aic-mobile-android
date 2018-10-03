@@ -31,17 +31,18 @@ class TutorialViewModel @Inject constructor(private val tutorialPreferencesManag
 
     val tutorialTitle: Subject<Int> = BehaviorSubject.create()
 
-    val showBack: Subject<Boolean> = BehaviorSubject.createDefault(false)
+    /**
+     * Reflection of what the 'previous' button's [alpha][android.view.View.ALPHA] should be.
+     *
+     * Defaults to `0f` (fully transparent)
+     */
+    val showBack: Subject<Float> = BehaviorSubject.createDefault(0f)
 
     val tutorialPopupCurrentPage: Subject<Int> = BehaviorSubject.createDefault(0)
 
     val currentTutorialStage: Subject<Stage> = BehaviorSubject.createDefault(Stage.One)
 
     init {
-        tutorialPopupCurrentPage
-                .map { it != 0 }
-                .bindTo(showBack)
-                .disposedBy(disposeBag)
         tutorialPopupCurrentPage
                 .map {
                     return@map if (it == 0)
