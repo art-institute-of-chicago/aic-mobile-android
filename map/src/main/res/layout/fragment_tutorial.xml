@@ -78,6 +78,7 @@
             app:layout_constraintTop_toBottomOf="@id/lowerLevel"/>
 
         <TextView
+            style="@style/MetadataMediumWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginDouble"
@@ -93,6 +94,7 @@
 
 
         <TextView
+            style="@style/MetadataMediumWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginDouble"
