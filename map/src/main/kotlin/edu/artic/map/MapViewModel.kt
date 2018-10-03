@@ -382,25 +382,28 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     fun setupPreferenceBindings(lifetimeDisposeBag: DisposeBag) {
 
-        // TODO: Remove 'delay' invocations, as they're no longer desirable.
-
-        locationPreferenceManager
-                .hasSeenLocationPromptObservable
-                .filter { !it }
-                .map { Navigate.Forward(NavigationEndpoint.LocationPrompt) }
-                .delay(500, TimeUnit.MILLISECONDS)
-                .bindTo(navigateTo)
-                .disposedBy(lifetimeDisposeBag)
-
 
         Observables
                 .combineLatest(
+                        locationPreferenceManager.hasSeenLocationPromptObservable,
                         locationPreferenceManager.hasClosedLocationPromptObservable,
                         tutorialPreferencesManager.hasSeenTutorialObservable
-                ).filter { (hasClosedLocation, hasSeenTutorial) ->
-                    hasClosedLocation && !hasSeenTutorial
-                }.map { Navigate.Forward(NavigationEndpoint.Tutorial) }
-                .delay(500, TimeUnit.MILLISECONDS)
+                ).map {
+                    (hasSeenPrompt, hasClosedPrompt, hasSeenTutorial) ->
+
+                    !hasSeenPrompt to (hasClosedPrompt && !hasSeenTutorial)
+                }
+                .filter {
+                    it.first || it.second
+                }
+                .map {
+                    (shouldShowPrompt, shouldShowTutorial) ->
+                    when {
+                        shouldShowPrompt -> Navigate.Forward(NavigationEndpoint.LocationPrompt)
+                        shouldShowTutorial -> Navigate.Forward(NavigationEndpoint.Tutorial)
+                        else -> throw IllegalStateException("Map Overlay requested, but none of the available types are permissible at this time.")
+                    }
+                }
                 .bindTo(navigateTo)
                 .disposedBy(lifetimeDisposeBag)
 
