@@ -238,7 +238,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     viewModel.onClickCompass()
                 }.disposedBy(disposeBag)
 
-        mapFirstRunHeader.setOnTouchListener { _, event ->
+        mapFirstRunHeaderFrame.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 viewModel.onTouchWithHeader()
             }
@@ -246,7 +246,15 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
 
         viewModel.showFirstRunHeader
-                .bindToMain(mapFirstRunHeader.visibility())
+                .bindToMain(mapFirstRunHeaderFrame.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.chosenInfo
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    mapFirstRunHeaderTitle.text = it.mapTitle
+                    mapFirstRunHeaderSubtitle.text = it.mapSubtitle
+                }
                 .disposedBy(disposeBag)
 
         viewModel.displayMode

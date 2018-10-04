@@ -79,52 +79,52 @@
         app:layout_constraintTop_toBottomOf="@id/lowerLevel"
         tools:visibility="visible" />
 
-        <LinearLayout
-            android:id="@+id/mapFirstRunHeader"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/mapFirstRunHeaderFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/marine"
+        android:gravity="center_horizontal"
+        android:minHeight="240dp"
+        android:orientation="vertical"
+        android:paddingTop="40dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/marine"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_map_header" />
+
+        <TextView
+            android:id="@+id/mapFirstRunHeaderTitle"
+            style="@style/PageTitleRegularWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginDouble"
+            android:text="@string/map_header_overlay_title"
+            />
+
+        <TextView
+            android:id="@+id/mapFirstRunHeaderSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginOneHalf"
+            android:layout_marginStart="@dimen/marginDouble"
+            android:layout_marginEnd="@dimen/marginDouble"
+            android:fontFamily="@font/amiri_regular"
             android:gravity="center_horizontal"
-            android:minHeight="240dp"
-            android:orientation="vertical"
-            android:paddingTop="40dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_map_header" />
-
-            <TextView
-                android:id="@+id/mapFirstRunHeaderTitle"
-                style="@style/PageTitleRegularWhite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/map_header_overlay_title"
-                />
-
-            <TextView
-                android:id="@+id/mapFirstRunHeaderSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/marginOneHalf"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:fontFamily="@font/amiri_regular"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="4sp"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:text="@string/map_header_overlay_body"
-                />
-        </LinearLayout>
+            android:lineSpacingExtra="4sp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:text="@string/map_header_overlay_body"
+            />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/infocontainer"

@@ -14,6 +14,7 @@ import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticMapFloorDao
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.location.LocationPreferenceManager
@@ -53,6 +54,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                                        private val tutorialPreferencesManager: TutorialPreferencesManager,
                                        private val locationPreferenceManager: LocationPreferenceManager,
                                        articMapAnnotationDao: ArticMapAnnotationDao,
+                                       generalInfoDao: GeneralInfoDao,
                                        mapFloorDao: ArticMapFloorDao
 ) : NavViewViewModel<MapViewModel.NavigationEndpoint>() {
 
@@ -93,6 +95,16 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Not set by default.
      */
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
+    /**
+     * Which [ArticGeneralInfo.Translation] to use for important, general-purpose text.
+     *
+     * Updated whenever the app language changes.
+     *
+     * Set to the current language's translation by default.
+     *
+     * @see LanguageSelector.currentLanguage
+     */
+    val chosenInfo: Subject<ArticGeneralInfo.Translation> = BehaviorSubject.create()
     /**
      * Current exhibition of interest.
      *
@@ -213,6 +225,20 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         displayMode.distinctUntilChanged(),
                         visibleRegionChanges.distinctUntilChanged()
                 )
+
+
+        // We need this for the header's title and subtitle
+        Observables.combineLatest(
+                languageSelector.currentLanguage,
+                generalInfoDao.getGeneralInfo().toObservable()
+        )
+                .map { (_, generalObject) ->
+                    languageSelector.selectFrom(generalObject.allTranslations())
+                }
+                .bindTo(chosenInfo)
+                .disposedBy(disposeBag)
+
+
 
         // when we change to tour mode, we notify the tourProgressManager.
         displayMode
