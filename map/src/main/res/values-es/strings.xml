@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_explore_text">Apretar y acercar para explorar el mapa.</string>
+    <string name="tutorial_audio_pins_title">Tocar los pines de audio para escuchar</string>
+    <string name="tutorial_audio_pins_text">Los pines transparentes indican audio en una pista diferente.</string>
+    <string name="tutorial_mark_compass">Presione para orientar el mapa</string>
+    <string name="tutorial_mark_first_floor">Usted está en la planta baja.</string>
+    <string name="tutorial_explore_title">Explorar el mapa</string>
+</resources>
