@@ -79,26 +79,21 @@
         app:layout_constraintTop_toBottomOf="@id/lowerLevel"
         tools:visibility="visible" />
 
-    <FrameLayout
-        android:id="@+id/mapFirstRunHeader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        >
-
         <LinearLayout
+            android:id="@+id/mapFirstRunHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/marine"
             android:gravity="center_horizontal"
             android:minHeight="240dp"
             android:orientation="vertical"
-            android:paddingTop="40dp">
+            android:paddingTop="40dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -126,8 +121,6 @@
                 android:text="@string/map_header_overlay_body"
                 tools:text="Use the map to find food, facilities, and audio-enhanced artworks. " />
         </LinearLayout>
-    </FrameLayout>
-
 
     <FrameLayout
         android:id="@+id/infocontainer"
