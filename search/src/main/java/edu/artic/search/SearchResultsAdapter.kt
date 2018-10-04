@@ -5,7 +5,6 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.StyleSpan
 import android.view.View
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
@@ -15,6 +14,7 @@ import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import edu.artic.image.GlideApp
 import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
 import kotlinx.android.synthetic.main.layout_cell_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
@@ -51,8 +51,9 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
             is SearchBaseListItemViewModel -> {
                 item.imageUrl
                         .subscribe {
-                            Glide.with(context)
+                            GlideApp.with(context)
                                     .load(it)
+                                    .placeholder(R.drawable.tour_thumb_placeholder)
                                     .into(image)
                         }.disposedBy(item.viewDisposeBag)
                 item.isHeadphonesVisible
@@ -96,8 +97,9 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
             is SearchCircularCellViewModel -> {
                 item.imageUrl
                         .subscribe {
-                            Glide.with(this)
+                            GlideApp.with(this)
                                     .load(it)
+                                    .placeholder(R.drawable.circular_placeholder)
                                     .apply(RequestOptions.circleCropTransform())
                                     .into(circularImage)
                         }
