@@ -21,6 +21,7 @@ dependencies {
     implementation project(':media_ui')
     implementation project(':map')
     implementation project(':navigation')
+    implementation project(':image')
     implementation project(':localization')
     implementation project(':details')
 }

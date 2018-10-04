@@ -2,7 +2,6 @@ package edu.artic.tours
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import com.bumptech.glide.Glide
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -10,6 +9,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import io.reactivex.subjects.Subject
+import edu.artic.image.GlideApp
 import kotlinx.android.synthetic.main.cell_all_tours_intro.view.*
 import kotlinx.android.synthetic.main.cell_all_tours_layout.view.*
 
@@ -34,8 +34,9 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
     override fun View.onBindView(item: AllToursCellViewModel, position: Int) {
 
         item.tourImageUrl.subscribe {
-            Glide.with(context)
+            GlideApp.with(context)
                     .load(it)
+                    .placeholder(R.drawable.thumb_placeholder)
                     .into(image)
         }.disposedBy(item.viewDisposeBag)
 
