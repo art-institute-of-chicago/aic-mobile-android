@@ -55,4 +55,15 @@ data class ArticSearchArtworkObject(
             }
             return thumbUrl
         }
+
+    val locationValue: String
+        get() {
+            var retLocation = location
+            gallery?.let {
+                if (location.orEmpty().isEmpty()) {
+                    retLocation = it.location
+                }
+            }
+            return retLocation.orEmpty()
+        }
 }

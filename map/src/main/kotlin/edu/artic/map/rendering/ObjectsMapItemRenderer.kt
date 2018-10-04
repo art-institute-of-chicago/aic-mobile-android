@@ -143,11 +143,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
             }
         }
         is MapDisplayMode.Search.ObjectSearch -> {
-            if (displayMode.item.backingObject != null) {
-                listOf(MapItemModel.fromArticObject(displayMode.item.backingObject as ArticObject)).asFlowable()
-            } else {
-                listOf<List<MapItemModel>>().toFlowable()
-            }
+            listOf(MapItemModel.fromArticSearchArtwork(displayMode.item)).asFlowable()
         }
         is MapDisplayMode.Search.ExhibitionSearch -> {
             listOf(MapItemModel.fromExhibition(displayMode.item)).asFlowable()
