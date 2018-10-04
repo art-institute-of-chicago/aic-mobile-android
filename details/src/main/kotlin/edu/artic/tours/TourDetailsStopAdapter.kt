@@ -8,6 +8,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.details.R
+import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
 
@@ -35,8 +36,9 @@ class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCell
         item.imageUrl
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    Glide.with(this)
+                    GlideApp.with(this)
                             .load(it)
+                            .placeholder(R.drawable.tour_thumb_placeholder)
                             .into(image)
                 }
                 .disposedBy(item.viewDisposeBag)
