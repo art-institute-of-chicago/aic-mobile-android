@@ -1,6 +1,5 @@
 package edu.artic.map.rendering
 
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.asFlowable
 import com.fuzz.rx.disposedBy
@@ -12,6 +11,7 @@ import com.google.android.gms.maps.model.VisibleRegion
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticObject
+import edu.artic.image.GlideApp
 import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
 import edu.artic.map.*
@@ -171,9 +171,11 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
 
     override fun getBitmapFetcher(item: MapItemModel, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? {
         val imageSize = context.resources.getDimension(R.dimen.artic_object_map_image_size).toInt()
-        return Glide.with(context)
+        return GlideApp.with(context)
                 .asBitmap()
+                .placeholder(R.drawable.circular_placeholder)
                 .apply(RequestOptions().disallowHardwareConfig())
+                .error(R.drawable.circular_placeholder)
                 .loadWithThumbnail(
                         item.thumbURL,
                         item.imageURL
