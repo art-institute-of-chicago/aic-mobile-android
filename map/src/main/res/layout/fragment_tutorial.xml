@@ -124,6 +124,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/marginDouble"
             android:layout_marginBottom="@dimen/marginDouble"
+            android:gravity="center_horizontal"
             tools:text="Explore The Map"/>
 
         <android.support.v4.view.ViewPager
@@ -144,6 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/back"
+                android:alpha="0"
                 tools:text="Back"/>
 
             <View
