@@ -66,7 +66,7 @@ class SearchAudioDetailViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         articObjectObservable
-                .map { it.location.orEmpty() }
+                .map { it.locationValue }
                 .map { it.isNotEmpty() }
                 .bindTo(showOnMapVisible)
                 .disposedBy(disposeBag)
