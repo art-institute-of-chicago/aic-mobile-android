@@ -114,6 +114,7 @@
         app:bar_height="@dimen/marginTwo"
         app:buffered_color="@color/audioBufferingColor"
         app:layout_constraintStart_toEndOf="@id/playPause"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/exo_position"
         app:played_color="@color/sea"
         app:scrubber_drawable="@drawable/exo_scrubber" />
