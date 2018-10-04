@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="english">英文</string>
+    <string name="spanish">西班牙语</string>
+    <string name="chinese">中文</string>
+</resources>
