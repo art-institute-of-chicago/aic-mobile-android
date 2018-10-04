@@ -1,12 +1,9 @@
 package edu.artic.map
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.view.MotionEvent
 import android.view.View
 import com.fuzz.rx.*
@@ -21,6 +18,7 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.location.LocationPromptFragment
+import edu.artic.location.centerOfMuseumOnMap
 import edu.artic.location.museumBounds
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
@@ -115,7 +113,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
             map.moveCamera(initialMapCameraPosition())
             //Initial Camera position doesn't load to the actual map position so re-center to center of musuem
-            map.moveCamera(CameraUpdateFactory.newLatLng(defaultMapPosition))
+            map.moveCamera(CameraUpdateFactory.newLatLng(centerOfMuseumOnMap))
             // initial visible region
             viewModel.visibleRegionChanged(map.projection.visibleRegion)
 
@@ -304,7 +302,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         // Only need to zoom out all the way. Specific bounds are irrelevant
                         map.animateCamera(
                                 CameraUpdateFactory.newLatLngZoom(
-                                        defaultMapPosition,
+                                        centerOfMuseumOnMap,
                                         ZOOM_MIN
                                 )
                         )
