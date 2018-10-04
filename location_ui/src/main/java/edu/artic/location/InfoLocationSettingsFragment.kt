@@ -4,12 +4,15 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.location_ui.R
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_location_settings.*
@@ -52,6 +55,12 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
                     viewModel.onClickButton()
                 }
                 .disposedBy(disposeBag)
+
+        searchIcon.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
+                }.disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: InfoLocationSettingsViewModel) {
@@ -69,6 +78,10 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
                         }
                         InfoLocationSettingsViewModel.NavigationEndpoint.LocationServiceSettings -> {
                             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                        }
+                        InfoLocationSettingsViewModel.NavigationEndpoint.Search -> {
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
                         }
                     }
                 }.disposedBy(navigationDisposeBag)
