@@ -19,6 +19,7 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticTour
 import edu.artic.details.R
+import edu.artic.image.GlideApp
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
@@ -89,9 +90,12 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                     Glide.with(this)
                             .load(it)
                             .into(appBarLayout.detailImage)
-                    Glide.with(this)
+
+                    GlideApp.with(this)
                             .load(it)
+                            .placeholder(R.drawable.tour_thumb_placeholder)
                             .into(tourDetailIntroCell.image)
+
                 }.disposedBy(disposeBag)
 
         viewModel.titleText
