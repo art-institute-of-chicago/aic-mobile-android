@@ -109,7 +109,7 @@
             android:layout_marginTop="@dimen/marginDouble"
             tools:text="Find Your Way"
             />
-
+        
         <TextView
             android:id="@+id/mapFirstRunHeaderSubtitle"
             android:layout_width="wrap_content"
@@ -125,6 +125,19 @@
             tools:text="Use the map to find food, facilities, and audio-enhanced artworks."
             />
     </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/searchIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/marginTwenty"
+        android:layout_marginTop="@dimen/marginTen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/ic_search_background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_search_24dp"/>
 
     <FrameLayout
         android:id="@+id/infocontainer"

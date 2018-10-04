@@ -3,6 +3,7 @@ package edu.artic.map.rendering
 import com.google.android.gms.maps.model.LatLng
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.map.MapDisplayMode
 import edu.artic.map.getTourOrderNumberBasedOnDisplayMode
 import edu.artic.map.helpers.toLatLng
@@ -21,6 +22,15 @@ class MapItemModel(
                     item.thumbUrl ?: "",
                     item.standardImageUrl ?: item.largeImageUrl ?: "",
                     item,
+                    item.toLatLng())
+        }
+
+        fun fromArticSearchArtwork(item: ArticSearchArtworkObject): MapItemModel {
+            return MapItemModel(item.artworkId,
+                    item.floor,
+                    item.thumbUrl ?: "",
+                    item.largeImageUrl ?: "",
+                    item.backingObject,
                     item.toLatLng())
         }
 

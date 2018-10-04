@@ -3,7 +3,6 @@ package edu.artic.info
 import android.support.annotation.StringRes
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.localization.LanguageSelector
@@ -26,6 +25,7 @@ class MuseumInformationViewModel @Inject constructor(
         class BuyTicket(val url: String) : NavigationEndpoint()
         class CallMuseum(@StringRes val phone: Int) : NavigationEndpoint()
         class ShowMuseumInMap(@StringRes val location: Int) : NavigationEndpoint()
+        object Search : NavigationEndpoint()
     }
 
     val museumHours: Subject<String> = BehaviorSubject.create()
@@ -65,6 +65,10 @@ class MuseumInformationViewModel @Inject constructor(
 
     fun onMuseumAddressClicked() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ShowMuseumInMap(R.string.museumAddress)))
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
 }

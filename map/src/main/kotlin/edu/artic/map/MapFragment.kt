@@ -28,6 +28,7 @@ import edu.artic.map.rendering.*
 import edu.artic.map.tutorial.TutorialFragment
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.navigation.NavigationConstants.Companion.ARG_EXHIBITION_OBJECT
 import edu.artic.navigation.NavigationConstants.Companion.ARG_SEARCH_OBJECT
@@ -236,6 +237,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         compass.clicks()
                 .subscribeBy {
                     viewModel.onClickCompass()
+                }.disposedBy(disposeBag)
+
+        searchIcon.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
                 }.disposedBy(disposeBag)
 
         mapFirstRunHeaderFrame.setOnTouchListener { _, event ->
@@ -497,6 +504,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     val manager: FragmentManager = act.supportFragmentManager ?: return@subscribe
 
                     when (it) {
+                        MapViewModel.NavigationEndpoint.Search -> {
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
+                        }
                         MapViewModel.NavigationEndpoint.LocationPrompt -> {
                             /**
                              * Display location prompt iff location permission is not granted.

@@ -14,6 +14,7 @@ class InfoLocationSettingsViewModel @Inject constructor(private val locationServ
     sealed class NavigationEndpoint {
         object Settings : NavigationEndpoint()
         object LocationServiceSettings : NavigationEndpoint()
+        object Search : NavigationEndpoint()
     }
 
 
@@ -50,6 +51,10 @@ class InfoLocationSettingsViewModel @Inject constructor(private val locationServ
             }
         }.bindTo(buttonType).disposedBy(disposeBag)
 
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
     fun onClickButton() {
