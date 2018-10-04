@@ -59,29 +59,26 @@ class FuzedLocationProvider(private val context: Context) : LocationProvider, Se
     private val locationCallback: LocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
             super.onLocationResult(locationResult)
-            locationResult?.let {
+            locationResult?.lastLocation?.let {
                 val success = SensorManager.getRotationMatrix(defaultRotation, null, mGravity, mGeomagnetic)
                 if (success) {
                     val orientation = FloatArray(3)
                     configureDeviceAngle()
                     SensorManager.getOrientation(correctedRotation, orientation)
                     val azimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
-                    it.lastLocation.bearing = azimuth
+                    it.bearing = azimuth
                 }
-                val location = it.lastLocation
                 val distance = FloatArray(1)
-                distanceBetween(location.latitude, location.longitude, centerOfMuseumOnMap.latitude, centerOfMuseumOnMap.longitude, distance)
+                distanceBetween(it.latitude, it.longitude, centerOfMuseumOnMap.latitude, centerOfMuseumOnMap.longitude, distance)
                 if (distance[0] > 15000) {
                     stopLocationTracking()
                 }
-                currentLocation.onNext(location)
+                currentLocation.onNext(it)
             }
         }
     }
 
     override val currentLocation: Subject<Location> = BehaviorSubject.create()
-
-    val bearing: Subject<Location> = BehaviorSubject.create()
 
     override val isTrackingLocationChanges: Subject<Boolean> = BehaviorSubject.createDefault(false)
 
@@ -182,8 +179,7 @@ class FuzedLocationProvider(private val context: Context) : LocationProvider, Se
         }
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
 
 
 }
