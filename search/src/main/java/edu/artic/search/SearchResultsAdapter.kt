@@ -29,6 +29,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
     }
 
     override fun View.onBindView(item: SearchBaseCellViewModel, position: Int) {
+        setTag(R.id.tag_holder,item)
         when (item) {
 
             is SearchHeaderCellViewModel -> {
@@ -147,8 +148,11 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
 
     override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
         super.onItemViewHolderRecycled(holder, position)
-        getItem(position).apply {
-            cleanup()
+        val tag = holder.itemView.getTag(R.id.tag_holder)
+        if (tag is SearchBaseCellViewModel) {
+            tag.apply {
+                cleanup()
+            }
         }
     }
 
