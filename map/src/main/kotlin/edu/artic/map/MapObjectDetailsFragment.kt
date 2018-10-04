@@ -8,6 +8,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.models.ArticObject
+import edu.artic.image.GlideApp
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -59,8 +60,9 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
                 .disposedBy(disposeBag)
 
         viewModel.image.subscribe {
-            Glide.with(this)
+            GlideApp.with(this)
                     .load(it)
+                    .placeholder(R.drawable.tour_thumb_placeholder)
                     .into(image)
         }.disposedBy(disposeBag)
 
