@@ -8,6 +8,8 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.audio.LookupResult.FoundAudio
+import edu.artic.audio.LookupResult.NotFound
 import edu.artic.audio.NumberPadElement.*
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.GeneralInfoDao
@@ -44,6 +46,7 @@ class AudioLookupViewModel @Inject constructor(
     sealed class NavigationEndpoint {
         object Search: NavigationEndpoint()
         object AudioDetails: NavigationEndpoint()
+        object ClearSearch: NavigationEndpoint()
     }
 
     /**
@@ -142,6 +145,8 @@ class AudioLookupViewModel @Inject constructor(
                     AnalyticsAction.playAudioAudioGuide,
                     foundAudio.hostObject.title
             )
+            // Clear search prior to playPlayer since AudioTutorial may intercede
+            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ClearSearch))
             // Request the actual playback (this triggers its own analytics event)
             it.playPlayer(foundAudio.hostObject)
             // Switch to the details screen

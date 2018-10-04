@@ -7,7 +7,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.DateTimeHelper.Purpose.*
+import edu.artic.base.utils.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.localization.LanguageSelector
