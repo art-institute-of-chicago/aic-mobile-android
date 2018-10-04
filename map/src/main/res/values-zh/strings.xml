@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_explore_text">缩放以探索地图。</string>
+    <string name="tutorial_audio_pins_text">不同楼层上的透明引脚指示音频</string>
+    <string name="tutorial_audio_pins_title">点击音频引脚进行收听</string>
+    <string name="tutorial_mark_compass">放大缩小以探索地图。</string>
+    <string name="tutorial_mark_first_floor">您在一楼。</string>
+    <string name="tutorial_explore_title">探索地图</string>
+</resources>

@@ -107,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginDouble"
-            android:text="@string/map_header_overlay_title"
+            tools:text="Find Your Way"
             />
 
         <TextView
@@ -122,7 +122,7 @@
             android:lineSpacingExtra="4sp"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:text="@string/map_header_overlay_body"
+            tools:text="Use the map to find food, facilities, and audio-enhanced artworks."
             />
     </LinearLayout>
 
