@@ -127,8 +127,12 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                                     startActivity(intent)
                                 }
                                 AudioLookupViewModel.NavigationEndpoint.AudioDetails -> {
+
                                     val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
                                     startActivity(intent)
+                                }
+                                AudioLookupViewModel.NavigationEndpoint.ClearSearch -> {
+                                    lookup_field.setText(R.string.noTitle)
                                 }
                             }
                         }
