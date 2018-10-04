@@ -23,7 +23,7 @@ class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewMod
 
         item.exhibitionDate
                 .map {
-                     context.getString(R.string.throughDate, it)
+                    context.getString(R.string.throughDate, it)
                 }
                 .bindToMain(exhibitionDate.text())
                 .disposedBy(item.viewDisposeBag)
@@ -33,7 +33,7 @@ class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewMod
                 .subscribe {
                     GlideApp.with(context)
                             .load(it)
-                            .placeholder(R.drawable.square_default_image)
+                            .placeholder(R.drawable.square_placeholder)
                             .into(image)
                 }.disposedBy(item.viewDisposeBag)
 
