@@ -3,15 +3,8 @@ package edu.artic.map
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
+import edu.artic.location.centerOfMuseumOnMap
 
-
-/**
- * Center of the screen, as used by [initialMapCameraPosition].
- *
- * This is _NOT_ the same as the center of [museumBounds] (although it is pretty close).
- */
-internal val defaultMapPosition = LatLng(41.879592, -87.622491)
 
 /**
  * Camera update enforcing display of first visible content when a [MapFragment] loads.
@@ -21,7 +14,7 @@ internal val defaultMapPosition = LatLng(41.879592, -87.622491)
 internal fun initialMapCameraPosition(): CameraUpdate {
     return CameraUpdateFactory.newCameraPosition(
             CameraPosition.Builder()
-                    .target(defaultMapPosition)
+                    .target(centerOfMuseumOnMap)
                     .bearing(90f)
                     .tilt(45f)
                     .build())
