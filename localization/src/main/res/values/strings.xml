@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="english_in_that_language" translatable="false">English</string>
+    <string name="spanish_in_that_language" translatable="false">Español</string>
+    <string name="chinese_in_that_language" translatable="false">中文</string>
+</resources>
