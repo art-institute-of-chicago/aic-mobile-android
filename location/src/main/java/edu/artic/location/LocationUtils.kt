@@ -17,6 +17,13 @@ val museumBounds: LatLngBounds = LatLngBounds(
         LatLng(41.883309, -87.617464)
 )
 
+/**
+ * Center of the screen, as used by [initialMapCameraPosition].
+ *
+ * This is _NOT_ the same as the center of [museumBounds] (although it is pretty close).
+ */
+val centerOfMuseumOnMap = LatLng(41.879592, -87.622491)
+
 fun isLocationInMuseum(location : Location) : Boolean {
     return museumBounds.contains(LatLng(location.latitude, location.longitude))
 }

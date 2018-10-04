@@ -11,6 +11,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.Location
+import android.location.Location.distanceBetween
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -67,7 +68,13 @@ class FuzedLocationProvider(private val context: Context) : LocationProvider, Se
                     val azimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
                     it.lastLocation.bearing = azimuth
                 }
-                currentLocation.onNext(it.lastLocation)
+                val location = it.lastLocation
+                val distance = FloatArray(1)
+                distanceBetween(location.latitude, location.longitude, centerOfMuseumOnMap.latitude, centerOfMuseumOnMap.longitude, distance)
+                if (distance[0] > 15000) {
+                    stopLocationTracking()
+                }
+                currentLocation.onNext(location)
             }
         }
     }
