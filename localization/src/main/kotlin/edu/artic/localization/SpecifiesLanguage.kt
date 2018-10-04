@@ -21,14 +21,30 @@ interface SpecifiesLanguage {
         return Locale.forLanguageTag(underlyingLanguage())
     }
 
-    fun userFriendlyLanguage(forThisView: Context): CharSequence {
-        val current = forThisView.resources.configuration
+    /**
+     * Retrieve the name of [underlyingLocale]'s language in that language.
+     */
+    private fun nameOfLanguageInThatLanguage(ctx: Context): CharSequence {
+        val current = ctx.resources.configuration
 
-        return forThisView.createConfigurationContext(
+        return ctx.createConfigurationContext(
                 Configuration(current).apply {
                     // Locale retrieval on pre-Nougat is somewhat lacking
                     setLocale(Locale.forLanguageTag(underlyingLocale().language))
                 }
         ).getText(R.string.name_of_this_language)
+    }
+
+    /**
+     * Retrieve the name of [underlyingLocale]'s language under the given Context's
+     * config.
+     */
+    fun userFriendlyLanguage(ctx: Context): CharSequence {
+        return when(underlyingLocale().language) {
+            Locale.ENGLISH.language -> ctx.getText(R.string.english)
+            SPANISH.language -> ctx.getText(R.string.spanish)
+            Locale.CHINESE.language -> ctx.getText(R.string.chinese)
+            else -> underlyingLocale().displayLanguage
+        }
     }
 }
