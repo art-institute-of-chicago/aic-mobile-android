@@ -10,7 +10,9 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_museum_information.*
@@ -33,7 +35,6 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
 
     override fun setupBindings(viewModel: MuseumInformationViewModel) {
         super.setupBindings(viewModel)
-
         viewModel.museumHours
                 .bindToMain(museumHours.text())
                 .disposedBy(disposeBag)
@@ -60,6 +61,12 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
                 .defaultThrottle()
                 .subscribe {
                     viewModel.onBuyTicketClicked()
+                }.disposedBy(disposeBag)
+
+        searchIcon.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
                 }.disposedBy(disposeBag)
 
         requireActivity().title = resources.getString(R.string.museumInformation)
@@ -91,6 +98,10 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
                                     intent.data = Uri.parse(url)
                                     val chooser = Intent.createChooser(intent, resources.getString(R.string.viewMapWith))
                                     startActivity(chooser)
+                                }
+                                is MuseumInformationViewModel.NavigationEndpoint.Search -> {
+                                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                                    startActivity(intent)
                                 }
                             }
                         }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -85,5 +86,21 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_all_exhibitions, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.let {
+            when(it.itemId) {
+                R.id.search -> {
+                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                    startActivity(intent)
+                    return true
+                }
+                else -> {
+                    return super.onOptionsItemSelected(item)
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
