@@ -1,0 +1,21 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+
+        <shape android:shape="rectangle">
+            <solid android:color="@color/tourPlaceholderBackground" />
+            <size
+                android:width="400dp"
+                android:height="220dp" />
+        </shape>
+    </item>
+    <item
+        android:bottom="8dp"
+        android:drawable="@drawable/tour_frame"
+        android:gravity="center"
+        android:left="22dp"
+        android:right="22dp"
+        android:top="7dp">
+
+    </item>
+
+</layer-list>

@@ -20,7 +20,7 @@ class WelcomeToursAdapter : AutoHolderRecyclerViewAdapter<WelcomeTourCellViewMod
         item.tourImageUrl.subscribe {
             GlideApp.with(context)
                     .load(it)
-                    .placeholder(R.drawable.rect_default_image)
+                    .placeholder(R.drawable.rect_placeholder)
                     .into(image)
         }.disposedBy(item.viewDisposeBag)
 
