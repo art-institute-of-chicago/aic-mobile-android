@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import edu.artic.image.GlideApp
 import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.layout_amenity_search_cell.view.*
@@ -75,8 +76,9 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    Glide.with(view)
+                    GlideApp.with(view)
                             .load(it)
+                            .placeholder(R.drawable.tour_thumb_placeholder)
                             .into(view.exhibitionImage)
                 }
                 .disposedBy(item.viewDisposeBag)
@@ -93,8 +95,9 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    Glide.with(view)
+                    GlideApp.with(view)
                             .load(it)
+                            .placeholder(R.drawable.tour_thumb_placeholder)
                             .into(view.objectImage)
                 }
                 .disposedBy(item.viewDisposeBag)
