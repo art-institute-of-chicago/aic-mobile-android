@@ -1,12 +1,12 @@
 package edu.artic.exhibitions
 
 import android.view.View
-import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import edu.artic.image.GlideApp
 import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 
 /**
@@ -17,8 +17,9 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
 
     override fun View.onBindView(item: AllExhibitionsCellViewModel, position: Int) {
         item.exhibitionImageUrl.subscribe {
-            Glide.with(context)
+            GlideApp.with(context)
                     .load(it)
+                    .placeholder(R.drawable.square_placeholder)
                     .into(image)
         }.disposedBy(item.viewDisposeBag)
 
