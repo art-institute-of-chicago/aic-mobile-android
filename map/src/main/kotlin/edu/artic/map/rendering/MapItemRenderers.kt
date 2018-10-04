@@ -13,6 +13,7 @@ import edu.artic.db.models.ArticGallery
 import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapTextType
+import edu.artic.image.GlideApp
 import edu.artic.image.asRequestObservable
 import edu.artic.image.toBitmap
 import edu.artic.map.*
@@ -170,9 +171,10 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
             searchMapFocus(displayMode) { setOf(MapFocus.Department, MapFocus.DepartmentAndSpaces) }
 
     override fun getBitmapFetcher(item: ArticMapAnnotation, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? {
-        return Glide.with(context)
+        return GlideApp.with(context)
                 .asBitmap()
                 .load(item.standardImageUrl)
+                .error(R.drawable.square_placeholder)
                 .asRequestObservable(context)
                 .map { BitmapDescriptorFactory.fromBitmap(departmentMarkerGenerator.makeIcon(it, item.label.orEmpty())) }
     }
