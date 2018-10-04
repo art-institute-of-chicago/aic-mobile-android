@@ -126,25 +126,18 @@
             />
     </LinearLayout>
 
-    <FrameLayout
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
+
+    <ImageView
+        android:id="@+id/searchIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/marginTwenty"
+        android:layout_marginTop="@dimen/marginTen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/searchIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/marginTwenty"
-            android:layout_marginTop="@dimen/marginTen"
-            android:background="@drawable/ic_search_background"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_search_24dp"/>
-    </FrameLayout>
+        android:background="@drawable/ic_search_background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_search_24dp"/>
 
     <FrameLayout
         android:id="@+id/infocontainer"

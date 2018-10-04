@@ -25,7 +25,7 @@ class MuseumInformationViewModel @Inject constructor(
         class BuyTicket(val url: String) : NavigationEndpoint()
         class CallMuseum(@StringRes val phone: Int) : NavigationEndpoint()
         class ShowMuseumInMap(@StringRes val location: Int) : NavigationEndpoint()
-        class Search() : NavigationEndpoint()
+        object Search : NavigationEndpoint()
     }
 
     val museumHours: Subject<String> = BehaviorSubject.create()
@@ -68,7 +68,7 @@ class MuseumInformationViewModel @Inject constructor(
     }
 
     fun onClickSearch() {
-        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search()))
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
 }

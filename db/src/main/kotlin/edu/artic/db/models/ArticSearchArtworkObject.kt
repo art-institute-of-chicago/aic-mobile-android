@@ -59,10 +59,8 @@ data class ArticSearchArtworkObject(
     val locationValue: String
         get() {
             var retLocation = location
-            gallery?.let {
-                if (location.orEmpty().isEmpty()) {
-                    retLocation = it.location
-                }
+            if (location.orEmpty().isEmpty()) {
+                retLocation = gallery?.location
             }
             return retLocation.orEmpty()
         }
