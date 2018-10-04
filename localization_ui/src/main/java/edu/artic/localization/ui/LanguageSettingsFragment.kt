@@ -9,12 +9,13 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.localization.SPANISH
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_language_settings.*
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 
@@ -97,6 +98,13 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
         super.setupBindings(viewModel)
 
         requireActivity().title = resources.getString(R.string.languageSettings)
+
+        searchIcon.clicks()
+                .defaultThrottle()
+                .subscribe {
+                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                    startActivity(intent)
+                }.disposedBy(disposeBag)
 
         viewModel.appLocale
                 .observeOn(AndroidSchedulers.mainThread())

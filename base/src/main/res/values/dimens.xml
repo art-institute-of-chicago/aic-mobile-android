@@ -4,6 +4,7 @@
     <dimen name="marginQuarter">2dp</dimen>
     <dimen name="marginHalf">4dp</dimen>
     <dimen name="marginStandard">8dp</dimen>
+    <dimen name="marginTen">10dp</dimen>
     <dimen name="marginOneHalf">12dp</dimen>
     <dimen name="marginDouble">16dp</dimen>
     <dimen name="marginTwenty">20dp</dimen>

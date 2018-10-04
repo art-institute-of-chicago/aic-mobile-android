@@ -17,7 +17,7 @@ fun ArticObject.toLatLng(): LatLng {
  * See [convertToLatLng].
  */
 fun ArticSearchArtworkObject.toLatLng(): LatLng {
-    return convertToLatLng(location)
+    return convertToLatLng(locationValue)
 }
 
 /**
