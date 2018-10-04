@@ -102,24 +102,28 @@
                 android:src="@drawable/ic_map_header" />
 
             <TextView
+                android:id="@+id/mapFirstRunHeaderTitle"
                 style="@style/PageTitleRegularWhite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:text="@string/map_header_overlay_title"
-                tools:text="Find Your Way" />
+                />
 
             <TextView
+                android:id="@+id/mapFirstRunHeaderSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginOneHalf"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
                 android:fontFamily="@font/amiri_regular"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="4sp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:text="@string/map_header_overlay_body"
-                tools:text="Use the map to find food, facilities, and audio-enhanced artworks. " />
+                />
         </LinearLayout>
 
     <FrameLayout
