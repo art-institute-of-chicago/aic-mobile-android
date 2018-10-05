@@ -63,13 +63,14 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
 
 
         viewModel.buildVersion
-                .subscribe { versionName ->
+                .subscribeBy { versionName ->
                     versionInfo.text = getString(R.string.versionInfo, versionName)
                 }
                 .disposedBy(disposeBag)
 
 
         viewModel.generalInfo
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     appBarLayout.setSubtitleText(it.infoSubtitle)
                     requestTitleUpdate(it.infoTitle)
