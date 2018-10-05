@@ -6,7 +6,7 @@
     <string name="locationSettingsLocationDenied">Ubicación deshabilitada</string>
     <string name="locationSettingsLocationAllowed">Ubicación habilitada</string>
     <string name="locationPromptNotNow">No Ahora</string>
-    <string name="locationSettingsLocationNeverAsked">Ajustes de ubicación</string>
-    <string name="locationPromptOk">OK, usa mi ubicación</string>
+    <string name="locationSettingsLocationNeverAsked">@string/location_title</string>
+    <string name="locationPromptOk">Ok</string>
     <string name="locationSettingsLocationServiceOff">Servicio de ubicación desactivado</string>
 </resources>
