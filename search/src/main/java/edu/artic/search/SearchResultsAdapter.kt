@@ -53,7 +53,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                         .subscribe {
                             GlideApp.with(context)
                                     .load(it)
-                                    .placeholder(R.drawable.tour_thumb_placeholder)
+                                    .placeholder(R.drawable.placeholder_thumb)
                                     .into(image)
                         }.disposedBy(item.viewDisposeBag)
                 item.isHeadphonesVisible
