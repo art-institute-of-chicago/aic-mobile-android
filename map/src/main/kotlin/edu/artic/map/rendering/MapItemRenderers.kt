@@ -2,7 +2,6 @@ package edu.artic.map.rendering
 
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
-import com.bumptech.glide.Glide
 import com.fuzz.rx.asFlowable
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -174,7 +173,7 @@ class DepartmentsMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
         return GlideApp.with(context)
                 .asBitmap()
                 .load(item.standardImageUrl)
-                .error(R.drawable.square_placeholder)
+                .error(R.drawable.placeholder_medium_square)
                 .asRequestObservable(context)
                 .map { BitmapDescriptorFactory.fromBitmap(departmentMarkerGenerator.makeIcon(it, item.label.orEmpty())) }
     }

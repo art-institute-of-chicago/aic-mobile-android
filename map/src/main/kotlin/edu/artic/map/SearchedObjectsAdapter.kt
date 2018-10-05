@@ -78,7 +78,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                 .subscribe {
                     GlideApp.with(view)
                             .load(it)
-                            .placeholder(R.drawable.tour_thumb_placeholder)
+                            .placeholder(R.drawable.placeholder_thumb)
                             .into(view.exhibitionImage)
                 }
                 .disposedBy(item.viewDisposeBag)
@@ -97,7 +97,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                 .subscribe {
                     GlideApp.with(view)
                             .load(it)
-                            .placeholder(R.drawable.tour_thumb_placeholder)
+                            .placeholder(R.drawable.placeholder_thumb)
                             .into(view.objectImage)
                 }
                 .disposedBy(item.viewDisposeBag)
