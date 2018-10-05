@@ -23,6 +23,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_welcome.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -100,7 +101,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.currentCardHolder
-                .subscribe { cardHolder ->
+                .subscribeBy { cardHolder ->
                     val firstName = cardHolder.split(" ").first()
                     val title = resources.getString(R.string.welcomeUser, firstName)
                     requestTitleUpdate(title)

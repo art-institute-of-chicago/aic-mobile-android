@@ -31,15 +31,33 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
 
     private var requestedTitle: String? = null
 
+    /**
+     * This method can be used to manually update
+     *
+     * * [requestedTitle] (which can be retrieved later with [getToolbarTitle])
+     * * The [activity's title][BaseActivity.setTitle]
+     * and
+     * * (If present) the [collapsing toolbar][collapsingToolbar]'s title
+     *
+     * C.f. [updateToolbar]
+     */
     fun requestTitleUpdate(proposedTitle: String) {
-        this.requestedTitle = proposedTitle
-        baseActivity.title = proposedTitle
+        baseActivity.runOnUiThread {
+            this.requestedTitle = proposedTitle
+            /**
+             * This assignment to BaseActivity.title
+             *
+             * 1. updates the title in regular [Toolbar]s
+             * 2. **does not** update the title in [CollapsingToolbarLayout]s
+             */
+            baseActivity.title = proposedTitle
 
-        /**
-         * BaseActivity.title does not update the title for the fragments with collapsing toolbar title.
-         */
-        updateToolbar(requireView())
-        collapsingToolbar?.title = proposedTitle
+            /**
+             * Ensure [toolbar] and [collapsingToolbar] have had a chance to be bound
+             */
+            updateToolbar(requireView())
+            collapsingToolbar?.title = proposedTitle
+        }
     }
 
     private fun getToolbarTitle(): String {
