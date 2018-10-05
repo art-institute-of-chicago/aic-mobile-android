@@ -4,7 +4,7 @@
     <string name="spanish">Español</string>
     <string name="chinese">中文</string>
 
-    <string name="english_in_that_language" translatable="false">English</string>
-    <string name="spanish_in_that_language" translatable="false">Español</string>
-    <string name="chinese_in_that_language" translatable="false">中文</string>
+    <string name="english_in_english" translatable="false">English</string>
+    <string name="spanish_in_spanish" translatable="false">Español</string>
+    <string name="chinese_in_chinese" translatable="false">中文</string>
 </resources>
