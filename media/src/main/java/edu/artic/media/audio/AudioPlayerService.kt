@@ -10,6 +10,7 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
+import android.support.v4.app.NotificationCompat
 import android.support.v4.media.AudioAttributesCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -276,6 +277,23 @@ class AudioPlayerService : DaggerService(), PlayerService {
                             }
                         }
                         return currentBitmap
+                    }
+                },
+                object : PlayerNotificationManager.CustomActionReceiver {
+                    override fun getCustomActions(player: Player?): MutableList<String> {
+                        return mutableListOf("Cancel_Notification")
+                    }
+
+                    override fun createCustomActions(context: Context?): MutableMap<String, NotificationCompat.Action> {
+                        val playIntent = Intent("Cancel_Notification").setPackage(context?.packageName)
+                        return mutableMapOf("Cancel_Notification" to NotificationCompat.Action(
+                                R.drawable.ic_close_circle,
+                                "Close",
+                                PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_CANCEL_CURRENT)))
+                    }
+
+                    override fun onCustomAction(player: Player?, action: String?, intent: Intent?) {
+                        stopPlayer()
                     }
                 })
 
