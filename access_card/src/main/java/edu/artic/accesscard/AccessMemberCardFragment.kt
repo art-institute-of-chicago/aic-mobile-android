@@ -14,6 +14,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.hintRes
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textChanges
@@ -152,6 +153,11 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
 
         viewModel.memberIdHint
                 .bindToMain(memberId.hintRes())
+                .disposedBy(disposeBag)
+
+        viewModel.members
+                .map { it.size > 1 }
+                .bindToMain(switchCardHolder.visibility())
                 .disposedBy(disposeBag)
     }
 
