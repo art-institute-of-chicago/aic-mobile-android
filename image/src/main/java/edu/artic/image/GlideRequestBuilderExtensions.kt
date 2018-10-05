@@ -53,18 +53,18 @@ inline fun RequestBuilder<Drawable>.listenerClean(
 fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(
         fragment: Fragment,
         image: ImageView,
-        scaleInfo: ImageViewScaleInfo? = null
+        scaleOverride: ImageViewScaleInfo? = null
 ): RequestBuilder<Drawable> {
     return listenerClean({
-        scaleInfo?.let {
-            image.scaleType = scaleInfo.placeHolderScaleType
+        scaleOverride?.let {
+            image.scaleType = scaleOverride.placeHolderScaleType
         }
         fragment.startPostponedEnterTransition()
         return@listenerClean false
 
     }, { resource: Drawable ->
-        scaleInfo?.let {
-            image.scaleType = scaleInfo.imageScaleType
+        scaleOverride?.let {
+            image.scaleType = scaleOverride.imageScaleType
         }
         // Adds a nice animator to scale the container down to proper aspect ratio
         val parentWidth = (image.parent as View).width
@@ -94,18 +94,18 @@ fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(
 
 fun RequestBuilder<Drawable>.listenerSetHeight(
         image: ImageView,
-        scaleInfo: ImageViewScaleInfo? = null
+        scaleOverride: ImageViewScaleInfo? = null
 ): RequestBuilder<Drawable> {
     return listenerClean({
-        scaleInfo?.let {
-            image.scaleType = scaleInfo.placeHolderScaleType
+        scaleOverride?.let {
+            image.scaleType = scaleOverride.placeHolderScaleType
         }
         return@listenerClean false
 
     }, { resource: Drawable ->
 
-        scaleInfo?.let {
-            image.scaleType = scaleInfo.imageScaleType
+        scaleOverride?.let {
+            image.scaleType = scaleOverride.imageScaleType
         }
 
         // Adds a nice animator to scale the container down to proper aspect ratio
@@ -146,6 +146,15 @@ fun RequestBuilder<Drawable>.updateImageScaleType(imageView: ImageView,
     })
 }
 
+/**
+ * Class for encapsulating the scale properties of imageview.
+ *
+ * ImageViewScaleInfo.placeHolderScaleType is used when imageView is displaying the placeholder &
+ * ImageViewScaleInfo.imageScaleType is used when image resource is displayed.
+ * @see updateImageScaleType
+ * @see listenerAnimateSharedTransaction
+ * @see listenerSetHeight
+ */
 data class ImageViewScaleInfo(
         val placeHolderScaleType: ImageView.ScaleType,
         val imageScaleType: ImageView.ScaleType
