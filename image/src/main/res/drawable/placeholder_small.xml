@@ -13,7 +13,7 @@
         android:right="52dp"
         android:top="21dp"
         android:bottom="23dp"
-        android:drawable="@drawable/frame_thumbnail"
+        android:drawable="@drawable/frame_small"
         android:gravity="center" >
 
     </item>
