@@ -2,7 +2,6 @@ package edu.artic.map
 
 import android.os.Bundle
 import android.view.View
-import com.bumptech.glide.Glide
 import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
@@ -62,7 +61,7 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
         viewModel.image.subscribe {
             GlideApp.with(this)
                     .load(it)
-                    .placeholder(R.drawable.tour_thumb_placeholder)
+                    .placeholder(R.drawable.placeholder_thumb)
                     .into(image)
         }.disposedBy(disposeBag)
 
