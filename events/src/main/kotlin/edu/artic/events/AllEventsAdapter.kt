@@ -29,7 +29,7 @@ class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellBaseViewMode
             item.eventImageUrl.subscribe {
                 GlideApp.with(context)
                         .load(it)
-                        .placeholder(R.drawable.thumb_placeholder)
+                        .placeholder(R.drawable.placeholder_small)
                         .into(image)
             }.disposedBy(item.viewDisposeBag)
 

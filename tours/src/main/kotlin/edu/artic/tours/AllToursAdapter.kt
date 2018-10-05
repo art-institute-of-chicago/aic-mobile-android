@@ -36,7 +36,7 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
         item.tourImageUrl.subscribe {
             GlideApp.with(context)
                     .load(it)
-                    .placeholder(R.drawable.thumb_placeholder)
+                    .placeholder(R.drawable.placeholder_small)
                     .into(image)
         }.disposedBy(item.viewDisposeBag)
 
