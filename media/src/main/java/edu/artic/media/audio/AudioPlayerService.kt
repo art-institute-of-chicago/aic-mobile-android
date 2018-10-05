@@ -77,6 +77,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
         }
     }
 
+    val CANCEL_ACTION = "Cancel_Notification"
     val EMPTY_AUDIO_FILE = AudioFileModel("",null,null,null,null,null, null, null, null)
 
     /**
@@ -291,12 +292,12 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 },
                 object : PlayerNotificationManager.CustomActionReceiver {
                     override fun getCustomActions(player: Player?): MutableList<String> {
-                        return mutableListOf("Cancel_Notification")
+                        return mutableListOf(CANCEL_ACTION)
                     }
 
                     override fun createCustomActions(context: Context?): MutableMap<String, NotificationCompat.Action> {
-                        val playIntent = Intent("Cancel_Notification").setPackage(context?.packageName)
-                        return mutableMapOf("Cancel_Notification" to NotificationCompat.Action(
+                        val playIntent = Intent(CANCEL_ACTION).setPackage(context?.packageName)
+                        return mutableMapOf(CANCEL_ACTION to NotificationCompat.Action(
                                 R.drawable.ic_close_circle,
                                 "Close",
                                 PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_CANCEL_CURRENT)))
