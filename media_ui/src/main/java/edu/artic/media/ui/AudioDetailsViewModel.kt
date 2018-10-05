@@ -134,12 +134,6 @@ class AudioDetailsViewModel @Inject constructor(
 
         audioTrackToUse
                 .map {
-                    // TODO: default to playable.title, perhaps?
-                    it.title.orEmpty()
-                }.bindTo(title)
-                .disposedBy(disposeBag)
-        audioTrackToUse
-                .map {
                     it.transcript.orEmpty()
                 }.bindTo(transcript)
                 .disposedBy(disposeBag)
@@ -160,8 +154,13 @@ class AudioDetailsViewModel @Inject constructor(
         // Register for updates
         trackDisposable = service.currentTrack
                 .subscribeBy { translation ->
+                    service.playable?.let {
+                        title.onNext(it.getPlayableTitle().orEmpty())
+                    }
                     audioTrackToUse.onNext(translation)
                 }.disposedBy(disposeBag)
+
+
 
         if (service.hasNoTrack()) {
             // Set up the default language selection.
