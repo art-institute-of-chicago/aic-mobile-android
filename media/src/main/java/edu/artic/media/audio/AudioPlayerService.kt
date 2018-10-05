@@ -24,6 +24,7 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.util.NotificationUtil
 import com.google.android.exoplayer2.util.Util
 import dagger.android.DaggerService
 import edu.artic.analytics.AnalyticsAction
@@ -74,6 +75,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
             return Intent(context, AudioPlayerService::class.java)
         }
     }
+
+    val EMPTY_AUDIO_FILE = AudioFileModel("",null,null,null,null,null, null, null, null)
 
     /**
      * These are the inputs callers can use to change which [PlayBackState] should be
@@ -174,6 +177,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
     val currentTrack: Subject<AudioFileModel> = BehaviorSubject.create()
 
     val disposeBag = DisposeBag()
+    internal var currentBitmap: Bitmap? = null
 
 
     override fun onCreate() {
@@ -188,6 +192,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
                             /*Play back completed*/
                             analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value?.title.orEmpty())
                             audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
+                            playerNotificationManager.setPlayer(null)
+                            currentTrack.onNext(EMPTY_AUDIO_FILE)
                         }
                         playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
                         else -> audioPlayBackStatus.onNext(PlayBackState.Paused(given))
@@ -199,6 +205,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
                 is PlayBackAction.Play -> {
+                    playerNotificationManager.setPlayer(player)
                     // No need to seek here; that'll be done in 'setArticObject' if needed
                     setArticObject(playBackAction.audioFile, playBackAction.audioModel)
                     /**
@@ -225,6 +232,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
                     (currentTrack as BehaviorSubject).value?.let { audioFile ->
                         audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
                     }
+                    playerNotificationManager.setPlayer(null)
                     player.stop()
                 }
 
@@ -236,10 +244,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
     }
 
     private fun setUpNotificationManager() {
-        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
+        NotificationUtil.createNotificationChannel(
+                this, FOREGROUND_CHANNEL_ID, R.string.channel_name, NotificationUtil.IMPORTANCE_LOW)
+        playerNotificationManager = PlayerNotificationManager(
                 this,
                 FOREGROUND_CHANNEL_ID,
-                R.string.channel_name,
                 NOTIFICATION_ID,
                 object : PlayerNotificationManager.MediaDescriptionAdapter {
                     override fun createCurrentContentIntent(player: Player?): PendingIntent? {
@@ -258,19 +267,21 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
 
                     override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
-                        playable?.getPlayableThumbnailUrl()?.let {
-
-                            Glide.with(this@AudioPlayerService)
-                                    .asBitmap()
-                                    .load(it)
-                                    .into(BitmapCallbackTarget(callback))
+                        if (currentBitmap == null) {
+                            playable?.getPlayableThumbnailUrl()?.let {
+                                Glide.with(this@AudioPlayerService)
+                                        .asBitmap()
+                                        .load(it)
+                                        .into(BitmapCallbackTarget(this@AudioPlayerService, callback))
+                            }
                         }
-                        return null
+                        return currentBitmap
                     }
                 })
 
         playerNotificationManager.setNotificationListener(object : PlayerNotificationManager.NotificationListener {
             override fun onNotificationCancelled(notificationId: Int) {
+                stopForeground(true)
             }
 
             override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
@@ -321,6 +332,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
         }
 
         if (playable != _articObject || isDifferentAudio || player.playbackState == Player.STATE_IDLE) {
+            currentBitmap = null
 
             /** Check if the current audio is being interrupted by other audio object.**/
             playable?.let { articObject ->
@@ -447,8 +459,9 @@ class AudioPlayerService : DaggerService(), PlayerService {
  * Kotlin(version:1.2.51) was unable to resolve this class when it was defined anonymously,
  * so had to create this class.
  */
-class BitmapCallbackTarget(private val callback: PlayerNotificationManager.BitmapCallback?) : SimpleTarget<Bitmap>() {
+class BitmapCallbackTarget(private val service: AudioPlayerService, private val callback: PlayerNotificationManager.BitmapCallback) : SimpleTarget<Bitmap>() {
     override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
-        callback?.onBitmap(resource)
+        callback.onBitmap(resource)
+        service.currentBitmap = resource
     }
 }
