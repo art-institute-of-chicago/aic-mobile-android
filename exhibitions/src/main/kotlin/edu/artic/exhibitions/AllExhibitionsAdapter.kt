@@ -19,7 +19,7 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
         item.exhibitionImageUrl.subscribe {
             GlideApp.with(context)
                     .load(it)
-                    .placeholder(R.drawable.square_placeholder)
+                    .placeholder(R.drawable.placeholder_medium_square)
                     .into(image)
         }.disposedBy(item.viewDisposeBag)
 
