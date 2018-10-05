@@ -2,7 +2,7 @@ package edu.artic.exhibitions
 
 import android.content.Intent
 import android.os.Bundle
-import com.bumptech.glide.Glide
+import android.widget.ImageView
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -16,6 +16,8 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.details.R
+import edu.artic.image.GlideApp
+import edu.artic.image.ImageViewScaleInfo
 import edu.artic.image.listenerSetHeight
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -67,10 +69,16 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                     val options = RequestOptions()
                             .dontAnimate()
                             .dontTransform()
-                    Glide.with(this)
+
+                    val scaleInfo = ImageViewScaleInfo(
+                            placeHolderScaleType = ImageView.ScaleType.CENTER_CROP,
+                            imageScaleType = ImageView.ScaleType.MATRIX)
+
+                    GlideApp.with(this)
                             .load(it)
                             .apply(options)
-                            .listenerSetHeight(appBarLayout.detailImage)
+                            .placeholder(R.drawable.placeholder_large)
+                            .listenerSetHeight(appBarLayout.detailImage, scaleInfo)
                             .into(appBarLayout.detailImage)
                 }
                 .disposedBy(disposeBag)
