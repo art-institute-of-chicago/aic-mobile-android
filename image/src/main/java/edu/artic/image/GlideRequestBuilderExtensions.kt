@@ -50,13 +50,22 @@ inline fun RequestBuilder<Drawable>.listenerClean(
     })
 }
 
-fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(fragment: Fragment, image: ImageView): RequestBuilder<Drawable> {
+fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(
+        fragment: Fragment,
+        image: ImageView,
+        scaleInfo: ImageViewScaleInfo? = null
+): RequestBuilder<Drawable> {
     return listenerClean({
+        scaleInfo?.let {
+            image.scaleType = scaleInfo.placeHolderScaleType
+        }
         fragment.startPostponedEnterTransition()
         return@listenerClean false
 
     }, { resource: Drawable ->
-
+        scaleInfo?.let {
+            image.scaleType = scaleInfo.imageScaleType
+        }
         // Adds a nice animator to scale the container down to proper aspect ratio
         val parentWidth = (image.parent as View).width
         val newHeight = if (resource.intrinsicWidth > resource.intrinsicHeight) {
@@ -83,11 +92,21 @@ fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(fragment: Fragment
     })
 }
 
-fun RequestBuilder<Drawable>.listenerSetHeight(image: ImageView): RequestBuilder<Drawable> {
+fun RequestBuilder<Drawable>.listenerSetHeight(
+        image: ImageView,
+        scaleInfo: ImageViewScaleInfo? = null
+): RequestBuilder<Drawable> {
     return listenerClean({
+        scaleInfo?.let {
+            image.scaleType = scaleInfo.placeHolderScaleType
+        }
         return@listenerClean false
 
     }, { resource: Drawable ->
+
+        scaleInfo?.let {
+            image.scaleType = scaleInfo.imageScaleType
+        }
 
         // Adds a nice animator to scale the container down to proper aspect ratio
         val parentWidth = (image.parent as View).width
@@ -105,3 +124,29 @@ fun RequestBuilder<Drawable>.listenerSetHeight(image: ImageView): RequestBuilder
         return@listenerClean false
     })
 }
+
+/**
+ * This method updates ImageView.ScaleType of imageView.
+ * - Uses placeHolderScaleType when imageView is displaying placeholder image.
+ * - Uses imageScaleType when glide is done loading image and about to set image to imageView.
+ *
+ * @param imageView ImageView
+ * @param placeHolderScaleType ImageView.ScaleType for placeHolder
+ * @param imageScaleType ImageView.ScaleType for the imageView when request is completed successfully
+ */
+fun RequestBuilder<Drawable>.updateImageScaleType(imageView: ImageView,
+                                                  scaleInfo: ImageViewScaleInfo
+): RequestBuilder<Drawable> {
+    return listenerClean({
+        imageView.scaleType = scaleInfo.placeHolderScaleType
+        return@listenerClean false
+    }, {
+        imageView.scaleType = scaleInfo.imageScaleType
+        return@listenerClean false
+    })
+}
+
+data class ImageViewScaleInfo(
+        val placeHolderScaleType: ImageView.ScaleType,
+        val imageScaleType: ImageView.ScaleType
+)
