@@ -160,9 +160,10 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
     private fun setUpAudioServiceBindings() {
 
         boundService?.let { audioService ->
+
             audioService.currentTrack
                     .subscribe { audioFile ->
-                        trackTitle.text = audioFile.title
+                        trackTitle.text = audioService.playable?.getPlayableTitle()
                     }.disposedBy(disposeBag)
 
             audioService.audioPlayBackStatus
