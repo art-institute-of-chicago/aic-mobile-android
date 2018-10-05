@@ -8,5 +8,9 @@
     <string name="locationSettingsLocationAllowed">Location Enabled</string>
     <string name="locationSettingsLocationDenied">Location Disabled</string>
     <string name="locationPromptNotNow">Not Right Now</string>
-    <string name="locationPromptOk">OK, Use My Location</string>
+
+    <!-- NB: This is a fallback. We do not generally use the standard 'ok' for this string. -->
+    <!--suppress AndroidDomInspection -->
+    <string name="locationPromptOk">@android:string/ok</string>
+
 </resources>
