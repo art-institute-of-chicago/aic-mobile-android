@@ -8,7 +8,6 @@ import edu.artic.localization.LanguageSelector
 import edu.artic.localization.SPANISH
 import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.viewmodel.BaseViewModel
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -36,6 +35,7 @@ class LanguageSettingsViewModel @Inject constructor(
          */
         appLocale
                 .distinctUntilChanged()
+                .skip(1)
                 .subscribe {
                     languageSelector.setDefaultLanguageForApplication(it)
                 }.disposedBy(disposeBag)
