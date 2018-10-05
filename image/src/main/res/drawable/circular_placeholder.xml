@@ -10,7 +10,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/tour_thumb_frame"
+        android:drawable="@drawable/frame_thumbnail"
         android:bottom="6dp"
         android:gravity="center">
 
