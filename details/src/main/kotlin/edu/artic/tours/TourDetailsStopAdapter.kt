@@ -1,7 +1,6 @@
 package edu.artic.tours
 
 import android.view.View
-import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
@@ -38,7 +37,7 @@ class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCell
                 .subscribe {
                     GlideApp.with(this)
                             .load(it)
-                            .placeholder(R.drawable.tour_thumb_placeholder)
+                            .placeholder(R.drawable.placeholder_thumb)
                             .into(image)
                 }
                 .disposedBy(item.viewDisposeBag)

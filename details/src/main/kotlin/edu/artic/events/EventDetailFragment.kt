@@ -2,7 +2,8 @@ package edu.artic.events
 
 import android.os.Bundle
 import android.view.View
-import com.bumptech.glide.Glide
+import android.widget.ImageView
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -14,6 +15,8 @@ import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticEvent
 import edu.artic.details.R
+import edu.artic.image.GlideApp
+import edu.artic.image.ImageViewScaleInfo
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -53,10 +56,17 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                     val options = RequestOptions()
                             .dontAnimate()
                             .dontTransform()
-                    Glide.with(this)
+
+                    val scaleInfo = ImageViewScaleInfo(
+                            placeHolderScaleType = ImageView.ScaleType.CENTER_CROP,
+                            imageScaleType = ImageView.ScaleType.MATRIX)
+
+                    GlideApp.with(this)
                             .load(it)
                             .apply(options)
-                            .listenerAnimateSharedTransaction(this, appBarLayout.detailImage)
+                            .placeholder(R.drawable.placeholder_large)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .listenerAnimateSharedTransaction(this, appBarLayout.detailImage, scaleInfo)
                             .into(appBarLayout.detailImage)
                 }
                 .disposedBy(disposeBag)

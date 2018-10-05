@@ -6,7 +6,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import com.bumptech.glide.Glide
+import android.widget.ImageView
 import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.itemSelections
@@ -20,6 +20,8 @@ import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticTour
 import edu.artic.details.R
 import edu.artic.image.GlideApp
+import edu.artic.image.ImageViewScaleInfo
+import edu.artic.image.updateImageScaleType
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
@@ -86,14 +88,22 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     override fun setupBindings(viewModel: TourDetailsViewModel) {
         viewModel.imageUrl
-                .subscribe {
-                    Glide.with(this)
-                            .load(it)
-                            .into(appBarLayout.detailImage)
+                .subscribe { it ->
+
+                    val scaleInfo = ImageViewScaleInfo(
+                            placeHolderScaleType = ImageView.ScaleType.CENTER_CROP,
+                            imageScaleType = ImageView.ScaleType.MATRIX)
 
                     GlideApp.with(this)
                             .load(it)
-                            .placeholder(R.drawable.tour_thumb_placeholder)
+                            .placeholder(R.drawable.placeholder_large)
+                            .updateImageScaleType(appBarLayout.detailImage, scaleInfo)
+                            .into(appBarLayout.detailImage)
+
+
+                    GlideApp.with(this)
+                            .load(it)
+                            .placeholder(R.drawable.placeholder_thumb)
                             .into(tourDetailIntroCell.image)
 
                 }.disposedBy(disposeBag)
