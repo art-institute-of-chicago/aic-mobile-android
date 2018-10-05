@@ -3,12 +3,11 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/placeholderBackground" />
             <size
-                android:width="285dp"
-                android:height="177dp" />
+                android:width="240dp"
+                android:height="240dp" />
         </shape>
     </item>
     <item
-        android:bottom="32dp"
-        android:drawable="@drawable/large_frame"
+        android:drawable="@drawable/frame_medium"
         android:gravity="center" />
 </layer-list>
