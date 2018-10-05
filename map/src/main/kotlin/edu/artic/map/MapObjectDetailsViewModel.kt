@@ -18,6 +18,7 @@ import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
@@ -37,7 +38,9 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
     val audioPlayBackStatus: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
 
     val currentTrack: Subject<Optional<AudioFileModel>> = BehaviorSubject.createDefault(Optional(null))
-    val playerControl: Subject<PlayerAction> = BehaviorSubject.create()
+
+    //Use publish subject to ensure no cache of playback events on activity recreation
+    val playerControl: Subject<PlayerAction> = PublishSubject.create()
 
 
     /**
