@@ -8,7 +8,10 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.LoadStatus
-import edu.artic.membership.*
+import edu.artic.membership.MemberDataProvider
+import edu.artic.membership.MemberInfo
+import edu.artic.membership.MemberInfoPreferencesManager
+import edu.artic.membership.SOAPMemberInfoResponse
 import edu.artic.viewmodel.BaseViewModel
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -62,7 +65,7 @@ class AccessMemberCardViewModel @Inject constructor(
     var displayMode: Subject<DisplayMode> = BehaviorSubject.create()
 
 
-    private var members: Subject<List<MemberInfo>> = BehaviorSubject.create()
+    var members: Subject<List<MemberInfo>> = BehaviorSubject.create()
     private var selectedMember: Subject<MemberInfo> = BehaviorSubject.create()
 
     var expiration: Subject<String> = BehaviorSubject.create()
