@@ -37,6 +37,8 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
 
     override fun hasTransparentStatusBar(): Boolean = true
 
+    override fun hasHomeAsUpEnabled(): Boolean = false
+
     override val layoutResId: Int
         get() = R.layout.fragment_information
 
