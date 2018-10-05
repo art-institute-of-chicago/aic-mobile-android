@@ -27,6 +27,7 @@ import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
+import edu.artic.image.GlideApp
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
@@ -114,9 +115,11 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.image.subscribe {
-            Glide.with(this)
+
+            GlideApp.with(this)
                     .load(it)
                     .apply(options)
+                    .placeholder(R.drawable.placeholder_large)
                     .listenerAnimateSharedTransaction(this, audioImage)
                     .into(audioImage)
         }.disposedBy(disposeBag)
