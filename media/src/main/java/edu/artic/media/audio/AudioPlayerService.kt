@@ -185,10 +185,20 @@ class AudioPlayerService : DaggerService(), PlayerService {
         super.onCreate()
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
+
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 (currentTrack as BehaviorSubject).value?.let { given ->
                     when {
-                        playWhenReady && playbackState == Player.STATE_READY -> audioPlayBackStatus.onNext(PlayBackState.Playing(given))
+                        playWhenReady && playbackState == Player.STATE_READY -> {
+                            audioPlayBackStatus
+                                    .take(1)
+                                    .subscribe{
+                                        when(it) {
+                                            is Playing -> audioPlayBackStatus.onNext(PlayBackState.Paused(given))
+                                            else -> audioPlayBackStatus.onNext(PlayBackState.Playing(given))
+                                        }
+                                    }.disposedBy(disposeBag)
+                        }
                         playbackState == Player.STATE_ENDED -> {
                             /*Play back completed*/
                             analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value?.title.orEmpty())
