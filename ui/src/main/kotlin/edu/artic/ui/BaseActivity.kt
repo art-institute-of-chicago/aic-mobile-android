@@ -52,15 +52,15 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (useInjection) {
             AndroidInjection.inject(this)
-            if (shouldRecreateUponLanguageChange) {
-                languageSelector.currentLanguage
-                        // Ignore current value; we only want to receive updates
-                        .skip(1)
-                        .subscribe {
-                            ensureConfigIncludesAppLocale()
+            languageSelector.currentLanguage
+                    // Ignore current value; we only want to receive updates
+                    .skip(1)
+                    .subscribe {
+                        ensureConfigIncludesAppLocale()
+                        if (shouldRecreateUponLanguageChange) {
                             recreate()
-                        }.disposedBy(disposeBag)
-            }
+                        }
+                    }.disposedBy(disposeBag)
         }
         super.onCreate(savedInstanceState)
         if (layoutResId != 0) {
