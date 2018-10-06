@@ -214,6 +214,20 @@ class AudioPlayerService : DaggerService(), PlayerService {
             }
         })
 
+        val audioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioPlayBackStatus
+            .subscribe {
+                when(it) {
+                    is Playing -> {
+                        //Tell the system we are currently in a call like environment which
+                        //lets the system contextually update the volume on android pie
+                        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+                        audioManager.isSpeakerphoneOn = false
+                    }
+                    else -> audioManager.mode = AudioManager.MODE_NORMAL
+                }
+            }.disposedBy(disposeBag)
+
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
                 is PlayBackAction.Play -> {
