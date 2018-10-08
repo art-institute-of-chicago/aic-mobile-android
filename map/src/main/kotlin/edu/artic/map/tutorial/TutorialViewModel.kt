@@ -31,12 +31,14 @@ class TutorialViewModel @Inject constructor(private val tutorialPreferencesManag
 
     val tutorialTitle: Subject<Int> = BehaviorSubject.create()
 
+    val floor: Subject<Int> = BehaviorSubject.create()
+
     /**
      * Reflection of what the 'previous' button's [alpha][android.view.View.ALPHA] should be.
      *
      * Defaults to `0f` (fully transparent)
      */
-    val showBack: Subject<Float> = BehaviorSubject.createDefault(0f)
+    val currentIndex: Subject<Float> = BehaviorSubject.createDefault(0f)
 
     val tutorialPopupCurrentPage: Subject<Int> = BehaviorSubject.createDefault(0)
 

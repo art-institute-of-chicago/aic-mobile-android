@@ -9,15 +9,18 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.INVALID_FLOOR
 import edu.artic.map.R
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.withLatestFrom
 import kotlinx.android.synthetic.main.fragment_tutorial.*
 import kotlin.reflect.KClass
 
@@ -54,13 +57,16 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
 
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                viewModel.showBack.onNext(position + positionOffset)
+                viewModel.currentIndex.onNext(position + positionOffset)
             }
 
             override fun onPageSelected(position: Int) {
                 viewModel.onTutorialPageChanged(position)
             }
         })
+
+        val floor = arguments!!.getInt(ARG_FLOOR, INVALID_FLOOR)
+        viewModel.floor.onNext(floor)
     }
 
     override fun setupBindings(viewModel: TutorialViewModel) {
@@ -82,7 +88,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 .bindToMain(tutorialPopupTitle.text())
                 .disposedBy(disposeBag)
 
-        viewModel.showBack
+        viewModel.currentIndex
                 // Defensive coding: we really only expect values from 0f to 1f (both inclusive).
                 .filter { it >= 0 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -90,6 +96,24 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     tutorialBack.alpha = Math.min(it, 1f)
                 }
                 .disposedBy(disposeBag)
+
+        viewModel.currentIndex
+                .withLatestFrom(viewModel.cells)
+                .filter { (showDismiss, cells) ->
+                    showDismiss.toInt() == cells.size.minus(1)
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    tutorialNext.text = getString(R.string.dismiss)
+                }.disposedBy(disposeBag)
+
+        viewModel.currentIndex
+                .withLatestFrom(viewModel.cells)
+                .filter { (showDismiss, cells) ->
+                    showDismiss.toInt() < cells.size.minus(1)
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    tutorialNext.text = getString(R.string.next)
+                }.disposedBy(disposeBag)
 
         viewModel.currentTutorialStage
                 .map { it == TutorialViewModel.Stage.One }
@@ -110,6 +134,26 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     viewModel.onPopupBackClick()
                 }
                 .disposedBy(disposeBag)
+
+        viewModel.floor
+                .map { it == 0 }
+                .bindToMain(tutorial_lower_level_text.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.floor
+                .map { it == 1 }
+                .bindToMain(tutorial_first_floor_text.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.floor
+                .map { it == 2 }
+                .bindToMain(tutorial_second_floor_text.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.floor
+                .map { it == 3 }
+                .bindToMain(tutorial_third_floor_text.visibility())
+                .disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: TutorialViewModel) {
@@ -119,6 +163,18 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 .subscribe {
                     activity?.onBackPressed()
                 }.disposedBy(navigationDisposeBag)
+    }
+
+    companion object {
+        val ARG_FLOOR = "${TutorialFragment::class.java.simpleName}: floor"
+
+        fun withExtras(floor: Int): TutorialFragment {
+            val fragment = TutorialFragment()
+            fragment.arguments = Bundle().apply {
+                putInt(ARG_FLOOR, floor)
+            }
+            return fragment
+        }
     }
 
 }

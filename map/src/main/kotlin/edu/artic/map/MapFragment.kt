@@ -111,7 +111,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 viewModel.zoomLevelChanged(zoomLevel = map.cameraPosition.zoom)
                 viewModel.visibleRegionIdle(map.projection.visibleRegion)
             }
-            map.setOnCameraMoveListener { viewModel.visibleRegionChanged(map.projection.visibleRegion) }
+            map.setOnCameraMoveListener {
+                dismissFirstRunHeader()
+                viewModel.visibleRegionChanged(map.projection.visibleRegion)
+            }
 
             map.moveCamera(initialMapCameraPosition())
             //Initial Camera position doesn't load to the actual map position so re-center to center of musuem
@@ -211,6 +214,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
     }
 
+    fun dismissFirstRunHeader() {
+        if (mapFirstRunHeaderFrame.visibility == View.VISIBLE) {
+            viewModel.onTouchWithHeader()
+        }
+    }
+
     @SuppressLint("MissingPermission")
     override fun setupBindings(viewModel: MapViewModel) {
 
@@ -219,23 +228,36 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .disposedBy(disposeBag)
 
         lowerLevel.clicks()
-                .subscribe { viewModel.floorChangedTo(0) }
+                .subscribe {
+                    dismissFirstRunHeader()
+                    viewModel.floorChangedTo(0)
+                }
                 .disposedBy(disposeBag)
 
         floorOne.clicks()
-                .subscribe { viewModel.floorChangedTo(1) }
+                .subscribe {
+                    dismissFirstRunHeader()
+                    viewModel.floorChangedTo(1)
+                }
                 .disposedBy(disposeBag)
 
         floorTwo.clicks()
-                .subscribe { viewModel.floorChangedTo(2) }
+                .subscribe {
+                    dismissFirstRunHeader()
+                    viewModel.floorChangedTo(2)
+                }
                 .disposedBy(disposeBag)
 
         floorThree.clicks()
-                .subscribe { viewModel.floorChangedTo(3) }
+                .subscribe {
+                    dismissFirstRunHeader()
+                    viewModel.floorChangedTo(3)
+                }
                 .disposedBy(disposeBag)
 
         compass.clicks()
                 .subscribeBy {
+                    dismissFirstRunHeader()
                     viewModel.onClickCompass()
                 }.disposedBy(disposeBag)
 
@@ -520,10 +542,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                         .commit()
                             }
                         }
-                        MapViewModel.NavigationEndpoint.Tutorial -> {
+                        is MapViewModel.NavigationEndpoint.Tutorial -> {
                             manager
                                     .beginTransaction()
-                                    .replace(R.id.overlayContainer, TutorialFragment(), "TutorialFragment")
+                                    .replace(R.id.overlayContainer, TutorialFragment.withExtras(it.currentFloor), "TutorialFragment")
                                     .addToBackStack("TutorialFragment")
                                     .commit()
                         }

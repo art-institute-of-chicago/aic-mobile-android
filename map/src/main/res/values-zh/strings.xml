@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="next">下一个</string>
+    <string name="back">背部</string>
+    <string name="dismiss">抛弃</string>
     <string name="tutorial_explore_text">缩放以探索地图。</string>
     <string name="tutorial_audio_pins_text">不同楼层上的透明引脚指示音频</string>
     <string name="tutorial_audio_pins_title">点击音频引脚进行收听</string>
     <string name="tutorial_mark_compass">放大缩小以探索地图。</string>
-    <string name="tutorial_mark_first_floor">您在一楼。</string>
     <string name="tutorial_explore_title">探索地图</string>
+
+    <string name="tutorial_mark_lower_level">您在地下层.\n点击更换地板.</string>
+    <string name="tutorial_mark_first_floor">您在一层.\n点击更换地板.</string>
+    <string name="tutorial_mark_second_floor">您在二层.\n点击更换地板.</string>
+    <string name="tutorial_mark_third_floor">您在三层.\n点击更换地板.</string>
 </resources>

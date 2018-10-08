@@ -110,6 +110,20 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                 .bindToMain(view.artist.text())
                 .disposedBy(item.viewDisposeBag)
 
+        item.artistName
+                .map {
+                    it.isNotEmpty()
+                }
+                .bindToMain(view.artist.visibility(View.GONE))
+                .disposedBy(item.viewDisposeBag)
+
+        item.gallery
+                .map {
+                    view.resources.getString(R.string.gallery, it)
+                }
+                .bindToMain(view.gallery.text())
+                .disposedBy(item.viewDisposeBag)
+
         item.objectType
                 .bindToMain(view.objectType.textRes())
                 .disposedBy(item.viewDisposeBag)

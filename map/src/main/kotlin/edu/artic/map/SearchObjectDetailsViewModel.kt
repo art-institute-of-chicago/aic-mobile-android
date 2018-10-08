@@ -196,6 +196,7 @@ class ArtworkViewModel(
 
     val artworkTitle: Subject<String> = BehaviorSubject.createDefault(item.title)
     val artistName: Subject<String> = BehaviorSubject.create()
+    val gallery: Subject<String> = BehaviorSubject.create()
 
     val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.artworks)
     private val audioFileModel = item.backingObject?.audioFile?.preferredLanguage(languageSelector)
@@ -214,9 +215,12 @@ class ArtworkViewModel(
                 }.bindTo(playState)
                 .disposedBy(disposeBag)
 
-        item.artistDisplay?.let {
-            artistName.onNext(it)
+        artistName.onNext(item.artistTitle.orEmpty())
+
+        item.gallery?.let {
+            gallery.onNext(it.number.orEmpty())
         }
+
     }
 
     /**

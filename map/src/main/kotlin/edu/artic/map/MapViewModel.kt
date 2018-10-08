@@ -60,7 +60,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
     sealed class NavigationEndpoint {
         object LocationPrompt : NavigationEndpoint()
-        object Tutorial : NavigationEndpoint()
+        class Tutorial(val currentFloor: Int) : NavigationEndpoint()
         object Search : NavigationEndpoint()
     }
 
@@ -423,11 +423,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .filter {
                     it.first || it.second
                 }
+                .withLatestFrom(floor)
                 .map {
-                    (shouldShowPrompt, shouldShowTutorial) ->
+                    (whatToShow, floor) ->
+                    val (shouldShowPrompt, shouldShowTutorial) = whatToShow
                     when {
                         shouldShowPrompt -> Navigate.Forward(NavigationEndpoint.LocationPrompt)
-                        shouldShowTutorial -> Navigate.Forward(NavigationEndpoint.Tutorial)
+                        shouldShowTutorial -> Navigate.Forward(NavigationEndpoint.Tutorial(floor))
                         else -> throw IllegalStateException("Map Overlay requested, but none of the available types are permissible at this time.")
                     }
                 }
