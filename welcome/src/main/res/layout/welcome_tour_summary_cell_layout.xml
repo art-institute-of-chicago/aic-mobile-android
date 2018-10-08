@@ -14,16 +14,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:background="@drawable/rect_default_image" />
+        tools:background="@color/brownishOrange" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/infoBarrier"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="infoBar"
+        />
 
     <View
         android:id="@+id/infoBar"
         android:layout_width="0dp"
-        android:layout_height="@dimen/tourSummaryInfoBarHeight"
+        android:layout_height="0dp"
         android:background="@color/transparentInfoBarColor"
+        app:layout_constraintTop_toBottomOf="@id/infoBarrier"
         app:layout_constraintBottom_toBottomOf="@id/image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/image"
+        app:layout_constraintEnd_toEndOf="@id/image"
+        />
 
 
     <TextView
@@ -34,9 +44,11 @@
         android:layout_margin="@dimen/marginStandard"
         android:drawableStart="@drawable/ic_map_white"
         android:gravity="center"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintTop_toBottomOf="@id/infoBarrier"
         app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintStart_toStartOf="@id/image"
-        tools:text="5 stops" />
+        tools:text="5 Stops"/>
 
 
     <TextView
@@ -47,9 +59,13 @@
         android:layout_margin="@dimen/marginStandard"
         android:drawableStart="@drawable/ic_clock"
         android:gravity="center"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintTop_toTopOf="@id/infoBar"
         app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintStart_toEndOf="@id/stops"
-        tools:text="42 mins" />
+        app:layout_constraintEnd_toEndOf="@id/image"
+        app:layout_constraintHorizontal_bias="0"
+        tools:text="42 min" />
 
     <TextView
         android:id="@+id/tourTitle"
