@@ -1,114 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/audioBackground"
-    android:fitsSystemWindows="true"
-    app:statusBarBackground="@android:color/transparent">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:fitsSystemWindows="true">
+        android:translationZ="0.1dp"
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            tools:title="test">
+
+            <TextView
+                android:id="@+id/toolbarTitle"
+                style="@style/DetailToolbarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:alpha="0"
+                android:textColor="@color/white" />
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/darkGrey"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:titleEnabled="false">
-
+            android:background="@color/darkGrey"
+            android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
-                android:fitsSystemWindows="true">
-
-                <ImageView
-                    android:id="@+id/headerGradient"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@null"
-                    android:fitsSystemWindows="true"
-                    android:src="@drawable/detail_header_gradient"
-                    app:layout_collapseMode="parallax"
-                    app:layout_collapseParallaxMultiplier="1"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
+                android:layout_height="wrap_content"
+                android:background="@color/audioBackground">
 
                 <ImageView
                     android:id="@+id/audioImage"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
                     android:background="@color/audioBackground"
                     android:contentDescription="@null"
-                    android:fitsSystemWindows="true"
-                    android:src="@color/audioBackground"
+                    android:maxHeight="344dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/dashboard"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_height="300dp" />
+                    tools:layout_height="344dp" />
 
                 <TextView
                     android:id="@+id/expandedTitle"
-                    style="@style/DetailToolbarExpandedText"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/marginStandard"
+                    android:fontFamily="@font/ideal_sans_book"
                     android:gravity="start"
+                    android:padding="@dimen/marginDouble"
                     android:textColor="@color/white"
+                    android:textSize="21sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/audioImage"
                     tools:text="test expanded title" />
 
-            </android.support.constraint.ConstraintLayout>
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin">
-
-                <TextView
-                    android:id="@+id/toolbarTitle"
-                    style="@style/DetailToolbarText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0"
-                    android:lines="1" />
-
-            </android.support.v7.widget.Toolbar>
-
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/greyText"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/greyText"
-            android:orientation="vertical">
-
-            <!--
+                <!--
 
             NB: the actual appearance of the 'PlayerView' is
             in exo_playback_control_view.xml; this doesn't show
@@ -122,16 +99,21 @@
 
             -->
 
-            <com.google.android.exoplayer2.ui.PlayerView
-                android:id="@+id/audioPlayer"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                app:auto_show="true"
-                app:controller_layout_id="@layout/exo_playback_control_view"
-                app:hide_on_touch="false"
-                app:show_timeout="0"
-                app:use_artwork="false"
-                app:use_controller="true" />
+                <com.google.android.exoplayer2.ui.PlayerView
+                    android:id="@+id/audioPlayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    app:auto_show="true"
+                    app:controller_layout_id="@layout/exo_playback_control_view"
+                    app:hide_on_touch="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/expandedTitle"
+                    app:show_timeout="0"
+                    app:use_artwork="false"
+                    app:use_controller="true" />
+
+            </android.support.constraint.ConstraintLayout>
 
             <TextView
                 android:id="@+id/artistCulturePlaceDenim"
@@ -196,4 +178,4 @@
     </android.support.v4.widget.NestedScrollView>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>
