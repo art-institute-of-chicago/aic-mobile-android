@@ -19,7 +19,7 @@ class ArticDetailsAppBarLayout(context: Context, attrs: AttributeSet? = null) : 
      * property here that maps to the internal property.
      */
     val detailImage: ImageView
-        get() = image
+        get() = ImageView(context)
 
     init {
         View.inflate(context, R.layout.view_details_app_bar, this)
@@ -33,7 +33,7 @@ class ArticDetailsAppBarLayout(context: Context, attrs: AttributeSet? = null) : 
     }
 
     fun setImageTransitionName(name: String) {
-        image.transitionName = name
+        //image.transitionName = name
     }
 
     fun setTitleText(text: CharSequence) {
