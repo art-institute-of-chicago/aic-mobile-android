@@ -22,6 +22,7 @@
     <string name="map">地图</string>
     <string name="info">信息</string>
     <string name="audio">音频</string>
+    <string name="search">搜索</string>
     <string name="looking_for_artwork">寻找艺术品？</string>
     <string name="startTour">开始游览</string>
     <string name="throughDate">通過 %s</string>

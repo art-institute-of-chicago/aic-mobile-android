@@ -84,6 +84,7 @@
                 android:layout_marginEnd="@dimen/marginTwenty"
                 android:background="@drawable/ic_search_background"
                 android:scaleType="centerCrop"
+                android:contentDescription="@string/search"
                 android:src="@drawable/ic_search_24dp" />
 
         </android.support.v7.widget.Toolbar>

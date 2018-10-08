@@ -22,6 +22,7 @@
     <string name="info">Info</string>
     <string name="map">Map</string>
     <string name="audio">Audio</string>
+    <string name="search">Search</string>
     <string name="looking_for_artwork">Looking for Artwork?</string>
     <string name="startTour">Start Tour</string>
     <string name="throughDate">Through %s</string>
