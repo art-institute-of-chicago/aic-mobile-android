@@ -31,6 +31,8 @@ class TutorialViewModel @Inject constructor(private val tutorialPreferencesManag
 
     val tutorialTitle: Subject<Int> = BehaviorSubject.create()
 
+    val floor: Subject<Int> = BehaviorSubject.create()
+
     /**
      * Reflection of what the 'previous' button's [alpha][android.view.View.ALPHA] should be.
      *
