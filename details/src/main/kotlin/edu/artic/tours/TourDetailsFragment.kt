@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.math.MathUtils
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -48,6 +49,9 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.TourDetails
+
+    override val customToolbarColorResource: Int
+        get() = R.color.audioBackground
 
     private val tour by lazy {
         //Support arguments from the search activity
@@ -118,15 +122,14 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                      *   the toolbar's title.
                      */
                     val toolbarHeight = toolbar?.layoutParams?.height ?: 0
-                    tourScrollView.viewTreeObserver.addOnScrollChangedListener {
-                        val tourY = tourScrollView.scrollY
+                    tourScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
+                    { _, _, scrollY, _, _ ->
                         val threshold = image.measuredHeight + toolbarHeight / 2
-
-                        val alpha: Float = (tourY - threshold + 40f) / 40f
-
+                        val alpha: Float = (scrollY - threshold + 40f) / 40f
                         toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
                         expandedTitle.alpha = 1 - alpha
-                    }
+                    })
+
                 }.disposedBy(disposeBag)
 
         viewModel.introductionTitleText
@@ -213,6 +216,11 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tourScrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
     }
 
     override fun setupNavigationBindings(viewModel: TourDetailsViewModel) {

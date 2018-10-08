@@ -3,6 +3,7 @@ package edu.artic.exhibitions
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.math.MathUtils
+import android.support.v4.widget.NestedScrollView
 import android.widget.ImageView
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -45,6 +46,10 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     override val title = R.string.noTitle
 
+    override val customToolbarColorResource: Int
+        get() = R.color.audioBackground
+
+
     private val exhibition by lazy {
         //Support arguments from the search activity
         if (arguments?.containsKey(ARG_EXHIBITION) == true) {
@@ -71,15 +76,13 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                      *   the toolbar's title.
                      */
                     val toolbarHeight = toolbar?.layoutParams?.height ?: 0
-                    scrollView.viewTreeObserver.addOnScrollChangedListener {
-                        val tourY = scrollView.scrollY
+                    scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
+                    { _, _, scrollY, _, _ ->
                         val threshold = image.measuredHeight + toolbarHeight / 2
-
-                        val alpha: Float = (tourY - threshold + 40f) / 40f
-
+                        val alpha: Float = (scrollY - threshold + 40f) / 40f
                         toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
                         expandedTitle.alpha = 1 - alpha
-                    }
+                    })
 
                 }
                 .disposedBy(disposeBag)
@@ -133,6 +136,11 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .subscribe { viewModel.onClickBuyTickets() }
                 .disposedBy(disposeBag)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
     }
 
     override fun setupNavigationBindings(viewModel: ExhibitionDetailViewModel) {

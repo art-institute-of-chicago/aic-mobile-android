@@ -2,6 +2,7 @@ package edu.artic.events
 
 import android.os.Bundle
 import android.support.v4.math.MathUtils
+import android.support.v4.widget.NestedScrollView
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -34,6 +35,9 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     override val title = R.string.noTitle
 
+    override val customToolbarColorResource: Int
+        get() = R.color.audioBackground
+
     private val event by lazy { requireActivity().intent.getParcelableExtra<ArticEvent>(ARG_EVENT) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,15 +62,13 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                      *   the toolbar's title.
                      */
                     val toolbarHeight = toolbar?.layoutParams?.height ?: 0
-                    scrollView.viewTreeObserver.addOnScrollChangedListener {
-                        val tourY = scrollView.scrollY
+                    scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
+                    { _, _, scrollY, _, _ ->
                         val threshold = image.measuredHeight + toolbarHeight / 2
-
-                        val alpha: Float = (tourY - threshold + 40f) / 40f
-
+                        val alpha: Float = (scrollY - threshold + 40f) / 40f
                         toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
                         expandedTitle.alpha = 1 - alpha
-                    }
+                    })
                 }
                 .disposedBy(disposeBag)
 
@@ -141,6 +143,10 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 }
             }
         }.disposedBy(disposeBag)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        scrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
     }
 
     companion object {
