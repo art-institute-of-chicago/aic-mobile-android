@@ -2,6 +2,7 @@
 <resources>
     <string name="next">Next</string>
     <string name="back">Back</string>
+    <string name="dismiss">Dismiss</string>
     <string name="tutorial_mark_first_floor">You are on Floor 1</string>
     <string name="tutorial_mark_compass">Tap to Orient Map</string>
     <string name="tutorial_explore_title">Explore The Map</string>
