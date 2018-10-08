@@ -137,6 +137,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:background="@drawable/ic_search_background"
         android:scaleType="centerCrop"
+        android:contentDescription="@string/search"
         android:src="@drawable/ic_search_24dp"/>
 
     <FrameLayout

@@ -33,6 +33,7 @@
                     android:layout_gravity="end"
                     android:layout_marginEnd="@dimen/marginTwenty"
                     android:scaleType="centerCrop"
+                    android:contentDescription="@string/search"
                     android:src="@drawable/ic_search_24dp" />
 
             </android.support.v7.widget.Toolbar>
