@@ -17,5 +17,6 @@
         android:layout_height="wrap_content"
         android:background="@drawable/number_pad_delete"
         android:maxLength="1"
+        android:contentDescription="@string/number_pad_delete"
         />
 </FrameLayout>

@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/search"
         app:showAsAction="always"
+          android:contentDescription="@string/search"
         android:icon="@drawable/ic_search_24dp"
         tools:ignore="MenuTitle" />
 </menu>

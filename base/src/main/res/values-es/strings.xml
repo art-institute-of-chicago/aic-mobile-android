@@ -22,6 +22,7 @@
     <string name="map">Mapa</string>
     <string name="info">Información</string>
     <string name="audio">Audio</string>
+    <string name="search">Búsqueda</string>
     <string name="looking_for_artwork">¿Buscando obras de arte?</string>
     <string name="startTour">Comenzar visita</string>
     <string name="throughDate">Hasta %s</string>

@@ -53,7 +53,7 @@
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
         android:layout_marginBottom="@dimen/marginDouble"
-        android:contentDescription="@null"
+        android:contentDescription="@string/close"
         android:padding="@dimen/marginStandard"
         android:src="@drawable/ic_close_black_24dp" />
 

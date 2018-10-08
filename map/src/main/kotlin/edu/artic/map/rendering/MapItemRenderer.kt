@@ -3,15 +3,10 @@ package edu.artic.map.rendering
 import android.content.Context
 import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
-import com.fuzz.rx.DisposeBag
-import com.fuzz.rx.Optional
-import com.fuzz.rx.asFlowable
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterValue
-import com.fuzz.rx.optionalOf
+import com.fuzz.rx.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
+import edu.artic.db.AccessibilityAware
 import edu.artic.db.INVALID_FLOOR
 import edu.artic.db.debug
 import edu.artic.map.*
@@ -35,7 +30,7 @@ import java.util.concurrent.TimeUnit
  * Defines the main base class for rendering markers on the map. It handles synchronization, batching,
  * fetching, and listening to events on the map. Subclass this to add other custom markers.
  */
-abstract class MapItemRenderer<T>(
+abstract class MapItemRenderer<T : AccessibilityAware>(
         /**
          * Minor optimization to register or not register the bitmap queue within a subclass.
          */
@@ -388,6 +383,7 @@ abstract class MapItemRenderer<T>(
         val options = MarkerOptions()
                 .zIndex(zIndex)
                 .position(getAdjustedLocationFromItem(item))
+                .title(item.getContentDescription())
                 .icon(bitmap)
                 .alpha(0f)
 
