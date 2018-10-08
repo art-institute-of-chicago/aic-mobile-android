@@ -74,11 +74,26 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginStandard"
         android:gravity="start"
-        android:lines="1"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/objectImage"
         app:layout_constraintTop_toBottomOf="@+id/objectTitle"
         tools:text="Leonardo da vinci" />
+
+    <TextView
+        android:id="@+id/gallery"
+        style="@style/ListItemTitle2White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/objectImage"
+        app:layout_constraintTop_toBottomOf="@+id/artist"
+        tools:text="Gallery 121" />
 
 
     <ImageButton
