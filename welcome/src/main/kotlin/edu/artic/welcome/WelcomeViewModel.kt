@@ -162,7 +162,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 }
 
 /**
- * ViewModel responsible for building the tour summary list.
+ * ViewModel responsible for building each item in the tour summary list.
  */
 class WelcomeTourCellViewModel(val tour: ArticTour) : CellViewModel(null) {
 
@@ -174,7 +174,7 @@ class WelcomeTourCellViewModel(val tour: ArticTour) : CellViewModel(null) {
 }
 
 /**
- * ViewModel responsible for building the `On View` list (i.e. list of exhibition).
+ * ViewModel responsible for building each item in the `On View` list (i.e. the list of exhibitions).
  */
 class WelcomeExhibitionCellViewModel(
         adapterDisposeBag: DisposeBag,
