@@ -6,7 +6,7 @@ import android.support.annotation.UiThread
 import com.fuzz.rx.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
-import edu.artic.db.Accessiblable
+import edu.artic.db.AccessibilityAware
 import edu.artic.db.INVALID_FLOOR
 import edu.artic.db.debug
 import edu.artic.map.*
@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
  * Defines the main base class for rendering markers on the map. It handles synchronization, batching,
  * fetching, and listening to events on the map. Subclass this to add other custom markers.
  */
-abstract class MapItemRenderer<T : Accessiblable>(
+abstract class MapItemRenderer<T : AccessibilityAware>(
         /**
          * Minor optimization to register or not register the bitmap queue within a subclass.
          */
@@ -383,7 +383,7 @@ abstract class MapItemRenderer<T : Accessiblable>(
         val options = MarkerOptions()
                 .zIndex(zIndex)
                 .position(getAdjustedLocationFromItem(item))
-                .title(item.getAccessiblableTitle())
+                .title(item.getContentDescription())
                 .icon(bitmap)
                 .alpha(0f)
 

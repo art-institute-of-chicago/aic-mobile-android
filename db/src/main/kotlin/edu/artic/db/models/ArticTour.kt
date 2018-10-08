@@ -51,7 +51,7 @@ data class ArticTour(
         @Json(name = "weight") val weight: Int,
         @Json(name = "tour_stops") val tourStops: MutableList<TourStop>
 
-) : Parcelable, Playable, Accessiblable {
+) : Parcelable, Playable, AccessibilityAware {
 
     data class TourDate(
             @Json(name = "start_date") val startDate: String?,
@@ -129,7 +129,7 @@ data class ArticTour(
         return this.title
     }
 
-    override fun getAccessiblableTitle(): String {
+    override fun getContentDescription(): String {
         return this.title
     }
 

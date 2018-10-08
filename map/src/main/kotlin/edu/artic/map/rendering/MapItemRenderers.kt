@@ -6,7 +6,7 @@ import com.fuzz.rx.asFlowable
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import edu.artic.db.Accessiblable
+import edu.artic.db.AccessibilityAware
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.models.ArticGallery
@@ -213,8 +213,8 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
 /**
  * Simple [Pair]-like object which holds a [LatLng] and [Int] icon.
  */
-data class LionMapItem(val location: LatLng, @DrawableRes val iconId: Int) : Accessiblable {
-    override fun getAccessiblableTitle(): String {
+data class LionMapItem(val location: LatLng, @DrawableRes val iconId: Int) : AccessibilityAware {
+    override fun getContentDescription(): String {
         return ""
     }
 }
