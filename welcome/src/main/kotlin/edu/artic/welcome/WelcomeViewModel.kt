@@ -64,7 +64,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 .map {
                     val viewModelList = ArrayList<WelcomeTourCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeTourCellViewModel(it))
+                        viewModelList.add(WelcomeTourCellViewModel(disposeBag, it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(tours)
@@ -164,13 +164,34 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 /**
  * ViewModel responsible for building each item in the tour summary list.
  */
-class WelcomeTourCellViewModel(val tour: ArticTour) : CellViewModel(null) {
+class WelcomeTourCellViewModel(
+        adapterDisposeBag: DisposeBag,
+        val tour: ArticTour,
+        languageSelector: LanguageSelector
+) : CellViewModel(adapterDisposeBag) {
+
+    /**
+     * Which translation of [tour] currently matches the
+     * [App-level language selection][LanguageSelector.getAppLocale].
+     */
+    private val tourTranslation: Subject<ArticTour.Translation> = BehaviorSubject.create()
 
     val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
     val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
     val tourStops: Subject<String> = BehaviorSubject.createDefault(tour.tourStops.count().toString())
     val tourDuration: Subject<String> = BehaviorSubject.createDefault(tour.tourDuration)
     val tourImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.standardImageUrl)
+
+    init {
+
+        languageSelector.currentLanguage
+                .map {
+                    languageSelector.selectFrom(tour.allTranslations)
+                }
+                .bindTo(tourTranslation)
+                .disposedBy(disposeBag)
+
+    }
 }
 
 /**
