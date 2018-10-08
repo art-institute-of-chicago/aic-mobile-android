@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="next">下一个</string>
+    <string name="back">背部</string>
+    <string name="dismiss">抛弃</string>
     <string name="tutorial_explore_text">缩放以探索地图。</string>
     <string name="tutorial_audio_pins_text">不同楼层上的透明引脚指示音频</string>
     <string name="tutorial_audio_pins_title">点击音频引脚进行收听</string>

@@ -55,6 +55,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 viewModel.showBack.onNext(position + positionOffset)
+                viewModel.showDismiss.onNext(position + positionOffset)
             }
 
             override fun onPageSelected(position: Int) {
@@ -90,6 +91,26 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     tutorialBack.alpha = Math.min(it, 1f)
                 }
                 .disposedBy(disposeBag)
+
+        viewModel.showDismiss
+                .filter {
+                    it.toInt() == viewPager.adapter?.count?.minus(1)
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    tutorialNext.text = getString(R.string.dismiss)
+                }.disposedBy(disposeBag)
+
+        viewModel.showDismiss
+                .filter {
+                    if (viewPager.adapter == null) {
+                        false
+                    } else {
+                        it.toInt() < viewPager.adapter!!.count.minus(1)
+                    }
+                }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    tutorialNext.text = getString(R.string.next)
+                }.disposedBy(disposeBag)
 
         viewModel.currentTutorialStage
                 .map { it == TutorialViewModel.Stage.One }

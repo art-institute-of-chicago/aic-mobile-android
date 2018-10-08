@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="next">Siguiente</string>
+    <string name="back">Atras</string>
+    <string name="dismiss">Anular</string>
     <string name="tutorial_explore_text">Apretar y acercar para explorar el mapa.</string>
     <string name="tutorial_audio_pins_title">Tocar los pines de audio para escuchar</string>
     <string name="tutorial_audio_pins_text">Los pines transparentes indican audio en una pista diferente.</string>

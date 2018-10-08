@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dismiss">Dismiss</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
     <string name="tutorial_mark_first_floor">You are on Floor 1</string>

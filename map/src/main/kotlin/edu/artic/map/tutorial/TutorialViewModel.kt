@@ -38,6 +38,8 @@ class TutorialViewModel @Inject constructor(private val tutorialPreferencesManag
      */
     val showBack: Subject<Float> = BehaviorSubject.createDefault(0f)
 
+    val showDismiss: Subject<Float> = BehaviorSubject.createDefault(0f)
+
     val tutorialPopupCurrentPage: Subject<Int> = BehaviorSubject.createDefault(0)
 
     val currentTutorialStage: Subject<Stage> = BehaviorSubject.createDefault(Stage.One)
