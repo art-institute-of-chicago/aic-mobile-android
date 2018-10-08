@@ -19,6 +19,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.withLatestFrom
 import kotlinx.android.synthetic.main.fragment_tutorial.*
 import kotlin.reflect.KClass
 
@@ -55,8 +56,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
 
         viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                viewModel.showBack.onNext(position + positionOffset)
-                viewModel.showDismiss.onNext(position + positionOffset)
+                viewModel.currentIndex.onNext(position + positionOffset)
             }
 
             override fun onPageSelected(position: Int) {
@@ -87,7 +87,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 .bindToMain(tutorialPopupTitle.text())
                 .disposedBy(disposeBag)
 
-        viewModel.showBack
+        viewModel.currentIndex
                 // Defensive coding: we really only expect values from 0f to 1f (both inclusive).
                 .filter { it >= 0 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -96,21 +96,19 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
-        viewModel.showDismiss
-                .filter {
-                    it.toInt() == viewPager.adapter?.count?.minus(1)
+        viewModel.currentIndex
+                .withLatestFrom(viewModel.cells)
+                .filter { (showDismiss, cells) ->
+                    showDismiss.toInt() == cells.size.minus(1)
                 }.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     tutorialNext.text = getString(R.string.dismiss)
                 }.disposedBy(disposeBag)
 
-        viewModel.showDismiss
-                .filter {
-                    if (viewPager.adapter == null) {
-                        false
-                    } else {
-                        it.toInt() < viewPager.adapter!!.count.minus(1)
-                    }
+        viewModel.currentIndex
+                .withLatestFrom(viewModel.cells)
+                .filter { (showDismiss, cells) ->
+                    showDismiss.toInt() < cells.size.minus(1)
                 }.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     tutorialNext.text = getString(R.string.next)
