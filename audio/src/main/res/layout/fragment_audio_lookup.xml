@@ -10,6 +10,7 @@
     >
 
     <ImageView
+        android:contentDescription="@string/search"
         android:id="@+id/searchIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
