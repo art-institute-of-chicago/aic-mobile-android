@@ -1,12 +1,15 @@
 package edu.artic.base.utils
 
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.view.MenuItem
-
+import android.widget.TextView
+import edu.artic.base.R
 
 
 /**
@@ -26,16 +29,32 @@ fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
         isAccessible = false
     }
 
+    // While we're adjusting the other properties, we can normalize the font in use too.
+    val type: Typeface? = ResourcesCompat.getFont(context, R.font.ideal_sans_medium)
+
     @SuppressLint("RestrictedApi")
     for (i in 0 until menuView.childCount) {
         (menuView.getChildAt(i) as BottomNavigationItemView).apply {
             setShiftingMode(false)
             setChecked(false)
+            if (type != null) {
+                overrideLabelFont(type)
+            }
             if (colorList > 0) {
                 setTextColor(ContextCompat.getColorStateList(this.context, colorList))
             }
         }
     }
+}
+
+/**
+ * There's no other API for defining these font styles. We just
+ * find and set Typeface on the `smallLabel` and 'largeLabel`
+ * directly.
+ */
+private fun BottomNavigationItemView.overrideLabelFont(font: Typeface) {
+    findViewById<TextView?>(R.id.smallLabel)?.typeface = font
+    findViewById<TextView?>(R.id.largeLabel)?.typeface = font
 }
 
 /**
