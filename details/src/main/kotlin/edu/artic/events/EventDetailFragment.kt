@@ -51,10 +51,10 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                     expandedTitle.text = it
                     toolbarTitle.text = it
                     /**
-                     * When the tourScrollView is
+                     * When the scrollView is
                      * - scrolled down and expandedTitle is about to go behind the toolbar,
                      *   update the toolbar's title.
-                     * - scrolled up and expandedTitle is visible (seen in tourScrollView) clear
+                     * - scrolled up and expandedTitle is visible (seen in scrollView) clear
                      *   the toolbar's title.
                      */
                     val toolbarHeight = toolbar?.layoutParams?.height ?: 0
