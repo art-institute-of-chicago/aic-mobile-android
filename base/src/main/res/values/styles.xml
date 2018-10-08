@@ -22,6 +22,7 @@
     </style>
 
     <style name="PageTitleLargeWhite" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">40sp</item>
         <item name="android:letterSpacing">0.03</item>
