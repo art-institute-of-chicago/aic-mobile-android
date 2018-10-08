@@ -6,10 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import edu.artic.db.Floor
-import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID
-import edu.artic.db.INVALID_FLOOR
-import edu.artic.db.Playable
+import edu.artic.db.*
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.ui.util.asCDNUri
 import kotlinx.android.parcel.Parcelize
@@ -54,7 +51,7 @@ data class ArticTour(
         @Json(name = "weight") val weight: Int,
         @Json(name = "tour_stops") val tourStops: MutableList<TourStop>
 
-) : Parcelable, Playable {
+) : Parcelable, Playable, Accessiblable {
 
     data class TourDate(
             @Json(name = "start_date") val startDate: String?,
@@ -129,6 +126,10 @@ data class ArticTour(
     }
 
     override fun getPlayableTitle(): String? {
+        return this.title
+    }
+
+    override fun getAccessiblableTitle(): String {
         return this.title
     }
 
