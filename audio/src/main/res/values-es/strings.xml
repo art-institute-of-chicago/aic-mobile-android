@@ -2,5 +2,6 @@
 <resources>
 
     <string name="number_pad_go_search">Va</string>
+    <string name="number_pad_delete">Borrar</string>
 
 </resources>

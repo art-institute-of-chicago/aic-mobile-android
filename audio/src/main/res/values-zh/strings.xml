@@ -2,5 +2,6 @@
 <resources>
 
     <string name="number_pad_go_search">走</string>
+    <string name="number_pad_delete">删除</string>
 
 </resources>
