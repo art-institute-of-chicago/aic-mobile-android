@@ -27,7 +27,7 @@
             android:adjustViewBounds="true"
             app:layout_collapseMode="parallax"
             app:layout_collapseParallaxMultiplier="1"
-            tools:background="#fab"
+            tools:background="@color/bluegreen"
             tools:layout_height="200dp" />
 
         <LinearLayout
@@ -45,13 +45,15 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
+                android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
                 android:tint="@color/white"
-                tools:background="@drawable/ic_play" />
+                tools:src="@drawable/ic_play" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                tools:layout_height="52dp" />
 
             <TextView
                 android:id="@+id/subTitle"
@@ -66,7 +68,8 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 app:layout_collapseMode="parallax"
-                tools:text="Lorem Ipsum Iran Lorem Ipsum Iran Lorem Ipsum Iran Lorem Ipsum Iran Lorem Ipsum" />
+                tools:maxLines="3"
+                tools:text="@tools:sample/lorem/random" />
         </LinearLayout>
 
         <android.support.v7.widget.Toolbar
@@ -74,7 +77,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_collapseMode="pin"
-            app:titleTextColor="@color/white">
+            app:titleTextColor="@color/white"
+            tools:title="Welcome"
+            tools:layout_height="52dp" >
 
             <ImageView
                 android:id="@+id/searchIcon"
