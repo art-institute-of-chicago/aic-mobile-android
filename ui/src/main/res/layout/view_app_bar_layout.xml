@@ -60,6 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:fontFamily="@font/amiri_regular"
                 android:gravity="center"
                 android:paddingStart="@dimen/marginDouble"
                 android:paddingTop="@dimen/marginDouble"
