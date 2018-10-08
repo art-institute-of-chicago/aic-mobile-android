@@ -38,6 +38,24 @@ fun String.asUrlViewIntent(action: String = Intent.ACTION_VIEW): Intent {
 }
 
 /**
+ * If this
+ * * is not null and
+ * * is not the empty string `""` and
+ * * doesn't just consist of spaces
+ *
+ * then this function just returns the String it was called on.
+ *
+ * Otherwise, we will return [alternate].
+ */
+fun String?.orIfNullOrBlank(alternate: String?): String? {
+    return if (this.isNullOrBlank()) {
+        alternate
+    } else {
+        this
+    }
+}
+
+/**
  * Decodes html encoded strings preserving new line chars.
  */
 fun String.filterHtmlEncodedText(): String {
