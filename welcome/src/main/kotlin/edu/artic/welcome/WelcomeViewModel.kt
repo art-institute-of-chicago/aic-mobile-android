@@ -6,6 +6,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.DateTimeHelper.Purpose.*
+import edu.artic.base.utils.orIfNullOrBlank
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.daos.ArticTourDao
@@ -176,10 +177,10 @@ class WelcomeTourCellViewModel(
      */
     private val tourTranslation: Subject<ArticTour.Translation> = BehaviorSubject.create()
 
-    val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
-    val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
+    val tourTitle: Subject<String> = BehaviorSubject.create()
+    val tourDescription: Subject<String> = BehaviorSubject.create()
     val tourStops: Subject<String> = BehaviorSubject.createDefault(tour.tourStops.count().toString())
-    val tourDuration: Subject<String> = BehaviorSubject.createDefault(tour.tourDuration)
+    val tourDuration: Subject<String> = BehaviorSubject.create()
     val tourImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.standardImageUrl)
 
     init {
@@ -191,6 +192,26 @@ class WelcomeTourCellViewModel(
                 .bindTo(tourTranslation)
                 .disposedBy(disposeBag)
 
+        tourTranslation
+                .map {
+                    it.description.orIfNullOrBlank(tour.description).orEmpty()
+                }
+                .bindToMain(tourDescription)
+                .disposedBy(disposeBag)
+
+        tourTranslation
+                .map {
+                    it.title.orIfNullOrBlank(tour.title).orEmpty()
+                }
+                .bindToMain(tourTitle)
+                .disposedBy(disposeBag)
+
+        tourTranslation
+                .map {
+                    it.tour_duration.orIfNullOrBlank(tour.tourDuration).orEmpty()
+                }
+                .bindToMain(tourDuration)
+                .disposedBy(disposeBag)
     }
 }
 
