@@ -1,6 +1,7 @@
 package edu.artic.events
 
 import android.os.Bundle
+import android.support.v4.math.MathUtils
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -35,11 +36,9 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     private val event by lazy { requireActivity().intent.getParcelableExtra<ArticEvent>(ARG_EVENT) }
 
-    override fun hasTransparentStatusBar() = true
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        appBarLayout.setImageTransitionName(event.title)
+        image.transitionName = event.title
     }
 
     override fun onRegisterViewModel(viewModel: EventDetailViewModel) {
@@ -48,7 +47,27 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     override fun setupBindings(viewModel: EventDetailViewModel) {
         viewModel.title
-                .subscribe { appBarLayout.setTitleText(it) }
+                .subscribe {
+                    expandedTitle.text = it
+                    toolbarTitle.text = it
+                    /**
+                     * When the tourScrollView is
+                     * - scrolled down and expandedTitle is about to go behind the toolbar,
+                     *   update the toolbar's title.
+                     * - scrolled up and expandedTitle is visible (seen in tourScrollView) clear
+                     *   the toolbar's title.
+                     */
+                    val toolbarHeight = toolbar?.layoutParams?.height ?: 0
+                    scrollView.viewTreeObserver.addOnScrollChangedListener {
+                        val tourY = scrollView.scrollY
+                        val threshold = image.measuredHeight + toolbarHeight / 2
+
+                        val alpha: Float = (tourY - threshold + 40f) / 40f
+
+                        toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
+                        expandedTitle.alpha = 1 - alpha
+                    }
+                }
                 .disposedBy(disposeBag)
 
         viewModel.imageUrl
@@ -66,8 +85,8 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                             .apply(options)
                             .placeholder(R.drawable.placeholder_large)
                             .transition(DrawableTransitionOptions.withCrossFade())
-                            .listenerAnimateSharedTransaction(this, appBarLayout.detailImage, scaleInfo)
-                            .into(appBarLayout.detailImage)
+                            .listenerAnimateSharedTransaction(this, image, scaleInfo)
+                            .into(image)
                 }
                 .disposedBy(disposeBag)
 
