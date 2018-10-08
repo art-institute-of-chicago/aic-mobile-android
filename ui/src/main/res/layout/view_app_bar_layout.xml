@@ -14,7 +14,6 @@
         android:fitsSystemWindows="true"
         app:contentScrim="?attr/colorPrimary"
         app:expandedTitleGravity="bottom|center_horizontal"
-        app:expandedTitleMarginBottom="74dp"
         app:expandedTitleTextAppearance="@style/PageTitleLargeWhite"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -52,8 +51,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                tools:layout_height="52dp" />
+                android:layout_height="40dp"
+                />
 
             <TextView
                 android:id="@+id/subTitle"
@@ -63,7 +62,7 @@
                 android:fontFamily="@font/amiri_regular"
                 android:gravity="center"
                 android:paddingStart="@dimen/marginDouble"
-                android:paddingTop="@dimen/marginDouble"
+                android:paddingTop="@dimen/marginHalf"
                 android:paddingEnd="@dimen/marginDouble"
                 android:paddingBottom="@dimen/marginTriple"
                 android:textColor="@android:color/white"
