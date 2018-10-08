@@ -1,7 +1,7 @@
 package edu.artic.map.rendering
 
 import com.google.android.gms.maps.model.LatLng
-import edu.artic.db.Accessiblable
+import edu.artic.db.AccessibilityAware
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject
@@ -16,9 +16,9 @@ class MapItemModel(
         val thumbURL: String,
         val imageURL: String,
         val backingObject: ArticObject?,
-        val latLng: LatLng) : Accessiblable {
+        val latLng: LatLng) : AccessibilityAware {
 
-    override fun getAccessiblableTitle(): String {
+    override fun getContentDescription(): String {
         return title
     }
 

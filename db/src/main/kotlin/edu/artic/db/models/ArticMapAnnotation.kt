@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import edu.artic.db.Accessiblable
+import edu.artic.db.AccessibilityAware
 import edu.artic.db.Floor
 import edu.artic.ui.util.asCDNUri
 
@@ -31,9 +31,9 @@ data class ArticMapAnnotation(
         @Json(name = "image_filesize") val imageFileSize: String?,
         @Json(name = "image_width") val imageWidth: String?,
         @Json(name = "image_height") val imageHeight: String?
-) : Accessiblable {
+) : AccessibilityAware {
 
-    override fun getAccessiblableTitle(): String {
+    override fun getContentDescription(): String {
         return title.orEmpty()
     }
 

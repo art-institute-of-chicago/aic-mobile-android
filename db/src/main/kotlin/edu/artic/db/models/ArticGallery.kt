@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import edu.artic.db.Accessiblable
+import edu.artic.db.AccessibilityAware
 import edu.artic.db.Floor
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -40,9 +40,9 @@ data class ArticGallery(
         @Json(name = "closed") val closed: Boolean,
         @Json(name = "number") val number: String?,
         @Json(name = "category_titles") val categoryTitles: List<String>
-) : Parcelable, Accessiblable {
+) : Parcelable, AccessibilityAware {
 
-    override fun getAccessiblableTitle(): String {
+    override fun getContentDescription(): String {
         return title.orEmpty()
     }
 
