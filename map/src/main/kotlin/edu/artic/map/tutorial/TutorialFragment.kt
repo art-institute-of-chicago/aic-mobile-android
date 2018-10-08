@@ -9,6 +9,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
@@ -62,6 +63,9 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 viewModel.onTutorialPageChanged(position)
             }
         })
+
+        val floor = arguments!!.getInt(ARG_FLOOR, 0)
+        viewModel.floor.onNext(floor)
     }
 
     override fun setupBindings(viewModel: TutorialViewModel) {
@@ -131,6 +135,26 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     viewModel.onPopupBackClick()
                 }
                 .disposedBy(disposeBag)
+
+        viewModel.floor
+                .map { it == 0 }
+                .bindToMain(tutorial_lower_level_text.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.floor
+                .map { it == 1 }
+                .bindToMain(tutorial_first_floor_text.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.floor
+                .map { it == 2 }
+                .bindToMain(tutorial_second_floor_text.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.floor
+                .map { it == 3 }
+                .bindToMain(tutorial_third_floor_text.visibility())
+                .disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: TutorialViewModel) {
@@ -140,6 +164,18 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 .subscribe {
                     activity?.onBackPressed()
                 }.disposedBy(navigationDisposeBag)
+    }
+
+    companion object {
+        val ARG_FLOOR = "${TutorialFragment::class.java.simpleName}: floor"
+
+        fun withExtras(floor: Int): TutorialFragment {
+            val fragment = TutorialFragment()
+            fragment.arguments = Bundle().apply {
+                putInt(ARG_FLOOR, floor)
+            }
+            return fragment
+        }
     }
 
 }

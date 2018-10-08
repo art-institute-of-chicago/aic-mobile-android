@@ -542,10 +542,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                                         .commit()
                             }
                         }
-                        MapViewModel.NavigationEndpoint.Tutorial -> {
+                        is MapViewModel.NavigationEndpoint.Tutorial -> {
                             manager
                                     .beginTransaction()
-                                    .replace(R.id.overlayContainer, TutorialFragment(), "TutorialFragment")
+                                    .replace(R.id.overlayContainer, TutorialFragment.withExtras(it.currentFloor), "TutorialFragment")
                                     .addToBackStack("TutorialFragment")
                                     .commit()
                         }

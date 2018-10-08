@@ -3,7 +3,10 @@
     <string name="dismiss">Dismiss</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
-    <string name="tutorial_mark_first_floor">You are on Floor 1</string>
+    <string name="tutorial_mark_lower_level">You are on Lower Level.\nTap to change floors.</string>
+    <string name="tutorial_mark_first_floor">You are on First Level.\nTap to change floors.</string>
+    <string name="tutorial_mark_second_floor">You are on Second Level.\nTap to change floors.</string>
+    <string name="tutorial_mark_third_floor">You are on Third Level.\nTap to change floors.</string>
     <string name="tutorial_mark_compass">Tap to Orient Map</string>
     <string name="tutorial_explore_title">Explore The Map</string>
     <string name="tutorial_explore_text">Pinch to explore the map.</string>
