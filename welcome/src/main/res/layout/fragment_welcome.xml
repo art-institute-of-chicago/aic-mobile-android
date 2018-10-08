@@ -85,7 +85,7 @@
                 style="@style/SeeAll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/seeAllLinkMargin"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:text="@string/seeAll"
                 app:layout_constraintBaseline_toBaselineOf="@id/tourSummaryLabel"
@@ -93,7 +93,7 @@
                 app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toEndOf="@id/tourSummaryLabel"
                 app:layout_constraintWidth_default="wrap"
-                tools:text="See All"/>
+                />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/tourSummaryRecyclerView"
@@ -102,6 +102,7 @@
                 android:layout_marginTop="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false"
                 android:paddingStart="@dimen/marginDouble"
+                android:paddingEnd="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toursSeeAllLink"
@@ -135,7 +136,7 @@
                 style="@style/SeeAll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/seeAllLinkMargin"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:text="@string/seeAll"
                 app:layout_constraintBaseline_toBaselineOf="@id/onViewLabel"
@@ -143,7 +144,7 @@
                 app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toEndOf="@id/onViewLabel"
                 app:layout_constraintWidth_default="wrap"
-                tools:text="See All"/>
+                />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/onViewRecyclerView"
@@ -153,6 +154,7 @@
                 android:layout_marginTop="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false"
                 android:paddingStart="@dimen/marginDouble"
+                android:paddingEnd="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/onViewLink"
@@ -186,7 +188,7 @@
                 style="@style/SeeAll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/seeAllLinkMargin"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:text="@string/seeAll"
@@ -195,7 +197,7 @@
                 app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toEndOf="@id/eventLabel"
                 app:layout_constraintWidth_default="wrap"
-                tools:text="See All"/>
+                />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/eventsRecyclerView"
@@ -205,6 +207,7 @@
                 android:layout_marginTop="@dimen/marginDouble"
                 android:nestedScrollingEnabled="false"
                 android:paddingStart="@dimen/marginDouble"
+                android:paddingEnd="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
