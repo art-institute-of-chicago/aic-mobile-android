@@ -2,6 +2,7 @@ package edu.artic.exhibitions
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.math.MathUtils
 import android.widget.ImageView
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -44,8 +45,6 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     override val title = R.string.noTitle
 
-    override fun hasTransparentStatusBar() = true
-
     private val exhibition by lazy {
         //Support arguments from the search activity
         if (arguments?.containsKey(ARG_EXHIBITION) == true) {
@@ -61,7 +60,28 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     override fun setupBindings(viewModel: ExhibitionDetailViewModel) {
         viewModel.title
-                .subscribe { appBarLayout.setTitleText(it) }
+                .subscribe {
+                    expandedTitle.text = it
+                    toolbarTitle.text = it
+                    /**
+                     * When the scrollView is
+                     * - scrolled down and expandedTitle is about to go behind the toolbar,
+                     *   update the toolbar's title.
+                     * - scrolled up and expandedTitle is visible (seen in scrollView) clear
+                     *   the toolbar's title.
+                     */
+                    val toolbarHeight = toolbar?.layoutParams?.height ?: 0
+                    scrollView.viewTreeObserver.addOnScrollChangedListener {
+                        val tourY = scrollView.scrollY
+                        val threshold = image.measuredHeight + toolbarHeight / 2
+
+                        val alpha: Float = (tourY - threshold + 40f) / 40f
+
+                        toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
+                        expandedTitle.alpha = 1 - alpha
+                    }
+
+                }
                 .disposedBy(disposeBag)
 
         viewModel.imageUrl
@@ -78,8 +98,8 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                             .load(it)
                             .apply(options)
                             .placeholder(R.drawable.placeholder_large)
-                            .listenerSetHeight(appBarLayout.detailImage, scaleInfo)
-                            .into(appBarLayout.detailImage)
+                            .listenerSetHeight(image, scaleInfo)
+                            .into(image)
                 }
                 .disposedBy(disposeBag)
 
