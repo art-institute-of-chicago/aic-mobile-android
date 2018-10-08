@@ -14,6 +14,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.INVALID_FLOOR
 import edu.artic.map.R
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -166,7 +167,6 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
 
     companion object {
         val ARG_FLOOR = "${TutorialFragment::class.java.simpleName}: floor"
-        const val INVALID_FLOOR = 0
 
         fun withExtras(floor: Int): TutorialFragment {
             val fragment = TutorialFragment()
