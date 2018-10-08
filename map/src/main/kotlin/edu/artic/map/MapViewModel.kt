@@ -425,8 +425,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 }
                 .withLatestFrom(floor)
                 .map {
-                    (data, floor) ->
-                    val (shouldShowPrompt, shouldShowTutorial) = data
+                    (whatToShow, floor) ->
+                    val (shouldShowPrompt, shouldShowTutorial) = whatToShow
                     when {
                         shouldShowPrompt -> Navigate.Forward(NavigationEndpoint.LocationPrompt)
                         shouldShowTutorial -> Navigate.Forward(NavigationEndpoint.Tutorial(floor))

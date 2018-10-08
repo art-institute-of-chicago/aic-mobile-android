@@ -64,7 +64,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
             }
         })
 
-        val floor = arguments!!.getInt(ARG_FLOOR, 0)
+        val floor = arguments!!.getInt(ARG_FLOOR, INVALID_FLOOR)
         viewModel.floor.onNext(floor)
     }
 
@@ -166,6 +166,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
 
     companion object {
         val ARG_FLOOR = "${TutorialFragment::class.java.simpleName}: floor"
+        const val INVALID_FLOOR = 0
 
         fun withExtras(floor: Int): TutorialFragment {
             val fragment = TutorialFragment()
