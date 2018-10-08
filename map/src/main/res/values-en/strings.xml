@@ -3,6 +3,7 @@
     <string name="dismiss">Dismiss</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
+    <string name="close">Close</string>
     <string name="tutorial_mark_lower_level">You are on Lower Level.\nTap to change floors.</string>
     <string name="tutorial_mark_first_floor">You are on First Level.\nTap to change floors.</string>
     <string name="tutorial_mark_second_floor">You are on Second Level.\nTap to change floors.</string>
