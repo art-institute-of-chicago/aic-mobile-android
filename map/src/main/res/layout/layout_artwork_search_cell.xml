@@ -103,6 +103,7 @@
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/ic_play"
         android:visibility="visible"
+        android:contentDescription="@string/exo_controls_play_description"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintBottom_toBottomOf="@id/objectImage"
         app:layout_constraintEnd_toEndOf="parent"
@@ -117,6 +118,7 @@
         app:layout_constraintVertical_bias="0"
         tools:visibility="gone"
         android:visibility="gone"
+        android:contentDescription="@string/exo_controls_pause_description"
         app:layout_constraintBottom_toBottomOf="@id/objectImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/objectImage" />
