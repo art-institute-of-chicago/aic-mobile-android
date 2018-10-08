@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- These two attributes are used in design_bottom_navigation_item.xml -->
+    <item type="dimen" name="bottomNavTextSize">12sp</item>
+    <item type="dimen" name="design_bottom_navigation_text_size" tools:override="true">@dimen/bottomNavTextSize</item>
+    <item type="dimen" name="design_bottom_navigation_active_text_size" tools:override="true">@dimen/bottomNavTextSize</item>
+
+</resources>

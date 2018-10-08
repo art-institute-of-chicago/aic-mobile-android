@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,20 +18,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/audio_navigation_graph"
-        tools:background="#fab" />
+        tools:background="#fab"/>
 
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigation"
+        style="@style/BottomNav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:itemBackground="@color/white"
-        app:itemTextColor="@color/colorPrimary"
         app:layout_constrainedHeight="true"
         app:layout_constraintTop_toBottomOf="@id/container"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/navigation_menu" />
+        />
 
 </android.support.constraint.ConstraintLayout>
