@@ -8,6 +8,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.support.annotation.UiThread
+import android.support.v4.math.MathUtils
 import android.support.v4.widget.TextViewCompat
 import android.view.View
 import android.widget.LinearLayout.LayoutParams
@@ -28,6 +29,7 @@ import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
 import edu.artic.image.GlideApp
 import edu.artic.image.listenerAnimateSharedTransaction
+import edu.artic.image.listenerSetHeight
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.media.audio.AudioPlayerService
@@ -64,7 +66,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.AudioPlayer
 
-    override fun hasTransparentStatusBar(): Boolean = true
     var boundService: AudioPlayerService? = null
 
     private val translationsAdapter: BaseRecyclerViewAdapter<AudioFileModel, BaseViewHolder>
@@ -90,10 +91,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            appBarLayout.updateDetailTitle(verticalOffset, expandedTitle, toolbarTitle)
-        }
-
         exo_translation_selector.adapter = LanguageAdapter().toBaseAdapter()
     }
 
@@ -102,6 +99,17 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.title.subscribe {
             expandedTitle.text = it
             toolbarTitle.text = it
+
+            val toolbarHeight = toolbar?.layoutParams?.height ?: 0
+            scrollView.viewTreeObserver.addOnScrollChangedListener {
+                val tourY = scrollView.scrollY
+                val threshold = audioImage.measuredHeight + toolbarHeight / 2
+
+                val alpha: Float = (tourY - threshold + 40f) / 40f
+
+                toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
+                expandedTitle.alpha = 1 - alpha
+            }
         }.disposedBy(disposeBag)
 
         val options = RequestOptions()
