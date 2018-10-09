@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.support.annotation.UiThread
 import android.support.v4.math.MathUtils
+import android.support.v4.widget.NestedScrollView
 import android.support.v4.widget.TextViewCompat
 import android.view.View
 import android.widget.LinearLayout.LayoutParams
@@ -23,13 +24,11 @@ import edu.artic.adapter.*
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.filterHtmlEncodedText
-import edu.artic.base.utils.updateDetailTitle
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
 import edu.artic.image.GlideApp
 import edu.artic.image.listenerAnimateSharedTransaction
-import edu.artic.image.listenerSetHeight
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.media.audio.AudioPlayerService
@@ -101,15 +100,13 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
             toolbarTitle.text = it
 
             val toolbarHeight = toolbar?.layoutParams?.height ?: 0
-            scrollView.viewTreeObserver.addOnScrollChangedListener {
-                val tourY = scrollView.scrollY
+            scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
+            { _, _, scrollY, _, _ ->
                 val threshold = audioImage.measuredHeight + toolbarHeight / 2
-
-                val alpha: Float = (tourY - threshold + 40f) / 40f
-
+                val alpha: Float = (scrollY - threshold + 40f) / 40f
                 toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
                 expandedTitle.alpha = 1 - alpha
-            }
+            })
         }.disposedBy(disposeBag)
 
         val options = RequestOptions()
@@ -257,6 +254,12 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         requireActivity().bindService(AudioPlayerService.getLaunchIntent(requireContext()),
                 serviceConnection, BIND_AUTO_CREATE)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        scrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
+    }
+
 
     override fun onPause() {
         super.onPause()
