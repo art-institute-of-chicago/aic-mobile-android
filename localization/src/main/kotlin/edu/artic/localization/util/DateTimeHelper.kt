@@ -1,5 +1,6 @@
 package edu.artic.localization.util
 
+import edu.artic.localization.SPANISH
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.*
@@ -18,9 +19,6 @@ class DateTimeHelper {
      * The intended use of a given [DateTimeFormatter].
      */
     sealed class Purpose {
-
-        @Suppress("PropertyName")
-        internal val SPANISH = Locale("es")
 
         object MonthThenDay : Purpose() {
             override fun obtainFormatter(locale: Locale): DateTimeFormatter {
