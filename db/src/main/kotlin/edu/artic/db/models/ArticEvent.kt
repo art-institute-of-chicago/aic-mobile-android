@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import edu.artic.base.utils.toCurrentTimeZone
+import edu.artic.localization.util.toCurrentTimeZone
 import edu.artic.db.BuildConfig
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime

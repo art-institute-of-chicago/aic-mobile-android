@@ -7,7 +7,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenCategoryName
-import edu.artic.base.utils.DateTimeHelper.Purpose.*
+import edu.artic.localization.util.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.models.ArticExhibition

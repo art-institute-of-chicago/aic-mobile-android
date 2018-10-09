@@ -5,7 +5,7 @@ import com.fuzz.rx.*
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.base.utils.DateTimeHelper.Purpose.*
+import edu.artic.localization.util.DateTimeHelper.Purpose.*
 import edu.artic.base.utils.orIfNullOrBlank
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
