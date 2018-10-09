@@ -14,7 +14,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:27.1.1'
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
 
@@ -36,6 +35,7 @@ dependencies {
     implementation project(':ui')
     implementation project(':viewmodel')
 
+    implementation libs.v4_support
     implementation libs.arch_navigation
     implementation libs.arch_navigation_ui
     implementation libs.constraint_layout
