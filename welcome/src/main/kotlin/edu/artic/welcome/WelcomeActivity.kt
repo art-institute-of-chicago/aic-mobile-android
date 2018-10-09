@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import edu.artic.base.utils.disableShiftMode
-import edu.artic.base.utils.preventReselection
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_welcome.*
@@ -35,7 +34,9 @@ class WelcomeActivity : BaseActivity() {
         bottomNavigation.apply {
             disableShiftMode(R.color.menu_color_list)
             selectedItemId = R.id.action_home
-            preventReselection()
+            setOnNavigationItemReselectedListener {
+                navController.popBackStack(R.id.welcomeFragment, true)
+            }
             setOnNavigationItemSelectedListener(NavigationSelectListener(this@WelcomeActivity))
         }
     }
