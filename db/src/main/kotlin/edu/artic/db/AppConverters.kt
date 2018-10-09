@@ -3,7 +3,7 @@ package edu.artic.db
 import android.arch.persistence.room.TypeConverter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
-import edu.artic.base.utils.DateTimeHelper
+import edu.artic.localization.util.DateTimeHelper
 import edu.artic.db.models.*
 import org.threeten.bp.Instant
 import org.threeten.bp.ZonedDateTime
