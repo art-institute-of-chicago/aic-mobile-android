@@ -2,7 +2,7 @@
 <resources>
 
     <style name="SearchTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/audioBackground</item>
         <item name="colorPrimaryDark">@color/greyText</item>
         <item name="android:colorPrimaryDark">@color/greyText</item>
         <item name="colorControlNormal">@color/white</item>
