@@ -133,8 +133,9 @@ subprojects {
         }
 
         // TODO: Re-enable 'translation' lint check when translated strings arrive
+        // TODO: Re-enable 'constraints' lint check whenever the IDE inspection actually agrees with the CLI tool
         lintOptions {
-            disable 'MissingTranslation'
+            disable 'MissingTranslation','MissingConstraints'
         }
 
         apply plugin: 'androidx.navigation.safeargs'
