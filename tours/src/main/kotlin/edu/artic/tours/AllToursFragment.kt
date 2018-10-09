@@ -5,8 +5,10 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
@@ -16,7 +18,6 @@ import edu.artic.tours.recyclerview.AllToursItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_all_tours.*
 import kotlin.reflect.KClass
@@ -62,8 +63,13 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         recyclerView.addItemDecoration(AllToursItemDecoration(view.context, 2))
 
         /* Ensure search events go through ok. */
-        appBarLayout.setExpanded(false)
-        appBarLayout.setOnSearchClickedConsumer(Consumer { viewModel.onClickSearch() })
+        searchIcon
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
+                }
+                .disposedBy(disposeBag)
     }
 
     override fun setupBindings(viewModel: AllToursViewModel) {

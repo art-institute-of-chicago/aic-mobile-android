@@ -7,19 +7,30 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <edu.artic.view.ArticMainAppBarLayout
-        android:id="@+id/appBarLayout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHeight_max="?attr/actionBarSize"
-        app:expanded="false"
-        app:backgroundImage="@color/colorPrimary"
-        app:icon="@null"
-        tools:layout_height="52dp"
-        />
+        tools:title="Tours"
+        tools:layout_height="52dp" >
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/marginTwenty"
+            android:background="@null"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/search"
+            android:src="@drawable/ic_search_24dp" />
+
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -28,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:listitem="@layout/cell_all_tours_intro"
         />
 
