@@ -83,6 +83,10 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
                 .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
                 .subscribeBy {
                     when (it) {
+                        AllToursViewModel.NavigationEndpoint.Search -> {
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
+                        }
                         is AllToursViewModel.NavigationEndpoint.TourDetails -> {
                             val endpoint = it
                             val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
@@ -104,8 +108,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         item?.let {
             when(it.itemId) {
                 R.id.search -> {
-                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                    startActivity(intent)
+                    viewModel.onClickSearch()
                     return true
                 }
                 else -> {
