@@ -20,8 +20,11 @@ import kotlinx.android.synthetic.main.fragment_search_results_sub.*
 import java.util.concurrent.TimeUnit
 import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.view.inputmethod.InputMethodManager
+import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.base.utils.hideSoftKeyboard
+import javax.inject.Inject
 
 
 abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
@@ -30,6 +33,9 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
     override val screenCategory: ScreenCategoryName? = null
 
     override val overrideStatusBarColor: Boolean = false
+
+    @Inject
+    lateinit var customTabManager: CustomTabManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -132,8 +138,9 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                         SearchBaseViewModel.NavigationEndpoint.HideKeyboard -> {
                             requireActivity().hideSoftKeyboard()
                         }
-                        SearchBaseViewModel.NavigationEndpoint.Web -> {
-
+                        is SearchBaseViewModel.NavigationEndpoint.Web -> {
+                            val url = endpoint.url
+                            customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(url))
                         }
                     }
                 }
