@@ -7,6 +7,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar.Ideal</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:windowAnimationStyle">@null</item>
     </style>
@@ -27,6 +29,10 @@
         <item name="android:textSize">40sp</item>
         <item name="android:letterSpacing">0.03</item>
         <item name="android:lineSpacingExtra">0sp</item>
+    </style>
+
+    <style name="Widget.AppCompat.Toolbar.Ideal">
+        <item name="titleTextAppearance">@style/AppBarTitleWhite</item>
     </style>
 
     <style name="DetailToolbarExpandedText">
@@ -142,7 +148,7 @@
     </style>
 
     <style name="divider">
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">1px</item>
         <item name="android:layout_marginStart">@dimen/marginDouble</item>
         <item name="android:layout_marginEnd">@dimen/marginDouble</item>
         <item name="android:background">@color/warmGrey40Alpha</item>
@@ -165,9 +171,10 @@
     </style>
 
     <style name="BodySansSerifBlackLeft">
-        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:textSize">@dimen/textMedium</item>
         <item name="android:lineSpacingExtra">7sp</item>
-        <item name="android:textColor">#343434</item>
+        <item name="android:textColor">@color/greyText</item>
     </style>
 
     <style name="SearchResultWhite">
@@ -177,6 +184,7 @@
     </style>
 
     <style name="SearchSectionHeadingGray">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/warmGrey</item>
     </style>
@@ -235,7 +243,9 @@
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
     </style>
 
-    <style name="AppBarTitleWhite">
+    <!-- Style for toolbar titles. -->
+    <style name="AppBarTitleWhite" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:textSize">21sp</item>
         <item name="android:lineSpacingExtra">-1sp</item>
         <item name="android:textColor">#ffffff</item>
