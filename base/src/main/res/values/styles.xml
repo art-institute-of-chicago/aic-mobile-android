@@ -142,7 +142,7 @@
     </style>
 
     <style name="divider">
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">1px</item>
         <item name="android:layout_marginStart">@dimen/marginDouble</item>
         <item name="android:layout_marginEnd">@dimen/marginDouble</item>
         <item name="android:background">@color/warmGrey40Alpha</item>
@@ -177,6 +177,7 @@
     </style>
 
     <style name="SearchSectionHeadingGray">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/warmGrey</item>
     </style>
