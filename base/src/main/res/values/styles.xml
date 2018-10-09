@@ -145,7 +145,7 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginStart">@dimen/marginDouble</item>
         <item name="android:layout_marginEnd">@dimen/marginDouble</item>
-        <item name="android:background">@color/warmGrey</item>
+        <item name="android:background">@color/warmGrey40Alpha</item>
     </style>
 
     <style name="DetailButton">
