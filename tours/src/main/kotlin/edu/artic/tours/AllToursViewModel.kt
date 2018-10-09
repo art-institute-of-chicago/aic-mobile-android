@@ -20,6 +20,7 @@ class AllToursViewModel @Inject constructor(
         toursDao: ArticTourDao) : NavViewViewModel<AllToursViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
+        object Search : NavigationEndpoint()
         data class TourDetails(val pos: Int, val tour: ArticTour) : NavigationEndpoint()
     }
 
@@ -54,6 +55,10 @@ class AllToursViewModel @Inject constructor(
 
     fun onClickTour(pos: Int, tour: ArticTour) {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.TourDetails(pos, tour)))
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 }
 
