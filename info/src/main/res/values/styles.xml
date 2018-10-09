@@ -33,4 +33,16 @@
         <item name="android:minHeight">50dp</item>
     </style>
 
+    <style name="InformationExpandedTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:lineSpacingExtra">0sp</item>
+    </style>
+
+    <style name="InfoMenu" parent="CardTitleLargeBlack">
+        <item name="android:paddingTop">@dimen/marginDouble</item>
+        <item name="android:paddingBottom">@dimen/marginDouble</item>
+    </style>
 </resources>
