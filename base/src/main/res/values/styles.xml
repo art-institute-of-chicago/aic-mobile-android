@@ -22,6 +22,7 @@
     </style>
 
     <style name="PageTitleLargeWhite" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">40sp</item>
         <item name="android:letterSpacing">0.03</item>
@@ -143,7 +144,7 @@
     <style name="divider">
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginStart">@dimen/marginDouble</item>
-        <item name="android:layout_marginEnd">@dimen/marginStandard</item>
+        <item name="android:layout_marginEnd">@dimen/marginDouble</item>
         <item name="android:background">@color/warmGrey</item>
     </style>
 
