@@ -41,4 +41,8 @@
         <item name="android:lineSpacingExtra">0sp</item>
     </style>
 
+    <style name="InfoMenu" parent="CardTitleLargeBlack">
+        <item name="android:paddingTop">@dimen/marginDouble</item>
+        <item name="android:paddingBottom">@dimen/marginDouble</item>
+    </style>
 </resources>
