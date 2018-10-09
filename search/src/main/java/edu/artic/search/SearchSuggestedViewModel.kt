@@ -5,6 +5,7 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
+import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticExhibition
@@ -19,8 +20,9 @@ import javax.inject.Inject
 class SearchSuggestedViewModel @Inject constructor(private val manager: SearchResultsManager,
                                                    private val searchSuggestionsDao: ArticSearchObjectDao,
                                                    private val objectDao: ArticObjectDao,
-                                                   analyticsTracker: AnalyticsTracker)
-    : SearchBaseViewModel(analyticsTracker, manager) {
+                                                   analyticsTracker: AnalyticsTracker,
+                                                   dataObjectDao: ArticDataObjectDao)
+    : SearchBaseViewModel(analyticsTracker, manager, dataObjectDao) {
 
     private val dynamicCells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
