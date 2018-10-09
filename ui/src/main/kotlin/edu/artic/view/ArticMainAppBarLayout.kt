@@ -33,7 +33,11 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             )
             setIcon(a.getResourceId(R.styleable.ArticMainAppBarLayout_icon, 0))
             setBackgroundImage(a.getResourceId(R.styleable.ArticMainAppBarLayout_backgroundImage, 0))
-            subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
+            subTitle.text = a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
+            val setExpandedTitleTextAppearance = a.getResourceId(
+                    R.styleable.ArticMainAppBarLayout_expandedTitleStyle,
+                    R.style.PageTitleLargeWhite)
+            collapsingToolbar.setExpandedTitleTextAppearance(setExpandedTitleTextAppearance)
         }
 
         // update our content when offset changes.
