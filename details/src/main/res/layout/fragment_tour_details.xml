@@ -201,6 +201,13 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tourDetailIntroCell" />
 
+            <!--
+
+            NB: the below attributes for 'focusable' and 'nestedScrollingEnabled' are
+            reinforced at runtime, in TourDetailsFragment. Pity the XML variants aren't
+            enough.
+
+            -->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="0dp"
@@ -208,9 +215,12 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:focusable="false"
+                android:nestedScrollingEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/introCellBottomDivider" />
+                app:layout_constraintTop_toBottomOf="@id/introCellBottomDivider"
+                tools:listitem="@layout/cell_tour_details_stop"
+                />
 
         </android.support.constraint.ConstraintLayout>
 
