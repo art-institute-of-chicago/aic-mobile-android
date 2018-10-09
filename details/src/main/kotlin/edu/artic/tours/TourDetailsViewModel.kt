@@ -31,7 +31,6 @@ class TourDetailsViewModel @Inject constructor(
     val stopsText: Subject<String> = BehaviorSubject.create()
     val timeText: Subject<String> = BehaviorSubject.create()
     val availableTranslations: Subject<List<SpecifiesLanguage>> = BehaviorSubject.create()
-    val startTourButtonText: Subject<Int> = BehaviorSubject.createDefault(R.string.startTour)
     val description: Subject<String> = BehaviorSubject.create()
     val intro: Subject<String> = BehaviorSubject.create()
     val stops: Subject<List<TourDetailsStopCellViewModel>> = BehaviorSubject.create()

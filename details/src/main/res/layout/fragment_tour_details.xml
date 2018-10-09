@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            tools:title="test">
+            tools:title="Tour Details">
 
             <TextView
                 android:id="@+id/toolbarTitle"
@@ -111,7 +111,7 @@
                 app:layout_constraintEnd_toStartOf="@id/languageSelector"
                 app:layout_constraintStart_toEndOf="@id/tourStops"
                 app:layout_constraintTop_toTopOf="@id/tourStops"
-                tools:text="34min" />
+                tools:text="34 min" />
 
             <FrameLayout
                 android:id="@+id/startTourButton"
@@ -135,7 +135,7 @@
                     android:drawableStart="@drawable/exo_icon_play"
                     android:background="@null"
                     android:minHeight="0dp"
-                    tools:text="Start Tour" />
+                    android:text="@string/startTour" />
 
             </FrameLayout>
 

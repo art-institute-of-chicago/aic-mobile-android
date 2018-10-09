@@ -151,9 +151,6 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .bindToMain(tourTime.text())
                 .disposedBy(disposeBag)
 
-        viewModel.startTourButtonText
-                .bindToMain(startTourButtonText.textRes())
-                .disposedBy(disposeBag)
 
         viewModel.description
                 .map { it.fromHtml() }
