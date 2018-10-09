@@ -81,6 +81,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         languageSelector.adapter = LanguageAdapter().toBaseAdapter()
         //Fix for the scrollview starting mid-scroll on the recyclerview
         recyclerView.isFocusable = false
+        //Pass fling events to the parent 'tourScrollView' layout
+        recyclerView.isNestedScrollingEnabled = false
         languageSelector.requestFocus()
     }
 
