@@ -36,7 +36,6 @@
         android:id="@+id/tourScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/darkGrey"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +45,6 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/greyText"
             android:descendantFocusability="afterDescendants">
 
             <ImageView
@@ -107,7 +105,8 @@
                 style="@style/MetadataMediumWhite"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:drawableStart="@drawable/ic_clock"
+                android:gravity="center_vertical|start"
                 app:layout_constraintBottom_toBottomOf="@id/tourStops"
                 app:layout_constraintEnd_toStartOf="@id/languageSelector"
                 app:layout_constraintStart_toEndOf="@id/tourStops"
@@ -132,6 +131,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:gravity="center"
+                    android:drawableStart="@drawable/exo_icon_play"
                     android:background="@null"
                     android:minHeight="0dp"
                     tools:text="Start Tour" />
