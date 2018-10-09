@@ -3,9 +3,6 @@ package edu.artic.tours
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -19,6 +16,7 @@ import edu.artic.tours.recyclerview.AllToursItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_all_tours.*
 import kotlin.reflect.KClass
@@ -56,11 +54,16 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
             }
 
         }
+
+        // NB: a LayoutManager _must_ be defined before initializing 'toursAdapter'
         recyclerView.layoutManager = layoutManager
         val toursAdapter = AllToursAdapter(recyclerView, viewModel.intro, viewModel.viewDisposeBag)
         recyclerView.adapter = toursAdapter
         recyclerView.addItemDecoration(AllToursItemDecoration(view.context, 2))
 
+        /* Ensure search events go through ok. */
+        appBarLayout.setExpanded(false)
+        appBarLayout.setOnSearchClickedConsumer(Consumer { viewModel.onClickSearch() })
     }
 
     override fun setupBindings(viewModel: AllToursViewModel) {
@@ -97,25 +100,5 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
                     }
                 }
                 .disposedBy(navigationDisposeBag)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_all_tours, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            when(it.itemId) {
-                R.id.search -> {
-                    viewModel.onClickSearch()
-                    return true
-                }
-                else -> {
-                    return super.onOptionsItemSelected(item)
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }
