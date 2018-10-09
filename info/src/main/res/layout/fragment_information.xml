@@ -196,7 +196,7 @@
                     android:layout_width="136dp"
                     android:layout_height="43dp"
                     android:layout_marginStart="@dimen/marginDouble"
-                    android:layout_marginTop="@dimen/marginTriple"
+                    android:layout_marginTop="@dimen/marginTen"
                     android:src="@drawable/bloomberg_logo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0"
