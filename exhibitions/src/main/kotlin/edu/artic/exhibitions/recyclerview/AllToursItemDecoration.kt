@@ -1,4 +1,4 @@
-package edu.artic.tours.recyclerview
+package edu.artic.exhibitions.recyclerview
 
 import android.content.Context
 import android.graphics.Rect
@@ -11,8 +11,8 @@ class AllExhibitionsItemDecoration(
         private val spanCount: Int,
         private val includeEdge: Boolean = true
 ) : RecyclerView.ItemDecoration() {
-    private val horizontalSpacing: Int = context.resources.getDimension(R.dimen.all_exhibitions_cell_spacing_horizontal).toInt()
-    private val verticalSpacing: Int = context.resources.getDimension(R.dimen.all_exhibitions_cell_spacing_vertical).toInt()
+    private val horizontalSpacing: Int = context.resources.getDimensionPixelSize(R.dimen.all_exhibitions_cell_spacing_horizontal)
+    private val verticalSpacing: Int = context.resources.getDimensionPixelSize(R.dimen.all_exhibitions_cell_spacing_vertical)
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
         var position = parent.getChildAdapterPosition(view) // item position
