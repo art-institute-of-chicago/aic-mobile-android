@@ -1,9 +1,13 @@
 package edu.artic.search
 
+import com.fuzz.rx.bindTo
+import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
@@ -15,7 +19,9 @@ import javax.inject.Inject
 
 open class SearchBaseViewModel @Inject constructor(
         protected val analyticsTracker: AnalyticsTracker,
-        protected val searchResultsManager: SearchResultsManager)
+        protected val searchResultsManager: SearchResultsManager,
+        private val dataObjectDao: ArticDataObjectDao
+)
     : NavViewViewModel<SearchBaseViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -25,7 +31,7 @@ open class SearchBaseViewModel @Inject constructor(
         data class ArtworkOnMap(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
         data class AmenityOnMap(val type: SuggestedMapAmenities) : NavigationEndpoint()
         object HideKeyboard: NavigationEndpoint()
-        object Web : NavigationEndpoint()
+        data class Web(val url: String) : NavigationEndpoint()
 
     }
 
@@ -91,7 +97,11 @@ open class SearchBaseViewModel @Inject constructor(
                 )
             }
             is SearchEmptyCellViewModel -> {
-                navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Web))
+                dataObjectDao.getDataObject()
+                        .map { it.websiteUrlAndroid }
+                        .take(1)
+                        .map { url -> Navigate.Forward(NavigationEndpoint.Web(url)) }
+                        .bindTo(navigateTo)
             }
             is SearchCircularCellViewModel -> {
                 viewModel.artwork?.let { articObject ->
