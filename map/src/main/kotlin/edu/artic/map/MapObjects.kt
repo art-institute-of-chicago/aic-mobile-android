@@ -15,7 +15,7 @@ internal fun initialMapCameraPosition(): CameraUpdate {
     return CameraUpdateFactory.newCameraPosition(
             CameraPosition.Builder()
                     .target(centerOfMuseumOnMap)
-                    .bearing(90f)
-                    .tilt(45f)
+                    .bearing(88.725f)
+                    .tilt(60f)
                     .build())
 }

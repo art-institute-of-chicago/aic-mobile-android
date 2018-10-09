@@ -12,7 +12,6 @@ import android.support.v4.widget.TextViewCompat
 import android.view.View
 import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -222,6 +221,11 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.availableTranslations
                 .bindToMain(translationsAdapter.itemChanges())
+                .disposedBy(disposeBag)
+
+        viewModel.availableTranslations
+                .map { it.size > 1 }
+                .bindToMain(exo_translation_selector.visibility(View.INVISIBLE))
                 .disposedBy(disposeBag)
 
         LanguageSelectorViewBackground(exo_translation_selector)

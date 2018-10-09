@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ImageView
 import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
@@ -165,6 +166,11 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
         viewModel.availableTranslations
                 .bindToMain(translationsAdapter.itemChanges())
+                .disposedBy(disposeBag)
+
+        viewModel.availableTranslations
+                .map { it.size > 1 }
+                .bindToMain(languageSelector.visibility(View.INVISIBLE))
                 .disposedBy(disposeBag)
 
         LanguageSelectorViewBackground(languageSelector)

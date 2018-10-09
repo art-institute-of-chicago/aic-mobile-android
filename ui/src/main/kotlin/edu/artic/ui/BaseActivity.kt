@@ -52,6 +52,13 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         if (useInjection) {
             AndroidInjection.inject(this)
+
+            languageSelector.currentLanguage
+                    .take(1)
+                    .subscribe {
+                        ensureConfigIncludesAppLocale()
+                    }.disposedBy(disposeBag)
+
             languageSelector.currentLanguage
                     // Ignore current value; we only want to receive updates
                     .skip(1)
