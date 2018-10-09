@@ -6,6 +6,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import edu.artic.image.GlideApp
 import edu.artic.map.R
 import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -43,8 +44,9 @@ class TourCarouselAdapter : AutoHolderRecyclerViewAdapter<TourCarousalBaseViewMo
                 item.imageUrl
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
-                            Glide.with(this)
+                            GlideApp.with(this)
                                     .load(it)
+                                    .placeholder(R.drawable.placeholder_thumb)
                                     .into(image)
                         }
                         .disposedBy(item.viewDisposeBag)
