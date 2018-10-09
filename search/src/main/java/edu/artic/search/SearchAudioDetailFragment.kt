@@ -1,12 +1,9 @@
 package edu.artic.search
 
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
-import android.widget.ImageView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -18,7 +15,6 @@ import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.image.GlideApp
-import edu.artic.image.ImageViewScaleInfo
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants
@@ -66,22 +62,22 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
             })
         }.disposedBy(disposeBag)
 
-        val options = RequestOptions()
-                .dontAnimate()
-                .dontTransform()
-                .placeholder(ColorDrawable())
-                .error(ColorDrawable())
 
         viewModel.imageUrl
                 .map { it.isNotEmpty() }
                 .bindToMain(image.visibility())
                 .disposedBy(disposeBag)
 
-
+        val options = RequestOptions()
+                .dontAnimate()
+                .dontTransform()
 
         viewModel.imageUrl
                 .subscribe {
-
+                    /**
+                     * Please be aware that the "options" defined above will impact the way Glide
+                     * operates.
+                     */
                     GlideApp.with(this)
                             .load(it)
                             .apply(options)
