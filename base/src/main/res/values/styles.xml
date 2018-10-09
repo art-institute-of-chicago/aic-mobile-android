@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar.Ideal</item>
         <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:windowAnimationStyle">@null</item>
@@ -28,6 +29,10 @@
         <item name="android:textSize">40sp</item>
         <item name="android:letterSpacing">0.03</item>
         <item name="android:lineSpacingExtra">0sp</item>
+    </style>
+
+    <style name="Widget.AppCompat.Toolbar.Ideal">
+        <item name="titleTextAppearance">@style/AppBarTitleWhite</item>
     </style>
 
     <style name="DetailToolbarExpandedText">
@@ -238,7 +243,9 @@
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
     </style>
 
-    <style name="AppBarTitleWhite">
+    <!-- Style for toolbar titles. -->
+    <style name="AppBarTitleWhite" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:textSize">21sp</item>
         <item name="android:lineSpacingExtra">-1sp</item>
         <item name="android:textColor">#ffffff</item>
