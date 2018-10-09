@@ -160,7 +160,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/onViewLink"
                 tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                tools:listitem="@layout/welcome_event_cell_layout"
+                tools:listitem="@layout/welcome_on_view_cell_layout"
                 tools:orientation="horizontal"/>
 
             <View
