@@ -164,6 +164,7 @@
     </style>
 
     <style name="BodySansSerifWhiteCentered">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">17sp</item>
         <item name="android:lineSpacingExtra">7sp</item>
@@ -178,6 +179,7 @@
     </style>
 
     <style name="SearchResultWhite">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">8sp</item>
         <item name="android:textColor">#ffffff</item>
@@ -206,6 +208,7 @@
         <item name="android:gravity">end</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/brownishOrange</item>
+        <item name="android:fontFamily">@font/ideal_sans_semibold</item>
     </style>
 
     <style name="MetadataMediumGray">
@@ -222,6 +225,7 @@
     </style>
 
     <style name="ListItemTitle2White">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:textSize">16sp</item>
         <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:textColor">#CCffffff</item>
@@ -252,12 +256,14 @@
     </style>
 
     <style name="TabUnselected">
+        <item name="android:fontFamily">@font/ideal_sans_light</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">#ffffff</item>
     </style>
 
     <style name="TabSelected">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">17sp</item>
         <item name="android:textColor">#ffffff</item>
