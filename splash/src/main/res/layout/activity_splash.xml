@@ -35,10 +35,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
+            android:layout_marginTop="@dimen/marginDouble"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/logo"
-            app:layout_constraintBottom_toTopOf="@id/musuemImage">
+            app:layout_constraintTop_toBottomOf="@id/logo">
 
             <TextView
                 android:id="@+id/welcome"
@@ -77,17 +77,6 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/musuemImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dashboard"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/supportedBy"/>
-
         <TextView
             android:id="@+id/supportedBy"
             style="@style/MetadataSmallWhite"
@@ -119,4 +108,12 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/animatedMuseum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dashboard"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"/>
 </FrameLayout>
