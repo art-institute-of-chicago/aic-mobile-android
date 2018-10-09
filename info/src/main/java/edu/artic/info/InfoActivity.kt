@@ -3,7 +3,6 @@ package edu.artic.info
 import android.content.Intent
 import android.os.Bundle
 import edu.artic.base.utils.disableShiftMode
-import edu.artic.base.utils.preventReselection
 import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
 import edu.artic.navigation.NavigationConstants
@@ -29,7 +28,9 @@ class InfoActivity : BaseActivity() {
         bottomNavigation.apply {
             disableShiftMode(R.color.info_menu_color_list)
             selectedItemId = R.id.action_info
-            preventReselection()
+            setOnNavigationItemReselectedListener {
+                navController.popBackStack(R.id.informationFragment, true)
+            }
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
     }
