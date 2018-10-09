@@ -1,5 +1,6 @@
 package edu.artic.splash
 
+import android.animation.Animator
 import android.app.AlertDialog
 import android.app.DialogFragment.STYLE_NO_FRAME
 import android.graphics.Matrix
@@ -8,11 +9,13 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.UiThread
+import android.util.TypedValue
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.FrameLayout
 import com.fuzz.rx.disposedBy
 import edu.artic.base.NetworkException
 import edu.artic.base.utils.asDeepLinkIntent
@@ -106,20 +109,15 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     override fun onStart() {
         super.onStart()
         viewModel.navigateTo
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { navigation ->
                     when (navigation) {
                         is Navigate.Forward -> {
                             when (navigation.endpoint) {
                                 is SplashViewModel.NavigationEndpoint.StartVideo -> {
-                                    mMediaPlayer?.start()
-                                    splashChrome.postDelayed({
-                                        splashChrome.animate().alpha(0f).start()
-                                        val endpoint = navigation.endpoint as SplashViewModel.NavigationEndpoint.StartVideo
-                                        val displayDialog = endpoint.displayLanguageSettings
-                                        if (displayDialog) {
-                                            pauseVideo(4)
-                                        }
-                                    }, 200)
+                                    val endpoint = navigation.endpoint as SplashViewModel.NavigationEndpoint.StartVideo
+                                    val displayDialog = endpoint.displayLanguageSettings
+                                    fadeOutChrome(displayDialog)
                                 }
                                 is SplashViewModel.NavigationEndpoint.Welcome ->
                                     goToWelcomeActivity()
@@ -159,7 +157,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         updateTextureViewSize(width, height)
 
         try {
-            val afd = assets.openFd("splash.mp4")
+            val afd = resources.openRawResourceFd(R.raw.splash)
             val mediaPlayer = MediaPlayer()
             mMediaPlayer = mediaPlayer
             mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
@@ -171,6 +169,48 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         } catch (ignored: Throwable) {
             ///TODO: instead, handle errors when we receive the Navigate.Forward event (i.e. when the progressBar is full)
         }
+    }
+
+    private fun fadeOutChrome(displayDialog: Boolean) {
+        textureView.alpha = 0f
+        mMediaPlayer?.seekTo(0)
+        splashChrome.animate().alpha(0f).setListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(p0: Animator?) {
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                fadeInVideo(displayDialog)
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+            }
+
+        }).start()
+    }
+
+    private fun fadeInVideo(displayDialog: Boolean) {
+        animatedMuseum.animate().alpha(0f).start()
+        textureView.animate().alpha(1f).setListener(object : Animator.AnimatorListener{
+            override fun onAnimationRepeat(p0: Animator?) {
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                mMediaPlayer?.start()
+                if (displayDialog) {
+                    pauseVideo(4)
+                }
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+            }
+
+        }).start()
     }
 
     private fun goToWelcomeActivity() {
@@ -231,8 +271,17 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     private fun updateTextureViewSize(width: Int, height: Int) {
         val matrix = Matrix()
         val ratioOfScreen = height.toFloat() / width.toFloat()
-        val ratio = (16f / 9f) / ratioOfScreen
-        matrix.setScale(1.0f, ratio, width / 2f, height / 2f)
+        val videoRatio = 16f / 9f
+        val scaleRatio = videoRatio / ratioOfScreen
+        matrix.setScale(1.0f, scaleRatio, 0f, 0f)
         textureView.setTransform(matrix)
+
+        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        val videoHeight = (width.toFloat() * videoRatio).toInt()
+        val percentageOfScreenAboveMuseumInVideo = (636f/1280f)
+        val topScreenOffset = (videoHeight * percentageOfScreenAboveMuseumInVideo)
+        val imagePadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, resources.displayMetrics)
+        params.topMargin = (topScreenOffset - imagePadding).toInt()
+        animatedMuseum.layoutParams = params
     }
 }
