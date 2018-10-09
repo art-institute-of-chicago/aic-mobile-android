@@ -1,32 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/greyText"
-    android:fitsSystemWindows="true"
-    app:statusBarBackground="@android:color/transparent">
+    android:background="@color/greyText">
 
-    <edu.artic.view.ArticDetailsAppBarLayout
-        android:id="@+id/appBarLayout"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            tools:title="test">
+
+            <TextView
+                android:id="@+id/toolbarTitle"
+                style="@style/DetailToolbarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0"
+                android:lines="1"
+                android:textColor="@color/white" />
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/greyText"
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/darkGrey"
         android:fillViewport="true"
-        android:paddingTop="@dimen/marginStandard"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/greyText">
+            android:background="@color/greyText"
+            android:descendantFocusability="afterDescendants">
 
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@null"
+                android:scaleType="matrix"
+                app:layout_constraintDimensionRatio="H,375:220"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@drawable/dashboard" />
+
+            <TextView
+                android:id="@+id/expandedTitle"
+                style="@style/DetailToolbarExpandedText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/image"
+                tools:text="Expanded Title" />
             <!--
 
             Rules: Both 'showOnMap' and 'buyTickets' should be same width,
@@ -41,37 +84,37 @@
                 style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginStandard"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
+                android:layout_marginEnd="@dimen/marginStandard"
                 android:drawableStart="@drawable/ic_show_on_map"
                 android:padding="@dimen/marginStandard"
                 android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@id/buyTickets"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
-                app:layout_constraintEnd_toStartOf="@id/buyTickets"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible"
-                tools:text="Show on Map"/>
+                app:layout_constraintTop_toBottomOf="@id/expandedTitle"
+                tools:text="Show on Map"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/buyTickets"
                 style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginStandard"
                 android:layout_marginTop="21dp"
-                android:drawablePadding="@dimen/marginStandard"
+                android:layout_marginEnd="@dimen/marginDouble"
                 android:drawableStart="@drawable/ic_ticket"
+                android:drawablePadding="@dimen/marginStandard"
                 android:padding="@dimen/marginStandard"
-                app:layout_constraintWidth_percent=".45"
-                app:layout_constraintHorizontal_weight=".5"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight=".5"
                 app:layout_constraintStart_toEndOf="@id/showOnMap"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Buy Tickets"/>
+                app:layout_constraintTop_toBottomOf="@id/expandedTitle"
+                app:layout_constraintWidth_percent=".45"
+                tools:text="Buy Tickets" />
 
             <!--
 
@@ -86,12 +129,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:barrierDirection="bottom"
                 app:constraint_referenced_ids="showOnMap,buyTickets"
-                app:layout_constraintTop_toBottomOf="@id/buyTickets"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buyTickets" />
 
             <TextView
                 android:id="@+id/description"
@@ -99,12 +141,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginRight="@dimen/marginDouble"
                 android:layout_marginTop="19dp"
+                android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonPanelGuide"
-                tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate."/>
+                tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate." />
 
             <TextView
                 android:id="@+id/throughDate"
@@ -112,15 +154,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginRight="@dimen/marginDouble"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"
-                tools:text="Through August 5, 2018"/>
+                tools:text="Through August 5, 2018" />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>

@@ -3,6 +3,8 @@ package edu.artic.tours
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.math.MathUtils
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -48,8 +50,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.TourDetails
 
-    override fun hasTransparentStatusBar() = true
-
+    override val customToolbarColorResource: Int
+        get() = R.color.audioBackground
 
     private val tour by lazy {
         //Support arguments from the search activity
@@ -77,7 +79,6 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         }
 
         languageSelector.adapter = LanguageAdapter().toBaseAdapter()
-
         //Fix for the scrollview starting mid-scroll on the recyclerview
         recyclerView.isFocusable = false
         languageSelector.requestFocus()
@@ -98,8 +99,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                     GlideApp.with(this)
                             .load(it)
                             .placeholder(R.drawable.placeholder_large)
-                            .updateImageScaleType(appBarLayout.detailImage, scaleInfo)
-                            .into(appBarLayout.detailImage)
+                            .updateImageScaleType(image, scaleInfo)
+                            .into(image)
 
 
                     GlideApp.with(this)
@@ -110,7 +111,26 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 }.disposedBy(disposeBag)
 
         viewModel.titleText
-                .subscribe { appBarLayout.setTitleText(it) }.disposedBy(disposeBag)
+                .subscribe {
+                    expandedTitle.text = it
+                    toolbarTitle.text = it
+                    /**
+                     * When the tourScrollView is
+                     * - scrolled down and expandedTitle is about to go behind the toolbar,
+                     *   update the toolbar's title.
+                     * - scrolled up and expandedTitle is visible (seen in tourScrollView) clear
+                     *   the toolbar's title.
+                     */
+                    val toolbarHeight = toolbar?.layoutParams?.height ?: 0
+                    tourScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
+                    { _, _, scrollY, _, _ ->
+                        val threshold = image.measuredHeight + toolbarHeight / 2
+                        val alpha: Float = (scrollY - threshold + 40f) / 40f
+                        toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
+                        expandedTitle.alpha = 1 - alpha
+                    })
+
+                }.disposedBy(disposeBag)
 
         viewModel.introductionTitleText
                 .bindToMain(tourDetailIntroCell.tourStopTitle.text())
@@ -196,6 +216,11 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tourScrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
     }
 
     override fun setupNavigationBindings(viewModel: TourDetailsViewModel) {
