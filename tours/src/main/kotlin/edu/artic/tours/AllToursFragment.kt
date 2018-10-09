@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
@@ -17,6 +18,8 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.tours.recyclerview.AllToursItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_all_tours.*
 import kotlin.reflect.KClass
 
@@ -76,22 +79,16 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
     override fun setupNavigationBindings(viewModel: AllToursViewModel) {
         viewModel.navigateTo
-                .subscribe {
+                .observeOn(AndroidSchedulers.mainThread())
+                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
+                .subscribeBy {
                     when (it) {
-                        is Navigate.Forward -> {
-                            when(it.endpoint) {
-
-                                is AllToursViewModel.NavigationEndpoint.TourDetails -> {
-                                    val endpoint = it.endpoint as AllToursViewModel.NavigationEndpoint.TourDetails
-                                    val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
-                                        putExtras(TourDetailsFragment.argsBundle(endpoint.tour))
-                                    }
-                                    startActivity(intent)
-                                }
+                        is AllToursViewModel.NavigationEndpoint.TourDetails -> {
+                            val endpoint = it
+                            val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                                putExtras(TourDetailsFragment.argsBundle(endpoint.tour))
                             }
-                        }
-                        is Navigate.Back -> {
-
+                            startActivity(intent)
                         }
                     }
                 }
