@@ -30,7 +30,7 @@ class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCell
 
         // The TourIntro (which would be labeled 0) is bound by the fragment separately.
         // TODO: Integrate that transform of the `ArticTour` as a separate ViewModel.
-        tourNumber.text = (position + 1).toString()
+        tourNumber.text = context.getString(R.string.tourStopPosition, position + 1)
 
         item.imageUrl
                 .observeOn(AndroidSchedulers.mainThread())
