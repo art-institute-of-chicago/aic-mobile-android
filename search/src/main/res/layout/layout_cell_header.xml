@@ -6,7 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/marginTriple"
-    android:paddingStart="@dimen/marginStandard"
-    android:paddingEnd="@dimen/marginStandard"
     tools:background="@color/greyText"
     tools:text="Makalu" />
