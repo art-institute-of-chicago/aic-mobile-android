@@ -3,6 +3,7 @@ package edu.artic.events
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
+import android.text.Html
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -15,6 +16,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.fromHtml
+import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticEvent
 import edu.artic.details.R
 import edu.artic.image.GlideApp
@@ -98,7 +100,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
         viewModel.description
                 .map {
-                    it.fromHtml()
+                    it.trimDownBlankLines().fromHtml(Html.FROM_HTML_MODE_COMPACT)
                 }
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)
