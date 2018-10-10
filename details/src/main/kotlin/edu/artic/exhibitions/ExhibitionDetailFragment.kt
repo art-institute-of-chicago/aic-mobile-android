@@ -115,13 +115,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .bindToMain(throughDate.text())
                 .disposedBy(disposeBag)
 
-        viewModel.showOnMapButtonText
-                .bindToMain(showOnMap.textRes())
-                .disposedBy(disposeBag)
 
-        viewModel.buyTicketsButtonText
-                .bindToMain(buyTickets.textRes())
-                .disposedBy(disposeBag)
 
         viewModel.location
                 .map { (lat, long) -> lat != null && long != null }
