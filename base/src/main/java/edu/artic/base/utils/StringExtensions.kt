@@ -22,6 +22,18 @@ fun String.asDeepLinkIntent(action: String = Intent.ACTION_VIEW, schema: String 
     return Intent(action, Uri.parse("$schema://${this}"))
 }
 
+
+/**
+ * Sometimes HTML content comes in with 3 or more blank lines in a row.
+ *
+ * This detects and replaces such occurrences with a single html `br` tag.
+ */
+fun String.trimDownBlankLines(): String {
+    return replace("\n\n", "\n")
+            .replace("\n", "<br/>")
+            .replace("<br/><strong><br/></strong>", "<br/>")
+}
+
 /**
  * Convert this (probably HTML-style) text into the [Spanned] equivalent.
  *
