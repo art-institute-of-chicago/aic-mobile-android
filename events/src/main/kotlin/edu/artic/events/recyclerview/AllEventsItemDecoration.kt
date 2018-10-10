@@ -14,25 +14,28 @@ class AllEventsItemDecoration(
         private val spanCount: Int,
         private val adapter: AllEventsAdapter
 ) : RecyclerView.ItemDecoration() {
-    private val horizontalSpacing: Int = context.resources.getDimension(R.dimen.all_tour_cell_spacing_horizontal).toInt()
-    private val verticalSpacing: Int = context.resources.getDimension(R.dimen.all_tour_cell_spacing_vertical).toInt()
-    private val headerVerticalSpacing: Int = context.resources.getDimension(R.dimen.all_tour_cell_spacing_vertical_header).toInt()
+    private val horizontalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_horizontal)
+    private val verticalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical)
+    private val headerVerticalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical_header)
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
         var position = parent.getChildAdapterPosition(view) // item position
         adapter.getItemOrNull(position)?.let {
-            if (it is AllEventsCellHeaderViewModel) {
-                outRect.left = horizontalSpacing
-                outRect.right = horizontalSpacing
-                outRect.top = if (position == 0) headerVerticalSpacing else verticalSpacing
-                outRect.bottom = (verticalSpacing / 2.0f).toInt()
-            } else if (it is AllEventsCellViewModel) {
-                position -= it.headerPosition - 1
-                val column = (position) % spanCount // item column
-                outRect.left = horizontalSpacing - column * horizontalSpacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * horizontalSpacing / spanCount // (column + 1) * ((1f / spanCount) * spacing)
-                outRect.top = (verticalSpacing / 2.0f).toInt()
-                outRect.bottom = (verticalSpacing / 2.0f).toInt()
+            when (it) {
+                is AllEventsCellHeaderViewModel -> {
+                    outRect.left = horizontalSpacing
+                    outRect.right = horizontalSpacing
+                    outRect.top = if (position == 0) headerVerticalSpacing else verticalSpacing
+                    outRect.bottom = (verticalSpacing / 2.0f).toInt()
+                }
+                is AllEventsCellViewModel -> {
+                    position -= it.headerPosition - 1
+                    val column = (position) % spanCount // item column
+                    outRect.left = horizontalSpacing - column * horizontalSpacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
+                    outRect.right = (column + 1) * horizontalSpacing / spanCount // (column + 1) * ((1f / spanCount) * spacing)
+                    outRect.top = (verticalSpacing / 2.0f).toInt()
+                    outRect.bottom = (verticalSpacing / 2.0f).toInt()
+                }
             }
         }
 
