@@ -1,6 +1,7 @@
 package edu.artic.splash
 
 import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.app.DialogFragment.STYLE_NO_FRAME
@@ -113,23 +114,16 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     override fun onStart() {
         super.onStart()
         viewModel.navigateTo
+                .filter { it is Navigate.Forward }
+                .map { it as Navigate.Forward }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { navigation ->
-                    when (navigation) {
-                        is Navigate.Forward -> {
-                            when (navigation.endpoint) {
-                                is SplashViewModel.NavigationEndpoint.StartVideo -> {
-                                    val endpoint = navigation.endpoint as SplashViewModel.NavigationEndpoint.StartVideo
-                                    val displayDialog = endpoint.displayLanguageSettings
-                                    fadeOutChrome(displayDialog)
-                                }
-                                is SplashViewModel.NavigationEndpoint.Welcome ->
-                                    goToWelcomeActivity()
-                            }
-                        }
-                        is Navigate.Back -> {
-
-                        }
+                    val endpoint = navigation.endpoint
+                    when (endpoint) {
+                        is SplashViewModel.NavigationEndpoint.StartVideo ->
+                            fadeOutChrome(endpoint.displayLanguageSettings)
+                        is SplashViewModel.NavigationEndpoint.Welcome ->
+                            goToWelcomeActivity()
                     }
                 }.disposedBy(navDisposeBag)
     }
@@ -178,42 +172,22 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     private fun fadeOutChrome(displayDialog: Boolean) {
         textureView.alpha = 0f
         mMediaPlayer?.seekTo(0)
-        splashChrome.animate().alpha(0f).setListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(p0: Animator?) {
-            }
-
+        splashChrome.animate().alpha(0f).setListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(p0: Animator?) {
                 fadeInVideo(displayDialog)
             }
-
-            override fun onAnimationCancel(p0: Animator?) {
-            }
-
-            override fun onAnimationStart(p0: Animator?) {
-            }
-
         }).start()
     }
 
     private fun fadeInVideo(displayDialog: Boolean) {
         animatedMuseum.animate().alpha(0f).start()
-        textureView.animate().alpha(1f).setListener(object : Animator.AnimatorListener{
-            override fun onAnimationRepeat(p0: Animator?) {
-            }
-
+        textureView.animate().alpha(1f).setListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(p0: Animator?) {
                 mMediaPlayer?.start()
                 if (displayDialog) {
                     pauseVideo(4)
                 }
             }
-
-            override fun onAnimationCancel(p0: Animator?) {
-            }
-
-            override fun onAnimationStart(p0: Animator?) {
-            }
-
         }).start()
     }
 
