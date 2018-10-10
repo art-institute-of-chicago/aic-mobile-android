@@ -35,8 +35,6 @@ constructor(dataObjectDao: ArticDataObjectDao,
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val title: Subject<String> = BehaviorSubject.createDefault("test")
     val metaData: Subject<String> = BehaviorSubject.createDefault("")
-    val showOnMapButtonText: Subject<Int> = BehaviorSubject.createDefault(R.string.showOnMap)
-    val buyTicketsButtonText: Subject<Int> = BehaviorSubject.createDefault(R.string.buyTickets)
     val description: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     /**
