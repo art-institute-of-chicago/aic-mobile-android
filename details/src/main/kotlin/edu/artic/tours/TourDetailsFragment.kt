@@ -1,6 +1,7 @@
 package edu.artic.tours
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.math.MathUtils
@@ -18,6 +19,7 @@ import edu.artic.adapter.*
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.base.utils.dpToPixels
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticTour
 import edu.artic.details.R
@@ -83,9 +85,15 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     private fun obtainDecoration(view: View): DividerItemDecoration {
         val decoration = DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL)
-        ContextCompat.getDrawable(view.context, R.drawable.tour_detail_tour_stop_divider)?.let {
-            decoration.setDrawable(it)
-        }
+
+        val dividerColor = ContextCompat.getColor(view.context, R.color.tourDetailTourStopDivider)
+        val dividerHeight = view.context.resources.dpToPixels(1f).toInt()
+        decoration.setDrawable(object: ColorDrawable(dividerColor) {
+            override fun getIntrinsicHeight(): Int {
+                return dividerHeight
+            }
+        })
+
         return decoration
     }
 
