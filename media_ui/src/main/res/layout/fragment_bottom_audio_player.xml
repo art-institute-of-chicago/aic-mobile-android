@@ -4,32 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/greyText">
+    android:background="@color/narrowAudioPlayerBackgroundColor">
 
 
     <ImageButton
         android:id="@+id/exo_play"
-        android:layout_width="@dimen/bottomAudioControlIconSize"
-        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_width="@dimen/narrowAudioControlIconSize"
+        android:layout_height="@dimen/narrowAudioControlIconSize"
         android:layout_marginStart="@dimen/marginStandard"
         android:background="@drawable/ic_play"
-        android:visibility="visible"
         android:contentDescription="@string/exo_controls_play_description"
+        android:padding="@dimen/marginStandard"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
     <ImageButton
         android:id="@+id/exo_pause"
-        android:layout_width="@dimen/bottomAudioControlIconSize"
-        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_width="@dimen/narrowAudioControlIconSize"
+        android:layout_height="@dimen/narrowAudioControlIconSize"
         android:layout_marginStart="@dimen/marginStandard"
         android:background="@drawable/ic_pause"
-        android:visibility="gone"
         android:contentDescription="@string/exo_controls_pause_description"
+        android:padding="@dimen/marginStandard"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <android.support.constraint.Barrier
         android:id="@+id/barrier"
@@ -56,11 +60,12 @@
 
     <ImageButton
         android:id="@+id/closePlayer"
-        android:layout_width="@dimen/bottomAudioControlIconSize"
-        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_width="@dimen/narrowAudioControlIconSize"
+        android:layout_height="@dimen/narrowAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginStandard"
-        android:contentDescription="@string/cancel_audio"
         android:background="@drawable/ic_close_circle"
+        android:contentDescription="@string/cancel_audio"
+        android:padding="@dimen/marginStandard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
