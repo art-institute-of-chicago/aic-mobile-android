@@ -2,13 +2,12 @@ package edu.artic.events
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterTo
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
@@ -66,9 +65,21 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
     override fun setupBindings(viewModel: AllEventsViewModel) {
         val adapter = recyclerView.adapter as AllEventsAdapter
+
+
+        /* Ensure search events go through ok. */
+        searchIcon
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
+                }
+                .disposedBy(disposeBag)
+
         viewModel.events
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
+
         adapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickEvent(pos, model.event)
@@ -89,28 +100,11 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
                             }
                             startActivity(intent)
                         }
+                        AllEventsViewModel.NavigationEndpoint.Search -> {
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
+                        }
                     }
                 }.disposedBy(navigationDisposeBag)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_all_events, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            when(it.itemId) {
-                R.id.search -> {
-                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                    startActivity(intent)
-                    return true
-                }
-                else -> {
-                    return super.onOptionsItemSelected(item)
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }
