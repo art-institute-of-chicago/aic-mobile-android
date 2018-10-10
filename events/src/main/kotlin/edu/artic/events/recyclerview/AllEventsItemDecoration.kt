@@ -19,22 +19,26 @@ class AllEventsItemDecoration(
     private val headerVerticalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical_header)
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
-        var position = parent.getChildAdapterPosition(view) // item position
+        // item position
+        val position = parent.getChildAdapterPosition(view)
         adapter.getItemOrNull(position)?.let {
+
+            val halfOfVertical = (verticalSpacing / 2.0f).toInt()
+
             when (it) {
                 is AllEventsCellHeaderViewModel -> {
                     outRect.left = horizontalSpacing
                     outRect.right = horizontalSpacing
                     outRect.top = if (position == 0) headerVerticalSpacing else verticalSpacing
-                    outRect.bottom = (verticalSpacing / 2.0f).toInt()
+                    outRect.bottom = halfOfVertical
                 }
                 is AllEventsCellViewModel -> {
-                    position -= it.headerPosition - 1
-                    val column = (position) % spanCount // item column
+                    val adjustedPosition = position - (it.headerPosition - 1)
+                    val column = (adjustedPosition) % spanCount // item column
                     outRect.left = horizontalSpacing - column * horizontalSpacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
                     outRect.right = (column + 1) * horizontalSpacing / spanCount // (column + 1) * ((1f / spanCount) * spacing)
-                    outRect.top = (verticalSpacing / 2.0f).toInt()
-                    outRect.bottom = (verticalSpacing / 2.0f).toInt()
+                    outRect.top = halfOfVertical
+                    outRect.bottom = halfOfVertical
                 }
             }
         }
