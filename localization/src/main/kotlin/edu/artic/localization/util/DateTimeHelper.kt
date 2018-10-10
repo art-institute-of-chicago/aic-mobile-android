@@ -50,7 +50,7 @@ class DateTimeHelper {
 
                 return DateTimeFormatterBuilder()
                         .append(dateFormat)
-                        .appendLiteral("   ")
+                        .appendLiteral("    ")
                         .append(timeFormat)
                         .toFormatter(locale)
             }

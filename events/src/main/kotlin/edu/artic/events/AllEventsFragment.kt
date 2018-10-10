@@ -2,12 +2,12 @@ package edu.artic.events
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterTo
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
@@ -16,6 +16,7 @@ import edu.artic.events.recyclerview.AllEventsItemDecoration
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_all_events.*
 import kotlin.reflect.KClass
 
@@ -44,7 +45,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 /**
-                 * this is specifically for handling tours with a header
+                 * this is specifically for handling the dateline above each day's events
                  */
                 return when(eventsAdapter.getItemOrNull(position)) {
                     is AllEventsCellHeaderViewModel -> {
@@ -64,9 +65,21 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
     override fun setupBindings(viewModel: AllEventsViewModel) {
         val adapter = recyclerView.adapter as AllEventsAdapter
+
+
+        /* Ensure search events go through ok. */
+        searchIcon
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
+                }
+                .disposedBy(disposeBag)
+
         viewModel.events
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
+
         adapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickEvent(pos, model.event)
@@ -76,9 +89,9 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
     }
 
     override fun setupNavigationBindings(viewModel: AllEventsViewModel) {
-        viewModel.navigateTo.subscribe { navigation ->
-            when (navigation) {
-                is Navigate.Forward -> {
+        viewModel.navigateTo
+                .filterTo<Navigate<AllEventsViewModel.NavigationEndpoint>, Navigate.Forward<AllEventsViewModel.NavigationEndpoint>>()
+                .subscribeBy { navigation ->
                     val endpoint = navigation.endpoint
                     when (endpoint) {
                         is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
@@ -87,33 +100,11 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
                             }
                             startActivity(intent)
                         }
+                        AllEventsViewModel.NavigationEndpoint.Search -> {
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
+                        }
                     }
-                }
-                is Navigate.Back -> {
-                    //Nothing in vm requires back
-                }
-            }
-        }.disposedBy(navigationDisposeBag)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_all_events, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            when(it.itemId) {
-                R.id.search -> {
-                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                    startActivity(intent)
-                    return true
-                }
-                else -> {
-                    return super.onOptionsItemSelected(item)
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
+                }.disposedBy(navigationDisposeBag)
     }
 }
