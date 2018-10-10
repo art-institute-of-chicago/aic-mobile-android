@@ -1,15 +1,11 @@
 package edu.artic.media.ui
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.base.utils.makeStatusBarTransparent
-import edu.artic.base.utils.setWindowFlag
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.activity_audio_tutorial.*
@@ -59,5 +55,9 @@ class AudioTutorialActivity : BaseViewModelActivity<AudioTutorialViewModel>() {
     override fun onDestroy() {
         super.onDestroy()
         disposeBag.clear()
+    }
+
+    override fun onBackPressed() {
+        //Do not allow the user to go back they need to click OK
     }
 }
