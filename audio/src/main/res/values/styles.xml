@@ -25,7 +25,6 @@
         <item name="android:includeFontPadding">false</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/number_pad_text_size</item>
     </style>
 
     <dimen name="number_pad_text_size">16sp</dimen>
