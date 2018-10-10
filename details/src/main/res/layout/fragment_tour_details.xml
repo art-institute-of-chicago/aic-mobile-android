@@ -208,7 +208,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginQuad"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:background="@drawable/tour_detail_tour_stop_divider"
+                android:background="@color/tourDetailTourStopDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/intro" />
@@ -230,7 +230,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_height="1dp"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:background="@drawable/tour_detail_tour_stop_divider"
+                android:background="@color/tourDetailTourStopDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tourDetailIntroCell" />
