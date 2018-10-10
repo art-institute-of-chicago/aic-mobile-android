@@ -1,9 +1,11 @@
 package edu.artic.base.utils
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.text.Html
+import android.text.Spanned
 
 /**
  *@author Sameer Dhakal (Fuzz)
@@ -20,12 +22,31 @@ fun String.asDeepLinkIntent(action: String = Intent.ACTION_VIEW, schema: String 
     return Intent(action, Uri.parse("$schema://${this}"))
 }
 
-fun String.fromHtml(): CharSequence {
+
+/**
+ * Sometimes HTML content comes in with 3 or more blank lines in a row.
+ *
+ * This detects and replaces such occurrences with a single html `br` tag.
+ */
+fun String.trimDownBlankLines(): String {
+    return replace("\n\n", "\n")
+            .replace("\n", "<br/>")
+            .replace("<br/><strong><br/></strong>", "<br/>")
+}
+
+/**
+ * Convert this (probably HTML-style) text into the [Spanned] equivalent.
+ *
+ * On Android N and higher you can override the parse mode with the [flags]
+ * parameter. See [Html.fromHtml] and overloads thereof for more details.
+ */
+@SuppressLint("InlinedApi")
+fun String.fromHtml(flags: Int = Html.FROM_HTML_MODE_LEGACY): CharSequence {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
+        Html.fromHtml(this, flags)
     } else {
         Html.fromHtml(this)
-    }
+    }.trim()
 }
 
 fun String.asUrlViewIntent(action: String = Intent.ACTION_VIEW): Intent {
