@@ -76,6 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/ideal_sans_book"
+                    android:fontFeatureSettings="tnum"
                     android:gravity="start"
                     android:padding="@dimen/marginDouble"
                     android:textColor="@color/white"
