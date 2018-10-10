@@ -14,7 +14,6 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
-import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.*
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
@@ -70,11 +69,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = TourDetailsStopAdapter()
-            val decoration = DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL)
-            ContextCompat.getDrawable(view.context, R.drawable.tour_detail_tour_stop_divider)?.let {
-                decoration.setDrawable(it)
-            }
-            addItemDecoration(decoration)
+            addItemDecoration(obtainDecoration(view))
             isNestedScrollingEnabled = true
         }
 
@@ -84,6 +79,14 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         //Pass fling events to the parent 'tourScrollView' layout
         recyclerView.isNestedScrollingEnabled = false
         languageSelector.requestFocus()
+    }
+
+    private fun obtainDecoration(view: View): DividerItemDecoration {
+        val decoration = DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL)
+        ContextCompat.getDrawable(view.context, R.drawable.tour_detail_tour_stop_divider)?.let {
+            decoration.setDrawable(it)
+        }
+        return decoration
     }
 
     override fun onRegisterViewModel(viewModel: TourDetailsViewModel) {
