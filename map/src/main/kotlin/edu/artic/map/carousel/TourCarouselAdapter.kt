@@ -51,7 +51,7 @@ class TourCarouselAdapter : AutoHolderRecyclerViewAdapter<TourCarousalBaseViewMo
                         }
                         .disposedBy(item.viewDisposeBag)
 
-                tourNumber.text = position.toString()
+                tourNumber.text = context.getString(R.string.tourStopPosition, position)
 
                 item.viewPlayBackState
                         .subscribe { playBackState ->

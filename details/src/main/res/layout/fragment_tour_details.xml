@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            tools:title="test">
+            tools:title="Tour Details">
 
             <TextView
                 android:id="@+id/toolbarTitle"
@@ -36,7 +36,6 @@
         android:id="@+id/tourScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/darkGrey"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +45,6 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/greyText"
             android:descendantFocusability="afterDescendants">
 
             <ImageView
@@ -107,12 +105,15 @@
                 style="@style/MetadataMediumWhite"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:drawableStart="@drawable/ic_clock"
+                android:gravity="center_vertical|start"
                 app:layout_constraintBottom_toBottomOf="@id/tourStops"
                 app:layout_constraintEnd_toStartOf="@id/languageSelector"
                 app:layout_constraintStart_toEndOf="@id/tourStops"
                 app:layout_constraintTop_toTopOf="@id/tourStops"
-                tools:text="34min" />
+                tools:text="34 min" />
 
             <FrameLayout
                 android:id="@+id/startTourButton"
@@ -132,20 +133,53 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:gravity="center"
+                    android:drawableStart="@drawable/exo_icon_play"
                     android:background="@null"
                     android:minHeight="0dp"
-                    tools:text="Start Tour" />
+                    android:text="@string/startTour" />
 
             </FrameLayout>
 
+            <!--
+
+             @author Philip Cohn-Cort (Fuzz)
+
+             Derivation of top-margin for @id/description:
+
+             The font size is 17sp.
+             The font is amiri_regular.
+             The lineSpacingExtra is -8sp.
+             The includeFontPadding is false.
+
+             Given the two following constants:
+             B: the height of the text bounds for Latin text in Amiri font files
+             P: the total amount of vertical padding around said text bounds
+
+             The ratio of B:P is approximately 1.12:1 (for font sizes under 59sp, this has been observed as within 1/3 of a pixel of the true value)
+
+             Thus, the practical amount of implicit vertical padding in the font is 15.2sp.
+             With the lineSpacingExtra added, the effective vertical padding is 15.2sp + (-8sp) = 7.2sp
+             As includeFontPadding is false, no further modifications to textual padding apply.
+
+             Designs for this screen request 20dp between the description text and the view
+             above it. As properly reconciling dp with sp at any non-identity scale factor is
+             beyond the current scope of work (for v1.0 release), a scale factor of 1 should
+             be assumed.
+
+             This leads to the conclusion that there must be 20dp - 7.2dp = 12.8dp of margin
+             defined on the TextView itself.
+
+             -->
             <TextView
                 android:id="@+id/description"
                 style="@style/BodySerifWhiteLeft"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginTwenty"
+                android:layout_marginTop="12.8dp"
                 android:layout_marginEnd="@dimen/marginDouble"
+                android:includeFontPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/startTourButton"
@@ -160,6 +194,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginStandard"
                 android:layout_marginEnd="@dimen/marginDouble"
+                android:includeFontPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"
@@ -173,7 +208,7 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginQuad"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:background="@drawable/tour_detail_tour_stop_divider"
+                android:background="@color/tourDetailTourStopDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/intro" />
@@ -195,11 +230,18 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_height="1dp"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:background="@drawable/tour_detail_tour_stop_divider"
+                android:background="@color/tourDetailTourStopDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tourDetailIntroCell" />
 
+            <!--
+
+            NB: the below attributes for 'focusable' and 'nestedScrollingEnabled' are
+            reinforced at runtime, in TourDetailsFragment. Pity the XML variants aren't
+            enough.
+
+            -->
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="0dp"
@@ -207,9 +249,12 @@ Indulge in the sunlit bank of the River Seine in Georges Seurat's A Sunday on La
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:focusable="false"
+                android:nestedScrollingEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/introCellBottomDivider" />
+                app:layout_constraintTop_toBottomOf="@id/introCellBottomDivider"
+                tools:listitem="@layout/cell_tour_details_stop"
+                />
 
         </android.support.constraint.ConstraintLayout>
 

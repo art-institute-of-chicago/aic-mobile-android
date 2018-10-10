@@ -1,5 +1,6 @@
 package edu.artic.tours
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -14,11 +15,11 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
-import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.*
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.base.utils.dpToPixels
 import edu.artic.base.utils.fromHtml
 import edu.artic.db.models.ArticTour
 import edu.artic.details.R
@@ -30,6 +31,7 @@ import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.navigation.NavigationConstants
+import edu.artic.ui.SizedColorDrawable
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -70,18 +72,27 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = TourDetailsStopAdapter()
-            val decoration = DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL)
-            ContextCompat.getDrawable(view.context, R.drawable.tour_detail_tour_stop_divider)?.let {
-                decoration.setDrawable(it)
-            }
-            addItemDecoration(decoration)
+            addItemDecoration(obtainDecoration(view.context))
             isNestedScrollingEnabled = true
         }
 
         languageSelector.adapter = LanguageAdapter().toBaseAdapter()
         //Fix for the scrollview starting mid-scroll on the recyclerview
         recyclerView.isFocusable = false
+        //Pass fling events to the parent 'tourScrollView' layout
+        recyclerView.isNestedScrollingEnabled = false
         languageSelector.requestFocus()
+    }
+
+    private fun obtainDecoration(context: Context): DividerItemDecoration {
+        val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+
+        decoration.setDrawable(SizedColorDrawable(
+                color = ContextCompat.getColor(context, R.color.tourDetailTourStopDivider),
+                height = context.resources.dpToPixels(1f).toInt()
+        ))
+
+        return decoration
     }
 
     override fun onRegisterViewModel(viewModel: TourDetailsViewModel) {
@@ -151,9 +162,6 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .bindToMain(tourTime.text())
                 .disposedBy(disposeBag)
 
-        viewModel.startTourButtonText
-                .bindToMain(startTourButtonText.textRes())
-                .disposedBy(disposeBag)
 
         viewModel.description
                 .map { it.fromHtml() }
