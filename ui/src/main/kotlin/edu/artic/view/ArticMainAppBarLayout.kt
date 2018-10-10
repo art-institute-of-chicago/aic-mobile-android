@@ -33,11 +33,13 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             )
             setIcon(a.getResourceId(R.styleable.ArticMainAppBarLayout_icon, 0))
             setBackgroundImage(a.getResourceId(R.styleable.ArticMainAppBarLayout_backgroundImage, 0))
+            setBackgroundImagePadding(a.getDimension(R.styleable.ArticMainAppBarLayout_backgroundImagePadding, 0f))
             subTitle.text = a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
             val setExpandedTitleTextAppearance = a.getResourceId(
                     R.styleable.ArticMainAppBarLayout_expandedTitleStyle,
                     R.style.PageTitleLargeWhite)
             collapsingToolbar.setExpandedTitleTextAppearance(setExpandedTitleTextAppearance)
+            subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
         }
 
         // update our content when offset changes.
@@ -65,6 +67,10 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
 
     fun setBackgroundImage(@DrawableRes imageId: Int) {
         expandedImage.setImageResource(imageId)
+    }
+
+    fun setBackgroundImagePadding(padding: Float) {
+        expandedImage.setPadding(0, padding.toInt(), 0,0)
     }
 
     fun setOnSearchClickedConsumer(clickConsumer: Consumer<Unit>) {

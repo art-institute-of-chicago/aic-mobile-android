@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backgroundImage="@drawable/dashboard"
+        app:backgroundImagePadding="28dp"
         app:icon="@drawable/tours"/>
 
     <android.support.v4.widget.NestedScrollView
