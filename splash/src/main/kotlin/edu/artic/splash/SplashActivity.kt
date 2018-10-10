@@ -1,6 +1,7 @@
 package edu.artic.splash
 
 import android.animation.Animator
+import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.app.DialogFragment.STYLE_NO_FRAME
 import android.graphics.Matrix
@@ -9,11 +10,9 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.UiThread
+import android.transition.Fade
 import android.util.TypedValue
-import android.view.Surface
-import android.view.TextureView
-import android.view.View
-import android.view.ViewPropertyAnimator
+import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import com.fuzz.rx.disposedBy
@@ -52,6 +51,11 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        with(window) {
+            requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+            exitTransition = Fade()
+        }
+
         super.onCreate(savedInstanceState)
         makeStatusBarTransparent()
 
@@ -215,8 +219,10 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
 
     private fun goToWelcomeActivity() {
         val intent = NavigationConstants.HOME.asDeepLinkIntent()
-        startActivity(intent)
-        finish()
+        val options = ActivityOptions
+                .makeSceneTransitionAnimation(this, textureView, "museumImage")
+        startActivity(intent, options.toBundle())
+        finishAfterTransition()
     }
 
     /**

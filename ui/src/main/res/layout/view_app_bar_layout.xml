@@ -17,17 +17,23 @@
         app:expandedTitleTextAppearance="@style/PageTitleLargeWhite"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <ImageView
-            android:id="@+id/expandedImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <FrameLayout
             android:fitsSystemWindows="true"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true"
             app:layout_collapseMode="parallax"
             app:layout_collapseParallaxMultiplier="1"
-            tools:background="@color/bluegreen"
-            tools:layout_height="200dp" />
+            android:background="?attr/colorPrimary"
+            android:transitionName="museumImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/expandedImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                tools:background="@color/bluegreen"
+                tools:layout_height="200dp" />
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/container"
