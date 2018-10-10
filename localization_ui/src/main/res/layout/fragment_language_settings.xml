@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:fontFamily="@font/ideal_sans_book"
+                android:fontFeatureSettings="tnum"
                 android:paddingStart="@dimen/marginDouble"
                 android:textColor="?attr/languageSettingsBodyTextColor"
                 android:paddingEnd="@dimen/marginDouble"
