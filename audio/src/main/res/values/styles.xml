@@ -28,7 +28,11 @@
         <item name="android:textSize">@dimen/number_pad_text_size</item>
     </style>
 
-    <dimen name="number_pad_text_size">26sp</dimen>
+    <dimen name="number_pad_text_size">16sp</dimen>
     <dimen name="number_pad_bg_size">66dp</dimen>
+
+    <!-- Ratio of these two bounds dimensions should be 37:62, same as in number_pad_delete.xml -->
+    <dimen name="number_pad_text_bounds">10sp</dimen>
+    <dimen name="number_pad_text_bounds_height">5.97sp</dimen>
 
 </resources>
