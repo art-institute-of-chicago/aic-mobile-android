@@ -1,7 +1,7 @@
 package edu.artic.tours
 
+import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.math.MathUtils
@@ -31,6 +31,7 @@ import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.navigation.NavigationConstants
+import edu.artic.ui.SizedColorDrawable
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -71,7 +72,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = TourDetailsStopAdapter()
-            addItemDecoration(obtainDecoration(view))
+            addItemDecoration(obtainDecoration(view.context))
             isNestedScrollingEnabled = true
         }
 
@@ -83,16 +84,13 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         languageSelector.requestFocus()
     }
 
-    private fun obtainDecoration(view: View): DividerItemDecoration {
-        val decoration = DividerItemDecoration(view.context, DividerItemDecoration.VERTICAL)
+    private fun obtainDecoration(context: Context): DividerItemDecoration {
+        val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
 
-        val dividerColor = ContextCompat.getColor(view.context, R.color.tourDetailTourStopDivider)
-        val dividerHeight = view.context.resources.dpToPixels(1f).toInt()
-        decoration.setDrawable(object: ColorDrawable(dividerColor) {
-            override fun getIntrinsicHeight(): Int {
-                return dividerHeight
-            }
-        })
+        decoration.setDrawable(SizedColorDrawable(
+                color = ContextCompat.getColor(context, R.color.tourDetailTourStopDivider),
+                height = context.resources.dpToPixels(1f).toInt()
+        ))
 
         return decoration
     }
