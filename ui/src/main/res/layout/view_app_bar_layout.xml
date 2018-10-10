@@ -20,7 +20,7 @@
         <ImageView
             android:id="@+id/expandedImage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:scaleType="fitXY"
             android:adjustViewBounds="true"
