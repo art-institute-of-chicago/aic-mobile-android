@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:layout_width="250dp"
+    tools:layout_marginStart="@dimen/marginDouble"
+    >
 
 
     <ImageView
@@ -16,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:scaleType="matrix"
-        tools:background="@color/sea" />
+        tools:src="@color/sea" />
 
 
     <TextView
@@ -27,10 +31,11 @@
         android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:lines="2"
+        android:lineSpacingExtra="4sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image"
-        tools:text="test" />
+        tools:text="Some Sort of Event" />
 
     <TextView
         android:id="@+id/dateTime"
@@ -42,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
-        tools:text="stops test"
+        tools:text="July 28    8:15 a.m."
         android:fontFamily="@font/ideal_sans_book"
         android:fontFeatureSettings="tnum"
         />
@@ -64,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
         android:ellipsize="end"
-        android:lines="4"
+        android:maxLines="4"
         android:lineSpacingMultiplier="0.8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
