@@ -41,12 +41,12 @@ fun String.trimDownBlankLines(): String {
  * parameter. See [Html.fromHtml] and overloads thereof for more details.
  */
 @SuppressLint("InlinedApi")
-fun String.fromHtml(flags: Int = Html.FROM_HTML_MODE_LEGACY): Spanned {
+fun String.fromHtml(flags: Int = Html.FROM_HTML_MODE_LEGACY): CharSequence {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this, flags)
     } else {
         Html.fromHtml(this)
-    }
+    }.trim()
 }
 
 fun String.asUrlViewIntent(action: String = Intent.ACTION_VIEW): Intent {
