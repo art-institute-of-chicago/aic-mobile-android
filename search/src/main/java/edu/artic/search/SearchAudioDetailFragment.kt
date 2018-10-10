@@ -23,6 +23,7 @@ import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_search_audio_detail.*
 import kotlin.reflect.KClass
 
+//TODO move into details package
 class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewModel>() {
     override val viewModelClass: KClass<SearchAudioDetailViewModel>
         get() = SearchAudioDetailViewModel::class
@@ -98,7 +99,7 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                 .disposedBy(disposeBag)
 
         viewModel.authorCulturalPlace
-                .bindToMain(artistCulturePlaceDenim.text())
+                .bindToMain(description.text())
                 .disposedBy(disposeBag)
 
         viewModel.showOnMapVisible
