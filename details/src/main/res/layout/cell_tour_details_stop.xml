@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/marginOneHalf"
     android:paddingBottom="@dimen/marginOneHalf"
-    tools:background="@color/colorAccent"
-    >
+    tools:background="@color/colorAccent">
 
     <ImageView
         android:id="@+id/image"
@@ -16,53 +14,61 @@
         android:layout_height="45dp"
         android:contentDescription="@null"
         android:scaleType="matrix"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:src="@tools:sample/backgrounds/scenic"
-        />
+        tools:src="@tools:sample/backgrounds/scenic" />
 
     <TextView
-        style="@style/ListItemTitle1White"
         android:id="@+id/tourNumber"
-        android:layout_width="20dp"
-        android:layout_height="22dp"
+        style="@style/ListItemTitle1White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginOneHalf"
+        android:gravity="end|center_vertical"
+        android:includeFontPadding="false"
+        app:layout_constraintBaseline_toBaselineOf="@id/tourStopTitle"
         app:layout_constraintStart_toEndOf="@id/image"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="@dimen/marginOneHalf"
-        android:layout_marginTop="3dp"
-        android:gravity="end"
-        />
+        app:layout_constraintVertical_bias="0"
+        tools:text="17" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="40dp"
+
+    <TextView
+        android:id="@+id/tourStopTitle"
+        style="@style/ListItemTitle1White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="0dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:lines="1"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/tourNumber"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        tools:text="Introduction" />
+
+    <TextView
+        android:id="@+id/tourStopGallery"
+        style="@style/ListItemTitle2White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
         android:layout_marginEnd="0dp"
         android:gravity="center_vertical"
+        android:lines="1"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/tourNumber"
+        app:layout_constraintTop_toBottomOf="@id/tourStopTitle"
+        tools:text="Gallery 201" />
 
-        <TextView
-            style="@style/ListItemTitle1White"
-            android:id="@+id/tourStopTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:ellipsize="end"
-            tools:text="Introduction" />
-        <TextView
-            style="@style/ListItemTitle2White"
-            android:id="@+id/tourStopGallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            tools:text="Gallery 201"
-            />
-
-    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
