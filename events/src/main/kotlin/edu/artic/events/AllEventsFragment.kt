@@ -44,7 +44,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 /**
-                 * this is specifically for handling tours with a header
+                 * this is specifically for handling the dateline above each day's events
                  */
                 return when(eventsAdapter.getItemOrNull(position)) {
                     is AllEventsCellHeaderViewModel -> {
