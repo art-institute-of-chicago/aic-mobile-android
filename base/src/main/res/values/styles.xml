@@ -143,6 +143,7 @@
     </style>
 
     <style name="DescriptionDate" parent="CardBodyLargeItalic">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="divider">

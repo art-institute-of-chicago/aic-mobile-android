@@ -40,6 +40,7 @@
         android:layout_marginTop="@dimen/marginStandard"
         android:ellipsize="end"
         android:lines="1"
+        android:textColor="@color/greyText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
