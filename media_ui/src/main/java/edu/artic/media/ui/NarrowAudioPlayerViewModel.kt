@@ -24,6 +24,7 @@ class NarrowAudioPlayerViewModel @Inject constructor(
 
     sealed class NavigationEndpoint {
         object AudioTutorial : NavigationEndpoint()
+        object AudioDetails : NavigationEndpoint()
     }
 
 
@@ -39,6 +40,11 @@ class NarrowAudioPlayerViewModel @Inject constructor(
     fun userSawAudioTutorial() {
         audioPrefManager.hasSeenAudioTutorial = true
         resumeAudioPlayBack.onNext(true)
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
+    }
+
+    fun userClickPlayer() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
     }
 
 }

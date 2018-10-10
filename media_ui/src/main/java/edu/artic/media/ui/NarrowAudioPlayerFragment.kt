@@ -105,8 +105,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         }?.disposedBy(disposeBag)
 
         trackTitle.setOnClickListener {
-            val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
-            startActivity(intent)
+            viewModel.userClickPlayer()
         }
     }
 
@@ -134,6 +133,10 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
                                     val intent = NavigationConstants.AUDIO_TUTORIAL.asDeepLinkIntent()
                                     startActivityForResult(intent, AUDIO_CONFIRMATION)
                                 }
+                                is NarrowAudioPlayerViewModel.NavigationEndpoint.AudioDetails -> {
+                                    val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
+                                    startActivity(intent)
+                                }
                             }
                         }
                     }
@@ -144,7 +147,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == AppCompatActivity.RESULT_OK) {
             if (requestCode == AUDIO_CONFIRMATION) {
-                viewModel.userSawAudioTutorial()
+                view?.post { viewModel.userSawAudioTutorial() }
             }
         }
     }

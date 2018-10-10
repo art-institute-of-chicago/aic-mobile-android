@@ -17,6 +17,7 @@ import edu.artic.db.models.ArticGeneralInfo
 import edu.artic.db.models.ArticObject
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.audio.AudioPrefManager
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -40,7 +41,8 @@ class AudioLookupViewModel @Inject constructor(
         private val analyticsTracker: AnalyticsTracker,
         objectLookupDao: ArticObjectDao,
         generalInfoDao: GeneralInfoDao,
-        languageSelector: LanguageSelector
+        languageSelector: LanguageSelector,
+        private val audioPrefManager: AudioPrefManager
 ) : NavViewViewModel<AudioLookupViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
@@ -150,7 +152,9 @@ class AudioLookupViewModel @Inject constructor(
             // Request the actual playback (this triggers its own analytics event)
             it.playPlayer(foundAudio.hostObject)
             // Switch to the details screen
-            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
+            if (audioPrefManager.hasSeenAudioTutorial) {
+                navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
+            }
         }
     }
 
