@@ -21,6 +21,7 @@
     <declare-styleable name="ArticMainAppBarLayout">
         <attr name="icon" format="reference"/>
         <attr name="backgroundImage" format="reference"/>
+        <attr name="backgroundImagePadding" format="dimension"/>
         <attr name="subtitle" format="string"/>
         <attr name="expandedTitleStyle" format="reference"/>
     </declare-styleable>
