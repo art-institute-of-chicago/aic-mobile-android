@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterTo
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
@@ -16,6 +17,7 @@ import edu.artic.events.recyclerview.AllEventsItemDecoration
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_all_events.*
 import kotlin.reflect.KClass
 
@@ -76,9 +78,9 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
     }
 
     override fun setupNavigationBindings(viewModel: AllEventsViewModel) {
-        viewModel.navigateTo.subscribe { navigation ->
-            when (navigation) {
-                is Navigate.Forward -> {
+        viewModel.navigateTo
+                .filterTo<Navigate<AllEventsViewModel.NavigationEndpoint>, Navigate.Forward<AllEventsViewModel.NavigationEndpoint>>()
+                .subscribeBy { navigation ->
                     val endpoint = navigation.endpoint
                     when (endpoint) {
                         is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
@@ -88,12 +90,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
                             startActivity(intent)
                         }
                     }
-                }
-                is Navigate.Back -> {
-                    //Nothing in vm requires back
-                }
-            }
-        }.disposedBy(navigationDisposeBag)
+                }.disposedBy(navigationDisposeBag)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
