@@ -1,3 +1,4 @@
+  <!-- Approximate path for upward-pointing caret: "M7.4,13.9 l4.6,-4 l4.6,4" (no z)-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
@@ -5,7 +6,10 @@
     android:viewportHeight="24"
     >
   <path
-      android:pathData="M14.5,12l-4.315,5 -0.685,-0.787L13.136,12 9.5,7.787 10.185,7z"
+      android:pathData="M12,9.5
+      l5,4.315 -0.787,0.685
+      l-4.213,-3.636 -4.223,3.636 -0.787,-0.685
+      z"
       android:fillColor="@android:color/white"
       />
 </vector>

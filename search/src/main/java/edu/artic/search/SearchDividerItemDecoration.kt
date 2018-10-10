@@ -6,18 +6,15 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.util.TypedValue
 import android.view.View
+import edu.artic.base.utils.dpToPixels
 
 class SearchDividerItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
     private val mPaint: Paint = Paint().apply {
         color = ContextCompat.getColor(context, R.color.warmGrey20Alpha)
     }
-    private val mDividerHeight: Int = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            2f,
-            context.resources.displayMetrics).toInt()
+    private val mDividerHeight: Int = context.resources.dpToPixels(2f).toInt()
 
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
