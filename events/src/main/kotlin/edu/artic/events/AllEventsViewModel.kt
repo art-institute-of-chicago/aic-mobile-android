@@ -31,6 +31,7 @@ class AllEventsViewModel @Inject constructor(
 
     sealed class NavigationEndpoint {
         class EventDetail(val pos: Int, val event: ArticEvent) : NavigationEndpoint()
+        object Search : NavigationEndpoint()
     }
 
     val events: Subject<List<AllEventsCellBaseViewModel>> = BehaviorSubject.create()
@@ -70,6 +71,10 @@ class AllEventsViewModel @Inject constructor(
     fun onClickEvent(pos: Int, event: ArticEvent) {
         analyticsTracker.reportEvent(ScreenCategoryName.Events, AnalyticsAction.OPENED, event.title)
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.EventDetail(pos, event)))
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
 }
