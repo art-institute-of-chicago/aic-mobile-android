@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginTriple"
         android:layout_marginBottom="@dimen/leave_tour_title_button_padding"
-        android:fontFamily="@font/ideal_sans_book"
         android:gravity="center"
         android:text="Leave Current Tour?"
         app:layout_constraintBottom_toTopOf="@id/stay"
