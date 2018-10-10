@@ -44,6 +44,7 @@
         app:layout_constraintTop_toBottomOf="@id/title"
         tools:text="stops test"
         android:fontFamily="@font/ideal_sans_book"
+        android:fontFeatureSettings="tnum"
         />
 
     <View
