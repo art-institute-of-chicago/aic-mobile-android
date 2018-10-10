@@ -39,9 +39,10 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
         super.onViewCreated(view, savedInstanceState)
 
         var width = resources.displayMetrics.widthPixels
-        width -= TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, resources.displayMetrics).toInt()
+        val ten = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, resources.displayMetrics).toInt()
         val size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70f, resources.displayMetrics)
-        SearchResultsAdapter.MAX_ARTWORKS_PER_ROW = (width / size).toInt()
+        val numToDisplay = ((width-ten) / size).toInt()
+        SearchResultsAdapter.MAX_ARTWORKS_PER_ROW = numToDisplay
 
         val lm = GridLayoutManager(view.context, SearchResultsAdapter.MAX_ARTWORKS_PER_ROW)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
