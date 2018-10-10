@@ -138,12 +138,13 @@
 
             <TextView
                 android:id="@+id/description"
-                style="@style/DetailsDescription"
+                style="@style/BodySerifWhiteLeft"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
                 android:layout_marginTop="19dp"
                 android:layout_marginRight="@dimen/marginDouble"
+                android:includeFontPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonPanelGuide"
