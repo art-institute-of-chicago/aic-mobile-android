@@ -23,14 +23,12 @@
 
     <TextView
         android:id="@+id/title"
+        style="@style/CardTitleSmallBlack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:ellipsize="end"
-        android:fontFamily="@font/ideal_sans_medium"
         android:lines="2"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/textSixteen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image"
