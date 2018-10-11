@@ -90,7 +90,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginActivitySubtitle"
-        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/audioLookupTextInternalMargin"
         android:layout_marginEnd="@dimen/marginActivitySubtitle"
         android:labelFor="@id/lookup_field"
         app:layout_constrainedWidth="true"
