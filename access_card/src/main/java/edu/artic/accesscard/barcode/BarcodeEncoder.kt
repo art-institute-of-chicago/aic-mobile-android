@@ -63,7 +63,7 @@ class BarcodeEncoder {
 
     @Throws(WriterException::class)
     fun encodeBitmap(contents: String, format: BarcodeFormat, width: Int, height: Int): Bitmap {
-        return createBitmap(encode(contents, format, width, height))
+        return createBitmap(encode(contents, format, width, height, mapOf(EncodeHintType.MARGIN to 0)))
     }
 
     @Throws(WriterException::class)
