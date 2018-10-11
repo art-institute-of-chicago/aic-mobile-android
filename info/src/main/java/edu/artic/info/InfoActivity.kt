@@ -29,7 +29,7 @@ class InfoActivity : BaseActivity() {
             disableShiftMode(R.color.info_menu_color_list)
             selectedItemId = R.id.action_info
             setOnNavigationItemReselectedListener {
-                navController.popBackStack(R.id.informationFragment, true)
+                navController.popBackStack(R.id.informationFragment, false)
             }
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
