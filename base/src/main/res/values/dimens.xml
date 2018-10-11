@@ -32,6 +32,7 @@
 
     <dimen name="textLink">15sp</dimen>
     <dimen name="textPrompt">24sp</dimen>
+    <dimen name="textPageTitle">30sp</dimen>
 
     <dimen name="textThirteen">13sp</dimen>
     <dimen name="textFifteen">15sp</dimen>
