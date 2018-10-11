@@ -74,6 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/screen_icon"
+        tools:hint="Look It Up"
         tools:ignore="Deprecated,UnusedAttribute"
         />
 
@@ -89,13 +90,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginActivitySubtitle"
-        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/audioLookupTextInternalMargin"
         android:layout_marginEnd="@dimen/marginActivitySubtitle"
         android:labelFor="@id/lookup_field"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lookup_field"
+        tools:text="Enter the number next to the headphone icon on the artwork label."
         tools:ignore="LabelFor"
         />
 

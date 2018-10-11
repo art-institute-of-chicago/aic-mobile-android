@@ -190,7 +190,7 @@
     <style name="SearchResultWhite">
         <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:fontFeatureSettings">tnum</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
         <item name="android:lineSpacingExtra">8sp</item>
         <item name="android:textColor">#ffffff</item>
     </style>
@@ -240,22 +240,32 @@
     <style name="ListItemTitle2White">
         <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:fontFeatureSettings">tnum</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
         <item name="android:lineSpacingExtra">4sp</item>
         <item name="android:textColor">#CCffffff</item>
     </style>
 
+
     <style name="PageTitleRegularWhite">
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">@dimen/textPageTitle</item>
         <item name="android:letterSpacing">0.03</item>
         <item name="android:lineSpacingExtra">2sp</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
     </style>
 
+    <style name="PageSubHeaderRegularWhite">
+        <item name="android:fontFamily">@font/amiri_regular</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
+    </style>
+
+
     <style name="ListItemTitle1White">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
         <item name="android:lineSpacingExtra">-4sp</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
@@ -294,7 +304,7 @@
     <style name="MarkerDepartmentText">
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
     </style>
 
     <style name="MarkerGalleryText">
@@ -305,7 +315,7 @@
 
     <style name="IdealSansMediumItalic">
         <item name="android:fontFamily">@font/ideal_sans_medium_italic</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
