@@ -60,4 +60,8 @@ class MapItemModel(
         }
         return null
     }
+
+    fun isObject(articObject: ArticObject?): Boolean {
+        return articObject?.nid == id
+    }
 }

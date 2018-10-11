@@ -15,7 +15,8 @@ import io.reactivex.disposables.Disposable
  */
 data class MarkerMetaData<T>(val item: T,
                              val loadedBitmap: Boolean = false,
-                             val requestDisposable: Disposable? = null)
+                             val requestDisposable: Disposable? = null,
+                             val isSelected: Boolean = false)
 
 /**
  * Useful extension that casts the [Marker.getTag] into a [MarkerMetaData]. Might be null.

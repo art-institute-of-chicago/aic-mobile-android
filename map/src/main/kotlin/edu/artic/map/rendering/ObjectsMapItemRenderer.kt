@@ -1,8 +1,7 @@
 package edu.artic.map.rendering
 
 import com.bumptech.glide.request.RequestOptions
-import com.fuzz.rx.asFlowable
-import com.fuzz.rx.disposedBy
+import com.fuzz.rx.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -15,20 +14,26 @@ import edu.artic.image.GlideApp
 import edu.artic.image.asRequestObservable
 import edu.artic.image.loadWithThumbnail
 import edu.artic.map.*
+import edu.artic.map.R
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.toFlowable
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     : MapItemRenderer<MapItemModel>(useBitmapQueue = true) {
+
+    private val selectedArticObject: Subject<Optional<ArticObject>> = BehaviorSubject.createDefault(Optional(null))
 
     private val articObjectMarkerGenerator by lazy { ArticObjectMarkerGenerator(context) }
 
@@ -45,20 +50,28 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
     }
 
     init {
-        visibleRegionChanges
+        Observables.combineLatest(visibleRegionChanges, selectedArticObject)
                 .sample(visibleRegionSampleRate, TimeUnit.MILLISECONDS) // too many events, prevent flooding.
                 .withLatestFrom(mapItems, mapChangeEvents)
                 .filter { (_, _, mapEvent) -> mapEvent.displayMode !is MapDisplayMode.Tour }
                 .toFlowable(BackpressureStrategy.LATEST) // if downstream can't keep up, let's pick latest.
                 .subscribeOn(Schedulers.trampoline())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (region, mapItems, mapChangeEvent) ->
+                .subscribeBy { (regionAndObject, mapItems, mapChangeEvent) ->
+                    val (region, optArticObject) = regionAndObject
                     Timber.d("Evaluating Markers For Visible Region Change $region")
                     mapItems.values.forEach { markerHolder ->
-                        adjustVisibleMarker(markerHolder, region, mapChangeEvent)
+                        adjustVisibleMarker(markerHolder, optArticObject.value, region, mapChangeEvent)
                     }
                 }
                 .disposedBy(imageQueueDisposeBag)
+    }
+
+    fun bindToSelectedArticObject(selectedArticObject: Observable<ArticObject>, disposeBag: DisposeBag) {
+        selectedArticObject
+                .mapOptional()
+                .bindTo(this.selectedArticObject)
+                .disposedBy(disposeBag)
     }
 
 
@@ -72,19 +85,33 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
             existing: MarkerHolder<MapItemModel>,
             visibleRegion: VisibleRegion,
             mapChangeEvent: MapChangeEvent) {
+        adjustVisibleMarker(existing, null, visibleRegion, mapChangeEvent)
+    }
+
+    private fun adjustVisibleMarker(
+            existing: MarkerHolder<MapItemModel>,
+            selectedArticObject: ArticObject?,
+            visibleRegion: VisibleRegion,
+            mapChangeEvent: MapChangeEvent) {
         val position = getAdjustedLocationFromItem(existing.item)
         val meta = existing.marker.metaData()
-                ?: MarkerMetaData(existing.item, loadedBitmap = false, requestDisposable = null)
+                ?: MarkerMetaData(existing.item, loadedBitmap = false, requestDisposable = null, isSelected = false)
+
+        val isSelectedObject = existing.item.isObject(selectedArticObject)
 
         if (mapChangeEvent.displayMode !is MapDisplayMode.CurrentFloor
-                || position.isCloseEnoughToCenter(visibleRegion.latLngBounds)) {
+                || position.isCloseEnoughToCenter(visibleRegion.latLngBounds)
+                || isSelectedObject) {
             if (!meta.loadedBitmap) {
                 // show loading while its loading.
                 existing.marker.setIcon(loadingBitmap)
 
                 // enqueue replacement and add to marker meta.
                 existing.marker.tag = meta.copy(
-                        requestDisposable = enqueueBitmapFetch(item = existing.item, mapChangeEvent = mapChangeEvent))
+                        requestDisposable = enqueueBitmapFetch(item = existing.item, mapChangeEvent = mapChangeEvent), isSelected = isSelectedObject)
+            } else if (meta.isSelected xor isSelectedObject) {
+                existing.marker.tag = meta.copy(
+                        requestDisposable = enqueueBitmapFetch(item = existing.item, mapChangeEvent = mapChangeEvent), isSelected = isSelectedObject)
             }
         } else {
             // reset loading state here.
@@ -183,10 +210,12 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                 .asRequestObservable(context,
                         width = imageSize,
                         height = imageSize)
-                .map { bitmap ->
+                .withLatestFrom(selectedArticObject)
+                .map { (bitmap, articObject) ->
+                    val isSelected = item.isObject(articObject.value)
                     val order: String? = item.getTourOrderNumberBasedOnDisplayMode(displayMode)
                     BitmapDescriptorFactory.fromBitmap(
-                            articObjectMarkerGenerator.makeIcon(bitmap, overlay = order))
+                            articObjectMarkerGenerator.makeIcon(bitmap, overlay = order, selected = isSelected))
                 }
     }
 

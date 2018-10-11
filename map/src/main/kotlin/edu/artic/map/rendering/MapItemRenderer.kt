@@ -312,6 +312,7 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
             val existingMarker = existingMapItems[id]
             // reusing existing marker if possible.
             if (existingMarker != null) {
+                val meta = existingMarker.marker.metaData() ?: MarkerMetaData(item.item, loadedBitmap = true)
                 existingMarker.marker.apply {
                     // manually remove.
                     metaData<T>()?.requestDisposable?.let { toCancel ->
@@ -319,7 +320,7 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
                     }
                     setIcon(item.bitmap)
                     alpha = getMarkerAlpha(floor, displayMode, item.item)
-                    tag = MarkerMetaData(item.item, loadedBitmap = true)
+                    tag = meta.copy(item = item.item, loadedBitmap = true)
                 }
                 return@fromCallable Optional(null)
             } else {
