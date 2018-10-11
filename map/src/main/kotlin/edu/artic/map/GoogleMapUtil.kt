@@ -9,10 +9,7 @@ import android.support.annotation.UiThread
 import android.util.Log
 import android.util.Property
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.TileOverlay
+import com.google.android.gms.maps.model.*
 import edu.artic.base.utils.statusBarHeight
 import edu.artic.db.models.ArticObject
 import edu.artic.map.rendering.ALPHA_INVISIBLE
@@ -79,8 +76,32 @@ internal class TransparencyProperty : Property<TileOverlay, Float>(Float::class.
  * @param bounds the restrictions of
  * [the map's viewport][com.google.android.gms.maps.Projection.getVisibleRegion]
  */
-fun LatLng.isCloseEnoughToCenter(bounds: LatLngBounds): Boolean {
-    return bounds.contains(this) && bounds.center.distanceTo(this) < 15
+fun LatLng.isCloseEnoughToCenter(region: VisibleRegion): Boolean {
+    val bounds = region.latLngBounds
+    val nearLeft = region.nearLeft
+    val nearRight = region.nearRight
+    val farLeft = region.farLeft
+    val farRight = region.farRight
+    val nearDistance = nearLeft.distanceTo(nearRight)
+    val farDistance = farLeft.distanceTo(farRight)
+
+    val latDiffFar = (farRight.latitude - farLeft.latitude)/2f
+    val lonDiffFar = (farRight.longitude - farLeft.longitude)/2f
+    val centerFar = LatLng(farLeft.latitude + latDiffFar, farLeft.longitude + lonDiffFar)
+
+    val latDiffNear = (nearRight.latitude - nearLeft.latitude)/2f
+    val lonDiffNear = (nearRight.longitude - nearLeft.longitude)/2f
+    val centerNear = LatLng(nearLeft.latitude + latDiffNear, nearLeft.longitude + lonDiffNear)
+
+    val distanceToBack = centerNear.distanceTo(centerFar)
+    val ratio = ((nearDistance/farDistance) * (distanceToBack/2))
+
+    val latDiffCenter = ((centerFar.latitude - centerNear.latitude)/distanceToBack)*ratio
+    val lonDiffCenter = ((centerFar.longitude - centerNear.longitude)/distanceToBack)*ratio
+    val center = LatLng(centerNear.latitude + latDiffCenter, centerNear.longitude + lonDiffCenter)
+
+    val distanceFromCenter = center.distanceTo(this)
+    return bounds.contains(this) && distanceFromCenter < 15
 }
 
 /**
