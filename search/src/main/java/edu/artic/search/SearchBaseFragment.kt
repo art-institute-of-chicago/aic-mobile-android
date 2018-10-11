@@ -1,6 +1,7 @@
 package edu.artic.search
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
@@ -8,6 +9,9 @@ import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
+import edu.artic.base.utils.customTab.CustomTabManager
+import edu.artic.base.utils.dpToPixels
+import edu.artic.base.utils.hideSoftKeyboard
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.navigation.NavigationConstants
@@ -18,12 +22,6 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_search_results_sub.*
 import java.util.concurrent.TimeUnit
-import android.app.Activity
-import android.content.Context
-import android.net.Uri
-import android.view.inputmethod.InputMethodManager
-import edu.artic.base.utils.customTab.CustomTabManager
-import edu.artic.base.utils.hideSoftKeyboard
 import javax.inject.Inject
 
 
@@ -40,7 +38,19 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val lm = GridLayoutManager(view.context, 5)
+        var width = resources.displayMetrics.widthPixels
+        val ten = resources.dpToPixels(10f)
+        val size = resources.dpToPixels(70f)
+        val numToDisplay = ((width-ten) / size).toInt()
+        SearchResultsAdapter.MAX_ARTWORKS_PER_ROW = numToDisplay
+
+        val circleSize = resources.dpToPixels(48f)
+        val margins = resources.dpToPixels(24f)
+        val spaceReminding = (width - margins) - (numToDisplay*circleSize)
+        val endCurrentPadding = (spaceReminding / numToDisplay).toInt()
+        val endFinalPadding = (spaceReminding / (numToDisplay-1)).toInt()
+
+        val lm = GridLayoutManager(view.context, SearchResultsAdapter.MAX_ARTWORKS_PER_ROW)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return (resultsRV.adapter as SearchResultsAdapter).getSpanCount(position)
@@ -51,6 +61,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
             adapter = SearchResultsAdapter()
             layoutManager = lm
             addItemDecoration(SearchDividerItemDecoration(this.context))
+            addItemDecoration(CircularViewItemDecoration(endCurrentPadding, endFinalPadding, disposeBag))
         }
 
     }

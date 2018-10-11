@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- TODO this layout and Exhibition layout should be merged -->
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/greyText">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             android:background="@color/greyText">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:translationZ="0.1dp"
-        app:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,7 +33,6 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
@@ -50,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/greyText"
-            android:orientation="vertical">
+            android:descendantFocusability="afterDescendants">
 
             <ImageView
                 android:id="@+id/image"
@@ -77,68 +75,104 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/image"
                 tools:text="Expanded Title" />
+            <!--
 
-            <LinearLayout
-                android:id="@id/buttonPanelGuide"
+            Rules: Both 'showOnMap' and 'playAudio' should be same width,
+            a little under half the window width. Height should be wrap
+            content. If 'playAudio' is set to VISIBLE, 'showOnMap' should
+            only change position - not size.
+
+            -->
+
+            <Button
+                android:id="@+id/showOnMap"
+                style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
+                android:layout_marginEnd="@dimen/marginStandard"
+                android:drawableStart="@drawable/ic_show_on_map"
+                android:paddingLeft="@dimen/marginDouble"
+                android:text="@string/showOnMap"
+                android:visibility="visible"
+                android:gravity="start|center_vertical"
+                android:drawablePadding="@dimen/marginStandard"
+                app:layout_constraintEnd_toStartOf="@id/playAudio"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintHorizontal_weight=".5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/expandedTitle"
+                app:layout_constraintWidth_percent=".45"
+                 />
+
+            <Button
+                android:id="@+id/playAudio"
+                style="@style/DetailButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginStandard"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:drawableStart="@drawable/ic_play"
+                tools:text="Play Audio"
+                android:visibility="gone"
+                android:gravity="start|center_vertical"
+                android:drawablePadding="@dimen/marginStandard"
+                android:paddingLeft="@dimen/marginTriple"
+                tools:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight=".5"
+                app:layout_constraintStart_toEndOf="@id/showOnMap"
+                app:layout_constraintTop_toBottomOf="@id/expandedTitle"
+                app:layout_constraintWidth_percent=".45"
+                />
+
+            <!--
+
+            The below Barrier is aligned to 'showOnMap', since we
+            don't expect that to be marked GONE at any of the current
+            uses of this file.
+
+            -->
+
+            <android.support.constraint.Barrier
+                android:id="@+id/buttonPanelGuide"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="showOnMap,playAudio"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/expandedTitle">
-
-                <Button
-                    android:id="@+id/showOnMap"
-                    style="@style/DetailButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/marginDouble"
-                    android:layout_marginEnd="@dimen/marginStandard"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_show_on_map"
-                    android:padding="@dimen/marginStandard"
-                    tools:text="Show on Map"
-                    tools:visibility="visible" />
-
-                <Button
-                    android:id="@+id/playAudio"
-                    style="@style/DetailButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/marginStandard"
-                    android:layout_marginEnd="@dimen/marginDouble"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_play"
-                    android:drawablePadding="@dimen/marginStandard"
-                    android:padding="@dimen/marginStandard"
-                    tools:text="PlayAudio"
-                    tools:visibility="visible" />
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@id/showOnMap" />
 
             <TextView
-                android:id="@+id/artistCulturePlaceDenim"
+                android:id="@+id/description"
                 style="@style/BodySerifWhiteLeft"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginDouble"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="19dp"
+                android:layout_marginRight="@dimen/marginDouble"
+                android:includeFontPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buttonPanelGuide"
-                tools:text="Edward hooper" />
-
+                tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate." />
 
             <TextView
                 android:id="@+id/galleryNumber"
-                style="@style/BodySerifWhiteLeft"
+                style="@style/DescriptionDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/marginDouble"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/artistCulturePlaceDenim"
-                tools:text="Gallery 204" />
-
+                app:layout_constraintTop_toBottomOf="@id/description"
+                tools:text="Through August 5, 2018" />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
