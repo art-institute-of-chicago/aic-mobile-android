@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
 import android.view.View
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -78,7 +77,7 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                             .load(it)
                             .apply(options)
                             .placeholder(R.drawable.placeholder_large)
-                            .transition(DrawableTransitionOptions.withCrossFade())
+                            //.transition(DrawableTransitionOptions.withCrossFade()) removing cross fade related to https://github.com/bumptech/glide/issues/363
                             .listenerAnimateSharedTransaction(this, image)
                             .into(image)
 
