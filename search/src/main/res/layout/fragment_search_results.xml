@@ -20,8 +20,8 @@
         app:tabSelectedTextColor="@color/white"
         app:tabPaddingStart="-1dp"
         app:tabPaddingEnd="-1dp"
-        android:layout_marginStart="@dimen/marginHalf"
-        android:layout_marginEnd="@dimen/marginHalf"
+        android:layout_marginStart="@dimen/marginQuarter"
+        android:layout_marginEnd="@dimen/marginQuarter"
         app:tabTextColor="@color/white" />
 
     <View
