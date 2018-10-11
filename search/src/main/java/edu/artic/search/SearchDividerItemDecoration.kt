@@ -15,6 +15,7 @@ class SearchDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
         color = ContextCompat.getColor(context, R.color.warmGrey20Alpha)
     }
     private val mDividerHeight: Int = context.resources.dpToPixels(2f).toInt()
+    private val mBottomPadding: Int = context.resources.dpToPixels(20f).toInt()
 
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
@@ -26,6 +27,14 @@ class SearchDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
             val position = parent.getChildAdapterPosition(view)
             adapter.getItemOrNull(position)?.let {
                 if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1 )) {
+                    c.drawRect(
+                            view.left.toFloat(),
+                            view.bottom.toFloat() + mBottomPadding,
+                            view.right.toFloat(),
+                            view.bottom + mBottomPadding + mDividerHeight.toFloat(),
+                            mPaint
+                    )
+                } else if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1 )) {
                     c.drawRect(
                             view.left.toFloat(),
                             view.bottom.toFloat(),
@@ -45,6 +54,8 @@ class SearchDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
         val adapter = parent.adapter as SearchResultsAdapter
         adapter.getItemOrNull(position)?.let {
             if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1 )) {
+                outRect.set(0, 0, 0, mBottomPadding+mDividerHeight)
+            } else if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1 )) {
                 outRect.set(0, 0, 0, mDividerHeight)
             } else {
                 outRect.set(0, 0, 0, 0)
