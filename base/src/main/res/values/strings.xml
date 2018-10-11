@@ -23,7 +23,7 @@
 
     <!-- 'Leave Tour' dialog -->
     <string name="leaveCurrentTour">Leave Current Tour</string>
-    <string name="stay">Stay</string>
+    <string name="continueTour">Continue Tour</string>
     <string name="leaveTour">Leave Tour</string>
 
     <string name="searchContent">Search Content</string>
