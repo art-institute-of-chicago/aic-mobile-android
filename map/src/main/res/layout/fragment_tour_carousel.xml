@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/mapObjectWindowBlue"
     android:clickable="true"
     android:focusable="true">
@@ -17,10 +17,10 @@
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
-        tools:text="John Singer Sargent and Chicago John Singer Sargent and Chicago"
         app:layout_constraintEnd_toStartOf="@id/close"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="John Singer Sargent and Chicago John Singer Sargent and Chicago" />
 
     <ImageView
         android:id="@+id/close"
@@ -50,12 +50,12 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/tourCarousel"
         android:layout_width="0dp"
-        android:layout_height="@dimen/tourCarouselHeight"
+        android:layout_height="45dp"
         android:layout_marginBottom="@dimen/marginSixtyFour"
-        android:paddingTop="@dimen/marginDouble"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:listitem="@layout/tour_carousel_cell" />
 
     <com.fuzz.indicator.CutoutViewIndicator
         android:id="@+id/viewPagerIndicator"
@@ -66,6 +66,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tourCarousel"
+        android:layout_marginTop="@dimen/marginDouble"
         app:rcv_drawable="@drawable/icn_indicator_selected"
         app:rcv_drawable_unselected="@drawable/icn_indicator"
         app:rcv_internal_margin="8dp"
