@@ -64,12 +64,6 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
             })
         }.disposedBy(disposeBag)
 
-
-        viewModel.imageUrl
-                .map { it.isNotEmpty() }
-                .bindToMain(image.visibility())
-                .disposedBy(disposeBag)
-
         val options = RequestOptions()
                 .dontAnimate()
                 .dontTransform()
