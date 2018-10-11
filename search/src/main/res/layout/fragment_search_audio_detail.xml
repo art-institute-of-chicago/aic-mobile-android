@@ -79,7 +79,7 @@
 
             Rules: Both 'showOnMap' and 'playAudio' should be same width,
             a little under half the window width. Height should be wrap
-            content. If 'showOnMap' is set to VISIBLE, 'playAudio' should
+            content. If 'playAudio' is set to VISIBLE, 'showOnMap' should
             only change position - not size.
 
             -->
@@ -95,7 +95,7 @@
                 android:drawableStart="@drawable/ic_show_on_map"
                 android:paddingLeft="@dimen/marginDouble"
                 android:text="@string/showOnMap"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:gravity="start|center_vertical"
                 android:drawablePadding="@dimen/marginStandard"
                 app:layout_constraintEnd_toStartOf="@id/playAudio"
@@ -103,7 +103,8 @@
                 app:layout_constraintHorizontal_weight=".5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
-                tools:visibility="visible" />
+                app:layout_constraintWidth_percent=".45"
+                 />
 
             <Button
                 android:id="@+id/playAudio"
@@ -115,9 +116,11 @@
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:drawableStart="@drawable/ic_play"
                 tools:text="Play Audio"
+                android:visibility="gone"
                 android:gravity="start|center_vertical"
                 android:drawablePadding="@dimen/marginStandard"
                 android:paddingLeft="@dimen/marginTriple"
+                tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight=".5"
                 app:layout_constraintStart_toEndOf="@id/showOnMap"
@@ -127,7 +130,7 @@
 
             <!--
 
-            The below Barrier is aligned to 'playAudio', since we
+            The below Barrier is aligned to 'showOnMap', since we
             don't expect that to be marked GONE at any of the current
             uses of this file.
 
