@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import android.view.View
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -23,6 +23,7 @@ import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_search_audio_detail.*
 import kotlin.reflect.KClass
 
+//TODO move into details package
 class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewModel>() {
     override val viewModelClass: KClass<SearchAudioDetailViewModel>
         get() = SearchAudioDetailViewModel::class
@@ -62,12 +63,6 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
             })
         }.disposedBy(disposeBag)
 
-
-        viewModel.imageUrl
-                .map { it.isNotEmpty() }
-                .bindToMain(image.visibility())
-                .disposedBy(disposeBag)
-
         val options = RequestOptions()
                 .dontAnimate()
                 .dontTransform()
@@ -82,7 +77,7 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                             .load(it)
                             .apply(options)
                             .placeholder(R.drawable.placeholder_large)
-                            .transition(DrawableTransitionOptions.withCrossFade())
+                            //.transition(DrawableTransitionOptions.withCrossFade()) removing cross fade related to https://github.com/bumptech/glide/issues/363
                             .listenerAnimateSharedTransaction(this, image)
                             .into(image)
 
@@ -98,14 +93,15 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                 .disposedBy(disposeBag)
 
         viewModel.authorCulturalPlace
-                .bindToMain(artistCulturePlaceDenim.text())
+                .bindToMain(description.text())
                 .disposedBy(disposeBag)
 
         viewModel.showOnMapVisible
                 .bindToMain(showOnMap.visibility())
                 .disposedBy(disposeBag)
+
         viewModel.playAudioVisible
-                .bindToMain(playAudio.visibility())
+                .bindToMain(playAudio.visibility(View.INVISIBLE))
                 .disposedBy(disposeBag)
 
         viewModel.galleryNumber

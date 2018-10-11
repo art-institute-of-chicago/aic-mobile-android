@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greyText"
-    android:paddingTop="@dimen/marginTriple">
+    android:paddingTop="@dimen/marginDouble">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabStrip"
@@ -13,11 +13,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabGravity="center"
+        app:tabGravity="fill"
         app:tabIndicatorColor="@android:color/transparent"
         app:tabIndicatorHeight="0dp"
-        app:tabMode="scrollable"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/white"
+        app:tabPaddingStart="-1dp"
+        app:tabPaddingEnd="-1dp"
+        android:layout_marginStart="@dimen/marginQuarter"
+        android:layout_marginEnd="@dimen/marginQuarter"
         app:tabTextColor="@color/white" />
 
     <View

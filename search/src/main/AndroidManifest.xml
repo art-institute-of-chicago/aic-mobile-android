@@ -6,7 +6,7 @@
         <activity
             android:name=".SearchActivity"
             android:theme="@style/SearchTheme"
-            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:windowSoftInputMode="adjustResize|stateVisible"
             android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
