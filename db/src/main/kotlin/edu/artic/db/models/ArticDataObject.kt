@@ -17,7 +17,7 @@ data class ArticDataObject(
         @Json(name = "artworks_endpoint") val artworksEndpoint: String?,
         @Json(name = "galleries_endpoint") val galleriesEndpoint: String?,
         @Json(name = "images_endpoint") val imagesEndpoint: String?,
-        @Json(name = "events_endpoint") val eventsEndpoint: String?,
+        @Json(name = "events_endpoint_v2") val eventsEndpoint: String?, //App is using v2 of this endpoint
         @Json(name = "autocomplete_endpoint") val autocompleteEndpoint: String?,
         @Json(name = "tours_endpoint") val toursEndpoint: String?,
         @Json(name = "multisearch_endpoint") val multiSearchEndpoint: String?,
@@ -26,6 +26,10 @@ data class ArticDataObject(
         @Json(name = "tickets_url") val ticketsUrl: String?,
         @PrimaryKey val id: Int = 0
 ) {
+
+    companion object {
+        var IMAGE_SERVER_URL = ""
+    }
 
     val membershipUrlAndroid: String
         get() {
