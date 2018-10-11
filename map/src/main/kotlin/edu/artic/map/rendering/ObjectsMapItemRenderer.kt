@@ -100,7 +100,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
         val isSelectedObject = existing.item.isObject(selectedArticObject)
 
         if (mapChangeEvent.displayMode !is MapDisplayMode.CurrentFloor
-                || position.isCloseEnoughToCenter(visibleRegion.latLngBounds)
+                || position.isCloseEnoughToCenter(visibleRegion)
                 || isSelectedObject) {
             if (!meta.loadedBitmap) {
                 // show loading while its loading.
@@ -138,7 +138,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
         // slightly different logic than the above method. If close enough to center or on tour, enqueue and show loading.
         // otherwise just show dot.
         val fastBitmap = if (displayMode !is MapDisplayMode.CurrentFloor ||
-                position.isCloseEnoughToCenter(visibleRegion.latLngBounds)) {
+                position.isCloseEnoughToCenter(visibleRegion)) {
             requestDisposable = enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
             loadingBitmap
         } else {
