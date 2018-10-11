@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
+import android.view.View
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -105,8 +106,9 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
         viewModel.showOnMapVisible
                 .bindToMain(showOnMap.visibility())
                 .disposedBy(disposeBag)
+
         viewModel.playAudioVisible
-                .bindToMain(playAudio.visibility())
+                .bindToMain(playAudio.visibility(View.INVISIBLE))
                 .disposedBy(disposeBag)
 
         viewModel.galleryNumber
