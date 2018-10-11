@@ -248,7 +248,7 @@
 
     <style name="PageTitleRegularWhite">
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">@dimen/textPageTitle</item>
         <item name="android:letterSpacing">0.03</item>
         <item name="android:lineSpacingExtra">2sp</item>
         <item name="android:textColor">#ffffff</item>
