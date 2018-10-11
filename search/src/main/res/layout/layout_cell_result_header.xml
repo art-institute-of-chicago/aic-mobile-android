@@ -4,16 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="6dp">
+    android:paddingTop="@dimen/marginStandard"
+    android:paddingBottom="6dp"
+    tools:background="@color/dark_grey">
 
     <TextView
         android:id="@+id/title"
         style="@style/SectionTitleWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="6dp"
         app:layout_constrainedHeight="true"
         app:layout_constrainedWidth="true"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +25,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/seeAll"
-        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toEndOf="parent" />
 
