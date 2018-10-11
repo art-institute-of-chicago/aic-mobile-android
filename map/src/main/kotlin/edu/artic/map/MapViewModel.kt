@@ -224,7 +224,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         distinctFloor.map { it.number },
                         focus.distinctUntilChanged(),
                         displayMode.distinctUntilChanged(),
-                        visibleRegionChanges.distinctUntilChanged()
+                        visibleRegionChanges.distinctUntilChanged(),
+                        selectedArticObject.distinctUntilChanged()
                 )
 
 

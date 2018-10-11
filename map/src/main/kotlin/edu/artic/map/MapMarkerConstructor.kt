@@ -9,14 +9,8 @@ import com.google.android.gms.maps.model.VisibleRegion
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticObjectDao
-import edu.artic.map.rendering.AmenitiesMapItemRenderer
-import edu.artic.map.rendering.DepartmentsMapItemRenderer
-import edu.artic.map.rendering.GalleriesMapItemRenderer
-import edu.artic.map.rendering.LandmarkMapItemRenderer
-import edu.artic.map.rendering.LionMapItemRenderer
-import edu.artic.map.rendering.ObjectsMapItemRenderer
-import edu.artic.map.rendering.SpacesMapItemRenderer
-import edu.artic.map.rendering.TourIntroMapItemRenderer
+import edu.artic.db.models.ArticObject
+import edu.artic.map.rendering.*
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
@@ -63,13 +57,16 @@ class MapMarkerConstructor
     fun bindToMapChanges(floorChanges: Observable<Int>,
                          focusChanges: Observable<MapFocus>,
                          displayMode: Observable<MapDisplayMode>,
-                         visibleRegion: Observable<VisibleRegion>) {
+                         visibleRegion: Observable<VisibleRegion>,
+                         selectedArticObject: Observable<ArticObject>) {
         // buffer changes between the two events.
         val bufferedMapChangeEvents = Observables.combineLatest(focusChanges, floorChanges, displayMode) { focus, floor, mode ->
             MapChangeEvent(floor = floor, focus = focus, displayMode = mode)
         }
                 .toFlowable(BackpressureStrategy.LATEST)
                 .share()
+
+        objectsMapItemRenderer.bindToSelectedArticObject(selectedArticObject, disposeBag)
 
         renderers.forEach { renderer ->
             renderer.bindToMapChanges(map.filterValue(), bufferedMapChangeEvents, visibleRegion, disposeBag)
