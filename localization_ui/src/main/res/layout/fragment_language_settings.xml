@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
@@ -52,13 +51,15 @@
             <TextView
                 android:id="@+id/choseYourLanguage"
                 style="?attr/languageSettingsTitleTextAppearance"
+                tools:theme="@style/CardTitleLargeBlack"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/languageSettingsTitleTextColor"
-                android:layout_marginTop="@dimen/marginTriple"
+                android:paddingTop="@dimen/marginTriple"
+                android:paddingBottom="@dimen/marginTriple"
                 android:paddingStart="@dimen/marginDouble"
                 android:paddingEnd="@dimen/marginDouble"
                 android:text="@string/chooseYourLanguage"
+                android:textColor="?attr/languageSettingsTitleTextColor"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +70,6 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginTriple"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:background="@color/warmGrey"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -79,15 +79,16 @@
             <TextView
                 android:id="@+id/languageSettingsBody"
                 style="?attr/languageSettingsBodyTextAppearance"
+                tools:theme="@style/BodySansSerifBlackLeft"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:fontFamily="@font/ideal_sans_book"
                 android:fontFeatureSettings="tnum"
                 android:paddingStart="@dimen/marginDouble"
-                android:textColor="?attr/languageSettingsBodyTextColor"
                 android:paddingEnd="@dimen/marginDouble"
                 android:text="@string/languageSettingsBody"
+                android:textColor="?attr/languageSettingsBodyTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider" />
@@ -101,8 +102,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/languageSettingsBody"
-                >
+                tools:layout_constraintVertical_bias="0"
+                app:layout_constraintTop_toBottomOf="@id/languageSettingsBody">
 
                 <RadioButton
                     android:id="@+id/englishLanguage"
@@ -125,7 +126,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="@dimen/marginDouble"
-                    android:layout_marginTop="@dimen/marginQuad"
+                    android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginEnd="@dimen/marginDouble"
                     android:background="?attr/languageSettingsButtonBackground"
                     android:button="@null"
@@ -141,7 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="@dimen/marginDouble"
-                    android:layout_marginTop="@dimen/marginQuad"
+                    android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginEnd="@dimen/marginDouble"
                     android:background="?attr/languageSettingsButtonBackground"
                     android:button="@null"
