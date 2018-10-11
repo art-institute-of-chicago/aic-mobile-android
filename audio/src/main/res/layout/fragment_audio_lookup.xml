@@ -74,6 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/screen_icon"
+        tools:hint="Look It Up"
         tools:ignore="Deprecated,UnusedAttribute"
         />
 
@@ -96,6 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lookup_field"
+        tools:text="Enter the number next to the headphone icon on the artwork label."
         tools:ignore="LabelFor"
         />
 
