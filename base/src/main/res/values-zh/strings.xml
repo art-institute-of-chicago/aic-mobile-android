@@ -16,8 +16,11 @@
     <string name="channel_name">音频</string>
     <string name="transcript">脚本</string>
     <string name="credits">信用</string>
+
+    <!-- 'Leave Tour' dialog -->
     <string name="leaveCurrentTour">退出当前游览？</string>
     <string name="leaveTour">离开游览</string>
+
     <string name="home">首页</string>
     <string name="map">地图</string>
     <string name="info">信息</string>
