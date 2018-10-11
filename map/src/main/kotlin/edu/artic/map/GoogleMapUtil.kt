@@ -69,6 +69,12 @@ internal class TransparencyProperty : Property<TileOverlay, Float>(Float::class.
     }
 }
 
+fun LatLng.midpoint(other: LatLng): LatLng {
+    val latDiffFar = (other.latitude - latitude)/2f
+    val lonDiffFar = (other.longitude - longitude)/2f
+    return LatLng(latitude + latDiffFar, longitude + lonDiffFar)
+}
+
 /**
  * We only want to display [ArticObject] annotations that are within 15 meters
  * of the center of the map.
@@ -78,23 +84,13 @@ internal class TransparencyProperty : Property<TileOverlay, Float>(Float::class.
  */
 fun LatLng.isCloseEnoughToCenter(region: VisibleRegion): Boolean {
     val bounds = region.latLngBounds
-    val nearLeft = region.nearLeft
-    val nearRight = region.nearRight
-    val farLeft = region.farLeft
-    val farRight = region.farRight
-    val nearDistance = nearLeft.distanceTo(nearRight)
-    val farDistance = farLeft.distanceTo(farRight)
+    val nearDistance = region.nearLeft.distanceTo(region.nearRight)
+    val farDistance = region.farLeft.distanceTo(region.farRight)
 
-    val latDiffFar = (farRight.latitude - farLeft.latitude)/2f
-    val lonDiffFar = (farRight.longitude - farLeft.longitude)/2f
-    val centerFar = LatLng(farLeft.latitude + latDiffFar, farLeft.longitude + lonDiffFar)
-
-    val latDiffNear = (nearRight.latitude - nearLeft.latitude)/2f
-    val lonDiffNear = (nearRight.longitude - nearLeft.longitude)/2f
-    val centerNear = LatLng(nearLeft.latitude + latDiffNear, nearLeft.longitude + lonDiffNear)
-
+    val centerFar = region.farLeft.midpoint(region.farRight)
+    val centerNear = region.nearLeft.midpoint(region.nearRight)
     val distanceToBack = centerNear.distanceTo(centerFar)
-    val ratio = ((nearDistance/farDistance) * (distanceToBack/2))
+    val ratio = ((nearDistance/farDistance) * (distanceToBack/2f))
 
     val latDiffCenter = ((centerFar.latitude - centerNear.latitude)/distanceToBack)*ratio
     val lonDiffCenter = ((centerFar.longitude - centerNear.longitude)/distanceToBack)*ratio
