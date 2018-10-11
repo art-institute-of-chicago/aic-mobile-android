@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import de.hdodenhof.circleimageview.CircleImageView
+import edu.artic.base.utils.dpToPixels
 
 /**
  * Simple [Bitmap]-generating class for drawing map markers from custom layouts.
@@ -97,7 +99,7 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
     /**
      * Where the [icon][BaseMarkerGenerator.makeIcon] will appear.
      */
-    private val imageView: ImageView
+    private val imageView: CircleImageView
     private val overlayTextView: TextView
     private val baseView: View
     private val defaultImage: ColorDrawable
@@ -118,7 +120,13 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
      * [CircleImageView][de.hdodenhof.circleimageview.CircleImageView]
      * may crash.
      */
-    fun makeIcon(imageViewBitmap: Bitmap?, scale: Float = 1f, overlay: String? = null): Bitmap {
+    fun makeIcon(imageViewBitmap: Bitmap?, scale: Float = 1f, overlay: String? = null, selected: Boolean = false): Bitmap {
+
+        if (selected) {
+            imageView.borderWidth = imageView.resources.dpToPixels(4f).toInt()
+        } else {
+            imageView.borderWidth = imageView.resources.dpToPixels(2f).toInt()
+        }
 
         if (imageViewBitmap != null) {
             imageView.setImageBitmap(imageViewBitmap)

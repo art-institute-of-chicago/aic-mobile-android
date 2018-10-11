@@ -60,4 +60,8 @@ class MapItemModel(
         }
         return null
     }
+
+    fun isSelected(articObject: ArticObject?): Boolean {
+        return articObject?.nid == id
+    }
 }
