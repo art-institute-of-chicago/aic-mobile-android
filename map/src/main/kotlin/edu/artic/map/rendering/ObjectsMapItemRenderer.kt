@@ -97,23 +97,21 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
         val meta = existing.marker.metaData()
                 ?: MarkerMetaData(existing.item, loadedBitmap = false, requestDisposable = null, isSelected = false)
 
-        val isSelected = existing.item.isSelected(selectedArticObject)
+        val isSelectedObject = existing.item.isObject(selectedArticObject)
 
         if (mapChangeEvent.displayMode !is MapDisplayMode.CurrentFloor
-                || (position.isCloseEnoughToCenter(visibleRegion.latLngBounds) || isSelected)) {
+                || position.isCloseEnoughToCenter(visibleRegion.latLngBounds)
+                || isSelectedObject) {
             if (!meta.loadedBitmap) {
                 // show loading while its loading.
                 existing.marker.setIcon(loadingBitmap)
 
                 // enqueue replacement and add to marker meta.
                 existing.marker.tag = meta.copy(
-                        requestDisposable = enqueueBitmapFetch(item = existing.item, mapChangeEvent = mapChangeEvent), isSelected = isSelected)
-            } else if (!meta.isSelected && isSelected) {
+                        requestDisposable = enqueueBitmapFetch(item = existing.item, mapChangeEvent = mapChangeEvent), isSelected = isSelectedObject)
+            } else if (meta.isSelected xor isSelectedObject) {
                 existing.marker.tag = meta.copy(
-                        requestDisposable = enqueueBitmapFetch(item = existing.item, mapChangeEvent = mapChangeEvent), isSelected = isSelected)
-            } else if (meta.isSelected && !isSelected) {
-                existing.marker.tag = meta.copy(
-                        requestDisposable = enqueueBitmapFetch(item = existing.item, mapChangeEvent = mapChangeEvent), isSelected = isSelected)
+                        requestDisposable = enqueueBitmapFetch(item = existing.item, mapChangeEvent = mapChangeEvent), isSelected = isSelectedObject)
             }
         } else {
             // reset loading state here.
@@ -214,7 +212,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                         height = imageSize)
                 .withLatestFrom(selectedArticObject)
                 .map { (bitmap, articObject) ->
-                    val isSelected = item.isSelected(articObject.value)
+                    val isSelected = item.isObject(articObject.value)
                     val order: String? = item.getTourOrderNumberBasedOnDisplayMode(displayMode)
                     BitmapDescriptorFactory.fromBitmap(
                             articObjectMarkerGenerator.makeIcon(bitmap, overlay = order, selected = isSelected))
