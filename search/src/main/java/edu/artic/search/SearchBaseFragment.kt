@@ -4,13 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.util.TypedValue
 import android.view.View
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
+import edu.artic.base.utils.dpToPixels
 import edu.artic.base.utils.hideSoftKeyboard
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.exhibitions.ExhibitionDetailFragment
@@ -39,13 +39,13 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
         super.onViewCreated(view, savedInstanceState)
 
         var width = resources.displayMetrics.widthPixels
-        val ten = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10f, resources.displayMetrics).toInt()
-        val size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70f, resources.displayMetrics)
+        val ten = resources.dpToPixels(10f)
+        val size = resources.dpToPixels(70f)
         val numToDisplay = ((width-ten) / size).toInt()
         SearchResultsAdapter.MAX_ARTWORKS_PER_ROW = numToDisplay
 
-        val circleSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48f, resources.displayMetrics)
-        val margins = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32f, resources.displayMetrics)
+        val circleSize = resources.dpToPixels(48f)
+        val margins = resources.dpToPixels(24f)
         val spaceReminding = (width - margins) - (numToDisplay*circleSize)
         val endCurrentPadding = (spaceReminding / numToDisplay).toInt()
         val endFinalPadding = (spaceReminding / (numToDisplay-1)).toInt()

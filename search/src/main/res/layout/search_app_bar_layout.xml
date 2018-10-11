@@ -35,6 +35,7 @@
         android:imeOptions="actionDone"
         android:inputType="text"
         android:textSize="17sp"
+        android:fontFeatureSettings="tnum"
         android:fontFamily="@font/ideal_sans_medium"
         />
 
