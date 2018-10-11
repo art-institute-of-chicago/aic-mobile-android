@@ -112,16 +112,12 @@
         
         <TextView
             android:id="@+id/mapFirstRunHeaderSubtitle"
+            style="@style/PageSubHeaderRegularWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginOneHalf"
             android:layout_marginStart="@dimen/marginActivitySubtitle"
             android:layout_marginEnd="@dimen/marginActivitySubtitle"
-            android:fontFamily="@font/amiri_regular"
-            android:gravity="center_horizontal"
-            android:lineSpacingExtra="4sp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/textSixteen"
             tools:text="Use the map to find food, facilities, and audio-enhanced artworks."
             />
     </LinearLayout>
