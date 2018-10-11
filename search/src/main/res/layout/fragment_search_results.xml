@@ -13,11 +13,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabGravity="center"
+        app:tabGravity="fill"
         app:tabIndicatorColor="@android:color/transparent"
         app:tabIndicatorHeight="0dp"
-        app:tabMode="scrollable"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/white"
+        app:tabPaddingStart="-1dp"
+        app:tabPaddingEnd="-1dp"
+        android:layout_marginStart="@dimen/marginHalf"
+        android:layout_marginEnd="@dimen/marginHalf"
         app:tabTextColor="@color/white" />
 
     <View
