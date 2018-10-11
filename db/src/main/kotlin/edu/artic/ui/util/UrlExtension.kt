@@ -2,6 +2,7 @@ package edu.artic.ui.util
 
 import android.net.Uri
 import edu.artic.db.BuildConfig
+import edu.artic.db.models.ArticDataObject
 
 /**
  * Use this to ensure that your image urls are always hitting the CDN.
@@ -13,8 +14,8 @@ import edu.artic.db.BuildConfig
 fun String.asCDNUri() : String {
     val parsed = Uri.parse(this)
     return when {
-        parsed.authority == BuildConfig.OFFICIAL_IMAGE_HOST -> parsed.buildUpon()
-                .authority(BuildConfig.CDN_HOST)
+        parsed.authority == ArticDataObject.IMAGE_SERVER_URL -> parsed.buildUpon()
+                .authority(ArticDataObject.IMAGE_SERVER_URL)
                 .build()
         else -> parsed
     }.toString()
