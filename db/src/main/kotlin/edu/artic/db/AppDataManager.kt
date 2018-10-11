@@ -208,6 +208,7 @@ class AppDataManager @Inject constructor(
                                 mapAnnotationDao.addAnnotations(mapAnnotations.values.toList())
                             }
 
+                            ArticDataObject.IMAGE_SERVER_URL = result.data.imageServerUrl
                             dataObjectDao.setDataObject(result.data)
 
                             result.search?.let { searchObject ->
