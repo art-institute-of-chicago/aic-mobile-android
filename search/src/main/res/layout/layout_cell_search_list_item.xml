@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp">
 
     <ImageView
         android:id="@+id/image"
@@ -19,8 +19,8 @@
 
     <ImageView
         android:id="@+id/headphonesIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="29dp"
+        android:layout_height="29dp"
         android:contentDescription="@null"
         android:src="@drawable/ic_headphones"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,8 +44,7 @@
         android:gravity="bottom"
         android:lines="1"
         android:maxLines="1"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
+        android:layout_marginStart="@dimen/marginStandard"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toStartOf="@id/headphonesIcon"
         app:layout_constraintStart_toEndOf="@id/image"
@@ -60,8 +59,7 @@
         android:gravity="top"
         android:lines="1"
         android:maxLines="1"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
+        android:layout_marginStart="@dimen/marginStandard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/headphonesIcon"
         app:layout_constraintStart_toEndOf="@id/image"
