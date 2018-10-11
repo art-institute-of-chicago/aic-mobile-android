@@ -128,7 +128,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     }
 
     fun onClickSeeAllTours() {
-        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours))
+         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours))
     }
 
     fun onClickSeeAllOnView() {

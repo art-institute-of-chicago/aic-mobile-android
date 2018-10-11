@@ -28,7 +28,7 @@ class WelcomeActivity : BaseActivity() {
             disableShiftMode(R.color.menu_color_list)
             selectedItemId = R.id.action_home
             setOnNavigationItemReselectedListener {
-                navController.popBackStack(R.id.welcomeFragment, true)
+                navController.popBackStack(R.id.welcomeFragment, false)
             }
             setOnNavigationItemSelectedListener(NavigationSelectListener(this@WelcomeActivity))
         }
