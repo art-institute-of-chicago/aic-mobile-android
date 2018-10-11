@@ -73,6 +73,8 @@ The values get loaded in the following order:
 
 Sample (added for reference as well)
 ```aidl
+blob_url=
+default_buy_url=
 member_validation_url=
 member_validation_token=
 crashlytics_api_secret=
