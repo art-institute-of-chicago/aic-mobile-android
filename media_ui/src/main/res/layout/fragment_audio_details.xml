@@ -158,6 +158,7 @@
                 android:background="@color/greyText"
                 app:content_text_color="@color/white"
                 app:panel_padding="@dimen/marginDouble"
+                app:content_padding="@dimen/marginDouble"
                 app:title_text="@string/transcript"
                 app:title_text_color="@color/white" />
 
@@ -171,6 +172,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/greyText"
                 app:content_text_color="@color/white"
+                app:panel_padding="@dimen/marginDouble"
+                app:content_padding="@dimen/marginDouble"
                 app:title_text="@string/credits"
                 app:title_text_color="@color/white" />
 
