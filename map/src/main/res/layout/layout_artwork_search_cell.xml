@@ -15,7 +15,7 @@
         style="@style/SectionTitleWhite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/marginStandard"
+        android:layout_marginStart="@dimen/marginDouble"
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
