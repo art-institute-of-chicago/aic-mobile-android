@@ -79,42 +79,38 @@
 
             -->
 
-            <Button
+            <edu.artic.view.DetailButton
                 android:id="@+id/showOnMap"
-                style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginStandard"
-                android:drawableStart="@drawable/ic_show_on_map"
-                android:padding="@dimen/marginStandard"
-                android:text="@string/showOnMap"
+                app:button_text="@string/showOnMap"
+                app:button_icon="@drawable/ic_show_on_map"
                 android:visibility="gone"
-                app:layout_constraintEnd_toStartOf="@id/buyTickets"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
+                app:layout_constraintWidth_percent=".45"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:visibility="visible" />
 
-            <Button
+            <edu.artic.view.DetailButton
                 android:id="@+id/buyTickets"
-                style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginStandard"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:drawableStart="@drawable/ic_ticket"
-                android:drawablePadding="@dimen/marginStandard"
-                android:padding="@dimen/marginStandard"
-                android:text="@string/buyTickets"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:button_icon="@drawable/ic_ticket"
+                app:button_text="@string/buyTickets"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
-                app:layout_constraintStart_toEndOf="@id/showOnMap"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 app:layout_constraintWidth_percent=".45"
+                app:layout_constraintStart_toEndOf="@id/showOnMap"
+                app:layout_goneMarginStart="@dimen/marginDouble"
                 />
 
             <!--

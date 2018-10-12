@@ -1,13 +1,11 @@
 package edu.artic.search
 
 import com.fuzz.rx.bindTo
-import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
-import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
@@ -27,7 +25,7 @@ open class SearchBaseViewModel @Inject constructor(
     sealed class NavigationEndpoint {
         data class TourDetails(val tour: ArticTour) : NavigationEndpoint()
         data class ExhibitionDetails(val exhibition: ArticExhibition) : NavigationEndpoint()
-        data class ArtworkDetails(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
+        data class ArtworkDetails(val articObject: ArticSearchArtworkObject, val searchTerm: String) : NavigationEndpoint()
         data class ArtworkOnMap(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
         data class AmenityOnMap(val type: SuggestedMapAmenities) : NavigationEndpoint()
         object HideKeyboard: NavigationEndpoint()
@@ -71,7 +69,7 @@ open class SearchBaseViewModel @Inject constructor(
                 )
                 navigateTo.onNext(
                         Navigate.Forward(
-                                NavigationEndpoint.ArtworkDetails(viewModel.artwork)
+                                NavigationEndpoint.ArtworkDetails(viewModel.artwork, searchText)
                         )
                 )
             }

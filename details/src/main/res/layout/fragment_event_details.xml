@@ -84,22 +84,18 @@
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 tools:text="June 30, 1:00pm"/>
 
-            <Button
+            <edu.artic.view.DetailButton
                 android:id="@+id/registerToday"
-                style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginStandard"
-                android:drawablePadding="@dimen/marginStandard"
-                android:drawableStart="@drawable/ic_ticket"
-                android:padding="@dimen/marginDouble"
+                app:button_icon="@drawable/ic_ticket"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/metaData"
-                tools:text="@string/buyTickets"
                 tools:visibility="visible"/>
 
             <TextView
@@ -111,7 +107,7 @@
                 android:layout_marginRight="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:includeFontPadding="false"
-                android:lineSpacingExtra="-8sp"
+                android:lineSpacingMultiplier=".62"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/registerToday"

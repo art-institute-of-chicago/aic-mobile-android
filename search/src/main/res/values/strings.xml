@@ -2,7 +2,6 @@
 <resources>
     <string name="couldnt_find_top_text">Sorry, we couldn’t find that.</string>
     <string name="couldnt_find_bottom_text">For help, visit the nearest museum representative or <u>visit our website</u></string>
-    <string name="gallery">Gallery %s</string>
     <string name="artworks">Artworks</string>
     <string name="exhibitions">Exhibitions</string>
 </resources>
