@@ -41,7 +41,7 @@
     <color name="greeny_blue">#37a8ab</color>
     <color name="colorPrimary">#118084</color>
     <color name="colorPrimaryDark">#118084</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">@color/sea</color>
     <color name="brownishOrange">#ce6b27</color>
     <color name="infoScreenRed">#91072D</color>
     <color name="audioBackground">#1e1e1e</color>
