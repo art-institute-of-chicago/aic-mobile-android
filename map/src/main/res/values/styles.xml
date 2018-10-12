@@ -3,8 +3,11 @@
     <style name="AppTheme.CustomToolbar.MapTheme">
         <item name="colorPrimary">@color/marine</item>
         <item name="colorPrimaryDark">@color/marine</item>
-        <item name="android:statusBarColor">@color/marine</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="MapFloor">
