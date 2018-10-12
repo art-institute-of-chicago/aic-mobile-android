@@ -2,9 +2,12 @@
 <resources>
 
     <style name="AppTheme.CustomToolbar.InfoTheme">
+        <!-- General theme attributes -->
         <item name="colorPrimary">@color/brownishOrange</item>
         <item name="colorPrimaryDark">@color/brownishOrange</item>
+        <item name="colorAccent">@color/brownishOrange</item>
         <item name="colorControlNormal">@color/white</item>
+        <item name="android:colorAccent">@color/brownishOrange</item>
         <item name="android:statusBarColor">@color/brownishOrange</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowNoTitle">true</item>
@@ -12,6 +15,8 @@
         <item name="windowNoTitle">true</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
+
+        <!-- Attributes for edu.artic.localization.ui.LanguageSettingsFragment -->
         <item name="languageSettingsBackgroundColor">@color/white</item>
         <item name="languageSettingsButtonTextColor">@color/radiobutton_text_color_list</item>
         <item name="languageSettingsButtonBackground">@drawable/language_radio_button_background</item>
