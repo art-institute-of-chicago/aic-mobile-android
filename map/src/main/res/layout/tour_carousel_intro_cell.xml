@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/mapObjectWindowBlue"
-    tools:layout_height="200dp">
+    android:background="@color/mapObjectWindowBlue">
 
 
     <Button
@@ -15,12 +14,14 @@
         android:layout_height="wrap_content"
         android:background="@color/marine"
         android:drawableLeft="@drawable/ic_play"
-        android:drawablePadding="@dimen/marginDouble"
+        android:drawablePadding="@dimen/marginStandard"
         android:paddingStart="@dimen/marginDouble"
         android:paddingEnd="@dimen/marginDouble"
         android:text="@string/play_tour_introduction"
         android:textAllCaps="false"
         android:textColor="@color/white"
+        android:gravity="start|center_vertical"
+        android:layout_marginTop="@dimen/marginDouble"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

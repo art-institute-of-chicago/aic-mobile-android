@@ -38,7 +38,7 @@
     <dimen name="textFifteen">15sp</dimen>
     <dimen name="textSixteen">16sp</dimen>
 
-    <dimen name="bottom_audio_player_height">50dp</dimen>
+    <dimen name="bottom_audio_player_height">40dp</dimen>
     <dimen name="bottomAudioControlIconSize">32dp</dimen>
     <dimen name="large_icon_size">42dp</dimen>
     <dimen name="mapObjectDetailsViewHeight">135dp</dimen>
