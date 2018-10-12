@@ -163,16 +163,22 @@
         <item name="android:background">@color/warmGrey20Alpha</item>
     </style>
 
+
     <style name="DetailButton">
-        <item name="android:background">@color/sea</item>
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:gravity">center</item>
         <item name="android:letterSpacing">0.07</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="DetailButtonParent" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/detail_button_background</item>
+        <item name="android:gravity">center</item>
         <item name="android:minHeight">50dp</item>
     </style>
+
 
     <style name="BodySansSerifWhiteCentered">
         <item name="android:fontFamily">@font/ideal_sans_book</item>
