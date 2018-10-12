@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding2.view.ViewLayoutChangeEvent
 import com.jakewharton.rxbinding2.view.layoutChangeEvents
+import edu.artic.base.utils.dpToPixels
 import edu.artic.media.ui.R
 import io.reactivex.disposables.Disposable
 
@@ -61,18 +62,14 @@ class LanguageSelectorViewBackground(private val selectorView: ViewGroup) {
         val shaped: GradientDrawable = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             setColor(ContextCompat.getColor(localContext, R.color.black60alpha))
-
             val radiusInPixels: Float = Math.min(event.newWidth, event.newHeight) / 2f
             cornerRadius = radiusInPixels
         }
 
         val endCaret: Drawable? = AppCompatResources.getDrawable(localContext, R.drawable.ic_language_caret)
         if (endCaret != null) {
-
-            val idealPadding = event.newWidth - endCaret.intrinsicWidth
-
+            val idealPadding = event.newWidth - endCaret.intrinsicWidth - localContext.resources.dpToPixels(16f).toInt()
             val layered = LayerDrawable(arrayOf(shaped, endCaret))
-
             defineNeededInsets(target, idealPadding, layered)
 
             return layered
@@ -99,6 +96,18 @@ class LanguageSelectorViewBackground(private val selectorView: ViewGroup) {
      */
     private fun defineNeededInsets(host: View, @Px spaceForHost: Int, bgLayers: LayerDrawable) {
         val foremostPadding: Rect = resolveRelativity(host, spaceForHost)
+        val padding = host.resources.dpToPixels(6f).toInt()
+
+        /**
+         * Adds padding to background drawable.
+         */
+        bgLayers.setLayerInset(
+                0,
+                0,
+                padding,
+                0,
+                padding
+        )
 
         bgLayers.setLayerInset(
                 1,
@@ -128,6 +137,9 @@ class LanguageSelectorViewBackground(private val selectorView: ViewGroup) {
                 resolvedInset.right = inset
             }
         }
+        val toInt = target.resources.dpToPixels(4f).toInt()
+        resolvedInset.top = toInt
+        resolvedInset.bottom = toInt
         return resolvedInset
     }
 

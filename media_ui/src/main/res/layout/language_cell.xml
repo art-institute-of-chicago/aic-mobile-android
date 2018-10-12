@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-    android:id="@+id/text"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text"
     style="@style/AudioTranslationSans"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:fontFamily="@font/ideal_sans_medium"
     android:gravity="center"
     android:includeFontPadding="false"
+    android:minWidth="108dp"
+    android:minHeight="48dp"
     android:paddingStart="@dimen/marginDouble"
     android:paddingTop="@dimen/marginHalf"
     android:paddingEnd="@dimen/marginQuad"
     android:paddingBottom="@dimen/marginHalf"
-    tools:background="@android:color/darker_gray"
-    tools:drawableEnd="@drawable/ic_language_caret"
-    tools:text="@string/name_of_this_language"
-    />
+    tools:text="@string/name_of_this_language" />
