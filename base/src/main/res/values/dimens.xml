@@ -14,6 +14,8 @@
     <dimen name="marginSixtyFour">64dp</dimen>
     <dimen name="marginNinety">90dp</dimen>
 
+    <dimen name="statusBarHeightPlus10">34dp</dimen>
+
     <dimen name="collapsibleImageHeight">240dp</dimen>
     <dimen name="tourTileWidth">285dp</dimen>
     <dimen name="tourTileHeight">300dp</dimen>
