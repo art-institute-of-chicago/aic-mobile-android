@@ -5,6 +5,7 @@ import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.Playable
 import edu.artic.db.models.ArticSearchArtworkObject
@@ -45,6 +46,8 @@ class ArtworkDetailViewModel @Inject constructor(
                 articObjectObservable.onNext(it)
             }
         }
+
+    var searchTerm: String? = null
 
     init {
 
@@ -107,12 +110,11 @@ class ArtworkDetailViewModel @Inject constructor(
 
     fun onClickPlayAudio() {
         playerService?.let {playerService ->
+            analyticsTracker.reportEvent(EventCategoryName.SearchPlayArtwork, articObject?.title.orEmpty(), searchTerm.orEmpty())
             articObject?.backingObject?.audioFile?.allTranslations()?.let {
                 val articObject = articObject?.backingObject as Playable
                 playerService.playPlayer(articObject, languageSelector.selectFrom(it))
             }
-
-
         }
     }
 
