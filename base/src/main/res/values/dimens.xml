@@ -42,6 +42,7 @@
 
     <dimen name="bottom_audio_player_height">40dp</dimen>
     <dimen name="bottomAudioControlIconSize">32dp</dimen>
+    <dimen name="audioPlayerControllerSize">32dp</dimen>
     <dimen name="large_icon_size">42dp</dimen>
     <dimen name="mapObjectDetailsViewHeight">135dp</dimen>
 </resources>
