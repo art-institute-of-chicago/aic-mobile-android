@@ -37,6 +37,8 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override val layoutResId: Int
         get() = R.layout.fragment_map_object_details
 
+    override val overrideStatusBarColor: Boolean
+        get() = false
 
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.OnViewDetails

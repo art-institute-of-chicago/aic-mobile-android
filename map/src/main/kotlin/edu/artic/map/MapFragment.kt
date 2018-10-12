@@ -69,6 +69,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Map
 
+    override fun hasTransparentStatusBar() = true
+
     private var tileOverlay: TileOverlay? = null
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
     private var leaveTourDialog: LeaveCurrentTourDialogFragment? = null
