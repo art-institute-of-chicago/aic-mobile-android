@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.view_detail_button_layout.view.*
  * Description: Wraps the layout and common functionality for the main collapsing [AppBarLayout] in
  * this app.
  */
-class DetailButton(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs) {
+class DetailButton(context: Context, attrs: AttributeSet? = null) : FrameLayout(context, attrs, 0, R.style.DetailButton) {
 
     init {
         View.inflate(context, R.layout.view_detail_button_layout, this)
@@ -24,7 +24,7 @@ class DetailButton(context: Context, attrs: AttributeSet? = null) : FrameLayout(
             val a = context.theme.obtainStyledAttributes(
                     attrs,
                     R.styleable.DetailButton,
-                    0, 0
+                    0, R.style.DetailButton
             )
             setIcon(a.getResourceId(R.styleable.DetailButton_button_icon, 0))
             buttonText.text = a.getString(R.styleable.DetailButton_button_text)
