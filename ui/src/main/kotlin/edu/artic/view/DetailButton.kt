@@ -32,7 +32,7 @@ class DetailButton(context: Context, attrs: AttributeSet? = null) : FrameLayout(
     }
 
     fun setIcon(@DrawableRes iconId: Int) {
-        buttonText.setCompoundDrawables(resources.getDrawable(iconId, context.theme),null,null,null)
+        buttonText.setCompoundDrawablesRelativeWithIntrinsicBounds(iconId, 0, 0, 0)
     }
 
     fun text(): Consumer<in CharSequence> {
