@@ -42,6 +42,7 @@
     <string name="throughDate">Through %s</string>
     <string name="showOnMap">Show on Map</string>
     <string name="buyTickets">Buy Tickets</string>
+    <string name="gallery">Gallery %s</string>
 
     <string name="errorDialogTitle">Error</string>
     <string name="noInternetConnection">No internet connection.</string>
