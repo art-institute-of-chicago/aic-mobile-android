@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/searchAudioDetailFragment"
-        android:name="edu.artic.search.SearchAudioDetailFragment"
+        android:name="edu.artic.artwork.ArtworkDetailFragment"
         android:label="SearchAudioDetailFragment" />
 
     <fragment

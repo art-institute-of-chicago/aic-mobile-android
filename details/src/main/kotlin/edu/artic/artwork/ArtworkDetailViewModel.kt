@@ -1,10 +1,11 @@
-package edu.artic.search
+package edu.artic.artwork
 
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.Playable
 import edu.artic.db.models.ArticSearchArtworkObject
@@ -17,10 +18,10 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
-class SearchAudioDetailViewModel @Inject constructor(
+class ArtworkDetailViewModel @Inject constructor(
         private val analyticsTracker: AnalyticsTracker,
         private val languageSelector: LanguageSelector
-) : NavViewViewModel<SearchAudioDetailViewModel.NavigationEndpoint>() {
+) : NavViewViewModel<ArtworkDetailViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         data class ObjectOnMap(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
@@ -45,6 +46,8 @@ class SearchAudioDetailViewModel @Inject constructor(
                 articObjectObservable.onNext(it)
             }
         }
+
+    var searchTerm: String? = null
 
     init {
 
@@ -107,12 +110,11 @@ class SearchAudioDetailViewModel @Inject constructor(
 
     fun onClickPlayAudio() {
         playerService?.let {playerService ->
+            analyticsTracker.reportEvent(EventCategoryName.SearchPlayArtwork, articObject?.title.orEmpty(), searchTerm.orEmpty())
             articObject?.backingObject?.audioFile?.allTranslations()?.let {
                 val articObject = articObject?.backingObject as Playable
                 playerService.playPlayer(articObject, languageSelector.selectFrom(it))
             }
-
-
         }
     }
 

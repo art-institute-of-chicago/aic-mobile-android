@@ -34,11 +34,6 @@ abstract class SearchModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SearchAudioDetailViewModel::class)
-    abstract fun searchAudioDetailViewModel(searchAudioDetailViewModel: SearchAudioDetailViewModel): ViewModel
-
-    @Binds
-    @IntoMap
     @ViewModelKey(SearchResultsContainerViewModel::class)
     abstract fun searchResultsViewModel(searchResultsContainerViewModel: SearchResultsContainerViewModel): ViewModel
 
@@ -70,9 +65,6 @@ abstract class SearchModule {
 
     @get:ContributesAndroidInjector
     abstract val searchFragment: SearchFragment
-
-    @get:ContributesAndroidInjector
-    abstract val searchAudioDetailFragment: SearchAudioDetailFragment
 
     @get:ContributesAndroidInjector
     abstract val searchResultsContainerFragment: SearchResultsContainerFragment

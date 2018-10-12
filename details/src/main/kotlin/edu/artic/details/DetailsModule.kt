@@ -5,6 +5,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
+import edu.artic.artwork.ArtworkDetailFragment
+import edu.artic.artwork.ArtworkDetailViewModel
 import edu.artic.events.EventDetailFragment
 import edu.artic.events.EventDetailViewModel
 import edu.artic.exhibitions.ExhibitionDetailFragment
@@ -42,6 +44,14 @@ abstract class DetailsModule {
 
     @get:ContributesAndroidInjector
     abstract val eventDetailFragment: EventDetailFragment
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ArtworkDetailViewModel::class)
+    abstract fun artworkDetailViewModel(eventDetailViewModel: ArtworkDetailViewModel): ViewModel
+
+    @get:ContributesAndroidInjector
+    abstract val artworkDetailFragment: ArtworkDetailFragment
 
     @get:ContributesAndroidInjector
     abstract val detailsActivity: DetailsActivity

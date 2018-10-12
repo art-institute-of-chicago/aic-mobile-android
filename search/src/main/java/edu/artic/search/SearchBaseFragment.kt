@@ -8,6 +8,7 @@ import android.view.View
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenCategoryName
+import edu.artic.artwork.ArtworkDetailFragment
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.base.utils.dpToPixels
@@ -132,9 +133,10 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                         }
                         is SearchBaseViewModel.NavigationEndpoint.ArtworkDetails -> {
                             val o = endpoint.articObject
+                            val term = endpoint.searchTerm
                             searchNavController.navigate(
                                     R.id.goToSearchAudioDetails,
-                                    SearchAudioDetailFragment.argsBundle(o)
+                                    ArtworkDetailFragment.argsBundle(o, term)
                             )
                         }
                         is SearchBaseViewModel.NavigationEndpoint.AmenityOnMap -> {

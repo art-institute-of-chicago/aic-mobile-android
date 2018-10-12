@@ -32,5 +32,6 @@
     <string name="throughDate">Hasta %s</string>
     <string name="showOnMap">Ver mapa</string>
     <string name="buyTickets">Comprar boletos</string>
+    <string name="gallery">Galería %s</string>
     <string name="welcomeUser">Bienvenido, %s</string>
 </resources>
