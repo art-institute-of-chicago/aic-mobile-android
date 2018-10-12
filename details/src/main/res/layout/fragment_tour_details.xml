@@ -115,10 +115,12 @@
                 app:layout_constraintTop_toTopOf="@id/tourStops"
                 tools:text="34 min" />
 
-            <FrameLayout
+            <edu.artic.view.DetailButton
                 android:id="@+id/startTourButton"
                 style="@style/DetailButton"
                 android:layout_width="0dp"
+                app:button_icon="@drawable/exo_icon_play"
+                app:button_text="@string/startTour"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginTriple"
@@ -126,20 +128,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/languageSelector">
-
-                <TextView
-                    android:id="@+id/startTourButtonText"
-                    style="@style/DetailButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:drawableStart="@drawable/exo_icon_play"
-                    android:background="@null"
-                    android:minHeight="0dp"
-                    android:text="@string/startTour" />
-
-            </FrameLayout>
+            </edu.artic.view.DetailButton>
 
             <!--
 
