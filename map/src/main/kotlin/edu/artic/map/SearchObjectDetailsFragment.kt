@@ -42,6 +42,8 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
     override val layoutResId: Int
         get() = R.layout.fragment_search_object_details
 
+    override val overrideStatusBarColor: Boolean
+        get() = false
 
     override val screenCategory: ScreenCategoryName
         get() = ScreenCategoryName.Search
