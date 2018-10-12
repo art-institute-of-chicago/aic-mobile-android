@@ -30,7 +30,7 @@ fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
     }
 
     // While we're adjusting the other properties, we can normalize the font in use too.
-    val type: Typeface? = ResourcesCompat.getFont(context, R.font.ideal_sans_medium)
+    val type: Typeface? = ResourcesCompat.getFont(context, R.font.ideal_sans_semibold)
 
     @SuppressLint("RestrictedApi")
     for (i in 0 until menuView.childCount) {
