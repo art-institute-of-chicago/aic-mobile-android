@@ -7,7 +7,7 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.adapter.DropDownAdapter
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.media.ui.R
-import kotlinx.android.synthetic.main.view_language_box.view.*
+import kotlinx.android.synthetic.main.language_cell.view.*
 
 /**
  * List adapter for the language-selection dropdown.
@@ -22,7 +22,7 @@ class LanguageAdapter : AutoHolderRecyclerViewAdapter<SpecifiesLanguage>(),
         text.setTextColor(Color.WHITE)
     }
 
-    override fun getLayoutResId(position: Int): Int = R.layout.view_language_box
+    override fun getLayoutResId(position: Int): Int = R.layout.language_cell
 
     override fun View.onBindDropdownView(item: SpecifiesLanguage, position: Int) {
         text.text = item.userFriendlyLanguage(context)
