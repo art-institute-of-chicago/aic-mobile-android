@@ -33,4 +33,5 @@
     <string name="buyTickets">购票</string>
     <string name="showOnMap" translatable="false">在地图上显示</string>
     <string name="welcomeUser">欢迎, %s</string>
+    <string name="gallery">画廊 %s</string>
 </resources>
