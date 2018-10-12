@@ -13,35 +13,32 @@
         style="@style/SectionTitleWhite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/marginDouble"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginTen"
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
         app:layout_constraintEnd_toStartOf="@id/close"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="John Singer Sargent and Chicago John Singer Sargent and Chicago" />
+        tools:text="John Singer Sargent and Chicago Johna..." />
 
     <ImageView
         android:id="@+id/close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginEnd="@dimen/marginDouble"
-        android:layout_marginBottom="@dimen/marginDouble"
         android:contentDescription="@string/close"
-        android:src="@drawable/ic_close_black_24dp"
+        android:src="@drawable/ic_tour_close_black_24dp"
         app:layout_constraintBottom_toBottomOf="@+id/tourTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tourTitle"
-        app:layout_constraintTop_toTopOf="@+id/tourTitle" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <View
         android:id="@+id/divider"
-        style="@style/divider"
+        style="@style/tourDivider"
         android:layout_width="0dp"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginTen"
         android:layout_marginEnd="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,17 +47,17 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/tourCarousel"
         android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_height="66dp"
         android:layout_marginBottom="@dimen/marginSixtyFour"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider"
-        tools:listitem="@layout/tour_carousel_cell" />
+        tools:listitem="@layout/tour_carousel_intro_cell" />
 
     <com.fuzz.indicator.CutoutViewIndicator
         android:id="@+id/viewPagerIndicator"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="@dimen/tutorialDotSize"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         app:layout_constraintEnd_toEndOf="parent"

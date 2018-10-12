@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    tools:layout_height="200dp"
     android:background="@color/narrowAudioPlayerBackgroundColor">
 
 
@@ -14,7 +15,6 @@
         android:layout_marginStart="@dimen/marginStandard"
         android:background="@drawable/ic_play"
         android:contentDescription="@string/exo_controls_play_description"
-        android:padding="@dimen/marginStandard"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +28,6 @@
         android:layout_marginStart="@dimen/marginStandard"
         android:background="@drawable/ic_pause"
         android:contentDescription="@string/exo_controls_pause_description"
-        android:padding="@dimen/marginStandard"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,17 +45,22 @@
     <TextView
         android:id="@+id/trackTitle"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="@dimen/marginStandard"
+        android:layout_marginEnd="@dimen/marginStandard"
         android:fontFamily="@font/ideal_sans_book"
-        android:padding="4dp"
         android:textColor="@color/white"
         android:textSize="@dimen/textMedium"
+        android:gravity="center_vertical"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="@dimen/textSmall"
+        app:autoSizeMaxTextSize="@dimen/textMedium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/closePlayer"
         app:layout_constraintStart_toEndOf="@id/barrier"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Test track" />
+        tools:text="Test track"
+        tools:ignore="MissingPrefix"/>
 
     <ImageButton
         android:id="@+id/closePlayer"
@@ -65,7 +69,6 @@
         android:layout_marginEnd="@dimen/marginStandard"
         android:background="@drawable/ic_close_circle"
         android:contentDescription="@string/cancel_audio"
-        android:padding="@dimen/marginStandard"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

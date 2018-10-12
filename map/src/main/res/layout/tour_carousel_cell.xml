@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="@dimen/marginDouble"
+    android:paddingBottom="@dimen/marginStandard"
     android:background="@color/mapObjectWindowBlue">
 
     <ImageView
@@ -14,7 +16,6 @@
         android:contentDescription="@null"
         android:scaleType="matrix"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider"
         tools:background="@color/brownishOrange" />
 
     <TextView
@@ -23,7 +24,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginDouble"
-        android:layout_marginTop="@dimen/marginDouble"
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
@@ -61,34 +61,32 @@
         android:lines="1"
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/tourNumber"
-        app:layout_constraintTop_toBottomOf="@id/stopTitle"
+        app:layout_constraintBottom_toBottomOf="@id/image"
         tools:text="Regenstein Hall Regenstein Hall Regenstein Hall Regenstein Hall" />
 
 
     <ImageButton
         android:id="@+id/playCurrent"
-        android:layout_width="@dimen/bottomAudioControlIconSize"
-        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_width="@dimen/mapAudioControlIconSize"
+        android:layout_height="@dimen/mapAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/ic_play"
         android:visibility="visible"
         android:contentDescription="@string/exo_controls_play_description"
         app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintTop_toTopOf="@id/image" />
 
     <ImageButton
         android:id="@+id/pauseCurrent"
-        android:layout_width="@dimen/bottomAudioControlIconSize"
-        android:layout_height="@dimen/bottomAudioControlIconSize"
+        android:layout_width="@dimen/mapAudioControlIconSize"
+        android:layout_height="@dimen/mapAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/ic_pause"
         android:visibility="gone"
         android:contentDescription="@string/exo_controls_pause_description"
         app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintTop_toTopOf="@id/image" />
 
     <android.support.constraint.Barrier
