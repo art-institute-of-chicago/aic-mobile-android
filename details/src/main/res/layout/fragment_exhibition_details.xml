@@ -88,7 +88,7 @@
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginStandard"
                 app:button_text="@string/showOnMap"
-                app:button_icon="@drawable/ic_map_white"
+                app:button_icon="@drawable/ic_show_on_map"
                 android:visibility="gone"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
