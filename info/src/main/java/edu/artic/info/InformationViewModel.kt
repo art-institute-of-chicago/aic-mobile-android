@@ -4,7 +4,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticGeneralInfo
@@ -59,7 +59,7 @@ class InformationViewModel @Inject constructor(
     }
 
     fun onClickJoinNow() {
-        analyticsTracker.reportEvent(ScreenCategoryName.Information, AnalyticsAction.memberJoinPressed)
+        analyticsTracker.reportEvent(EventCategoryName.Member, AnalyticsAction.memberJoinPressed)
         dataObjectDao.getDataObject()
                 .toObservable()
                 .take(1)
