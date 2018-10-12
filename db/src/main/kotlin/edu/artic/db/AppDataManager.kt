@@ -176,11 +176,6 @@ class AppDataManager @Inject constructor(
                                 tours.forEach { tour ->
                                     // assign the first stop's floor to tour if tour's floor is invalid
                                     if (tour.tourStops.isNotEmpty()) {
-                                        if (tour.floorAsInt == INVALID_FLOOR) {
-                                            tour.tourStops.first().objectId?.let { firstTourStopId ->
-                                                tour.floor = objects?.get(firstTourStopId)?.floor ?: INVALID_FLOOR
-                                            }
-                                        }
                                         // Filter out stops without known objectIds (so-called 'ghost' stops)
                                         val iterator = tour.tourStops.iterator()
                                         while (iterator.hasNext()) {
@@ -189,6 +184,12 @@ class AppDataManager @Inject constructor(
                                                 continue
                                             } else {
                                                 iterator.remove()
+                                            }
+                                        }
+                                        // Make sure the tour itself has a floor number
+                                        if (tour.floorAsInt == INVALID_FLOOR && tour.tourStops.isNotEmpty()) {
+                                            tour.tourStops.first().objectId?.let { firstTourStopId ->
+                                                tour.floor = objects?.get(firstTourStopId)?.floor ?: INVALID_FLOOR
                                             }
                                         }
                                     }
