@@ -1,4 +1,4 @@
-package edu.artic.search
+package edu.artic.artwork
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,6 +14,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticSearchArtworkObject
+import edu.artic.details.R
 import edu.artic.image.GlideApp
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.media.ui.getAudioServiceObservable
@@ -23,10 +24,9 @@ import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_search_audio_detail.*
 import kotlin.reflect.KClass
 
-//TODO move into details package
-class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewModel>() {
-    override val viewModelClass: KClass<SearchAudioDetailViewModel>
-        get() = SearchAudioDetailViewModel::class
+class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
+    override val viewModelClass: KClass<ArtworkDetailViewModel>
+        get() = ArtworkDetailViewModel::class
     override val title = R.string.noTitle
     override val layoutResId: Int
         get() = R.layout.fragment_search_audio_detail
@@ -38,11 +38,11 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
     override val customToolbarColorResource: Int
         get() = R.color.audioBackground
 
-    override fun onRegisterViewModel(viewModel: SearchAudioDetailViewModel) {
+    override fun onRegisterViewModel(viewModel: ArtworkDetailViewModel) {
         viewModel.articObject = articObject
     }
 
-    override fun setupBindings(viewModel: SearchAudioDetailViewModel) {
+    override fun setupBindings(viewModel: ArtworkDetailViewModel) {
         super.setupBindings(viewModel)
 
         this.getAudioServiceObservable()
@@ -119,15 +119,15 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
                 .disposedBy(disposeBag)
     }
 
-    override fun setupNavigationBindings(viewModel: SearchAudioDetailViewModel) {
+    override fun setupNavigationBindings(viewModel: ArtworkDetailViewModel) {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
                 .filter { it is Navigate.Forward }
                 .map { it as Navigate.Forward }
                 .subscribe {
                     when (it.endpoint) {
-                        is SearchAudioDetailViewModel.NavigationEndpoint.ObjectOnMap -> {
-                            val o: ArticSearchArtworkObject = (it.endpoint as SearchAudioDetailViewModel.NavigationEndpoint.ObjectOnMap).articObject
+                        is ArtworkDetailViewModel.NavigationEndpoint.ObjectOnMap -> {
+                            val o: ArticSearchArtworkObject = (it.endpoint as ArtworkDetailViewModel.NavigationEndpoint.ObjectOnMap).articObject
                             val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                 putExtra(NavigationConstants.ARG_SEARCH_OBJECT, o)
                                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -148,7 +148,7 @@ class SearchAudioDetailFragment : BaseViewModelFragment<SearchAudioDetailViewMod
 
 
     companion object {
-        private val ARG_OBJECT = "${SearchAudioDetailFragment::class.java.simpleName}: object"
+        private val ARG_OBJECT = "${ArtworkDetailFragment::class.java.simpleName}: object"
 
         fun argsBundle(event: ArticSearchArtworkObject) = Bundle().apply {
             putParcelable(ARG_OBJECT, event)
