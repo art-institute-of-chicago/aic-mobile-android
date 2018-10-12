@@ -51,9 +51,9 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             subTitle.alpha = progress.toFloat()
         }
 
-        post {
+        postDelayed( {
             collapsingToolbar.expandedTitleMarginBottom = container.getChildAt(2).height
-        }
+        }, 50)
 
     }
 

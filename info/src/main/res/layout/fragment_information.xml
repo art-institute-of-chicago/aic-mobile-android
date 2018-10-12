@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/containerLayout"
     android:fitsSystemWindows="true">
 
     <edu.artic.view.ArticMainAppBarLayout
@@ -15,6 +16,7 @@
         app:icon="@drawable/ic_info" />
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
