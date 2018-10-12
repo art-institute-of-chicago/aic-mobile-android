@@ -86,7 +86,6 @@
 
             <edu.artic.view.DetailButton
                 android:id="@+id/showOnMap"
-                style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
@@ -105,7 +104,6 @@
 
             <edu.artic.view.DetailButton
                 android:id="@+id/playAudio"
-                style="@style/DetailButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginStandard"
