@@ -78,9 +78,14 @@
                     android:fontFamily="@font/ideal_sans_book"
                     android:fontFeatureSettings="tnum"
                     android:gravity="start"
-                    android:padding="@dimen/marginDouble"
+                    android:paddingTop="@dimen/marginOneHalf"
+                    android:paddingStart="@dimen/marginDouble"
+                    android:paddingEnd="@dimen/marginDouble"
+                    android:paddingBottom="@dimen/marginOneHalf"
                     android:textColor="@color/white"
                     android:textSize="21sp"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/audioImage"
@@ -122,10 +127,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/marginDouble"
+                android:includeFontPadding="false"
                 tools:text="Edward hooper" />
 
             <View
-                style="@style/divider"
+                style="@style/dividerTwentyOpaque"
                 android:layout_width="match_parent" />
 
             <TextView
@@ -147,7 +153,7 @@
 
             <View
                 android:id="@+id/dividerBelowRelatedTours"
-                style="@style/divider"
+                style="@style/dividerTwentyOpaque"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/marginQuad" />
 
@@ -163,7 +169,7 @@
                 app:title_text_color="@color/white" />
 
             <View
-                style="@style/divider"
+                style="@style/dividerTwentyOpaque"
                 android:layout_width="match_parent" />
 
             <edu.artic.view.DropdownTextView
