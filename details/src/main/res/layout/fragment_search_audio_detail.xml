@@ -84,7 +84,7 @@
 
             -->
 
-            <Button
+            <edu.artic.view.DetailButton
                 android:id="@+id/showOnMap"
                 style="@style/DetailButton"
                 android:layout_width="0dp"
@@ -92,12 +92,9 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginStandard"
-                android:drawableStart="@drawable/ic_show_on_map"
-                android:paddingLeft="@dimen/marginDouble"
-                android:text="@string/showOnMap"
+                app:button_icon="@drawable/ic_show_on_map"
+                app:button_text="@string/showOnMap"
                 android:visibility="visible"
-                android:gravity="start|center_vertical"
-                android:drawablePadding="@dimen/marginStandard"
                 app:layout_constraintEnd_toStartOf="@id/playAudio"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
@@ -106,7 +103,7 @@
                 app:layout_constraintWidth_percent=".45"
                  />
 
-            <Button
+            <edu.artic.view.DetailButton
                 android:id="@+id/playAudio"
                 style="@style/DetailButton"
                 android:layout_width="0dp"
@@ -114,12 +111,8 @@
                 android:layout_marginStart="@dimen/marginStandard"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:drawableStart="@drawable/ic_play"
-                tools:text="Play Audio"
+                app:button_icon="@drawable/ic_play"
                 android:visibility="gone"
-                android:gravity="start|center_vertical"
-                android:drawablePadding="@dimen/marginStandard"
-                android:paddingLeft="@dimen/marginTriple"
                 tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight=".5"
