@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/DetailButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/buttonText"
+        style="@style/DetailButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:drawablePadding="@dimen/marginStandard"
+        android:background="@null"
+        android:minHeight="0dp"
+        tools:drawableStart="@drawable/ic_play"
+        tools:text="@string/startTour" />
+
+</FrameLayout>
