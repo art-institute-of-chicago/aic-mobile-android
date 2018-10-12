@@ -133,9 +133,10 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
                         }
                         is SearchBaseViewModel.NavigationEndpoint.ArtworkDetails -> {
                             val o = endpoint.articObject
+                            val term = endpoint.searchTerm
                             searchNavController.navigate(
                                     R.id.goToSearchAudioDetails,
-                                    ArtworkDetailFragment.argsBundle(o)
+                                    ArtworkDetailFragment.argsBundle(o, term)
                             )
                         }
                         is SearchBaseViewModel.NavigationEndpoint.AmenityOnMap -> {

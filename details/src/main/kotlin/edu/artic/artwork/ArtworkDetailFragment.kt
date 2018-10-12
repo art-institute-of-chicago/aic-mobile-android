@@ -34,12 +34,14 @@ class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
         get() = ScreenCategoryName.ArtworkSearchDetails
 
     private val articObject by lazy { arguments!!.getParcelable<ArticSearchArtworkObject>(ARG_OBJECT) }
+    private val searchTerm by lazy { arguments!!.getString(ARG_SEARCH_TERM) }
 
     override val customToolbarColorResource: Int
         get() = R.color.audioBackground
 
     override fun onRegisterViewModel(viewModel: ArtworkDetailViewModel) {
         viewModel.articObject = articObject
+        viewModel.searchTerm = searchTerm
     }
 
     override fun setupBindings(viewModel: ArtworkDetailViewModel) {
@@ -149,9 +151,11 @@ class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
 
     companion object {
         private val ARG_OBJECT = "${ArtworkDetailFragment::class.java.simpleName}: object"
+        private val ARG_SEARCH_TERM = "${ArtworkDetailFragment::class.java.simpleName}: search_term"
 
-        fun argsBundle(event: ArticSearchArtworkObject) = Bundle().apply {
+        fun argsBundle(event: ArticSearchArtworkObject, term: String) = Bundle().apply {
             putParcelable(ARG_OBJECT, event)
+            putString(ARG_SEARCH_TERM, term)
         }
 
     }
