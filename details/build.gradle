@@ -19,6 +19,7 @@ dependencies {
     implementation project(':base')
     implementation project(':adapter')
     implementation project(':localization')
+    implementation project(':media')
     implementation project(':media_ui')
     implementation project(':image')
 }
