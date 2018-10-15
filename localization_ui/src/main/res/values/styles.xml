@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="LanguageButton">
+    <style name="LanguageButton" parent="Widget.AppCompat.Button">
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:textSize">15sp</item>
