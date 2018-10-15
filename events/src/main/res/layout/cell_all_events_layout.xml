@@ -24,14 +24,13 @@
 
 
     <TextView
-        style="@style/CardTitleSmallBlack"
         android:id="@+id/title"
+        style="@style/CardTitleSmallBlack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:lines="2"
-        android:lineSpacingExtra="4sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image"
@@ -39,38 +38,36 @@
 
     <TextView
         android:id="@+id/dateTime"
+        style="@style/SearchSectionHeadingGray"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/marginStandard"
         android:lines="1"
-        android:textColor="@color/warmGrey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
         tools:text="July 28    8:15 a.m."
-        android:fontFamily="@font/ideal_sans_book"
-        android:fontFeatureSettings="tnum"
         />
 
     <View
         android:id="@+id/spacerLine"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/marginTen"
         android:background="#e1e1e4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dateTime" />
 
     <TextView
-        style="@style/CardBodySerifGray"
         android:id="@+id/description"
+        style="@style/CardBodySerifGray"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
         android:ellipsize="end"
+        android:lineSpacingExtra="3dp"
+        android:lineSpacingMultiplier="0.7"
         android:maxLines="4"
-        android:lineSpacingMultiplier="0.8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spacerLine"
