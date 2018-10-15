@@ -14,7 +14,7 @@ class AllExhibitionsItemDecoration(
     private val horizontalSpacing: Int = context.resources.getDimensionPixelSize(R.dimen.all_exhibitions_cell_spacing_horizontal)
     private val verticalSpacing: Int = context.resources.getDimensionPixelSize(R.dimen.all_exhibitions_cell_spacing_vertical)
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         var position = parent.getChildAdapterPosition(view) // item position
         position -= 1
         val column = (position) % spanCount // item column

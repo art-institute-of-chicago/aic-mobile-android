@@ -18,7 +18,7 @@ class AllEventsItemDecoration(
     private val verticalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical)
     private val headerVerticalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical_header)
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         // item position
         val position = parent.getChildAdapterPosition(view)
         adapter.getItemOrNull(position)?.let {
