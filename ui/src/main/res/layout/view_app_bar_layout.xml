@@ -69,10 +69,10 @@
                 android:gravity="center"
                 android:paddingStart="@dimen/marginActivitySubtitle"
                 android:paddingTop="@dimen/marginHalf"
-                android:paddingEnd="@dimen/marginActivitySubtitle"
                 android:paddingBottom="@dimen/marginTriple"
+                android:paddingEnd="@dimen/marginActivitySubtitle"
                 app:layout_collapseMode="parallax"
-                tools:maxLines="3"
+                tools:maxLines="2"
                 tools:text="@tools:sample/lorem/random" />
         </LinearLayout>
 

@@ -106,8 +106,6 @@
                 android:layout_marginLeft="@dimen/marginDouble"
                 android:layout_marginRight="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
-                android:includeFontPadding="false"
-                android:lineSpacingMultiplier=".62"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/registerToday"
