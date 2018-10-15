@@ -6,11 +6,9 @@ dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
 
-    def withoutX = { exclude group: 'com.android.support', module: 'support-media-compat' }
-
     implementation libs.exo_player_core
     implementation libs.exo_player_dash
-    implementation libs.exo_player_ui, withoutX
+    implementation libs.exo_player_ui
     implementation libs.media_compat
     implementation libs.glide
     implementation libs.exo_player_media_session
