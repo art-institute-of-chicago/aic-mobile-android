@@ -485,9 +485,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     }
                 }.disposedBy(disposeBag)
 
-        viewModel.showCompass
-                .bindToMain(compass.visibility())
-                .disposedBy(disposeBag)
+        //TODO re-enable once we figure out why this feature isn't working great on site
+//        viewModel.showCompass
+//                .bindToMain(compass.visibility())
+//                .disposedBy(disposeBag)
 
         viewModel.focusToTracking
                 .distinctUntilChanged()
