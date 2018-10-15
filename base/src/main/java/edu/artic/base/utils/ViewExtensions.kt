@@ -34,6 +34,7 @@ fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
                 overrideLabelFont(type)
             }
             if (colorList > 0) {
+                setIconTintList(ContextCompat.getColorStateList(this.context, colorList))
                 setTextColor(ContextCompat.getColorStateList(this.context, colorList))
             }
         }
