@@ -29,7 +29,7 @@
         android:layout_height="24dp"
         android:layout_marginEnd="@dimen/marginDouble"
         android:contentDescription="@string/close"
-        android:src="@drawable/ic_tour_close_black_24dp"
+        android:src="@drawable/ic_close_white_24dp"
         app:layout_constraintTop_toTopOf="@id/tourTitle"
         app:layout_constraintBottom_toBottomOf="@id/tourTitle"
         app:layout_constraintEnd_toEndOf="parent" />
