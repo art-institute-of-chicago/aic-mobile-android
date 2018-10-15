@@ -8,6 +8,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar.Ideal</item>
+        <item name="buttonStyle">@style/Widget.AppCompat.Button.Tinted</item>
         <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:fontFeatureSettings">tnum</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
@@ -34,6 +35,10 @@
 
     <style name="Widget.AppCompat.Toolbar.Ideal">
         <item name="titleTextAppearance">@style/AppBarTitleWhite</item>
+    </style>
+
+    <style name="Widget.AppCompat.Button.Tinted">
+        <item name="android:background">@drawable/detail_button_background</item>
     </style>
 
     <style name="DetailToolbarExpandedText">
@@ -177,8 +182,7 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="DetailButtonParent" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/detail_button_background</item>
+    <style name="DetailButtonParent" parent="Widget.AppCompat.Button.Tinted">
         <item name="android:gravity">center</item>
         <item name="android:minHeight">50dp</item>
     </style>
