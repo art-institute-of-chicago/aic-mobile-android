@@ -5,12 +5,14 @@
     android:layout_height="match_parent"
     android:background="@color/marine"
     android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme.CustomToolbar.Location"
     android:layout_marginBottom="@dimen/design_bottom_navigation_height">
 
     <ImageView
         android:id="@+id/promptTopIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -69,6 +71,7 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
         android:layout_marginBottom="@dimen/marginDouble"
+        android:background="@drawable/detail_button_background"
         app:layout_constraintBottom_toTopOf="@id/promptNotNowButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
