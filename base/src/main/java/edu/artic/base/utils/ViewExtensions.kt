@@ -23,19 +23,12 @@ import edu.artic.base.R
 fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
     val menuView = getChildAt(0) as BottomNavigationMenuView
 
-    menuView.javaClass.getDeclaredField("mShiftingMode").apply {
-        isAccessible = true
-        setBoolean(menuView, false)
-        isAccessible = false
-    }
-
     // While we're adjusting the other properties, we can normalize the font in use too.
     val type: Typeface? = ResourcesCompat.getFont(context, R.font.ideal_sans_semibold)
 
     @SuppressLint("RestrictedApi")
     for (i in 0 until menuView.childCount) {
         (menuView.getChildAt(i) as BottomNavigationItemView).apply {
-            setShiftingMode(false)
             setChecked(false)
             if (type != null) {
                 overrideLabelFont(type)

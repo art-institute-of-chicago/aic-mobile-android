@@ -87,7 +87,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
         viewModel.cells
                 .delay(50, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { resultsRV.layoutManager.scrollToPosition(0) }
+                .subscribe { resultsRV.layoutManager?.scrollToPosition(0) }
                 .disposedBy(disposeBag)
 
 
