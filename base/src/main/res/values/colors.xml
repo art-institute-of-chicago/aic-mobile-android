@@ -22,15 +22,28 @@
     <color name="darkGrey">#333333</color>
     <color name="cloudyBlue">#cee0df</color>
     <color name="transparentInfoBarColor">#73000000</color>
+
+
+    <!-- Global defaults -->
+    <color name="colorPrimary">#118084</color>
+    <color name="colorPrimaryDark">#118084</color>
+    <color name="colorAccent">@color/sea</color>
+
+
+    <!-- Home/Welcome-related -->
     <color name="ugly_blue">#307177</color>
     <color name="cloudy_blue">#cee0df</color>
     <color name="bluegreen">#008085</color>
+
+    <!-- Audio-related -->
     <color name="grape">#6d2861</color>
+
+
+    <!-- Map-related -->
     <color name="marine">#063258</color>
     <color name="grey_blue">#6a8ba8</color>
 
     <color name="bluegrey">#96aec2</color>
-    <color name="brownish_orange">#ce6b27</color>
     <color name="denim">#39658b</color>
     <color name="map_light_dot">@color/denim</color>
 
@@ -39,10 +52,10 @@
     <color name="dark_grey">#333333</color>
     <color name="brownish_grey">#666666</color>
     <color name="greeny_blue">#37a8ab</color>
-    <color name="colorPrimary">#118084</color>
-    <color name="colorPrimaryDark">#118084</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <!-- Info-related -->
     <color name="brownishOrange">#ce6b27</color>
+    <color name="brownish_orange">#ce6b27</color>
     <color name="infoScreenRed">#91072D</color>
     <color name="audioBackground">#1e1e1e</color>
     <color name="mapObjectWindowBlue">#7789a7</color>
@@ -53,6 +66,7 @@
     <color name="infoInputFieldWhite">#F0F0F0</color>
     <color name="translucentLoadingScrim">#4D000000</color>
 
+    <!-- Splash/logo-related -->
     <color name="splashGradientStart">#1c515e</color>
     <color name="splashGradientEnd">#2ea1a2</color>
 </resources>

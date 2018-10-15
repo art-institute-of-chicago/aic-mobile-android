@@ -651,7 +651,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override fun onDestroyView() {
         mapView.onDestroy()
-        leaveTourDialog?.dismiss()
+        leaveTourDialog?.dismissAllowingStateLoss()
         super.onDestroyView()
     }
 
