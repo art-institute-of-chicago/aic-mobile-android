@@ -14,7 +14,7 @@
         android:layout_height="45dp"
         android:layout_marginStart="@dimen/marginDouble"
         android:contentDescription="@null"
-        android:scaleType="matrix"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         tools:background="@color/brownishOrange" />
 

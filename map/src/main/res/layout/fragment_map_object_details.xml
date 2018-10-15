@@ -23,7 +23,7 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginBottom="@dimen/marginSixtyFour"
         android:contentDescription="@null"
-        android:scaleType="matrix"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/reference"
