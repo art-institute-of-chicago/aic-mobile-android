@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@color/brownish_orange" android:state_checked="true" />
+    <item android:drawable="@drawable/language_button_tint" android:state_checked="true" />
     <item android:drawable="@drawable/language_button_background" android:state_checked="false" />
 
 </selector>
