@@ -40,6 +40,9 @@
     <dimen name="textFifteen">15sp</dimen>
     <dimen name="textSixteen">16sp</dimen>
 
+    <dimen name="lineHeightTextSixteen">20sp</dimen>
+    <dimen name="lineHeightTextMedium">25sp</dimen>
+
     <dimen name="bottom_audio_player_height">40dp</dimen>
     <dimen name="bottomAudioControlIconSize">32dp</dimen>
     <dimen name="audioPlayerControllerSize">32dp</dimen>

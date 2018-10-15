@@ -39,7 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginStandard"
         android:ellipsize="end"
-        android:includeFontPadding="false"
         android:lines="1"
         android:textColor="@color/greyText"
         app:layout_constraintEnd_toEndOf="parent"
