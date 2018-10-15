@@ -14,7 +14,7 @@
         <item name="languageSettingsBodyTextColor">@color/white</item>
         <item name="languageSettingsTitleTextColor">@color/white</item>
         <item name="languageSettingsHasDivider">false</item>
-        <item name="languageSettingsButtonVerticalBias">0.5</item>
+        <item name="languageSettingsButtonVerticalBias">0.8</item>
         <item name="languageSettingsTitleTextAppearance">@style/LanguageSettingsText</item>
         <item name="languageSettingsBodyTextAppearance">@style/BodySansSerifWhiteCentered</item>
     </style>
