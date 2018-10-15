@@ -30,6 +30,8 @@ class LeaveCurrentTourDialogFragment : BaseFragment() {
 
     override val layoutResId: Int = R.layout.fragment_leave_tour_dialog
 
+    override val overrideStatusBarColor: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.LeaveTourDialogTheme)
