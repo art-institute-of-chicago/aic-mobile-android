@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:name=".ArticApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
