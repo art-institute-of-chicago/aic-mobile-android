@@ -100,7 +100,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
         viewModel.description
                 .map {
-                    it.trimDownBlankLines().fromHtml(Html.FROM_HTML_MODE_COMPACT)
+                    it.trimDownBlankLines().fromHtml()
                 }
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)
