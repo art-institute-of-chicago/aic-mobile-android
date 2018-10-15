@@ -4,15 +4,17 @@
     <style name="SplashTheme" parent="AppTheme.CustomToolbar">
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:windowBackground">@drawable/splash_gradient</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/sea</item>
+
+        <!-- Attributes for edu.artic.localization.ui.LanguageSettingsFragment -->
         <item name="languageSettingsBackgroundColor">@color/ugly_blue</item>
         <item name="languageSettingsButtonTextColor">@color/white</item>
-        <item name="languageSettingsButtonBackground">@drawable/splash_language_radio_button_background</item>
+        <item name="languageSettingsButtonBackground">@drawable/language_radio_button_background</item>
         <item name="languageSettingsContainsToolbar">false</item>
         <item name="languageSettingsBodyTextColor">@color/white</item>
         <item name="languageSettingsTitleTextColor">@color/white</item>
         <item name="languageSettingsHasDivider">false</item>
-        <item name="languageSettingsButtonVerticalBias">0.5</item>
+        <item name="languageSettingsButtonVerticalBias">0.8</item>
         <item name="languageSettingsTitleTextAppearance">@style/LanguageSettingsText</item>
         <item name="languageSettingsBodyTextAppearance">@style/BodySansSerifWhiteCentered</item>
     </style>
