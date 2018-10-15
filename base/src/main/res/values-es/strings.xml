@@ -19,8 +19,8 @@
 
     <!-- 'Leave Tour' dialog -->
     <string name="leaveCurrentTour">¿Salir del Tour Actual?</string>
-    <string name="continueTour">Continuar la visita guiada</string>
-    <string name="leaveTour">Salir de la visita guiada</string>
+    <string name="continueTour">Continuar</string>
+    <string name="leaveTour">Salir</string>
 
     <string name="home">Inicio</string>
     <string name="map">Mapa</string>
