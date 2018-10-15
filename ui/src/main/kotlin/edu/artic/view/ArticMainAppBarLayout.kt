@@ -43,13 +43,13 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
         }
 
         // update our content when offset changes.
-        addOnOffsetChangedListener { aBarLayout, verticalOffset ->
+        addOnOffsetChangedListener(OnOffsetChangedListener { aBarLayout, verticalOffset ->
             val progress: Double = 1 - Math.abs(verticalOffset) / aBarLayout.totalScrollRange.toDouble()
             searchIcon.background.alpha = (progress * 255).toInt()
             icon.drawable.alpha = (progress * 255).toInt()
             expandedImage.drawable.alpha = (progress * 255).toInt()
             subTitle.alpha = progress.toFloat()
-        }
+        })
 
         postDelayed( {
             collapsingToolbar.expandedTitleMarginBottom = container.getChildAt(2).height
