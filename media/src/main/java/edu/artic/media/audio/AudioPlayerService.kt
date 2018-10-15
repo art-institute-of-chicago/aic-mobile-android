@@ -309,8 +309,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
                         return mutableListOf(CANCEL_ACTION)
                     }
 
-                    override fun createCustomActions(context: Context?): MutableMap<String, NotificationCompat.Action> {
-                        val playIntent = Intent(CANCEL_ACTION).setPackage(context?.packageName)
+                    override fun createCustomActions(context: Context, instanceId: Int): MutableMap<String, NotificationCompat.Action> {
+                        val playIntent = Intent(CANCEL_ACTION).setPackage(context.packageName)
                         return mutableMapOf(CANCEL_ACTION to NotificationCompat.Action(
                                 R.drawable.ic_close_circle,
                                 "Close",
@@ -411,7 +411,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
         audioManager.isSpeakerphoneOn = false
         AudioFocusExoPlayerDecorator(audioAttributes,
                 audioManager,
-                ExoPlayerFactory.newSimpleInstance(DefaultRenderersFactory(this),
+                ExoPlayerFactory.newSimpleInstance(this,
+                        DefaultRenderersFactory(this),
                         DefaultTrackSelector(),
                         DefaultLoadControl()).apply {
                     audioAttributes = AudioAttributes.Builder()
