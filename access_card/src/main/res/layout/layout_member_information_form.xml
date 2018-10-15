@@ -29,13 +29,15 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginOneHalf"
         android:layout_marginEnd="@dimen/marginDouble"
+        android:importantForAutofill="no"
         android:background="@color/infoInputFieldWhite"
         android:inputType="number"
         android:padding="@dimen/marginStandard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/memberIdLabel"
-        tools:text="sampleid123" />
+        tools:targetApi="o"
+        tools:text="23456789" />
 
     <TextView
         android:id="@+id/homeZipCode"
@@ -58,13 +60,15 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginOneHalf"
+        android:autofillHints="postalCode"
         android:background="@color/infoInputFieldWhite"
         android:inputType="number"
         android:padding="@dimen/marginStandard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/homeZipCode"
-        tools:text="222-346-1234" />
+        tools:targetApi="o"
+        tools:text="@tools:sample/us_zipcodes" />
 
     <Button
         android:id="@+id/signIn"
@@ -79,7 +83,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/zipCode"
-        tools:background="@color/brownish_orange"
         tools:enabled="false" />
 
 </android.support.constraint.ConstraintLayout>

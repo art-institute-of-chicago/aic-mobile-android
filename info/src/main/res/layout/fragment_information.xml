@@ -98,7 +98,6 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginTwenty"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:background="@color/brownishOrange"
                 android:text="@string/accessMemberCardLabel"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

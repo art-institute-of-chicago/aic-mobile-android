@@ -51,7 +51,6 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
         android:layout_marginBottom="@dimen/okButtonBottomMargin"
-        android:background="@drawable/detail_button_background"
         android:text="@android:string/ok"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
