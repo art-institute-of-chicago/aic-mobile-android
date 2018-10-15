@@ -31,6 +31,7 @@ class EventDetailViewModel @Inject constructor(
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     val location: Subject<String> = BehaviorSubject.createDefault("")
     val eventButtonText: Subject<String> = BehaviorSubject.createDefault("")
+    val hasEventUrl: Subject<Boolean> = BehaviorSubject.create()
     private val eventObservable: Subject<ArticEvent> = BehaviorSubject.create()
 
 
@@ -49,6 +50,11 @@ class EventDetailViewModel @Inject constructor(
                     it.button_text.orEmpty()
                 }
                 .bindTo(eventButtonText)
+                .disposedBy(disposeBag)
+
+        eventObservable
+                .map { !it.button_url.isNullOrBlank() }
+                .bindTo(hasEventUrl)
                 .disposedBy(disposeBag)
 
         eventObservable

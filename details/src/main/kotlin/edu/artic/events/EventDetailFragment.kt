@@ -3,7 +3,6 @@ package edu.artic.events
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
-import android.text.Html
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -24,6 +23,7 @@ import edu.artic.image.ImageViewScaleInfo
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlin.reflect.KClass
 
@@ -114,9 +114,13 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .bindToMain(location.text())
                 .disposedBy(disposeBag)
 
-        viewModel.eventButtonText
-                .map { it.isNotEmpty() }
+        Observables.combineLatest(
+                viewModel.eventButtonText.map { it.isNotEmpty() },
+                viewModel.hasEventUrl
+        )
+                .map { it.first && it.second }
                 .bindToMain(registerToday.visibility())
+                .disposedBy(disposeBag)
 
 
         viewModel.eventButtonText
