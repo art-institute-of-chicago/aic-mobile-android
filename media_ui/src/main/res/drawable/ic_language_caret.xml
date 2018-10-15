@@ -1,15 +1,19 @@
-  <!-- Approximate path for upward-pointing caret: "M7.4,13.9 l4.6,-4 l4.6,4" (no z)-->
+<!-- Approximate path for upward-pointing caret: "M7.4,13.9 l4.6,-4 l4.6,4" (no z)-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
-    android:viewportHeight="24"
-    >
-  <path
-      android:pathData="M12,9.5
+    android:viewportHeight="24">
+    <group
+        android:name="rotationGroup"
+        android:pivotX="12"
+        android:pivotY="12"
+        android:rotation="180">
+        <path
+            android:fillColor="@android:color/white"
+            android:pathData="M12,9.5
       l5,4.315 -0.787,0.685
       l-4.213,-3.636 -4.223,3.636 -0.787,-0.685
-      z"
-      android:fillColor="@android:color/white"
-      />
+      z" />
+    </group>
 </vector>
