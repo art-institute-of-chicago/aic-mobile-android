@@ -33,7 +33,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(envVariable("keystore",true))
+            storeFile file(envVariable("keystore",true) ?: "DUMMY")
             storePassword envVariable("keystore_password",true)
             keyAlias envVariable("keystore_alias",true)
             keyPassword envVariable("keystore_alias_password",true)
