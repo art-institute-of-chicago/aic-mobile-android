@@ -20,7 +20,7 @@ import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.location.LocationPromptFragment
 import edu.artic.location.centerOfMuseumOnMap
-import edu.artic.location.museumBounds
+import edu.artic.location.mapDisplayBounds
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
 import edu.artic.map.helpers.toLatLng
@@ -195,7 +195,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              * We are setting the bounds here as they are roughly the bounds of the museum,
              * locks us into just that area
              */
-            setLatLngBoundsForCameraTarget(museumBounds)
+            setLatLngBoundsForCameraTarget(mapDisplayBounds)
         }
     }
 
