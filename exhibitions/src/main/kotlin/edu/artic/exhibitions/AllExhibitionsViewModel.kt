@@ -6,7 +6,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.EventCategoryName
 import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
@@ -48,7 +48,7 @@ class AllExhibitionsViewModel @Inject constructor(
     }
 
     fun onClickExhibition(position: Int, exhibition: ArticExhibition) {
-        analyticsTracker.reportEvent(ScreenCategoryName.Exhibition, AnalyticsAction.OPENED, exhibition.title)
+        analyticsTracker.reportEvent(EventCategoryName.Exhibition, AnalyticsAction.OPENED, exhibition.title)
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ExhibitionDetails(position, exhibition)))
     }
 
