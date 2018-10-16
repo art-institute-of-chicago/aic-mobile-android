@@ -30,6 +30,16 @@ android {
         buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "VERSION_NAME"
         resValue "string", "com.crashlytics.android.build_id", "$majorAndMinorVersion.$patchVersionCode"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(envVariable("keystore",true) ?: "DUMMY")
+            storePassword envVariable("keystore_password",true)
+            keyAlias envVariable("keystore_alias",true)
+            keyPassword envVariable("keystore_alias_password",true)
+        }
+    }
+
     buildTypes {
         debug {
             buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",false)}\""
@@ -40,8 +50,6 @@ android {
             buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",false)}\""
             buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
             resValue "string", "google_app_id", "${envVariable("fb_application_id",false)}"
-
-            ext.enableCrashlytics = false
         }
         release {
             buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",true)}\""
@@ -53,6 +61,7 @@ android {
             resValue "string", "google_app_id", "${envVariable("fb_application_id",true)}"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
