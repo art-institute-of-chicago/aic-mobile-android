@@ -19,6 +19,8 @@ import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoField
+import java.io.FileNotFoundException
+import java.io.InputStream
 import java.util.Locale
 
 /**
@@ -36,6 +38,7 @@ class LocalAppDataServiceProvider(
     private val dataObject: Subject<ArticDataObject> = BehaviorSubject.create()
 
     private val zeroResults = ResultPagination(0, 0, 0, 0, 0)
+
 
     /**
      * The returned object can parse and print timestamps in accordance with
@@ -84,7 +87,15 @@ class LocalAppDataServiceProvider(
 
     override fun getBlob(): Observable<ProgressDataState> {
         return Observable.create { observer ->
-            context.assets.open("app-data-v2.json").use {
+
+            val stream: InputStream = try {
+                context.assets.open("app-data-v2.json")
+            } catch (fnf: FileNotFoundException) {
+                observer.onError(NoAppDataException(fnf))
+                return@create
+            }
+
+            stream.use {
 
                 val data = moshi.adapter(ArticAppData::class.java).fromJson(Okio.buffer(Okio.source(it)))
 
@@ -94,9 +105,7 @@ class LocalAppDataServiceProvider(
                     )
                     observer.onComplete()
                 } else {
-                    observer.onError(NullPointerException(
-                            "Unfortunately, we can't figure out where the application data is stored. Double-check the 'How To Build' section of the project README."
-                    ))
+                    observer.onError(NoAppDataException())
                 }
 
                 return@create
@@ -125,6 +134,16 @@ class LocalAppDataServiceProvider(
                         observer.onComplete()
                         return@subscribeBy
                     })
+        }
+    }
+
+    class NoAppDataException(cause: Throwable? = null): NullPointerException(
+            "Unfortunately, we can't figure out where the application data is stored." +
+            "\nDouble-check the 'How To Build' section of the project README."
+    ) {
+
+        init {
+            initCause(cause)
         }
     }
 
