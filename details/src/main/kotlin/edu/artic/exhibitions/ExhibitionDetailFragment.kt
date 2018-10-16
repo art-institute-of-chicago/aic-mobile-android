@@ -11,17 +11,15 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
-import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.details.R
 import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
-import edu.artic.image.listenerSetHeight
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -37,8 +35,8 @@ import kotlin.reflect.KClass
  */
 class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel>() {
 
-    override val screenName: ScreenCategoryName
-        get() = ScreenCategoryName.OnViewDetails
+    override val screenName: ScreenName
+        get() = ScreenName.OnViewDetails
 
     override val viewModelClass: KClass<ExhibitionDetailViewModel>
         get() = ExhibitionDetailViewModel::class

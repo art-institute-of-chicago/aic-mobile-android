@@ -6,7 +6,6 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.localization.util.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.models.ArticEvent

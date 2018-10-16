@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemClicksWithPosition
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.artwork.ArtworkDetailFragment
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
@@ -29,7 +29,7 @@ import javax.inject.Inject
 abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
     override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_search_results_sub
-    override val screenName: ScreenCategoryName? = null
+    override val screenName: ScreenName? = null
 
     override val overrideStatusBarColor: Boolean = false
 

@@ -6,7 +6,7 @@ import android.view.View
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.map.R
 import edu.artic.ui.BaseFragment
 import io.reactivex.rxkotlin.subscribeBy
@@ -25,7 +25,7 @@ class LeaveCurrentTourDialogFragment : BaseFragment() {
 
     override val title = R.string.noTitle
 
-    override val screenName: ScreenCategoryName?
+    override val screenName: ScreenName?
         get() = null
 
     override val layoutResId: Int = R.layout.fragment_leave_tour_dialog

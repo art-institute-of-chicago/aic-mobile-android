@@ -14,7 +14,7 @@ import com.jakewharton.rxbinding2.widget.hint
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicks
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticObject
 import edu.artic.media.ui.getAudioServiceObservable
@@ -49,8 +49,8 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
     override val layoutResId: Int
         get() = R.layout.fragment_audio_lookup
-    override val screenName: ScreenCategoryName
-        get() = ScreenCategoryName.AudioGuide
+    override val screenName: ScreenName
+        get() = ScreenName.AudioGuide
 
     override fun hasTransparentStatusBar(): Boolean {
         return true

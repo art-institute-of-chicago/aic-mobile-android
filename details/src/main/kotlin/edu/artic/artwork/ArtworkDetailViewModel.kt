@@ -6,7 +6,6 @@ import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.Playable
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.audioFile

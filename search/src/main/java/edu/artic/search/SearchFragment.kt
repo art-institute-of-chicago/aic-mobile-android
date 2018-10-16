@@ -9,7 +9,7 @@ import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.disposables.Disposable
@@ -39,7 +39,7 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
     override val title = R.string.noTitle
     override val layoutResId: Int
         get() = R.layout.fragment_search
-    override val screenName: ScreenCategoryName?
+    override val screenName: ScreenName?
         get() = null
 
     override fun hasTransparentStatusBar(): Boolean = false
