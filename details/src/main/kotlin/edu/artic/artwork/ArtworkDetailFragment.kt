@@ -30,7 +30,7 @@ class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
     override val title = R.string.noTitle
     override val layoutResId: Int
         get() = R.layout.fragment_search_audio_detail
-    override val screenCategory: ScreenCategoryName?
+    override val screenName: ScreenCategoryName?
         get() = ScreenCategoryName.ArtworkSearchDetails
 
     private val articObject by lazy { arguments!!.getParcelable<ArticSearchArtworkObject>(ARG_OBJECT) }

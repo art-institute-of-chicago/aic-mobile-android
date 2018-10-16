@@ -49,7 +49,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
     override val layoutResId: Int
         get() = R.layout.fragment_audio_lookup
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.AudioGuide
 
     override fun hasTransparentStatusBar(): Boolean {

@@ -27,7 +27,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
     @Inject
     lateinit var languageSelector: LanguageSelector
 
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.Information
 
     override val viewModelClass: KClass<InformationViewModel>

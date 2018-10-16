@@ -31,7 +31,7 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
 
     override val layoutResId: Int = R.layout.fragment_museum_information
 
-    override val screenCategory: ScreenCategoryName = ScreenCategoryName.MuseumInformation
+    override val screenName: ScreenCategoryName = ScreenCategoryName.MuseumInformation
 
     override fun setupBindings(viewModel: MuseumInformationViewModel) {
         super.setupBindings(viewModel)

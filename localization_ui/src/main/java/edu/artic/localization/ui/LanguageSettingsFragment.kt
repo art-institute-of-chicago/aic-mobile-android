@@ -23,7 +23,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
     override val viewModelClass: KClass<LanguageSettingsViewModel> = LanguageSettingsViewModel::class
     override val title = R.string.languageSettings
     override val layoutResId: Int = R.layout.fragment_language_settings
-    override val screenCategory: ScreenCategoryName? = ScreenCategoryName.LanguageSettings
+    override val screenName: ScreenCategoryName? = ScreenCategoryName.LanguageSettings
 
     /**
      * Represents [LanguageSettingsFragment] is loaded in Splash.

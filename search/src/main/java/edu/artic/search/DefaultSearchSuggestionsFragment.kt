@@ -9,5 +9,5 @@ class DefaultSearchSuggestionsFragment : SearchBaseFragment<DefaultSearchSuggest
     override val viewModelClass: KClass<DefaultSearchSuggestionsViewModel>
         get() = DefaultSearchSuggestionsViewModel::class
 
-    override val screenCategory: ScreenCategoryName? = ScreenCategoryName.Search
+    override val screenName: ScreenCategoryName? = ScreenCategoryName.Search
 }

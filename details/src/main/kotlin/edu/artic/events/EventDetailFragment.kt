@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlin.reflect.KClass
 
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.EventDetails
     override val viewModelClass: KClass<EventDetailViewModel>
         get() = EventDetailViewModel::class

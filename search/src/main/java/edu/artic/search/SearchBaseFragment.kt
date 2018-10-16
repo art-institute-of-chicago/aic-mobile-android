@@ -29,7 +29,7 @@ import javax.inject.Inject
 abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
     override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_search_results_sub
-    override val screenCategory: ScreenCategoryName? = null
+    override val screenName: ScreenCategoryName? = null
 
     override val overrideStatusBarColor: Boolean = false
 

@@ -40,7 +40,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_tour_carousel
 
-    override val screenCategory: ScreenCategoryName?
+    override val screenName: ScreenCategoryName?
         get() = null
 
     override val overrideStatusBarColor: Boolean

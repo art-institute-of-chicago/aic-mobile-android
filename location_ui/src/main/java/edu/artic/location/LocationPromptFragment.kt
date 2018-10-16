@@ -20,7 +20,7 @@ class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() 
     override val viewModelClass: KClass<LocationPromptViewModel> = LocationPromptViewModel::class
     override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_location_prompt
-    override val screenCategory: ScreenCategoryName? = null
+    override val screenName: ScreenCategoryName? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

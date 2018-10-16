@@ -45,7 +45,7 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
     override val overrideStatusBarColor: Boolean
         get() = false
 
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.Search
 
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()

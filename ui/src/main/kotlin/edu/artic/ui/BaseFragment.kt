@@ -42,6 +42,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
      * C.f. [updateToolbar]
      */
     fun requestTitleUpdate(proposedTitle: String) {
+
         baseActivity.runOnUiThread {
             this.requestedTitle = proposedTitle
             /**
@@ -67,7 +68,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
     @get:LayoutRes
     protected abstract val layoutResId: Int
 
-    abstract val screenCategory: ScreenCategoryName?
+    abstract val screenName: ScreenCategoryName?
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
@@ -99,7 +100,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
 
     override fun onStart() {
         super.onStart()
-        screenCategory?.let {
+        screenName?.let {
             analyticsTracker.reportScreenView(it)
         }
     }
