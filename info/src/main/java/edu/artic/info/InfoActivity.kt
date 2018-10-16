@@ -2,6 +2,7 @@ package edu.artic.info
 
 import android.content.Intent
 import android.os.Bundle
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
@@ -78,5 +79,17 @@ class InfoActivity : BaseActivity() {
             }
 
         }
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            if (navController.currentDestination?.id == R.id.informationFragment) {
+                val intent = NavigationConstants.HOME.asDeepLinkIntent()
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                startActivity(intent)
+                return
+            }
+        }
+        super.onBackPressed()
     }
 }
