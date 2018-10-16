@@ -16,6 +16,7 @@ import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.details.R
 import edu.artic.image.GlideApp
+import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
