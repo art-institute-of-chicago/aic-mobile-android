@@ -131,5 +131,13 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     }
 
+    fun isRootFragment(inId: Int): Boolean {
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            if (navController.currentDestination?.id == inId) {
+                return true
+            }
+        }
+        return false
+    }
 }
 

@@ -8,6 +8,7 @@ import edu.artic.base.utils.preventReselection
 import edu.artic.media.ui.NarrowAudioPlayerFragment
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
+import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_audio.*
 
@@ -37,13 +38,9 @@ class AudioActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 0) {
-            if (navController.currentDestination?.id == R.id.audioLookupFragment) {
-                val intent = NavigationConstants.HOME.asDeepLinkIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                startActivity(intent)
-                return
-            }
+        if (isRootFragment(R.id.audioLookupFragment)) {
+            startActivity(linkHome())
+            return
         }
         super.onBackPressed()
     }

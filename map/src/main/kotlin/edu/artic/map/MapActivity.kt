@@ -14,6 +14,7 @@ import edu.artic.location.LocationPreferenceManager
 import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
+import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_map.*
 import javax.inject.Inject
@@ -89,13 +90,9 @@ class MapActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 0) {
-            if (navController.currentDestination?.id == R.id.mapFragment) {
-                val intent = NavigationConstants.HOME.asDeepLinkIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                startActivity(intent)
-                return
-            }
+        if (isRootFragment(R.id.mapFragment)) {
+            startActivity(linkHome())
+            return
         }
         super.onBackPressed()
     }
