@@ -3,10 +3,7 @@ package edu.artic.exhibitions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
-import edu.artic.analytics.AnalyticsAction
-import edu.artic.analytics.AnalyticsLabel
-import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.*
 import edu.artic.localization.util.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
@@ -107,7 +104,7 @@ constructor(dataObjectDao: ArticDataObjectDao,
 
     fun onClickBuyTickets() {
         ticketsUrl?.let { url ->
-            analyticsTracker.reportEvent(ScreenCategoryName.Exhibition, AnalyticsAction.linkPressed, exhibition?.title
+            analyticsTracker.reportEvent(EventCategoryName.Exhibition, AnalyticsAction.linkPressed, exhibition?.title
                     ?: AnalyticsLabel.Empty)
             navigateTo.onNext(Navigate.Forward(NavigationEndpoint.BuyTickets(url)))
         }

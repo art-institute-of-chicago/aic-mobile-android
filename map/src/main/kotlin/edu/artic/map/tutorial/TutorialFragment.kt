@@ -13,7 +13,7 @@ import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.db.INVALID_FLOOR
 import edu.artic.map.R
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -38,7 +38,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
     override val viewModelClass: KClass<TutorialViewModel> = TutorialViewModel::class
     override val title: Int = 0
     override val layoutResId: Int = R.layout.fragment_tutorial
-    override val screenCategory: ScreenCategoryName? = null
+    override val screenName: ScreenName? = null
 
     private val adapter = TutorialPopupAdapter()
 

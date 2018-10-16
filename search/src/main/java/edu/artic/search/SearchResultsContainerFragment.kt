@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager
 import android.view.View
 import android.widget.TextView
 import com.fuzz.rx.disposedBy
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.viewmodel.BaseViewModelFragment
 import kotlinx.android.synthetic.main.fragment_search_results.*
 import kotlin.reflect.KClass
@@ -17,7 +17,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
     override val viewModelClass: KClass<SearchResultsContainerViewModel> = SearchResultsContainerViewModel::class
     override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_search_results
-    override val screenCategory: ScreenCategoryName? = ScreenCategoryName.Search
+    override val screenName: ScreenName? = ScreenName.Search
 
     override val overrideStatusBarColor: Boolean = false
 

@@ -458,7 +458,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
         shouldFollowUser = !shouldFollowUser
 
         if (shouldFollowUser) {
-            analyticsTracker.reportEvent(EventCategoryName.Location, AnalyticsAction.headingEnabled)
+            analyticsTracker.reportEvent(EventCategoryName.Location, AnalyticsAction.locationHeadingEnabled)
         }
     }
 

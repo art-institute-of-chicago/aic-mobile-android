@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.location_ui.R
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -20,7 +20,7 @@ class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() 
     override val viewModelClass: KClass<LocationPromptViewModel> = LocationPromptViewModel::class
     override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_location_prompt
-    override val screenCategory: ScreenCategoryName? = null
+    override val screenName: ScreenName? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

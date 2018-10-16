@@ -15,7 +15,7 @@ import androidx.navigation.Navigation
 import com.fuzz.rx.DisposeBag
 import dagger.android.support.AndroidSupportInjection
 import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.getThemeColors
 import edu.artic.base.utils.setWindowFlag
 import javax.inject.Inject
@@ -42,6 +42,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
      * C.f. [updateToolbar]
      */
     fun requestTitleUpdate(proposedTitle: String) {
+
         baseActivity.runOnUiThread {
             this.requestedTitle = proposedTitle
             /**
@@ -67,7 +68,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
     @get:LayoutRes
     protected abstract val layoutResId: Int
 
-    abstract val screenCategory: ScreenCategoryName?
+    abstract val screenName: ScreenName?
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
@@ -99,7 +100,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
 
     override fun onStart() {
         super.onStart()
-        screenCategory?.let {
+        screenName?.let {
             analyticsTracker.reportScreenView(it)
         }
     }

@@ -21,7 +21,7 @@ import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.filterHtmlEncodedText
 import edu.artic.db.models.ArticTour
@@ -62,8 +62,8 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_audio_details
 
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.AudioPlayer
+    override val screenName: ScreenName
+        get() = ScreenName.AudioPlayer
 
     var boundService: AudioPlayerService? = null
 

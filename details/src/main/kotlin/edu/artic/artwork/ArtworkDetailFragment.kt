@@ -11,7 +11,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.details.R
@@ -30,8 +30,8 @@ class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
     override val title = R.string.noTitle
     override val layoutResId: Int
         get() = R.layout.fragment_search_audio_detail
-    override val screenCategory: ScreenCategoryName?
-        get() = ScreenCategoryName.ArtworkSearchDetails
+    override val screenName: ScreenName?
+        get() = ScreenName.ArtworkSearchDetails
 
     private val articObject by lazy { arguments!!.getParcelable<ArticSearchArtworkObject>(ARG_OBJECT) }
     private val searchTerm by lazy { arguments!!.getString(ARG_SEARCH_TERM) }

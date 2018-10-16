@@ -19,7 +19,7 @@ import com.jakewharton.rxbinding2.widget.hintRes
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textChanges
 import edu.artic.accesscard.barcode.BarcodeEncoder
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.LoadStatus
 import edu.artic.base.utils.hideSoftKeyboard
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -41,7 +41,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
     override val viewModelClass: KClass<AccessMemberCardViewModel> = AccessMemberCardViewModel::class
     override val title = R.string.accessMemberCardLabel
     override val layoutResId: Int = R.layout.fragment_validate_member_information
-    override val screenCategory: ScreenCategoryName? = null
+    override val screenName: ScreenName? = null
 
     private lateinit var toolbarColorAnimator: ValueAnimator
 

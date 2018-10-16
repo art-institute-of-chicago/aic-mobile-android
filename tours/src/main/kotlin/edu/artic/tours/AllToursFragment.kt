@@ -11,7 +11,7 @@ import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.navigation.NavigationConstants
 import edu.artic.tours.recyclerview.AllToursItemDecoration
@@ -24,8 +24,8 @@ import kotlin.reflect.KClass
 
 class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.Tours
+    override val screenName: ScreenName
+        get() = ScreenName.Tours
 
     override val viewModelClass: KClass<AllToursViewModel>
         get() = AllToursViewModel::class

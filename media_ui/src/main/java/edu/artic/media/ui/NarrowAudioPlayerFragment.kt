@@ -11,7 +11,7 @@ import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.navigation.NavigationConstants
@@ -47,7 +47,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
     override val layoutResId: Int
         get() = R.layout.fragment_bottom_audio_player
 
-    override val screenCategory: ScreenCategoryName?
+    override val screenName: ScreenName?
         get() = null
 
     override val overrideStatusBarColor: Boolean

@@ -12,7 +12,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asUrlViewIntent
 import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.trimDownBlankLines
@@ -28,8 +28,8 @@ import kotlinx.android.synthetic.main.fragment_event_details.*
 import kotlin.reflect.KClass
 
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.EventDetails
+    override val screenName: ScreenName
+        get() = ScreenName.EventDetails
     override val viewModelClass: KClass<EventDetailViewModel>
         get() = EventDetailViewModel::class
     override val layoutResId: Int

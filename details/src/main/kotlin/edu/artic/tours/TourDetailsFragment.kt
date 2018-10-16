@@ -17,7 +17,7 @@ import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.dpToPixels
 import edu.artic.base.utils.fromHtml
@@ -49,8 +49,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     override val title = R.string.noTitle
 
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.TourDetails
+    override val screenName: ScreenName
+        get() = ScreenName.TourDetails
 
     override val customToolbarColorResource: Int
         get() = R.color.audioBackground
