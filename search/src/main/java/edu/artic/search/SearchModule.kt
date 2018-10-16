@@ -104,8 +104,14 @@ abstract class SearchModule {
         @Provides
         @Singleton
         fun provideSearchService(
-                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit,
+                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit?,
                 dataObjectDao: ArticDataObjectDao
-        ): SearchServiceProvider = RetrofitSearchServiceProvider(retrofit, dataObjectDao)
+        ): SearchServiceProvider {
+            return if (retrofit == null) {
+                NoSearchResultsServiceProvider
+            } else {
+                RetrofitSearchServiceProvider(retrofit, dataObjectDao)
+            }
+        }
     }
 }
