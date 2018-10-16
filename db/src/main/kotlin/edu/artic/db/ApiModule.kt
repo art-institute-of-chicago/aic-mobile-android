@@ -98,13 +98,18 @@ abstract class ApiModule {
                             client: OkHttpClient,
                             executor: Executor,
                             moshi: Moshi
-        ): Retrofit = constructRetrofit(
-                baseUrl = baseUrl,
-                client = client,
-                executor = executor,
-                customConfiguration = {
-                    addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
-                })
+        ): Retrofit? {
+            return if (baseUrl.contains("https")) {constructRetrofit(
+                    baseUrl = baseUrl,
+                    client = client,
+                    executor = executor,
+                    customConfiguration = {
+                        addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+                    })
+            } else {
+                null
+            }
+        }
 
         @JvmStatic
         @Provides
@@ -138,10 +143,18 @@ abstract class ApiModule {
         @Provides
         @Singleton
         fun provideBlobProvider(
-                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit,
+                @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit?,
+                moshi: Moshi,
+                context: Context,
                 progressEventBus: ProgressEventBus,
                 dataObjectDao: ArticDataObjectDao
-        ): AppDataServiceProvider = RetrofitAppDataServiceProvider(retrofit, progressEventBus, dataObjectDao)
+        ): AppDataServiceProvider {
+            return if (retrofit == null) {
+                LocalAppDataServiceProvider(moshi, context, dataObjectDao)
+            } else {
+                RetrofitAppDataServiceProvider(retrofit, progressEventBus, dataObjectDao)
+            }
+        }
 
 
         @JvmStatic
