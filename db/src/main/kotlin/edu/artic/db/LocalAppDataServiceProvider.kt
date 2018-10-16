@@ -5,6 +5,9 @@ import com.fuzz.rx.bindTo
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticDataObject
+import edu.artic.db.models.ArticEvent
+import edu.artic.db.models.ArticExhibition
+import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
@@ -24,6 +27,8 @@ class LocalAppDataServiceProvider(
 ) : AppDataServiceProvider {
 
     private val dataObject: Subject<ArticDataObject> = BehaviorSubject.create()
+
+    private val zeroResults = ResultPagination(0, 0, 0, 0, 0)
 
     /**
      * The returned object can parse and print timestamps in accordance with
@@ -75,7 +80,8 @@ class LocalAppDataServiceProvider(
             dataObject.subscribeBy(
                     onError = { observer.onError(it) },
                     onNext = { _ ->
-                        // TODO: Return empty result
+                        observer.onNext(doneWithZeroResults<ArticExhibition>())
+                        observer.onComplete()
                         return@subscribeBy
                     })
         }
@@ -86,10 +92,24 @@ class LocalAppDataServiceProvider(
             dataObject.subscribeBy(
                     onError = { observer.onError(it) },
                     onNext = { _ ->
-                        // TODO: Return empty result
+                        observer.onNext(doneWithZeroResults<ArticEvent>())
+                        observer.onComplete()
                         return@subscribeBy
                     })
         }
     }
 
+    /**
+     * Use this to indicate the end of the current [progress stream][ProgressEventBus] sequence.
+     *
+     * See also the `:splash` module's `edu.artic.splash.SplashViewModel`.
+     */
+    private fun <T> doneWithZeroResults(): ProgressDataState.Done<ArticResult<T>> {
+        return ProgressDataState.Done(
+                ArticResult(
+                        zeroResults,
+                        emptyList()
+                )
+        )
+    }
 }
