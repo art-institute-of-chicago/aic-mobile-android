@@ -4,7 +4,6 @@ import com.fuzz.rx.bindTo
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticSearchArtworkObject

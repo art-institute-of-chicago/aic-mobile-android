@@ -1,7 +1,7 @@
 package edu.artic.search
 
 
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import kotlin.reflect.KClass
 
 
@@ -9,5 +9,5 @@ class DefaultSearchSuggestionsFragment : SearchBaseFragment<DefaultSearchSuggest
     override val viewModelClass: KClass<DefaultSearchSuggestionsViewModel>
         get() = DefaultSearchSuggestionsViewModel::class
 
-    override val screenName: ScreenCategoryName? = ScreenCategoryName.Search
+    override val screenName: ScreenName? = ScreenName.Search
 }

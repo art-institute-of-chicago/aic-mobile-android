@@ -11,7 +11,7 @@ import edu.artic.adapter.itemChanges
 import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.map.R
@@ -40,7 +40,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_tour_carousel
 
-    override val screenName: ScreenCategoryName?
+    override val screenName: ScreenName?
         get() = null
 
     override val overrideStatusBarColor: Boolean

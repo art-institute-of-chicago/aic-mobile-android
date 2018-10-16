@@ -10,7 +10,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.exhibitions.recyclerview.AllExhibitionsItemDecoration
 import edu.artic.navigation.NavigationConstants
@@ -21,8 +21,8 @@ import kotlin.reflect.KClass
 
 class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() {
 
-    override val screenName: ScreenCategoryName
-        get() = ScreenCategoryName.OnView
+    override val screenName: ScreenName
+        get() = ScreenName.OnView
 
     override val viewModelClass: KClass<AllExhibitionsViewModel>
         get() = AllExhibitionsViewModel::class

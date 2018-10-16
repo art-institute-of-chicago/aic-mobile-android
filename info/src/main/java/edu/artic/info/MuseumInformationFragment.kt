@@ -9,7 +9,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.navigation.NavigationConstants
@@ -31,7 +31,7 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
 
     override val layoutResId: Int = R.layout.fragment_museum_information
 
-    override val screenName: ScreenCategoryName = ScreenCategoryName.MuseumInformation
+    override val screenName: ScreenName = ScreenName.MuseumInformation
 
     override fun setupBindings(viewModel: MuseumInformationViewModel) {
         super.setupBindings(viewModel)

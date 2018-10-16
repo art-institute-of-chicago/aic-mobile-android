@@ -21,14 +21,13 @@ import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.filterHtmlEncodedText
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
 import edu.artic.image.GlideApp
-import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.media.audio.AudioPlayerService
@@ -62,8 +61,8 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_audio_details
 
-    override val screenName: ScreenCategoryName
-        get() = ScreenCategoryName.AudioPlayer
+    override val screenName: ScreenName
+        get() = ScreenName.AudioPlayer
 
     var boundService: AudioPlayerService? = null
 

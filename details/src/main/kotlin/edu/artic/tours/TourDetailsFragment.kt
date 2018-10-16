@@ -17,7 +17,7 @@ import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.dpToPixels
 import edu.artic.base.utils.fromHtml
@@ -25,7 +25,6 @@ import edu.artic.db.models.ArticTour
 import edu.artic.details.R
 import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
-import edu.artic.image.updateImageScaleType
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
@@ -49,8 +48,8 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     override val title = R.string.noTitle
 
-    override val screenName: ScreenCategoryName
-        get() = ScreenCategoryName.TourDetails
+    override val screenName: ScreenName
+        get() = ScreenName.TourDetails
 
     override val customToolbarColorResource: Int
         get() = R.color.audioBackground

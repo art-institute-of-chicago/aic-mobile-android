@@ -13,7 +13,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
@@ -30,8 +30,8 @@ import kotlin.reflect.KClass
 
 class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
-    override val screenName: ScreenCategoryName
-        get() = ScreenCategoryName.Home
+    override val screenName: ScreenName
+        get() = ScreenName.Home
 
     override val title = R.string.welcome
 

@@ -9,7 +9,7 @@ import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.location_ui.R
 import edu.artic.navigation.NavigationConstants
@@ -23,7 +23,7 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
     override val viewModelClass: KClass<InfoLocationSettingsViewModel> = InfoLocationSettingsViewModel::class
     override val title = R.string.location_title
     override val layoutResId: Int = R.layout.fragment_location_settings
-    override val screenName: ScreenCategoryName? = ScreenCategoryName.LocationSettings
+    override val screenName: ScreenName? = ScreenName.LocationSettings
 
 
     override fun setupBindings(viewModel: InfoLocationSettingsViewModel) {
