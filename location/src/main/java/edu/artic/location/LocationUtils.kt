@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLngBounds
  * the museum grounds, as we allow panning and zooming a decent amount away from the
  * buildings themselves.
  */
-val museumBounds: LatLngBounds = LatLngBounds(
+val mapDisplayBounds: LatLngBounds = LatLngBounds(
         // southwest
         LatLng(41.875815, -87.627528),
 
@@ -18,9 +18,9 @@ val museumBounds: LatLngBounds = LatLngBounds(
 )
 
 /**
- * Center of the screen, as used by [initialMapCameraPosition].
+ * Center of the musuem on the map in LatLng, as used by [initialMapCameraPosition].
  *
- * This is _NOT_ the same as the center of [museumBounds] (although it is pretty close).
+ * This is _NOT_ the same as the center of [mapDisplayBounds] (although it is pretty close).
  */
 val centerOfMuseumOnMap = LatLng(41.879592, -87.622491)
 
