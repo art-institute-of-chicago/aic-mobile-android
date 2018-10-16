@@ -21,4 +21,25 @@ interface SearchServiceProvider {
     fun getSuggestions(searchQuery: String): Observable<Result<List<String>>>
 
     fun loadAllMatchingContent(searchQuery: String): Observable<ApiSearchResult>
+
+}
+
+/**
+ * One of the two bundled implementations of [SearchServiceProvider],
+ * along with [RetrofitSearchServiceProvider].
+ *
+ * This will always error out.
+ */
+object NoSearchResultsServiceProvider: SearchServiceProvider {
+    override fun getSuggestions(searchQuery: String): Observable<Result<List<String>>> {
+        return Observable.error(
+                SearchUnavailableError
+        )
+    }
+
+    override fun loadAllMatchingContent(searchQuery: String): Observable<ApiSearchResult> {
+        return Observable.error(
+                SearchUnavailableError
+        )
+    }
 }
