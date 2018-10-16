@@ -22,7 +22,7 @@ class NavigationSelectListener(val context: Context) : BottomNavigationView.OnNa
         return when (item.itemId) {
             R.id.action_home -> {
                 val intent = NavigationConstants.HOME.asDeepLinkIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 context.startActivity(intent)
                 false
             }
