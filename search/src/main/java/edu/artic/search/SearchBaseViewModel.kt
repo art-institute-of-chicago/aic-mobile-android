@@ -76,16 +76,16 @@ open class SearchBaseViewModel @Inject constructor(
             is SearchAmenitiesCellViewModel -> {
                 when (viewModel.type) {
                     SuggestedMapAmenities.Dining -> {
-                        analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowDining)
+                        analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowDining)
                     }
                     SuggestedMapAmenities.Restrooms -> {
-                        analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowRestrooms)
+                        analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowRestrooms)
                     }
                     SuggestedMapAmenities.GiftShop -> {
-                        analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowGiftShops)
+                        analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowGiftShops)
                     }
                     SuggestedMapAmenities.MembersLounge -> {
-                        analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowMemberLounge)
+                        analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowMemberLounge)
                     }
                 }
                 navigateTo.onNext(
