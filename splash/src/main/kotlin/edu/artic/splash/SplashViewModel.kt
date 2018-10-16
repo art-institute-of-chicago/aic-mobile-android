@@ -10,7 +10,8 @@ import edu.artic.db.ProgressDataState
 import edu.artic.localization.ui.LanguageSettingsPrefManager
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -27,7 +28,7 @@ class SplashViewModel @Inject constructor(
     }
 
 
-    val percentage: PublishSubject<Float> = PublishSubject.create()
+    val percentage: Subject<Float> = BehaviorSubject.createDefault(0f)
 
     init {
         analyticsTracker.clearSession()
@@ -41,6 +42,7 @@ class SplashViewModel @Inject constructor(
                             percentage.onNext(it.progress)
                         }
                         is ProgressDataState.Done<*> -> {
+                            percentage.onNext(1.0f)
                             startVideo()
                             appDaPrefManager.downloadedNecessaryData = true
                         }
