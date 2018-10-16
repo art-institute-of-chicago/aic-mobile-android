@@ -116,14 +116,11 @@ subprojects {
             final File debugProperties = rootProject.file('debug.env')
 
             if (isRelease && releaseProperties.exists()) {
-                temp.load(releaseProperties.newDataInputStream())
-                return temp.getProperty(key)
+                return extract(temp, releaseProperties, key)
             } else if (!isRelease && debugProperties.exists()) {
-                temp.load(debugProperties.newDataInputStream())
-                return temp.getProperty(key)
+                return extract(temp, debugProperties, key)
             } else if (localProperties.exists()) {
-                temp.load(localProperties.newDataInputStream())
-                return temp.getProperty(key)
+                return extract(temp, localProperties, key)
             } else {
                 return project.findProperty(key)
             }
@@ -160,6 +157,27 @@ subprojects {
         mapDiagnosticLocations = true
         correctErrorTypes = true
     }
+}
+
+/**
+ * Utility function to retrieve a single value from a {@link Properties} file.
+ * <p>
+ *     The file should conform to whichever {@code properties} standard the
+ *     build system's JVM can understand. See e.g.
+ *     <a href="https://en.wikipedia.org/wiki/.properties">
+ *         https://en.wikipedia.org/wiki/.properties</a> for more details.
+ * </p>
+ *
+ * @param temp    cache that can load the properties into memory. If this already
+ * contains a mapping for {@code key}, that mapped value will be used as a default
+ * @param fileRef a {@link File} object representing a set of properties
+ * @param key     name of the desired value
+ * @return the value keyed under that key
+ * @see Properties#getProperty
+ */
+static String extract(final Properties temp, final File fileRef, final String key) {
+    temp.load(fileRef.newDataInputStream())
+    return temp.getProperty(key)
 }
 
 task clean(type: Delete) {
