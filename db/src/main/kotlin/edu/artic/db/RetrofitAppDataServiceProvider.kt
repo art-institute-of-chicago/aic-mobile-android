@@ -10,7 +10,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import retrofit2.Retrofit
-import javax.inject.Named
 
 /**
  * Reference implementation of [AppDataServiceProvider] for the Art Institute of Chicago.
@@ -20,7 +19,7 @@ import javax.inject.Named
  * are expected to run in the [io.reactivex.schedulers.Schedulers.io] thread-pool.
  */
 class RetrofitAppDataServiceProvider(
-        @Named(ApiModule.RETROFIT_BLOB_API) retrofit: Retrofit,
+        retrofit: Retrofit,
         private val progressEventBus: ProgressEventBus,
         dataObjectDao: ArticDataObjectDao
 ) : AppDataServiceProvider {
