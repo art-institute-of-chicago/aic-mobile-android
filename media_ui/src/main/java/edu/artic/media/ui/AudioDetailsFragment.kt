@@ -62,7 +62,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_audio_details
 
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.AudioPlayer
 
     var boundService: AudioPlayerService? = null

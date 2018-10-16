@@ -39,7 +39,7 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
     override val title = R.string.noTitle
     override val layoutResId: Int
         get() = R.layout.fragment_search
-    override val screenCategory: ScreenCategoryName?
+    override val screenName: ScreenCategoryName?
         get() = null
 
     override fun hasTransparentStatusBar(): Boolean = false

@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
 
 class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.Events
 
     override val viewModelClass: KClass<AllEventsViewModel>

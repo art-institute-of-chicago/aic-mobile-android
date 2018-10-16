@@ -49,7 +49,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
     override val title = R.string.noTitle
 
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.TourDetails
 
     override val customToolbarColorResource: Int

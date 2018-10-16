@@ -23,7 +23,7 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
     override val viewModelClass: KClass<InfoLocationSettingsViewModel> = InfoLocationSettingsViewModel::class
     override val title = R.string.location_title
     override val layoutResId: Int = R.layout.fragment_location_settings
-    override val screenCategory: ScreenCategoryName? = ScreenCategoryName.LocationSettings
+    override val screenName: ScreenCategoryName? = ScreenCategoryName.LocationSettings
 
 
     override fun setupBindings(viewModel: InfoLocationSettingsViewModel) {

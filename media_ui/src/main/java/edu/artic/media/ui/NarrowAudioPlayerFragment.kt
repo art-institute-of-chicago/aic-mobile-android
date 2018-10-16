@@ -47,7 +47,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
     override val layoutResId: Int
         get() = R.layout.fragment_bottom_audio_player
 
-    override val screenCategory: ScreenCategoryName?
+    override val screenName: ScreenCategoryName?
         get() = null
 
     override val overrideStatusBarColor: Boolean

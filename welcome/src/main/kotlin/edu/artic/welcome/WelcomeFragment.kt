@@ -30,7 +30,7 @@ import kotlin.reflect.KClass
 
 class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.Home
 
     override val title = R.string.welcome

@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
 
 class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() {
 
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.OnView
 
     override val viewModelClass: KClass<AllExhibitionsViewModel>

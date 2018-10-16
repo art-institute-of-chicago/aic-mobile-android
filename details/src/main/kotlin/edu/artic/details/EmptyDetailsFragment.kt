@@ -8,7 +8,7 @@ class EmptyDetailsFragment: BaseFragment() {
         get() = R.string.noTitle
     override val layoutResId: Int
         get() = R.layout.fragment_empty_details
-    override val screenCategory: ScreenCategoryName?
+    override val screenName: ScreenCategoryName?
         get() = null
 
 

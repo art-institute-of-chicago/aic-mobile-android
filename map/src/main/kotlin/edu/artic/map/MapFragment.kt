@@ -66,7 +66,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override val layoutResId: Int
         get() = R.layout.fragment_map
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.Map
 
     override fun hasTransparentStatusBar() = true

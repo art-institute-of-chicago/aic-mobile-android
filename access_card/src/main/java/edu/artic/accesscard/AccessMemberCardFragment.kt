@@ -41,7 +41,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
     override val viewModelClass: KClass<AccessMemberCardViewModel> = AccessMemberCardViewModel::class
     override val title = R.string.accessMemberCardLabel
     override val layoutResId: Int = R.layout.fragment_validate_member_information
-    override val screenCategory: ScreenCategoryName? = null
+    override val screenName: ScreenCategoryName? = null
 
     private lateinit var toolbarColorAnimator: ValueAnimator
 

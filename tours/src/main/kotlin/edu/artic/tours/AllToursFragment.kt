@@ -24,7 +24,7 @@ import kotlin.reflect.KClass
 
 class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
-    override val screenCategory: ScreenCategoryName
+    override val screenName: ScreenCategoryName
         get() = ScreenCategoryName.Tours
 
     override val viewModelClass: KClass<AllToursViewModel>

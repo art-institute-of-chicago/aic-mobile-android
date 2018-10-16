@@ -17,7 +17,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
     override val viewModelClass: KClass<SearchResultsContainerViewModel> = SearchResultsContainerViewModel::class
     override val title = R.string.noTitle
     override val layoutResId: Int = R.layout.fragment_search_results
-    override val screenCategory: ScreenCategoryName? = ScreenCategoryName.Search
+    override val screenName: ScreenCategoryName? = ScreenCategoryName.Search
 
     override val overrideStatusBarColor: Boolean = false
 

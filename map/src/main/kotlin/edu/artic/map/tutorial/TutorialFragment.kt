@@ -38,7 +38,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
     override val viewModelClass: KClass<TutorialViewModel> = TutorialViewModel::class
     override val title: Int = 0
     override val layoutResId: Int = R.layout.fragment_tutorial
-    override val screenCategory: ScreenCategoryName? = null
+    override val screenName: ScreenCategoryName? = null
 
     private val adapter = TutorialPopupAdapter()
 
