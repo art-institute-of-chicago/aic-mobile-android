@@ -30,9 +30,7 @@ class ArtworkDetailViewModel @Inject constructor(
     val title: Subject<String> = BehaviorSubject.create()
     val galleryNumber : Subject<String> = BehaviorSubject.create()
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
-    val showOnMapButtonText: Subject<String> = BehaviorSubject.createDefault("Show on Map") // TODO: replace when special localizer is done
     val showOnMapVisible: Subject<Boolean> = BehaviorSubject.create()
-    val playAudioButtonText: Subject<String> = BehaviorSubject.createDefault("Play Audio")// TODO: replace when special localizer is done
     val playAudioVisible: Subject<Boolean> = BehaviorSubject.create()
     private val articObjectObservable: Subject<ArticSearchArtworkObject> = BehaviorSubject.create()
 
