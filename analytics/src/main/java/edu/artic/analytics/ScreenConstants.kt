@@ -35,6 +35,7 @@ sealed class ScreenCategoryName(val screenName: String) {
 sealed class EventCategoryName(val eventCategoryName: String) {
     object App : EventCategoryName("app")
     object Exhibition : EventCategoryName("exhibition")
+    object Event : EventCategoryName("event")
     /**
      * NB: actions in this category may be `Locale.nameOfLanguageForAnalytics()` instead of a constant from this file.
      */
