@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.Tile
 import com.google.android.gms.maps.model.TileProvider
 import com.google.maps.android.geometry.Point
 import com.google.maps.android.projection.SphericalMercatorProjection
-import edu.artic.location.museumBounds
+import edu.artic.location.mapDisplayBounds
 import edu.artic.map.ZOOM_MIN
 import timber.log.Timber
 
@@ -45,8 +45,8 @@ abstract class BaseMapTileProvider : TileProvider {
     protected val boundsMap: Map<Int, Bounds>
 
     init {
-        northEast = mapProjection.toPoint(museumBounds.northeast)
-        southWest = mapProjection.toPoint(museumBounds.southwest)
+        northEast = mapProjection.toPoint(mapDisplayBounds.northeast)
+        southWest = mapProjection.toPoint(mapDisplayBounds.southwest)
 
         // use this snippet of code to calculate bounds map for you.
         /*boundsMap = (ZOOM_MIN.toInt()..ZOOM_MAX.toInt()).map {
