@@ -107,8 +107,6 @@ object AnalyticsAction {
     const val searchCategorySwitched = "category_switched"
 
     const val errorsAudioGuideFail = "audio_guide_fail"
-
-    const val headingEnabled = "headingEnabled"
 }
 
 object AnalyticsLabel {
