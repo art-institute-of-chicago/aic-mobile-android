@@ -19,7 +19,6 @@ sealed class ScreenCategoryName(val screenName: String) {
     object LocationSettings : ScreenCategoryName("Location Settings")
     object Events : ScreenCategoryName("Events")
     object OnView : ScreenCategoryName("On View")
-    object Exhibition : ScreenCategoryName("Exhibition")
     object Tours : ScreenCategoryName("Tours")
     object Search : ScreenCategoryName("Search")
     object AudioPlayer : ScreenCategoryName("Audio Player")
