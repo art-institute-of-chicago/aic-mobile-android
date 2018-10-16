@@ -2,11 +2,13 @@ package edu.artic.info
 
 import android.content.Intent
 import android.os.Bundle
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
+import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.findNavController
 import kotlinx.android.synthetic.main.activity_info.*
@@ -78,5 +80,13 @@ class InfoActivity : BaseActivity() {
             }
 
         }
+    }
+
+    override fun onBackPressed() {
+        if (isRootFragment(R.id.informationFragment)) {
+            startActivity(linkHome())
+            return
+        }
+        super.onBackPressed()
     }
 }

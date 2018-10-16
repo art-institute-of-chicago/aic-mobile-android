@@ -1,5 +1,8 @@
 package edu.artic.navigation
 
+import android.content.Intent
+import edu.artic.base.utils.asDeepLinkIntent
+
 /**
  *@author Sameer Dhakal (Fuzz)
  */
@@ -22,4 +25,10 @@ class NavigationConstants {
         const val ARG_AMENITY_TYPE: String = "ARG_AMENITY_TYPE"
         const val ARG_AUDIO_TUTORIAL_RESULT: String = "ARG_AUDIO_TUTORIAL_RESULT"
     }
+}
+
+fun linkHome(): Intent {
+    val intent = NavigationConstants.HOME.asDeepLinkIntent()
+    intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+    return intent
 }
