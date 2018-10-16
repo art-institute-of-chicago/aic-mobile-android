@@ -1,6 +1,7 @@
 package edu.artic.search
 
 import com.fuzz.rx.bindTo
+import com.jakewharton.retrofit2.adapter.rxjava2.Result
 import edu.artic.db.INVALID_FLOOR
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
@@ -12,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 /**
@@ -83,12 +85,24 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
 
     private fun getSuggestionsList(searchTerm: String): Observable<List<String>> {
         return searchService.getSuggestions(searchTerm)
+                .onErrorReturn {
+                    if (BuildConfig.DEBUG) {
+                        Timber.d(it)
+                    }
+                    Result.error(it)
+                }
                 .mapWithDefault(emptyList())
     }
 
     private fun loadOtherLists(searchTerm: String): Observable<ArticSearchResult> {
         return searchService
                 .loadAllMatchingContent(searchTerm)
+                .onErrorReturn {
+                    if (BuildConfig.DEBUG) {
+                        Timber.d(it)
+                    }
+                    ApiSearchResult(emptyList(), emptyList(), emptyList())
+                }
                 .flatMap { result ->
                     Observables.combineLatest(
                             loadArtwork(result.artworks),
