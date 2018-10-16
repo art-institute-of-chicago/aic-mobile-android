@@ -2,6 +2,7 @@ package edu.artic.db
 
 import android.content.Context
 import com.fuzz.rx.bindTo
+import com.squareup.moshi.Moshi
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticAppData
 import edu.artic.db.models.ArticDataObject
@@ -12,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import okio.Okio
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
@@ -26,6 +28,7 @@ import java.util.Locale
  * [exhibitions][getExhibitions].
  */
 class LocalAppDataServiceProvider(
+        private val moshi: Moshi,
         private val context: Context,
         dataObjectDao: ArticDataObjectDao
 ) : AppDataServiceProvider {
@@ -83,7 +86,18 @@ class LocalAppDataServiceProvider(
         return Observable.create { observer ->
             context.assets.open("app-data-v2.json").use {
 
-                // TODO: Read in from JSON file
+                val data = moshi.adapter(ArticAppData::class.java).fromJson(Okio.buffer(Okio.source(it)))
+
+                if (data != null) {
+                    observer.onNext(
+                            ProgressDataState.Done(data)
+                    )
+                    observer.onComplete()
+                } else {
+                    observer.onError(NullPointerException(
+                            "Unfortunately, we can't figure out where the application data is stored. Double-check the 'How To Build' section of the project README."
+                    ))
+                }
 
                 return@create
             }
