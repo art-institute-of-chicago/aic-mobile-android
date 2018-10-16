@@ -7,6 +7,7 @@ import edu.artic.db.models.ArticDataObject
 import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import retrofit2.Retrofit
@@ -34,6 +35,7 @@ class RetrofitAppDataServiceProvider(
     init {
         dataObjectDao
                 .getDataObject()
+                .observeOn(Schedulers.io())
                 .bindTo(dataObject)
     }
 
