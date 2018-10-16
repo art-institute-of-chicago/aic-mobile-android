@@ -94,12 +94,11 @@
                 app:button_icon="@drawable/ic_show_on_map"
                 app:button_text="@string/showOnMap"
                 android:visibility="visible"
-                app:layout_constraintEnd_toStartOf="@id/playAudio"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 app:layout_constraintWidth_percent=".45"
+                app:layout_constraintStart_toStartOf="parent"
                  />
 
             <edu.artic.view.DetailButton
@@ -110,13 +109,14 @@
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginDouble"
                 app:button_icon="@drawable/ic_play"
+                app:button_text="@string/playAudio"
                 android:visibility="gone"
                 tools:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
-                app:layout_constraintStart_toEndOf="@id/showOnMap"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 app:layout_constraintWidth_percent=".45"
+                app:layout_constraintStart_toEndOf="@id/showOnMap"
                 />
 
             <!--

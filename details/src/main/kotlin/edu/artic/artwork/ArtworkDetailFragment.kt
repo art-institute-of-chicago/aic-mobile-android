@@ -86,14 +86,6 @@ class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
                 }.disposedBy(disposeBag)
 
 
-        viewModel.showOnMapButtonText
-                .bindToMain(showOnMap.text())
-                .disposedBy(disposeBag)
-
-        viewModel.playAudioButtonText
-                .bindToMain(playAudio.text())
-                .disposedBy(disposeBag)
-
         viewModel.authorCulturalPlace
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)

@@ -41,6 +41,7 @@
     <string name="startTour">Start Tour</string>
     <string name="throughDate">Through %s</string>
     <string name="showOnMap">Show on Map</string>
+    <string name="playAudio">Play Audio</string>
     <string name="buyTickets">Buy Tickets</string>
     <string name="gallery">Gallery %s</string>
 
