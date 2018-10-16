@@ -14,6 +14,10 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.DateTimeFormatterBuilder
+import org.threeten.bp.format.TextStyle
+import org.threeten.bp.temporal.ChronoField
+import java.util.Locale
 
 /**
  * Implementation of [AppDataServiceProvider] that derives [ArticAppData] from local files.
@@ -38,8 +42,19 @@ class LocalAppDataServiceProvider(
      */
     private val rfc7232Formatter: DateTimeFormatter
         get() {
-            // TODO: use correct format
-            return DateTimeFormatter.ISO_DATE_TIME
+            return DateTimeFormatterBuilder()
+                    .appendText(ChronoField.DAY_OF_WEEK, TextStyle.SHORT)
+                    .appendLiteral(", ")
+                    .appendValue(ChronoField.DAY_OF_MONTH, 2)
+                    .appendLiteral(' ')
+                    .appendText(ChronoField.MONTH_OF_YEAR, TextStyle.SHORT)
+                    .appendLiteral(' ')
+                    .appendValue(ChronoField.YEAR, 4)
+                    .appendLiteral(' ')
+                    .append(DateTimeFormatter.ISO_LOCAL_TIME)
+                    .appendLiteral(' ')
+                    .appendZoneText(TextStyle.SHORT)
+                    .toFormatter(Locale.ENGLISH)
         }
 
     init {
