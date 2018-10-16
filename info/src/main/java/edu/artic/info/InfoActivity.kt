@@ -8,6 +8,7 @@ import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
+import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.findNavController
 import kotlinx.android.synthetic.main.activity_info.*
@@ -82,13 +83,9 @@ class InfoActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 0) {
-            if (navController.currentDestination?.id == R.id.informationFragment) {
-                val intent = NavigationConstants.HOME.asDeepLinkIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                startActivity(intent)
-                return
-            }
+        if (isRootFragment(R.id.informationFragment)) {
+            startActivity(linkHome())
+            return
         }
         super.onBackPressed()
     }

@@ -24,10 +24,10 @@ val museumBounds: LatLngBounds = LatLngBounds(
  */
 val centerOfMuseumOnMap = LatLng(41.879592, -87.622491)
 
-const val distanceFromCenter = 250.0f
+const val radiusFromCenterOfMuseumInMeters = 250.0f
 
 fun isLocationInMuseum(location : Location) : Boolean {
     val distance = FloatArray(1)
     Location.distanceBetween(location.latitude, location.longitude, centerOfMuseumOnMap.latitude, centerOfMuseumOnMap.longitude, distance)
-    return distance[0] <= distanceFromCenter
+    return distance[0] <= radiusFromCenterOfMuseumInMeters
 }

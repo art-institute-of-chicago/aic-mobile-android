@@ -21,9 +21,7 @@ class NavigationSelectListener(val context: Context) : BottomNavigationView.OnNa
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_home -> {
-                val intent = NavigationConstants.HOME.asDeepLinkIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                context.startActivity(intent)
+                context.startActivity(linkHome())
                 false
             }
             R.id.action_map -> {
