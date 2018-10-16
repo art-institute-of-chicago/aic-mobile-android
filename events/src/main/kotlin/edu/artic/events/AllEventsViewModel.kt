@@ -5,6 +5,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.localization.util.DateTimeHelper.Purpose.*
 import edu.artic.db.daos.ArticEventDao
@@ -69,7 +70,7 @@ class AllEventsViewModel @Inject constructor(
     }
 
     fun onClickEvent(pos: Int, event: ArticEvent) {
-        analyticsTracker.reportEvent(ScreenCategoryName.Events, AnalyticsAction.OPENED, event.title)
+        analyticsTracker.reportEvent(EventCategoryName.Event, AnalyticsAction.OPENED, event.title)
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.EventDetail(pos, event)))
     }
 
