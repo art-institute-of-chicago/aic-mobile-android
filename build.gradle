@@ -123,8 +123,10 @@ subprojects {
             } else if (localProperties.exists()) {
                 properties.load(localProperties.newDataInputStream())
                 return properties.getProperty(key)
-            } else {
+            } else if (project.hasProperty(key)) {
                 return project.findProperty(key)
+            } else {
+                return "DUMMY"
             }
         }
         compileSdkVersion sdk
