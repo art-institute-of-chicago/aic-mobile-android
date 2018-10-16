@@ -25,6 +25,7 @@ import edu.artic.db.models.ArticTour
 import edu.artic.details.R
 import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
+import edu.artic.image.updateImageScaleType
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage

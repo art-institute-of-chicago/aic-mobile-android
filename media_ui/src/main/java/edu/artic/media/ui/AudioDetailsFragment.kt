@@ -28,6 +28,7 @@ import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
 import edu.artic.image.GlideApp
+import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.language.LanguageAdapter
 import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.media.audio.AudioPlayerService

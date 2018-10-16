@@ -20,6 +20,7 @@ import edu.artic.db.models.ArticExhibition
 import edu.artic.details.R
 import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
+import edu.artic.image.listenerSetHeight
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
