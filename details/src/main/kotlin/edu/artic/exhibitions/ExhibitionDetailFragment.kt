@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.asUrlViewIntent
@@ -146,7 +147,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                             when (endpoint) {
                                 is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
-                                    analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowExhibition, exhibition.title)
+                                    analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowExhibition, exhibition.title)
                                     val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                         putExtra(NavigationConstants.ARG_EXHIBITION_OBJECT, exhibition)
                                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION

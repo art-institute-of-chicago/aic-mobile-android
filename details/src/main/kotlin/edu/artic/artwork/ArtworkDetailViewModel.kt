@@ -99,7 +99,7 @@ class ArtworkDetailViewModel @Inject constructor(
 
     fun onClickShowOnMap() {
         articObject?.let { articObj ->
-            analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowArtwork, articObj.title)
+            analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowArtwork, articObj.title)
             navigateTo.onNext(
                     Navigate.Forward(
                             NavigationEndpoint.ObjectOnMap(articObj)
