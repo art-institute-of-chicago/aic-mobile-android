@@ -5,7 +5,7 @@ import android.view.View
 import com.fuzz.rx.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.text
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.db.models.ArticObject
 import edu.artic.image.GlideApp
 import edu.artic.media.audio.AudioPlayerService
@@ -40,8 +40,8 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override val overrideStatusBarColor: Boolean
         get() = false
 
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.OnViewDetails
+    override val screenName: ScreenName
+        get() = ScreenName.OnViewDetails
 
     private val mapObject: ArticObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()

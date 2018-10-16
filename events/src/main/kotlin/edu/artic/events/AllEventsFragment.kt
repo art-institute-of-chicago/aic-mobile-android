@@ -10,7 +10,7 @@ import com.fuzz.rx.filterTo
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.events.recyclerview.AllEventsItemDecoration
 import edu.artic.navigation.NavigationConstants
@@ -22,8 +22,8 @@ import kotlin.reflect.KClass
 
 class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.Events
+    override val screenName: ScreenName
+        get() = ScreenName.Events
 
     override val viewModelClass: KClass<AllEventsViewModel>
         get() = AllEventsViewModel::class

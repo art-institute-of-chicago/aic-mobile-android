@@ -7,7 +7,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.EventCategoryName
 import edu.artic.audio.LookupResult.FoundAudio
 import edu.artic.audio.LookupResult.NotFound
 import edu.artic.audio.NumberPadElement.*
@@ -143,7 +143,7 @@ class AudioLookupViewModel @Inject constructor(
         audioService?.let{
             // Send Analytics for 'playback initiated'
             analyticsTracker.reportEvent(
-                    ScreenCategoryName.AudioGuide,
+                    EventCategoryName.PlayAudio,
                     AnalyticsAction.playAudioAudioGuide,
                     foundAudio.hostObject.title
             )

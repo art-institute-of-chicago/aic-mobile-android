@@ -13,7 +13,7 @@ import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject
@@ -45,8 +45,8 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
     override val overrideStatusBarColor: Boolean
         get() = false
 
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.Search
+    override val screenName: ScreenName
+        get() = ScreenName.Search
 
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
     private val adapter = SearchedObjectsAdapter()

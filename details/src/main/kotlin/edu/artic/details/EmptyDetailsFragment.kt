@@ -1,6 +1,6 @@
 package edu.artic.details
 
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.ui.BaseFragment
 
 class EmptyDetailsFragment: BaseFragment() {
@@ -8,7 +8,7 @@ class EmptyDetailsFragment: BaseFragment() {
         get() = R.string.noTitle
     override val layoutResId: Int
         get() = R.layout.fragment_empty_details
-    override val screenCategory: ScreenCategoryName?
+    override val screenName: ScreenName?
         get() = null
 
 

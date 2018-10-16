@@ -6,7 +6,6 @@ import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.analytics.ScreenCategoryName
 import edu.artic.db.Playable
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.audioFile
@@ -99,7 +98,7 @@ class ArtworkDetailViewModel @Inject constructor(
 
     fun onClickShowOnMap() {
         articObject?.let { articObj ->
-            analyticsTracker.reportEvent(ScreenCategoryName.Map, AnalyticsAction.mapShowArtwork, articObj.title)
+            analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowArtwork, articObj.title)
             navigateTo.onNext(
                     Navigate.Forward(
                             NavigationEndpoint.ObjectOnMap(articObj)

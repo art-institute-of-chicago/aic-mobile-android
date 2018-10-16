@@ -22,7 +22,7 @@ interface AnalyticsTracker {
 
     fun reportEvent(category: String, action: String = "", label: String = "")
 
-    fun reportEvent(categoryName: ScreenCategoryName, action: String = "", label: String = "") =
+    fun reportEvent(categoryName: ScreenName, action: String = "", label: String = "") =
             reportEvent(categoryName.screenName, action, label)
 
     fun reportEvent(categoryName: EventCategoryName, action: String = "", label: String = "") =
@@ -30,7 +30,7 @@ interface AnalyticsTracker {
 
     fun reportScreenView(name: String)
 
-    fun reportScreenView(categoryName: ScreenCategoryName) = reportScreenView(categoryName.screenName)
+    fun reportScreenView(categoryName: ScreenName) = reportScreenView(categoryName.screenName)
 }
 
 class AnalyticsTrackerImpl(context: Context,

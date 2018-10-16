@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.*
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.globalLayouts
 import com.jakewharton.rxbinding2.view.visibility
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.*
 import edu.artic.db.models.*
 import edu.artic.location.LocationPromptFragment
@@ -66,8 +66,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override val layoutResId: Int
         get() = R.layout.fragment_map
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.Map
+    override val screenName: ScreenName
+        get() = ScreenName.Map
 
     override fun hasTransparentStatusBar() = true
 

@@ -8,7 +8,7 @@ import android.view.View
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.localization.SPANISH
 import edu.artic.navigation.NavigationConstants
@@ -23,7 +23,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
     override val viewModelClass: KClass<LanguageSettingsViewModel> = LanguageSettingsViewModel::class
     override val title = R.string.languageSettings
     override val layoutResId: Int = R.layout.fragment_language_settings
-    override val screenCategory: ScreenCategoryName? = ScreenCategoryName.LanguageSettings
+    override val screenName: ScreenName? = ScreenName.LanguageSettings
 
     /**
      * Represents [LanguageSettingsFragment] is loaded in Splash.

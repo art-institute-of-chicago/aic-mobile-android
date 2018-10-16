@@ -5,7 +5,7 @@ import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import com.jakewharton.rxbinding2.view.clicks
-import edu.artic.analytics.ScreenCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.localization.LanguageSelector
@@ -27,8 +27,8 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
     @Inject
     lateinit var languageSelector: LanguageSelector
 
-    override val screenCategory: ScreenCategoryName
-        get() = ScreenCategoryName.Information
+    override val screenName: ScreenName
+        get() = ScreenName.Information
 
     override val viewModelClass: KClass<InformationViewModel>
         get() = InformationViewModel::class

@@ -9,32 +9,33 @@ package edu.artic.analytics
  * * Label (optional)
  * * Value (optional)
  */
-sealed class ScreenCategoryName(val screenName: String) {
-    object Home : ScreenCategoryName("Home")
-    object AudioGuide : ScreenCategoryName("Audio Guide")
-    object Map : ScreenCategoryName("Map")
-    object Information : ScreenCategoryName("Information")
-    object MuseumInformation : ScreenCategoryName("Museum Information")
-    object LanguageSettings : ScreenCategoryName("Language Settings")
-    object LocationSettings : ScreenCategoryName("Location Settings")
-    object Events : ScreenCategoryName("Events")
-    object OnView : ScreenCategoryName("On View")
-    object Exhibition : ScreenCategoryName("Exhibition")
-    object Tours : ScreenCategoryName("Tours")
-    object Search : ScreenCategoryName("Search")
-    object AudioPlayer : ScreenCategoryName("Audio Player")
-    object TourDetails : ScreenCategoryName("Tour Details")
-    object OnViewDetails : ScreenCategoryName("On View Details")
-    object EventDetails : ScreenCategoryName("Event Details")
-    object ArtworkSearchDetails : ScreenCategoryName("Artwork Search Details")
+sealed class ScreenName(val screenName: String) {
+    object Home : ScreenName("Home")
+    object AudioGuide : ScreenName("Audio Guide")
+    object Map : ScreenName("Map")
+    object Information : ScreenName("Information")
+    object MuseumInformation : ScreenName("Museum Information")
+    object LanguageSettings : ScreenName("Language Settings")
+    object LocationSettings : ScreenName("Location Settings")
+    object Events : ScreenName("Events")
+    object OnView : ScreenName("On View")
+    object Tours : ScreenName("Tours")
+    object Search : ScreenName("Search")
+    object AudioPlayer : ScreenName("Audio Player")
+    object TourDetails : ScreenName("Tour Details")
+    object OnViewDetails : ScreenName("On View Details")
+    object EventDetails : ScreenName("Event Details")
+    object ArtworkSearchDetails : ScreenName("Artwork Search Details")
 
     override fun toString(): String {
-        return "ScreenCategoryName(screenName='$screenName')"
+        return "ScreenName(screenName='$screenName')"
     }
 }
 
 sealed class EventCategoryName(val eventCategoryName: String) {
     object App : EventCategoryName("app")
+    object Exhibition : EventCategoryName("exhibition")
+    object Event : EventCategoryName("event")
     /**
      * NB: actions in this category may be `Locale.nameOfLanguageForAnalytics()` instead of a constant from this file.
      */
@@ -51,6 +52,7 @@ sealed class EventCategoryName(val eventCategoryName: String) {
     object SearchArtwork : EventCategoryName("search_artwork")
     object SearchPlayArtwork : EventCategoryName("search_play_artwork")
     object Member : EventCategoryName("member")
+    object Map : EventCategoryName("map")
     object Location : EventCategoryName("location")
 }
 
@@ -106,8 +108,6 @@ object AnalyticsAction {
     const val searchCategorySwitched = "category_switched"
 
     const val errorsAudioGuideFail = "audio_guide_fail"
-
-    const val headingEnabled = "headingEnabled"
 }
 
 object AnalyticsLabel {
