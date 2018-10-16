@@ -6,6 +6,7 @@ import edu.artic.db.daos.*
 import edu.artic.db.models.*
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -119,6 +120,7 @@ class AppDataManager @Inject constructor(
      */
     fun getBlob(): Observable<ProgressDataState> {
         return serviceProvider.getBlobHeaders()
+                .observeOn(Schedulers.io())
                 .flatMap { headers ->
                     // First, verify that we actually _have_ what we need. This is quick.
                     enforceSanityCheck()
