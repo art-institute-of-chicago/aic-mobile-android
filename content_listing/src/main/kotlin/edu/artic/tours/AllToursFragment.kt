@@ -1,7 +1,6 @@
 package edu.artic.tours
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
@@ -35,11 +34,13 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
     override val title = R.string.tours
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-        requireActivity().window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
-    }
+    /**
+     * The host activity can be trusted to use our preferred color,
+     * `@color/colorPrimary`, but it might have been told to hide
+     * the status bar. By returning `true` here we reaffirm that
+     * color choice.
+     */
+    override val overrideStatusBarColor: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
