@@ -29,17 +29,17 @@ class AllExhibitionsViewModel @Inject constructor(
         object Search: NavigationEndpoint()
     }
 
-    val exhibitions: Subject<List<AllExhibitionsCellViewModel>> = BehaviorSubject.create()
+    val exhibitions: Subject<List<ExhibitionCellViewModel>> = BehaviorSubject.create()
 
     init {
         exhibitionsDao.getAllExhibitions()
                 .map { list ->
-                    val viewModelList = ArrayList<AllExhibitionsCellViewModel>()
+                    val viewModelList = ArrayList<ExhibitionCellViewModel>()
                     list.forEach { exhibition ->
-                        viewModelList.add(AllExhibitionsCellViewModel(
+                        viewModelList.add(ExhibitionCellViewModel(
                                 disposeBag,
-                                languageSelector,
-                                exhibition
+                                exhibition,
+                                languageSelector
                         ))
                     }
                     return@map viewModelList
@@ -59,10 +59,13 @@ class AllExhibitionsViewModel @Inject constructor(
 
 }
 
-class AllExhibitionsCellViewModel(
+/**
+ * ViewModel responsible for building each item in the `On View` list (i.e. the list of exhibitions).
+ */
+class ExhibitionCellViewModel(
         adapterDisposeBag: DisposeBag,
-        val languageSelector: LanguageSelector,
-        val exhibition: ArticExhibition
+        val exhibition: ArticExhibition,
+        val languageSelector: LanguageSelector
 ) : CellViewModel(adapterDisposeBag) {
 
     val exhibitionTitle: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
@@ -73,9 +76,10 @@ class AllExhibitionsCellViewModel(
 
         languageSelector.currentLanguage
                 .map {
-                    exhibition.endTime.format(
-                            HomeExhibition.obtainFormatter(it)
-                    )
+                    HomeExhibition.obtainFormatter(it)
+                }
+                .map {
+                    exhibition.endTime.format(it)
                 }
                 .bindToMain(exhibitionEndDate)
                 .disposedBy(disposeBag)

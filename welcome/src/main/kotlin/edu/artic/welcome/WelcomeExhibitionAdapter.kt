@@ -6,6 +6,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import edu.artic.exhibitions.ExhibitionCellViewModel
 import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
@@ -14,15 +15,15 @@ import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
  * @author Sameer Dhakal (Fuzz)
  */
 
-class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewModel>() {
+class OnViewAdapter : AutoHolderRecyclerViewAdapter<ExhibitionCellViewModel>() {
 
-    override fun View.onBindView(item: WelcomeExhibitionCellViewModel, position: Int) {
+    override fun View.onBindView(item: ExhibitionCellViewModel, position: Int) {
 
-        item.exhibitionTitleStream
+        item.exhibitionTitle
                 .bindToMain(exhibitionTitle.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.exhibitionDate
+        item.exhibitionEndDate
                 .map {
                     context.getString(R.string.throughDate, it)
                 }

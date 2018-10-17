@@ -20,7 +20,7 @@ import javax.inject.Inject
 /**
  * ViewModel for the 'all events' screen.
  *
- * Each event is given an [AllEventsCellViewModel], and for each set of those that occur
+ * Each event is given an [EventCellViewModel], and for each set of those that occur
  * on the same date there is one [AllEventsCellHeaderViewModel] immediately preceding.
  */
 class AllEventsViewModel @Inject constructor(
@@ -55,10 +55,10 @@ class AllEventsViewModel @Inject constructor(
                             ))
                             lastHeaderPosition = viewModelList.size - 1
                         }
-                        viewModelList.add(AllEventsCellViewModel(
+                        viewModelList.add(EventCellViewModel(
                                 viewDisposeBag,
-                                languageSelector,
                                 tour,
+                                languageSelector,
                                 lastHeaderPosition
                         ))
                     }
@@ -106,12 +106,16 @@ class AllEventsCellHeaderViewModel(
     }
 }
 
-class AllEventsCellViewModel(
+/**
+ * ViewModel responsible for building the event summary list.
+ */
+class EventCellViewModel(
         adapterDisposeBag: DisposeBag,
-        languageSelector: LanguageSelector,
         event: ArticEvent,
-        val headerPosition: Int
+        languageSelector: LanguageSelector,
+        val headerPosition: Int = -1
 ) : AllEventsCellBaseViewModel(adapterDisposeBag, event) {
+
     val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
     val eventDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
     val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL)

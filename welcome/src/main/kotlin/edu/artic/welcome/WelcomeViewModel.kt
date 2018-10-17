@@ -5,8 +5,6 @@ import com.fuzz.rx.*
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.localization.util.DateTimeHelper.Purpose.*
-import edu.artic.base.utils.orIfNullOrBlank
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.daos.ArticTourDao
@@ -14,9 +12,11 @@ import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
+import edu.artic.events.EventCellViewModel
+import edu.artic.exhibitions.ExhibitionCellViewModel
 import edu.artic.localization.LanguageSelector
 import edu.artic.membership.MemberInfoPreferencesManager
-import edu.artic.viewmodel.CellViewModel
+import edu.artic.tours.TourCellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
@@ -49,9 +49,9 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
 
     val shouldPeekTourSummary: Subject<Boolean> = BehaviorSubject.create()
-    val tours: Subject<List<WelcomeTourCellViewModel>> = BehaviorSubject.create()
-    val exhibitions: Subject<List<WelcomeExhibitionCellViewModel>> = BehaviorSubject.create()
-    val events: Subject<List<WelcomeEventCellViewModel>> = BehaviorSubject.create()
+    val tours: Subject<List<TourCellViewModel>> = BehaviorSubject.create()
+    val exhibitions: Subject<List<ExhibitionCellViewModel>> = BehaviorSubject.create()
+    val events: Subject<List<EventCellViewModel>> = BehaviorSubject.create()
     val welcomePrompt: Subject<String> = BehaviorSubject.create()
     val currentCardHolder: Subject<String> = BehaviorSubject.create()
 
@@ -63,9 +63,9 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
         toursDao.getTourSummary()
                 .map {
-                    val viewModelList = ArrayList<WelcomeTourCellViewModel>()
+                    val viewModelList = ArrayList<TourCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeTourCellViewModel(disposeBag, it, languageSelector))
+                        viewModelList.add(TourCellViewModel(disposeBag, it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(tours)
@@ -73,9 +73,9 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
         exhibitionDao.getExhibitionSummary()
                 .map {
-                    val viewModelList = ArrayList<WelcomeExhibitionCellViewModel>()
+                    val viewModelList = ArrayList<ExhibitionCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeExhibitionCellViewModel(disposeBag, it, languageSelector))
+                        viewModelList.add(ExhibitionCellViewModel(disposeBag, it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(exhibitions)
@@ -83,9 +83,9 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
         eventsDao.getEventSummary()
                 .map {
-                    val viewModelList = ArrayList<WelcomeEventCellViewModel>()
+                    val viewModelList = ArrayList<EventCellViewModel>()
                     it.forEach {
-                        viewModelList.add(WelcomeEventCellViewModel(disposeBag, it, languageSelector))
+                        viewModelList.add(EventCellViewModel(disposeBag, it, languageSelector))
                     }
                     return@map viewModelList
                 }.bindTo(events)
@@ -162,111 +162,4 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
 
 }
 
-/**
- * ViewModel responsible for building each item in the tour summary list.
- */
-class WelcomeTourCellViewModel(
-        adapterDisposeBag: DisposeBag,
-        val tour: ArticTour,
-        languageSelector: LanguageSelector
-) : CellViewModel(adapterDisposeBag) {
 
-    /**
-     * Which translation of [tour] currently matches the
-     * [App-level language selection][LanguageSelector.getAppLocale].
-     */
-    private val tourTranslation: Subject<ArticTour.Translation> = BehaviorSubject.create()
-
-    val tourTitle: Subject<String> = BehaviorSubject.create()
-    val tourDescription: Subject<String> = BehaviorSubject.create()
-    val tourStops: Subject<String> = BehaviorSubject.createDefault(tour.tourStops.count().toString())
-    val tourDuration: Subject<String> = BehaviorSubject.create()
-    val tourImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.standardImageUrl)
-
-    init {
-
-        languageSelector.currentLanguage
-                .map {
-                    languageSelector.selectFrom(tour.allTranslations)
-                }
-                .bindTo(tourTranslation)
-                .disposedBy(disposeBag)
-
-        tourTranslation
-                .map {
-                    it.description.orIfNullOrBlank(tour.description).orEmpty()
-                }
-                .bindToMain(tourDescription)
-                .disposedBy(disposeBag)
-
-        tourTranslation
-                .map {
-                    it.title.orIfNullOrBlank(tour.title).orEmpty()
-                }
-                .bindToMain(tourTitle)
-                .disposedBy(disposeBag)
-
-        tourTranslation
-                .map {
-                    it.tour_duration.orIfNullOrBlank(tour.tourDuration).orEmpty()
-                }
-                .bindToMain(tourDuration)
-                .disposedBy(disposeBag)
-    }
-}
-
-/**
- * ViewModel responsible for building each item in the `On View` list (i.e. the list of exhibitions).
- */
-class WelcomeExhibitionCellViewModel(
-        adapterDisposeBag: DisposeBag,
-        val exhibition: ArticExhibition,
-        val languageSelector: LanguageSelector
-) : CellViewModel(adapterDisposeBag) {
-
-    val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
-    val exhibitionDate: Subject<String> = BehaviorSubject.create()
-    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.imageUrl.orEmpty())
-
-    init {
-
-        languageSelector.currentLanguage
-                .map {
-                    HomeExhibition.obtainFormatter(it)
-                }
-                .map {
-                    exhibition.endTime.format(it)
-                }
-                .bindToMain(exhibitionDate)
-                .disposedBy(disposeBag)
-
-    }
-
-}
-
-/**
- * ViewModel responsible for building the event summary list.
- */
-class WelcomeEventCellViewModel(
-        adapterDisposeBag: DisposeBag,
-        val event: ArticEvent,
-        val languageSelector: LanguageSelector
-) : CellViewModel(adapterDisposeBag) {
-
-    val eventTitle: Subject<String> = BehaviorSubject.createDefault(event.title)
-    val eventShortDescription: Subject<String> = BehaviorSubject.createDefault(event.short_description.orEmpty())
-    val eventTime: Subject<String> = BehaviorSubject.create()
-    val eventImageUrl: Subject<String> = BehaviorSubject.createDefault(event.imageURL)
-
-    init {
-        languageSelector.currentLanguage
-                .map {
-                    HomeEvent.obtainFormatter(it)
-                }
-                .map {
-                    event.startTime.format(it)
-                }
-                .bindTo(eventTime)
-                .disposedBy(disposeBag)
-    }
-}

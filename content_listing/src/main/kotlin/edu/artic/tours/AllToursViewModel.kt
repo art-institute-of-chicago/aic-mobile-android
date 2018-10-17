@@ -28,15 +28,15 @@ class AllToursViewModel @Inject constructor(
         data class TourDetails(val pos: Int, val tour: ArticTour) : NavigationEndpoint()
     }
 
-    val tours: Subject<List<AllToursCellViewModel>> = BehaviorSubject.create()
+    val tours: Subject<List<TourCellViewModel>> = BehaviorSubject.create()
     val intro: Subject<String> = BehaviorSubject.createDefault("")
 
     init {
         toursDao.getAllTours()
                 .map { list ->
-                    val viewModelList = ArrayList<AllToursCellViewModel>()
+                    val viewModelList = ArrayList<TourCellViewModel>()
                     list.forEach { tour ->
-                        viewModelList.add(AllToursCellViewModel(disposeBag, tour, languageSelector))
+                        viewModelList.add(TourCellViewModel(disposeBag, tour, languageSelector))
                     }
                     return@map viewModelList
                 }
@@ -67,9 +67,9 @@ class AllToursViewModel @Inject constructor(
 }
 
 /**
- * This class is fundamentally the same as `WelcomeTourCellViewModel` in the :welcome module.
+ * ViewModel responsible for building each item in the tour summary list.
  */
-class AllToursCellViewModel(
+class TourCellViewModel(
         adapterDisposeBag: DisposeBag,
         val tour: ArticTour,
         languageSelector: LanguageSelector

@@ -7,7 +7,7 @@ import android.view.View
 import edu.artic.content.listing.R
 import edu.artic.events.AllEventsAdapter
 import edu.artic.events.AllEventsCellHeaderViewModel
-import edu.artic.events.AllEventsCellViewModel
+import edu.artic.events.EventCellViewModel
 
 class AllEventsItemDecoration(
         context: Context,
@@ -32,7 +32,7 @@ class AllEventsItemDecoration(
                     outRect.top = if (position == 0) headerVerticalSpacing else verticalSpacing
                     outRect.bottom = halfOfVertical
                 }
-                is AllEventsCellViewModel -> {
+                is EventCellViewModel -> {
                     val adjustedPosition = position - (it.headerPosition - 1)
                     val column = (adjustedPosition) % spanCount // item column
                     outRect.left = horizontalSpacing - column * horizontalSpacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
