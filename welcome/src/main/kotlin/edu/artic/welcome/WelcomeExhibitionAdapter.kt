@@ -33,7 +33,8 @@ class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewMod
                 .subscribe {
                     GlideApp.with(context)
                             .load(it)
-                            .placeholder(R.drawable.placeholder_medium_square)
+                            .placeholder(R.color.placeholderBackground)
+                            .error(R.drawable.placeholder_medium_square)
                             .into(image)
                 }.disposedBy(item.viewDisposeBag)
 
