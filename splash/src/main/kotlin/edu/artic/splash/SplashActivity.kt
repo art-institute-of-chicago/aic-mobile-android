@@ -195,8 +195,10 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         val intent = NavigationConstants.HOME.asDeepLinkIntent()
         val options = ActivityOptions
                 .makeSceneTransitionAnimation(this, textureView, "museumImage")
-        startActivity(intent, options.toBundle())
-        finishAfterTransition()
+        if (!isFinishing) {
+            startActivity(intent, options.toBundle())
+            finishAfterTransition()
+        }
     }
 
     /**
