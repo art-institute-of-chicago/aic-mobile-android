@@ -119,3 +119,20 @@ data class ArticObject(
 val ArticObject.audioFile: ArticAudioFile?
     get() = this.audioCommentary.firstOrNull()?.audioFile
 
+/**
+ *  Converts ArticObject to [ArticSearchArtworkObject].
+ */
+fun ArticObject.asArticSearchArtworkObject(gallery: ArticGallery? = null) : ArticSearchArtworkObject {
+    return ArticSearchArtworkObject(
+            artworkId = this.id.toString(),
+            backingObject = this,
+            title = this.title,
+            thumbnailUrl = this.thumbUrl,
+            imageUrl = this.largeImageUrl,
+            artistTitle = this.tombstone,
+            artistDisplay = this.artistCulturePlaceDelim,
+            location = this.location,
+            floor = this.floor,
+            gallery = gallery
+    )
+}

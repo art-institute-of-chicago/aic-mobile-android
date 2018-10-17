@@ -4,6 +4,7 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.ArticSearchObjectDao
 import io.reactivex.rxkotlin.Observables
@@ -19,8 +20,9 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                                                             objectDao: ArticObjectDao,
                                                             analyticsTracker: AnalyticsTracker,
                                                             searchManager: SearchResultsManager,
-                                                            dataObjectDao: ArticDataObjectDao
-) : SearchBaseViewModel(analyticsTracker, searchManager, dataObjectDao) {
+                                                            dataObjectDao: ArticDataObjectDao,
+                                                            galleryDao: ArticGalleryDao
+) : SearchBaseViewModel(analyticsTracker, searchManager, dataObjectDao, galleryDao) {
 
     private val suggestedKeywords: Subject<List<SearchTextCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
