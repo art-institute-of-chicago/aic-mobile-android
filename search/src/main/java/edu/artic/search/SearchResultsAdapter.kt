@@ -53,7 +53,8 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                         .subscribe {
                             GlideApp.with(context)
                                     .load(it)
-                                    .placeholder(R.drawable.placeholder_thumb)
+                                    .placeholder(R.color.placeholderBackground)
+                                    .error(R.drawable.placeholder_thumb)
                                     .into(image)
                         }.disposedBy(item.viewDisposeBag)
                 item.isHeadphonesVisible
@@ -99,7 +100,8 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                         .subscribe {
                             GlideApp.with(this)
                                     .load(it)
-                                    .placeholder(R.drawable.circular_placeholder)
+                                    .placeholder(R.drawable.circular_placeholder_no_frame)
+                                    .error(R.drawable.circular_placeholder)
                                     .apply(RequestOptions.circleCropTransform())
                                     .into(circularImage)
                         }

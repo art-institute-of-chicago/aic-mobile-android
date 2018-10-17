@@ -109,14 +109,16 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
 
                     GlideApp.with(this)
                             .load(it)
-                            .placeholder(R.drawable.placeholder_large)
+                            .error(R.drawable.placeholder_large)
+                            .placeholder(R.color.placeholderBackground)
                             .updateImageScaleType(image, scaleInfo)
                             .into(image)
 
 
                     GlideApp.with(this)
                             .load(it)
-                            .placeholder(R.drawable.placeholder_thumb)
+                            .placeholder(R.color.placeholderBackground)
+                            .error(R.drawable.placeholder_thumb)
                             .into(tourDetailIntroCell.image)
 
                 }.disposedBy(disposeBag)
