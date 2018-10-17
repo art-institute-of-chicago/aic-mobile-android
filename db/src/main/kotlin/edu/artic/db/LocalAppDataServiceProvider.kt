@@ -30,6 +30,7 @@ import java.util.Locale
  * [exhibitions][getExhibitions].
  */
 class LocalAppDataServiceProvider(
+        private val assetName: String?,
         private val moshi: Moshi,
         private val context: Context,
         dataObjectDao: ArticDataObjectDao
@@ -39,6 +40,21 @@ class LocalAppDataServiceProvider(
 
     private val zeroResults = ResultPagination(0, 0, 0, 0, 0)
 
+    private val noDataErrorMessage: String
+        get() {
+            val furtherInfo = if (BuildConfig.DEBUG) {
+                if (assetName.isNullOrEmpty() || assetName == "null") {
+                    "\n\nPerhaps the 'blob_url' property was not set?\n"
+                } else {
+                    "\n\nThere's no asset called \"$assetName\".\n\n" +
+                            "Please refer to the 'How To Build' section of the project README for details."
+                }
+            } else {
+                "\n\nPlease let us know so we can release an update that fixes the issue."
+            }
+
+            return "Unfortunately, this version of the app was built incorrectly." + furtherInfo
+        }
 
     /**
      * The returned object can parse and print timestamps in accordance with
@@ -88,10 +104,15 @@ class LocalAppDataServiceProvider(
     override fun getBlob(): Observable<ProgressDataState> {
         return Observable.create { observer ->
 
+            if (assetName == null) {
+                observer.onError(NoAppDataException(noDataErrorMessage))
+                return@create
+            }
+
             val stream: InputStream = try {
-                context.assets.open("app-data-v2.json")
+                context.assets.open(assetName)
             } catch (fnf: FileNotFoundException) {
-                observer.onError(NoAppDataException(fnf))
+                observer.onError(NoAppDataException(noDataErrorMessage, fnf))
                 return@create
             }
 
@@ -105,7 +126,7 @@ class LocalAppDataServiceProvider(
                     )
                     observer.onComplete()
                 } else {
-                    observer.onError(NoAppDataException())
+                    observer.onError(NoAppDataException(noDataErrorMessage))
                 }
 
                 return@create
@@ -137,13 +158,14 @@ class LocalAppDataServiceProvider(
         }
     }
 
-    class NoAppDataException(cause: Throwable? = null): NullPointerException(
-            "Unfortunately, we can't figure out where the application data is stored." +
-            "\nDouble-check the 'How To Build' section of the project README."
-    ) {
+    class NoAppDataException(detailMessage: String, cause: Throwable? = null) :
+            NullPointerException(detailMessage)
+    {
 
         init {
-            initCause(cause)
+            if (cause != null) {
+                initCause(cause)
+            }
         }
     }
 

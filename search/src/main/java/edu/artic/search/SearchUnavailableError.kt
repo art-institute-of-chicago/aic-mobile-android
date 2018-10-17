@@ -14,5 +14,9 @@ package edu.artic.search
  */
 object SearchUnavailableError : Error(
         "Searching for Artwork, Tours, or Events will not work with this installation." +
-                " Double-check the section labeled 'How To Build' in the application README."
+                if (BuildConfig.DEBUG) {
+                    " Please refer to the 'How To Build' section of the project README for details."
+                } else {
+                    " Please let us know so we can release an update that fixes the issue."
+                }
 )
