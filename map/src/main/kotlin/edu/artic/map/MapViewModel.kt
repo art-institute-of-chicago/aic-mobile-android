@@ -663,6 +663,14 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
         locationService.requestTrackingUserLocation()
 
+        if (searchedObject == null &&
+                searchExhibition == null &&
+                searchedAnnotationType == null &&
+                tourInfo.first == null &&
+                tourInfo.second == null) {
+            return
+        }
+
         /**
          * Store the search object to memory.
          * Used in [MapViewModel.loadMapDisplayMode] to determine the map display mode.
