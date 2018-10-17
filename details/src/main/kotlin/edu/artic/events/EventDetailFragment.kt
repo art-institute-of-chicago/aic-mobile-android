@@ -25,6 +25,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_event_details.*
+import java.util.Locale
 import kotlin.reflect.KClass
 
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
@@ -125,9 +126,9 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
         viewModel.eventButtonText
                 .map {
-                    when(it) {
-                        "Buy Tickets" -> getString(R.string.buyTickets)
-                        "Register" -> getString(R.string.register)
+                    when(it.toLowerCase(Locale.ROOT)) {
+                        "buy tickets" -> getString(R.string.buyTickets)
+                        "register" -> getString(R.string.register)
                         else -> it
                     }
                 }
