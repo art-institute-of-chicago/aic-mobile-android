@@ -4,13 +4,15 @@ import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.db.daos.ArticDataObjectDao
+import edu.artic.db.daos.ArticGalleryDao
 import javax.inject.Inject
 
 class SearchArtworkViewModel @Inject constructor(
         searchManager: SearchResultsManager,
         analyticsTracker: AnalyticsTracker,
-        dataObjectDao: ArticDataObjectDao
-) : SearchBaseViewModel(analyticsTracker, searchManager, dataObjectDao) {
+        dataObjectDao: ArticDataObjectDao,
+        galleryDao: ArticGalleryDao
+) : SearchBaseViewModel(analyticsTracker, searchManager, dataObjectDao, galleryDao) {
 
     sealed class NavigationEndpoint
 
