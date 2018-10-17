@@ -122,8 +122,14 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .bindToMain(registerToday.visibility())
                 .disposedBy(disposeBag)
 
-
         viewModel.eventButtonText
+                .map {
+                    when(it) {
+                        "Buy Tickets" -> getString(R.string.buyTickets)
+                        "Register" -> getString(R.string.register)
+                        else -> it
+                    }
+                }
                 .bindToMain(registerToday.text())
                 .disposedBy(disposeBag)
 
