@@ -20,6 +20,7 @@ import edu.artic.db.models.ArticEvent
 import edu.artic.details.R
 import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
+import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
