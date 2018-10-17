@@ -99,7 +99,8 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                         .subscribe {
                             GlideApp.with(this)
                                     .load(it)
-                                    .placeholder(R.drawable.circular_placeholder)
+                                    .placeholder(R.drawable.circular_placeholder_no_frame)
+                                    .error(R.drawable.circular_placeholder)
                                     .apply(RequestOptions.circleCropTransform())
                                     .into(circularImage)
                         }
