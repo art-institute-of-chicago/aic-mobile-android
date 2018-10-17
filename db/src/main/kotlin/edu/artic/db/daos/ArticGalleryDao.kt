@@ -6,6 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import edu.artic.db.models.ArticGallery
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface ArticGalleryDao {
@@ -15,6 +16,9 @@ interface ArticGalleryDao {
 
     @Query("select * from ArticGallery where galleryId = :id")
     fun getGalleryForGalleryIdSynchronously(id: String): ArticGallery?
+
+    @Query("select * from ArticGallery where title = :title LIMIT 1")
+    fun getGalleryByTitle(title: String): Single<ArticGallery>
 
     /**
      * Retrieve all galleries with an id in the given list.
