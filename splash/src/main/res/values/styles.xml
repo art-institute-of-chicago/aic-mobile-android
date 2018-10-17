@@ -4,7 +4,14 @@
     <style name="SplashTheme" parent="AppTheme.CustomToolbar">
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:windowBackground">@drawable/splash_gradient</item>
+
+        <!-- 'colorAccent' is used as default tint color for Buttons -->
         <item name="colorAccent">@color/sea</item>
+        <item name="android:colorAccent">@color/sea</item>
+
+        <!-- 'colorControlActivated' is used by the progress in ProgressBars -->
+        <item name="colorControlActivated">@color/white</item>
+        <item name="android:colorControlActivated">@color/white</item>
 
         <!-- Attributes for edu.artic.localization.ui.LanguageSettingsFragment -->
         <item name="languageSettingsBackgroundColor">@color/ugly_blue</item>
