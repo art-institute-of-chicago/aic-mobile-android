@@ -16,7 +16,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.fragment_map.view.*
 import javax.inject.Inject
 
 
