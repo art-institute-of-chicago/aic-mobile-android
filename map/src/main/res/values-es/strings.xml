@@ -14,4 +14,9 @@
     <string name="tutorial_mark_first_floor">Usted está en Primer piso.\nTocar para cambiar las pistas.</string>
     <string name="tutorial_mark_second_floor">Usted está en Segundo piso.\nTocar para cambiar las pistas.</string>
     <string name="tutorial_mark_third_floor">Usted está en Tercer piso.\nTocar para cambiar las pistas.</string>
+
+    <string name="lowerLevel">Planta baja</string>
+    <string name="firstLevel">Primer piso</string>
+    <string name="secondLevel">Segundo piso</string>
+    <string name="thirdLevel">Tercer piso</string>
 </resources>

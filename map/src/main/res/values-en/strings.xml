@@ -13,4 +13,8 @@
     <string name="tutorial_explore_text">Pinch to explore the map.</string>
     <string name="tutorial_audio_pins_title">Tap Audio Pins to Listen</string>
     <string name="tutorial_audio_pins_text">Transparent pins indicate audio on a different floor.</string>
+    <string name="lowerLevel">Lower Level</string>
+    <string name="firstLevel">First Level</string>
+    <string name="secondLevel">Second Level</string>
+    <string name="thirdLevel">Third Level</string>
 </resources>

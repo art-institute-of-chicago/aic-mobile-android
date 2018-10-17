@@ -14,4 +14,9 @@
     <string name="tutorial_mark_first_floor">您在一层.\n点击更换地板.</string>
     <string name="tutorial_mark_second_floor">您在二层.\n点击更换地板.</string>
     <string name="tutorial_mark_third_floor">您在三层.\n点击更换地板.</string>
+
+    <string name="lowerLevel">下层</string>
+    <string name="firstLevel">一层</string>
+    <string name="secondLevel">二层</string>
+    <string name="thirdLevel">三层</string>
 </resources>
