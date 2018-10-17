@@ -104,7 +104,7 @@ class LocalAppDataServiceProvider(
     override fun getBlob(): Observable<ProgressDataState> {
         return Observable.create { observer ->
 
-            if (assetName == null) {
+            if (assetName == null || !BuildConfig.DEBUG) {
                 observer.onError(NoAppDataException(noDataErrorMessage))
                 return@create
             }
