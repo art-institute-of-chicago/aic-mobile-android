@@ -1,7 +1,10 @@
 package edu.artic.tours
 
+import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.bindTo
+import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
+import edu.artic.base.utils.orIfNullOrBlank
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticTour
@@ -17,7 +20,8 @@ import javax.inject.Inject
 class AllToursViewModel @Inject constructor(
         languageSelector: LanguageSelector,
         generalInfoDao: GeneralInfoDao,
-        toursDao: ArticTourDao) : NavViewViewModel<AllToursViewModel.NavigationEndpoint>() {
+        toursDao: ArticTourDao
+) : NavViewViewModel<AllToursViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         object Search : NavigationEndpoint()
@@ -32,7 +36,7 @@ class AllToursViewModel @Inject constructor(
                 .map { list ->
                     val viewModelList = ArrayList<AllToursCellViewModel>()
                     list.forEach { tour ->
-                        viewModelList.add(AllToursCellViewModel(tour))
+                        viewModelList.add(AllToursCellViewModel(disposeBag, tour, languageSelector))
                     }
                     return@map viewModelList
                 }
@@ -62,10 +66,55 @@ class AllToursViewModel @Inject constructor(
     }
 }
 
-class AllToursCellViewModel(val tour: ArticTour) : CellViewModel(null) {
-    val tourTitle: Subject<String> = BehaviorSubject.createDefault(tour.title)
-    val tourDescription: Subject<String> = BehaviorSubject.createDefault(tour.description)
-    val tourStops: Subject<String> = BehaviorSubject.createDefault("${tour.tourStops.count()}")
-    val tourDuration: Subject<String> = BehaviorSubject.createDefault(tour.tourDuration)
+/**
+ * This class is fundamentally the same as `WelcomeTourCellViewModel` in the :welcome module.
+ */
+class AllToursCellViewModel(
+        adapterDisposeBag: DisposeBag,
+        val tour: ArticTour,
+        languageSelector: LanguageSelector
+) : CellViewModel(adapterDisposeBag) {
+
+    /**
+     * Which translation of [tour] currently matches the
+     * [App-level language selection][LanguageSelector.getAppLocale].
+     */
+    private val tourTranslation: Subject<ArticTour.Translation> = BehaviorSubject.create()
+
+    val tourTitle: Subject<String> = BehaviorSubject.create()
+    val tourDescription: Subject<String> = BehaviorSubject.create()
+    val tourStops: Subject<String> = BehaviorSubject.createDefault(tour.tourStops.count().toString())
+    val tourDuration: Subject<String> = BehaviorSubject.create()
     val tourImageUrl: Subject<String> = BehaviorSubject.createDefault(tour.standardImageUrl)
+
+    init {
+
+        languageSelector.currentLanguage
+                .map {
+                    languageSelector.selectFrom(tour.allTranslations)
+                }
+                .bindTo(tourTranslation)
+                .disposedBy(disposeBag)
+
+        tourTranslation
+                .map {
+                    it.description.orIfNullOrBlank(tour.description).orEmpty()
+                }
+                .bindToMain(tourDescription)
+                .disposedBy(disposeBag)
+
+        tourTranslation
+                .map {
+                    it.title.orIfNullOrBlank(tour.title).orEmpty()
+                }
+                .bindToMain(tourTitle)
+                .disposedBy(disposeBag)
+
+        tourTranslation
+                .map {
+                    it.tour_duration.orIfNullOrBlank(tour.tourDuration).orEmpty()
+                }
+                .bindToMain(tourDuration)
+                .disposedBy(disposeBag)
+    }
 }
