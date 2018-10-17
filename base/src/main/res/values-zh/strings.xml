@@ -32,6 +32,7 @@
     <string name="throughDate">通過 %s</string>
     <string name="buyTickets">购票</string>
     <string name="playAudio">播放音频</string>
+    <string name="register">寄存器</string>
     <string name="showOnMap" translatable="false">在地图上显示</string>
     <string name="welcomeUser">欢迎, %s</string>
     <string name="gallery">画廊 %s</string>

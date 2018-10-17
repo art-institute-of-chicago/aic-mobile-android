@@ -33,6 +33,7 @@
     <string name="showOnMap">Ver mapa</string>
     <string name="playAudio">Reproducir audio</string>
     <string name="buyTickets">Comprar boletos</string>
+    <string name="register">Registro</string>
     <string name="gallery">Galería %s</string>
     <string name="welcomeUser">Bienvenido, %s</string>
 </resources>

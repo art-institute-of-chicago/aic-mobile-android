@@ -25,6 +25,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_event_details.*
+import kotlinx.android.synthetic.main.fragment_exhibition_details.view.*
 import kotlin.reflect.KClass
 
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
@@ -124,6 +125,19 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
 
         viewModel.eventButtonText
+                .filter { it==("Buy Tickets")}
+                .map { R.string.buyTickets }
+                .bindToMain(registerToday.text())
+                .disposedBy(disposeBag)
+
+        viewModel.eventButtonText
+                .map {
+                    when(it) {
+                        "Buy Tickets" -> getString(R.string.buyTickets)
+                        "Register" -> getString(R.string.register)
+                        else -> it
+                    }
+                }
                 .bindToMain(registerToday.text())
                 .disposedBy(disposeBag)
 

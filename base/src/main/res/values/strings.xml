@@ -43,6 +43,7 @@
     <string name="showOnMap">Show on Map</string>
     <string name="playAudio">Play Audio</string>
     <string name="buyTickets">Buy Tickets</string>
+    <string name="register">Register</string>
     <string name="gallery">Gallery %s</string>
 
     <string name="errorDialogTitle">Error</string>
