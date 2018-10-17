@@ -59,6 +59,8 @@ build process.
 ./gradlew assembleDebug assembleRelease
 ```
 
+### Environment Variables
+
 There is one hidden aspect of the build process not available for public
 consumption which is the keystore and keys used in the app. Due to
 infrastructure difference between our public build server and release of
@@ -94,3 +96,20 @@ keystore_password=
 keystore_alias=
 keystore_alias_password=
 ```
+
+### Bundling App Data as JSON (_debug builds only_)
+
+As a special case, if `blob_url` is not defined or is not a string
+starting with `https://`, the app can run in a reduced capacity. This
+feature is intended for `debug` configurations only and thus does
+nothing in release builds.
+
+If a JSON file
+1. was present in either `db/src/main/assets/` or `db/src/debug/assets/`
+at build time
+2. had the name `app-data-v2.json`
+and
+3. conforms to the expected format of `ArticAppData`
+
+then the content of that JSON file will overwrite whatever content is
+currently in the database.
