@@ -46,24 +46,28 @@ The project maintains an overview of the more interesting modules in
 
 ## How to Build
 
-This project should build perfectly as is using the standard build commands, but is unlikely to 
-function properly without key attributes defined in the build process. 
+This project should build perfectly as is using the standard build
+commands, but is unlikely to function properly without key attributes
+defined in the build process.
 
 Details below:
 
-In .circleci/ you will find a `config.yml` which controls our circle ci build process.
+In .circleci/ you will find a `config.yml` which controls our circle ci
+build process.
 
 ```aidl
 ./gradlew assembleDebug assembleRelease
 ```
 
-There is one hidden aspect of the build process not available for public consumption which
-is the keystore and keys used in the app. Due to infrastructure difference between our public
-build server and release of the app we handle injecting these variables into our build process
-by using the method `envVariable(key, isRelease)` within the gradle files.
+There is one hidden aspect of the build process not available for public
+consumption which is the keystore and keys used in the app. Due to
+infrastructure difference between our public build server and release of
+the app we handle injecting these variables into our build process by
+using the method `envVariable(key, isRelease)` within the gradle files.
 
-This function loads all the appropriate values for the keys from one of three places depending on 
-where you define them. You can see the full set of values needed in `env.sample` 
+This function loads all the appropriate values for the keys from one of
+three places depending on where you define them. You can see the full
+set of values needed in `env.sample`
 
 The values get loaded in the following order:
 
