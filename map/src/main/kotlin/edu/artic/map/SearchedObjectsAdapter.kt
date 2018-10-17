@@ -86,8 +86,8 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
         item.title
                 .bindToMain(view.exhibitionTitle.text())
                 .disposedBy(item.viewDisposeBag)
-        item.description
-                .bindToMain(view.exhibitionDetails.text())
+        item.floor
+                .bindToMain(view.exhibitionFloor.textRes())
                 .disposedBy(item.viewDisposeBag)
     }
 

@@ -16,6 +16,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import kotlinx.android.synthetic.main.fragment_map.view.*
 import javax.inject.Inject
 
 
@@ -242,14 +243,20 @@ class ArtworkViewModel(
  */
 class ExhibitionViewModel(val item: ArticExhibition) : SearchObjectBaseViewModel(null) {
     val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.artworks)
-    val description: Subject<String> = BehaviorSubject.create()
+    val floor: Subject<Int> = BehaviorSubject.create()
 
     init {
         title.onNext(item.title?.replace("\r", "\n"))
         item.legacyImageUrl?.let {
             imageUrl.onNext(it)
         }
-        description.onNext(item.short_description.orEmpty())
+        when (item.floor) {
+            0 -> floor.onNext(R.string.lowerLevel)
+            1 -> floor.onNext(R.string.firstLevel)
+            2 -> floor.onNext(R.string.secondLevel)
+            3 -> floor.onNext(R.string.thirdLevel)
+            else -> floor.onNext(R.string.noTitle)
+        }
     }
 }
 
