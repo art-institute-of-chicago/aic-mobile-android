@@ -1,0 +1,13 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+
+        <shape android:shape="oval">
+            <solid android:color="@color/tourPlaceholderBackground" />
+            <size
+                android:width="49dp"
+                android:height="49dp" />
+        </shape>
+    </item>
+
+
+</layer-list>
