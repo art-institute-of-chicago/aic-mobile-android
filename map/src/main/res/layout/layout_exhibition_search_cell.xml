@@ -70,7 +70,7 @@
         tools:text="Mona Lisa" />
 
     <TextView
-        android:id="@+id/exhibitionDetails"
+        android:id="@+id/exhibitionFloor"
         style="@style/ListItemTitle2White"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
