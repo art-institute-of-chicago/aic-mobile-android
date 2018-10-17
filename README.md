@@ -67,11 +67,12 @@ using the method `envVariable(key, isRelease)` within the gradle files.
 
 This function loads all the appropriate values for the keys from one of
 three places depending on where you define them. You can see the full
-set of values needed in `env.sample`
+set of values needed in `env.sample`.
 
-The values get loaded in the following order:
+These values are loaded from one of the following sources, listed here
+in decreasing order of priority:
 
-* release.env or dev.env (Deployments use this model)
+* release.env or debug.env (Deployments use this model)
 * local.properties (Development uses this model primarily)
 * environment variables (Circle CI, uses this model)
 
