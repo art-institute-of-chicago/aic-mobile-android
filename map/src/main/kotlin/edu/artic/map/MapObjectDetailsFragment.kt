@@ -63,7 +63,8 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
         viewModel.image.subscribe {
             GlideApp.with(this)
                     .load(it)
-                    .placeholder(R.drawable.placeholder_thumb)
+                    .placeholder(R.color.placeholderBackground)
+                    .error(R.drawable.placeholder_thumb)
                     .into(image)
         }.disposedBy(disposeBag)
 

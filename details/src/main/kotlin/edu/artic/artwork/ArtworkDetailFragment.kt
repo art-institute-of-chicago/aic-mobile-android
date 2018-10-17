@@ -78,7 +78,8 @@ class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
                     GlideApp.with(this)
                             .load(it)
                             .apply(options)
-                            .placeholder(R.drawable.placeholder_large)
+                            .error(R.drawable.placeholder_large)
+                            .placeholder(R.color.placeholderBackground)
                             //.transition(DrawableTransitionOptions.withCrossFade()) removing cross fade related to https://github.com/bumptech/glide/issues/363
                             .listenerAnimateSharedTransaction(this, image)
                             .into(image)
