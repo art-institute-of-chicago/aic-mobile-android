@@ -100,7 +100,8 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                     GlideApp.with(this)
                             .load(it)
                             .apply(options)
-                            .placeholder(R.drawable.placeholder_large)
+                            .placeholder(R.color.placeholderBackground)
+                            .error(R.drawable.placeholder_large)
                             .listenerSetHeight(image, scaleInfo)
                             .into(image)
                 }

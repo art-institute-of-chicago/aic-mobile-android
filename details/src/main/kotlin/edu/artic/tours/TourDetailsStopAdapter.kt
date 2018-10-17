@@ -37,7 +37,8 @@ class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCell
                 .subscribe {
                     GlideApp.with(this)
                             .load(it)
-                            .placeholder(R.drawable.placeholder_thumb)
+                            .placeholder(R.color.placeholderBackground)
+                            .error(R.drawable.placeholder_thumb)
                             .into(image)
                 }
                 .disposedBy(item.viewDisposeBag)
