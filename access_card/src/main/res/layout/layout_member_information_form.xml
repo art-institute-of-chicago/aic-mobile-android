@@ -62,7 +62,6 @@
         android:layout_marginTop="@dimen/marginOneHalf"
         android:autofillHints="postalCode"
         android:background="@color/infoInputFieldWhite"
-        android:inputType="number"
         android:padding="@dimen/marginStandard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
