@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Use this in at the top of the layout for whichever MapFragment is in use. -->
+    <item name="mapFragmentRoot" type="id"/>
+</resources>

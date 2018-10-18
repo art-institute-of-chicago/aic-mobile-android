@@ -1,11 +1,15 @@
 package edu.artic.location
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenName
 import edu.artic.location_ui.R
+import edu.artic.map.overrideMapAccess
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_location_prompt.*
@@ -52,5 +56,13 @@ class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() 
                 .subscribe {
                     activity?.onBackPressed()
                 }.disposedBy(navigationDisposeBag)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is Activity) {
+            // We expect this will be reset to 'auto' by 'TutorialFragment'.
+            overrideMapAccess(context, View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS)
+        }
     }
 }
