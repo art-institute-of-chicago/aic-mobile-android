@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.CustomToolbar.InfoTheme">
+        <!-- General theme attributes -->
+        <item name="colorPrimary">@color/brownishOrange</item>
+        <item name="colorPrimaryDark">@color/brownishOrange</item>
+        <item name="colorAccent">@color/brownishOrange</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:colorAccent">@color/brownishOrange</item>
+        <item name="android:statusBarColor">@color/brownishOrange</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+
+        <!-- Attributes for edu.artic.localization.ui.LanguageSettingsFragment -->
+        <item name="languageSettingsBackgroundColor">@color/white</item>
+        <item name="languageSettingsButtonTextColor">@color/radiobutton_text_color_list</item>
+        <item name="languageSettingsButtonBackground">@drawable/language_radio_button_background</item>
+        <item name="languageSettingsContainsToolbar">true</item>
+        <item name="languageSettingsBodyTextColor">@color/black</item>
+        <item name="languageSettingsTitleTextColor">@color/darkGrey</item>
+        <item name="languageSettingsButtonVerticalBias">0</item>
+        <item name="languageSettingsHasDivider">true</item>
+        <item name="languageSettingsTitleTextAppearance">@style/CardTitleLargeBlack</item>
+        <item name="languageSettingsBodyTextAppearance">@style/BodySansSerifBlackLeft</item>
+    </style>
+
+    <style name="LanguageButton">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:minHeight">50dp</item>
+    </style>
+
+    <style name="InformationExpandedTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/textPageTitle</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:lineSpacingExtra">0sp</item>
+    </style>
+
+    <style name="InfoMenu" parent="CardTitleLargeBlack">
+        <item name="android:paddingTop">@dimen/marginDouble</item>
+        <item name="android:paddingBottom">@dimen/marginDouble</item>
+    </style>
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="name_of_this_language">English</string>
+    <string name="welcome">Welcome</string>
+    <string name="welcomePrompt">Explore the museum with your personal, pocket-sized guide.</string>
+    <string name="play_tour_introduction">Play Tour Introduction</string>
+    <string name="suggested">Suggested</string>
+    <string name="on_the_map">On the map</string>
+    <string name="accessYourMemberCard">Access your member card</string>
+    <string name="tours">Tours</string>
+    <string name="onView">On View</string>
+    <string name="seeAll">See All</string>
+    <string name="stops">%s Stops</string>
+    <string name="events">Events</string>
+    <string name="infoPrompt">Access your member card, see museum hours, or update your app settings.</string>
+    <string name="channel_name">Audio</string>
+    <string name="transcript">Transcript</string>
+    <string name="credits">Credits</string>
+
+    <!-- 'Leave Tour' dialog -->
+    <string name="leaveCurrentTour">Leave Current Tour?</string>
+    <string name="continueTour">Continue Tour</string>
+    <string name="leaveTour">Leave Tour</string>
+
+    <string name="home">Home</string>
+    <string name="info">Info</string>
+    <string name="map">Map</string>
+    <string name="audio">Audio</string>
+    <string name="search">Search</string>
+    <string name="looking_for_artwork">Looking for Artwork?</string>
+    <string name="startTour">Start Tour</string>
+    <string name="throughDate">Through %s</string>
+    <string name="buyTickets">Buy Tickets</string>
+    <string name="register">Register</string>
+    <string name="playAudio">Play Audio</string>
+    <string name="showOnMap" translatable="false">Show on Map</string>
+    <string name="gallery">Gallery %s</string>
+    <string name="welcomeUser">Welcome, %s</string>
+</resources>

@@ -1,0 +1,30 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+
+dependencies {
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+    kapt libs.glide_compiler
+
+    implementation libs.arch_navigation
+    implementation libs.arch_navigation_ui
+
+    api libs.design_support
+    implementation libs.glide
+    implementation project(':base')
+    implementation project(':ui')
+    implementation project(':viewmodel')
+    implementation project(':navigation')
+    implementation project(':search')
+    implementation project(':media_ui')
+    implementation project(':db')
+    implementation project(':membership')
+    implementation project(':access_card')
+    implementation project(':location')
+    implementation project(':localization')
+    implementation project(':localization_ui')
+    implementation libs.constraint_layout
+    implementation libs.rx_helpers
+    implementation libs.rx_kotlin
+}

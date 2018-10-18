@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    android:id="@+id/map_navigation_graph"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/mapFragment">
+
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="edu.artic.map.MapFragment"
+        android:label="fragment_information"
+        tools:layout="@layout/fragment_map">
+
+        <argument
+            android:name="@string/tour_argument_key"
+            app:argType="edu.artic.db.models.ArticTour"/>
+
+        <action
+            android:id="@+id/goToLocationPrompt"
+            app:destination="@id/locationPromptFragment"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/locationPromptFragment"
+        android:name="edu.artic.location.LocationPromptFragment"
+        />
+
+</navigation>

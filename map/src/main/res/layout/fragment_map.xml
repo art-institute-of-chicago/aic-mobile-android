@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@id/mapFragmentRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lowerLevel"
+        style="@style/MapFloor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LL"
+        app:layout_constraintBottom_toBottomOf="@id/guideline"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/floorOne"
+        style="@style/MapFloor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        app:layout_constraintBottom_toTopOf="@id/lowerLevel"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/floorTwo"
+        style="@style/MapFloor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2"
+        app:layout_constraintBottom_toTopOf="@id/floorOne"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <TextView
+        android:id="@+id/floorThree"
+        style="@style/MapFloor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3"
+        app:layout_constraintBottom_toTopOf="@id/floorTwo"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/compass"
+        style="@style/MapFloor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:alpha=".5"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:rotation="30"
+        android:src="@drawable/ic_compass"
+        android:visibility="invisible"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lowerLevel"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/mapFirstRunHeaderFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/marine"
+        android:gravity="center_horizontal"
+        android:minHeight="240dp"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/marginSixtyFour"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_map_header" />
+
+        <TextView
+            android:id="@+id/mapFirstRunHeaderTitle"
+            style="@style/PageTitleRegularWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginDouble"
+            tools:text="Find Your Way"
+            />
+        
+        <TextView
+            android:id="@+id/mapFirstRunHeaderSubtitle"
+            style="@style/PageSubHeaderRegularWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginOneHalf"
+            android:layout_marginStart="@dimen/marginActivitySubtitle"
+            android:layout_marginEnd="@dimen/marginActivitySubtitle"
+            tools:text="Use the map to find food, facilities, and audio-enhanced artworks."
+            />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/searchIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/marginTwenty"
+        android:layout_marginTop="@dimen/statusBarHeightPlus10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/ic_search_background"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/search"
+        android:src="@drawable/ic_search_24dp"/>
+
+    <FrameLayout
+        android:id="@+id/infocontainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:backgroud="#fab" />
+
+</android.support.constraint.ConstraintLayout>

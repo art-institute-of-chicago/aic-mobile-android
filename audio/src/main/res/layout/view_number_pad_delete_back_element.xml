@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/number_frame"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/marginStandard"
+    tools:context=".AudioActivity"
+    tools:layout_gravity="center"
+    >
+
+    <TextView
+        android:id="@+id/number_content"
+        style="@style/NumberPadText"
+        android:layout_width="@dimen/number_pad_text_bounds"
+        android:layout_height="@dimen/number_pad_text_bounds_height"
+        android:background="@drawable/number_pad_delete"
+        android:maxLength="1"
+        android:contentDescription="@string/number_pad_delete"
+        />
+</FrameLayout>

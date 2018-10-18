@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- Very similar to AppTheme.CustomToolbar.MapTheme; This, however, uses 'sea' for the accent color -->
+    <style name="AppTheme.CustomToolbar.Location">
+        <item name="colorAccent">@color/sea</item>
+        <item name="colorPrimary">@color/marine</item>
+        <item name="colorPrimaryDark">@color/marine</item>
+        <item name="android:colorAccent">@color/sea</item>
+        <item name="android:statusBarColor">@color/marine</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+</resources>

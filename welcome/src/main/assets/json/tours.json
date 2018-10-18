@@ -1,0 +1,910 @@
+[
+  {
+    "title": "John Singer Sargent and Chicago's Gilded Age",
+    "status": "1",
+    "nid": "4178",
+    "type": "tour",
+    "translations": [],
+    "location": "41.87881008193772, -87.62218980209627",
+    "latitude": "41.87881008193772",
+    "longitude": " -87.62218980209627",
+    "floor": "2",
+    "image_filename": "Sargent tour cover.jpg",
+    "image_url": "http://aic-mobile-tours.artic.edu/sites/default/files/tour-images/Sargent%20tour%20cover.jpg",
+    "image_filemime": "image/jpeg",
+    "image_filesize": "419733",
+    "image_width": "865",
+    "image_height": "579",
+    "thumbnail_crop_rect": [],
+    "thumbnail_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/thumbnail_one_twelve/public/tour-images/Sargent%20tour%20cover.jpg?itok=I36Znfo3",
+    "large_image_crop_rect": [],
+    "large_image_crop_v2": {
+      "x": 0,
+      "y": 0.017,
+      "width": 1,
+      "height": 0.821
+    },
+    "large_image_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/large_six_hundred/public/tour-images/Sargent%20tour%20cover.jpg?itok=jFBVJk3k",
+    "tour_banner": "NEW",
+    "selector_number": "300",
+    "description": "Dive deep into the world of John Singer&nbsp;Sargent&nbsp;and Chicago's Gilded Age.",
+    "description_html": "<p><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">Dive deep into the world of John Singer&nbsp;</span><span class=\"il\" style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">Sargent</span><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">&nbsp;and Chicago's Gilded Age.</span></p>",
+    "tour_dates": {
+      "start_date": "2018-06-27 00:00:00",
+      "end_date": "2018-09-30 00:00:00"
+    },
+    "intro": "This tour will allow listeners to gain insight into the masterful technique of&nbsp;Sargent&nbsp;and his rich relationship with Chicago and its many art patrons. Curator Annelise Madsen and conservator Julie Simek will take you up close to these beautiful paintings and share the stories behind their subjects and creation.&nbsp;",
+    "intro_html": "<p><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">This tour will allow listeners to gain insight into the masterful technique of&nbsp;</span><span class=\"il\" style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">Sargent</span><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">&nbsp;and his rich relationship with Chicago and its many art patrons. Curator Annelise Madsen and conservator Julie Simek will take you up close to these beautiful paintings and share the stories behind their subjects and creation.&nbsp;</span></p>",
+    "tour_duration": "21 min",
+    "tour_audio": "4157",
+    "category": null,
+    "stops": [],
+    "weight": 0,
+    "tour_stops": [
+      {
+        "object": "4173",
+        "audio_id": "4158",
+        "audio_bumper": null,
+        "sort": 0
+      },
+      {
+        "object": "4168",
+        "audio_id": "4159",
+        "audio_bumper": null,
+        "sort": 1
+      },
+      {
+        "object": "4174",
+        "audio_id": "4160",
+        "audio_bumper": null,
+        "sort": 2
+      },
+      {
+        "object": "4175",
+        "audio_id": "4161",
+        "audio_bumper": null,
+        "sort": 3
+      },
+      {
+        "object": "4169",
+        "audio_id": "4162",
+        "audio_bumper": null,
+        "sort": 4
+      },
+      {
+        "object": "4176",
+        "audio_id": "4163",
+        "audio_bumper": null,
+        "sort": 5
+      },
+      {
+        "object": "4170",
+        "audio_id": "4164",
+        "audio_bumper": null,
+        "sort": 6
+      },
+      {
+        "object": "4172",
+        "audio_id": "4165",
+        "audio_bumper": null,
+        "sort": 7
+      },
+      {
+        "object": "4177",
+        "audio_id": "4166",
+        "audio_bumper": null,
+        "sort": 8
+      },
+      {
+        "object": "4171",
+        "audio_id": "4167",
+        "audio_bumper": null,
+        "sort": 9
+      }
+    ]
+  },
+  {
+    "title": "The Essentials Tour",
+    "status": "1",
+    "nid": "2193",
+    "type": "tour",
+    "translations": [
+      {
+        "language": "es",
+        "title": "Visita a lo esencial",
+        "description": "Descubra las historias detrás de algunas de las obras de arte más icónicas del museo.",
+        "description_html": "<p>Descubra las historias detrás de algunas de las obras de arte más icónicas del museo.</p>\n",
+        "intro": "Disfrute el banco del Río Sena bañado de sol en “Un domingo en La Grande Jatte” de Georges Seurat o haga una parada nocturna en una cafetería de Nueva York en “Nighthawks” de Edward Hopper en esta visita a la icónica colección del museo. El Art Institute of Chicago, fundado en 1879, alberga una enorme colección que abarca casi toda la historia de la humanidad. A medida que explora siglos de arte, esta visita resalta algunos hitos esenciales, con obras de arte menos conocidas, pero igualmente interesantes, en todo el recorrido. La pista musical presenta la música de Andrew Bird, otra persona esencial en Chicago.",
+        "intro_html": "<p>Disfrute el banco del Río Sena bañado de sol en “Un domingo en La Grande Jatte” de Georges Seurat o haga una parada nocturna en una cafetería de Nueva York en “Nighthawks” de Edward Hopper en esta visita a la icónica colección del museo. El Art Institute of Chicago, fundado en 1879, alberga una enorme colección que abarca casi toda la historia de la humanidad. A medida que explora siglos de arte, esta visita resalta algunos hitos esenciales, con obras de arte menos conocidas, pero igualmente interesantes, en todo el recorrido. La pista musical presenta la música de Andrew Bird, otra persona esencial en Chicago.</p>\n",
+        "tour_duration": ""
+      },
+      {
+        "language": "zh-hant",
+        "title": "精华游",
+        "description": "探索博物馆中最具代表性的艺术作品以及他们背后的故事。",
+        "description_html": "<p>探索博物馆中最具代表性的艺术作品以及他们背后的故事。</p>\n",
+        "intro": "沉浸在乔治·修拉“大碗岛的星期天下午”里洒满阳光的河岸，或者午夜时分在爱德华·霍普“夜鹰”里的纽约小餐馆停驻，这些博物馆的标志性收藏均包含在此语音导览中。芝加哥艺术博物馆成立于1879年，所拥有的藏品几乎涵盖了所有人类历史。在你探索几个世纪以来的艺术发展和艺术作品的时候，这个语音导览着重介绍了部分标志性展品，可能它们的知名度不一样，但都是引人入胜的艺术作品。语音导览背景音乐为芝加哥知名音乐人Andrew Bird作品。",
+        "intro_html": "<p>沉浸在乔治·修拉“大碗岛的星期天下午”里洒满阳光的河岸，或者午夜时分在爱德华·霍普“夜鹰”里的纽约小餐馆停驻，这些博物馆的标志性收藏均包含在此语音导览中。芝加哥艺术博物馆成立于1879年，所拥有的藏品几乎涵盖了所有人类历史。在你探索几个世纪以来的艺术发展和艺术作品的时候，这个语音导览着重介绍了部分标志性展品，可能它们的知名度不一样，但都是引人入胜的艺术作品。语音导览背景音乐为芝加哥知名音乐人Andrew Bird作品。</p>\n",
+        "tour_duration": ""
+      }
+    ],
+    "location": "41.8795545376782, -87.6233559474348",
+    "latitude": "41.8795545376782",
+    "longitude": " -87.6233559474348",
+    "floor": null,
+    "image_filename": "Rainy_Day copy.jpg",
+    "image_url": "http://aic-mobile-tours.artic.edu/sites/default/files/tour-images/Rainy_Day%20copy.jpg",
+    "image_filemime": "image/jpeg",
+    "image_filesize": "1387712",
+    "image_width": "1500",
+    "image_height": "1003",
+    "thumbnail_crop_rect": [],
+    "thumbnail_crop_v2": {
+      "x": 0.045,
+      "y": 0,
+      "width": 0.67,
+      "height": 1
+    },
+    "thumbnail_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/thumbnail_one_twelve/public/tour-images/Rainy_Day%20copy.jpg?itok=ivLv6r98",
+    "large_image_crop_rect": [],
+    "large_image_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/large_six_hundred/public/tour-images/Rainy_Day%20copy.jpg?itok=X21PyMQu",
+    "tour_banner": null,
+    "selector_number": null,
+    "description": "Discover the stories behind some of the museum’s most iconic artworks.",
+    "description_html": "<p>Discover the stories behind some of the museum’s most iconic artworks.</p>",
+    "tour_dates": [],
+    "intro": "Indulge in the sunlit bank of the River Seine in Georges Seurat’s \"A Sunday on La Grande Jatte\" or make a late-night stop at a New York City diner in Edward Hopper’s \"Nighthawks\" in this tour of the museum’s iconic collection. Founded in 1879, the Art Institute of Chicago is home to a massive collection spanning nearly all of human history. As you explore centuries of art, this tour highlights some essential landmarks—with lesser known, but equally engaging artworks—along the way. The soundtrack features the music of Andrew Bird, another Chicago essential.",
+    "intro_html": "<p>Indulge in the sunlit bank of the River Seine in Georges Seurat’s \"A Sunday on La Grande Jatte\" or make a late-night stop at a New York City diner in Edward Hopper’s \"Nighthawks\" in this tour of the museum’s iconic collection. Founded in 1879, the Art Institute of Chicago is home to a massive collection spanning nearly all of human history. As you explore centuries of art, this tour highlights some essential landmarks—with lesser known, but equally engaging artworks—along the way. The soundtrack features the music of Andrew Bird, another Chicago essential.</p>",
+    "tour_duration": "34 min",
+    "tour_audio": "2178",
+    "category": null,
+    "stops": [
+      {
+        "audio": "2179",
+        "object": "1938",
+        "sort": "0"
+      },
+      {
+        "audio": "2180",
+        "object": "1928",
+        "sort": "1"
+      },
+      {
+        "audio": "2181",
+        "object": "1932",
+        "sort": "2"
+      },
+      {
+        "audio": "2182",
+        "object": "1935",
+        "sort": "3"
+      },
+      {
+        "audio": "2183",
+        "object": "1745",
+        "sort": "4"
+      },
+      {
+        "audio": "2184",
+        "object": "1737",
+        "sort": "5"
+      },
+      {
+        "audio": "2185",
+        "object": "1733",
+        "sort": "6"
+      },
+      {
+        "audio": "2205",
+        "object": "1810",
+        "sort": "7"
+      },
+      {
+        "audio": "1371",
+        "object": "1741",
+        "sort": "8"
+      },
+      {
+        "audio": "2186",
+        "object": "2034",
+        "sort": "9"
+      },
+      {
+        "audio": "2192",
+        "object": "1709",
+        "sort": "10"
+      },
+      {
+        "audio": "2187",
+        "object": "2126",
+        "sort": "11"
+      },
+      {
+        "audio": "2191",
+        "object": "1839",
+        "sort": "12"
+      },
+      {
+        "audio": "2188",
+        "object": "1944",
+        "sort": "13"
+      },
+      {
+        "audio": "2190",
+        "object": "1749",
+        "sort": "14"
+      },
+      {
+        "audio": "2189",
+        "object": "2194",
+        "sort": "15"
+      }
+    ],
+    "weight": "1",
+    "tour_stops": [
+      {
+        "object": "1938",
+        "audio_id": "2179",
+        "audio_bumper": null,
+        "sort": 0
+      },
+      {
+        "object": "1928",
+        "audio_id": "2180",
+        "audio_bumper": null,
+        "sort": 1
+      },
+      {
+        "object": "1932",
+        "audio_id": "2181",
+        "audio_bumper": null,
+        "sort": 2
+      },
+      {
+        "object": "1935",
+        "audio_id": "2182",
+        "audio_bumper": null,
+        "sort": 3
+      },
+      {
+        "object": "1745",
+        "audio_id": "2183",
+        "audio_bumper": null,
+        "sort": 4
+      },
+      {
+        "object": "1737",
+        "audio_id": "2184",
+        "audio_bumper": null,
+        "sort": 5
+      },
+      {
+        "object": "1733",
+        "audio_id": "2185",
+        "audio_bumper": null,
+        "sort": 6
+      },
+      {
+        "object": "1810",
+        "audio_id": "2205",
+        "audio_bumper": null,
+        "sort": 7
+      },
+      {
+        "object": "1741",
+        "audio_id": "1371",
+        "audio_bumper": null,
+        "sort": 8
+      },
+      {
+        "object": "2034",
+        "audio_id": "2186",
+        "audio_bumper": null,
+        "sort": 9
+      },
+      {
+        "object": "1709",
+        "audio_id": "2192",
+        "audio_bumper": null,
+        "sort": 10
+      },
+      {
+        "object": "2126",
+        "audio_id": "2187",
+        "audio_bumper": null,
+        "sort": 11
+      },
+      {
+        "object": "1839",
+        "audio_id": "2191",
+        "audio_bumper": null,
+        "sort": 12
+      },
+      {
+        "object": "1944",
+        "audio_id": "2188",
+        "audio_bumper": null,
+        "sort": 13
+      },
+      {
+        "object": "1749",
+        "audio_id": "2190",
+        "audio_bumper": null,
+        "sort": 14
+      },
+      {
+        "object": "2194",
+        "audio_id": "2189",
+        "audio_bumper": null,
+        "sort": 15
+      }
+    ]
+  },
+  {
+    "title": "Never A Lovely so Real",
+    "status": "1",
+    "nid": "4111",
+    "type": "tour",
+    "translations": [],
+    "location": "41.87958244075922, -87.62351347238734",
+    "latitude": "41.87958244075922",
+    "longitude": " -87.62351347238734",
+    "floor": "0",
+    "image_filename": "IM022388-int_web.jpg",
+    "image_url": "http://aic-mobile-tours.artic.edu/sites/default/files/tour-images/IM022388-int_web.jpg",
+    "image_filemime": "image/jpeg",
+    "image_filesize": "440238",
+    "image_width": "843",
+    "image_height": "564",
+    "thumbnail_crop_rect": [],
+    "thumbnail_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/thumbnail_one_twelve/public/tour-images/IM022388-int_web.jpg?itok=_SifiIcW",
+    "large_image_crop_rect": [],
+    "large_image_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/large_six_hundred/public/tour-images/IM022388-int_web.jpg?itok=Q3f0FzDg",
+    "tour_banner": "NEW",
+    "selector_number": null,
+    "description": "Hear from photographers, scholars, filmmakers, music writers, and more as you delve into the art movements and history of 1960's Chicago.",
+    "description_html": "<p><span style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">Hear from photographers, scholars, filmmakers, music writers, and more as you delve into the art movements and history of 1960's Chicago.</span></p>",
+    "tour_dates": [],
+    "intro": "The&nbsp;Never A Lovely So Real&nbsp;audio&nbsp;tour features a wide collection of voices. Through each of these unique lenses, listeners will gain access to the rich stories behind these artworks and the tumultuous history in which they were created. From Uptown to South Shore, this tour travels across geography and time sharing never before heard reflections on art making in Chicago.&nbsp;",
+    "intro_html": "<div dir=\"ltr\" style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">The&nbsp;<i>Never A Lovely So Real&nbsp;</i><span class=\"il\">audio</span>&nbsp;tour features a wide collection of voices. Through each of these unique lenses, listeners will gain access to the rich stories behind these artworks and the tumultuous history in which they were created. From Uptown to South Shore, this tour travels across geography and time sharing never before heard reflections on art making in Chicago.&nbsp;</div>",
+    "tour_duration": "26 min",
+    "tour_audio": "4088",
+    "category": null,
+    "stops": [
+      {
+        "audio": "4089",
+        "object": "4102",
+        "sort": "0"
+      },
+      {
+        "audio": "4092",
+        "object": "4087",
+        "sort": "1"
+      },
+      {
+        "audio": "4090",
+        "object": "4103",
+        "sort": "2"
+      },
+      {
+        "audio": "4093",
+        "object": "4100",
+        "sort": "3"
+      },
+      {
+        "audio": "4094",
+        "object": "4104",
+        "sort": "4"
+      },
+      {
+        "audio": "4095",
+        "object": "4105",
+        "sort": "5"
+      },
+      {
+        "audio": "4096",
+        "object": "4106",
+        "sort": "6"
+      },
+      {
+        "audio": "4091",
+        "object": "4107",
+        "sort": "7"
+      },
+      {
+        "audio": "4097",
+        "object": "4108",
+        "sort": "8"
+      },
+      {
+        "audio": "4098",
+        "object": "4109",
+        "sort": "9"
+      },
+      {
+        "audio": "4099",
+        "object": "4110",
+        "sort": "10"
+      }
+    ],
+    "weight": "2",
+    "tour_stops": [
+      {
+        "object": "4102",
+        "audio_id": "4089",
+        "audio_bumper": null,
+        "sort": 0
+      },
+      {
+        "object": "4087",
+        "audio_id": "4092",
+        "audio_bumper": null,
+        "sort": 1
+      },
+      {
+        "object": "4103",
+        "audio_id": "4090",
+        "audio_bumper": null,
+        "sort": 2
+      },
+      {
+        "object": "4100",
+        "audio_id": "4093",
+        "audio_bumper": null,
+        "sort": 3
+      },
+      {
+        "object": "4104",
+        "audio_id": "4094",
+        "audio_bumper": null,
+        "sort": 4
+      },
+      {
+        "object": "4105",
+        "audio_id": "4095",
+        "audio_bumper": null,
+        "sort": 5
+      },
+      {
+        "object": "4106",
+        "audio_id": "4096",
+        "audio_bumper": null,
+        "sort": 6
+      },
+      {
+        "object": "4107",
+        "audio_id": "4091",
+        "audio_bumper": null,
+        "sort": 7
+      },
+      {
+        "object": "4108",
+        "audio_id": "4097",
+        "audio_bumper": null,
+        "sort": 8
+      },
+      {
+        "object": "4109",
+        "audio_id": "4098",
+        "audio_bumper": null,
+        "sort": 9
+      },
+      {
+        "object": "4110",
+        "audio_id": "4099",
+        "audio_bumper": null,
+        "sort": 10
+      }
+    ]
+  },
+  {
+    "title": "Visions of America",
+    "status": "1",
+    "nid": "2352",
+    "type": "tour",
+    "translations": [
+      {
+        "language": "es",
+        "title": "Visions of America",
+        "description": "Inspired by the hit musical Hamilton, explore America now, through America then. ",
+        "description_html": "<p>Inspired by the hit musical <em>Hamilton</em>, explore America now, through America then. </p>\n",
+        "intro": "Narrated by two principal cast members from the Chicago production of Hamilton—this new audio tour offers a contemporary lens on art from the early years of the United States. Get to know the people, places, and stories behind a variety of works of early American art and gain a new understanding of America now.",
+        "intro_html": "<p>Narrated by two principal cast members from the Chicago production of <em>Hamilton</em>—this new audio tour offers a contemporary lens on art from the early years of the United States. Get to know the people, places, and stories behind a variety of works of early American art and gain a new understanding of America now.</p>\n",
+        "tour_duration": "31 min"
+      },
+      {
+        "language": "zh-hant",
+        "title": "Visions of America",
+        "description": "Inspired by the hit musical Hamilton, explore America now, through America then. ",
+        "description_html": "<p>Inspired by the hit musical <em>Hamilton</em>, explore America now, through America then. </p>\n",
+        "intro": "Narrated by two principal cast members from the Chicago production of Hamilton—this new audio tour offers a contemporary lens on art from the early years of the United States. Get to know the people, places, and stories behind a variety of works of early American art and gain a new understanding of America now.",
+        "intro_html": "<p>Narrated by two principal cast members from the Chicago production of <em>Hamilton</em>—this new audio tour offers a contemporary lens on art from the early years of the United States. Get to know the people, places, and stories behind a variety of works of early American art and gain a new understanding of America now.</p>\n",
+        "tour_duration": "31 min"
+      }
+    ],
+    "location": "41.8789893731916, -87.622301839292",
+    "latitude": "41.8789893731916",
+    "longitude": " -87.622301839292",
+    "floor": null,
+    "image_filename": "The Freedman.jpg",
+    "image_url": "http://aic-mobile-tours.artic.edu/sites/default/files/tour-images/The%20Freedman.jpg",
+    "image_filemime": "image/jpeg",
+    "image_filesize": "537970",
+    "image_width": "1457",
+    "image_height": "974",
+    "thumbnail_crop_rect": [],
+    "thumbnail_crop_v2": {
+      "x": 0.116,
+      "y": 0,
+      "width": 0.67,
+      "height": 0.862
+    },
+    "thumbnail_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/thumbnail_one_twelve/public/tour-images/The%20Freedman.jpg?itok=ZlxKWpQP",
+    "large_image_crop_rect": [],
+    "large_image_crop_v2": {
+      "x": 0,
+      "y": 0.047,
+      "width": 1,
+      "height": 0.71
+    },
+    "large_image_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/large_six_hundred/public/tour-images/The%20Freedman.jpg?itok=N8J-vhpr",
+    "tour_banner": "FEATURED",
+    "selector_number": "120",
+    "description": "Inspired by the hit musical Hamilton, explore America now, through America&nbsp;then.&nbsp;",
+    "description_html": "<p>Inspired by the hit musical <em>Hamilton</em>, explore America now, through America&nbsp;then.&nbsp;</p>",
+    "tour_dates": [],
+    "intro": "Narrated by two principal cast members from the Chicago production of Hamilton—this new audio tour offers a contemporary lens on art from the early years of the United States. Get to know the people, places, and stories behind a variety of works of early American art and gain a new understanding of America now.",
+    "intro_html": "<p>Narrated by two principal cast members from the Chicago production of <em>Hamilton</em>—this new audio tour offers a contemporary lens on art from the early years of the United States. Get to know the people, places, and stories behind a variety of works of early American art and gain a new understanding of America now.</p>",
+    "tour_duration": "31 min",
+    "tour_audio": "2354",
+    "category": null,
+    "stops": [
+      {
+        "audio": "2355",
+        "object": "1784",
+        "sort": "0"
+      },
+      {
+        "audio": "2356",
+        "object": "1869",
+        "sort": "1"
+      },
+      {
+        "audio": "2357",
+        "object": "2347",
+        "sort": "2"
+      },
+      {
+        "audio": "2358",
+        "object": "2344",
+        "sort": "3"
+      },
+      {
+        "audio": "2359",
+        "object": "2350",
+        "sort": "4"
+      },
+      {
+        "audio": "2360",
+        "object": "2346",
+        "sort": "5"
+      },
+      {
+        "audio": "2361",
+        "object": "2348",
+        "sort": "6"
+      },
+      {
+        "audio": "2362",
+        "object": "2349",
+        "sort": "7"
+      },
+      {
+        "audio": "2363",
+        "object": "2345",
+        "sort": "8"
+      },
+      {
+        "audio": "2364",
+        "object": "2351",
+        "sort": "9"
+      }
+    ],
+    "weight": "3",
+    "tour_stops": [
+      {
+        "object": "1784",
+        "audio_id": "2355",
+        "audio_bumper": null,
+        "sort": 0
+      },
+      {
+        "object": "1869",
+        "audio_id": "2356",
+        "audio_bumper": null,
+        "sort": 1
+      },
+      {
+        "object": "2347",
+        "audio_id": "2357",
+        "audio_bumper": null,
+        "sort": 2
+      },
+      {
+        "object": "2344",
+        "audio_id": "2358",
+        "audio_bumper": null,
+        "sort": 3
+      },
+      {
+        "object": "2350",
+        "audio_id": "2359",
+        "audio_bumper": null,
+        "sort": 4
+      },
+      {
+        "object": "2346",
+        "audio_id": "2360",
+        "audio_bumper": null,
+        "sort": 5
+      },
+      {
+        "object": "2348",
+        "audio_id": "2361",
+        "audio_bumper": null,
+        "sort": 6
+      },
+      {
+        "object": "2349",
+        "audio_id": "2362",
+        "audio_bumper": null,
+        "sort": 7
+      },
+      {
+        "object": "2345",
+        "audio_id": "2363",
+        "audio_bumper": null,
+        "sort": 8
+      },
+      {
+        "object": "2351",
+        "audio_id": "2364",
+        "audio_bumper": null,
+        "sort": 9
+      }
+    ]
+  },
+  {
+    "title": "A Beautiful Science: The Evolution of Chinese Porcelain",
+    "status": "1",
+    "nid": "3906",
+    "type": "tour",
+    "translations": [
+      {
+        "language": "es",
+        "title": "A Beautiful Science: The Evolution of Chinese Porcelain",
+        "description": "Discover the technology and craft of Chinese Porcelain.",
+        "description_html": "<p>Discover the technology and craft of Chinese Porcelain.</p>\n",
+        "intro": "Join Art Institute conservator, Rachel Sabino, and practicing ceramic artist, Michael Kaysen, as they take you on a journey into the scientific and aesthetic marvel of Chinese porcelain. You will traverse hundreds of years of history as you see porcelain develop and change before your eyes. \n ",
+        "intro_html": "<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">Join Art Institute conservator, Rachel Sabino, and practicing ceramic artist, <span class=\"il\">Michael</span> Kaysen, as they take you on a journey into the <span class=\"il\">scientific</span> and aesthetic marvel of Chinese porcelain. You will traverse hundreds of years of history as you see porcelain develop and change before your eyes. </div>\n<div class=\"yj6qo ajU\" style=\"cursor: pointer; outline: none; padding: 10px 0px; width: 22px; margin: 2px 0px 0px; color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: small;\"> </div>\n",
+        "tour_duration": "19 min"
+      },
+      {
+        "language": "zh-hant",
+        "title": "A Beautiful Science: The Evolution of Chinese Porcelain",
+        "description": "Discover the technology and craft of Chinese Porcelain.",
+        "description_html": "<p>Discover the technology and craft of Chinese Porcelain.</p>\n",
+        "intro": "Join Art Institute conservator, Rachel Sabino, and practicing ceramic artist, Michael Kaysen, as they take you on a journey into the scientific and aesthetic marvel of Chinese porcelain. You will traverse hundreds of years of history as you see porcelain develop and change before your eyes. \n ",
+        "intro_html": "<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">Join Art Institute conservator, Rachel Sabino, and practicing ceramic artist, <span class=\"il\">Michael</span> Kaysen, as they take you on a journey into the <span class=\"il\">scientific</span> and aesthetic marvel of Chinese porcelain. You will traverse hundreds of years of history as you see porcelain develop and change before your eyes. </div>\n<div class=\"yj6qo ajU\" style=\"cursor: pointer; outline: none; padding: 10px 0px; width: 22px; margin: 2px 0px 0px; color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: small;\"> </div>\n",
+        "tour_duration": "19 min"
+      }
+    ],
+    "location": "41.87928793242504, -87.62320172041649",
+    "latitude": "41.87928793242504",
+    "longitude": " -87.62320172041649",
+    "floor": null,
+    "image_filename": "default (1).jpg",
+    "image_url": "http://aic-mobile-tours.artic.edu/sites/default/files/tour-images/default%20%281%29.jpg",
+    "image_filemime": "image/jpeg",
+    "image_filesize": "670313",
+    "image_width": "1080",
+    "image_height": "722",
+    "thumbnail_crop_rect": [],
+    "thumbnail_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/thumbnail_one_twelve/public/tour-images/default%20%281%29.jpg?itok=nVqtWK4z",
+    "large_image_crop_rect": [],
+    "large_image_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/large_six_hundred/public/tour-images/default%20%281%29.jpg?itok=aPoZlaDa",
+    "tour_banner": "NEW",
+    "selector_number": null,
+    "description": "Discover the technology and craft of Chinese Porcelain.",
+    "description_html": "<p>Discover the technology and craft of Chinese Porcelain.</p>",
+    "tour_dates": [],
+    "intro": "Join Art Institute conservator, Rachel Sabino, and practicing ceramic artist,&nbsp;Michael&nbsp;Kaysen, as they take you on a journey into the&nbsp;scientific&nbsp;and aesthetic marvel of Chinese porcelain. You will traverse hundreds of years of history as you see porcelain develop and change before your eyes.&nbsp;\r\n\r\n&nbsp;",
+    "intro_html": "<div style=\"color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: 12.8px;\">Join Art Institute conservator, Rachel Sabino, and practicing ceramic artist,&nbsp;<span class=\"il\">Michael</span>&nbsp;Kaysen, as they take you on a journey into the&nbsp;<span class=\"il\">scientific</span>&nbsp;and aesthetic marvel of Chinese porcelain. You will traverse hundreds of years of history as you see porcelain develop and change before your eyes.&nbsp;</div>\r\n\r\n<div class=\"yj6qo ajU\" style=\"cursor: pointer; outline: none; padding: 10px 0px; width: 22px; margin: 2px 0px 0px; color: rgb(34, 34, 34); font-family: arial, sans-serif; font-size: small;\">&nbsp;</div>",
+    "tour_duration": "19 min",
+    "tour_audio": "3898",
+    "category": null,
+    "stops": [
+      {
+        "audio": "3899",
+        "object": "1845",
+        "sort": "0"
+      },
+      {
+        "audio": "3900",
+        "object": "3911",
+        "sort": "1"
+      },
+      {
+        "audio": "3901",
+        "object": "1846",
+        "sort": "2"
+      },
+      {
+        "audio": "3902",
+        "object": "3910",
+        "sort": "3"
+      },
+      {
+        "audio": "3903",
+        "object": "3908",
+        "sort": "4"
+      },
+      {
+        "audio": "3904",
+        "object": "3907",
+        "sort": "5"
+      },
+      {
+        "audio": "3905",
+        "object": "3909",
+        "sort": "6"
+      }
+    ],
+    "weight": "4",
+    "tour_stops": [
+      {
+        "object": "1845",
+        "audio_id": "3899",
+        "audio_bumper": null,
+        "sort": 0
+      },
+      {
+        "object": "3911",
+        "audio_id": "3900",
+        "audio_bumper": null,
+        "sort": 1
+      },
+      {
+        "object": "1846",
+        "audio_id": "3901",
+        "audio_bumper": null,
+        "sort": 2
+      },
+      {
+        "object": "3910",
+        "audio_id": "3902",
+        "audio_bumper": null,
+        "sort": 3
+      },
+      {
+        "object": "3908",
+        "audio_id": "3903",
+        "audio_bumper": null,
+        "sort": 4
+      },
+      {
+        "object": "3907",
+        "audio_id": "3904",
+        "audio_bumper": null,
+        "sort": 5
+      },
+      {
+        "object": "3909",
+        "audio_id": "3905",
+        "audio_bumper": null,
+        "sort": 6
+      }
+    ]
+  },
+  {
+    "title": "The Teen Tour",
+    "status": "1",
+    "nid": "4197",
+    "type": "tour",
+    "translations": [],
+    "location": "41.879578446684434, -87.62365697056964",
+    "latitude": "41.879578446684434",
+    "longitude": " -87.62365697056964",
+    "floor": "0",
+    "image_filename": "IM031265_695-int.jpg",
+    "image_url": "http://aic-mobile-tours.artic.edu/sites/default/files/tour-images/IM031265_695-int.jpg",
+    "image_filemime": "image/jpeg",
+    "image_filesize": "972110",
+    "image_width": "1500",
+    "image_height": "1003",
+    "thumbnail_crop_rect": [],
+    "thumbnail_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/thumbnail_one_twelve/public/tour-images/IM031265_695-int.jpg?itok=TflrWrJZ",
+    "large_image_crop_rect": [],
+    "large_image_full_path": "http://aic-mobile-tours.artic.edu/sites/default/files/styles/large_six_hundred/public/tour-images/IM031265_695-int.jpg?itok=YHcOSb0r",
+    "tour_banner": null,
+    "selector_number": "30",
+    "description": "Experience the museum through sounds and stories produced by Chicago teens.",
+    "description_html": "<p dir=\"ltr\">Experience the museum through sounds and stories produced by Chicago teens.</p>",
+    "tour_dates": [],
+    "intro": "Expand your perspective on the Grand Staircase. Meditate to an original soundscape in the Ando Gallery. Connect with contemporary art through spoken word by some of Chicago’s best young poets. Immerse yourself in the ideas, interpretations, and creativity of Chicago youth.\r\n\r\nThe Art Institute of Chicago is grateful to Glenn and Claire Swogger and the Redbud Foundation for their extraordinary sponsorship expanding the museum’s free admission program to Chicago teens under the age of 18.\r\n\r\nSupport for Summer Learning at the Art Institute of Chicago is generously provided by The Jane and David M. Stone Charitable Trust.\r\n\r\n&nbsp;\r\n\r\nTeen Programs are partially supported by an IncentOvate Grant from the City of Chicago Department of Cultural Affairs &amp; Special Events.",
+    "intro_html": "<p dir=\"ltr\">Expand your perspective on the Grand Staircase. Meditate to an original soundscape in the Ando Gallery. Connect with contemporary art through spoken word by some of Chicago’s best young poets. Immerse yourself in the ideas, interpretations, and creativity of Chicago youth.</p>\r\n\r\n<p dir=\"ltr\">The Art Institute of Chicago is grateful to Glenn and Claire Swogger and the Redbud Foundation for their extraordinary sponsorship expanding the museum’s free admission program to Chicago teens under the age of 18.</p>\r\n\r\n<div>Support for Summer Learning at the Art Institute of Chicago is generously provided by The Jane and David M. Stone Charitable Trust.</div>\r\n\r\n<div>&nbsp;</div>\r\n\r\n<div>Teen Programs are partially supported by an IncentOvate Grant from the City of Chicago Department of Cultural Affairs &amp; Special Events.</div>",
+    "tour_duration": "25 min",
+    "tour_audio": "4185",
+    "category": null,
+    "stops": [],
+    "weight": "5",
+    "tour_stops": [
+      {
+        "object": "2197",
+        "audio_id": "4195",
+        "audio_bumper": null,
+        "sort": 0
+      },
+      {
+        "object": "1037",
+        "audio_id": "4196",
+        "audio_bumper": null,
+        "sort": 1
+      },
+      {
+        "object": "1741",
+        "audio_id": "4186",
+        "audio_bumper": null,
+        "sort": 2
+      },
+      {
+        "object": "2503",
+        "audio_id": "4188",
+        "audio_bumper": null,
+        "sort": 3
+      },
+      {
+        "object": "2126",
+        "audio_id": "4187",
+        "audio_bumper": null,
+        "sort": 4
+      },
+      {
+        "object": "4180",
+        "audio_id": "4189",
+        "audio_bumper": null,
+        "sort": 5
+      },
+      {
+        "object": "2008",
+        "audio_id": "4192",
+        "audio_bumper": null,
+        "sort": 6
+      },
+      {
+        "object": "4184",
+        "audio_id": "4194",
+        "audio_bumper": null,
+        "sort": 7
+      },
+      {
+        "object": "4182",
+        "audio_id": "4191",
+        "audio_bumper": null,
+        "sort": 8
+      },
+      {
+        "object": "4181",
+        "audio_id": "4190",
+        "audio_bumper": null,
+        "sort": 9
+      },
+      {
+        "object": "4183",
+        "audio_id": "4193",
+        "audio_bumper": null,
+        "sort": 10
+      }
+    ]
+  }
+]

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/mapObjectWindowBlue"
+    android:layout_gravity="bottom"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/objectType"
+        style="@style/SectionTitleWhite"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Artwork" />
+
+    <View
+        android:id="@+id/divider"
+        style="@style/divider"
+        android:layout_width="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="@dimen/marginStandard"
+        android:layout_marginEnd="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/objectType" />
+
+    <ImageView
+        android:id="@+id/objectImage"
+        android:layout_width="72dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginBottom="@dimen/marginSixtyFour"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        app:layout_constraintVertical_bias="0"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/objectTitle"
+        style="@style/ListItemTitle1White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/objectImage"
+        app:layout_constraintTop_toTopOf="@+id/divider"
+        tools:text="Mona Lisa" />
+
+    <TextView
+        android:id="@+id/artist"
+        style="@style/ListItemTitle2White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:gravity="start"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/objectImage"
+        app:layout_constraintTop_toBottomOf="@+id/objectTitle"
+        tools:text="Leonardo da vinci" />
+
+    <TextView
+        android:id="@+id/gallery"
+        style="@style/ListItemTitle2White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/objectImage"
+        app:layout_constraintTop_toBottomOf="@+id/artist"
+        tools:text="Gallery 121" />
+
+
+    <ImageButton
+        android:id="@+id/playCurrent"
+        android:layout_width="@dimen/mapAudioControlIconSize"
+        android:layout_height="@dimen/mapAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_play"
+        android:visibility="visible"
+        android:contentDescription="@string/exo_controls_play_description"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toBottomOf="@id/objectImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/objectImage" />
+
+    <ImageButton
+        android:id="@+id/pauseCurrent"
+        android:layout_width="@dimen/mapAudioControlIconSize"
+        android:layout_height="@dimen/mapAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_pause"
+        android:visibility="gone"
+        android:contentDescription="@string/exo_controls_pause_description"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toBottomOf="@id/objectImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/objectImage"
+        tools:visibility="gone" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="playCurrent,pauseCurrent"
+        tools:ignore="MissingConstraints" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marginSixtyFour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewPagerIndicator" />
+
+</android.support.constraint.ConstraintLayout>

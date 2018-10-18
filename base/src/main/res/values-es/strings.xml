@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="name_of_this_language">Español</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="welcomePrompt">Explore el museo con su guía de bolsillo personalizada.Si es miembro, regístrese para obtener un acceso mejorado.</string>
+    <string name="play_tour_introduction">Reproducir la Presentación del Tour</string>
+    <string name="suggested">Sugeridos</string>
+    <string name="on_the_map">Mapa</string>
+    <string name="accessYourMemberCard">Acceda a su tarjeta para miembros</string>
+    <string name="tours">Visitas</string>
+    <string name="onView">En vista</string>
+    <string name="seeAll">Ver todo</string>
+    <string name="stops">%s Terminas</string>
+    <string name="events">Eventos</string>
+    <string name="infoPrompt">Acceda a su tarjeta de miembro, consulte el horario del museo o actualice la configuración de su aplicación.</string>
+    <string name="channel_name">Audio</string>
+    <string name="transcript">Texto</string>
+    <string name="credits">Créditos</string>
+
+    <!-- 'Leave Tour' dialog -->
+    <string name="leaveCurrentTour">¿Salir del Tour Actual?</string>
+    <string name="continueTour">Continuar</string>
+    <string name="leaveTour">Salir</string>
+
+    <string name="home">Inicio</string>
+    <string name="map">Mapa</string>
+    <string name="info">Información</string>
+    <string name="audio">Audio</string>
+    <string name="search">Búsqueda</string>
+    <string name="looking_for_artwork">¿Buscando obras de arte?</string>
+    <string name="startTour">Comenzar visita</string>
+    <string name="throughDate">Hasta %s</string>
+    <string name="showOnMap">Ver mapa</string>
+    <string name="playAudio">Reproducir audio</string>
+    <string name="buyTickets">Comprar boletos</string>
+    <string name="register">Registro</string>
+    <string name="gallery">Galería %s</string>
+    <string name="welcomeUser">Bienvenido, %s</string>
+</resources>

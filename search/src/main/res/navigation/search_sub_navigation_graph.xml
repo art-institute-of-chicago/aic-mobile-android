@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_sub_navigation_graph"
+    app:startDestination="@id/defaultSearchSuggestionsFragment">
+
+    <fragment
+        android:id="@+id/defaultSearchSuggestionsFragment"
+        android:name="edu.artic.search.DefaultSearchSuggestionsFragment"
+        android:label="fragment_default_search_suggestions"
+        tools:layout="@layout/fragment_default_search_suggestions" />
+
+    <fragment
+        android:id="@+id/searchResultsFragment"
+        android:name="edu.artic.search.SearchResultsContainerFragment"
+        android:label="search_results"/>
+
+    <action
+        android:id="@+id/goToDefaultSuggestions"
+        app:destination="@id/defaultSearchSuggestionsFragment"
+        />
+
+    <action
+        android:id="@+id/goToSearchResults"
+        app:destination="@id/searchResultsFragment"
+        />
+
+</navigation>

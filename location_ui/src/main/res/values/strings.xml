@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="location_title">Location Settings</string>
+    <string name="locationSettingsHeader">Where Are You?</string>
+    <string name="locationSettingsBody">We’d like to use your location to help you navigate the museum.</string>
+    <string name="locationSettingsLocationServiceOff">Location Service Off</string>
+    <string name="locationSettingsLocationNeverAsked">Location Settings</string>
+    <string name="locationSettingsLocationAllowed">Location Enabled</string>
+    <string name="locationSettingsLocationDenied">Location Disabled</string>
+    <string name="locationPromptNotNow">Not Right Now</string>
+
+    <!-- NB: This is a fallback. We do not generally use the standard 'ok' for this string. -->
+    <!--suppress AndroidDomInspection -->
+    <string name="locationPromptOk">@android:string/ok</string>
+
+</resources>

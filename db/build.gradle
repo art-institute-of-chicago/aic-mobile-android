@@ -1,0 +1,62 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.android.library'
+
+android {
+    buildTypes {
+        debug {
+            buildConfigField "String", "BLOB_URL", "\"${envVariable("blob_url",false)}\""
+            buildConfigField "String", "DEFAULT_BUY_URL", "\"${envVariable("default_buy_url",false)}\""
+        }
+        release {
+            buildConfigField "String", "BLOB_URL", "\"${envVariable("blob_url",true)}\""
+            buildConfigField "String", "DEFAULT_BUY_URL", "\"${envVariable("default_buy_url",true)}\""
+        }
+    }
+}
+
+dependencies {
+    implementation project(':base')
+    api project(':localization')
+    api libs.rx_helpers
+    api libs.retrofit_rx
+
+    api libs.retrofit
+    api libs.retrofit_scalars
+
+    api libs.moshi
+    api libs.moshi_kotlin
+    kapt libs.moshi_kotlin_compiler
+
+    api libs.retrofit_moshi
+    api libs.moshi_kotlin
+    api (libs.retrofit_xml_converter, {
+        exclude module: 'xpp3'
+    })
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+
+    implementation libs.threeten
+
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+
+    api libs.kotlin
+    api libs.arch_runtime
+    api libs.arch_paging
+
+    api libs.room
+    kapt libs.room_compiler
+
+    api libs.dagger
+    kapt libs.dagger_compiler
+
+    api libs.rx_kotlin
+    api libs.rx
+    api libs.rx_android
+    api libs.room_rx
+}
+
+androidExtensions {
+    experimental = true
+}

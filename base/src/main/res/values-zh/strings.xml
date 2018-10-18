@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="name_of_this_language">中文</string>
+    <string name="welcome">欢迎</string>
+    <string name="welcomePrompt">利用个人袖珍导游探索博物馆。如果您是会员，请登录以获得高级访问权限。</string>
+    <string name="play_tour_introduction">播放游览简介</string>
+    <string name="suggested">推荐项目</string>
+    <string name="on_the_map">在地图上</string>
+    <string name="accessYourMemberCard">访问您的会员卡。</string>
+    <string name="tours">游览</string>
+    <string name="onView">当前展览</string>
+    <string name="seeAll">查看全部</string>
+    <string name="stops">%s 停止</string>
+    <string name="events">活动</string>
+    <string name="infoPrompt">访问您的会员卡，查看博物馆开放时间，或更新应用程序设置。</string>
+    <string name="channel_name">音频</string>
+    <string name="transcript">脚本</string>
+    <string name="credits">信用</string>
+
+    <!-- 'Leave Tour' dialog -->
+    <string name="leaveCurrentTour">退出当前游览？</string>
+    <string name="continueTour">继续游览</string>
+    <string name="leaveTour">离开游览</string>
+
+    <string name="home">首页</string>
+    <string name="map">地图</string>
+    <string name="info">信息</string>
+    <string name="audio">音频</string>
+    <string name="search">搜索</string>
+    <string name="looking_for_artwork">寻找艺术品？</string>
+    <string name="startTour">开始游览</string>
+    <string name="throughDate">通過 %s</string>
+    <string name="buyTickets">购票</string>
+    <string name="playAudio">播放音频</string>
+    <string name="register">寄存器</string>
+    <string name="showOnMap" translatable="false">在地图上显示</string>
+    <string name="welcomeUser">欢迎, %s</string>
+    <string name="gallery">画廊 %s</string>
+</resources>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar.Ideal</item>
+        <item name="buttonStyle">@style/Widget.AppCompat.Button.Tinted</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <style name="AppTheme.CustomToolbar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <style name="PageTitleLargeWhite" parent="TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:lineSpacingExtra">0sp</item>
+    </style>
+
+    <style name="Widget.AppCompat.Toolbar.Ideal">
+        <item name="titleTextAppearance">@style/AppBarTitleWhite</item>
+    </style>
+
+    <style name="Widget.AppCompat.Button.Tinted">
+        <item name="android:background">@drawable/detail_button_background</item>
+    </style>
+
+    <style name="DetailToolbarExpandedText">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginStart">@dimen/marginDouble</item>
+        <item name="android:layout_marginTop">@dimen/marginDouble</item>
+        <item name="android:layout_marginEnd">@dimen/marginDouble</item>
+    </style>
+
+    <style name="DetailToolbarText">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="BodySansSerifBlackCentered" parent="TextAppearance.AppCompat.Large">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:textSize">@dimen/textMedium</item>
+    </style>
+
+    <style name="BodyCtaTurquoise">
+        <item name="android:fontFamily">@font/ideal_sans_semibold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/sea</item>
+        <item name="android:textSize">@dimen/textLink</item>
+    </style>
+
+    <style name="SectionTitleBlack">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:textSize">@dimen/textLarge</item>
+    </style>
+
+    <style name="SeeAll" parent="BodyCtaTurquoise">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:gravity">end</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="DetailTitle">
+        <item name="android:textSize">@dimen/textLarge</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:minLines">1</item>
+    </style>
+
+    <style name="MetadataSmallWhite">
+        <item name="android:textSize">@dimen/textThirteen</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="MetaDataFifteenWhite">
+        <item name="android:textSize">@dimen/textThirteen</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="CardTitleLargeBlack">
+        <item name="android:textSize">@dimen/textLarge</item>
+        <item name="android:textColor">@color/darkGrey</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:minLines">1</item>
+    </style>
+
+    <style name="CardTitleMediumBlack">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/darkGrey</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+    </style>
+
+    <style name="CardTitleSmallBlack">
+        <item name="android:textSize">@dimen/textSixteen</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+    </style>
+
+    <style name="CardBodySmallItalic">
+        <item name="android:textSize">@dimen/textSmallest</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:fontFamily">@font/amiri_italic</item>
+    </style>
+
+    <style name="CardBodyLargeItalic">
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:fontFamily">@font/amiri_italic</item>
+        <item name="lineHeight">@dimen/lineHeightTextMedium</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="CardBodySerifGray">
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:fontFamily">@font/amiri_regular</item>
+        <item name="lineHeight">@dimen/lineHeightTextMedium</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="DetailsDescription" parent="CardBodySerifGray">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DescriptionDate" parent="CardBodyLargeItalic">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="divider">
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_marginStart">@dimen/marginDouble</item>
+        <item name="android:layout_marginEnd">@dimen/marginDouble</item>
+        <item name="android:background">@color/warmGrey40Alpha</item>
+    </style>
+
+    <style name="dividerTwentyOpaque" parent="divider">
+        <item name="android:background">@color/warmGrey20Alpha</item>
+    </style>
+
+
+    <style name="DetailButton">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:letterSpacing">0.07</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="DetailButtonParent" parent="Widget.AppCompat.Button.Tinted">
+        <item name="android:gravity">center</item>
+        <item name="android:minHeight">50dp</item>
+    </style>
+
+
+    <style name="BodySansSerifWhiteCentered">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:lineSpacingExtra">7sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="BodySansSerifBlackLeft">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:lineSpacingExtra">7sp</item>
+        <item name="android:textColor">@color/greyText</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="SearchResultWhite">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="SearchSectionHeadingGray">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/warmGrey</item>
+    </style>
+
+    <style name="SectionTitleWhite">
+        <item name="android:textSize">21sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="RelatedTourTitleStyle">
+        <item name="android:textSize">21sp</item>
+        <item name="android:layout_marginTop">@dimen/marginStandard</item>
+        <item name="android:textColor">@color/greeny_blue</item>
+    </style>
+
+    <style name="BodyCtaOrange">
+        <item name="android:gravity">end</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/brownishOrange</item>
+        <item name="android:fontFamily">@font/ideal_sans_semibold</item>
+    </style>
+
+    <style name="MetadataMediumGray">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/warmGrey</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="BodySerifWhiteLeft">
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:lineSpacingExtra">-8sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/amiri_regular</item>
+    </style>
+
+    <style name="ListItemTitle2White">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textColor">#CCffffff</item>
+    </style>
+
+
+    <style name="PageTitleRegularWhite">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/textPageTitle</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+    </style>
+
+    <style name="PageSubHeaderRegularWhite">
+        <item name="android:fontFamily">@font/amiri_regular</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
+        <item name="lineHeight">@dimen/lineHeightTextSixteen</item>
+    </style>
+
+
+    <style name="ListItemTitle1White">
+        <item name="android:textSize">@dimen/textSixteen</item>
+        <item name="android:lineSpacingExtra">-4sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <!-- Style for toolbar titles. -->
+    <style name="AppBarTitleWhite" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:lineSpacingExtra">-1sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="TabUnselected">
+        <item name="android:fontFamily">@font/ideal_sans_light</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="TabSelected">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/textMedium</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="MetadataMediumWhite">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="MarkerDepartmentText">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
+    </style>
+
+    <style name="MarkerGalleryText">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="IdealSansMediumItalic">
+        <item name="android:fontFamily">@font/ideal_sans_medium_italic</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="IdealSansBookItalic">
+        <item name="android:fontFamily">@font/ideal_sans_book_italic</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#52e3e7</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="IdealSansBook">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+</resources>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".AudioActivity"
+    >
+
+    <ImageView
+        android:contentDescription="@string/search"
+        android:id="@+id/searchIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="@dimen/marginTwenty"
+        android:background="@drawable/ic_search_background"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_search_24dp"
+        app:layout_constrainedHeight="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+    <ImageView
+        android:id="@+id/screen_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginOneHalf"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_audio_large"
+        app:layout_constraintBottom_toTopOf="@+id/lookup_field"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <!-- For the below EditText, please refer to
+
+    1. AIC-35 for the requirements (in brief, an uneditable edit box)
+
+    and
+
+    2. Android issue https://issuetracker.google.com/issues/37062549 for
+    the reason we're using a deprecated attribute (`android:editable`).
+
+    Note that the `android:background="@null"` definition removes the
+    Material underline from this View.
+    -->
+
+    <EditText
+        android:id="@+id/lookup_field"
+        style="@style/PageTitleRegularWhite"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:layout_marginBottom="@dimen/marginStandard"
+        android:background="@null"
+        android:editable="false"
+        android:focusable="true"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:maxLength="5"
+        android:textColorHint="@color/white"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toTopOf="@+id/subheader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/screen_icon"
+        tools:hint="Look It Up"
+        tools:ignore="Deprecated,UnusedAttribute"
+        />
+
+    <!--
+
+    Additional note: text for lookup_field and subheader is determined at runtime, in ArticGeneralInfo.
+
+    -->
+
+    <TextView
+        android:id="@+id/subheader"
+        style="@style/PageSubHeaderRegularWhite"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginActivitySubtitle"
+        android:layout_marginTop="@dimen/audioLookupTextInternalMargin"
+        android:layout_marginEnd="@dimen/marginActivitySubtitle"
+        android:includeFontPadding="false"
+        android:labelFor="@id/lookup_field"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lookup_field"
+        tools:text="Enter the number next to the headphone icon on the artwork label."
+        tools:ignore="LabelFor"
+        />
+
+
+    <!-- Assumption: the default layout_constraintVertical_bias is 0.5 -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/number_pad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subheader"
+        app:layout_constraintBottom_toTopOf="@id/playerGuideline"
+        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        app:spanCount="3"
+        tools:listitem="@layout/view_number_pad_numeric_element"
+        tools:itemCount="12"
+        />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/playerGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/bottom_audio_player_height"
+        />
+
+
+    <fragment
+        android:id="@+id/newPlayer"
+        android:name="edu.artic.media.ui.NarrowAudioPlayerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_audio_player_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playerGuideline"
+        tools:layout="@layout/fragment_bottom_audio_player"
+        />
+
+
+</android.support.constraint.ConstraintLayout>

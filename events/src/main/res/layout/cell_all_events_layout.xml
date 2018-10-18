@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:layout_width="250dp"
+    tools:layout_marginStart="@dimen/marginDouble"
+    >
+
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@null"
+        app:layout_constraintDimensionRatio="H,156:97"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="matrix"
+        tools:src="@color/sea" />
+
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/CardTitleSmallBlack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:lines="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image"
+        tools:text="Some Sort of Event" />
+
+    <TextView
+        android:id="@+id/dateTime"
+        style="@style/SearchSectionHeadingGray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginStandard"
+        android:lines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="July 28    8:15 a.m."
+        />
+
+    <View
+        android:id="@+id/spacerLine"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/marginTen"
+        android:background="#e1e1e4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateTime" />
+
+    <TextView
+        android:id="@+id/description"
+        style="@style/CardBodySerifGray"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lineSpacingExtra="3dp"
+        android:lineSpacingMultiplier="0.7"
+        android:maxLines="4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spacerLine"
+        tools:text="The Art Institute of Chicago is delighted to present the upcoming symposium UNFIXED: Material Challenges in Contemporary Art. Bringing together internationally renowned scholars, museum professionals, and artists, this symposium stages an interdisciplinary ex" />
+
+    <TextView
+        style="@style/CardTitleLargeBlack"
+        android:id="@+id/headerText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="July 28"
+        />
+
+
+</android.support.constraint.ConstraintLayout>

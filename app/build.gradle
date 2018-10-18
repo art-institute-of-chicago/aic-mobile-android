@@ -1,6 +1,20 @@
-apply plugin: 'com.android.application'
+
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+
+String buildMetadata
+
+if (project.hasProperty('build_number')) {
+    /**
+     * This is typically the build number produced by the CI service.
+     */
+    buildMetadata = project.getProperty('build_number')
+} else {
+    buildMetadata = 'SNAPSHOT'
+}
+
+String majorAndMinorVersion = "0.7"
+Integer patchVersionCode = 0
 
 android {
     compileSdkVersion sdk
@@ -8,23 +22,90 @@ android {
         applicationId "edu.artic"
         minSdkVersion minSdk
         targetSdkVersion sdk
-        versionCode 1
-        versionName "1.0"
+        multiDexEnabled true
+        versionCode (patchVersionCode + 1000)
+        versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "VERSION_NAME"
+        resValue "string", "com.crashlytics.android.build_id", "$majorAndMinorVersion.$patchVersionCode"
     }
-    buildTypes {
+
+    signingConfigs {
         release {
+            storeFile file(envVariable("keystore",true) ?: "DUMMY")
+            storePassword envVariable("keystore_password",true)
+            keyAlias envVariable("keystore_alias",true)
+            keyPassword envVariable("keystore_alias_password",true)
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",false)}\""
+            buildConfigField "String", "FB_API_KEY", "\"${envVariable("fb_api_key",false)}\""
+            buildConfigField "String", "GA_TRACKING_ID", "\"${envVariable("ga_tracking_id", false)}\""
+            buildConfigField "String", "GCM_SENDER_ID", "\"${envVariable("gcm_sender_id", false)}\""
+            buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id",false)}\""
+            buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",false)}\""
+            buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
+            resValue "string", "google_app_id", "${envVariable("fb_application_id",false)}"
+        }
+        release {
+            buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",true)}\""
+            buildConfigField "String", "FB_API_KEY", "\"${envVariable("fb_api_key",true)}\""
+            buildConfigField "String", "GA_TRACKING_ID", "\"${envVariable("ga_tracking_id", true)}\""
+            buildConfigField "String", "GCM_SENDER_ID", "\"${envVariable("gcm_sender_id", true)}\""
+            buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id",true)}\""
+            buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",true)}\""
+            resValue "string", "google_app_id", "${envVariable("fb_application_id",true)}"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':ui')
+    implementation project(':db')
+    implementation project(':viewmodel')
+    implementation project(':base')
+    implementation project(':splash')
+    implementation project(':welcome')
+    implementation project(':tours')
+    implementation project(':tour_manager')
+    implementation project(':info')
+    implementation project(':audio')
+    implementation project(':map')
+    implementation project(':exhibitions')
+    implementation project(':events')
+    implementation project(':analytics')
+    implementation project(':media')
+    implementation project(':media_ui')
+    implementation project(':image')
+    implementation project(':search')
+    implementation project(':details')
+    implementation project(':location')
+    implementation project(':location_ui')
+    implementation project(':membership')
+    implementation project(':access_card')
+    implementation project(':localization_ui')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation libs.kotlin
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    //Dagger
+    implementation libs.dagger
+    implementation libs.threeten
+    implementation libs.firebase_core
+    implementation libs.crashlytics
+    kapt libs.dagger_compiler
+    implementation libs.dagger_android
+    kapt libs.dagger_android_compiler
+
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
+    // testing uses real threetenbp
+    testImplementation('org.threeten:threetenbp:1.3.3') {
+        exclude group: 'com.jakewharton.threetenabp', module: 'threetenabp'
+    }
 }

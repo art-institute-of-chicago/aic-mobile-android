@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chooseYourLanguage">Elija su idioma de preferencia</string>
+    <string name="languageSettings">Configuración de idiomas</string>
+    <string name="enjoyFreeYearLongAdmission">Disfrute de admisión gratuita durante todo el año.</string>
+    <string name="joinNow">Unirse ahora mismo</string>
+    <string name="museumInformation">Información sobre el museo</string>
+    <string name="locationSettings">Configuración de ubicación</string>
+    <string name="supportBy">Patrocinado por</string>
+    <string name="buyTickets">Comprar boletos</string>
+    <string name="versionInfo">Versión %1$s</string>
+
+    <string name="alreadyMember">¿Ya es miembro?</string>
+    <string name="whereAreYouLabel">¿Dónde está usted?</string>
+    <string name="languageSettingsBody">Es posible que cierta información no esté disponible en el idioma seleccionado.</string>
+
+</resources>

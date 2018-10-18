@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Margin values are halved in the small configuration. -->
+
+    <dimen name="marginQuarter">1dp</dimen>
+    <dimen name="marginHalf">2dp</dimen>
+    <dimen name="marginStandard">4dp</dimen>
+    <dimen name="marginOneHalf">6dp</dimen>
+    <dimen name="marginDouble">8dp</dimen>
+    <dimen name="marginTriple">12dp</dimen>
+    <dimen name="marginQuad">16dp</dimen>
+
+
+    <!-- For text, small sizes should be around 4sp smaller than their normal counterparts. -->
+
+    <dimen name="textSmallest">10sp</dimen>
+    <dimen name="textSmall">12sp</dimen>
+    <dimen name="textMedium">15sp</dimen>
+    <dimen name="textLarge">19sp</dimen>
+
+    <dimen name="textSixteen">12sp</dimen>
+    <dimen name="textPageTitle">20sp</dimen>
+
+
+    <!-- All other values should be tailored to practical use (i.e. no real guidelines apply) -->
+
+    <dimen name="collapsibleImageHeight">200dp</dimen>
+
+
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="listenIn">收听</string>
+    <string name="audioGuide">使用你的耳机收听。没有配备耳机？请将听筒靠近耳朵。</string>
+    <string name="relatedTours">相关游览</string>
+    <string name="cancel_audio">关闭</string>
+</resources>

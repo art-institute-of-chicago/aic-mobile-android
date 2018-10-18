@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="becomeAMember">Hágase miembro</string>
+    <string name="signIn">Iniciar sesión</string>
+    <string name="homeZipCode">Código postal</string>
+    <string name="memberId">Identificación del Miembro…</string>
+    <string name="changeInformation">Cambiar información</string>
+    <string name="switchCardHolder">Cambiar titular de tarjeta</string>
+    <string name="memberCard">Tarjeta del Miembro</string>
+    <string name="accessMemberCardLabel">Tarjeta de acceso para miembros</string>
+    <string name="expires">Vence: %s</string>
+    <string name="zipCodeHint">Ingrese su código postal…</string>
+    <string name="memberIdHint">Ingrese la Identificación del Miembro…</string>
+</resources>

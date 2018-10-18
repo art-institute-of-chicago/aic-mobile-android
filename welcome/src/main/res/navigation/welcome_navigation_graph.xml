@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/welcome_navigation_graph"
+    app:startDestination="@id/welcomeFragment">
+
+    <include app:graph="@navigation/all_tours_navigation_graph" />
+    <include app:graph="@navigation/tour_details_navigation_graph" />
+    <include app:graph="@navigation/all_events_navigation_graph" />
+    <include app:graph="@navigation/event_details_navigation_graph" />
+    <include app:graph="@navigation/exhibition_navigation_graph" />
+    <include app:graph="@navigation/exhibition_details_navigation_graph" />
+    <include app:graph="@navigation/search_navigation_graph"/>
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="edu.artic.welcome.WelcomeFragment"
+        android:label="WelcomeFragment">
+        <action
+            android:id="@+id/goToAllToursAction"
+            app:destination="@id/all_tours_navigation_graph" />
+        <action
+            android:id="@+id/goToTourDetailsAction"
+            app:destination="@id/tour_details_navigation_graph" />
+        <action
+            android:id="@+id/goToAllEventsAction"
+            app:destination="@id/all_events_navigation_graph" />
+        <action
+            android:id="@+id/goToAllExhibitionsAction"
+            app:destination="@id/all_exhibitions_navigation_graph" />
+        <action
+            android:id="@+id/goToExhibitionDetailsAction"
+            app:destination="@id/exhibition_details_navigation_graph" />
+        <action
+            android:id="@+id/goToEventDetailsAction"
+            app:destination="@id/event_details_navigation_graph" />
+        <action
+            android:id="@+id/goToSearch"
+            app:destination="@id/search_navigation_graph" />
+    </fragment>
+
+
+
+
+</navigation>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AudioTutorialTheme" parent="AppTheme.CustomToolbar">
+        <item name="colorPrimary">@color/audioBackground</item>
+        <item name="colorPrimaryDark">@color/audioBackground</item>
+        <item name="android:colorPrimaryDark">@color/audioBackground</item>
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
+
+</resources>

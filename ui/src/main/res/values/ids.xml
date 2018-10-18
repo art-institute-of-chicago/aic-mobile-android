@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- We use this to hold Activities' androidx.navigation.fragment.NavHostFragment -->
+    <item name="container" type="id"/>
+</resources>
