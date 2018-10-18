@@ -87,7 +87,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      *
      * Defaults to [edu.artic.map.MapDisplayMode.CurrentFloor].
      */
-    val displayMode: Subject<MapDisplayMode> = PublishSubject.create()
+    val displayMode: Subject<MapDisplayMode> = BehaviorSubject.create()
     /**
      * Current object of interest.
      *
@@ -667,7 +667,8 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 searchExhibition == null &&
                 searchedAnnotationType == null &&
                 tourInfo.first == null &&
-                tourInfo.second == null) {
+                tourInfo.second == null &&
+                (displayMode as BehaviorSubject).value != null) {
             return
         }
 
