@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@color/mapObjectWindowBlue"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    tools:layout_gravity="bottom">
 
     <TextView
         android:id="@+id/amenityType"
@@ -17,14 +18,12 @@
         android:layout_marginTop="@dimen/marginStandard"
         android:layout_marginEnd="@dimen/marginTriple"
         android:ellipsize="end"
-        android:fontFamily="@font/ideal_sans_book"
-        android:fontFeatureSettings="tnum"
         android:lines="1"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="ArtworksArtworksArtworksArtworksArtworksArtworksArtworks" />
+        tools:text="Name of the Amenity" />
 
     <View
         android:id="@+id/divider"
@@ -47,12 +46,12 @@
         android:contentDescription="@null"
         android:scaleType="matrix"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"
-        tools:background="@color/brownishOrange" />
+        tools:visibility="visible"
+        tools:src="@tools:sample/backgrounds/scenic" />
 
     <TextView
         android:id="@+id/amenityDetails"
@@ -71,6 +70,6 @@
         app:layout_constraintStart_toEndOf="@id/amenityImage"
         app:layout_constraintTop_toBottomOf="@+id/divider"
         app:layout_constraintVertical_bias="0"
-        tools:text="Monday Tuesday" />
+        tools:text="More details about it, such as which floor it's on or when it's available." />
 
 </android.support.constraint.ConstraintLayout>
