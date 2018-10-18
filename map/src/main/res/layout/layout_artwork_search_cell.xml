@@ -7,7 +7,6 @@
     android:background="@color/mapObjectWindowBlue"
     android:layout_gravity="bottom"
     android:clickable="true"
-    tools:layout_height="match_parent"
     android:focusable="true">
 
     <TextView
@@ -22,7 +21,7 @@
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Artworks" />
+        tools:text="Artwork" />
 
     <View
         android:id="@+id/divider"
@@ -42,13 +41,13 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginBottom="@dimen/marginSixtyFour"
-        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"
         app:layout_constraintVertical_bias="0"
-        tools:background="@color/brownishOrange" />
+        tools:src="@tools:sample/backgrounds/scenic" />
 
     <TextView
         android:id="@+id/objectTitle"
@@ -115,13 +114,13 @@
         android:layout_height="@dimen/mapAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/ic_pause"
-        app:layout_constraintVertical_bias="0"
-        tools:visibility="gone"
         android:visibility="gone"
         android:contentDescription="@string/exo_controls_pause_description"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintBottom_toBottomOf="@id/objectImage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/objectImage" />
+        app:layout_constraintTop_toTopOf="@id/objectImage"
+        tools:visibility="gone" />
 
     <android.support.constraint.Barrier
         android:id="@+id/barrier"
