@@ -1,5 +1,7 @@
 package edu.artic.map.tutorial
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.view.MotionEvent
@@ -16,6 +18,7 @@ import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenName
 import edu.artic.db.INVALID_FLOOR
 import edu.artic.map.R
+import edu.artic.map.overrideMapAccess
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -163,6 +166,18 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 .subscribe {
                     activity?.onBackPressed()
                 }.disposedBy(navigationDisposeBag)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is Activity) {
+            overrideMapAccess(context, View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS)
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        overrideMapAccess(activity, View.IMPORTANT_FOR_ACCESSIBILITY_AUTO)
     }
 
     companion object {
