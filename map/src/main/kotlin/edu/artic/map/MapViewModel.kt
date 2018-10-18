@@ -668,7 +668,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 searchedAnnotationType == null &&
                 tourInfo.first == null &&
                 tourInfo.second == null &&
-                (displayMode as BehaviorSubject).value != null) {
+                (displayMode as BehaviorSubject).hasValue()) {
             return
         }
 
