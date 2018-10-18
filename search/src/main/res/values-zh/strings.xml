@@ -4,4 +4,5 @@
     <string name="couldnt_find_top_text">抱歉，我们无法找到。</string>
     <string name="couldnt_find_bottom_text">如需帮助，请咨询最近的博物馆人员或<u>访问我们的网站</u>。</string>
     <string name="exhibitions">展览</string>
+    <string name="exhibition_info_title">展览</string>
 </resources>

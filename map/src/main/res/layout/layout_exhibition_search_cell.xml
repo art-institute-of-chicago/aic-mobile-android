@@ -7,7 +7,6 @@
     android:background="@color/mapObjectWindowBlue"
     android:layout_gravity="bottom"
     android:clickable="true"
-    tools:layout_height="match_parent"
     android:focusable="true">
 
     <TextView
@@ -25,7 +24,7 @@
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Exhibition" />
+        android:text="@string/exhibition_info_title" />
 
     <View
         android:id="@+id/divider"
