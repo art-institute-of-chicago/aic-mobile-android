@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:layout_height="200dp"
+    android:background="@color/narrowAudioPlayerBackgroundColor">
+
+
+    <ImageButton
+        android:id="@+id/exo_play"
+        android:layout_width="@dimen/narrowAudioControlIconSize"
+        android:layout_height="@dimen/narrowAudioControlIconSize"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:background="@drawable/ic_play"
+        android:contentDescription="@string/exo_controls_play_description"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/exo_pause"
+        android:layout_width="@dimen/narrowAudioControlIconSize"
+        android:layout_height="@dimen/narrowAudioControlIconSize"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:background="@drawable/ic_pause"
+        android:contentDescription="@string/exo_controls_pause_description"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="end"
+        app:constraint_referenced_ids="exo_play,exo_pause"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/trackTitle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:fontFamily="@font/ideal_sans_book"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textMedium"
+        android:gravity="center_vertical"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="@dimen/textSmall"
+        app:autoSizeMaxTextSize="@dimen/textMedium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/closePlayer"
+        app:layout_constraintStart_toEndOf="@id/barrier"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Test track"
+        tools:ignore="MissingPrefix"/>
+
+    <ImageButton
+        android:id="@+id/closePlayer"
+        android:layout_width="@dimen/narrowAudioControlIconSize"
+        android:layout_height="@dimen/narrowAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:background="@drawable/ic_close_circle"
+        android:contentDescription="@string/cancel_audio"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

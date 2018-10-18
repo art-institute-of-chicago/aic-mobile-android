@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+
+    On this size and below, we need more just a little more space to
+    support the full range of text sizes. So this should be half the
+    amount used on higher-density devices.
+
+    -->
+    <dimen name="audioLookupTextInternalMargin">@dimen/marginStandard</dimen>
+
+</resources>

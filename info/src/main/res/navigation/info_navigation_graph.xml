@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/info_navigation_graph"
+    app:startDestination="@id/informationFragment">
+
+    <include app:graph="@navigation/search_navigation_graph" />
+
+    <fragment
+        android:id="@+id/informationFragment"
+        android:name="edu.artic.info.InformationFragment"
+        android:label="@string/fragmentInformationLabel"
+        tools:layout="@layout/fragment_information">
+        <action
+            android:id="@+id/goToSearch"
+            app:destination="@id/search_navigation_graph" />
+        <action
+            android:id="@+id/goToMuseumInformationFragment"
+            app:destination="@id/museumInformationFragment" />
+        <action
+            android:id="@+id/goToLocationSettings"
+            app:destination="@id/locationSettingsFragment" />
+        <action
+            android:id="@+id/goToAccessMemberCard"
+            app:destination="@id/accessMemberCardFragment" />
+        <action
+            android:id="@+id/gotoLanguageSettings"
+            app:destination="@id/languageSettingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/museumInformationFragment"
+        android:name="edu.artic.info.MuseumInformationFragment"
+        android:label="fragment_blank"
+        tools:layout="@layout/fragment_museum_information" />
+    <fragment
+        android:id="@+id/accessMemberCardFragment"
+        android:name="edu.artic.accesscard.AccessMemberCardFragment"
+        android:label="@string/accessMemberCardLabel"
+        tools:layout="@layout/fragment_validate_member_information">
+        <deepLink app:uri="artic://edu.artic.info/accessMemberCard" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/locationSettingsFragment"
+        android:name="edu.artic.location.InfoLocationSettingsFragment"
+        android:label="LocationSettings"
+        tools:layout="@layout/fragment_location_settings" />
+    <fragment
+        android:id="@+id/languageSettingsFragment"
+        android:name="edu.artic.localization.ui.LanguageSettingsFragment"
+        android:label="fragment_language_settings"
+        tools:layout="@layout/fragment_language_settings" />
+
+</navigation>

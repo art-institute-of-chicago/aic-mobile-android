@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Style for android.support.design.widget.BottomNavigationView layouts -->
+    <style name="BottomNav">
+        <item name="itemBackground">@color/white</item>
+        <item name="itemTextColor">@color/colorPrimary</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="menu">@menu/navigation_menu</item>
+    </style>
+</resources>

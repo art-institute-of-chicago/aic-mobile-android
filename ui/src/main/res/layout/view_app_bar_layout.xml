@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    tools:parentTag="edu.artic.view.ArticMainAppBarLayout">
+
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/collapsingToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        app:contentScrim="?attr/colorPrimary"
+        app:expandedTitleGravity="bottom|center_horizontal"
+        app:expandedTitleTextAppearance="@style/PageTitleLargeWhite"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+        <FrameLayout
+            android:fitsSystemWindows="true"
+            app:layout_collapseMode="parallax"
+            app:layout_collapseParallaxMultiplier="1"
+            android:background="?attr/colorPrimary"
+            android:transitionName="museumImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/expandedImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                tools:background="@color/bluegreen"
+                tools:layout_height="200dp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            app:layout_collapseMode="parallax"
+            app:layout_collapseParallaxMultiplier="0.3">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                android:tint="@color/white"
+                tools:src="@drawable/ic_play" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                />
+
+            <TextView
+                android:id="@+id/subTitle"
+                style="@style/PageSubHeaderRegularWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:paddingStart="@dimen/marginActivitySubtitle"
+                android:paddingTop="@dimen/marginHalf"
+                android:paddingBottom="@dimen/marginTriple"
+                android:paddingEnd="@dimen/marginActivitySubtitle"
+                app:layout_collapseMode="parallax"
+                tools:maxLines="2"
+                tools:text="@tools:sample/lorem/random" />
+        </LinearLayout>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_collapseMode="pin"
+            app:titleTextColor="@color/white"
+            tools:title="Welcome"
+            tools:layout_height="52dp" >
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/marginTwenty"
+                android:background="@drawable/ic_search_background"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/search"
+                android:src="@drawable/ic_search_24dp" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+
+</merge>

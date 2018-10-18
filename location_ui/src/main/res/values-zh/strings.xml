@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="location_title">地点设置</string>
+    <string name="locationSettingsHeader">您在哪里？</string>
+    <string name="locationSettingsBody">我们想使用您的位置帮助您找到博物馆。</string>
+    <string name="locationSettingsLocationDenied">禁用定位服务</string>
+    <string name="locationSettingsLocationAllowed">启用定位服务</string>
+    <string name="locationPromptNotNow">不是现在</string>
+    <string name="locationSettingsLocationNeverAsked">@string/location_title</string>
+    <string name="locationPromptOk">确定</string>
+    <string name="locationSettingsLocationServiceOff">位置服務關閉</string>
+</resources>

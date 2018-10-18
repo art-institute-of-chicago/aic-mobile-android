@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="listenIn">Escuche.</string>
+    <string name="audioGuide">Use los auriculares. ¿No tiene? Coloque el teléfono cerca del oído.</string>
+    <string name="relatedTours">Visitas relacionadas</string>
+    <string name="cancel_audio">Cancel Audio</string>
+</resources>

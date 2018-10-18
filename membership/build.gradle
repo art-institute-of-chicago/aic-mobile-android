@@ -1,0 +1,25 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    buildTypes {
+        debug {
+            buildConfigField("String", "MEMBER_INFO_API", "\"${envVariable("member_validation_url", false)}\"")
+            buildConfigField("String", "MEMBER_INFO_API_TOKEN", "\"${envVariable("member_validation_token", false)}\"")
+        }
+        release {
+            buildConfigField("String", "MEMBER_INFO_API", "\"${envVariable("member_validation_url", true)}\"")
+            buildConfigField("String", "MEMBER_INFO_API_TOKEN", "\"${envVariable("member_validation_token", true)}\"")
+        }
+    }
+}
+
+dependencies {
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+
+    api project(':base')
+    implementation project(':db')
+    implementation libs.rx_helpers
+    implementation libs.rx_kotlin
+}

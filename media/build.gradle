@@ -1,0 +1,18 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+
+    implementation libs.exo_player_core
+    implementation libs.exo_player_dash
+    implementation libs.exo_player_ui
+    implementation libs.media_compat
+    implementation libs.glide
+    implementation libs.exo_player_media_session
+    implementation project(':base')
+    implementation project(':db')
+    implementation project(':analytics')
+}

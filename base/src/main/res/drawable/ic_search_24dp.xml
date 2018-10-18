@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="35dp"
+    android:height="35dp"
+    android:viewportHeight="35"
+    android:viewportWidth="35">
+
+    <group android:name="search">
+        <path
+            android:fillColor="#FFF"
+            android:fillType="evenOdd"
+            android:pathData="M16.098 21.825c-3.1 0-5.621-2.543-5.621-5.668s2.522-5.668 5.62-5.668c3.1 0 5.621 2.543 5.621 5.668s-2.521 5.668-5.62 5.668zM26 24.94l-4.356-4.33a7.156 7.156 0 0 0 1.55-4.453C23.195 12.21 20.01 9 16.098 9 12.184 9 9 12.21 9 16.157c0 3.946 3.184 7.157 7.098 7.157a7.029 7.029 0 0 0 4.515-1.64l4.351 4.327 1.037-1.061z" />
+    </group>
+</vector>

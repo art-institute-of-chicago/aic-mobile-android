@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="couldnt_find_top_text">Sorry, we couldn’t find that.</string>
+    <string name="couldnt_find_bottom_text">For help, visit the nearest museum representative or <u>visit our website</u></string>
+    <string name="artworks">Artworks</string>
+    <string name="exhibitions">Exhibitions</string>
+    <string name="exhibition_info_title">Exhibition</string>
+</resources>

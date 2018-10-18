@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="number_pad_text_size">18sp</dimen>
+    <dimen name="number_pad_text_bounds">40sp</dimen>
+    <dimen name="number_pad_text_bounds_height">23.87sp</dimen>
+</resources>

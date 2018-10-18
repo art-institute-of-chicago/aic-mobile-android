@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.CustomToolbar.MapTheme">
+        <item name="colorAccent">@color/marine</item>
+        <item name="colorPrimary">@color/marine</item>
+        <item name="colorPrimaryDark">@color/marine</item>
+        <item name="android:colorAccent">@color/marine</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="MapFloor">
+        <item name="android:layout_marginStart">@dimen/marginDouble</item>
+        <item name="android:layout_marginEnd">@dimen/marginDouble</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">34dp</item>
+        <item name="android:minHeight">34dp</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:textColor">@color/mapFloorBlue</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@drawable/map_floor_background_default</item>
+    </style>
+
+    <style name="LeaveTourDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/off_blue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="buttonStyle">@style/MyButton</item>
+    </style>
+
+    <style name="MyButton" parent="Widget.AppCompat.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DialogButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">50dp</item>
+    </style>
+
+    <!-- For use with e.g. the map tutorial metadata tags -->
+    <style name="MetadataMediumWhite.Tutorial">
+        <item name="android:background">@drawable/tutorial_text_shape</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">@dimen/tutorialTextStartMargin</item>
+        <item name="android:paddingTop">@dimen/tutorialTextVerticalMargin</item>
+        <item name="android:paddingEnd">@dimen/marginTriple</item>
+        <item name="android:paddingBottom">@dimen/tutorialTextVerticalMargin</item>
+    </style>
+
+    <style name="Widget.AppCompat.Button.Borderless.IdealSansBook">
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="tourDivider">
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/white26Alpha</item>
+    </style>
+</resources>

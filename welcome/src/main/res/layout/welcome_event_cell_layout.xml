@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/eventTileWidth"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/marginTwenty">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tourSummaryImageHeight"
+            android:scaleType="matrix"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:src="@color/geyser"
+            />
+
+        <View
+            android:id="@+id/infoBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tourSummaryInfoBarHeight"
+            android:background="@color/transparentInfoBarColor"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toStartOf="@id/image"
+            app:layout_constraintEnd_toEndOf="@id/image"
+            />
+
+
+        <TextView
+            android:id="@+id/date"
+            style="@style/MetadataSmallWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginStandard"
+            android:gravity="center"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintStart_toStartOf="@id/image"
+            tools:text="October 9     11:30 a.m." />
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/CardTitleLargeBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginStandard"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/infoBar"
+            tools:text="Two Floating Worlds" />
+
+
+        <TextView
+            android:id="@+id/description"
+            style="@style/CardBodySerifGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lineSpacingMultiplier="0.8"
+            android:lines="3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="Event description details  Event description details  Event description details  Event description details  Event description details  Event description details  " />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</FrameLayout>

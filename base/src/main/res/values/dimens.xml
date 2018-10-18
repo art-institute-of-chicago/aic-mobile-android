@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="marginQuarter">2dp</dimen>
+    <dimen name="marginHalf">4dp</dimen>
+    <dimen name="marginStandard">8dp</dimen>
+    <dimen name="marginOneHalf">12dp</dimen>
+    <dimen name="marginDouble">16dp</dimen>
+    <dimen name="marginTriple">24dp</dimen>
+    <dimen name="marginQuad">32dp</dimen>
+
+    <dimen name="marginTen">10dp</dimen>
+    <dimen name="marginTwenty">20dp</dimen>
+    <dimen name="marginSixtyFour">64dp</dimen>
+    <dimen name="marginNinety">90dp</dimen>
+
+    <dimen name="statusBarHeightPlus10">34dp</dimen>
+
+    <dimen name="collapsibleImageHeight">240dp</dimen>
+    <dimen name="tourTileWidth">285dp</dimen>
+    <dimen name="tourTileHeight">300dp</dimen>
+    <dimen name="exhibitionTileWidth">240dp</dimen>
+    <dimen name="exhibitionTileHeight">300dp</dimen>
+    <dimen name="eventTileWidth">285dp</dimen>
+    <dimen name="eventTileHeight">320dp</dimen>
+    <dimen name="tourSummaryImageHeight">177dp</dimen>
+    <dimen name="tourSummaryInfoBarHeight">36dp</dimen>
+    <dimen name="tourCarouselHeight">86dp</dimen>
+    
+    <dimen name="textSmallest">12sp</dimen>
+    <dimen name="textSmall">14sp</dimen>
+    <dimen name="textMedium">17sp</dimen>
+    <dimen name="textLarge">21sp</dimen>
+
+    <dimen name="textLink">15sp</dimen>
+    <dimen name="textPrompt">24sp</dimen>
+    <dimen name="textPageTitle">30sp</dimen>
+
+    <dimen name="textThirteen">13sp</dimen>
+    <dimen name="textFifteen">15sp</dimen>
+    <dimen name="textSixteen">16sp</dimen>
+
+    <dimen name="lineHeightTextSixteen">20sp</dimen>
+    <dimen name="lineHeightTextMedium">25sp</dimen>
+
+    <dimen name="bottom_audio_player_height">40dp</dimen>
+    <dimen name="bottomAudioControlIconSize">32dp</dimen>
+    <dimen name="audioPlayerControllerSize">32dp</dimen>
+    <dimen name="large_icon_size">42dp</dimen>
+    <dimen name="mapObjectDetailsViewHeight">135dp</dimen>
+</resources>

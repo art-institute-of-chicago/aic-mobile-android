@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/exhibition_details_navigation_graph"
+    app:startDestination="@id/exhibitionDetailFragment">
+    <fragment
+        android:id="@+id/exhibitionDetailFragment"
+        android:name="edu.artic.exhibitions.ExhibitionDetailFragment"
+        android:label="ExhibitionDetailFragment">
+        <argument
+            android:name="exhibition"
+            app:argType="edu.artic.db.models.ArticExhibition" />
+    </fragment>
+</navigation>

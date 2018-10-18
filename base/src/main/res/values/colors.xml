@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="white50alpha">#80FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="black60alpha">#99000000</color>
+    <color name="gray">#979797</color>
+
+    <!-- 26% opacity -->
+    <color name="white26Alpha">#42ffffff</color>
+    <!-- 36% opacity -->
+    <color name="number_pad_white_faint">#5CFFFFFF</color>
+    <!-- 50% opacity -->
+    <color name="number_pad_white_half_visible">#80FFFFFF</color>
+
+    <color name="sea">#37a2a5</color>
+    <color name="geyser">#CEE0DF</color>
+    <color name="greyText">#343434</color>
+    <color name="warmGrey">#a1a1a1</color>
+    <color name="warmGrey40Alpha">#66a1a1a1</color>
+    <color name="warmGrey20Alpha">#33a1a1a1</color>
+    <color name="darkGrey">#333333</color>
+    <color name="cloudyBlue">#cee0df</color>
+    <color name="transparentInfoBarColor">#73000000</color>
+
+
+    <!-- Global defaults -->
+    <color name="colorPrimary">#118084</color>
+    <color name="colorPrimaryDark">#118084</color>
+    <color name="colorAccent">@color/sea</color>
+
+
+    <!-- Home/Welcome-related -->
+    <color name="ugly_blue">#307177</color>
+    <color name="cloudy_blue">#cee0df</color>
+    <color name="bluegreen">#008085</color>
+
+    <!-- Audio-related -->
+    <color name="grape">#6d2861</color>
+
+
+    <!-- Map-related -->
+    <color name="marine">#063258</color>
+    <color name="grey_blue">#6a8ba8</color>
+
+    <color name="bluegrey">#96aec2</color>
+    <color name="denim">#39658b</color>
+    <color name="map_light_dot">@color/denim</color>
+
+    <color name="off_blue">#5e73b2</color>
+    <color name="black_96">#f50a0a0a</color>
+    <color name="dark_grey">#333333</color>
+    <color name="brownish_grey">#666666</color>
+    <color name="greeny_blue">#37a8ab</color>
+
+    <!-- Info-related -->
+    <color name="brownishOrange">#ce6b27</color>
+    <color name="brownish_orange">#ce6b27</color>
+    <color name="infoScreenRed">#91072D</color>
+    <color name="audioBackground">#1e1e1e</color>
+    <color name="mapObjectWindowBlue">#7789a7</color>
+    <color name="mapFloorBlue">#083f6e</color>
+    <color name="audioBufferingColor">#868686</color>
+    <color name="audioDurationTextColor">#FFBEBEBE</color>
+    <color name="hintColor">#9b9b9b</color>
+    <color name="infoInputFieldWhite">#F0F0F0</color>
+    <color name="translucentLoadingScrim">#4D000000</color>
+
+    <!-- Splash/logo-related -->
+    <color name="splashGradientStart">#1c515e</color>
+    <color name="splashGradientEnd">#2ea1a2</color>
+</resources>

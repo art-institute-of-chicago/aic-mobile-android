@@ -1,0 +1,38 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+
+dependencies {
+    implementation libs.rx_helpers
+
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+    api libs.dagger
+    api libs.dagger_android
+    implementation libs.constraint_layout
+    implementation project(":base")
+    api project(":localization")
+    api project(":analytics")
+    api project(":navigation")
+    api libs.arch_navigation
+    api libs.arch_navigation_ui
+    api "com.android.support:appcompat-v7:${support_version}"
+    api libs.v4_support
+    api libs.design_support
+    api "com.android.support:cardview-v7:${support_version}"
+
+    api "com.jakewharton.rxbinding2:rxbinding-support-v4:${rx_binding_version}"
+    api "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:${rx_binding_version}"
+    api "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rx_binding_version}"
+    api "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:${rx_binding_version}"
+    api "com.jakewharton.rxbinding2:rxbinding-kotlin:${rx_binding_version}"
+    api "com.jakewharton.rxbinding2:rxbinding-design-kotlin:${rx_binding_version}"
+    api "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:${rx_binding_version}"
+    api "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7-kotlin:${rx_binding_version}"
+    api libs.rx_android
+}
+
+
+androidExtensions {
+    experimental = true
+}

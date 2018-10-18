@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/search_navigation_graph"
+    app:startDestination="@id/searchFragment">
+
+    <include app:graph="@navigation/search_sub_navigation_graph"/>
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="edu.artic.search.SearchFragment"
+        android:label="search_fragment">
+
+        <action
+            android:id="@+id/goToSearchAudioDetails"
+            app:destination="@id/searchAudioDetailFragment" />
+
+        <action
+            android:id="@+id/goToTourDetails"
+            app:destination="@id/tourDetailsFragment" />
+
+        <action
+            android:id="@+id/goToExhibitionDetails"
+            app:destination="@id/exhibitionDetailsFragment" />
+
+        <!--<action-->
+            <!--android:id="@+id/goToSearchResults"-->
+            <!--app:destination="@id/searchRe"/>-->
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchAudioDetailFragment"
+        android:name="edu.artic.artwork.ArtworkDetailFragment"
+        android:label="SearchAudioDetailFragment" />
+
+    <fragment
+        android:id="@+id/tourDetailsFragment"
+        android:name="edu.artic.tours.TourDetailsFragment"
+        android:label="TourDetailsFragment" />
+
+    <fragment
+        android:id="@+id/exhibitionDetailsFragment"
+        android:name="edu.artic.exhibitions.ExhibitionDetailFragment"
+        android:label="ExhibitionDetailsFragment" />
+
+
+</navigation>

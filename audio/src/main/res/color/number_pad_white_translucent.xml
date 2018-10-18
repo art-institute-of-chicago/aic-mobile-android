@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- In its default state, this ColorStateList is invisible. When pressed it appears, translucent. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/number_pad_white_half_visible" android:state_pressed="true"/>
+    <item android:color="@android:color/transparent"/>
+</selector>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/mapObjectWindowBlue"
+    android:clickable="true"
+    android:focusable="true">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/reference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/marginTriple" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="72dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginBottom="@dimen/marginSixtyFour"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/reference"
+        tools:background="@color/brownishOrange" />
+
+    <TextView
+        android:id="@+id/tourStopTitle"
+        style="@style/ListItemTitle1White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintTop_toTopOf="@+id/reference"
+        tools:text="Nighthawks" />
+
+    <TextView
+        android:id="@+id/tourStopGallery"
+        style="@style/ListItemTitle2White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginStandard"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
+        tools:text="Gallery 201" />
+
+
+    <ImageButton
+        android:id="@+id/playCurrent"
+        android:layout_width="@dimen/mapAudioControlIconSize"
+        android:layout_height="@dimen/mapAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_play"
+        android:visibility="visible"
+        android:contentDescription="@string/exo_controls_play_description"
+        app:layout_constraintBottom_toBottomOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image" />
+
+    <ImageButton
+        android:id="@+id/pauseCurrent"
+        android:layout_width="@dimen/mapAudioControlIconSize"
+        android:layout_height="@dimen/mapAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_pause"
+        android:visibility="gone"
+        android:contentDescription="@string/exo_controls_pause_description"
+        app:layout_constraintBottom_toBottomOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="playCurrent,pauseCurrent"
+        tools:ignore="MissingConstraints" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.CustomToolbar.AudioTheme">
+        <item name="colorPrimary">@color/grape</item>
+        <item name="colorPrimaryDark">@color/grape</item>
+        <item name="android:statusBarColor">@color/grape</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowBackground">@color/grape</item>
+    </style>
+
+
+    <style name="NumberPadText">
+        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <dimen name="number_pad_text_size">16sp</dimen>
+    <dimen name="number_pad_bg_size">66dp</dimen>
+
+    <!-- Ratio of these two bounds dimensions should be 37:62, same as in number_pad_delete.xml -->
+    <dimen name="number_pad_text_bounds">10sp</dimen>
+    <dimen name="number_pad_text_bounds_height">5.97sp</dimen>
+
+</resources>

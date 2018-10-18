@@ -1,0 +1,23 @@
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+
+    implementation libs.exo_player_core
+    implementation libs.exo_player_ui
+
+    implementation libs.constraint_layout
+    implementation project(':viewmodel')
+    implementation libs.rx_helpers
+    implementation project(':base')
+    implementation project(':ui')
+    implementation project(':media')
+    implementation project(':db')
+    implementation project(':navigation')
+    implementation project(':viewmodel')
+    implementation project(':adapter')
+    implementation project(':image')
+    implementation project(':tour_manager')
+}

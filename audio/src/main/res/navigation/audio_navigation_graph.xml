@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/audio_navigation_graph"
+    app:startDestination="@id/audioLookupFragment"
+    >
+
+    <include app:graph="@navigation/search_navigation_graph"/>
+
+    <fragment
+        android:id="@+id/audioLookupFragment"
+        android:name="edu.artic.audio.AudioLookupFragment"
+        android:label="audioLookupFragment"
+        >
+        <!-- This 'peek_audio_details' action can be reversed without leaving the Activity. -->
+        <action
+            android:id="@+id/peekAudioDetails"
+            app:destination="@id/audioDetailsFragment"
+            />
+        <!-- Load up the search screen with this action. -->
+        <action
+            android:id="@+id/goToSearch"
+            app:destination="@id/search_navigation_graph"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/audioDetailsFragment"
+        android:name="edu.artic.media.ui.AudioDetailsFragment"
+        android:label="audioDetailsFragment"
+        />
+
+
+    <!-- This 'see_current_audio_details' action kills the Activity as soon as you hit back. -->
+    <action
+        android:id="@+id/seeCurrentAudioDetails"
+        app:destination="@id/audioDetailsFragment"
+        app:popUpTo="@+id/audio_navigation_graph"
+        />
+
+</navigation>

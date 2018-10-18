@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/marginDouble"
+    android:paddingBottom="@dimen/marginStandard"
+    android:background="@color/mapObjectWindowBlue">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="72dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:background="@color/brownishOrange" />
+
+    <TextView
+        android:id="@+id/tourNumber"
+        style="@style/ListItemTitle1White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/stopTitle"
+        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:text="1" />
+
+
+    <TextView
+        android:id="@+id/stopTitle"
+        style="@style/ListItemTitle1White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/tourNumber"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:text="A Sunday on La Grande A Sunday on La Grande A Sunday on La Grande" />
+
+
+    <TextView
+        android:id="@+id/stopSubTitle"
+        style="@style/ListItemTitle2White"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginStandard"
+        android:layout_marginTop="@dimen/marginHalf"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
+        app:layout_constraintStart_toEndOf="@id/tourNumber"
+        app:layout_constraintBottom_toBottomOf="@id/image"
+        tools:text="Regenstein Hall Regenstein Hall Regenstein Hall Regenstein Hall" />
+
+
+    <ImageButton
+        android:id="@+id/playCurrent"
+        android:layout_width="@dimen/mapAudioControlIconSize"
+        android:layout_height="@dimen/mapAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_play"
+        android:visibility="visible"
+        android:contentDescription="@string/exo_controls_play_description"
+        app:layout_constraintBottom_toBottomOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image" />
+
+    <ImageButton
+        android:id="@+id/pauseCurrent"
+        android:layout_width="@dimen/mapAudioControlIconSize"
+        android:layout_height="@dimen/mapAudioControlIconSize"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:background="@drawable/ic_pause"
+        android:visibility="gone"
+        android:contentDescription="@string/exo_controls_pause_description"
+        app:layout_constraintBottom_toBottomOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/image" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="playCurrent,pauseCurrent"
+        tools:ignore="MissingConstraints" />
+
+</android.support.constraint.ConstraintLayout>

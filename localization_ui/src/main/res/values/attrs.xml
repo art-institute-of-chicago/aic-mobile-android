@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LanguageSettings">
+        <attr name="languageSettingsBackgroundColor" format="reference|color" />
+        <attr name="languageSettingsButtonTextColor" format="reference|color" />
+        <attr name="languageSettingsButtonBackground" format="reference|color" />
+        <attr name="languageSettingsContainsToolbar" format="boolean" />
+        <attr name="languageSettingsButtonVerticalBias" format="float" />
+        <attr name="languageSettingsBodyTextColor" format="reference|color" />
+        <attr name="languageSettingsTitleTextColor" format="reference|color" />
+        <attr name="languageSettingsHasDivider" format="boolean" />
+        <attr name="languageSettingsTitleTextAppearance" format="reference" />
+        <attr name="languageSettingsBodyTextAppearance" format="reference" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enjoyFreeYearLongAdmission">Enjoy free, year long admission.</string>
+    <string name="joinNow">Join Now</string>
+    <string name="museumInformation">Museum Information</string>
+    <string name="languageSettings">Language Settings</string>
+    <string name="locationSettings">Location Settings</string>
+    <string name="supportBy">Supported By</string>
+    <string name="buyTickets">Buy Tickets</string>
+
+
+    <string name="versionInfo">Version %1$s</string>
+
+
+    <string name="alreadyMember">Already a Member?</string>
+    <string name="whereAreYouLabel">Where are you?</string>
+    <string name="languageSettingsBody">Some content may not be available in your selected language.</string>
+    <string name="chooseYourLanguage">Please Choose Your Preferred Language</string>
+
+</resources>
