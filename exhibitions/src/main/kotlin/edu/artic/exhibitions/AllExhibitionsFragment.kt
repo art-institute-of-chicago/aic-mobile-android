@@ -2,12 +2,12 @@ package edu.artic.exhibitions
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import com.fuzz.rx.bindToMain
+import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterFlatMap
+import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenName
@@ -16,6 +16,8 @@ import edu.artic.exhibitions.recyclerview.AllExhibitionsItemDecoration
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_all_exhibitions.*
 import kotlin.reflect.KClass
 
@@ -31,11 +33,6 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
 
     override val title = R.string.onView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -50,6 +47,16 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
 
     override fun setupBindings(viewModel: AllExhibitionsViewModel) {
         val adapter = (recyclerView.adapter as AllExhibitionsAdapter)
+
+        /* Ensure search events go through ok. */
+        searchIcon
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
+                }
+                .disposedBy(disposeBag)
+
         viewModel.exhibitions
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
@@ -63,44 +70,22 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
     }
 
     override fun setupNavigationBindings(viewModel: AllExhibitionsViewModel) {
-        viewModel.navigateTo.subscribe {
-            when (it) {
-                is Navigate.Forward -> {
-                    when (it.endpoint) {
+        viewModel.navigateTo
+                .observeOn(AndroidSchedulers.mainThread())
+                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
+                .subscribeBy {
+                    when (it) {
                         is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {
-                            val endpoint = it.endpoint as AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails
                             val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
-                                putExtras(ExhibitionDetailFragment.argsBundle(endpoint.exhibition))
+                                putExtras(ExhibitionDetailFragment.argsBundle(it.exhibition))
                             }
                             startActivity(intent)
                         }
+                        AllExhibitionsViewModel.NavigationEndpoint.Search -> {
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
+                        }
                     }
-                }
-                else -> {
-
-                }
-            }
-        }.disposedBy(navigationDisposeBag)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_all_exhibitions, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            when(it.itemId) {
-                R.id.search -> {
-                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                    startActivity(intent)
-                    return true
-                }
-                else -> {
-                    return super.onOptionsItemSelected(item)
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
+                }.disposedBy(navigationDisposeBag)
     }
 }
