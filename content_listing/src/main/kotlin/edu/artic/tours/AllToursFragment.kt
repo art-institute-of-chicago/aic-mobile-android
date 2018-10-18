@@ -22,6 +22,20 @@ import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
+/**
+ * This represents the `tour` sub-screen of the ':welcome' module.
+ *
+ * It shows titles, descriptions, number of tour stops, and other
+ * essential information about each [tour][edu.artic.db.models.ArticTour]
+ * in a dual-column vertical grid. At the top of the list is a
+ * small blurb explaining the connection between tours and audio
+ * commentaries.
+ *
+ * Unlike events and exhibitions, tours may come with translations
+ * into other languages.
+ *
+ * @see AllToursAdapter
+ */
 class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
     override val screenName: ScreenName

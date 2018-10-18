@@ -21,6 +21,15 @@ import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
+/**
+ * This represents the `event` sub-screen of the ':welcome' module.
+ *
+ * It shows titles, descriptions, start/end times, and a simple
+ * promotional picture of each [event][edu.artic.db.models.ArticEvent]
+ * in a single-column vertical list.
+ *
+ * @see AllEventsAdapter
+ */
 class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
     override val screenName: ScreenName

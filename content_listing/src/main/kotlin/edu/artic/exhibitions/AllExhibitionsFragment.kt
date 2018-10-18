@@ -22,6 +22,17 @@ import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
+/**
+ * This represents the `exhibition` sub-screen of the ':welcome' module.
+ *
+ * It shows titles, end dates, and a simple promotional picture for
+ * each [exhibition][edu.artic.db.models.ArticExhibition] in a
+ * single-column vertical list.
+ *
+ * # `Exhibitions` are often displayed under an '`On View`' header.
+ *
+ * @see AllExhibitionsAdapter
+ */
 class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() {
 
     override val screenName: ScreenName
