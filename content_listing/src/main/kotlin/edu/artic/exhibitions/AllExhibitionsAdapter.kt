@@ -6,6 +6,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import edu.artic.content.listing.R
 import edu.artic.image.GlideApp
 import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 
