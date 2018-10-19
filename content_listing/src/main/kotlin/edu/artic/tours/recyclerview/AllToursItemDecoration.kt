@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import edu.artic.tours.R
+import edu.artic.content.listing.R
 
 class AllToursItemDecoration(
         context: Context,

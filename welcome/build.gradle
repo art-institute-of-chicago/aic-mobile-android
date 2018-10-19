@@ -15,7 +15,7 @@ dependencies {
     implementation project(':base')
     implementation project(':media_ui')
     implementation project(':adapter')
-    implementation project(':tours')
+    implementation project(':content_listing')
     implementation project(':exhibitions')
     implementation project(':events')
     implementation project(':navigation')
