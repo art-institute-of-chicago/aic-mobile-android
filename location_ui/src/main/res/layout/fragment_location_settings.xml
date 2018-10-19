@@ -24,13 +24,8 @@
 
             <ImageView
                 android:id="@+id/searchIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/marginTwenty"
-                android:contentDescription="@string/search"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_search_24dp" />
+                style="@style/Search.SubScreen"
+                />
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -48,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBar"
-        tools:text="Where Are You?" />
+        />
 
     <View
         android:id="@+id/divider"
@@ -74,7 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider"
-        tools:text="We’d like to use your location to help you navigate the museum." />
+        />
 
     <Button
         android:id="@+id/locationSettingsButton"
