@@ -4,10 +4,10 @@ import android.content.Context
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import edu.artic.content.listing.R
 import edu.artic.events.AllEventsAdapter
 import edu.artic.events.AllEventsCellHeaderViewModel
 import edu.artic.events.AllEventsCellViewModel
-import edu.artic.events.R
 
 class AllEventsItemDecoration(
         context: Context,
