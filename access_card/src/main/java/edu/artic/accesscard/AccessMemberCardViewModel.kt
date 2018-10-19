@@ -12,7 +12,8 @@ import edu.artic.membership.MemberDataProvider
 import edu.artic.membership.MemberInfo
 import edu.artic.membership.MemberInfoPreferencesManager
 import edu.artic.membership.SOAPMemberInfoResponse
-import edu.artic.viewmodel.BaseViewModel
+import edu.artic.viewmodel.NavViewViewModel
+import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
@@ -39,12 +40,16 @@ class AccessMemberCardViewModel @Inject constructor(
         private val service: MemberDataProvider,
         private val infoPreferencesManager: MemberInfoPreferencesManager,
         private val analyticsTracker: AnalyticsTracker
-) : BaseViewModel() {
+) : NavViewViewModel<AccessMemberCardViewModel.NavigationEndpoint>() {
 
     sealed class DisplayMode {
         object DisplayForm : DisplayMode()
         class DisplayAccessCard(val memberID: String) : DisplayMode()
         class UpdateForm(val memberID: String, val zipCode: String) : DisplayMode()
+    }
+
+    sealed class NavigationEndpoint {
+        object Search : NavigationEndpoint()
     }
 
     /**
@@ -211,6 +216,10 @@ class AccessMemberCardViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
     /**
