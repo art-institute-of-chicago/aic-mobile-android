@@ -78,7 +78,6 @@ dependencies {
     implementation project(':info')
     implementation project(':audio')
     implementation project(':map')
-    implementation project(':events')
     implementation project(':analytics')
     implementation project(':media')
     implementation project(':media_ui')

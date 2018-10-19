@@ -16,7 +16,6 @@ dependencies {
     implementation project(':media_ui')
     implementation project(':adapter')
     implementation project(':content_listing')
-    implementation project(':events')
     implementation project(':navigation')
     implementation project(':media')
     implementation project(':image')
