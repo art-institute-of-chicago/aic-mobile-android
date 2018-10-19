@@ -18,7 +18,7 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_all_events.*
+import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
 class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
@@ -29,7 +29,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
     override val viewModelClass: KClass<AllEventsViewModel>
         get() = AllEventsViewModel::class
     override val layoutResId: Int
-        get() = R.layout.fragment_all_events
+        get() = R.layout.fragment_view_all
 
     override val title = R.string.events
 

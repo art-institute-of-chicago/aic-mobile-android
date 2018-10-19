@@ -19,7 +19,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_all_exhibitions.*
+import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
 class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() {
@@ -30,7 +30,7 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
     override val viewModelClass: KClass<AllExhibitionsViewModel>
         get() = AllExhibitionsViewModel::class
     override val layoutResId: Int
-        get() = R.layout.fragment_all_exhibitions
+        get() = R.layout.fragment_view_all
 
     override val title = R.string.onView
 
