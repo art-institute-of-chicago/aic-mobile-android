@@ -10,20 +10,13 @@
     >
 
     <ImageView
-        android:contentDescription="@string/search"
         android:id="@+id/searchIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
         android:layout_marginTop="11dp"
-        android:layout_marginEnd="@dimen/marginTwenty"
-        android:background="@drawable/ic_search_background"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_search_24dp"
         app:layout_constrainedHeight="true"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        style="@style/Search.PrimaryScreen"
         />
 
 
