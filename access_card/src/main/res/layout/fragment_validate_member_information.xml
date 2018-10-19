@@ -27,14 +27,9 @@
                 android:background="?attr/colorPrimary">
 
                 <ImageView
-                    android:contentDescription="@string/search"
                     android:id="@+id/searchIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="@dimen/marginTwenty"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_search_24dp" />
+                    style="@style/Search.SubScreen"
+                    />
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
