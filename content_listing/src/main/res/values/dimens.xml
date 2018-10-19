@@ -5,4 +5,7 @@
     <dimen name="all_tour_cell_spacing_vertical_header" tools:ignore="MissingDefaultResource">@dimen/marginDouble</dimen>
     <dimen name="all_tour_cell_spacing_horizontal">16dp</dimen>
 
+    <dimen name="all_exhibitions_cell_spacing_vertical">18dp</dimen>
+    <dimen name="all_exhibitions_cell_spacing_horizontal">16dp</dimen>
+
 </resources>
