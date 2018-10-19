@@ -73,7 +73,7 @@ dependencies {
     implementation project(':base')
     implementation project(':splash')
     implementation project(':welcome')
-    implementation project(':tours')
+    implementation project(':content_listing')
     implementation project(':tour_manager')
     implementation project(':info')
     implementation project(':audio')
