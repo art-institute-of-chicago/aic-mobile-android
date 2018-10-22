@@ -64,7 +64,7 @@ class InfoActivity : BaseActivity() {
                     }
                 } else {
                     val currentDestination = navController
-                            ?.currentDestination
+                            .currentDestination
                             ?.label
                             ?.toString()
 
@@ -79,10 +79,10 @@ class InfoActivity : BaseActivity() {
                          * accessMemberCardLabel.
                          */
                         if (currentDestination != resources.getString(R.string.fragmentInformationLabel)) {
-                            navController?.navigateUp()
+                            navController.navigateUp()
                         }
 
-                        navController?.navigate(R.id.goToAccessMemberCard)
+                        navController.navigate(R.id.goToAccessMemberCard)
                     }
                 }
             }
