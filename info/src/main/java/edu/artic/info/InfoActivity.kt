@@ -2,7 +2,6 @@ package edu.artic.info
 
 import android.content.Intent
 import android.os.Bundle
-import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
@@ -12,6 +11,7 @@ import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.findNavController
 import kotlinx.android.synthetic.main.activity_info.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class InfoActivity : BaseActivity() {
@@ -56,26 +56,34 @@ class InfoActivity : BaseActivity() {
 
                 val navController = supportFragmentManager.findNavController()
 
-                val currentDestination = navController
-                        ?.currentDestination
-                        ?.label
-                        ?.toString()
+                // There is only value in continuing if we have a navController to use
 
-                /**
-                 * Go to access member card iff current destination's label is not [R.string.accessMemberCardLabel].
-                 * Label for [AccessMemberCardFragment] is [R.string.accessMemberCardLabel].
-                 */
-                if (currentDestination != resources.getString(R.string.accessMemberCardLabel)) {
+                if (navController == null) {
+                    if (BuildConfig.DEBUG) {
+                        Timber.w("Info screen was asked to display card, but no navigation host could be found to perform that task.")
+                    }
+                } else {
+                    val currentDestination = navController
+                            ?.currentDestination
+                            ?.label
+                            ?.toString()
 
                     /**
-                     * If the active fragment is not the start_destination navController can't find
-                     * accessMemberCardLabel.
+                     * Go to access member card iff current destination's label is not [R.string.accessMemberCardLabel].
+                     * Label for [AccessMemberCardFragment] is [R.string.accessMemberCardLabel].
                      */
-                    if (currentDestination != resources.getString(R.string.fragmentInformationLabel)) {
-                        navController?.navigateUp()
-                    }
+                    if (currentDestination != resources.getString(R.string.accessMemberCardLabel)) {
 
-                    navController?.navigate(R.id.goToAccessMemberCard)
+                        /**
+                         * If the active fragment is not the start_destination navController can't find
+                         * accessMemberCardLabel.
+                         */
+                        if (currentDestination != resources.getString(R.string.fragmentInformationLabel)) {
+                            navController?.navigateUp()
+                        }
+
+                        navController?.navigate(R.id.goToAccessMemberCard)
+                    }
                 }
             }
 
