@@ -8,10 +8,7 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.content.ContextCompat
 import android.view.View
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.bindToMain
-import com.fuzz.rx.defaultThrottle
-import com.fuzz.rx.disposedBy
+import com.fuzz.rx.*
 import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
@@ -21,8 +18,11 @@ import com.jakewharton.rxbinding2.widget.textChanges
 import edu.artic.accesscard.barcode.BarcodeEncoder
 import edu.artic.analytics.ScreenName
 import edu.artic.base.LoadStatus
+import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.hideSoftKeyboard
+import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
+import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_validate_member_information.*
@@ -120,6 +120,14 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                     }
                 }.disposedBy(disposeBag)
 
+        searchIcon
+                .clicks()
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.onClickSearch()
+                }
+                .disposedBy(disposeBag)
+
         viewModel.selectedCardHolder
                 .observeOn(AndroidSchedulers.mainThread())
                 .bindTo(cardHolder.text())
@@ -159,6 +167,22 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 .map { it.size > 1 }
                 .bindToMain(switchCardHolder.visibility())
                 .disposedBy(disposeBag)
+    }
+
+    override fun setupNavigationBindings(viewModel: AccessMemberCardViewModel) {
+        super.setupNavigationBindings(viewModel)
+        viewModel.navigateTo
+                .observeOn(AndroidSchedulers.mainThread())
+                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
+                .subscribeBy {
+                    when (it) {
+                        AccessMemberCardViewModel.NavigationEndpoint.Search -> {
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
+                        }
+                    }
+                }
+                .disposedBy(navigationDisposeBag)
     }
 
     /**

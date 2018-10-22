@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base style for Search buttons. -->
+    <style name="Search">
+        <item name="android:src">@drawable/ic_search_24dp</item>
+    </style>
+
+    <!--
+    Preferred for search buttons in the toolbars of non-primary
+    fragments (the ones that also have navigate-up arrows)
+    -->
+    <style name="Search.SubScreen">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginEnd">@dimen/marginTwenty</item>
+        <item name="android:background">@null</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:contentDescription">@string/search</item>
+    </style>
+
+    <!--
+    Preferred for search buttons in the toolbar or appbar of
+    primary fragments. These often choose to override the
+    `layout_topMargin` to account for other layout elements
+    -->
+    <style name="Search.PrimaryScreen">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginEnd">@dimen/marginTwenty</item>
+        <item name="android:background">@drawable/ic_search_background</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:contentDescription">@string/search</item>
+    </style>
+
+
+
+</resources>
