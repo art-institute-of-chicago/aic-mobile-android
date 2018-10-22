@@ -26,6 +26,7 @@ class AllExhibitionsViewModel @Inject constructor(
 
     sealed class NavigationEndpoint {
         class ExhibitionDetails(val pos: Int, val exhibition: ArticExhibition) : NavigationEndpoint()
+        object Search: NavigationEndpoint()
     }
 
     val exhibitions: Subject<List<AllExhibitionsCellViewModel>> = BehaviorSubject.create()
@@ -45,6 +46,10 @@ class AllExhibitionsViewModel @Inject constructor(
                 }
                 .bindTo(exhibitions)
                 .disposedBy(disposeBag)
+    }
+
+    fun onClickSearch() {
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
     fun onClickExhibition(position: Int, exhibition: ArticExhibition) {
