@@ -14,6 +14,37 @@ import kotlinx.android.synthetic.main.activity_info.*
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * # One of the four primary sections of the app.
+ *
+ * This Activity always hosts one full-size fragment, which must be one of
+ * the following:
+ * ## [InformationFragment] (default)
+ * * In `:info` module
+ * * Mostly just links to switch to one of the other Fragments
+ * * Includes version code, credits, link to sign up for membership, etc.
+ * ## [MuseumInformationFragment]
+ * * In `:info` module
+ * * Museum hours
+ * * Museum location
+ * * Contact info
+ * * Link to buy tickets
+ * ## [LanguageSettingsFragment][edu.artic.localization.ui.LanguageSettingsFragment]
+ * * In `:localization_ui` module
+ * * Change default application language
+ * * Disclaimer about untranslated content
+ * ## `InfoLocationSettingsFragment`
+ * * In `:location_ui` module
+ * * Grant or revoke location permissions
+ * ## [AccessMemberCardFragment][edu.artic.accesscard.AccessMemberCardFragment]
+ * * In `:access_card` module
+ * * Displays card metadata (if signed in)
+ * * Displays sign-in form (if _not_ signed in)
+ *
+ * As a primary section, this class always contains a
+ * [NarrowAudioPlayerFragment][edu.artic.media.ui.NarrowAudioPlayerFragment]
+ * and a search icon.
+ */
 class InfoActivity : BaseActivity() {
 
     /**
@@ -69,8 +100,9 @@ class InfoActivity : BaseActivity() {
                             ?.toString()
 
                     /**
-                     * Go to access member card iff current destination's label is not [R.string.accessMemberCardLabel].
-                     * Label for [AccessMemberCardFragment] is [R.string.accessMemberCardLabel].
+                     * Go to access member card iff current destination's label is not
+                     * [R.string.accessMemberCardLabel] (that's the Label for
+                     * [edu.artic.accesscard.AccessMemberCardFragment]).
                      */
                     if (currentDestination != resources.getString(R.string.accessMemberCardLabel)) {
 
