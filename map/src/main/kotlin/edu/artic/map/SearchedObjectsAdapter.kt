@@ -145,8 +145,10 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
         item.playState.subscribe {playBackState->
             when (playBackState) {
                 is AudioPlayerService.PlayBackState.Playing -> {
-                    view.playCurrent.visibility = View.INVISIBLE
-                    view.pauseCurrent.visibility = View.VISIBLE
+                    view.post {
+                        view.playCurrent.visibility = View.INVISIBLE
+                        view.pauseCurrent.visibility = View.VISIBLE
+                    }
                 }
                 is AudioPlayerService.PlayBackState.Paused -> {
                     view.playCurrent.visibility = View.VISIBLE
