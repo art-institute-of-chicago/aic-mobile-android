@@ -71,7 +71,7 @@
         tools:text="More details about it, such as which floor it's on or when it's available." />
 
     <Space
-        android:id="@+id/space"
+        android:id="@+id/amenitySpace"
         android:layout_width="match_parent"
         android:layout_height="@dimen/marginSixtyFour"
         app:layout_constraintBottom_toBottomOf="parent"
