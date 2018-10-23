@@ -13,7 +13,7 @@ if (project.hasProperty('build_number')) {
     buildMetadata = 'SNAPSHOT'
 }
 
-String majorAndMinorVersion = "0.7"
+String majorAndMinorVersion = "1.0"
 Integer patchVersionCode = 0
 
 android {
