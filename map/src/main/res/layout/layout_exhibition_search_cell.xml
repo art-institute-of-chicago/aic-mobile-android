@@ -43,7 +43,6 @@
         android:layout_height="45dp"
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginDouble"
-        android:layout_marginBottom="@dimen/marginSixtyFour"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -80,6 +79,7 @@
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/exhibitionImage"
         app:layout_constraintTop_toBottomOf="@+id/exhibitionTitle"
+        android:paddingBottom="@dimen/marginSixtyFour"
         tools:text="Leonardo da vinci" />
 
     <android.support.constraint.Barrier
