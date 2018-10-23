@@ -172,6 +172,9 @@
         <item name="android:background">@color/warmGrey20Alpha</item>
     </style>
 
+    <style name="dividerWhiteTwentySixOpaque" parent="divider">
+        <item name="android:background">@color/white26Alpha</item>
+    </style>
 
     <style name="DetailButton">
         <item name="android:fontFamily">@font/ideal_sans_medium</item>

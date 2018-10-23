@@ -40,7 +40,6 @@
         android:layout_height="45dp"
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginDouble"
-        android:layout_marginBottom="@dimen/marginSixtyFour"
         android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -131,10 +130,13 @@
         tools:ignore="MissingConstraints" />
 
     <Space
+        android:id="@+id/space"
         android:layout_width="match_parent"
         android:layout_height="@dimen/marginSixtyFour"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/viewPagerIndicator" />
+        app:layout_constraintTop_toBottomOf="@id/gallery"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 
 </android.support.constraint.ConstraintLayout>
