@@ -178,11 +178,11 @@ open class SearchBaseViewModel @Inject constructor(
     }
 
     /**
-     * Returns suggested artworks.
+     * Returns suggested artworks preserving the CMS order.
      */
     protected fun getSuggestedArtworks(searchSuggestionsDao: ArticSearchObjectDao,
                                        objectDao: ArticObjectDao
-    ): Observable<MutableList<ArticObject>> {
+    ): Observable<List<ArticObject>> {
         return searchSuggestionsDao.getDataObject()
                 .toObservable()
                 .map { suggestedSearchOptions -> suggestedSearchOptions.searchObjects }
@@ -196,13 +196,8 @@ open class SearchBaseViewModel @Inject constructor(
                                 /**
                                  * Sorting the objects based on idsList
                                  */
-                                val sortedObjects = mutableListOf<ArticObject>()
-                                for (id in idsList) {
-                                    unSortedObjects
-                                            .find { it.nid == id }
-                                            ?.also {
-                                                sortedObjects.add(it)
-                                            }
+                                val sortedObjects: List<ArticObject> = idsList.mapNotNull { id ->
+                                    unSortedObjects.find { it.nid == id }
                                 }
                                 sortedObjects
                             }
