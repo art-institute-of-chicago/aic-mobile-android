@@ -64,12 +64,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     }
 
     private fun setupOnMapSuggestionsBind() {
-        searchSuggestionsDao.getDataObject()
-                .toObservable()
-                .map { suggestedSearchOptions -> suggestedSearchOptions.searchObjects }
-                .flatMap { idsList ->
-                    objectDao.getObjectsByIdList(idsList).toObservable()
-                }
+        getSuggestedArtworks(searchSuggestionsDao, objectDao)
                 .map { objects ->
                     objects.map {
                         SearchCircularCellViewModel(it)
