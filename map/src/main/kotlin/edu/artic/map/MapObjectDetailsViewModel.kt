@@ -1,5 +1,6 @@
 package edu.artic.map
 
+import android.util.Log
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
@@ -7,6 +8,7 @@ import com.fuzz.rx.filterFlatMap
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.audioFile
@@ -16,7 +18,10 @@ import edu.artic.map.MapObjectDetailsViewModel.PlayerAction.Play
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -27,11 +32,14 @@ import javax.inject.Inject
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker, val languageSelector: LanguageSelector) : BaseViewModel() {
+class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: AnalyticsTracker,
+                                                    val languageSelector: LanguageSelector,
+                                                    val galleryDao: ArticGalleryDao
+) : BaseViewModel() {
 
     val title: Subject<String> = BehaviorSubject.create()
     val image: Subject<String> = BehaviorSubject.create()
-    val galleryLocation: Subject<String> = BehaviorSubject.create()
+    val galleryNumber: Subject<String> = BehaviorSubject.create()
 
     private val objectObservable: Subject<ArticObject> = BehaviorSubject.create()
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
@@ -108,10 +116,16 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
                 .disposedBy(disposeBag)
 
 
-        objectObservable
-                .map {
-                    it.galleryLocation.orEmpty()
-                }.bindTo(galleryLocation)
+        Observables.combineLatest(
+                languageSelector.currentLanguage,
+                objectObservable
+        ) { _, artwork -> artwork }
+                .filterFlatMap({ !it.galleryLocation.isNullOrBlank() }, { it.galleryLocation as String })
+                .observeOn(Schedulers.io())
+                .flatMap {
+                    galleryDao.getGalleryByTitle(it).toObservable()
+                }.map { it.number.orEmpty() }
+                .bindTo(galleryNumber)
                 .disposedBy(disposeBag)
 
 
