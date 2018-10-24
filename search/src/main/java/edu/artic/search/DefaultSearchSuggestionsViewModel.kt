@@ -48,12 +48,7 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
                 .bindTo(suggestedKeywords)
                 .disposedBy(disposeBag)
 
-        searchSuggestionsDao.getDataObject()
-                .toObservable()
-                .map { suggestedSearchOptions -> suggestedSearchOptions.searchObjects }
-                .flatMap { idsList ->
-                    objectDao.getObjectsByIdList(idsList).toObservable()
-                }
+        getSuggestedArtworks(searchSuggestionsDao, objectDao)
                 .map { objects ->
                     objects.map { artwork ->
                         SearchCircularCellViewModel(artwork)
