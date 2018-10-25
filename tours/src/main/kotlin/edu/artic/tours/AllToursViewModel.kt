@@ -32,7 +32,7 @@ class AllToursViewModel @Inject constructor(
     val intro: Subject<String> = BehaviorSubject.createDefault("")
 
     init {
-        toursDao.getTours()
+        toursDao.getAllTours()
                 .map { list ->
                     val viewModelList = ArrayList<AllToursCellViewModel>()
                     list.forEach { tour ->
