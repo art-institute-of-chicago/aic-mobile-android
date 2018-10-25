@@ -164,5 +164,5 @@ fun ArticTour.getIntroStop(): ArticTour.TourStop {
 }
 
 fun ArticTour.TourStop.isIntroStop(): Boolean {
-    return this.objectId === INTRO_TOUR_STOP_OBJECT_ID
+    return this.objectId == INTRO_TOUR_STOP_OBJECT_ID
 }
