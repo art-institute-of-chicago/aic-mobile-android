@@ -96,21 +96,19 @@ class InfoActivity : BaseActivity() {
                 } else {
                     val currentDestination = navController
                             .currentDestination
-                            ?.label
-                            ?.toString()
 
                     /**
                      * Go to access member card iff current destination's label is not
                      * [R.string.accessMemberCardLabel] (that's the Label for
                      * [edu.artic.accesscard.AccessMemberCardFragment]).
                      */
-                    if (currentDestination != resources.getString(R.string.accessMemberCardLabel)) {
+                    if (currentDestination?.id != R.id.accessMemberCardFragment) {
 
                         /**
                          * If the active fragment is not the start_destination navController can't find
                          * accessMemberCardLabel.
                          */
-                        if (currentDestination != resources.getString(R.string.fragmentInformationLabel)) {
+                        if (currentDestination?.id != R.id.informationFragment) {
                             navController.navigateUp()
                         }
 
