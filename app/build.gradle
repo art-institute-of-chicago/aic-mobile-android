@@ -92,20 +92,24 @@ dependencies {
     implementation project(':welcome')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     implementation libs.kotlin
-    //Dagger
-    implementation libs.dagger
     implementation libs.threeten
     implementation libs.firebase_core
     implementation libs.crashlytics
+
+    //The following four lines enable our usage of dagger2 dependency injection
+    implementation libs.dagger
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler
 
+    // Test-only dependencies below this point
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
-    // testing uses real threetenbp
+    // Our tests use the standard Java variant of the 310 backport..
     testImplementation('org.threeten:threetenbp:1.3.3') {
+        // ...so we need to explicitly exclude the Android variant here
         exclude group: 'com.jakewharton.threetenabp', module: 'threetenabp'
     }
 }
