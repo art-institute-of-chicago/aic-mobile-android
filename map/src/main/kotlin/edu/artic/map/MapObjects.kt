@@ -17,5 +17,6 @@ internal fun initialMapCameraPosition(): CameraUpdate {
                     .target(centerOfMuseumOnMap)
                     .bearing(88.725f)
                     .tilt(60f)
+                    .zoom(ZOOM_INITIAL)
                     .build())
 }
