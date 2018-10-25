@@ -44,7 +44,6 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
-import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 /**
@@ -349,10 +348,10 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         )
                     } else {
                         // Make sure we can see all of the specified positions
-                        val lanLngBounds = LatLngBounds.builder().includeAll(bounds).build()
+                        val aoiBounds = LatLngBounds.builder().includeAll(bounds).build()
                         map.animateCamera(
                                 CameraUpdateFactory.newLatLngZoom(
-                                        lanLngBounds.center,
+                                        aoiBounds.center,
                                         Math.max(ZOOM_INDIVIDUAL, map.cameraPosition.zoom)
                                 )
                         )
