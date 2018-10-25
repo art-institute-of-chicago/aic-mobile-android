@@ -343,18 +343,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         map.animateCamera(
                                 CameraUpdateFactory.newLatLngZoom(
                                         centerOfMuseumOnMap,
-                                        ZOOM_MIN
+                                        ZOOM_INITIAL
                                 )
                         )
                     } else {
                         // Make sure we can see all of the specified positions
-                        map.moveCamera(CameraUpdateFactory
-                                .newLatLngBounds(
-                                        LatLngBounds.builder()
-                                                .includeAll(bounds)
-                                                .build(),
-                                        0
-                                ))
+                        val aoiBounds = LatLngBounds.builder().includeAll(bounds).build()
+                        map.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                        aoiBounds.center,
+                                        Math.max(ZOOM_INDIVIDUAL, map.cameraPosition.zoom)
+                                )
+                        )
                     }
                 }
                 .disposedBy(disposeBag)
@@ -429,6 +429,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .flatMap { viewModel.retrieveObjectById(it) }
                 .filterValue()
                 .withLatestFrom(viewModel.currentMap.filterValue())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (markerHolder, map) ->
                     val (_, _, marker) = markerHolder
                     val currentZoomLevel = map.cameraPosition.zoom
