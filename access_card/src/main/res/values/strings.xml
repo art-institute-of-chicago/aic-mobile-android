@@ -10,4 +10,7 @@
     <string name="expires">Expires: %s</string>
     <string name="zipCodeHint">Enter your home zip code…</string>
     <string name="memberIdHint">Enter your Member ID…</string>
+
+    <string name="argSelfImportant" translatable="false">edu.artic.accesscard:selfImportant</string>
+
 </resources>

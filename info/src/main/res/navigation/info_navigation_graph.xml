@@ -39,6 +39,7 @@
         android:name="edu.artic.accesscard.AccessMemberCardFragment"
         android:label="@string/accessMemberCardLabel"
         tools:layout="@layout/fragment_validate_member_information">
+        <argument android:name="@string/argSelfImportant" android:defaultValue="false"/>
         <deepLink app:uri="artic://edu.artic.info/accessMemberCard" />
     </fragment>
 

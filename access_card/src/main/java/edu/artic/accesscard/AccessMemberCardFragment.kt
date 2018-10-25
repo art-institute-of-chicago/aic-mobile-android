@@ -217,6 +217,22 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
         animateToolbarColor()
     }
 
+    override fun onBackPressed(): Boolean {
+        val args = arguments
+        val v = view
+        val argSelfImportant = resources.getString(R.string.argSelfImportant)
+
+        return if (v != null && args?.getBoolean(argSelfImportant) == true) {
+            // By removing this fragment you remove the entire activity.
+            v.post {
+                requireActivity().finish()
+            }
+            true
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     /**
      * Animates the color of toolbar and StatusBar.
      */
