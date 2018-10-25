@@ -2,6 +2,7 @@ package edu.artic.info
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.navigation.fragment.FragmentNavigator
 import edu.artic.accesscard.AccessMemberCardFragment
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.location.LocationService
@@ -10,6 +11,7 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
+import edu.artic.ui.findFragmentInHierarchy
 import edu.artic.ui.findNavController
 import kotlinx.android.synthetic.main.activity_info.*
 import timber.log.Timber
@@ -86,7 +88,9 @@ class InfoActivity : BaseActivity() {
         when (intent.data?.toString()?.replace("artic://", "")) {
             NavigationConstants.INFO_MEMBER_CARD -> {
 
-                val navController = supportFragmentManager.findNavController()
+                val fm = supportFragmentManager
+
+                val navController = fm.findNavController()
 
                 // There is only value in continuing if we have a navController to use
 
@@ -118,6 +122,14 @@ class InfoActivity : BaseActivity() {
                         navController.navigate(R.id.goToAccessMemberCard, Bundle().apply {
                             putBoolean(argSelfImportant, true)
                         })
+                    } else if (currentDestination is FragmentNavigator.Destination) {
+
+                        /**
+                         * Ensure that the associated fragment will dismiss the activity when removed
+                         */
+                        findFragmentInHierarchy<AccessMemberCardFragment>(fm, R.id.container)?.let {
+                            it.arguments?.putBoolean(argSelfImportant, true)
+                        }
                     }
                 }
             }
