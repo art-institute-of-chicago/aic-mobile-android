@@ -2,6 +2,10 @@ package edu.artic.info
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.UiThread
+import android.support.v4.app.FragmentManager
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.FragmentNavigator
 import edu.artic.accesscard.AccessMemberCardFragment
 import edu.artic.base.utils.disableShiftMode
@@ -102,38 +106,47 @@ class InfoActivity : BaseActivity() {
                     val currentDestination = navController
                             .currentDestination
 
-                    val argSelfImportant = getString(R.string.argSelfImportant)
-
-                    /**
-                     * Go to access member card iff current destination's label is not
-                     * [R.string.accessMemberCardLabel] (that's the Label for
-                     * [AccessMemberCardFragment]).
-                     */
-                    if (currentDestination?.id != R.id.accessMemberCardFragment) {
-
-                        /**
-                         * If the active fragment is not the start_destination navController can't find
-                         * accessMemberCardLabel.
-                         */
-                        if (currentDestination?.id != R.id.informationFragment) {
-                            navController.navigateUp()
-                        }
-
-                        navController.navigate(R.id.goToAccessMemberCard, Bundle().apply {
-                            putBoolean(argSelfImportant, true)
-                        })
-                    } else if (currentDestination is FragmentNavigator.Destination) {
-
-                        /**
-                         * Ensure that the associated fragment will dismiss the activity when removed
-                         */
-                        findFragmentInHierarchy<AccessMemberCardFragment>(fm, R.id.container)?.let {
-                            it.arguments?.putBoolean(argSelfImportant, true)
-                        }
-                    }
+                    restrictToMemberCardFragment(currentDestination, navController, fm)
                 }
             }
 
+        }
+    }
+
+    /**
+     * This function ensures
+     * 1. that the [navController] is pointing at the destination for [AccessMemberCardFragment]
+     * 2. that the [AccessMemberCardFragment] is shown, on-screen
+     * 3. that this InfoActivity will be destroyed whenever that fragment receives a call to
+     * [onBackPressed][AccessMemberCardFragment.onBackPressed]
+     *
+     * We use the int `R.id.accessMemberCardFragment` to identify that destination.
+     */
+    @UiThread
+    private fun restrictToMemberCardFragment(here: NavDestination?, navController: NavController, fm: FragmentManager) {
+        val argSelfImportant = getString(R.string.argSelfImportant)
+
+        if (here?.id != R.id.accessMemberCardFragment) {
+
+            /**
+             * If the active fragment is not the start_destination navController can't find
+             * accessMemberCardLabel.
+             */
+            if (here?.id != R.id.informationFragment) {
+                navController.navigateUp()
+            }
+
+            navController.navigate(R.id.goToAccessMemberCard, Bundle().apply {
+                putBoolean(argSelfImportant, true)
+            })
+        } else if (here is FragmentNavigator.Destination) {
+
+            /**
+             * Ensure that the associated fragment will dismiss the activity when removed
+             */
+            findFragmentInHierarchy<AccessMemberCardFragment>(fm, R.id.container)?.let {
+                it.arguments?.putBoolean(argSelfImportant, true)
+            }
         }
     }
 
