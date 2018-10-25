@@ -2,6 +2,7 @@ package edu.artic.info
 
 import android.content.Intent
 import android.os.Bundle
+import edu.artic.accesscard.AccessMemberCardFragment
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
@@ -36,7 +37,7 @@ import javax.inject.Inject
  * ## `InfoLocationSettingsFragment`
  * * In `:location_ui` module
  * * Grant or revoke location permissions
- * ## [AccessMemberCardFragment][edu.artic.accesscard.AccessMemberCardFragment]
+ * ## [AccessMemberCardFragment]
  * * In `:access_card` module
  * * Displays card metadata (if signed in)
  * * Displays sign-in form (if _not_ signed in)
@@ -97,10 +98,12 @@ class InfoActivity : BaseActivity() {
                     val currentDestination = navController
                             .currentDestination
 
+                    val argSelfImportant = getString(R.string.argSelfImportant)
+
                     /**
                      * Go to access member card iff current destination's label is not
                      * [R.string.accessMemberCardLabel] (that's the Label for
-                     * [edu.artic.accesscard.AccessMemberCardFragment]).
+                     * [AccessMemberCardFragment]).
                      */
                     if (currentDestination?.id != R.id.accessMemberCardFragment) {
 
@@ -112,7 +115,9 @@ class InfoActivity : BaseActivity() {
                             navController.navigateUp()
                         }
 
-                        navController.navigate(R.id.goToAccessMemberCard)
+                        navController.navigate(R.id.goToAccessMemberCard, Bundle().apply {
+                            putBoolean(argSelfImportant, true)
+                        })
                     }
                 }
             }
