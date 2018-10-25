@@ -9,13 +9,13 @@ dependencies {
     api libs.design_support
     implementation libs.glide
     implementation libs.threeten
-    implementation project(':base')
     implementation libs.constraint_layout
-    implementation project(':ui')
-    implementation project(':db')
-    implementation project(':viewmodel')
-    implementation project(':base')
+
     implementation project(':adapter')
-    implementation project(':image')
+    implementation project(':base')
+    implementation project(':db')
     implementation project(':details')
+    implementation project(':image')
+    implementation project(':ui')
+    implementation project(':viewmodel')
 }
