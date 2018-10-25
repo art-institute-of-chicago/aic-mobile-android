@@ -16,6 +16,7 @@ dependencies {
     implementation project(':db')
     implementation project(':details')
     implementation project(':image')
+    implementation project(':map')
     implementation project(':ui')
     implementation project(':viewmodel')
 }
