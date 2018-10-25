@@ -44,6 +44,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.fragment_map.*
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 /**
@@ -343,18 +344,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         map.animateCamera(
                                 CameraUpdateFactory.newLatLngZoom(
                                         centerOfMuseumOnMap,
-                                        ZOOM_MIN
+                                        ZOOM_INITIAL
                                 )
                         )
                     } else {
                         // Make sure we can see all of the specified positions
-                        map.moveCamera(CameraUpdateFactory
-                                .newLatLngBounds(
-                                        LatLngBounds.builder()
-                                                .includeAll(bounds)
-                                                .build(),
-                                        0
-                                ))
+                        val lanLngBounds = LatLngBounds.builder().includeAll(bounds).build()
+                        map.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                        lanLngBounds.center,
+                                        Math.max(ZOOM_INDIVIDUAL, map.cameraPosition.zoom)
+                                )
+                        )
                     }
                 }
                 .disposedBy(disposeBag)
@@ -429,6 +430,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .flatMap { viewModel.retrieveObjectById(it) }
                 .filterValue()
                 .withLatestFrom(viewModel.currentMap.filterValue())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { (markerHolder, map) ->
                     val (_, _, marker) = markerHolder
                     val currentZoomLevel = map.cameraPosition.zoom
