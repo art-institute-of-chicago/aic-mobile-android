@@ -13,7 +13,7 @@ import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.content.listing.R
-import edu.artic.events.recyclerview.AllEventsItemDecoration
+import edu.artic.decoration.AllEventsItemDecoration
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate

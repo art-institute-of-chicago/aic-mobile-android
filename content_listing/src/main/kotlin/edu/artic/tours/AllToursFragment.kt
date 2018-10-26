@@ -14,7 +14,7 @@ import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.content.listing.R
 import edu.artic.navigation.NavigationConstants
-import edu.artic.tours.recyclerview.AllToursItemDecoration
+import edu.artic.decoration.AllToursItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -1,4 +1,4 @@
-package edu.artic.exhibitions.recyclerview
+package edu.artic.decoration
 
 import android.content.Context
 import android.graphics.Rect
