@@ -9,6 +9,11 @@ import edu.artic.events.AllEventsAdapter
 import edu.artic.events.AllEventsCellHeaderViewModel
 import edu.artic.events.EventCellViewModel
 
+/**
+ * The original version of this file was written by
+ * [edwardaa](https://stackoverflow.com/users/3414249/edwardaa) for
+ * [https://stackoverflow.com/a/30701422](https://stackoverflow.com/a/30701422).
+ */
 class AllEventsItemDecoration(
         context: Context,
         private val spanCount: Int,

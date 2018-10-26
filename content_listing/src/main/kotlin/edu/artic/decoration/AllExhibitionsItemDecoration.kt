@@ -6,6 +6,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import edu.artic.content.listing.R
 
+/**
+ * The original version of this file was written by
+ * [edwardaa](https://stackoverflow.com/users/3414249/edwardaa) for
+ * [https://stackoverflow.com/a/30701422](https://stackoverflow.com/a/30701422).
+ */
 class AllExhibitionsItemDecoration(
         context: Context,
         private val spanCount: Int,
