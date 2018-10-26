@@ -2,9 +2,9 @@ package edu.artic.db
 
 import com.fuzz.retrofit.rx.requireValue
 import com.fuzz.rx.bindTo
+import com.jobinlawrance.downloadprogressinterceptor.ProgressEventBus
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticDataObject
-import edu.artic.db.progress.ProgressEventBus
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
