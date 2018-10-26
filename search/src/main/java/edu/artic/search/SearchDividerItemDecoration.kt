@@ -58,7 +58,7 @@ class SearchDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
             } else if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1 )) {
                 outRect.set(0, 0, 0, mDividerHeight)
             } else {
-                outRect.set(0, 0, 0, 0)
+                outRect.setEmpty()
             }
         }
     }

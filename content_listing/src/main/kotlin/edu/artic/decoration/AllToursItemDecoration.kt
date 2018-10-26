@@ -21,7 +21,7 @@ class AllToursItemDecoration(
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val adjustedPos = parent.getChildAdapterPosition(view) - 1 // item position, minus 1 for the header
         if (adjustedPos < 0) {
-            outRect.set(0, 0, 0, 0)
+            outRect.setEmpty()
         } else {
             val column = (adjustedPos) % spanCount // item column
 
