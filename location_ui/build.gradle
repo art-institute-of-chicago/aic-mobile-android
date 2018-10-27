@@ -12,8 +12,8 @@ dependencies {
     implementation libs.location
     implementation libs.constraint_layout
     implementation project(':analytics')
+    implementation project(':location')
     implementation project(':ui')
     implementation project(':viewmodel')
-    implementation project(':location')
 
 }

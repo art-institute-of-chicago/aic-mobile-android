@@ -3,13 +3,13 @@ dependencies {
     implementation libs.rx_helpers
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
-    implementation project(':ui')
-    implementation project(':base')
-    implementation project(':viewmodel')
-    implementation project(':db')
-    implementation project(':navigation')
-    implementation project(':localization_ui')
     implementation project(':analytics')
+    implementation project(':base')
+    implementation project(':db')
+    implementation project(':localization_ui')
+    implementation project(':navigation')
+    implementation project(':ui')
+    implementation project(':viewmodel')
     implementation libs.constraint_layout
     api libs.arch_runtime
     api libs.arch_extensions

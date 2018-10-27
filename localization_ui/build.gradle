@@ -1,9 +1,9 @@
 
 dependencies {
     implementation project(':base')
+    implementation project(':localization')
     implementation project(':ui')
     implementation project(':viewmodel')
-    implementation project(':localization')
 
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
