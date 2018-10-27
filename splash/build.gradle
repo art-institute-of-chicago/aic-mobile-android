@@ -1,5 +1,3 @@
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 dependencies {
     implementation libs.rx_helpers
