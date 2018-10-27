@@ -106,6 +106,10 @@ subprojects {
         apply plugin: 'com.android.library'
     }
     apply plugin: 'kotlin-android'
+    if (name != 'analytics' && name != 'image') {
+        // Most modules make use of the synthetic accessors; ':db' uses the experimental 'Parcelize' annotation, so it does some configuration beyond that.
+        apply plugin: 'kotlin-android-extensions'
+    }
     apply plugin: 'kotlin-kapt'
 
     android {
