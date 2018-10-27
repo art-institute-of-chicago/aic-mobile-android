@@ -9,14 +9,14 @@ dependencies {
 
     api libs.design_support
     implementation libs.glide
-    implementation project(':membership')
     implementation project(':base')
-    implementation project(':ui')
-    implementation project(':viewmodel')
-    implementation project(':navigation')
-    implementation project(':search')
     implementation project(':db')
     implementation project(':localization')
+    implementation project(':membership')
+    implementation project(':navigation')
+    implementation project(':search')
+    implementation project(':ui')
+    implementation project(':viewmodel')
     implementation libs.constraint_layout
     implementation libs.rx_helpers
     implementation libs.rx_kotlin

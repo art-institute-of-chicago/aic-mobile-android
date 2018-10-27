@@ -10,18 +10,18 @@ dependencies {
 
     api libs.design_support
     implementation libs.glide
-    implementation project(':base')
-    implementation project(':ui')
-    implementation project(':viewmodel')
-    implementation project(':navigation')
-    implementation project(':search')
-    implementation project(':media_ui')
-    implementation project(':db')
-    implementation project(':membership')
     implementation project(':access_card')
-    implementation project(':location')
+    implementation project(':base')
+    implementation project(':db')
     implementation project(':localization')
     implementation project(':localization_ui')
+    implementation project(':location')
+    implementation project(':media_ui')
+    implementation project(':membership')
+    implementation project(':navigation')
+    implementation project(':search')
+    implementation project(':ui')
+    implementation project(':viewmodel')
     implementation libs.constraint_layout
     implementation libs.rx_helpers
     implementation libs.rx_kotlin

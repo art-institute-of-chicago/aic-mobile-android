@@ -10,7 +10,7 @@ dependencies {
     implementation libs.media_compat
     implementation libs.glide
     implementation libs.exo_player_media_session
+    implementation project(':analytics')
     implementation project(':base')
     implementation project(':db')
-    implementation project(':analytics')
 }

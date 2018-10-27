@@ -11,13 +11,13 @@ dependencies {
     implementation libs.arch_navigation
     implementation libs.arch_navigation_ui
     implementation libs.constraint_layout
-    implementation project(':ui')
-    implementation project(':db')
-    implementation project(':viewmodel')
-    implementation project(':base')
     implementation project(':adapter')
+    implementation project(':base')
+    implementation project(':db')
+    implementation project(':image')
     implementation project(':localization')
     implementation project(':media')
     implementation project(':media_ui')
-    implementation project(':image')
+    implementation project(':ui')
+    implementation project(':viewmodel')
 }

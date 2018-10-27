@@ -3,8 +3,8 @@ dependencies {
     kapt libs.dagger_compiler
     implementation libs.dagger
     implementation project(":localization")
-    implementation project(":membership")
     implementation project(":location")
+    implementation project(":membership")
 
     api libs.kotlin
     api libs.ga
