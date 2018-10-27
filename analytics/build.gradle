@@ -1,4 +1,3 @@
-apply plugin: 'kotlin-kapt'
 
 dependencies {
     kapt libs.dagger_compiler
