@@ -66,7 +66,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         }
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = eventsAdapter
-        recyclerView.addItemDecoration(AllEventsItemDecoration(view.context, 2, eventsAdapter))
+        recyclerView.addItemDecoration(AllEventsItemDecoration(2, eventsAdapter))
     }
 
     override fun setupBindings(viewModel: AllEventsViewModel) {

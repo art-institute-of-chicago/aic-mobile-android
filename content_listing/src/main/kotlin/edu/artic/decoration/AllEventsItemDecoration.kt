@@ -1,6 +1,5 @@
 package edu.artic.decoration
 
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
@@ -16,7 +15,6 @@ import edu.artic.events.EventCellViewModel
  * [https://stackoverflow.com/a/30701422](https://stackoverflow.com/a/30701422).
  */
 class AllEventsItemDecoration(
-        context: Context,
         override val spanCount: Int,
         private val adapter: AllEventsAdapter
 ) : GridItemDecoration(spanCount) {

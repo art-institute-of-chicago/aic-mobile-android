@@ -76,7 +76,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         recyclerView.layoutManager = layoutManager
         val toursAdapter = AllToursAdapter(recyclerView, viewModel.intro, viewModel.viewDisposeBag)
         recyclerView.adapter = toursAdapter
-        recyclerView.addItemDecoration(AllToursItemDecoration(view.context, 2))
+        recyclerView.addItemDecoration(AllToursItemDecoration(2))
 
         /* Ensure search events go through ok. */
         searchIcon

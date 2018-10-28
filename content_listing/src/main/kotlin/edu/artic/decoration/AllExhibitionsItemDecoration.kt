@@ -1,6 +1,5 @@
 package edu.artic.decoration
 
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
@@ -13,7 +12,6 @@ import edu.artic.content.listing.R
  * [https://stackoverflow.com/a/30701422](https://stackoverflow.com/a/30701422).
  */
 class AllExhibitionsItemDecoration(
-        context: Context,
         override val spanCount: Int
 ) : GridItemDecoration(spanCount) {
 

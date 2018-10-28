@@ -53,7 +53,7 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
         recyclerView.layoutManager = layoutManager
         val exhibitionsAdapter = AllExhibitionsAdapter()
         recyclerView.adapter = exhibitionsAdapter
-        recyclerView.addItemDecoration(AllExhibitionsItemDecoration(view.context, 1))
+        recyclerView.addItemDecoration(AllExhibitionsItemDecoration(1))
 
     }
 
