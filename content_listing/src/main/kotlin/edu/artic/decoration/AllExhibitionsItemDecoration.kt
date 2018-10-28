@@ -1,6 +1,7 @@
 package edu.artic.decoration
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -13,12 +14,23 @@ import edu.artic.content.listing.R
  */
 class AllExhibitionsItemDecoration(
         context: Context,
-        private val spanCount: Int
-) : RecyclerView.ItemDecoration() {
-    private val horizontalSpacing: Int = context.resources.getDimensionPixelSize(R.dimen.all_exhibitions_cell_spacing_horizontal)
-    private val verticalSpacing: Int = context.resources.getDimensionPixelSize(R.dimen.all_exhibitions_cell_spacing_vertical)
+        override val spanCount: Int
+) : GridItemDecoration(spanCount) {
+
+    override fun createDimensions(res: Resources): Dimensions {
+        return object : Dimensions {
+            override val horizontal: Int = res.getDimensionPixelSize(R.dimen.all_exhibitions_cell_spacing_horizontal)
+            override val vertical: Int = res.getDimensionPixelSize(R.dimen.all_exhibitions_cell_spacing_vertical)
+            override val topMostVertical: Int = vertical
+        }
+    }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        super.getItemOffsets(outRect, view, parent, state)
+
+        val horizontalSpacing = dimensions.horizontal
+        val verticalSpacing = dimensions.vertical
+
         val adjustedPos = parent.getChildAdapterPosition(view) - 1 // item position, minus 1 for the header
         val column = (adjustedPos) % spanCount // item column
 

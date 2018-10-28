@@ -1,6 +1,7 @@
 package edu.artic.decoration
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -16,19 +17,30 @@ import edu.artic.events.EventCellViewModel
  */
 class AllEventsItemDecoration(
         context: Context,
-        private val spanCount: Int,
+        override val spanCount: Int,
         private val adapter: AllEventsAdapter
-) : RecyclerView.ItemDecoration() {
-    private val horizontalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_horizontal)
-    private val verticalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical)
-    private val headerVerticalSpacing: Int = context.resources.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical_header)
+) : GridItemDecoration(spanCount) {
+
+    override fun createDimensions(res: Resources): Dimensions {
+        return object : Dimensions {
+            override val horizontal: Int = res.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_horizontal)
+            override val vertical: Int = res.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical)
+            override val topMostVertical: Int = res.getDimensionPixelOffset(R.dimen.all_tour_cell_spacing_vertical_header)
+        }
+    }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        super.getItemOffsets(outRect, view, parent, state)
+
+        val horizontalSpacing = dimensions.horizontal
+        val verticalSpacing = dimensions.vertical
+        val headerVerticalSpacing = dimensions.topMostVertical
+
         // item position
         val position = parent.getChildAdapterPosition(view)
         adapter.getItemOrNull(position)?.let {
 
-            val halfOfVertical = (verticalSpacing / 2.0f).toInt()
+            val halfOfVertical = dimensions.halfOfVertical()
 
             when (it) {
                 is AllEventsCellHeaderViewModel -> {
