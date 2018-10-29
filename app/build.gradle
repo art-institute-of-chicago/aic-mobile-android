@@ -1,7 +1,4 @@
 
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
 String buildMetadata
 
 if (project.hasProperty('build_number')) {
