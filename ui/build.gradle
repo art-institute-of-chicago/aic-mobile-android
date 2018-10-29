@@ -1,19 +1,19 @@
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 
 dependencies {
-    implementation libs.rx_helpers
 
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
+
+    implementation project(":base")
+    implementation libs.rx_helpers
+    implementation libs.constraint_layout
+
+    api project(":analytics")
+    api project(":localization")
+    api project(":navigation")
     api libs.dagger
     api libs.dagger_android
-    implementation libs.constraint_layout
-    implementation project(":base")
-    api project(":localization")
-    api project(":analytics")
-    api project(":navigation")
     api libs.arch_navigation
     api libs.arch_navigation_ui
     api "com.android.support:appcompat-v7:${support_version}"
