@@ -5,6 +5,7 @@ import com.fuzz.rx.asFlowable
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID
 import edu.artic.db.debug
 import edu.artic.db.models.ArticTour
 import edu.artic.image.asRequestObservable
@@ -46,7 +47,7 @@ class TourIntroMapItemRenderer : MapItemRenderer<ArticTour>(useBitmapQueue = tru
 
     override fun getLocationFromItem(item: ArticTour): LatLng = item.toLatLng()
 
-    override fun getIdFromItem(item: ArticTour): String = item.nid
+    override fun getIdFromItem(item: ArticTour): String = INTRO_TOUR_STOP_OBJECT_ID
 
     override fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: ArticTour): Float {
         // on tour, set the alpha depending on current floor.
