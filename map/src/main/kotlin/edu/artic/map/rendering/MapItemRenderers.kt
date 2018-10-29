@@ -197,7 +197,7 @@ class GalleriesMapItemRenderer(private val galleriesDao: ArticGalleryDao)
     }
 
     override fun getVisibleMapFocus(displayMode: MapDisplayMode): Set<MapFocus> =
-            searchMapFocus(displayMode) { setOf(MapFocus.Individual) }
+            setOf(MapFocus.Individual)
 
     override fun getLocationFromItem(item: ArticGallery): LatLng = item.toLatLng()
 
