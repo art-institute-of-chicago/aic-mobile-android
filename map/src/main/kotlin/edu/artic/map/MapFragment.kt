@@ -196,6 +196,24 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              * locks us into just that area
              */
             setLatLngBoundsForCameraTarget(mapDisplayBounds)
+
+            /**
+             * Marker.showInfoWindow() method is used (see [MapViewModel.retrieveMarkerByObjectId]
+             * to bring the selected marker to front (markers sometime overlap).
+             * We are using this method just to bring the targeted marker to front without
+             * displaying info window.
+             *
+             * Purpose of setting this infoWindowAdapter is for displaying an empty info window.
+             */
+            setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+                override fun getInfoContents(p0: Marker?): View {
+                    return View(requireContext())
+                }
+
+                override fun getInfoWindow(p0: Marker?): View {
+                    return View(requireContext())
+                }
+            })
         }
     }
 
@@ -426,12 +444,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
          */
         viewModel
                 .selectedTourStopMarkerId
-                .flatMap { viewModel.retrieveObjectById(it) }
+                .flatMap { viewModel.retrieveMarkerByObjectId(it) }
                 .filterValue()
                 .withLatestFrom(viewModel.currentMap.filterValue())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (markerHolder, map) ->
-                    val (_, _, marker) = markerHolder
+                .subscribeBy { (marker, map) ->
+
+                    /**
+                     * showInfoWindow() is only used for bringing targeted marker to front.
+                     */
+                    marker.showInfoWindow()
                     val currentZoomLevel = map.cameraPosition.zoom
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position,
                             Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
