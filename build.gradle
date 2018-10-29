@@ -113,6 +113,8 @@ subprojects {
     // Any module that needs experimental features should enable such in the
     // associated build.gradle, not here.
     apply plugin: 'kotlin-android-extensions'
+    // FIXME: Minimize usage of the 'kapt' directive where possible
+    // (it can significantly slow down the build process)
     apply plugin: 'kotlin-kapt'
 
     android {
