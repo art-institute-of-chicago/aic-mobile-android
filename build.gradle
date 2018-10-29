@@ -13,7 +13,7 @@ buildscript {
         paging_version = '1.0.0-beta1'
         rx_binding_version = '2.1.1'
         kotshi_version = '1.0.4'
-        moshi_version = '1.6.0'
+        moshi_version = '1.7.0'
         room_version = '1.1.1'
         glide_version = '4.4.0'
         firebase_version = '16.0.4'
