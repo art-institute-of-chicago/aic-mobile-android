@@ -5,12 +5,14 @@ import com.fuzz.rx.*
 import com.fuzz.rx.Optional
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.VisibleRegion
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
+import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.ArticMapFloorDao
 import edu.artic.db.daos.ArticObjectDao
@@ -22,8 +24,7 @@ import edu.artic.location.LocationService
 import edu.artic.location.isLocationInMuseum
 
 import edu.artic.map.helpers.toLatLng
-import edu.artic.map.rendering.MapItemModel
-import edu.artic.map.rendering.MarkerHolder
+import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.tours.manager.TourProgressManager
 import edu.artic.viewmodel.NavViewViewModel
@@ -575,11 +576,24 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
     }
 
     /**
-     * Retrieve an object from the [MapMarkerConstructor]
+     * Retrieve a Marker from the [MapMarkerConstructor]
      */
-    fun retrieveObjectById(nid: String): Observable<Optional<MarkerHolder<MapItemModel>>> {
-        return mapMarkerConstructor.objectsMapItemRenderer.getMarkerHolderById(nid)
+    fun retrieveMarkerByObjectId(nid: String): Observable<Optional<Marker>> {
+
+        val markerRenderer: MapItemRenderer<*> = if (nid == INTRO_TOUR_STOP_OBJECT_ID) {
+            mapMarkerConstructor.tourIntroMapItemRenderer
+        } else {
+            mapMarkerConstructor.objectsMapItemRenderer
+        }
+
+        return markerRenderer
+                .getMarkerHolderById(nid)
+                .filterFlatMap({ it.value != null }, { it.value })
+                .map { data ->
+                    Optional(data.marker)
+                }
     }
+
 
     override fun onCleared() {
         super.onCleared()

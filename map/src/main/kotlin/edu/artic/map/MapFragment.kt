@@ -426,7 +426,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
          */
         viewModel
                 .selectedTourStopMarkerId
-                .flatMap { viewModel.retrieveObjectById(it) }
+                .flatMap { viewModel.retrieveMarkerByObjectId(it) }
                 .filterValue()
                 .withLatestFrom(viewModel.currentMap.filterValue())
                 .observeOn(AndroidSchedulers.mainThread())
