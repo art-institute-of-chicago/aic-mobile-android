@@ -64,20 +64,17 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                 item.itemTitle
                         .bindToMain(itemTitle.text())
                         .disposedBy(item.viewDisposeBag)
+
                 item.itemSubTitle
                         .bindToMain(itemSubTitle.text())
                         .disposedBy(item.viewDisposeBag)
 
-                when (item) {
-                    is SearchArtworkCellViewModel -> {
-
-                    }
-                    is SearchExhibitionCellViewModel -> {
-
-                    }
-                    is SearchTourCellViewModel -> {
-                    }
+                if (item is SearchTourCellViewModel) {
+                    itemSubTitle.visibility = View.GONE
+                } else {
+                    itemSubTitle.visibility = View.VISIBLE
                 }
+
             }
             is SearchTextCellViewModel -> {
                 item.text
