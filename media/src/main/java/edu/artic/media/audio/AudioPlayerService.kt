@@ -232,8 +232,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
             when (playBackAction) {
                 is PlayBackAction.Play -> {
                     playerNotificationManager.setPlayer(player)
-                    // No need to seek here; that'll be done in 'setArticObject' if needed
-                    setArticObject(playBackAction.audioFile, playBackAction.audioModel)
+                    // No need to seek here; that'll be done in 'changeAudio' if needed
+                    changeAudio(playBackAction.audioFile, playBackAction.audioModel)
                     /**
                      * If the audio is being played for the first time, make sure we invoke
                      * [AudioServiceHook.displayAudioTutorial] event.
@@ -362,7 +362,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
         }
     }
 
-    fun setArticObject(_articObject: Playable, audio: AudioFileModel, resetPosition: Boolean = false) {
+    fun changeAudio(_articObject: Playable, audio: AudioFileModel, resetPosition: Boolean = false) {
 
         val isDifferentAudio = (currentTrack as BehaviorSubject).value != audio
 
@@ -453,7 +453,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
      * If nothing is [currently playing][audioPlayBackStatus], this skips
      * the 'pause' and 'resume' operations.
      *
-     * @see setArticObject
+     * @see changeAudio
      */
     override fun switchAudioTrack(alternative: AudioFileModel) {
         playable?.let {
