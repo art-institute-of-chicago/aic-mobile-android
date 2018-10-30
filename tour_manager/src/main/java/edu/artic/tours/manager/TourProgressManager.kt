@@ -2,11 +2,12 @@ package edu.artic.tours.manager
 
 import android.annotation.SuppressLint
 import com.fuzz.rx.Optional
-import com.fuzz.rx.filterFlatMap
+import com.fuzz.rx.filterValue
 import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID
+import edu.artic.db.daos.ArticAudioFileDao
 import edu.artic.db.models.ArticTour
-import io.reactivex.Observable
-import io.reactivex.rxkotlin.withLatestFrom
+import edu.artic.db.models.AudioFileModel
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -15,7 +16,7 @@ import io.reactivex.subjects.Subject
  * Responsible for managing the communication between tour carousel and the map.
  * @author Sameer Dhakal (Fuzz)
  */
-class TourProgressManager {
+class TourProgressManager(val audioFileDao: ArticAudioFileDao) {
     /**
      * Selected ArticObject
      */
@@ -28,38 +29,55 @@ class TourProgressManager {
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
 
     /**
-     * Updates the selected stop when the audio translation playback for a stop completes.
+     * If [audioFileModel] belongs to currently selected tour i.e. [selectedTour],
+     * this method advances [selectedStop] to next tour stop.
      */
     @SuppressLint("CheckResult")
-    fun loadNextTourStop() {
-        selectedTour
-                .filterFlatMap({ tour -> tour.value != null }, { tour -> tour.value as ArticTour })
-                .withLatestFrom(selectedStop)
-                .flatMap { (tour, currentStopId) ->
-                    tour.tourStops.sortBy { tourStop -> tourStop.order }
+    fun playBackEnded(audioFileModel: AudioFileModel) {
+        Observables.combineLatest(selectedTour.filterValue(), selectedStop)
+                .take(1)
+                .subscribe { (tour, currentStopID) ->
 
                     /**
-                     * current stop is guaranteed to be not null
+                     * Get audio file id
                      */
-                    return@flatMap if (currentStopId == INTRO_TOUR_STOP_OBJECT_ID) {
-                        Observable.just(tour.tourStops[0].objectId)
+                    val audioFileID: String? = if (currentStopID == INTRO_TOUR_STOP_OBJECT_ID) {
+                        tour.tourAudio
                     } else {
-
-                        val currentStop: ArticTour.TourStop = tour.tourStops
-                                .find { it.objectId == currentStopId }!!
-
-                        val nextStopIndex = Math.min(tour.tourStops.indexOf(currentStop) + 1, tour.tourStops.size)
-                        Observable.just(tour.tourStops[nextStopIndex].objectId)
+                        tour.tourStops.find { it.objectId == currentStopID }?.audioId
                     }
 
-                }.subscribe({ tourStopID ->
-                    tourStopID?.let {
-                        selectedStop.onNext(it)
+                    audioFileID?.let { audioID ->
+                        audioFileDao
+                                .getAudioByIdAsync(audioID)
+                                .toObservable()
+                                .subscribe { audioFile ->
+
+                                    /**
+                                     * Check if currently ended audio playback session belongs to
+                                     * current tour stop.
+                                     */
+                                    val isCurrentStopsAudioTranslation = audioFile
+                                            ?.allTranslations()
+                                            ?.contains(audioFileModel) == true
+
+                                    /**
+                                     * Advance [selectedStop] if current audio translation playback
+                                     * completed.
+                                     */
+                                    if (isCurrentStopsAudioTranslation) {
+                                        val indexOfCurrentTourStop = tour.tourStops.indexOfFirst { it.objectId == currentStopID }
+                                        val nextStopIndex = Math.min(indexOfCurrentTourStop + 1, tour.tourStops.size)
+                                        tour.tourStops[nextStopIndex].objectId?.let {
+                                            selectedStop.onNext(it)
+                                        }
+                                    }
+                                }
+
                     }
-                }, { t ->
-                    t.printStackTrace()
-                })
+                }
 
     }
+
 
 }

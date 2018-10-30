@@ -209,7 +209,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
                             analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value?.title.orEmpty())
                             audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
                             playerNotificationManager.setPlayer(null)
-                            tourProgressManager.loadNextTourStop()
+                            tourProgressManager.playBackEnded(given)
                             currentTrack.onNext(EMPTY_AUDIO_FILE)
                         }
                         playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
