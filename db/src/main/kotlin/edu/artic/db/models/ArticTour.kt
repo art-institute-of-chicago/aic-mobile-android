@@ -48,7 +48,14 @@ data class ArticTour(
         @Json(name = "tour_duration") val tourDuration: String?,
         @Json(name = "tour_audio") val tourAudio: String?,
         @Json(name = "category") @Embedded(prefix = "tour_cat") val category: TourCategory?,
-        @Json(name = "weight") val weight: Int,
+        /**
+         * This field lets tours be ordered differently at runtime. If it's
+         * missing, the tour is not valid and must not be used.
+         *
+         * Such filtering may be done by the database transaction in
+         * [AppDataManager.getBlob].
+         */
+        @Json(name = "weight") val weight: Int?,
         @Json(name = "tour_stops") val tourStops: MutableList<TourStop>
 
 ) : Parcelable, Playable, AccessibilityAware {
