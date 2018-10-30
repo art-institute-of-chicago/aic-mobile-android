@@ -40,6 +40,7 @@ import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
+import edu.artic.tours.manager.TourProgressManager
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -168,6 +169,9 @@ class AudioPlayerService : DaggerService(), PlayerService {
     @Inject
     lateinit var audioPrefManager: AudioPrefManager
 
+    @Inject
+    lateinit var tourProgressManager: TourProgressManager
+
     /**
      * Something with one or more audio tracks. See [currentTrack] and [AudioFileModel].
      */
@@ -205,6 +209,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
                             analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value?.title.orEmpty())
                             audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
                             playerNotificationManager.setPlayer(null)
+                            tourProgressManager.loadNextTourStop()
                             currentTrack.onNext(EMPTY_AUDIO_FILE)
                         }
                         playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
