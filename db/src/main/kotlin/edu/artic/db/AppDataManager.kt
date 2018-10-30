@@ -172,7 +172,7 @@ class AppDataManager @Inject constructor(
                                 objectDao.addObjects(objects.values.toList())
                             }
 
-                            val tours = result.tours
+                            val tours = result.tours?.filter { it.weight != null }
                             if (tours?.isNotEmpty() == true) {
                                 tourDao.clear()
                                 tours.forEach { tour ->
