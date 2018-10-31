@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="1024dp"
-    android:height="1024dp"
+    android:width="108dp"
+    android:height="108dp"
     android:viewportWidth="1024"
     android:viewportHeight="1024">
+    <!--
+
+    As per https://developer.android.com/guide/practices/ui_guidelines/icon_design_adaptive,
+    there is no active cause for the 'android:width' and 'android:height' properties above to
+    exceed 108dp. 'android:viewportWidth' and 'android:viewportHeight' may of course be
+    whatever we desire.
+
+    -->
 
     <group
         android:name="Page-1"
