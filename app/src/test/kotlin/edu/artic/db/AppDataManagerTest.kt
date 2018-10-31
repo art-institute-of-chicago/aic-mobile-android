@@ -6,10 +6,12 @@ import com.nhaarman.mockito_kotlin.verify
 import edu.artic.db.daos.*
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
+import io.reactivex.schedulers.Schedulers
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.internal.verification.Times
+import java.util.concurrent.LinkedBlockingQueue
 
 class AppDataManagerTest {
 
@@ -66,9 +68,18 @@ class AppDataManagerTest {
         doReturn(Observable.just(HashMap<String, List<String>>())).`when`(appDataProvider).getBlobHeaders()
         doReturn(Observable.just(mockedAppData)).`when`(appDataProvider).getBlob()
 
+        val subscriptionInterceptor = LinkedBlockingQueue<Runnable>()
         val testObserver = TestObserver<ProgressDataState>()
 
-        appDataManager.getBlob().subscribe(testObserver)
+        appDataManager.getBlob()
+                .observeOn(Schedulers.from { r -> subscriptionInterceptor.add(r) })
+                .subscribe(testObserver)
+
+        subscriptionInterceptor
+                // This blocks until we observe the first emission from the ::getBlob call...
+                .take()
+                // ..at which point we can synchronously execute ::subscribeActual
+                .run()
 
         verify(appDataProvider, Times(1)).getBlobHeaders()
         verify(appDataProvider, Times(1)).getBlob()
