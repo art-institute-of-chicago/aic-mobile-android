@@ -73,10 +73,10 @@ class FloorAdapter {
 
     @FromJson
     @Floor
-    fun fromText(text: String?): Int {
+    fun fromText(@Nullable text: String?): Int {
         return if (text != null) {
-            try {
-                return text.toInt()
+            return try {
+                text.toInt()
             } catch (e: NumberFormatException) {
                 /** "LL" stands for 'Lower level' **/
                 if (text == "LL") {
