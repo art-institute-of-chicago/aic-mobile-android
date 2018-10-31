@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import android.arch.persistence.db.SupportSQLiteOpenHelper
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -36,6 +37,10 @@ class AppDataManagerTest {
         appDataPrefManager = mock()
 
         database = mock()
+        // The 'OpenHelper' is marked as non-null, and we access it in AppDataManager to work around a bug in Room 2.0-
+        val openHelper: SupportSQLiteOpenHelper = mock()
+        doReturn(openHelper).`when`(database).openHelper
+
         appDataProvider = mock()
         appDataManager = AppDataManager(serviceProvider = appDataProvider,
                 appDataPreferencesManager = appDataPrefManager,
