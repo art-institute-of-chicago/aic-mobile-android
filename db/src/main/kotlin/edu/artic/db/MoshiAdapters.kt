@@ -17,10 +17,6 @@ inline fun getMoshi(configureBlock: (Moshi.Builder.() -> Unit) = {}): Moshi =
                 .apply { configureBlock(this) }
                 .build()
 
-/**
- * Used to explicitly reference without needing to inject it into [SCError] for convenience.
- */
-internal val apiErrorMoshi: Moshi = getMoshi()
 
 fun Moshi.Builder.registerAdapters() = apply {
     add(KotlinJsonAdapterFactory())
