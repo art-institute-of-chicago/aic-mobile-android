@@ -11,7 +11,7 @@ if (project.hasProperty('build_number')) {
 }
 
 String majorAndMinorVersion = "1.0"
-Integer patchVersionCode = 0
+Integer patchVersionCode = 1
 
 android {
     compileSdkVersion sdk
