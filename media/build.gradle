@@ -13,4 +13,5 @@ dependencies {
     implementation project(':analytics')
     implementation project(':base')
     implementation project(':db')
+    implementation project(':tour_manager')
 }
