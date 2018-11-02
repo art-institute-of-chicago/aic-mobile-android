@@ -1,37 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="25"
     android:viewportHeight="25">
 
     <group
-        android:rotation="90"
         android:pivotX="12.5"
         android:pivotY="12.5"
+        android:rotation="90"
         >
-    <path
-        android:fillType="evenOdd"
-        android:strokeColor="#FFFFFF"
-        android:strokeLineCap="square"
-        android:strokeWidth="1.145"
-        android:pathData="
-        M 21.570 17.132
-        C 20.929 16.660 20.101 16.429 19.210 16.597
-        C 17.996 16.824 17.023 17.824 16.824 19.046
-        C 16.675 19.968 16.949 20.828 17.476 21.464
-        L 15.417 23.648
-        C 15.324 23.75 15.164 23.75 15.066 23.652
-        L 1.578 10.046
-        C 1.410 9.878 1.406 9.609 1.570 9.4375
-        L 3.464 7.441
-        C 4.101 7.949 4.953 8.207 5.859 8.050
-        C 7.105 7.835 8.109 6.812 8.300 5.562
-        C 8.445 4.617 8.144 3.742 7.582 3.105
-        L 9.312 1.277
-        C 9.476 1.105 9.753 1.101 9.921 1.269
-        L 23.218 14.640
-        C 23.421 14.843 23.425 15.167 23.230 15.375 Z" />
+        <path
+            android:fillType="evenOdd"
+            android:pathData="
+            M 21.570 17.132
+            C 20.929 16.660 20.101 16.429 19.210 16.597
+            C 17.996 16.824 17.023 17.824 16.824 19.046
+            C 16.675 19.968 16.949 20.828 17.476 21.464
+            L 15.417 23.648
+            C 15.324 23.75 15.164 23.75 15.066 23.652
+            L 1.578 10.046
+            C 1.410 9.878 1.406 9.609 1.570 9.4375
+            L 3.464 7.441
+            C 4.101 7.949 4.953 8.207 5.859 8.050
+            C 7.105 7.835 8.109 6.812 8.300 5.562
+            C 8.445 4.617 8.144 3.742 7.582 3.105
+            L 9.312 1.277
+            C 9.476 1.105 9.753 1.101 9.921 1.269
+            L 23.218 14.640
+            C 23.421 14.843 23.425 15.167 23.230 15.375 Z"
+            android:strokeWidth="1.145"
+            android:strokeColor="#FFFFFF"
+            android:strokeLineCap="square"
+            />
 
     </group>
 </vector>
