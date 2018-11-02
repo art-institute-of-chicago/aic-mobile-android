@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.MotionEvent
 import android.view.View
+import android.widget.TextView
 import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -210,8 +211,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                     return View(requireContext())
                 }
 
-                override fun getInfoWindow(p0: Marker?): View {
-                    return View(requireContext())
+                override fun getInfoWindow(p0: Marker?): View? {
+                    /**
+                     * Returning empty textView or view didn't work so added TextView with spaces.
+                     */
+                    return TextView(requireContext()).apply {
+                        text = " "
+                    }
                 }
             })
         }
