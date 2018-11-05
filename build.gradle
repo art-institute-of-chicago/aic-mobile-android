@@ -13,7 +13,7 @@ buildscript {
         paging_version = '1.0.0-beta1'
         rx_binding_version = '2.1.1'
         kotshi_version = '1.0.4'
-        moshi_version = '1.6.0'
+        moshi_version = '1.7.0'
         room_version = '1.1.1'
         glide_version = '4.4.0'
         firebase_version = '16.0.4'
@@ -21,7 +21,7 @@ buildscript {
         exo_player_version = '2.9.0'
 
         libs = [
-                kotlin                  : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+                kotlin                  : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
                 rx_helpers              : "com.github.fuzz-productions:rx-helpers:${latest_helper}",
                 dagger                  : "com.google.dagger:dagger:${dagger_version}",
                 dagger_android          : "com.google.dagger:dagger-android-support:${dagger_version}",
@@ -77,7 +77,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha13'
+        classpath 'com.android.tools.build:gradle:3.4.0-alpha02'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath 'com.google.gms:google-services:4.1.0'
@@ -106,6 +106,15 @@ subprojects {
         apply plugin: 'com.android.library'
     }
     apply plugin: 'kotlin-android'
+    // Most modules make use of the synthetic 'findViewById' accessors, part of
+    // the 'kotlin-android-extensions' plugin. The ':db' module goes beyond, as
+    // it also takes advantage of the experimental 'Parcelize' annotation.
+    //
+    // Any module that needs experimental features should enable such in the
+    // associated build.gradle, not here.
+    apply plugin: 'kotlin-android-extensions'
+    // FIXME: Minimize usage of the 'kapt' directive where possible
+    // (it can significantly slow down the build process)
     apply plugin: 'kotlin-kapt'
 
     android {

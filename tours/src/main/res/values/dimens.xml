@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="all_tour_cell_spacing_vertical">23dp</dimen>
-    <dimen name="all_tour_cell_spacing_horizontal">16dp</dimen>
-</resources>

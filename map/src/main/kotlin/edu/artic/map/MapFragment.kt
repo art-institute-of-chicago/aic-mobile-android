@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.MotionEvent
 import android.view.View
+import android.widget.TextView
 import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -196,6 +197,29 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              * locks us into just that area
              */
             setLatLngBoundsForCameraTarget(mapDisplayBounds)
+
+            /**
+             * Marker.showInfoWindow() method is used (see [MapViewModel.retrieveMarkerByObjectId]
+             * to bring the selected marker to front (markers sometime overlap).
+             * We are using this method just to bring the targeted marker to front without
+             * displaying info window.
+             *
+             * Purpose of setting this infoWindowAdapter is for displaying an empty info window.
+             */
+            setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
+                override fun getInfoContents(p0: Marker?): View {
+                    return View(requireContext())
+                }
+
+                override fun getInfoWindow(p0: Marker?): View? {
+                    /**
+                     * Returning empty textView or view didn't work so added TextView with spaces.
+                     */
+                    return TextView(requireContext()).apply {
+                        text = " "
+                    }
+                }
+            })
         }
     }
 
@@ -343,18 +367,18 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         map.animateCamera(
                                 CameraUpdateFactory.newLatLngZoom(
                                         centerOfMuseumOnMap,
-                                        ZOOM_MIN
+                                        ZOOM_INITIAL
                                 )
                         )
                     } else {
                         // Make sure we can see all of the specified positions
-                        map.moveCamera(CameraUpdateFactory
-                                .newLatLngBounds(
-                                        LatLngBounds.builder()
-                                                .includeAll(bounds)
-                                                .build(),
-                                        0
-                                ))
+                        val aoiBounds = LatLngBounds.builder().includeAll(bounds).build()
+                        map.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(
+                                        aoiBounds.center,
+                                        Math.max(ZOOM_INDIVIDUAL, map.cameraPosition.zoom)
+                                )
+                        )
                     }
                 }
                 .disposedBy(disposeBag)
@@ -426,11 +450,16 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
          */
         viewModel
                 .selectedTourStopMarkerId
-                .flatMap { viewModel.retrieveObjectById(it) }
+                .flatMap { viewModel.retrieveMarkerByObjectId(it) }
                 .filterValue()
                 .withLatestFrom(viewModel.currentMap.filterValue())
-                .subscribeBy { (markerHolder, map) ->
-                    val (_, _, marker) = markerHolder
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { (marker, map) ->
+
+                    /**
+                     * showInfoWindow() is only used for bringing targeted marker to front.
+                     */
+                    marker.showInfoWindow()
                     val currentZoomLevel = map.cameraPosition.zoom
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position,
                             Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))

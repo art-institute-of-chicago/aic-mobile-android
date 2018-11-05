@@ -1,6 +1,3 @@
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'com.android.library'
 
 android {
     buildTypes {
@@ -34,8 +31,9 @@ dependencies {
         exclude module: 'xpp3'
     })
 
+    // This interceptor must be marked as 'api' if we want to allow the ':app' module to inject ProgressEventBus objects
+    api 'com.github.jobinlawrance:okhttp3-downloadprogress-interceptor:1.0.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
-
     implementation libs.threeten
 
     kapt libs.dagger_compiler

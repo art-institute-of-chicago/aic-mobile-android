@@ -20,6 +20,7 @@ class LanguageAdapter : AutoHolderRecyclerViewAdapter<SpecifiesLanguage>(),
     override fun View.onBindView(item: SpecifiesLanguage, position: Int) {
         text.text = item.userFriendlyLanguage(context)
         text.setTextColor(Color.WHITE)
+        background = null
     }
 
     override fun getLayoutResId(position: Int): Int = R.layout.language_cell

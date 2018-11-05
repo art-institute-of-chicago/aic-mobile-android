@@ -8,6 +8,8 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
+import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.*
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -173,5 +175,32 @@ open class SearchBaseViewModel @Inject constructor(
 
     open fun onClickSeeAll(header: Header) {
 
+    }
+
+    /**
+     * Returns suggested artworks preserving the CMS order.
+     */
+    protected fun getSuggestedArtworks(searchSuggestionsDao: ArticSearchObjectDao,
+                                       objectDao: ArticObjectDao
+    ): Observable<List<ArticObject>> {
+        return searchSuggestionsDao.getDataObject()
+                .toObservable()
+                .map { suggestedSearchOptions -> suggestedSearchOptions.searchObjects }
+                .flatMap { idsList ->
+                    /**
+                     * Database does not preserve the order of ids.
+                     */
+                    objectDao.getObjectsByIdList(idsList)
+                            .toObservable()
+                            .map { unSortedObjects ->
+                                /**
+                                 * Sorting the objects based on idsList
+                                 */
+                                val sortedObjects: List<ArticObject> = idsList.mapNotNull { id ->
+                                    unSortedObjects.find { it.nid == id }
+                                }
+                                sortedObjects
+                            }
+                }
     }
 }

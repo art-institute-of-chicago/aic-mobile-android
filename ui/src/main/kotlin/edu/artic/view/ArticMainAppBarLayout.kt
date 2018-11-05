@@ -45,9 +45,14 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
         // update our content when offset changes.
         addOnOffsetChangedListener(OnOffsetChangedListener { aBarLayout, verticalOffset ->
             val progress: Double = 1 - Math.abs(verticalOffset) / aBarLayout.totalScrollRange.toDouble()
-            searchIcon.background.alpha = (progress * 255).toInt()
-            icon.drawable.alpha = (progress * 255).toInt()
-            expandedImage.drawable.alpha = (progress * 255).toInt()
+            val progressOutOf255: Int = (progress * 255).toInt()
+
+            // The search icon's background is also known as the 'wash'. Its state
+            // must be distinct from that of its counterparts in other
+            // ArticMainAppBarLayouts - hence the `Drawable::mutate` call.
+            searchIcon.background.mutate().alpha = progressOutOf255
+            icon.drawable.alpha = progressOutOf255
+            expandedImage.drawable.alpha = progressOutOf255
             subTitle.alpha = progress.toFloat()
         })
 

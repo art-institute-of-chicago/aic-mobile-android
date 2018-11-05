@@ -1,5 +1,3 @@
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 dependencies {
     kapt libs.dagger_compiler
@@ -12,15 +10,16 @@ dependencies {
     implementation libs.v4_support
     implementation libs.design_support
 
-    implementation project(':base')
     implementation libs.constraint_layout
-    implementation project(':ui')
+
+    implementation project(':adapter')
+    implementation project(':base')
+    implementation project(':db')
+    implementation project(':image')
+    implementation project(':media')
     implementation project(':media_ui')
-    implementation project(':viewmodel')
     implementation project(':navigation')
     implementation project(':search')
-    implementation project(':db')
-    implementation project(':media')
-    implementation project(':adapter')
-    implementation project(':image')
+    implementation project(':ui')
+    implementation project(':viewmodel')
 }

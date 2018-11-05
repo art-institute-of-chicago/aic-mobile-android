@@ -1,5 +1,6 @@
 package edu.artic.db
 
+import android.annotation.SuppressLint
 import android.support.annotation.Nullable
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonQualifier
@@ -17,10 +18,6 @@ inline fun getMoshi(configureBlock: (Moshi.Builder.() -> Unit) = {}): Moshi =
                 .apply { configureBlock(this) }
                 .build()
 
-/**
- * Used to explicitly reference without needing to inject it into [SCError] for convenience.
- */
-internal val apiErrorMoshi: Moshi = getMoshi()
 
 fun Moshi.Builder.registerAdapters() = apply {
     add(KotlinJsonAdapterFactory())
@@ -68,19 +65,49 @@ class ZonedDateTimeAdapter {
 }
 
 /**
- * Parses floor as an integer. We default to [INVALID_FLOOR] as 0 and negative numbers are valid floors.
+ * Parses floor as an integer. We default to [INVALID_FLOOR] as 0 and
+ * negative numbers are valid floors.
+ *
+ *
+ * In the past, bugs related to this class have arisen (from Retrofit2) as
+ *
+ * `Unable to create converter for class edu.artic.db.models.ArticAppData for method AppDataApi.getBlob`
+ *
+ * or (from Moshi)
+ *
+ * `Non-null value 'floor' was null at $.some.path.`
  */
 class FloorAdapter {
 
     @ToJson
     fun toText(@Floor floor: Int): String = floor.toString()
 
+    /**
+     * Due to a bug in Moshi 1.7.0, we require two overloads of this int converter.
+     */
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+    @ToJson
+    fun toTextBoxed(@Floor floor: java.lang.Integer): String = floor.toString()
+
+    /**
+     * Due to a bug in Moshi 1.7.0, we require two overloads of this int converter.
+     *
+     * Due to a bug in Kotlin 1.2.71, we must use the `java.lang.Integer` constructor.
+     */
+    @SuppressLint("UseValueOf")
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     @FromJson
     @Floor
-    fun fromText(text: String?): Int {
+    fun fromTextBoxed(@Nullable text: String?): java.lang.Integer {
+        return java.lang.Integer(fromText(text))
+    }
+
+    @FromJson
+    @Floor
+    fun fromText(@Nullable text: String?): Int {
         return if (text != null) {
-            try {
-                return text.toInt()
+            return try {
+                text.toInt()
             } catch (e: NumberFormatException) {
                 /** "LL" stands for 'Lower level' **/
                 if (text == "LL") {
