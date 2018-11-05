@@ -55,7 +55,8 @@ interface ArticObjectDao {
     @Query("select * from ArticObject where galleryLocation in (:galleryTitle)")
     fun getObjectsInGallery(galleryTitle: String): List<ArticObject>
 
-    @Query(value = "select * from ArticObject where nid in (:ids)")
+    /** Database does not preserve the order of ids.**/
+    @Query(value = "select * from ArticObject where nid in (:ids) order by nid")
     fun getObjectsByIdList(ids: List<String>): Flowable<List<ArticObject>>
 
     @Query("select * from ArticObject where floor = :floor")

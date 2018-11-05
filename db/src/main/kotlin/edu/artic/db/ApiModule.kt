@@ -3,14 +3,14 @@ package edu.artic.db
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import com.jobinlawrance.downloadprogressinterceptor.DownloadProgressInterceptor
+import com.jobinlawrance.downloadprogressinterceptor.ProgressEventBus
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
 import edu.artic.db.daos.*
-import edu.artic.db.progress.DownloadProgressInterceptor
-import edu.artic.db.progress.ProgressEventBus
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

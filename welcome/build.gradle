@@ -1,30 +1,26 @@
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 dependencies {
-    implementation libs.constraint_layout
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
+
     api libs.design_support
-    implementation libs.threeten
-    implementation project(':base')
-    implementation libs.constraint_layout
-    implementation project(':ui')
-    implementation project(':db')
-    implementation project(':viewmodel')
-    implementation project(':base')
-    implementation project(':media_ui')
-    implementation project(':adapter')
-    implementation project(':tours')
-    implementation project(':exhibitions')
-    implementation project(':events')
-    implementation project(':navigation')
-    implementation project(':media')
-    implementation project(':image')
-    implementation project(':search')
-    implementation project(':details')
-    implementation project(':membership')
+
     implementation project(':access_card')
+    implementation project(':adapter')
+    implementation project(':base')
+    implementation project(':content_listing')
+    implementation project(':db')
+    implementation project(':details')
+    implementation project(':image')
+    implementation project(':media')
+    implementation project(':media_ui')
+    implementation project(':membership')
+    implementation project(':navigation')
+    implementation project(':search')
+    implementation project(':ui')
+    implementation project(':viewmodel')
+    implementation libs.constraint_layout
+    implementation libs.threeten
     implementation libs.exo_player_core
     implementation libs.exo_player_ui
 }

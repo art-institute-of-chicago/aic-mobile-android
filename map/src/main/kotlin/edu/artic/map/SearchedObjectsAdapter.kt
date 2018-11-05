@@ -69,6 +69,8 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
         item.description
                 .bindToMain(view.amenityDetails.text())
                 .disposedBy(item.viewDisposeBag)
+
+        view.amenitySpace.visibility = View.GONE
     }
 
     fun bindExhibitionView(item: ExhibitionViewModel, view: View) {

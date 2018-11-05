@@ -15,4 +15,5 @@
     android:paddingTop="@dimen/marginHalf"
     android:paddingEnd="@dimen/marginQuad"
     android:paddingBottom="@dimen/marginHalf"
+    android:background="@drawable/language_dropdown_background"
     tools:text="@string/name_of_this_language" />

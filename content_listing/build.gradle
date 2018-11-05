@@ -1,0 +1,20 @@
+
+dependencies {
+    kapt libs.dagger_compiler
+    kapt libs.dagger_android_compiler
+    kapt libs.glide_compiler
+
+    api libs.design_support
+    implementation libs.glide
+    implementation libs.threeten
+    implementation libs.constraint_layout
+
+    implementation project(':adapter')
+    implementation project(':base')
+    implementation project(':db')
+    implementation project(':details')
+    implementation project(':image')
+    implementation project(':map')
+    implementation project(':ui')
+    implementation project(':viewmodel')
+}

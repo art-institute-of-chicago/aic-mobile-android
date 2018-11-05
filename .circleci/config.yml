@@ -3,9 +3,18 @@ jobs:
   build:
     working_directory: ~/code
     docker:
+      # This image needs to match our 'target' sdk version. The 'alpha' designation
+      # _is_ kinda weird, but the images generally work just fine.
       - image: circleci/android:api-28-alpha
     environment:
-      JVM_OPTS: -Xmx3200m
+      # Gradle treats JVM_OPTS with lower precedence than JAVA_OPTS,
+      # according to https://circleci.com/blog/how-to-handle-java-oom-errors/
+      #
+      # We use a relatively low number for max memory, as that is what 
+      # https://discuss.circleci.com/t/circleci-2-0-android-with-kotlin/17531/2
+      # recommends.
+      #
+      JAVA_OPTS: -Xmx1000m
     steps:
       - checkout
       - restore_cache:

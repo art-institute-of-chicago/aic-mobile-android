@@ -56,7 +56,12 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
                 .bindToMain(tourStopTitle.text())
                 .disposedBy(disposeBag)
 
-        viewModel.galleryLocation
+        viewModel.galleryNumber
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter { it.isNotEmpty() }
+                .map {
+                    resources.getString(R.string.gallery, it)
+                }
                 .bindToMain(tourStopGallery.text())
                 .disposedBy(disposeBag)
 

@@ -172,7 +172,7 @@ class AppDataManager @Inject constructor(
                                 objectDao.addObjects(objects.values.toList())
                             }
 
-                            val tours = result.tours
+                            val tours = result.tours?.filter { it.weight != null }
                             if (tours?.isNotEmpty() == true) {
                                 tourDao.clear()
                                 tours.forEach { tour ->
@@ -251,6 +251,14 @@ class AppDataManager @Inject constructor(
      */
     @WorkerThread
     private fun enforceSanityCheck() {
+        // Make sure we're not bitten by https://issuetracker.google.com/issues/111504749
+        // TODO: Remove this '::close' when we start using Room 2.1.0-a1 or higher
+        if (!appDatabase.isOpen) {
+            // This _should_ be a no-op, but in Room 2.0.0 and earlier it may release a stale database reference.
+            appDatabase.openHelper.close()
+            // If it did release a reference, the next line will throw with a helpful (though long) error message
+        }
+
         if (generalInfoDao.getRowCount() != 1 || dataObjectDao.getRowCount() != 1) {
             // Absolutely no reason to keep previous data. Destroy it.
             appDataPreferencesManager.lastModified = ""

@@ -2,6 +2,7 @@ package edu.artic.tours.manager
 
 import dagger.Module
 import dagger.Provides
+import edu.artic.db.daos.ArticAudioFileDao
 import javax.inject.Singleton
 
 /**
@@ -15,6 +16,6 @@ abstract class TourManagerModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun tourProgressManager(): TourProgressManager = TourProgressManager()
+        fun tourProgressManager(audioFileDao: ArticAudioFileDao): TourProgressManager = TourProgressManager(audioFileDao)
     }
 }
