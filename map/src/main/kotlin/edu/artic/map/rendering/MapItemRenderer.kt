@@ -291,10 +291,18 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
                     map = map,
                     floor = floor,
                     id = id,
+                    isSelected = shouldFocusOnCreation(mapChangeEvent.displayMode),
                     // bitmap queue not used, means bitmap is considered loaded
                     loadedBitmap = !useBitmapQueue,
                     requestDisposable = requestDisposable)
         }
+    }
+
+    /**
+     * This method is called by [displayMarker], later it is used to focus the marker.
+     */
+    protected  open fun shouldFocusOnCreation(displayMode: MapDisplayMode): Boolean {
+        return false
     }
 
     /**
@@ -330,6 +338,7 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
                         map = map,
                         floor = floor,
                         id = id,
+                        isSelected = shouldFocusOnCreation(displayMode),
                         loadedBitmap = true,
                         requestDisposable = null)
                 synchronized(tempMarkers) {
@@ -375,6 +384,7 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
             floor: Int,
             id: String,
             loadedBitmap: Boolean,
+            isSelected: Boolean,
             requestDisposable: Disposable?
     ): MarkerHolder<T> {
         val targetAlpha = getMarkerAlpha(floor,
@@ -395,7 +405,15 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
                     tag = MarkerMetaData(item, loadedBitmap, requestDisposable)
                 })
 
+
         markerHolder.marker.fadeIn(targetAlpha)
+
+        /**
+         * Focus the selected object.
+         */
+        if (isSelected) {
+            markerHolder.marker.showInfoWindow()
+        }
 
         return markerHolder
     }
