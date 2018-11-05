@@ -145,6 +145,12 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
             scaledDot
         }
 
+        val isSelectedTourStop = if (mapChangeEvent.displayMode is MapDisplayMode.Tour) {
+            mapChangeEvent.displayMode.selectedTourStop?.objectId == id
+        } else {
+            false
+        }
+
         // fast bitmap returns immediately.
         return constructAndAddMarkerHolder(
                 item = item,
@@ -155,6 +161,7 @@ class ObjectsMapItemRenderer(private val objectsDao: ArticObjectDao)
                 id = id,
                 // bitmap queue not used, means bitmap is considered loaded
                 loadedBitmap = !useBitmapQueue,
+                isSelected = isSelectedTourStop,
                 requestDisposable = requestDisposable)
     }
 
