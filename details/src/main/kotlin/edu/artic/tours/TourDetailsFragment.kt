@@ -27,7 +27,6 @@ import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
 import edu.artic.image.updateImageScaleType
 import edu.artic.language.LanguageAdapter
-import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.navigation.NavigationConstants
@@ -201,10 +200,6 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
         viewModel.availableTranslations
                 .map { it.size > 1 }
                 .bindToMain(languageSelector.visibility(View.INVISIBLE))
-                .disposedBy(disposeBag)
-
-        LanguageSelectorViewBackground(languageSelector)
-                .listenToLayoutChanges()
                 .disposedBy(disposeBag)
 
         languageSelector
