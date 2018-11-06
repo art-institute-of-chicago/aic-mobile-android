@@ -2,6 +2,7 @@ package edu.artic.language
 
 import android.graphics.Color
 import android.view.View
+import android.view.ViewGroup
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.adapter.DropDownAdapter
@@ -20,7 +21,6 @@ class LanguageAdapter : AutoHolderRecyclerViewAdapter<SpecifiesLanguage>(),
     override fun View.onBindView(item: SpecifiesLanguage, position: Int) {
         text.text = item.userFriendlyLanguage(context)
         text.setTextColor(Color.WHITE)
-        background = null
     }
 
     override fun getLayoutResId(position: Int): Int = R.layout.language_cell
@@ -28,4 +28,16 @@ class LanguageAdapter : AutoHolderRecyclerViewAdapter<SpecifiesLanguage>(),
     override fun View.onBindDropdownView(item: SpecifiesLanguage, position: Int) {
         text.text = item.userFriendlyLanguage(context)
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        return CViewHolder(parent, R.layout.dropdown_language_cell)
+    }
+
+    override fun onCreateDropdownItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder? {
+        return DDViewHolder(parent, getLayoutResId(0))
+    }
+
+    class DDViewHolder(viewGroup: ViewGroup, layout: Int) : BaseViewHolder(viewGroup, layout)
+
+    class CViewHolder(viewGroup: ViewGroup, layout: Int) : BaseViewHolder(viewGroup, layout)
 }
