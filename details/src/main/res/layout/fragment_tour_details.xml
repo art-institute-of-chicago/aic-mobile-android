@@ -83,7 +83,7 @@
                 app:layout_constraintHeight_default="wrap"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 app:layout_constraintWidth_default="wrap"
-                tools:listitem="@layout/dropdown_language_cell" />
+                tools:listitem="@layout/language_cell" />
 
             <TextView
                 android:id="@+id/tourStops"
