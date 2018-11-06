@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginStandard"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:background="@color/audioBackground"
+                android:background="@null"
                 android:clipToPadding="false"
                 android:spinnerMode="dropdown"
                 android:textColor="@android:color/white"
@@ -83,7 +83,7 @@
                 app:layout_constraintHeight_default="wrap"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 app:layout_constraintWidth_default="wrap"
-                tools:background="@drawable/exo_scrubber" />
+                tools:listitem="@layout/dropdown_language_cell" />
 
             <TextView
                 android:id="@+id/tourStops"
