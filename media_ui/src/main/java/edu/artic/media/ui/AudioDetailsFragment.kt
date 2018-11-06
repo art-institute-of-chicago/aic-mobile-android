@@ -30,7 +30,6 @@ import edu.artic.db.models.getIntroStop
 import edu.artic.image.GlideApp
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.language.LanguageAdapter
-import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -232,10 +231,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.availableTranslations
                 .map { it.size > 1 }
                 .bindToMain(exo_translation_selector.visibility(View.INVISIBLE))
-                .disposedBy(disposeBag)
-
-        LanguageSelectorViewBackground(exo_translation_selector)
-                .listenToLayoutChanges()
                 .disposedBy(disposeBag)
 
         exo_translation_selector
