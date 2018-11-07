@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="LanguageButton" parent="ArticButton">
+        <item name="android:button">@null</item>
+        <item name="android:background">?attr/languageSettingsButtonBackground</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:textColor">?attr/languageSettingsButtonTextColor</item>
         <item name="android:minHeight">50dp</item>
     </style>
 </resources>
