@@ -20,4 +20,7 @@ interface ArticAudioFileDao {
 
     @Query("select * from ArticAudioFile where nid = :id")
     fun getAudioByIdAsync(id: String): Flowable<ArticAudioFile>
+
+    @Query("delete from ArticAudioFile")
+    fun clear()
 }

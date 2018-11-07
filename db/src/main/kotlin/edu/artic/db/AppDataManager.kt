@@ -147,11 +147,13 @@ class AppDataManager @Inject constructor(
 
                             val galleries = result.galleries?.values?.toList()
                             if (galleries?.isNotEmpty() == true) {
+                                galleryDao.clear()
                                 galleryDao.addGalleries(galleries)
                             }
 
                             val audioFiles = result.audioFiles
                             if (audioFiles?.isNotEmpty() == true) {
+                                audioFileDao.clear()
                                 audioFileDao.addAudioFiles(audioFiles.values.toList())
                             }
 
