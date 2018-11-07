@@ -13,7 +13,6 @@ import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.signature.ObjectKey
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -65,7 +64,9 @@ class GlideModule : AppGlideModule() {
          */
         val cacheSize: Long = 10 * 1024 * 1024 // 10 MiB
         val clientBuilder = OkHttpClient.Builder()
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
+        if (BuildConfig.DEBUG) {
+            clientBuilder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
+        }
         val client = clientBuilder.cache(Cache(context.cacheDir, cacheSize)).build()
         val okHttpFactory = OkHttpUrlLoader.Factory(client)
 
