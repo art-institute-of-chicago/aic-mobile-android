@@ -1,9 +1,10 @@
 package edu.artic.map.rendering
 
 import android.content.Context
-import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.gms.maps.model.Tile
 import edu.artic.db.models.ArticMapFloor
+import edu.artic.image.GlideApp
 import timber.log.Timber
 import java.io.IOException
 import kotlin.math.pow
@@ -30,9 +31,17 @@ class GlideMapTileProvider(private val context: Context,
 
                 val path = "${floor.tiles}zoom$zoom/tiles-$tileNumber.jpg"
                 return try {
-                    val array = Glide.with(context)
+
+                    /**
+                     * Skipping the glide cache.
+                     * OkHttp will handle the work of caching the image.
+                     * @See edu.artic.image.GlideModule
+                     */
+                    val array = GlideApp.with(context)
                             .`as`(ByteArray::class.java)
                             .load(path)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
                             .submit(TILE_SIZE.toInt(), TILE_SIZE.toInt())
                             .get()
                     Tile(TILE_SIZE.toInt(),
