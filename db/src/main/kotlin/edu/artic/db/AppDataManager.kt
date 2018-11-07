@@ -169,6 +169,7 @@ class AppDataManager @Inject constructor(
                                         }
                                     }
                                 }
+                                objectDao.clear()
                                 objectDao.addObjects(objects.values.toList())
                             }
 

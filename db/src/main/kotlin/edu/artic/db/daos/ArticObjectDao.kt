@@ -61,6 +61,9 @@ interface ArticObjectDao {
 
     @Query("select * from ArticObject where floor = :floor")
     fun getObjectsByFloor(floor: Int): Flowable<List<ArticObject>>
+
+    @Query("delete from ArticObject")
+    fun clear()
 }
 
 
