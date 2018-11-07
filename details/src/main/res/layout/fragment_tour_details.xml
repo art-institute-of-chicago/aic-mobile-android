@@ -118,7 +118,6 @@
             <edu.artic.view.DetailButton
                 android:id="@+id/startTourButton"
                 android:layout_width="0dp"
-                app:button_icon="@drawable/exo_icon_play"
                 app:button_text="@string/startTour"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
@@ -126,8 +125,8 @@
                 android:layout_marginEnd="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/languageSelector">
-            </edu.artic.view.DetailButton>
+                app:layout_constraintTop_toBottomOf="@id/languageSelector"
+                />
 
             <!--
 
