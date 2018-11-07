@@ -29,14 +29,6 @@
         <item name="languageSettingsBodyTextAppearance">@style/BodySansSerifBlackLeft</item>
     </style>
 
-    <style name="LanguageButton">
-        <item name="android:fontFamily">@font/ideal_sans_medium</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:minHeight">50dp</item>
-    </style>
 
     <style name="InformationExpandedTitle" parent="TextAppearance.AppCompat.Title">
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
