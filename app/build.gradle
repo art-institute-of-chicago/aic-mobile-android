@@ -105,7 +105,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
     // Our tests use the standard Java variant of the 310 backport..
-    testImplementation('org.threeten:threetenbp:1.3.3') {
+    testImplementation('org.threeten:threetenbp:1.3.7') {
         // ...so we need to explicitly exclude the Android variant here
         exclude group: 'com.jakewharton.threetenabp', module: 'threetenabp'
     }
