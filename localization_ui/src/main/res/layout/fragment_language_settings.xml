@@ -109,10 +109,7 @@
                     android:layout_marginStart="@dimen/marginDouble"
                     android:layout_marginTop="@dimen/marginQuad"
                     android:layout_marginEnd="@dimen/marginDouble"
-                    android:background="?attr/languageSettingsButtonBackground"
-                    android:button="@null"
                     android:text="@string/english_in_english"
-                    android:textColor="?attr/languageSettingsButtonTextColor"
                     tools:checked="true" />
 
                 <RadioButton
@@ -123,10 +120,7 @@
                     android:layout_marginStart="@dimen/marginDouble"
                     android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginEnd="@dimen/marginDouble"
-                    android:background="?attr/languageSettingsButtonBackground"
-                    android:button="@null"
                     android:text="@string/spanish_in_spanish"
-                    android:textColor="?attr/languageSettingsButtonTextColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/englishLanguage" />
@@ -139,10 +133,7 @@
                     android:layout_marginStart="@dimen/marginDouble"
                     android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginEnd="@dimen/marginDouble"
-                    android:background="?attr/languageSettingsButtonBackground"
-                    android:button="@null"
                     android:text="@string/chinese_in_chinese"
-                    android:textColor="?attr/languageSettingsButtonTextColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/spanishLanguage" />

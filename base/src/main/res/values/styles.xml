@@ -38,6 +38,7 @@
     </style>
 
     <style name="Widget.AppCompat.Button.Tinted">
+        <item name="android:elevation">0dp</item>
         <item name="android:background">@drawable/detail_button_background</item>
     </style>
 
@@ -176,13 +177,26 @@
         <item name="android:background">@color/white26Alpha</item>
     </style>
 
-    <style name="DetailButton">
+    <style name="ArticButton">
         <item name="android:fontFamily">@font/ideal_sans_medium</item>
         <item name="android:gravity">center</item>
-        <item name="android:letterSpacing">0.07</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">15sp</item>
+        <!--
+        Setting stateListAnimator to null is the simplest way to prevent the elevation from
+        changing. We don't really want a shadow here, and this'll make elevation max out at
+        0dp (which _implies_ no shadow).
+
+        For more about what the property is and how to use it, check out Mert Şimşek's post
+        at https://android.jlelse.eu/polishing-ui-android-statelistanimator-7b74a06b85a5
+        -->
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="DetailButton" parent="ArticButton">
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="DetailButtonParent" parent="Widget.AppCompat.Button.Tinted">
