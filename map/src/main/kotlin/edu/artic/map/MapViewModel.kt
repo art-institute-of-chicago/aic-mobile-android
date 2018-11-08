@@ -594,6 +594,19 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 }
     }
 
+    override fun cleanup() {
+        // If the associated fragment is being recreated, we'll need a new GoogleMap object
+        currentMap
+                .take(1)
+                .filterValue()
+                .subscribeBy {
+                    it.setInfoWindowAdapter(null)
+                }.disposedBy(disposeBag)
+
+
+        super.cleanup()
+    }
+
 
     override fun onCleared() {
         super.onCleared()
