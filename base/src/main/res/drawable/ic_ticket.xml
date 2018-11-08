@@ -9,9 +9,21 @@
     <group
         android:pivotX="12.5"
         android:pivotY="12.5"
-        android:rotation="90"
+        android:rotation="270"
         >
         <path
+            android:name="stub_perforation"
+            android:fillType="evenOdd"
+            android:pathData="
+            M 10.820312 19.375
+            L 19.398438 10.796875"
+            android:strokeLineCap="square"
+            android:strokeWidth="1.145"
+            android:strokeColor="#FFFFFF"
+            />
+
+        <path
+            android:name="ticket_outline"
             android:fillType="evenOdd"
             android:pathData="
             M 21.570 17.132
