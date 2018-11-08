@@ -133,7 +133,7 @@
     </style>
 
     <style name="CardBodySmallItalic">
-        <item name="android:textSize">@dimen/textSmallest</item>
+        <item name="android:textSize">@dimen/textSixteen</item>
         <item name="android:textColor">@color/greyText</item>
         <item name="android:fontFamily">@font/amiri_italic</item>
     </style>
