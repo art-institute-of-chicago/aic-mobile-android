@@ -14,6 +14,16 @@
         <path
             android:fillType="evenOdd"
             android:pathData="
+            M 10.820312 19.375
+            L 19.398438 10.796875"
+            android:strokeLineCap="square"
+            android:strokeWidth="1.145"
+            android:strokeColor="#FFFFFF"
+            />
+
+        <path
+            android:fillType="evenOdd"
+            android:pathData="
             M 21.570 17.132
             C 20.929 16.660 20.101 16.429 19.210 16.597
             C 17.996 16.824 17.023 17.824 16.824 19.046
