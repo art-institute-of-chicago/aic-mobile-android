@@ -44,6 +44,11 @@ data class ArticExhibition(
             return aic_start_at.toCurrentTimeZone()
         }
 
+    val thumbUrl: String?
+        get() {
+            return "$imageUrl?w=200&h=150"
+        }
+
     val endTime: ZonedDateTime
         get() {
             return aic_end_at.toCurrentTimeZone()
