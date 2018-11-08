@@ -8,6 +8,7 @@ import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.content.listing.R
 import edu.artic.image.GlideApp
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 
 /**
@@ -17,13 +18,18 @@ import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellViewModel>() {
 
     override fun View.onBindView(item: AllExhibitionsCellViewModel, position: Int) {
-        item.exhibitionImageUrl.subscribe {
-            GlideApp.with(context)
-                    .load(it)
-                    .error(R.drawable.placeholder_medium_square)
-                    .placeholder(R.color.placeholderBackground)
-                    .into(image)
-        }.disposedBy(item.viewDisposeBag)
+        item.exhibitionImageUrl
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    image.post {
+                        GlideApp.with(context)
+                                .load("$it?w=${image.measuredWidth}&h=${image.measuredHeight}")
+                                .error(R.drawable.placeholder_medium_square)
+                                .placeholder(R.color.placeholderBackground)
+                                .into(image)
+
+                    }
+                }.disposedBy(item.viewDisposeBag)
 
         item.exhibitionTitle.bindToMain(title.text()).disposedBy(item.viewDisposeBag)
         item.exhibitionTitle.subscribe{image.transitionName = it}.disposedBy(item.viewDisposeBag)
