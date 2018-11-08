@@ -9,7 +9,7 @@
     <group
         android:pivotX="12.5"
         android:pivotY="12.5"
-        android:rotation="90"
+        android:rotation="270"
         >
         <path
             android:fillType="evenOdd"
