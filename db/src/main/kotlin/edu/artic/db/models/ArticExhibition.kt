@@ -14,8 +14,7 @@ import org.threeten.bp.ZonedDateTime
 data class ArticExhibition(
         @Json(name = "short_description") val short_description: String?,
         @Json(name = "aic_start_at") val aic_start_at: ZonedDateTime,
-        @Json(name = "legacy_image_mobile_url") var legacy_image_mobile_url: String?,
-        @Json(name = "legacy_image_desktop_url") val legacy_image_desktop_url: String?,
+        @Json(name = "image_url") val imageUrl: String?,
         @Json(name = "web_url") val web_url: String?,
         @Json(name = "gallery_id") val gallery_id: String?,
         @Json(name = "id") @PrimaryKey val id: Int,
@@ -39,11 +38,6 @@ data class ArticExhibition(
          */
         var floor: Int? = null
 ) : Parcelable {
-
-    val legacyImageUrl: String?
-        get() {
-            return legacy_image_mobile_url?.asCDNUri()
-        }
 
     val startTime: ZonedDateTime
         get() {

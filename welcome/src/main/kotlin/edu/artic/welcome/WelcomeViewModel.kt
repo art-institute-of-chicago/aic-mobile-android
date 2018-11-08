@@ -226,7 +226,7 @@ class WelcomeExhibitionCellViewModel(
 
     val exhibitionTitleStream: Subject<String> = BehaviorSubject.createDefault(exhibition.title)
     val exhibitionDate: Subject<String> = BehaviorSubject.create()
-    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.legacyImageUrl.orEmpty())
+    val exhibitionImageUrl: Subject<String> = BehaviorSubject.createDefault(exhibition.imageUrl.orEmpty())
 
     init {
 

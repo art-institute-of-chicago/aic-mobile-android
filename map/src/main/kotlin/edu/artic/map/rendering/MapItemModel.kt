@@ -47,8 +47,8 @@ class MapItemModel(
             return MapItemModel(item.id.toString(),
                     item.title,
                     item.floor ?: 1,
-                    item.legacyImageUrl ?: "",
-                    item.legacyImageUrl ?: "",
+                    item.imageUrl ?: "",
+                    item.imageUrl ?: "",
                     null,
                     item.toLatLng())
         }
