@@ -12,6 +12,7 @@
         android:rotation="270"
         >
         <path
+            android:name="stub_perforation"
             android:fillType="evenOdd"
             android:pathData="
             M 10.820312 19.375
@@ -22,6 +23,7 @@
             />
 
         <path
+            android:name="ticket_outline"
             android:fillType="evenOdd"
             android:pathData="
             M 21.570 17.132
