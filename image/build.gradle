@@ -4,4 +4,6 @@ dependencies {
     kapt libs.glide_compiler
 
     api libs.rx_helpers
+    implementation libs.glide_okhttp_integration
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 }
