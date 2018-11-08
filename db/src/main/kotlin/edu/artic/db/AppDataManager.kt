@@ -348,7 +348,7 @@ class AppDataManager @Inject constructor(
                                                 exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                                 // Override with exhibitions optional images from CMS, if available
                                                 exhibitionCMS.imageUrl?.let {
-                                                    exhibitionsById[exhibitionCMS.id]?.legacy_image_mobile_url = it
+                                                    exhibitionsById[exhibitionCMS.id]?.imageUrl = it
                                                 }
                                                 exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                             }

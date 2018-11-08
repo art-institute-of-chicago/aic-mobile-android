@@ -78,11 +78,15 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    GlideApp.with(view)
-                            .load(it)
-                            .placeholder(R.color.placeholderBackground)
-                            .error(R.drawable.placeholder_thumb)
-                            .into(view.exhibitionImage)
+                    view.exhibitionImage.post {
+                        view.exhibitionImage.post {
+                            GlideApp.with(view)
+                                    .load("$it?w=${view.exhibitionImage.measuredWidth}&h=${view.exhibitionImage.measuredWidth}")
+                                    .placeholder(R.color.placeholderBackground)
+                                    .error(R.drawable.placeholder_thumb)
+                                    .into(view.exhibitionImage)
+                        }
+                    }
                 }
                 .disposedBy(item.viewDisposeBag)
         item.title
