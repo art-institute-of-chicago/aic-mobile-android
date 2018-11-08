@@ -47,7 +47,7 @@ class MapItemModel(
             return MapItemModel(item.id.toString(),
                     item.title,
                     item.floor ?: 1,
-                    item.imageUrl ?: "",
+                    item.thumbUrl ?: "",
                     item.imageUrl ?: "",
                     null,
                     item.toLatLng())
