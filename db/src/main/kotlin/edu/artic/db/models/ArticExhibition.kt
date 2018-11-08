@@ -46,7 +46,9 @@ data class ArticExhibition(
 
     val thumbUrl: String?
         get() {
-            return "$imageUrl?w=200&h=150"
+            return imageUrl?.let {
+                "$imageUrl?w=200&h=150"
+            }
         }
 
     val endTime: ZonedDateTime
