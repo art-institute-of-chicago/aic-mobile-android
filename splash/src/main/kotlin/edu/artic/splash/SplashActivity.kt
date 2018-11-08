@@ -79,6 +79,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                     if (BuildConfig.DEBUG) {
                         percentText.visibility = View.VISIBLE
                         percentText.text = errorMessage
+
+                        Timber.e(it)
                     }
 
                     /**
