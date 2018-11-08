@@ -71,7 +71,6 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         get() = ScreenName.Map
 
     override fun hasTransparentStatusBar() = true
-    private var infoAdapter : GoogleMap.InfoWindowAdapter? = null
 
     private var tileOverlay: TileOverlay? = null
     private var mapClicks: Subject<Boolean> = PublishSubject.create()
@@ -180,7 +179,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     private fun configureMap(map: GoogleMap, mapStyleOptions: String) {
 
-        infoAdapter = object : GoogleMap.InfoWindowAdapter {
+        val infoAdapter = object : GoogleMap.InfoWindowAdapter {
 
             override fun getInfoContents(marker: Marker?): View? {
                 return context?.let { ctx ->
@@ -691,7 +690,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onDestroyView() {
         mapView.onDestroy()
         leaveTourDialog?.dismissAllowingStateLoss()
-        infoAdapter = null
+
+
         super.onDestroyView()
     }
 
