@@ -338,13 +338,13 @@
     </style>
 
     <style name="MarkerDepartmentText">
-        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/textSixteen</item>
     </style>
 
     <style name="MarkerGalleryText">
-        <item name="android:fontFamily">@font/ideal_sans_medium</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">15sp</item>
     </style>
