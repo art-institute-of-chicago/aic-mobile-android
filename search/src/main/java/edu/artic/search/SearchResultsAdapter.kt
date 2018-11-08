@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
 import kotlinx.android.synthetic.main.layout_cell_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
@@ -50,12 +51,25 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
             }
             is SearchBaseListItemViewModel -> {
                 item.imageUrl
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
-                            GlideApp.with(context)
-                                    .load(it)
-                                    .placeholder(R.color.placeholderBackground)
-                                    .error(R.drawable.placeholder_thumb)
-                                    .into(image)
+                            image.post {
+                                /**
+                                 * Scale the exhibition image.
+                                 */
+                                val url = if (item is SearchExhibitionCellViewModel) {
+                                        "$it?w=${image.measuredWidth}&h=${image.measuredHeight}"
+                                } else {
+                                    it
+                                }
+
+                                GlideApp.with(context)
+                                        .load(url)
+                                        .placeholder(R.color.placeholderBackground)
+                                        .error(R.drawable.placeholder_thumb)
+                                        .into(image)
+                            }
+
                         }.disposedBy(item.viewDisposeBag)
                 item.isHeadphonesVisible
                         .bindToMain(headphonesIcon.visibility(View.INVISIBLE))
