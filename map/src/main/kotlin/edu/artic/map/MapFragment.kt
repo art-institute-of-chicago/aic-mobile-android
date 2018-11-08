@@ -691,7 +691,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         mapView.onDestroy()
         leaveTourDialog?.dismissAllowingStateLoss()
 
-
+        // NB: this call leads directly to viewModel::cleanup
         super.onDestroyView()
     }
 
