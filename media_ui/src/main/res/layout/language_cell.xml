@@ -16,21 +16,25 @@
         android:fontFamily="@font/ideal_sans_medium"
         android:gravity="center_vertical|start"
         android:includeFontPadding="false"
-        android:minWidth="93dp"
+        android:minWidth="63dp"
         android:minHeight="32dp"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/caret"
         tools:layout_width="100dp"
+        android:maxLines="1"
         android:layout_marginStart="@dimen/marginDouble"
-        tools:text="@string/name_of_this_language" />
+        tools:text="this is very " />
 
     <ImageView
+        android:id="@+id/caret"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/ic_language_caret"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/marginHalf"
         android:layout_marginEnd="@dimen/marginDouble"
         app:layout_constraintTop_toTopOf="parent" />
 
