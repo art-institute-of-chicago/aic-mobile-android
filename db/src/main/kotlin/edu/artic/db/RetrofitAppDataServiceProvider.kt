@@ -2,7 +2,9 @@ package edu.artic.db
 
 import com.fuzz.retrofit.rx.requireValue
 import com.fuzz.rx.bindTo
+import com.jakewharton.retrofit2.adapter.rxjava2.Result
 import com.jobinlawrance.downloadprogressinterceptor.ProgressEventBus
+import edu.artic.base.utils.orIfNullOrBlank
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticDataObject
 import io.reactivex.Observable
@@ -10,6 +12,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import org.json.JSONObject
 import retrofit2.Retrofit
 
 /**
@@ -157,6 +160,27 @@ class RetrofitAppDataServiceProvider(
                         )
             })
         }
+    }
+
+    /**
+     * Extension method to parse the error message from the JSON.
+     * Only works iff the response body can be converted to JSONObject.
+     * Looks for error, message and detail keys in order.
+     */
+    fun Result<*>.getErrorMessage(): String? {
+        var errorMessage: String? = null
+        try {
+            this.response().errorBody()?.also { errorBody ->
+                val errorJSON = JSONObject(errorBody.string())
+                errorMessage = errorJSON.optString("error")
+                        .orIfNullOrBlank(errorJSON.optString("message"))
+                        .orIfNullOrBlank(errorJSON.optString("detail"))
+                        .orIfNullOrBlank("")
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+        }
+        return errorMessage
     }
 
 
