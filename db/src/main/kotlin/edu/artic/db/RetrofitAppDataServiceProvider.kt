@@ -131,34 +131,35 @@ class RetrofitAppDataServiceProvider(
             dataObject.subscribeBy(
                     onError = { observer.onError(it) },
                     onNext = { dataObject ->
-                var url = dataObject.dataApiUrl + dataObject.eventsEndpoint
-                if (!url.contains("/search")) {
-                    url += "/search"
-                }
-                url += "?limit=500"
-
-                val postParams = ApiBodyGenerator.createEventQueryBody()
-
-                service.getEvents(EVENT_HEADER_ID, url, postParams)
-                        .subscribe({
-                            if (!it.isError) {
-                                observer.onNext(
-                                        ProgressDataState.Done(
-                                                it.requireValue(),
-                                                it.response().headers().toMultimap()
-                                        )
-                                )
-                            } else {
-                                observer.onError(it.error())
-                            }
-                        }, {
-                            observer.onError(it)
-                        }, {
-                            observer.onComplete()
+                        var url = dataObject.dataApiUrl + dataObject.eventsEndpoint
+                        if (!url.contains("/search")) {
+                            url += "/search"
                         }
+                        url += "?limit=500"
 
-                        )
-            })
+                        val postParams = ApiBodyGenerator.createEventQueryBody()
+
+                        service.getEvents(EVENT_HEADER_ID, url, postParams)
+                                .subscribe({
+                                    if (it.response().isSuccessful) {
+                                        observer.onNext(
+                                                ProgressDataState.Done(
+                                                        it.requireValue(),
+                                                        it.response().headers().toMultimap()
+                                                )
+                                        )
+                                    } else {
+                                        val errorMessage: String? = it.getErrorMessage()
+                                        observer.onError(Throwable(errorMessage, it.error()))
+                                    }
+                                }, {
+                                    observer.onError(it)
+                                }, {
+                                    observer.onComplete()
+                                }
+
+                                )
+                    })
         }
     }
 
