@@ -66,8 +66,10 @@ class SplashViewModel @Inject constructor(
                 .disposedBy(disposeBag)
     }
 
-    
-    fun onNetworkErrorDialogDismissed() {
+    /**
+     * Allow user to proceed forward if app has cache data.
+     */
+    fun errorDialogDismissed() {
         if (appDaPrefManager.downloadedNecessaryData) {
             Navigate.Forward(NavigationEndpoint.Welcome)
                     .asObservable()
