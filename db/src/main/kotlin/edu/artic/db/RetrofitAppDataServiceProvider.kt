@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import retrofit2.Retrofit
+import timber.log.Timber
 
 /**
  * Reference implementation of [AppDataServiceProvider] for the Art Institute of Chicago.
@@ -109,7 +110,9 @@ class RetrofitAppDataServiceProvider(
                                         )
                                     } else {
                                         val errorMessage: String? = it.getErrorMessage()
-                                        observer.onError(Throwable(errorMessage, it.error()))
+                                        val error = Throwable(errorMessage, it.error())
+                                        Timber.e(error)
+                                        observer.onError(error)
                                     }
 
                                 }, {
@@ -152,7 +155,9 @@ class RetrofitAppDataServiceProvider(
                                         )
                                     } else {
                                         val errorMessage: String? = it.getErrorMessage()
-                                        observer.onError(Throwable(errorMessage, it.error()))
+                                        val error = Throwable(errorMessage, it.error())
+                                        Timber.e(error)
+                                        observer.onError(error)
                                     }
                                 }, {
                                     observer.onError(it)
