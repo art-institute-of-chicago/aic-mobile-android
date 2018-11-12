@@ -23,4 +23,6 @@
 6: 13dde4f8d8188f6f99dda35da79d09b937d9dd92
 # Change to 7 in commit 0ff102882ebe6d25754a1f39cbf8d0cd6fff80b0, 27 Sep 2018
 7: 8057e4b42d74e3f510d6eb3ffd1f2f8dd181bd88
+# Change to 8 in commit 9ed7788207b5fbc995ac1b6fe89cb7c688556ef6, 02 Oct 2018
+8: c5e9367a0357ee5030dbf83f9b1109beedd1ee27
 
