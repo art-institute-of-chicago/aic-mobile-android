@@ -29,6 +29,9 @@ of the Android support libraries and the Kotlin programming language -
 our modifications to those, if any, are also licensed under the AGPL,
  unless otherwise indicated.
 
+The Amiri font files in `base/src/main/res/font` are licensed under the
+[Open Font License, version 1.1](OFL.txt).
+
 The following modules use proprietary APIs:
 * The `map` module includes Google's "`GoogleMap`" and "`LatLng`"
   classes.
