@@ -2,11 +2,9 @@ package edu.artic.info
 
 import android.content.Intent
 import android.os.Bundle
-import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
-import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
@@ -45,40 +43,22 @@ class InfoActivity : BaseActivity() {
         }
     }
 
+    /**
+     * DeepLinking does not work by default when activity is reordered to front.
+     * So we need to handle it manually.
+     */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        /**
-         * DeepLinking does not work by default when activity is reordered to front.
-         * So we need to handle it manually.
-         */
-        when (intent.data?.toString()?.replace("artic://", "")) {
-            NavigationConstants.INFO_MEMBER_CARD -> {
-
-                val navController = supportFragmentManager.findNavController()
-
-                val currentDestination = navController
-                        ?.currentDestination
-                        ?.label
-                        ?.toString()
-
-                /**
-                 * Go to access member card iff current destination's label is not [R.string.accessMemberCardLabel].
-                 * Label for [AccessMemberCardFragment] is [R.string.accessMemberCardLabel].
-                 */
-                if (currentDestination != resources.getString(R.string.accessMemberCardLabel)) {
-
-                    /**
-                     * If the active fragment is not the start_destination navController can't find
-                     * accessMemberCardLabel.
-                     */
-                    if (currentDestination != resources.getString(R.string.fragmentInformationLabel)) {
-                        navController?.navigateUp()
-                    }
-
-                    navController?.navigate(R.id.goToAccessMemberCard)
-                }
-            }
-
+        supportFragmentManager.findNavController()?.apply {
+            /**
+             * Normally, the root child fragment is [InformationFragment].
+             * But when the user navigates from access_info_card link from WelcomeFragment, the root
+             * fragment is [edu.artic.accesscard.AccessMemberCardFragment].
+             *
+             * We expect at most two fragment at a time in this graph.
+             */
+            popBackStack(R.id.informationFragment, false)
+            onHandleDeepLink(intent)
         }
     }
 
