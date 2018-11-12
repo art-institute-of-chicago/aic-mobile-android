@@ -178,6 +178,27 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     private fun configureMap(map: GoogleMap, mapStyleOptions: String) {
+
+        val infoAdapter = object : GoogleMap.InfoWindowAdapter {
+
+            override fun getInfoContents(marker: Marker?): View? {
+                return context?.let { ctx ->
+                    View(ctx)
+                }
+            }
+
+            override fun getInfoWindow(marker: Marker?): View? {
+                /**
+                 * Returning empty textView or view didn't work so added TextView with spaces.
+                 */
+                return context?.let { ctx ->
+                    TextView(ctx).apply {
+                        text = " "
+                    }
+                }
+            }
+        }
+
         map.apply {
             isBuildingsEnabled = false
             isIndoorEnabled = false
@@ -206,20 +227,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              *
              * Purpose of setting this infoWindowAdapter is for displaying an empty info window.
              */
-            setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
-                override fun getInfoContents(p0: Marker?): View {
-                    return View(requireContext())
-                }
-
-                override fun getInfoWindow(p0: Marker?): View? {
-                    /**
-                     * Returning empty textView or view didn't work so added TextView with spaces.
-                     */
-                    return TextView(requireContext()).apply {
-                        text = " "
-                    }
-                }
-            })
+            setInfoWindowAdapter(infoAdapter)
         }
     }
 
@@ -682,6 +690,8 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun onDestroyView() {
         mapView.onDestroy()
         leaveTourDialog?.dismissAllowingStateLoss()
+
+        // NB: this call leads directly to viewModel::cleanup
         super.onDestroyView()
     }
 
