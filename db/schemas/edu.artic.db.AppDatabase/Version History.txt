@@ -1,0 +1,5 @@
+# This file maps each schema to a commit. You can use these to recreate the
+# full list of AppDatabase versions.
+#
+1: 2f66a16da7a958971e2e68b1c6d588ab319bb8da
+
