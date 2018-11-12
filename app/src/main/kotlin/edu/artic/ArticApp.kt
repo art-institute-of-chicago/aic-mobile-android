@@ -27,7 +27,10 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
         super.onCreate()
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(CrashlyticsTree())
         }
+
         AndroidThreeTen.init(this)
         FirebaseApp.initializeApp(this, firebaseOptions())
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
