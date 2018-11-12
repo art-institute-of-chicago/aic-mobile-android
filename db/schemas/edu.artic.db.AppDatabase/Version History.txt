@@ -7,6 +7,9 @@
 # something closely approximating the db in the build most frequently
 # referenced by the development team at the time.
 #
+# Note that in some cases, the database version was changed without any
+# corresponding change to the models in use.
+#
 1: 2f66a16da7a958971e2e68b1c6d588ab319bb8da
 # Change to 2 in commit 67bd840a46eda46cc3a7a208861300f8080e8508, 30 Aug 2018
 2: e10b94136bde299d5888ab2e723922d199d6c65c
@@ -16,4 +19,6 @@
 4: 1740bc4fb8b03232b66b1f0d59e0375c3c396adc
 # Change to 5 in commit 30c0d19eb58ce11a062800d6fe2bf1a88ecf6a5e, 24 Sep 2018
 5: 08daec019da3937605bd1548ac07b93dfdacb767
+# Change to 6 in commit b04bcf3c404deeb720e63bd3e3acd2a254fac359, 26 Sep 2018
+6: 13dde4f8d8188f6f99dda35da79d09b937d9dd92
 
