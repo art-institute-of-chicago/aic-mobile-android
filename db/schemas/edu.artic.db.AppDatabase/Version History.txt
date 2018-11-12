@@ -8,5 +8,8 @@
 # referenced by the development team at the time.
 #
 1: 2f66a16da7a958971e2e68b1c6d588ab319bb8da
+# Change to 2 in commit 67bd840a46eda46cc3a7a208861300f8080e8508, 30 Aug 2018
 2: e10b94136bde299d5888ab2e723922d199d6c65c
+# Change to 3 in commit c23ccb136ed5875db9556b9769b67b8e896c32b5, 12 Sep 2018
+3: 38e9d298c88d3bc861ef63e3ac342e5d0cdbe75b
 
