@@ -1,5 +1,12 @@
 # This file maps each schema to a commit. You can use these to recreate the
 # full list of AppDatabase versions.
 #
+# Specific commits reflect when the database version first appeared in the
+# mainline `master` branch. As a special case, version 1 was used for a number
+# of different schemas, so the commit given for that points instead to
+# something closely approximating the db in the build most frequently
+# referenced by the development team at the time.
+#
 1: 2f66a16da7a958971e2e68b1c6d588ab319bb8da
+2: e10b94136bde299d5888ab2e723922d199d6c65c
 
