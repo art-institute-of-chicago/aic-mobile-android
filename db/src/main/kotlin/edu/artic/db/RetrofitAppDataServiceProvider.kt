@@ -2,17 +2,16 @@ package edu.artic.db
 
 import com.fuzz.retrofit.rx.requireValue
 import com.fuzz.rx.bindTo
-import com.jakewharton.retrofit2.adapter.rxjava2.Result
 import com.jobinlawrance.downloadprogressinterceptor.ProgressEventBus
-import edu.artic.base.utils.orIfNullOrBlank
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticDataObject
+import edu.artic.getErrorMessage
+import edu.artic.throwIfError
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import org.json.JSONObject
 import retrofit2.Retrofit
 
 /**
@@ -90,37 +89,39 @@ class RetrofitAppDataServiceProvider(
             dataObject.subscribeBy(
                     onError = { observer.onError(it) },
                     onNext = { dataObject ->
-                var url = dataObject.dataApiUrl + dataObject.exhibitionsEndpoint
-                if (!url.contains("/search")) {
-                    url += "/search"
-                }
-                url += "?limit=99"
-
-                val postParams = ApiBodyGenerator.createExhibitionQueryBody()
-
-                service.getExhibitions(EXHIBITIONS_HEADER_ID, url, postParams)
-                        .subscribe({
-                            if (!it.isError) {
-                                observer.onNext(
-                                        ProgressDataState.Done(
-                                                it.requireValue(),
-                                                it.response().headers().toMultimap()
-                                        )
-                                )
-                            } else {
-                                observer.onError(it.error())
-                            }
-
-                        }, {
-                            observer.onError(it)
-
-                        }, {
-                            observer.onComplete()
-
+                        var url = dataObject.dataApiUrl + dataObject.exhibitionsEndpoint
+                        if (!url.contains("/search")) {
+                            url += "/search"
                         }
+                        url += "?limit=99"
 
-                        )
-            })
+                        val postParams = ApiBodyGenerator.createExhibitionQueryBody()
+
+                        service.getExhibitions(EXHIBITIONS_HEADER_ID, url, postParams)
+                                .map { it.throwIfError() }
+                                .subscribe({
+                                    if (it.response().isSuccessful) {
+                                        observer.onNext(
+                                                ProgressDataState.Done(
+                                                        it.requireValue(),
+                                                        it.response().headers().toMultimap()
+                                                )
+                                        )
+                                    } else {
+                                        val errorMessage: String? = it.getErrorMessage()
+                                        observer.onError(Throwable(errorMessage, it.error()))
+                                    }
+
+                                }, {
+                                    observer.onError(it)
+
+                                }, {
+                                    observer.onComplete()
+
+                                }
+
+                                )
+                    })
         }
 
     }
@@ -140,6 +141,7 @@ class RetrofitAppDataServiceProvider(
                         val postParams = ApiBodyGenerator.createEventQueryBody()
 
                         service.getEvents(EVENT_HEADER_ID, url, postParams)
+                                .map { it.throwIfError() }
                                 .subscribe({
                                     if (it.response().isSuccessful) {
                                         observer.onNext(
@@ -162,27 +164,5 @@ class RetrofitAppDataServiceProvider(
                     })
         }
     }
-
-    /**
-     * Extension method to parse the error message from the JSON.
-     * Only works iff the response body can be converted to JSONObject.
-     * Looks for error, message and detail keys in order.
-     */
-    fun Result<*>.getErrorMessage(): String? {
-        var errorMessage: String? = null
-        try {
-            this.response().errorBody()?.also { errorBody ->
-                val errorJSON = JSONObject(errorBody.string())
-                errorMessage = errorJSON.optString("error")
-                        .orIfNullOrBlank(errorJSON.optString("message"))
-                        .orIfNullOrBlank(errorJSON.optString("detail"))
-                        .orIfNullOrBlank("")
-            }
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-        }
-        return errorMessage
-    }
-
 
 }
