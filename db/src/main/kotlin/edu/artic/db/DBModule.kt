@@ -13,7 +13,8 @@ class DBModule {
     @Singleton
     fun provideDB(context: Context) =
             Room.databaseBuilder(context, AppDatabase::class.java, "articdb")
-                    .apply { if (BuildConfig.DEBUG) fallbackToDestructiveMigration() } // allow unsafe schema changes in debug
+                    // TODO: Once we've switched to Androidx, use safe migrations instead
+                    .fallbackToDestructiveMigration()
                     .build()
 
     @Provides
