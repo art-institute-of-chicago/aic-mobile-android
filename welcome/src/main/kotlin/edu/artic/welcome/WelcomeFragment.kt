@@ -75,13 +75,25 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
+        viewModel.exhibitions
+                .map { it.isNotEmpty() }
+                .bindToMain(exhibitionSection.visibility())
+                .disposedBy(disposeBag)
+
+
         /* Build event summary list*/
         val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         eventSection.list.layoutManager = eventsLayoutManager
         val eventsAdapter = WelcomeEventsAdapter()
         eventSection.list.adapter = eventsAdapter
+
         viewModel.events
                 .bindToMain(eventsAdapter.itemChanges())
+                .disposedBy(disposeBag)
+
+        viewModel.events
+                .map { it.isNotEmpty() }
+                .bindToMain(eventSection.visibility())
                 .disposedBy(disposeBag)
 
         viewModel.shouldPeekTourSummary
@@ -109,17 +121,6 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     val title = resources.getString(R.string.welcomeUser, firstName)
                     requestTitleUpdate(title)
                 }
-                .disposedBy(disposeBag)
-
-        viewModel.events
-                .map { it.isNotEmpty() }
-                .bindToMain(eventSection.visibility())
-                .disposedBy(disposeBag)
-
-        viewModel.exhibitions
-                .map { it.isNotEmpty() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .bindToMain(exhibitionSection.visibility())
                 .disposedBy(disposeBag)
 
     }
