@@ -3,6 +3,7 @@ package edu.artic.db
 import com.fuzz.retrofit.rx.requireValue
 import com.fuzz.rx.bindTo
 import com.jobinlawrance.downloadprogressinterceptor.ProgressEventBus
+import edu.artic.base.PermissibleException
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticDataObject
 import edu.artic.getErrorMessage
@@ -110,7 +111,7 @@ class RetrofitAppDataServiceProvider(
                                         )
                                     } else {
                                         val errorMessage: String? = it.getErrorMessage()
-                                        val error = Throwable(errorMessage, it.error())
+                                        val error = PermissibleException(errorMessage, it.error())
                                         Timber.e(error)
                                         observer.onError(error)
                                     }
@@ -155,7 +156,7 @@ class RetrofitAppDataServiceProvider(
                                         )
                                     } else {
                                         val errorMessage: String? = it.getErrorMessage()
-                                        val error = Throwable(errorMessage, it.error())
+                                        val error = PermissibleException(errorMessage, it.error())
                                         Timber.e(error)
                                         observer.onError(error)
                                     }
