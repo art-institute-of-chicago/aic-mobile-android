@@ -44,7 +44,6 @@ class SplashViewModel @Inject constructor(
                         is ProgressDataState.Done<*> -> {
                             percentage.onNext(1.0f)
                             startVideo()
-                            appDaPrefManager.downloadedNecessaryData = true
                         }
                         is ProgressDataState.Empty -> {
                             startVideo()

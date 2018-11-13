@@ -51,7 +51,8 @@ abstract class ApiModule {
                 exhibitionDao: ArticExhibitionDao,
                 objectDao: ArticObjectDao,
                 articMapFloorDao: ArticMapFloorDao,
-                searchSuggestionDao: ArticSearchObjectDao
+                searchSuggestionDao: ArticSearchObjectDao,
+                appDaPrefManager: AppDataPreferencesManager
         ): AppDataManager = AppDataManager(
                 serviceProvider,
                 appDataPreferencesManager,
@@ -68,7 +69,8 @@ abstract class ApiModule {
                 exhibitionDao,
                 objectDao,
                 articMapFloorDao,
-                searchSuggestionDao
+                searchSuggestionDao,
+                appDaPrefManager
         )
 
         @JvmStatic
