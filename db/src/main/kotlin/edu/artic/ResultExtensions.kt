@@ -15,8 +15,8 @@ import org.json.JSONObject
  * Only works iff the response body can be converted to JSONObject.
  * Looks for error, message and detail keys in order.
  */
-fun Result<*>.getErrorMessage(): String? {
-    var errorMessage: String? = null
+fun Result<*>.getErrorMessage(): String {
+    lateinit var errorMessage: String
     try {
         this.response().errorBody()?.also { errorBody ->
             val errorJSON = JSONObject(errorBody.string())
@@ -24,9 +24,11 @@ fun Result<*>.getErrorMessage(): String? {
                     .orIfNullOrBlank(errorJSON.optString("message"))
                     .orIfNullOrBlank(errorJSON.optString("Message"))
                     .orIfNullOrBlank(errorJSON.optString("detail"))
-                    .orIfNullOrBlank("")
+                    ?: "Something went wrong"
+
         }
     } catch (exception: Exception) {
+        errorMessage = "Something went wrong"
         exception.printStackTrace()
     }
     return errorMessage
