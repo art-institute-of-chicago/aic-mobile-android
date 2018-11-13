@@ -23,7 +23,6 @@ import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_welcome.*
@@ -127,9 +126,9 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun setupBindings(viewModel: WelcomeViewModel) {
 
-        tourSection.label.text = resources.getString(R.string.tours)
-        exhibitionSection.label.text = resources.getString(R.string.onView)
-        eventSection.label.text = resources.getString(R.string.events)
+        tourSection.label.setText(R.string.tours)
+        exhibitionSection.label.setText(R.string.onView)
+        eventSection.label.setText(R.string.events)
 
         tourSection.seeAllLink.clicks()
                 .defaultThrottle()
