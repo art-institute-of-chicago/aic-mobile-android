@@ -1,5 +1,14 @@
 
 android {
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation": "$projectDir/schemas".toString()
+                ]
+            }
+        }
+    }
     buildTypes {
         debug {
             buildConfigField "String", "BLOB_URL", "\"${envVariable("blob_url",false)}\""

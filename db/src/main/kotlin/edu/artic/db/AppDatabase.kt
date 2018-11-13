@@ -23,7 +23,7 @@ import edu.artic.db.models.*
             ArticSearchSuggestionsObject::class
         ],
         version = 10,
-        exportSchema = false
+        exportSchema = true
 )
 @TypeConverters(AppConverters::class)
 abstract class AppDatabase : RoomDatabase() {
