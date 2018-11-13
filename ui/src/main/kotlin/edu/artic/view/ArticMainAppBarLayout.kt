@@ -28,6 +28,8 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
         View.inflate(context, R.layout.view_app_bar_layout, this)
         fitsSystemWindows = true
 
+        var expandedDefaultAppearance: Int = R.style.PageTitleLargeWhite
+
         if (attrs != null) {
             val a = context.theme.obtainStyledAttributes(
                     attrs,
@@ -39,16 +41,16 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             setBackgroundImagePadding(a.getDimension(R.styleable.ArticMainAppBarLayout_backgroundImagePadding, 0f))
             subTitle.text = a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
 
-            expandedDefaultTextStyleAttribute = a.getResourceId(
+            expandedDefaultAppearance = a.getResourceId(
                     R.styleable.ArticMainAppBarLayout_expandedTitleStyle,
-                    R.style.PageTitleLargeWhite
+                    expandedDefaultAppearance
             )
 
-            collapsingToolbar.setExpandedTitleTextAppearance(expandedDefaultTextStyleAttribute)
+            collapsingToolbar.setExpandedTitleTextAppearance(expandedDefaultAppearance)
             subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
-        } else {
-            expandedDefaultTextStyleAttribute = R.style.PageTitleLargeWhite
         }
+
+        expandedDefaultTextStyleAttribute = expandedDefaultAppearance
 
         // update our content when offset changes.
         addOnOffsetChangedListener(OnOffsetChangedListener { aBarLayout, verticalOffset ->
