@@ -21,7 +21,10 @@ import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
 class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : AppBarLayout(context, attrs) {
     private val disposeBag: DisposeBag = DisposeBag()
     @StyleRes
-    private val expandedDefaultTextStyleAttribute: Int
+    private val expandedDefaultTextAppearance: Int
+    @StyleRes
+    private val expandedFixedSizeTextAppearance: Int
+
     private var clickConsumer: Consumer<Unit>? = null
 
     init {
@@ -29,6 +32,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
         fitsSystemWindows = true
 
         var expandedDefaultAppearance: Int = R.style.PageTitleLargeWhite
+        var expandedFixedSizeAppearance: Int = R.style.PageTitleLargeWhite_FixedSize
 
         if (attrs != null) {
             val a = context.theme.obtainStyledAttributes(
@@ -45,12 +49,17 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
                     R.styleable.ArticMainAppBarLayout_expandedTitleStyle,
                     expandedDefaultAppearance
             )
+            expandedFixedSizeAppearance = a.getResourceId(
+                    R.styleable.ArticMainAppBarLayout_expandedFixedSizeTitleStyle,
+                    expandedFixedSizeAppearance
+            )
 
             collapsingToolbar.setExpandedTitleTextAppearance(expandedDefaultAppearance)
             subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
         }
 
-        expandedDefaultTextStyleAttribute = expandedDefaultAppearance
+        expandedDefaultTextAppearance = expandedDefaultAppearance
+        expandedFixedSizeTextAppearance = expandedFixedSizeAppearance
 
         // update our content when offset changes.
         addOnOffsetChangedListener(OnOffsetChangedListener { aBarLayout, verticalOffset ->
