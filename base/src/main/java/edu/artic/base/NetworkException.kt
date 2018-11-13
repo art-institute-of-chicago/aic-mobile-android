@@ -9,12 +9,10 @@ class NetworkException(
 ) : PermissibleError(message, cause)
 
 /**
- * Exceptions that do not create the app in an unstable state.
- * E.g. Network exceptions are PermissibleError.
- * If this exception is encountered during data loading process, user is allowed to use
- * the app (i.e. app is not stuck at splash screen). All other exceptions are not permitted.
+ * This is a non-fatal exception. E.g. Failure to refresh data
  *
- * @see [edu.artic.splash.SplashActivity]
+ * If something non-fatal happens during data loading process, we throw this kind of error and
+ * and it is caught in [edu.artic.splash.SplashActivity].
  */
 open class PermissibleError(
         override var message: String,
