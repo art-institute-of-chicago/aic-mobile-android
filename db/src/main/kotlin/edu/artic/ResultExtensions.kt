@@ -22,6 +22,7 @@ fun Result<*>.getErrorMessage(): String? {
             val errorJSON = JSONObject(errorBody.string())
             errorMessage = errorJSON.optString("error")
                     .orIfNullOrBlank(errorJSON.optString("message"))
+                    .orIfNullOrBlank(errorJSON.optString("Message"))
                     .orIfNullOrBlank(errorJSON.optString("detail"))
                     .orIfNullOrBlank("")
         }
