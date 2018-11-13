@@ -69,7 +69,7 @@ class SplashViewModel @Inject constructor(
     /**
      * Allow user to proceed forward if app has cache data.
      */
-    fun errorDialogDismissed() {
+    fun proceedToWelcomePageIfDataAvailable() {
         if (appDaPrefManager.downloadedNecessaryData) {
             Navigate.Forward(NavigationEndpoint.Welcome)
                     .asObservable()

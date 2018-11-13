@@ -17,6 +17,7 @@ import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import com.fuzz.rx.disposedBy
+import edu.artic.base.PermissibleException
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.makeStatusBarTransparent
 import edu.artic.localization.ui.LanguageSettingsFragment
@@ -90,7 +91,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                             .setTitle(resources.getString(R.string.errorDialogTitle))
                             .setMessage(errorMessage)
                             .setOnDismissListener { _ ->
-                                    viewModel.errorDialogDismissed()
+                                if (it is PermissibleException) {
+                                    viewModel.proceedToWelcomePageIfDataAvailable()
+                                }
                             }
                             .setPositiveButton(getString(android.R.string.ok)) { dialog, _->
                                 dialog.dismiss()
