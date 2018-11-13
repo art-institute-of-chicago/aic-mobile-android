@@ -2,6 +2,7 @@ package edu.artic.view
 
 import android.content.Context
 import android.support.annotation.DrawableRes
+import android.support.annotation.StyleRes
 import android.support.design.widget.AppBarLayout
 import android.util.AttributeSet
 import android.view.View
@@ -19,6 +20,8 @@ import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
  */
 class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : AppBarLayout(context, attrs) {
     private val disposeBag: DisposeBag = DisposeBag()
+    @StyleRes
+    private val expandedDefaultTextStyleAttribute: Int
     private var clickConsumer: Consumer<Unit>? = null
 
     init {
@@ -35,11 +38,16 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             setBackgroundImage(a.getResourceId(R.styleable.ArticMainAppBarLayout_backgroundImage, 0))
             setBackgroundImagePadding(a.getDimension(R.styleable.ArticMainAppBarLayout_backgroundImagePadding, 0f))
             subTitle.text = a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
-            val setExpandedTitleTextAppearance = a.getResourceId(
+
+            expandedDefaultTextStyleAttribute = a.getResourceId(
                     R.styleable.ArticMainAppBarLayout_expandedTitleStyle,
-                    R.style.PageTitleLargeWhite)
-            collapsingToolbar.setExpandedTitleTextAppearance(setExpandedTitleTextAppearance)
+                    R.style.PageTitleLargeWhite
+            )
+
+            collapsingToolbar.setExpandedTitleTextAppearance(expandedDefaultTextStyleAttribute)
             subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
+        } else {
+            expandedDefaultTextStyleAttribute = R.style.PageTitleLargeWhite
         }
 
         // update our content when offset changes.
