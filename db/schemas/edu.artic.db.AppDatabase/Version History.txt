@@ -1,0 +1,32 @@
+# This file maps each schema to a commit. You can use these to recreate the
+# full list of AppDatabase versions.
+#
+# Specific commits reflect when the database version first appeared in the
+# mainline `master` branch. As a special case, version 1 was used for a number
+# of different schemas, so the commit given for that points instead to
+# something closely approximating the db in the build most frequently
+# referenced by the development team at the time.
+#
+# Note that in some cases, the database version was changed without any
+# corresponding change to the models in use.
+#
+1: 2f66a16da7a958971e2e68b1c6d588ab319bb8da
+# Change to 2 in commit 67bd840a46eda46cc3a7a208861300f8080e8508, 30 Aug 2018
+2: e10b94136bde299d5888ab2e723922d199d6c65c
+# Change to 3 in commit c23ccb136ed5875db9556b9769b67b8e896c32b5, 12 Sep 2018
+3: 38e9d298c88d3bc861ef63e3ac342e5d0cdbe75b
+# Change to 4 in commit 8647c9eb1c0cad0ea28c3df5349160a84a76a89e, 14 Sep 2018
+4: 1740bc4fb8b03232b66b1f0d59e0375c3c396adc
+# Change to 5 in commit 30c0d19eb58ce11a062800d6fe2bf1a88ecf6a5e, 24 Sep 2018
+5: 08daec019da3937605bd1548ac07b93dfdacb767
+# Change to 6 in commit b04bcf3c404deeb720e63bd3e3acd2a254fac359, 26 Sep 2018
+6: 13dde4f8d8188f6f99dda35da79d09b937d9dd92
+# Change to 7 in commit 0ff102882ebe6d25754a1f39cbf8d0cd6fff80b0, 27 Sep 2018
+7: 8057e4b42d74e3f510d6eb3ffd1f2f8dd181bd88
+# Change to 8 in commit 9ed7788207b5fbc995ac1b6fe89cb7c688556ef6, 02 Oct 2018
+8: c5e9367a0357ee5030dbf83f9b1109beedd1ee27
+# Change to 9 in commit bb7e7cbbbb2b1be083dee328b8be6572e79791ab, 30 Oct 2018
+9: fcd908720ac98725a825b6876a325d4853e5dd21
+# Change to 10 in commit b6e58a582b4fdbdc4b07900cc92c0199d6d0cb99, 08 Nov 2018
+10: 54b6bd8a63853656d8b0f53920de436eef53da7b
+

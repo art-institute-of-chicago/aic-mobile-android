@@ -1,0 +1,1407 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 8,
+    "identityHash": "16d5af950229f05e6cde0c94885b846f",
+    "entities": [
+      {
+        "tableName": "DashBoard",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `featuredTours` TEXT NOT NULL, `featuredExhibitions` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "featuredTours",
+            "columnName": "featuredTours",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "featuredExhibitions",
+            "columnName": "featuredExhibitions",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticGeneralInfo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `status` TEXT NOT NULL, `nid` TEXT NOT NULL, `translations` TEXT NOT NULL, `museumHours` TEXT NOT NULL, `homeMemberPromptText` TEXT NOT NULL, `audioTitle` TEXT NOT NULL, `audioSubtitle` TEXT NOT NULL, `mapTitle` TEXT NOT NULL, `mapSubtitle` TEXT NOT NULL, `infoTitle` TEXT NOT NULL, `infoSubtitle` TEXT NOT NULL, `giftShopsTitle` TEXT NOT NULL, `giftShopsText` TEXT NOT NULL, `membersLoungeTitle` TEXT NOT NULL, `membersLoungeText` TEXT NOT NULL, `seeAllToursIntro` TEXT NOT NULL, `restroomsTitle` TEXT NOT NULL, `restroomsText` TEXT NOT NULL, PRIMARY KEY(`nid`))",
+        "fields": [
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nid",
+            "columnName": "nid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "translations",
+            "columnName": "translations",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "museumHours",
+            "columnName": "museumHours",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "homeMemberPromptText",
+            "columnName": "homeMemberPromptText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "audioTitle",
+            "columnName": "audioTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "audioSubtitle",
+            "columnName": "audioSubtitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mapTitle",
+            "columnName": "mapTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mapSubtitle",
+            "columnName": "mapSubtitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "infoTitle",
+            "columnName": "infoTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "infoSubtitle",
+            "columnName": "infoSubtitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "giftShopsTitle",
+            "columnName": "giftShopsTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "giftShopsText",
+            "columnName": "giftShopsText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "membersLoungeTitle",
+            "columnName": "membersLoungeTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "membersLoungeText",
+            "columnName": "membersLoungeText",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seeAllToursIntro",
+            "columnName": "seeAllToursIntro",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "restroomsTitle",
+            "columnName": "restroomsTitle",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "restroomsText",
+            "columnName": "restroomsText",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "nid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticGallery",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT, `status` TEXT, `nid` TEXT NOT NULL, `type` TEXT, `location` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `floor` INTEGER NOT NULL, `titleT` TEXT, `galleryId` TEXT, `isBoosted` INTEGER NOT NULL, `thumbnail` TEXT, `closed` INTEGER NOT NULL, `number` TEXT, `categoryTitles` TEXT NOT NULL, PRIMARY KEY(`nid`))",
+        "fields": [
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nid",
+            "columnName": "nid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "floor",
+            "columnName": "floor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "titleT",
+            "columnName": "titleT",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "galleryId",
+            "columnName": "galleryId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isBoosted",
+            "columnName": "isBoosted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "thumbnail",
+            "columnName": "thumbnail",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "closed",
+            "columnName": "closed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "number",
+            "columnName": "number",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoryTitles",
+            "columnName": "categoryTitles",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "nid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticObject",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `status` TEXT, `nid` TEXT NOT NULL, `type` TEXT, `id` INTEGER, `objectId` INTEGER, `altTitles` TEXT, `mainReferenceNumber` TEXT, `boostRank` TEXT, `dateDisplay` TEXT, `artistCulturePlaceDelim` TEXT, `dimensions` TEXT, `artworkTypeTitle` TEXT, `artworkTypeId` TEXT, `creditLine` TEXT, `copyrightNotice` TEXT, `inGallery` INTEGER NOT NULL, `subjectId` TEXT, `techniqueId` TEXT, `color` TEXT, `tourTitles` TEXT, `location` TEXT, `image_filename` TEXT, `image_url` TEXT, `imageFileMime` TEXT, `imageFileSize` TEXT, `imageWidth` TEXT, `imageHeight` TEXT, `thumbnailFullPath` TEXT, `largeImageFullPath` TEXT, `titleT` TEXT, `galleryLocation` TEXT, `referenceNum` TEXT, `audioCommentary` TEXT NOT NULL, `highlightedObject` TEXT, `fullImageFullPath` TEXT, `audioTranscript` TEXT, `objectSelectorNumber` TEXT, `objectSelectorNumbers` TEXT NOT NULL, `isOnView` INTEGER, `floor` INTEGER NOT NULL, `thumbnail_crop_rectx` TEXT, `thumbnail_crop_recty` TEXT, `thumbnail_crop_rectwidth` TEXT, `thumbnail_crop_rectheight` TEXT, `large_image_crop_rectx` TEXT, `large_image_crop_recty` TEXT, `large_image_crop_rectwidth` TEXT, `large_image_crop_rectheight` TEXT, PRIMARY KEY(`nid`))",
+        "fields": [
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nid",
+            "columnName": "nid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "objectId",
+            "columnName": "objectId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "altTitles",
+            "columnName": "altTitles",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mainReferenceNumber",
+            "columnName": "mainReferenceNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "boostRank",
+            "columnName": "boostRank",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dateDisplay",
+            "columnName": "dateDisplay",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "artistCulturePlaceDelim",
+            "columnName": "artistCulturePlaceDelim",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dimensions",
+            "columnName": "dimensions",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "artworkTypeTitle",
+            "columnName": "artworkTypeTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "artworkTypeId",
+            "columnName": "artworkTypeId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "creditLine",
+            "columnName": "creditLine",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "copyrightNotice",
+            "columnName": "copyrightNotice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "inGallery",
+            "columnName": "inGallery",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subjectId",
+            "columnName": "subjectId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "techniqueId",
+            "columnName": "techniqueId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tourTitles",
+            "columnName": "tourTitles",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "image_filename",
+            "columnName": "image_filename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "image_url",
+            "columnName": "image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageFileMime",
+            "columnName": "imageFileMime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageFileSize",
+            "columnName": "imageFileSize",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageWidth",
+            "columnName": "imageWidth",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageHeight",
+            "columnName": "imageHeight",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailFullPath",
+            "columnName": "thumbnailFullPath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageFullPath",
+            "columnName": "largeImageFullPath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "titleT",
+            "columnName": "titleT",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "galleryLocation",
+            "columnName": "galleryLocation",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "referenceNum",
+            "columnName": "referenceNum",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "audioCommentary",
+            "columnName": "audioCommentary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "highlightedObject",
+            "columnName": "highlightedObject",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullImageFullPath",
+            "columnName": "fullImageFullPath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "audioTranscript",
+            "columnName": "audioTranscript",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "objectSelectorNumber",
+            "columnName": "objectSelectorNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "objectSelectorNumbers",
+            "columnName": "objectSelectorNumbers",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isOnView",
+            "columnName": "isOnView",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "floor",
+            "columnName": "floor",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "thumbnailCropRectV2.x",
+            "columnName": "thumbnail_crop_rectx",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailCropRectV2.y",
+            "columnName": "thumbnail_crop_recty",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailCropRectV2.width",
+            "columnName": "thumbnail_crop_rectwidth",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailCropRectV2.height",
+            "columnName": "thumbnail_crop_rectheight",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageCropRectV2.x",
+            "columnName": "large_image_crop_rectx",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageCropRectV2.y",
+            "columnName": "large_image_crop_recty",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageCropRectV2.width",
+            "columnName": "large_image_crop_rectwidth",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageCropRectV2.height",
+            "columnName": "large_image_crop_rectheight",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "nid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticAudioFile",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT, `status` TEXT, `nid` TEXT NOT NULL, `type` TEXT, `translations` TEXT NOT NULL, `fileName` TEXT, `fileUrl` TEXT, `fileMime` TEXT, `fileSize` TEXT, `transcript` TEXT, `credits` TEXT, `trackTitle` TEXT, PRIMARY KEY(`nid`))",
+        "fields": [
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nid",
+            "columnName": "nid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "translations",
+            "columnName": "translations",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileName",
+            "columnName": "fileName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fileUrl",
+            "columnName": "fileUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fileMime",
+            "columnName": "fileMime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fileSize",
+            "columnName": "fileSize",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transcript",
+            "columnName": "transcript",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "credits",
+            "columnName": "credits",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "trackTitle",
+            "columnName": "trackTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "nid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticTour",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT NOT NULL, `status` TEXT, `nid` TEXT NOT NULL, `type` TEXT, `translations` TEXT NOT NULL, `location` TEXT, `latitude` TEXT, `longitude` TEXT, `floor` INTEGER, `imageFileName` TEXT, `imageUrl` TEXT, `imageFileMime` TEXT, `imageFileSize` TEXT, `imageWidth` TEXT, `imageHeight` TEXT, `thumbnailFullPath` TEXT, `largeImageFullPath` TEXT, `tourBanner` TEXT, `selectorNumber` TEXT, `description` TEXT, `descriptionHtml` TEXT, `intro` TEXT, `introHtml` TEXT, `tourDuration` TEXT, `tourAudio` TEXT, `weight` INTEGER NOT NULL, `tourStops` TEXT NOT NULL, `large_image_cropx` TEXT, `large_image_cropy` TEXT, `large_image_cropwidth` TEXT, `large_image_cropheight` TEXT, `tour_catid` TEXT, `tour_cattitle` TEXT, PRIMARY KEY(`nid`))",
+        "fields": [
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nid",
+            "columnName": "nid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "translations",
+            "columnName": "translations",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "floor",
+            "columnName": "floor",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageFileName",
+            "columnName": "imageFileName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageFileMime",
+            "columnName": "imageFileMime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageFileSize",
+            "columnName": "imageFileSize",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageWidth",
+            "columnName": "imageWidth",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageHeight",
+            "columnName": "imageHeight",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailFullPath",
+            "columnName": "thumbnailFullPath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageFullPath",
+            "columnName": "largeImageFullPath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tourBanner",
+            "columnName": "tourBanner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "selectorNumber",
+            "columnName": "selectorNumber",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "descriptionHtml",
+            "columnName": "descriptionHtml",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "intro",
+            "columnName": "intro",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "introHtml",
+            "columnName": "introHtml",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tourDuration",
+            "columnName": "tourDuration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tourAudio",
+            "columnName": "tourAudio",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "weight",
+            "columnName": "weight",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tourStops",
+            "columnName": "tourStops",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "largeImageCropV2.x",
+            "columnName": "large_image_cropx",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageCropV2.y",
+            "columnName": "large_image_cropy",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageCropV2.width",
+            "columnName": "large_image_cropwidth",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "largeImageCropV2.height",
+            "columnName": "large_image_cropheight",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "category.id",
+            "columnName": "tour_catid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "category.title",
+            "columnName": "tour_cattitle",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "nid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticMapAnnotation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`title` TEXT, `status` TEXT, `nid` TEXT NOT NULL, `type` TEXT, `location` TEXT, `latitude` TEXT, `longitude` TEXT, `floor` INTEGER, `description` TEXT, `label` TEXT, `annotationType` TEXT, `textType` TEXT, `amenityType` TEXT, `imageFilename` TEXT, `imageUrl` TEXT, `imageFileMime` TEXT, `imageFileSize` TEXT, `imageWidth` TEXT, `imageHeight` TEXT, PRIMARY KEY(`nid`))",
+        "fields": [
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nid",
+            "columnName": "nid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "floor",
+            "columnName": "floor",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "annotationType",
+            "columnName": "annotationType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "textType",
+            "columnName": "textType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "amenityType",
+            "columnName": "amenityType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageFilename",
+            "columnName": "imageFilename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageFileMime",
+            "columnName": "imageFileMime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageFileSize",
+            "columnName": "imageFileSize",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageWidth",
+            "columnName": "imageWidth",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageHeight",
+            "columnName": "imageHeight",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "nid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticExhibition",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`short_description` TEXT, `aic_start_at` TEXT NOT NULL, `legacy_image_mobile_url` TEXT, `legacy_image_desktop_url` TEXT, `web_url` TEXT, `gallery_id` TEXT, `id` INTEGER NOT NULL, `aic_end_at` TEXT NOT NULL, `title` TEXT NOT NULL, `order` INTEGER NOT NULL, `latitude` REAL, `longitude` REAL, `floor` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "short_description",
+            "columnName": "short_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "aic_start_at",
+            "columnName": "aic_start_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "legacy_image_mobile_url",
+            "columnName": "legacy_image_mobile_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "legacy_image_desktop_url",
+            "columnName": "legacy_image_desktop_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "web_url",
+            "columnName": "web_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gallery_id",
+            "columnName": "gallery_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aic_end_at",
+            "columnName": "aic_end_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "order",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "floor",
+            "columnName": "floor",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticExhibitionCMS",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `sort` INTEGER NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sort",
+            "columnName": "sort",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticEvent",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`short_description` TEXT, `image` TEXT, `imageUrl` TEXT, `end_at` TEXT NOT NULL, `button_url` TEXT, `description` TEXT, `location` TEXT, `id` INTEGER NOT NULL, `button_text` TEXT, `title` TEXT NOT NULL, `start_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "short_description",
+            "columnName": "short_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "end_at",
+            "columnName": "end_at",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "button_url",
+            "columnName": "button_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "button_text",
+            "columnName": "button_text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "start_at",
+            "columnName": "start_at",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticDataObject",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`imageServerUrl` TEXT NOT NULL, `dataApiUrl` TEXT NOT NULL, `exhibitionsEndpoint` TEXT NOT NULL, `artworksEndpoint` TEXT, `galleriesEndpoint` TEXT, `imagesEndpoint` TEXT, `eventsEndpoint` TEXT, `autocompleteEndpoint` TEXT, `toursEndpoint` TEXT, `multiSearchEndpoint` TEXT, `membershipUrl` TEXT, `websiteUrl` TEXT, `ticketsUrl` TEXT, `id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "imageServerUrl",
+            "columnName": "imageServerUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataApiUrl",
+            "columnName": "dataApiUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exhibitionsEndpoint",
+            "columnName": "exhibitionsEndpoint",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "artworksEndpoint",
+            "columnName": "artworksEndpoint",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "galleriesEndpoint",
+            "columnName": "galleriesEndpoint",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imagesEndpoint",
+            "columnName": "imagesEndpoint",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eventsEndpoint",
+            "columnName": "eventsEndpoint",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "autocompleteEndpoint",
+            "columnName": "autocompleteEndpoint",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "toursEndpoint",
+            "columnName": "toursEndpoint",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "multiSearchEndpoint",
+            "columnName": "multiSearchEndpoint",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "membershipUrl",
+            "columnName": "membershipUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "websiteUrl",
+            "columnName": "websiteUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ticketsUrl",
+            "columnName": "ticketsUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticMapFloor",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`label` TEXT NOT NULL, `floorPlan` TEXT, `anchorPixel1` TEXT, `anchorPixel2` TEXT, `anchorLocation1` TEXT, `anchorLocation2` TEXT, `tiles` TEXT NOT NULL, PRIMARY KEY(`label`))",
+        "fields": [
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "floorPlan",
+            "columnName": "floorPlan",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "anchorPixel1",
+            "columnName": "anchorPixel1",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "anchorPixel2",
+            "columnName": "anchorPixel2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "anchorLocation1",
+            "columnName": "anchorLocation1",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "anchorLocation2",
+            "columnName": "anchorLocation2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tiles",
+            "columnName": "tiles",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "label"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ArticSearchSuggestionsObject",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`searchStrings` TEXT NOT NULL, `searchObjects` TEXT NOT NULL, `id` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "searchStrings",
+            "columnName": "searchStrings",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "searchObjects",
+            "columnName": "searchObjects",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"16d5af950229f05e6cde0c94885b846f\")"
+    ]
+  }
+}
