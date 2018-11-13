@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/label"
+        style="@style/SectionTitleBlack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/marginDouble"
+        android:text="@string/onView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Label" />
+
+    <TextView
+        android:id="@+id/seeAllLink"
+        style="@style/SeeAll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginEnd="@dimen/seeAllLinkMargin"
+        android:text="@string/seeAll"
+        app:layout_constraintBaseline_toBaselineOf="@id/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/label"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_default="wrap" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginDouble"
+        android:layout_marginBottom="@dimen/marginDouble"
+        android:nestedScrollingEnabled="false"
+        android:paddingStart="@dimen/marginDouble"
+        android:paddingEnd="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seeAllLink"
+        tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        tools:listitem="@layout/welcome_on_view_cell_layout"
+        tools:orientation="horizontal" />
+
+    <View
+        android:id="@+id/divider"
+        style="@style/divider"
+        android:layout_width="0dp"
+        android:layout_marginTop="@dimen/marginDouble"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list" />
+
+</android.support.constraint.ConstraintLayout>
