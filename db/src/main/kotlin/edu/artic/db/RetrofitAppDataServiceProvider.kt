@@ -2,15 +2,22 @@ package edu.artic.db
 
 import com.fuzz.retrofit.rx.requireValue
 import com.fuzz.rx.bindTo
+import com.jakewharton.retrofit2.adapter.rxjava2.Result
 import com.jobinlawrance.downloadprogressinterceptor.ProgressEventBus
+import edu.artic.base.PermissibleError
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticDataObject
+import edu.artic.db.models.ArticEvent
+import edu.artic.db.models.ArticExhibition
+import edu.artic.getErrorMessage
+import edu.artic.throwIfError
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import retrofit2.Retrofit
+import timber.log.Timber
 
 /**
  * Reference implementation of [AppDataServiceProvider] for the Art Institute of Chicago.
@@ -87,37 +94,41 @@ class RetrofitAppDataServiceProvider(
             dataObject.subscribeBy(
                     onError = { observer.onError(it) },
                     onNext = { dataObject ->
-                var url = dataObject.dataApiUrl + dataObject.exhibitionsEndpoint
-                if (!url.contains("/search")) {
-                    url += "/search"
-                }
-                url += "?limit=99"
-
-                val postParams = ApiBodyGenerator.createExhibitionQueryBody()
-
-                service.getExhibitions(EXHIBITIONS_HEADER_ID, url, postParams)
-                        .subscribe({
-                            if (!it.isError) {
-                                observer.onNext(
-                                        ProgressDataState.Done(
-                                                it.requireValue(),
-                                                it.response().headers().toMultimap()
-                                        )
-                                )
-                            } else {
-                                observer.onError(it.error())
-                            }
-
-                        }, {
-                            observer.onError(it)
-
-                        }, {
-                            observer.onComplete()
-
+                        var url = dataObject.dataApiUrl + dataObject.exhibitionsEndpoint
+                        if (!url.contains("/search")) {
+                            url += "/search"
                         }
+                        url += "?limit=99"
 
-                        )
-            })
+                        val postParams = ApiBodyGenerator.createExhibitionQueryBody()
+
+                        service.getExhibitions(EXHIBITIONS_HEADER_ID, url, postParams)
+                                .map(Result<ArticResult<ArticExhibition>>::throwIfError)
+                                .subscribe({
+                                    if (it.response().isSuccessful) {
+                                        observer.onNext(
+                                                ProgressDataState.Done(
+                                                        it.requireValue(),
+                                                        it.response().headers().toMultimap()
+                                                )
+                                        )
+                                    } else {
+                                        val errorMessage: String = it.getErrorMessage()
+                                        val error = PermissibleError(errorMessage)
+                                        Timber.e(error)
+                                        observer.onError(error)
+                                    }
+
+                                }, {
+                                    observer.onError(it)
+
+                                }, {
+                                    observer.onComplete()
+
+                                }
+
+                                )
+                    })
         }
 
     }
@@ -128,36 +139,39 @@ class RetrofitAppDataServiceProvider(
             dataObject.subscribeBy(
                     onError = { observer.onError(it) },
                     onNext = { dataObject ->
-                var url = dataObject.dataApiUrl + dataObject.eventsEndpoint
-                if (!url.contains("/search")) {
-                    url += "/search"
-                }
-                url += "?limit=500"
-
-                val postParams = ApiBodyGenerator.createEventQueryBody()
-
-                service.getEvents(EVENT_HEADER_ID, url, postParams)
-                        .subscribe({
-                            if (!it.isError) {
-                                observer.onNext(
-                                        ProgressDataState.Done(
-                                                it.requireValue(),
-                                                it.response().headers().toMultimap()
-                                        )
-                                )
-                            } else {
-                                observer.onError(it.error())
-                            }
-                        }, {
-                            observer.onError(it)
-                        }, {
-                            observer.onComplete()
+                        var url = dataObject.dataApiUrl + dataObject.eventsEndpoint
+                        if (!url.contains("/search")) {
+                            url += "/search"
                         }
+                        url += "?limit=500"
 
-                        )
-            })
+                        val postParams = ApiBodyGenerator.createEventQueryBody()
+
+                        service.getEvents(EVENT_HEADER_ID, url, postParams)
+                                .map(Result<ArticResult<ArticEvent>>::throwIfError)
+                                .subscribe({
+                                    if (it.response().isSuccessful) {
+                                        observer.onNext(
+                                                ProgressDataState.Done(
+                                                        it.requireValue(),
+                                                        it.response().headers().toMultimap()
+                                                )
+                                        )
+                                    } else {
+                                        val errorMessage: String = it.getErrorMessage()
+                                        val error = PermissibleError(errorMessage, it.error())
+                                        Timber.e(error)
+                                        observer.onError(error)
+                                    }
+                                }, {
+                                    observer.onError(it)
+                                }, {
+                                    observer.onComplete()
+                                }
+
+                                )
+                    })
         }
     }
-
 
 }

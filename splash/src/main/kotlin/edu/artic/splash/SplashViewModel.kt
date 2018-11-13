@@ -44,7 +44,6 @@ class SplashViewModel @Inject constructor(
                         is ProgressDataState.Done<*> -> {
                             percentage.onNext(1.0f)
                             startVideo()
-                            appDaPrefManager.downloadedNecessaryData = true
                         }
                         is ProgressDataState.Empty -> {
                             startVideo()
@@ -66,8 +65,10 @@ class SplashViewModel @Inject constructor(
                 .disposedBy(disposeBag)
     }
 
-    
-    fun onNetworkErrorDialogDismissed() {
+    /**
+     * Allow user to proceed forward if app has cache data.
+     */
+    fun proceedToWelcomePageIfDataAvailable() {
         if (appDaPrefManager.downloadedNecessaryData) {
             Navigate.Forward(NavigationEndpoint.Welcome)
                     .asObservable()
