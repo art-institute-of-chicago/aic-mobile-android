@@ -110,6 +110,18 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     requestTitleUpdate(title)
                 }
                 .disposedBy(disposeBag)
+
+        viewModel.events
+                .map { it.isNotEmpty() }
+                .bindToMain(eventSection.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.exhibitions
+                .map { it.isNotEmpty() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .bindToMain(exhibitionSection.visibility())
+                .disposedBy(disposeBag)
+
     }
 
     override fun setupBindings(viewModel: WelcomeViewModel) {
