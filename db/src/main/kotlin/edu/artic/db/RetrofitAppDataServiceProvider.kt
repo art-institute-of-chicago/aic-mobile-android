@@ -2,10 +2,13 @@ package edu.artic.db
 
 import com.fuzz.retrofit.rx.requireValue
 import com.fuzz.rx.bindTo
+import com.jakewharton.retrofit2.adapter.rxjava2.Result
 import com.jobinlawrance.downloadprogressinterceptor.ProgressEventBus
 import edu.artic.base.PermissibleError
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.models.ArticDataObject
+import edu.artic.db.models.ArticEvent
+import edu.artic.db.models.ArticExhibition
 import edu.artic.getErrorMessage
 import edu.artic.throwIfError
 import io.reactivex.Observable
@@ -100,7 +103,7 @@ class RetrofitAppDataServiceProvider(
                         val postParams = ApiBodyGenerator.createExhibitionQueryBody()
 
                         service.getExhibitions(EXHIBITIONS_HEADER_ID, url, postParams)
-                                .map { it.throwIfError() }
+                                .map(Result<ArticResult<ArticExhibition>>::throwIfError)
                                 .subscribe({
                                     if (it.response().isSuccessful) {
                                         observer.onNext(
@@ -145,7 +148,7 @@ class RetrofitAppDataServiceProvider(
                         val postParams = ApiBodyGenerator.createEventQueryBody()
 
                         service.getEvents(EVENT_HEADER_ID, url, postParams)
-                                .map { it.throwIfError() }
+                                .map(Result<ArticResult<ArticEvent>>::throwIfError)
                                 .subscribe({
                                     if (it.response().isSuccessful) {
                                         observer.onNext(
