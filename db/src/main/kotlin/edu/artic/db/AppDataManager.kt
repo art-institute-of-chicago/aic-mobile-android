@@ -39,7 +39,7 @@ class AppDataManager @Inject constructor(
         private val objectDao: ArticObjectDao,
         private val articMapFloorDao: ArticMapFloorDao,
         private val searchSuggestionDao: ArticSearchObjectDao,
-        private val appDaPrefManager: AppDataPreferencesManager
+        private val appDataPrefManager: AppDataPreferencesManager
 ) {
     companion object {
         const val HEADER_LAST_MODIFIED = "last-modified"
@@ -79,7 +79,7 @@ class AppDataManager @Inject constructor(
             //First load app data, once app data is successfully loaded
             getBlob().subscribe({ appDataState ->
                 if (appDataState is ProgressDataState.Done<*> || appDataState === ProgressDataState.Empty) {
-                    appDaPrefManager.downloadedNecessaryData = true
+                    appDataPrefManager.downloadedNecessaryData = true
                     loadSecondaryData()
                             .subscribe({ amountDownload ->
                                 observer.onNext(
