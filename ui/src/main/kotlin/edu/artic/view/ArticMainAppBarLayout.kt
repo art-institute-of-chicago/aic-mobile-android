@@ -1,9 +1,11 @@
 package edu.artic.view
 
 import android.content.Context
+import android.graphics.Typeface
 import android.support.annotation.DrawableRes
 import android.support.annotation.StyleRes
 import android.support.design.widget.AppBarLayout
+import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.View
 import com.fuzz.rx.DisposeBag
@@ -26,6 +28,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
     private val expandedFixedSizeTextAppearance: Int
 
     private var clickConsumer: Consumer<Unit>? = null
+    private var expandedTypeface: Typeface? = null
 
     init {
         View.inflate(context, R.layout.view_app_bar_layout, this)
@@ -58,6 +61,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
         }
 
+        expandedTypeface = ResourcesCompat.getFont(context, R.font.ideal_sans_medium)
         expandedDefaultTextAppearance = expandedDefaultAppearance
         expandedFixedSizeTextAppearance = expandedFixedSizeAppearance
 
