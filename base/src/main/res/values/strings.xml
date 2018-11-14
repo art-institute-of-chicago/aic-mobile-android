@@ -47,6 +47,8 @@
     <string name="gallery">Gallery %s</string>
 
     <string name="errorDialogTitle">Error</string>
+    <string name="loadingError">Loading Error</string>
+    <string name="loadingFailure">Failed to load application data.</string>
     <string name="noInternetConnection">No internet connection.</string>
     <string name="networkTimedOut">Network time out. Please try again.</string>
 
