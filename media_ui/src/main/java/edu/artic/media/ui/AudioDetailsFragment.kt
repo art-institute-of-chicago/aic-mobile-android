@@ -133,7 +133,16 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.authorCulturalPlace
                 .map { it.isNotEmpty() }
-                .bindToMain(artistCulturePlaceDenim.visibility())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { hasData ->
+                    if (hasData) {
+                        artistCulturePlaceDenim.visibility = View.VISIBLE
+                        dividerBelowArtist.visibility = View.VISIBLE
+                    } else {
+                        artistCulturePlaceDenim.visibility = View.GONE
+                        dividerBelowArtist.visibility = View.GONE
+                    }
+                }
                 .disposedBy(disposeBag)
 
         viewModel.authorCulturalPlace
