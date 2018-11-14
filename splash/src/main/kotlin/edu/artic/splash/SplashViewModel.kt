@@ -29,6 +29,7 @@ class SplashViewModel @Inject constructor(
 
 
     val percentage: Subject<Float> = BehaviorSubject.createDefault(0f)
+    val dataError: Subject<Throwable> = BehaviorSubject.create()
 
     init {
         analyticsTracker.clearSession()
@@ -51,6 +52,7 @@ class SplashViewModel @Inject constructor(
                     }
                 }, {
                     percentage.onError(it)
+                    dataError.onNext(it)
                 }, {}).disposedBy(disposeBag)
     }
 
