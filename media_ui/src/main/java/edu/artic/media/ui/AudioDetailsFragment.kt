@@ -24,6 +24,7 @@ import edu.artic.adapter.*
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.filterHtmlEncodedText
+import edu.artic.base.utils.show
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
@@ -133,7 +134,11 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.authorCulturalPlace
                 .map { it.isNotEmpty() }
-                .bindToMain(artistCulturePlaceDenim.visibility())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { hasData ->
+                    artistCulturePlaceDenim.show(show = hasData)
+                    dividerBelowArtist.show(show = hasData)
+                }
                 .disposedBy(disposeBag)
 
         viewModel.authorCulturalPlace
@@ -165,15 +170,13 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.relatedTours
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { tours ->
-                    if (tours.isEmpty()) {
-                        relatedTourTitle.visibility = View.GONE
-                        relatedToursView.visibility = View.GONE
-                        dividerBelowRelatedTours.visibility = View.GONE
-                    } else {
+                    val hasData = tours.isNotEmpty()
+                    relatedTourTitle.show(show = hasData)
+                    relatedToursView.show(show = hasData)
+                    dividerBelowRelatedTours.show(show = hasData)
+
+                    if (hasData) {
                         relatedToursView.removeAllViews()
-                        relatedTourTitle.visibility = View.VISIBLE
-                        relatedToursView.visibility = View.VISIBLE
-                        dividerBelowRelatedTours.visibility = View.VISIBLE
                         addRelatedToursToView(tours)
                     }
                 }
