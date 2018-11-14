@@ -124,8 +124,27 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
     @UiThread
     fun adaptExpandedTextAppearance() {
         collapsingToolbar.run {
+            val titleLength = title?.toString().orEmpty().length
+
+            if (titleLength < FULL_SIZE_TEXT_BREAKPOINT) {
+                setExpandedTitleTextAppearance(expandedDefaultTextAppearance)
+            } else {
+                setExpandedTitleTextAppearance(expandedFixedSizeTextAppearance)
+            }
             setExpandedTitleTypeface(expandedTypeface)
         }
+    }
+
+
+    companion object {
+
+        /**
+         * Max length of text visible with expanded style [expandedDefaultTextAppearance].
+         *
+         * If title extends beyond this, callers should switch
+         * [collapsingToolbar] over to [expandedFixedSizeTextAppearance].
+         */
+        const val FULL_SIZE_TEXT_BREAKPOINT: Int = """Welcome, And…""".length
     }
 
 }
