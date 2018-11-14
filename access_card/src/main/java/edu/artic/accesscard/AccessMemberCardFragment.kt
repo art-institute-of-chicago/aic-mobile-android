@@ -24,6 +24,7 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_validate_member_information.*
 import kotlinx.android.synthetic.main.layout_member_access_card.*
@@ -171,6 +172,14 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
         viewModel.isReciprocalMemberLevel
                 .bindToMain(reciprocalMember.visibility())
                 .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                viewModel.isReciprocalMemberLevel.filter { it },
+                viewModel.membership)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { (_, memberLevel) ->
+                    reciprocalMember.contentDescription = memberLevel
+                }.disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: AccessMemberCardViewModel) {
