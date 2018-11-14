@@ -66,6 +66,23 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         makeStatusBarTransparent()
 
         textureView.surfaceTextureListener = this
+
+        observeDataLoadingProgress()
+
+        observeDataError()
+
+        welcome.alpha = 0f
+
+        fadeInAnimation = welcome.animate()
+                .alpha(1f)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .setDuration(1000)
+                .setStartDelay(500)
+
+        fadeInAnimation.start()
+    }
+
+    private fun observeDataLoadingProgress() {
         viewModel.percentage
                 .handleNetworkError(this)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,8 +106,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                     }
 
                 }).disposedBy(disposeBag)
+    }
 
-
+    private fun observeDataError() {
         viewModel.dataError
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { t -> t.asNetworkException(resources.getString(R.string.loadingFailure)) }
@@ -120,16 +138,6 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                     }
 
                 }.disposedBy(disposeBag)
-
-        welcome.alpha = 0f
-
-        fadeInAnimation = welcome.animate()
-                .alpha(1f)
-                .setInterpolator(AccelerateDecelerateInterpolator())
-                .setDuration(1000)
-                .setStartDelay(500)
-
-        fadeInAnimation.start()
     }
 
     override fun onStart() {
