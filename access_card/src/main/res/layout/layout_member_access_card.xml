@@ -52,6 +52,7 @@
         android:layout_height="@dimen/marginQuad"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/reciprocal_logo"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/expiration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
