@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import edu.artic.base.R
 
@@ -68,4 +69,15 @@ private object IgnoreReselection : BottomNavigationView.OnNavigationItemReselect
  */
 fun BottomNavigationView.preventReselection() {
     setOnNavigationItemReselectedListener(IgnoreReselection)
+}
+
+/**
+ * Function for showing/hiding the view.
+ */
+fun View.show(show: Boolean){
+    if (show) {
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
+    }
 }
