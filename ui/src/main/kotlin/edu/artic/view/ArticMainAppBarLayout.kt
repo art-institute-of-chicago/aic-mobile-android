@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.support.annotation.DrawableRes
 import android.support.annotation.StyleRes
+import android.support.annotation.UiThread
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
@@ -118,6 +119,13 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         disposeBag.clear()
+    }
+
+    @UiThread
+    fun adaptExpandedTextAppearance() {
+        collapsingToolbar.run {
+            setExpandedTitleTypeface(expandedTypeface)
+        }
     }
 
 }
