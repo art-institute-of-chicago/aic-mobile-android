@@ -167,6 +167,10 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 .map { it.size > 1 }
                 .bindToMain(switchCardHolder.visibility())
                 .disposedBy(disposeBag)
+
+        viewModel.isReciprocalMemberLevel
+                .bindToMain(reciprocalMember.visibility())
+                .disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: AccessMemberCardViewModel) {
