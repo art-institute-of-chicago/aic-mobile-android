@@ -142,6 +142,7 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
+                android:visibility="gone"
                 android:text="@string/relatedTours"
                 tools:text="@string/relatedTours" />
 
@@ -149,12 +150,14 @@
                 android:id="@+id/relatedToursView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="vertical" />
 
             <View
                 android:id="@+id/dividerBelowRelatedTours"
                 style="@style/dividerTwentyOpaque"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/marginQuad" />
 
             <edu.artic.view.DropdownTextView
