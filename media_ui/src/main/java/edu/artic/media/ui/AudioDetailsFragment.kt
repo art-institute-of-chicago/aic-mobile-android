@@ -24,6 +24,7 @@ import edu.artic.adapter.*
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.filterHtmlEncodedText
+import edu.artic.base.utils.show
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
@@ -135,13 +136,8 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .map { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { hasData ->
-                    if (hasData) {
-                        artistCulturePlaceDenim.visibility = View.VISIBLE
-                        dividerBelowArtist.visibility = View.VISIBLE
-                    } else {
-                        artistCulturePlaceDenim.visibility = View.GONE
-                        dividerBelowArtist.visibility = View.GONE
-                    }
+                    artistCulturePlaceDenim.show(show = hasData)
+                    dividerBelowArtist.show(show = hasData)
                 }
                 .disposedBy(disposeBag)
 
@@ -174,15 +170,13 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.relatedTours
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { tours ->
-                    if (tours.isEmpty()) {
-                        relatedTourTitle.visibility = View.GONE
-                        relatedToursView.visibility = View.GONE
-                        dividerBelowRelatedTours.visibility = View.GONE
-                    } else {
+                    val hasData = tours.isNotEmpty()
+                    relatedTourTitle.show(show = hasData)
+                    relatedToursView.show(show = hasData)
+                    dividerBelowRelatedTours.show(show = hasData)
+
+                    if (hasData) {
                         relatedToursView.removeAllViews()
-                        relatedTourTitle.visibility = View.VISIBLE
-                        relatedToursView.visibility = View.VISIBLE
-                        dividerBelowRelatedTours.visibility = View.VISIBLE
                         addRelatedToursToView(tours)
                     }
                 }
