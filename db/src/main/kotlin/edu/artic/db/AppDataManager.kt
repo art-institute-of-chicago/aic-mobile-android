@@ -144,12 +144,12 @@ class AppDataManager @Inject constructor(
                                 dashboardDao.setDashBoard(dashboard)
                             }
                             generalInfoDao.setGeneralInfo(result.generalInfo)
-                            result.mapFloors?.values?.let { floors ->
+                            result.mapFloors.values.filterNotNull().let { floors ->
                                 articMapFloorDao.insertMapFloors(floors.toList())
                             }
 
-                            val galleries = result.galleries?.values?.toList()
-                            if (galleries?.isNotEmpty() == true) {
+                            val galleries : List<ArticGallery> = result.galleries?.values?.toList()?.filterNotNull().orEmpty()
+                            if (galleries.isNotEmpty()) {
                                 galleryDao.clear()
                                 galleryDao.addGalleries(galleries)
                             }
@@ -157,7 +157,7 @@ class AppDataManager @Inject constructor(
                             val audioFiles = result.audioFiles
                             if (audioFiles?.isNotEmpty() == true) {
                                 audioFileDao.clear()
-                                audioFileDao.addAudioFiles(audioFiles.values.toList())
+                                audioFileDao.addAudioFiles(audioFiles.values.filterNotNull().toList())
                             }
 
                             val objects = result.objects
