@@ -166,22 +166,7 @@ class AppDataManager @Inject constructor(
 
                             val objects = result.objects
                             if (objects?.isNotEmpty() == true) {
-                                objects.values.filterNotNull().forEach { articObject ->
-                                    // add a floor field to the object, since its not known in the JSON directly.
-                                    rawGalleries
-                                            ?.asSequence()
-                                            ?.filterNotNull()
-                                            ?.firstOrNull { it.title == articObject.galleryLocation }
-                                            ?.let { gallery ->
-                                                articObject.floor = gallery.floor
-                                            }
-
-                                    articObject.audioCommentary.forEach { audioCommentaryObject ->
-                                        audioCommentaryObject.audio?.let {
-                                            audioCommentaryObject.audioFile = audioFileDao.getAudioById(it)
-                                        }
-                                    }
-                                }
+                                updateArticObjects(objects, rawGalleries)
                                 objectDao.clear()
                                 objectDao.addObjects(objects.values.filterNotNull().toList())
                             }
@@ -223,6 +208,25 @@ class AppDataManager @Inject constructor(
                     }
                     return@flatMap appDataState.asObservable()
                 }
+    }
+
+    private fun updateArticObjects(objects: Map<String, ArticObject?>, rawGalleries: List<ArticGallery?>?) {
+        objects.values.filterNotNull().forEach { articObject ->
+            // add a floor field to the object, since its not known in the JSON directly.
+            rawGalleries
+                    ?.asSequence()
+                    ?.filterNotNull()
+                    ?.firstOrNull { it.title == articObject.galleryLocation }
+                    ?.let { gallery ->
+                        articObject.floor = gallery.floor
+                    }
+
+            articObject.audioCommentary.forEach { audioCommentaryObject ->
+                audioCommentaryObject.audio?.let {
+                    audioCommentaryObject.audioFile = audioFileDao.getAudioById(it)
+                }
+            }
+        }
     }
 
     private fun updateTours(it: List<ArticTour?>, objects: Map<String, ArticObject?>?) {
