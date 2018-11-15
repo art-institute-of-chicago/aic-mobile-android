@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
 import com.fuzz.rx.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import edu.artic.db.AccessibilityAware
@@ -406,13 +407,17 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
                 })
 
 
-        markerHolder.marker.fadeIn(targetAlpha)
+        val marker = markerHolder.marker
+        marker.fadeIn(targetAlpha)
 
         /**
          * Focus the selected object.
          */
         if (isSelected) {
-            markerHolder.marker.showInfoWindow()
+            marker.showInfoWindow()
+            val currentZoomLevel = map.cameraPosition.zoom
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position,
+                    Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
         }
 
         return markerHolder
