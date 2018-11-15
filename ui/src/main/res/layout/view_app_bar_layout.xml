@@ -14,7 +14,6 @@
         android:fitsSystemWindows="true"
         app:contentScrim="?attr/colorPrimary"
         app:expandedTitleGravity="bottom|center_horizontal"
-        app:expandedTitleTextAppearance="@style/PageTitleLargeWhite"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
         <FrameLayout

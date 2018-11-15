@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         app:backgroundImage="@drawable/info_image"
         app:expandedTitleStyle="@style/InformationExpandedTitle"
+        app:expandedFixedSizeTitleStyle="@style/InformationExpandedTitle"
         app:icon="@drawable/ic_info" />
 
     <android.support.v4.widget.NestedScrollView
