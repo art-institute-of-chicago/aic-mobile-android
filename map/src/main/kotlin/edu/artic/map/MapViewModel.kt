@@ -417,8 +417,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         locationPreferenceManager.hasSeenLocationPromptObservable,
                         locationPreferenceManager.hasClosedLocationPromptObservable,
                         tutorialPreferencesManager.hasSeenTutorialObservable
-                ).map {
-                    (hasSeenPrompt, hasClosedPrompt, hasSeenTutorial) ->
+                ).map { (hasSeenPrompt, hasClosedPrompt, hasSeenTutorial) ->
 
                     !hasSeenPrompt to (hasClosedPrompt && !hasSeenTutorial)
                 }
@@ -426,8 +425,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                     it.first || it.second
                 }
                 .withLatestFrom(floor)
-                .map {
-                    (whatToShow, floor) ->
+                .map { (whatToShow, floor) ->
                     val (shouldShowPrompt, shouldShowTutorial) = whatToShow
                     when {
                         shouldShowPrompt -> Navigate.Forward(NavigationEndpoint.LocationPrompt)
