@@ -3,7 +3,7 @@ package edu.artic.util
 import android.content.Context
 import com.fuzz.retrofit.rx.requireValue
 import com.jakewharton.retrofit2.adapter.rxjava2.Result
-import edu.artic.base.NetworkException
+import edu.artic.base.asNetworkException
 import edu.artic.viewmodel.R
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.zipWith
@@ -53,12 +53,7 @@ fun <T> Observable<T>.waitForASecondOfCalmIn(other: Subject<*>): Observable<T> {
  */
 fun <T> Observable<T>.handleNetworkError(context: Context): Observable<T> {
     return this.onErrorResumeNext { t: Throwable ->
-        var exception = t
-        if (t is UnknownHostException) {
-            exception = NetworkException(context.getString(R.string.noInternetConnection), t)
-        } else if (t is SocketTimeoutException) {
-            exception = NetworkException(context.getString(R.string.networkTimedOut), t)
-        }
+        val exception = t.asNetworkException(context.getString(R.string.noInternetConnection))
         Observable.error(exception)
     }
 }
