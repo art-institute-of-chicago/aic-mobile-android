@@ -14,7 +14,7 @@ data class ArticAppData(
         @Json(name = "audio_files") val audioFiles: Map<String, ArticAudioFile?>?,
         @Json(name = "tours") val tours: List<ArticTour?>?,
         @Json(name = "map_annontations") val mapAnnotations: Map<String, ArticMapAnnotation?>?,
-        @Json(name = "map_floors") val mapFloors: Map<String, ArticMapFloor>,
+        @Json(name = "map_floors") val mapFloors: Map<String, ArticMapFloor?>,
         @Json(name = "tour_categories") val tourCategories: Map<String, ArticTourCategory?>?,
         @Json(name = "exhibitions") val exhibitions: List<ArticExhibitionCMS?>?,
         @Json(name = "data") val data: ArticDataObject,
