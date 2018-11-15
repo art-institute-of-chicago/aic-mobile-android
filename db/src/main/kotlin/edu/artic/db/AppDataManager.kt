@@ -148,8 +148,12 @@ class AppDataManager @Inject constructor(
                                 articMapFloorDao.insertMapFloors(floors.toList())
                             }
 
-                            val galleries : List<ArticGallery> = result.galleries?.values?.toList()?.filterNotNull().orEmpty()
-                            if (galleries.isNotEmpty()) {
+                            val rawGalleries : List<ArticGallery?>? = result.galleries
+                                    ?.values
+                                    ?.toList()
+
+                            val galleries = rawGalleries?.filterNotNull().orEmpty()
+                            if (rawGalleries?.isNotEmpty() == true) {
                                 galleryDao.clear()
                                 galleryDao.addGalleries(galleries)
                             }
