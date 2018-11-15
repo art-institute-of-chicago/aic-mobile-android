@@ -661,6 +661,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         searchManager.selectedObject.onNext(Optional(null))
                         val startStop = requestedTourStop ?: activeTour.getIntroStop()
                         switchTourRequest.onNext(requestedTour to startStop)
+                    } else if (requestedTour != null && activeTour != null && requestedTour == activeTour) {
+                        /**
+                         * Update the tour stop.
+                         */
+                        requestedTourStop?.objectId?.let { newTourStop ->
+                            tourProgressManager.selectedStop.onNext(newTourStop)
+                        }
                     } else if (proposedTour != null) {
                         val (tour, stop) = proposedTour
                         displayModeChanged(MapDisplayMode.Tour(tour, stop))
