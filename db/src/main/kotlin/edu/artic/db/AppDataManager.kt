@@ -140,8 +140,9 @@ class AppDataManager @Inject constructor(
                         // runs the whole operation in a transaction.
                         appDatabase.runInTransaction {
                             val result = appDataState.result as ArticAppData
-
-                            dashboardDao.setDashBoard(result.dashboard)
+                            result.dashboard?.let { dashboard ->
+                                dashboardDao.setDashBoard(dashboard)
+                            }
                             generalInfoDao.setGeneralInfo(result.generalInfo)
                             result.mapFloors?.values?.let { floors ->
                                 articMapFloorDao.insertMapFloors(floors.toList())
