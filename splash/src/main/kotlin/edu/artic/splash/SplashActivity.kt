@@ -111,7 +111,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     private fun observeDataError() {
         viewModel.dataError
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { t -> t.asNetworkException(resources.getString(R.string.loadingFailure)) }
+                .map { t -> t.asNetworkException(resources.getString(R.string.noInternetConnection)) }
                 .subscribeBy {
                     /**
                      * Display alert with error message.
