@@ -16,19 +16,21 @@ import org.json.JSONObject
  * Looks for error, message and detail keys in order.
  */
 fun Result<*>.getErrorMessage(): String {
+    val SOMETHING_WENT_WRONG : String = "Something went wrong"
+
     lateinit var errorMessage: String
     try {
         this.response().errorBody()?.also { errorBody ->
             val errorJSON = JSONObject(errorBody.string())
-            errorMessage = errorJSON.optString("error")
+            val message = errorJSON.optString("error")
                     .orIfNullOrBlank(errorJSON.optString("message"))
                     .orIfNullOrBlank(errorJSON.optString("Message"))
                     .orIfNullOrBlank(errorJSON.optString("detail"))
-                    ?: "Something went wrong"
-
+                    .orEmpty()
+            errorMessage = if (message.isNotBlank()) message else SOMETHING_WENT_WRONG
         }
     } catch (exception: Exception) {
-        errorMessage = "Something went wrong"
+        errorMessage = SOMETHING_WENT_WRONG
         exception.printStackTrace()
     }
     return errorMessage
