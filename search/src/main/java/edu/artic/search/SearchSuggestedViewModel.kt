@@ -40,14 +40,14 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                 .combineLatest(
                         dynamicCells,
                         Observable.just(listOf(
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant, SuggestedMapAmenities.Dining),
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge, SuggestedMapAmenities.MembersLounge),
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop, SuggestedMapAmenities.GiftShop),
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant, SuggestedMapAmenities.Dining, 0),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge, SuggestedMapAmenities.MembersLounge, 1),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop, SuggestedMapAmenities.GiftShop, 2),
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms, 3),
                                 /**
                                  * TODO:: Refactor it, used something other than SearchAmenitiesCellViewModel (maybe PaddingAmenitiesCellViewModel)
                                  * **/
-                                SearchAmenitiesCellViewModel(0,SuggestedMapAmenities.Restrooms))
+                                SearchAmenitiesCellViewModel(0, SuggestedMapAmenities.Restrooms, 4))
                         ),
                         suggestedArtworks)
                 { dynamicCells, amenities, suggestedArtworks ->
@@ -66,8 +66,8 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun setupOnMapSuggestionsBind() {
         getSuggestedArtworks(searchSuggestionsDao, objectDao)
                 .map { objects ->
-                    objects.map {
-                        SearchCircularCellViewModel(it)
+                    objects.mapIndexed { index, item ->
+                        SearchCircularCellViewModel(item, index)
                     }
                 }
                 .bindTo(suggestedArtworks)
