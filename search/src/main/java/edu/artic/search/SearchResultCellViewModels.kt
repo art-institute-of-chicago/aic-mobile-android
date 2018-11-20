@@ -86,7 +86,7 @@ class SearchTourCellViewModel(val articTour: ArticTour) : SearchBaseListItemView
  * ViewModel for displaying the circular artwork image under "On the map" section.
  */
 class SearchCircularCellViewModel(val artwork: ArticObject?,
-                                  override val order: Int = -1) : SearchBaseCellViewModel(), OrderedCellViewModel {
+                                  override val order: Int) : SearchBaseCellViewModel(), OrderedCellViewModel {
 
     val imageUrl: Subject<String> = BehaviorSubject.createDefault(
             artwork?.thumbUrl.orEmpty()
@@ -99,7 +99,7 @@ class SearchCircularCellViewModel(val artwork: ArticObject?,
 class SearchAmenitiesCellViewModel(
         @DrawableRes val value: Int,
         val type: SuggestedMapAmenities,
-        override val order: Int = -1
+        override val order: Int
 ) : SearchBaseCellViewModel(), OrderedCellViewModel
 
 
