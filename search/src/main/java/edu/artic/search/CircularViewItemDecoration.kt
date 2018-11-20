@@ -25,12 +25,12 @@ class CircularViewItemDecoration(private val currentPadding: Int,
                 }.disposedBy(disposeBag)
             } else if (onTheMapPosition > 0) {
                 if (it is SearchCircularCellViewModel || it is SearchAmenitiesCellViewModel) {
-                    val offsetPositionFromOnTheMap = position - (onTheMapPosition+1)
-                    val spannedPosition = offsetPositionFromOnTheMap % SearchResultsAdapter.MAX_ARTWORKS_PER_ROW
-                    val middlePadding = finalPadding-currentPadding
+                    val offsetPositionFromOnTheMap = position - (onTheMapPosition + 1)
+                    val artworkColumn = offsetPositionFromOnTheMap % SearchResultsAdapter.MAX_ARTWORKS_PER_ROW
+                    val middlePadding = finalPadding - currentPadding
                     when {
-                        spannedPosition > 0 -> {
-                            outRect.left = middlePadding*spannedPosition
+                        artworkColumn > 0 -> {
+                            outRect.left = middlePadding * artworkColumn
                             outRect.right = 0
                         }
                         else -> {
