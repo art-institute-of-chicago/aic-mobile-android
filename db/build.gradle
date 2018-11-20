@@ -25,9 +25,9 @@ dependencies {
     implementation project(':base')
     api project(':localization')
     api libs.rx_helpers
-    api libs.retrofit_rx
 
     api libs.retrofit
+    api libs.retrofit_rx
     api libs.retrofit_scalars
 
     api libs.moshi
@@ -53,6 +53,7 @@ dependencies {
     api libs.arch_paging
 
     api libs.room
+    api libs.room_rx
     kapt libs.room_compiler
 
     api libs.dagger
@@ -61,7 +62,6 @@ dependencies {
     api libs.rx_kotlin
     api libs.rx
     api libs.rx_android
-    api libs.room_rx
 }
 
 androidExtensions {
