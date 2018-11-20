@@ -85,7 +85,8 @@ class SearchTourCellViewModel(val articTour: ArticTour) : SearchBaseListItemView
 /**
  * ViewModel for displaying the circular artwork image under "On the map" section.
  */
-class SearchCircularCellViewModel(val artwork: ArticObject?) : SearchBaseCellViewModel() {
+class SearchCircularCellViewModel(val artwork: ArticObject?,
+                                  override val order: Int = -1) : SearchBaseCellViewModel(), OrderedCellViewModel {
 
     val imageUrl: Subject<String> = BehaviorSubject.createDefault(
             artwork?.thumbUrl.orEmpty()
@@ -95,8 +96,11 @@ class SearchCircularCellViewModel(val artwork: ArticObject?) : SearchBaseCellVie
 /**
  * ViewModel for displaying the amenities icons
  */
-class SearchAmenitiesCellViewModel(@DrawableRes val value: Int, val type: SuggestedMapAmenities) : SearchBaseCellViewModel()
-
+class SearchAmenitiesCellViewModel(
+        @DrawableRes val value: Int,
+        val type: SuggestedMapAmenities,
+        override val order: Int = -1
+) : SearchBaseCellViewModel(), OrderedCellViewModel
 
 
 /**
@@ -113,4 +117,8 @@ sealed class Header(@StringRes val title : Int) {
     class Artworks(title: Int = R.string.artworks) : Header(title)
     class Tours(title: Int = R.string.tours) : Header(title)
     class Exhibitions(title: Int = R.string.exhibitions) : Header(title)
+}
+
+interface OrderedCellViewModel {
+    open val order: Int
 }
