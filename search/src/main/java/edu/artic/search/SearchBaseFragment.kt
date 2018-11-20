@@ -62,7 +62,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
             adapter = SearchResultsAdapter()
             layoutManager = lm
             addItemDecoration(SearchDividerItemDecoration(this.context))
-            addItemDecoration(CircularViewItemDecoration(endCurrentPadding, endFinalPadding, disposeBag))
+            addItemDecoration(CircularViewItemDecoration(endCurrentPadding, endFinalPadding))
         }
 
     }
