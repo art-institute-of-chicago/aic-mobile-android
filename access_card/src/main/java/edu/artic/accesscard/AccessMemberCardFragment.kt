@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import com.fuzz.rx.*
 import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.clicks
@@ -226,6 +227,18 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                     requireActivity().hideSoftKeyboard()
                 }.disposedBy(disposeBag)
 
+        zipCode.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    val isFormFilled = !zipCode.text.isNullOrBlank() && !memberId.text.isNullOrBlank()
+                    if (isFormFilled) {
+                        viewModel.onSignInClick()
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
 
         animateToolbarColor()
     }
