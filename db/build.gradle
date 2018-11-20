@@ -24,7 +24,6 @@ android {
 dependencies {
     implementation project(':base')
     api project(':localization')
-    api libs.rx_helpers
 
     api libs.retrofit
     api libs.retrofit_rx
@@ -59,9 +58,6 @@ dependencies {
     api libs.dagger
     kapt libs.dagger_compiler
 
-    api libs.rx_kotlin
-    api libs.rx
-    api libs.rx_android
 }
 
 androidExtensions {
