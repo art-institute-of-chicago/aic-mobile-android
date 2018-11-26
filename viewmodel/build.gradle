@@ -3,7 +3,6 @@ dependencies {
     implementation project(':ui')
     implementation project(':base')
 
-    implementation libs.rx_helpers
 
     kapt libs.dagger_compiler
     api libs.dagger_android
