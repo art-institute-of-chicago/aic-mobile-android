@@ -57,6 +57,7 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
                 .build()
     }
 
+    // TODO: Document this
     fun seedBuilder(builder: AppComponent.Builder): AppComponent {
         builder.seedInstance(this)
         val component = builder.build()
@@ -82,6 +83,7 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
 
     companion object {
 
+        // TODO: Maybe we don't need this?
         @JvmStatic
         lateinit var app: ArticApp
             private set

@@ -57,6 +57,7 @@ sealed class EventCategoryName(val eventCategoryName: String) {
 }
 
 
+// TODO: Check if we're missing some events; all of these properties should be used somewhere
 object AnalyticsAction {
     const val APP_OPENED = "open"
     const val APP_BACKGROUNDED = "background"
@@ -66,6 +67,7 @@ object AnalyticsAction {
     const val languageChanged = "changed"
 
     const val locationOnSite = "on_site"
+    // FIXME: Use these!
     const val locationOffSite = "off_site"
     const val locationDisabled = "disabled"
     const val locationNotNowPressed = "not_now_pressed"

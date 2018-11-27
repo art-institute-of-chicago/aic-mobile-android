@@ -16,6 +16,7 @@ import edu.artic.viewmodel.ViewModelKey
 @Module
 abstract class AudioModule {
 
+    // TODO: Check Dagger2 docs as for whether this can be a final class or interface. Does it make a difference?
 
     @Binds
     @IntoMap

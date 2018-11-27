@@ -1,6 +1,8 @@
 package edu.artic.base
 
 /**
+ * TODO: Maybe move into separate module, along with progress interceptor
+ *
  * @author Sameer Dhakal (Fuzz)
  */
 sealed class LoadStatus {

@@ -8,6 +8,7 @@ import edu.artic.db.models.ArticMapAnnotation
 import edu.artic.db.models.ArticMapAnnotationType
 import io.reactivex.Flowable
 
+// TODO: turn into interface
 @Dao
 abstract class ArticMapAnnotationDao {
 

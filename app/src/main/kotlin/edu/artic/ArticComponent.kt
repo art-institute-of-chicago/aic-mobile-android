@@ -19,6 +19,7 @@ object ArticComponent {
         _appComponent = null
     }
 
+    // TODO: Re-evaluate whether this helps in the practical sense
     fun setInternalAppComponent(appComponent: AppComponent) {
         _appComponent = appComponent
     }

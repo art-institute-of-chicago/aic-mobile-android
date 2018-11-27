@@ -24,6 +24,7 @@ class AppModule {
     @Named(VERSION)
     fun getBuildVersion(): String = BuildConfig.VERSION_NAME_FOR_DISPLAY
 
+    // TODO: Are we using this? Can we just track changes in VERSION_NAME_FOR_DISPLAY instead?
     @Provides
     @Named(DISPLAY_CONFIG)
     fun getDisplayConfig(): String = BuildConfig.BUILD_TYPE
@@ -37,6 +38,7 @@ class AppModule {
         const val VERSION = "VERSION"
         const val DISPLAY_CONFIG = "DISPLAY_CONFIG"
 
+        // TODO: Replace type with simple interface, move CustomTabManager into separate module
         @JvmStatic
         @Provides
         fun provideChromeTabManager(): CustomTabManager = CustomTabManager()

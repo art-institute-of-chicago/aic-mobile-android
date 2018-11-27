@@ -36,6 +36,7 @@ open class ViewPagerAdapterBinder<TModel>(
         container.removeView((`object` as View))
     }
 
+    // TODO: isn't this the same as that inner class in `BaseAdapterBinder`?
     private inner class RecyclerViewToBaseAdapterObserver : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) = notifyDataSetChanged()
 

@@ -33,6 +33,8 @@ abstract class AutoHolderRecyclerViewAdapter<TModel> : BaseRecyclerViewAdapter<T
 
     /**
      * Called when an item is ready to be bound. It may be null.
+     *
+     * TODO: Point out that this is defined as a View extension method
      */
     private fun View.onBindNullableView(item: TModel?, position: Int) {
         if (item != null) {
@@ -44,6 +46,8 @@ abstract class AutoHolderRecyclerViewAdapter<TModel> : BaseRecyclerViewAdapter<T
 
     /**
      * Called when [TModel] is null. only useful for paginated list contents.
+     *
+     * TODO: Maybe delete?
      */
     protected open fun View.onBindPlaceHolder(position: Int) = Unit
 

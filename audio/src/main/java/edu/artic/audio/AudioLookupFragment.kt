@@ -61,9 +61,11 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
         // These first two bindings set the hint and instructional text.
         viewModel.chosenInfo
-                .map { info ->
-                    info.audioTitle
-                }.bindToMain(lookup_field.hint())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    lookup_field.hint = it.audioTitle
+                    subheader.text = it.audioSubtitle
+                }
                 .disposedBy(disposeBag)
 
         viewModel.chosenInfo
@@ -91,6 +93,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
         numberPadAdapter.itemClicks()
                 .subscribeBy { element ->
+                    // TODO: Just call internals of ::registerNumPadSubscription from here
                     viewModel.adapterClicks
                             .onNext(element)
                 }

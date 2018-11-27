@@ -8,6 +8,7 @@ import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Collections.emptyList
 
+// TODO: Add javadoc!
 class AppConverters {
 
     private val moshi = getMoshi()

@@ -10,6 +10,7 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 @Entity
+// FIXME: Way too easy to confuse with ArticObject. Also, can we drop the Artic prefix?
 data class ArticDataObject(
         @Json(name = "image_server_url") val imageServerUrl: String,
         @Json(name = "data_api_url") val dataApiUrl: String,

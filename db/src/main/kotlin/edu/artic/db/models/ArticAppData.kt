@@ -21,6 +21,7 @@ data class ArticAppData(
         @Json(name = "search") val search: ArticSearchObject?
 )
 
+//TODO: Are we using this class anywhere? Should we?
 @Entity
 @JsonClass(generateAdapter = true)
 data class DashBoard(

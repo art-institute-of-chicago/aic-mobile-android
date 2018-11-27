@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_information.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-
+// TODO: Add javadoc, rename to avoid confusion with MuseumInformationFragment
 class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
 
     @Inject

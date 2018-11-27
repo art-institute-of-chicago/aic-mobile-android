@@ -37,6 +37,8 @@ class RetrofitAppDataServiceProvider(
         const val EVENT_HEADER_ID = "events_download_header_id"
     }
 
+    // TODO: Explain why we request however many events/exhibitions
+
     val dataObject: Subject<ArticDataObject> = BehaviorSubject.create()
 
     init {

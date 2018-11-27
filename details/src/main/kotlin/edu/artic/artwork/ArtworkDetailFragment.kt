@@ -24,6 +24,7 @@ import edu.artic.viewmodel.Navigate
 import kotlinx.android.synthetic.main.fragment_search_audio_detail.*
 import kotlin.reflect.KClass
 
+// TODO: Deduplicate against other DetailFragments
 class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
     override val viewModelClass: KClass<ArtworkDetailViewModel>
         get() = ArtworkDetailViewModel::class
@@ -114,6 +115,8 @@ class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
                 .disposedBy(disposeBag)
     }
 
+
+    // FIXME: use simpler logic
     override fun setupNavigationBindings(viewModel: ArtworkDetailViewModel) {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo

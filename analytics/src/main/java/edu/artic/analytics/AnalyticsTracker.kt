@@ -46,6 +46,7 @@ class AnalyticsTrackerImpl(context: Context,
 
     init {
         locationService.requestTrackingUserLocation()
+        // FIXME: This could be a lot simpler. Can't we make it work with just one RX stream?
         val isInMuseum = locationService.currentUserLocation.map{isLocationInMuseum(it)}
         isInMuseum
                 .distinctUntilChanged()

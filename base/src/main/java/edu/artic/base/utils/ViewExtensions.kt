@@ -21,6 +21,7 @@ import edu.artic.base.R
  * @see https://stackoverflow.com/a/47407229/4253091
  * @param colorList ColorStateList for icon and text
  */
+// TODO:....We no longer need to hack, right?
 fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
     val menuView = getChildAt(0) as BottomNavigationMenuView
 

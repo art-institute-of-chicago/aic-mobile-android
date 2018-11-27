@@ -36,6 +36,7 @@ import javax.inject.Inject
  *
  * @author Sameer Dhakal (Fuzz)
  */
+// TODO: Perhaps we should split this into two models, one for the form and one for the membership
 class AccessMemberCardViewModel @Inject constructor(
         private val service: MemberDataProvider,
         private val infoPreferencesManager: MemberInfoPreferencesManager,
@@ -51,6 +52,8 @@ class AccessMemberCardViewModel @Inject constructor(
     sealed class NavigationEndpoint {
         object Search : NavigationEndpoint()
     }
+
+    // TODO: These properties should be final; maybe we can let a delegate handle them?
 
     /**
      * Emits events for various loading states.

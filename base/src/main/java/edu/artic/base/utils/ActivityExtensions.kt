@@ -73,6 +73,7 @@ internal const val MIN_MEMORY_FOR_HIGH_QUALITY: Long = 175 * 1_000_000
  * If you're wondering about that last check, the amount of RAM we'd prefer to
  * use is noticeably higher than AOSP's 'low RAM' threshold.
  */
+// TODO: Start using this again in the map module
 fun Context.isResourceConstrained(): Boolean {
     val am = (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?)
 

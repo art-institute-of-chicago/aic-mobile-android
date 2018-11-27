@@ -135,10 +135,12 @@ class BaseAdapterBinder<TModel>(
 
     private fun applyViewHolderTags(viewHolder: BaseViewHolder, viewType: Int) =
             viewHolder.itemView.apply {
+                // TODO: Can we get rid of both of these? Just query the parent ViewGroup instead?
                 setTag(R.id.tag_holder, viewHolder)
                 setTag(R.id.tag_item_type, viewType)
             }
 
+    // TODO: Can we make it work without this class?
     private inner class RecyclerViewToBaseAdapterObserver : RecyclerView.AdapterDataObserver() {
         override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) = notifyDataSetChanged()
 

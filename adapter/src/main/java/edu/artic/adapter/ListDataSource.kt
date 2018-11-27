@@ -5,6 +5,8 @@ import java.util.*
 
 /**
  * Description: Represents a list that only returns sublists of itself.
+ *
+ * TODO: Better docs, perhaps see if best practices have changed since this was first written
  */
 class ListDataSource<T>(list: List<T>) : PositionalDataSource<T>() {
     private val list: List<T>
