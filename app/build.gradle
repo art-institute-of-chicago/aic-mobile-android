@@ -92,6 +92,7 @@ dependencies {
 
     implementation libs.kotlin
     implementation libs.threeten
+    implementation libs.progress_interceptor
     implementation libs.firebase_core
     implementation libs.crashlytics
 
