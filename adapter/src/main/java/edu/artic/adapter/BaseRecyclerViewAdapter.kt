@@ -26,14 +26,7 @@ import java.util.ArrayList
  * follows:
  */
 abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
-        private val diffItemCallback: DiffUtil.ItemCallback<TModel> = object :
-                DiffUtil.ItemCallback<TModel>() {
-            override fun areItemsTheSame(oldItem: TModel, newItem: TModel): Boolean =
-                    areContentsTheSame(oldItem, newItem)
-
-            override fun areContentsTheSame(oldItem: TModel, newItem: TModel): Boolean =
-                    oldItem == newItem
-        }
+        private val diffItemCallback: DiffUtil.ItemCallback<TModel> = getDefaultDiffCallback()
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
     interface OnItemClickListener<in T> {
