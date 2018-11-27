@@ -4,6 +4,4 @@ dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
     implementation project(':db')
-    implementation libs.rx_kotlin
-    implementation libs.rx_helpers
 }
