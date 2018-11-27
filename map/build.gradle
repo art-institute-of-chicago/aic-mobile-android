@@ -40,6 +40,5 @@ dependencies {
     implementation libs.exo_player_core
     implementation libs.exo_player_ui
     implementation libs.glide
-    implementation libs.rx_kotlin
     implementation libs.view_indicator
 }
