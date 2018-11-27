@@ -48,13 +48,3 @@ fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemClicksWithPosition(): 
                 emitter.onNext(pos to model)
             }
         }
-
-/**
- * Scrolls to bottom of [RecyclerView] after animation completes to ensure its visible.
- */
-fun RecyclerView.delayScrollToBottom(): Disposable =
-        Observable.just(Unit)
-                .delay(200, TimeUnit.MILLISECONDS)
-                .subscribe {
-                    smoothScrollToPosition(0)
-                }
