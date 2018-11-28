@@ -39,7 +39,8 @@ dependencies {
         exclude module: 'xpp3'
     })
 
-    // This interceptor must be marked as 'api' if we want to allow the ':app' module to inject ProgressEventBus objects
+    // This interceptor must also be included by the ':app' module, if it is to inject ProgressEventBus objects safely
+    implementation libs.kotlin_jre7
     implementation libs.progress_interceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     implementation libs.threeten
@@ -47,7 +48,6 @@ dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
 
-    api libs.kotlin
     api libs.arch_runtime
     api libs.arch_paging
 
