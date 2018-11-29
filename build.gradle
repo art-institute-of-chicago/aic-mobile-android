@@ -22,6 +22,7 @@ buildscript {
 
         libs = [
                 kotlin                  : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+                kotlin_jre7             : "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version",
                 rx_helpers              : "com.github.fuzz-productions:rx-helpers:${latest_helper}",
                 dagger                  : "com.google.dagger:dagger:${dagger_version}",
                 dagger_android          : "com.google.dagger:dagger-android-support:${dagger_version}",
@@ -57,6 +58,7 @@ buildscript {
                 glide                   : "com.github.bumptech.glide:glide:${glide_version}",
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",
                 glide_okhttp_integration: "com.github.bumptech.glide:okhttp3-integration:${glide_version}@aar",
+                progress_interceptor    : 'com.github.jobinlawrance:okhttp3-downloadprogress-interceptor:1.0.1',
                 ga                      : "com.google.android.gms:play-services-analytics:${firebase_version}",
                 firebase_core           : "com.google.firebase:firebase-core:${firebase_version}",
                 crashlytics             : "com.crashlytics.sdk.android:crashlytics:${crashlytics_version}",
