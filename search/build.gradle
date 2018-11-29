@@ -6,8 +6,6 @@ dependencies {
     implementation libs.threeten
     implementation libs.glide
     implementation libs.constraint_layout
-    implementation libs.rx_helpers
-    implementation libs.rx_kotlin
 
     implementation project(':adapter')
     implementation project(':analytics')

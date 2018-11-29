@@ -24,10 +24,9 @@ android {
 dependencies {
     implementation project(':base')
     api project(':localization')
-    api libs.rx_helpers
-    api libs.retrofit_rx
 
     api libs.retrofit
+    api libs.retrofit_rx
     api libs.retrofit_scalars
 
     api libs.moshi
@@ -40,28 +39,25 @@ dependencies {
         exclude module: 'xpp3'
     })
 
-    // This interceptor must be marked as 'api' if we want to allow the ':app' module to inject ProgressEventBus objects
-    api 'com.github.jobinlawrance:okhttp3-downloadprogress-interceptor:1.0.1'
+    // This interceptor must also be included by the ':app' module, if it is to inject ProgressEventBus objects safely
+    implementation libs.kotlin_jre7
+    implementation libs.progress_interceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     implementation libs.threeten
 
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
 
-    api libs.kotlin
     api libs.arch_runtime
     api libs.arch_paging
 
     api libs.room
+    api libs.room_rx
     kapt libs.room_compiler
 
     api libs.dagger
     kapt libs.dagger_compiler
 
-    api libs.rx_kotlin
-    api libs.rx
-    api libs.rx_android
-    api libs.room_rx
 }
 
 androidExtensions {

@@ -9,9 +9,4 @@ dependencies {
     kapt libs.dagger_android_compiler
 
     implementation libs.constraint_layout
-    implementation libs.rx_helpers
-    implementation libs.rx_kotlin
-    implementation libs.rx
-    implementation libs.rx_android
-    implementation libs.room_rx
 }
