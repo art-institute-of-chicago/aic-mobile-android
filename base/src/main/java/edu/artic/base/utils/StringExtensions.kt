@@ -1,9 +1,9 @@
 package edu.artic.base.utils
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.support.v4.text.HtmlCompat
 import android.text.Html
 import android.text.Spannable
 import android.text.SpannableString
@@ -43,13 +43,9 @@ fun String.trimDownBlankLines(): String {
  * On Android N and higher you can override the parse mode with the [flags]
  * parameter. See [Html.fromHtml] and overloads thereof for more details.
  */
-@SuppressLint("InlinedApi")
-fun String.fromHtml(flags: Int = Html.FROM_HTML_MODE_LEGACY): CharSequence {
-    val htmlText: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        Html.fromHtml(this, flags)
-    } else {
-        Html.fromHtml(this)
-    }
+fun String.fromHtml(flags: Int = HtmlCompat.FROM_HTML_MODE_LEGACY): CharSequence {
+    val htmlText: Spanned = HtmlCompat.fromHtml(this, flags)
+
     return htmlText
             .asSpannable()
             .removeAnchors()
