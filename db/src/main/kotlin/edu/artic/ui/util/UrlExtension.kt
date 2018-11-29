@@ -1,16 +1,17 @@
 package edu.artic.ui.util
 
 import android.net.Uri
-import edu.artic.db.BuildConfig
 import edu.artic.db.models.ArticDataObject
 
 /**
  * Use this to ensure that your image urls are always hitting the CDN.
  *
  * Especially handy for IIIF resources.
- *
- * FIXME: Use [edu.artic.db.models.ArticDataObject.imageServerUrl] instead of [BuildConfig.CDN_HOST]
  */
+@Deprecated(
+        message = "This method does nothing, as CDN Urls are now provided directly by the API.",
+        replaceWith = ReplaceWith("toString()")
+)
 fun String.asCDNUri() : String {
     val parsed = Uri.parse(this)
     return when {
