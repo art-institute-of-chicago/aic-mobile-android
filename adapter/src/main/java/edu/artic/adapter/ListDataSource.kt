@@ -1,7 +1,6 @@
 package edu.artic.adapter
 
 import android.arch.paging.PositionalDataSource
-import java.util.*
 
 /**
  * Description: Represents a list that only returns sublists of itself.
