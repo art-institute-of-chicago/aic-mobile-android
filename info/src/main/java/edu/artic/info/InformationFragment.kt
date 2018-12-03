@@ -8,7 +8,6 @@ import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.customTab.CustomTabManager
-import edu.artic.localization.LanguageSelector
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -24,8 +23,6 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
 
     @Inject
     lateinit var customTabManager: CustomTabManager
-    @Inject
-    lateinit var languageSelector: LanguageSelector
 
     override val screenName: ScreenName
         get() = ScreenName.Information
