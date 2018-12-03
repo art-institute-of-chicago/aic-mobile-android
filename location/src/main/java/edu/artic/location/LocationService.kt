@@ -18,6 +18,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
+// TODO: Maybe rename to be more distinct from `LocationProvider`?
 interface LocationService {
 
     sealed class AuthorizationStatus {
@@ -41,6 +42,7 @@ interface LocationService {
     fun requestTrackingUserLocation()
 }
 
+//TODO: Make this `internal`, document which Android APIs we communicate with
 class LocationServiceImpl(
         private val app: Context,
         private val locationPreferenceManager: LocationPreferenceManager)

@@ -28,12 +28,14 @@ class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // TODO: Include the intent behind this: why are we preventing interaction with the Views below?
         //Do not allow any touch events to go below this view
         view.setOnTouchListener { _, _ -> true }
     }
 
     override fun setupBindings(viewModel: LocationPromptViewModel) {
         super.setupBindings(viewModel)
+        // TODO: Should we throttle these click streams?
         promptNotNowButton
                 .clicks()
                 .subscribe {

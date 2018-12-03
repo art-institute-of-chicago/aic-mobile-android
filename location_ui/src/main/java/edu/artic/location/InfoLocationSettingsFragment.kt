@@ -28,6 +28,7 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
 
     override fun setupBindings(viewModel: InfoLocationSettingsViewModel) {
         super.setupBindings(viewModel)
+        // TODO: Bind resource ids directly to TextView (don't call `::getString` explicitly here)
         viewModel.buttonType
                 .map {
                     val stringId = when (it) {
@@ -49,6 +50,7 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
                 .bindToMain(locationSettingsButton.text())
                 .disposedBy(disposeBag)
 
+        // TODO: Throttle click events
         locationSettingsButton
                 .clicks()
                 .subscribe {
@@ -68,6 +70,7 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
         viewModel.navigateTo
                 .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
                 .subscribe {
+                    // TODO: Investigate whether perhaps we want to use `::startActivityForResult` in these branches instead
                     when (it) {
                         InfoLocationSettingsViewModel.NavigationEndpoint.Settings -> {
                             val intent = Intent()

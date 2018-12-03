@@ -18,6 +18,7 @@ class AudioTutorialViewModel @Inject constructor() : NavViewViewModel<AudioTutor
     }
 
     fun onOkClicked() {
+        // TODO: Just call navigateTo::onNext
         Navigate.Forward(NavigationEndpoint.Finish)
                 .asObservable()
                 .bindTo(navigateTo)

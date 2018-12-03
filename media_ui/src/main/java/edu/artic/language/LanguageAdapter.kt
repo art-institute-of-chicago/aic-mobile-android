@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.dropdown_language_cell.view.*
  * This is also responsible for creating the view seen at the top
  * of the list (i.e. the 'currently selected' language).
  */
+// TODO: See if `:media_ui` is still the best module for this file
 class LanguageAdapter : AutoHolderRecyclerViewAdapter<SpecifiesLanguage>(),
         DropDownAdapter<SpecifiesLanguage, BaseViewHolder> {
     override fun View.onBindView(item: SpecifiesLanguage, position: Int) {

@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationServices
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
+//TODO: Please document this class, give credit to the original authors
 class FuzedLocationProvider(private val context: Context) : LocationProvider, SensorEventListener {
 
     private val mSensorManager: SensorManager

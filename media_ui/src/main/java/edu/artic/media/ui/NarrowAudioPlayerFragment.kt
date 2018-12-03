@@ -194,6 +194,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
          * Use this to modify an [Intent] for launching the AudioActivity's
          * AudioDetailsFragment (in 'audio' module, of course).
          */
+        // TODO: Delete this, as it has been superceded by the `:details` module
         fun argsBundle(shouldSkip: Boolean) = Bundle().apply {
             putBoolean(ARG_SKIP_TO_DETAILS, shouldSkip)
         }

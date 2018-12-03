@@ -20,6 +20,7 @@ class DateTimeHelper {
      */
     sealed class Purpose {
 
+        // TODO: Rename to `MonthAndDay`
         object MonthThenDay : Purpose() {
             override fun obtainFormatter(locale: Locale): DateTimeFormatter {
                 return when (locale) {

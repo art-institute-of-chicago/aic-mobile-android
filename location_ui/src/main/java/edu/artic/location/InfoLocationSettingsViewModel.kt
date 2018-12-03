@@ -57,6 +57,7 @@ class InfoLocationSettingsViewModel @Inject constructor(private val locationServ
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
+    // TODO: use more Reactive logic, drop the pointless `null` block
     fun onClickButton() {
         if ((buttonType as BehaviorSubject).hasValue()) {
             when (buttonType.value) {

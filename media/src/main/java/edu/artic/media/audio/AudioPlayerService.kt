@@ -91,6 +91,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
      * * [Stop] - stop current track
      * * [Seek] - change player position to a particular timestamp
      */
+    // TODO: Move to dedicated file
     sealed class PlayBackAction {
         /**
          * Play the track associated with the given [Playable].
@@ -146,6 +147,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
      *
      * To switch states, send a [PlayBackAction] to [audioControl].
      */
+    // TODO: Move to dedicated file
     sealed class PlayBackState(val audio: AudioFileModel) {
         class Playing(audio: AudioFileModel) : PlayBackState(audio)
         class Paused(audio: AudioFileModel) : PlayBackState(audio)
@@ -189,9 +191,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
     override fun onCreate() {
         super.onCreate()
         setUpNotificationManager()
+        // TODO: Use more Reactive callback style here, extend directly from `EventListener`
         player.addListener(object : Player.DefaultEventListener() {
 
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                // TODO: Document clearly that the main point of this code is to update `audioPlayBackStatus`
                 (currentTrack as BehaviorSubject).value?.let { given ->
                     when {
                         playWhenReady && playbackState == Player.STATE_READY -> {
@@ -229,6 +233,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
                         audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
                         audioManager.isSpeakerphoneOn = false
                     }
+                    // TODO: Investigate whether there is any value in restoring the Audio mode from _before_ this stream was registered
                     else -> audioManager.mode = AudioManager.MODE_NORMAL
                 }
             }.disposedBy(disposeBag)
@@ -277,6 +282,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
     private fun setUpNotificationManager() {
         NotificationUtil.createNotificationChannel(
                 this, FOREGROUND_CHANNEL_ID, R.string.channel_name, NotificationUtil.IMPORTANCE_LOW)
+        // TODO: Define the two anonymous parameters in separate files
         playerNotificationManager = PlayerNotificationManager(
                 this,
                 FOREGROUND_CHANNEL_ID,
@@ -336,6 +342,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 startForeground(notificationId, notification)
             }
         })
+        // TODO: Check if any new techniques might allow us to dismiss a paused audio track notification with a single swipe
         playerNotificationManager.apply {
             setUseNavigationActions(false)
             setStopAction(null)
@@ -406,6 +413,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
      * AIC wants to play the music through the ear piece.
      * @see SimpleExoPlayer.setAudioStreamType
      */
+    // TODO: rename field to reflect intended usage (`earpieceAttributes`?)
     private val audioAttributes = AudioAttributesCompat.Builder()
             .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
             .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))

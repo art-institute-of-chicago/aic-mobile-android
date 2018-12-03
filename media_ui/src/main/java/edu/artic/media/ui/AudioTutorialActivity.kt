@@ -31,6 +31,7 @@ class AudioTutorialActivity : BaseViewModelActivity<AudioTutorialViewModel>() {
 
     override fun onStart() {
         super.onStart()
+        // FIXME: We only support one destination, so it shouldn't be a problem to collapse down these blocks
         viewModel.navigateTo
                 .subscribe {
                     when (it) {

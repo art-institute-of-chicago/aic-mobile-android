@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// TODO: Rename package to `edu.artic.media.player`
 package edu.artic.media.audio
 
 import android.annotation.TargetApi

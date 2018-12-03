@@ -24,6 +24,7 @@ interface SpecifiesLanguage {
     /**
      * Retrieve the name of [underlyingLocale]'s language in that language.
      */
+    // FIXME: This is no longer used. We can remove it safely.
     private fun nameOfLanguageInThatLanguage(ctx: Context): CharSequence {
         val current = ctx.resources.configuration
 
