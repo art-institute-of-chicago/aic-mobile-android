@@ -6,7 +6,7 @@ import edu.artic.base.utils.asDeepLinkIntent
 /**
  *@author Sameer Dhakal (Fuzz)
  */
-
+// TODO: Consider moving some common NavViewViewModel logic to this module
 class NavigationConstants {
     companion object {
         const val HOME: String = "edu.artic.home"

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 
+// TODO: Make relation between this and SearchResultsContainerViewModel clearer
 class SearchResultsPagerAdapter(fm: FragmentManager, var context: Context) : FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
@@ -25,6 +26,7 @@ class SearchResultsPagerAdapter(fm: FragmentManager, var context: Context) : Fra
     }
 
     override fun getCount(): Int {
+        // TODO: Use enumerated type (or sealed class) to represent known fragments
         return 4
     }
 

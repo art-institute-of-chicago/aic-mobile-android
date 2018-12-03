@@ -6,7 +6,7 @@ import retrofit2.http.*
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-
+// TODO: Briefly describe API capabilities, explain why we're using `xmethods-delayed-quotes`
 interface MemberInfoApi {
 
     @Headers("Content-Type: text/xml",

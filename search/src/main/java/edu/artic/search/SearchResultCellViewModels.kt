@@ -46,6 +46,7 @@ class SearchHeaderCellViewModel(private val header: Header, private val parentVi
     }
 }
 
+// FIXME: Rename `text`, turn it into a public Int and drop the BehaviorSubject
 class SearchTextHeaderViewModel(@StringRes text: Int) : SearchBaseCellViewModel() {
     val text: Subject<Int> = BehaviorSubject.createDefault(text)
 }

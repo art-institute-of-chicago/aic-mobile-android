@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.layout_cell_suggested_map_object.view.*
 class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewModel>() {
 
     companion object {
+        // TODO: Convert this `var` into some sort of (im)mutable constructor property of SearchResultsAdapter
         var MAX_ARTWORKS_PER_ROW = 5
     }
 

@@ -85,6 +85,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
          * thus a delay of 50 - 100 milliseconds to make the scroll during next layout pass
          */
         viewModel.cells
+                // TODO: Delay until next layout pass completes. Maybe this is something the Paging Library can help with
                 .delay(50, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { resultsRV.layoutManager?.scrollToPosition(0) }

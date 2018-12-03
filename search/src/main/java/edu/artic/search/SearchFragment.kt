@@ -60,6 +60,7 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
         bindSearchText()
 
+        // TODO: Document how this helps restore the last-known search text, and how it lets the SearchResultsManager take priority over view-layer icicles
         viewModel.searchText
                 .subscribe {
                     if (searchEditText.text.toString() != it) {

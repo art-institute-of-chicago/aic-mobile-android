@@ -36,6 +36,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
     }
 
     private fun setupTabStripUi() {
+        // TODO: Investigate the possibility of assigning TypeFace based on whether View is selected or not
         val selectedTypeface = ResourcesCompat.getFont(requireContext(), R.font.ideal_sans_medium)
         val defaultTypeface = ResourcesCompat.getFont(requireContext(), R.font.ideal_sans_light)
 

@@ -178,6 +178,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
             gallery: ArticGallery?
     ): ArticSearchArtworkObject {
 
+        // TODO: Add documentation referencing the IIIF standard
         val imageBaseUrl = baseUrl + "/" + searchedArtwork.image_id
 
         val thumbnailUrl = "$imageBaseUrl/full/!200,200/0/default.jpg"

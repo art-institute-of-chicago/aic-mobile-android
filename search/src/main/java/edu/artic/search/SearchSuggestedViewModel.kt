@@ -115,6 +115,9 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                 .disposedBy(disposeBag)
     }
 
+    // TODO: See if there might be a way to consolidate the below three/four 'filter' functions
+    // FIXME: Remove obsolete 'TODO's referring to localizer, as that is currently handled by the Context
+
     private fun filterArtworkForViewModel(artworkList: List<ArticSearchArtworkObject>): List<SearchBaseCellViewModel> {
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (artworkList.isNotEmpty()) {

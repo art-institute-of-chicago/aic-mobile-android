@@ -5,6 +5,7 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
+// TODO: Document this class, explaining the connection to ViewPager and TabLayout
 //Manager
 class SearchResultsContainerViewModel @Inject constructor() : NavViewViewModel<SearchResultsContainerViewModel.NavigationEndpoint>() {
 
