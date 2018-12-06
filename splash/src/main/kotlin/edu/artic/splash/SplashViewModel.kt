@@ -72,6 +72,7 @@ class SplashViewModel @Inject constructor(
      */
     fun proceedToWelcomePageIfDataAvailable() {
         if (appDaPrefManager.downloadedNecessaryData) {
+            // TODO: replace with navigateTo::onNext
             Navigate.Forward(NavigationEndpoint.Welcome)
                     .asObservable()
                     .bindTo(navigateTo)

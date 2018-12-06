@@ -18,6 +18,7 @@ import java.util.*
  */
 interface AnalyticsTracker {
 
+    //FIXME: Rename and document ::clearSession
     fun clearSession()
 
     fun reportEvent(category: String, action: String = "", label: String = "")
@@ -33,6 +34,7 @@ interface AnalyticsTracker {
     fun reportScreenView(categoryName: ScreenName) = reportScreenView(categoryName.screenName)
 }
 
+// TODO: Move AnalyticsTrackerImpl to separate file
 class AnalyticsTrackerImpl(context: Context,
                            private val languageSelector: LanguageSelector,
                            private val membershipPrefs: MemberInfoPreferencesManager,

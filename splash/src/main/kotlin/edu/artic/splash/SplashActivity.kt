@@ -38,9 +38,10 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-
+// TODO: document class, reorganize fields by access level and initialization time
 class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.SurfaceTextureListener {
     private var mMediaPlayer: MediaPlayer? = null
+    // TODO: Determine why the surface sometimes turns the window background to black
     private lateinit var surface: Surface
 
     override val layoutResId: Int
@@ -184,6 +185,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         surface = Surface(p0)
         updateTextureViewSize(width, height)
 
+        // TODO: Could we benefit by using one of the MediaPlayer::create functions instead of calling MediaPlayer()?
         try {
             val afd = resources.openRawResourceFd(R.raw.splash)
             val mediaPlayer = MediaPlayer()
