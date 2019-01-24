@@ -5,13 +5,13 @@ import android.support.annotation.UiThread
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
+import com.fuzz.rx.filterTo
 import edu.artic.db.Playable
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
-import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
@@ -108,7 +108,7 @@ class AudioDetailsViewModel @Inject constructor(
         // that we don't need to worry about them later
 
         objectObservable
-                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
+                .filterTo<Playable, ArticObject>()
                 .map {
                     it.artistCulturePlaceDelim?.replace("\r", "\n").orEmpty()
                 }.bindTo(authorCulturalPlace)
