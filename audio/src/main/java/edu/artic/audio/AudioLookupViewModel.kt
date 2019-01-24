@@ -44,8 +44,9 @@ class AudioLookupViewModel @Inject constructor(
         private val analyticsTracker: AnalyticsTracker,
         objectLookupDao: ArticObjectDao,
         tourLookupDao: ArticTourDao,
+        private val audioFileDao: ArticAudioFileDao,
         generalInfoDao: GeneralInfoDao,
-        languageSelector: LanguageSelector,
+        private val languageSelector: LanguageSelector,
         private val audioPrefManager: AudioPrefManager
 ) : NavViewViewModel<AudioLookupViewModel.NavigationEndpoint>() {
 
@@ -152,25 +153,68 @@ class AudioLookupViewModel @Inject constructor(
     }
 
 
-    fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {
-        audioService?.let{
+    private fun playAndDisplay(foundAudio: LookupResult.FoundAudio) {
+        val playable = foundAudio.hostObject
+
+        audioService?.let {
             // Send Analytics for 'playback initiated'
             analyticsTracker.reportEvent(
                     EventCategoryName.PlayAudio,
                     AnalyticsAction.playAudioAudioGuide,
-                    foundAudio.hostObject.getPlayableTitle().orEmpty()
+                    playable.getPlayableTitle().orEmpty()
             )
-            // Clear search prior to playPlayer since AudioTutorial may intercede
-            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ClearSearch))
-            // Request the actual playback (this triggers its own analytics event)
-            it.playPlayer(foundAudio.hostObject)
-            // Switch to the details screen
-            if (audioPrefManager.hasSeenAudioTutorial) {
-                navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
+
+            when (playable) {
+                is ArticObject -> playArticObject(playable, foundAudio.objectSelectorNumber, it)
+                is ArticTour -> playArticTour(playable, it)
             }
         }
     }
 
+    private fun playArticTour(tour: ArticTour, audioService: AudioPlayerService) {
+        tour.tourAudio?.let { audioID ->
+            audioFileDao.getAudioByIdAsync(audioID)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy { audioFile ->
+
+                        // Clear search prior to playPlayer since AudioTutorial may intercede
+                        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ClearSearch))
+
+                        // Request the actual playback (this triggers its own analytics event)
+                        audioService.playPlayer(tour, audioFile.preferredLanguage(languageSelector))
+
+                        // Switch to the details screen
+                        if (audioPrefManager.hasSeenAudioTutorial) {
+                            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
+                        }
+                    }
+                    .disposedBy(disposeBag)
+
+        }
+    }
+
+    private fun playArticObject(articObject: ArticObject,
+                                objectSelectorNumber: String,
+                                audioService: AudioPlayerService) {
+
+        val selectedAudioFileModel = articObject.audioFileBySelectorNumber(objectSelectorNumber)
+
+        // Clear search prior to playPlayer since AudioTutorial may intercede
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ClearSearch))
+
+        // Request the actual playback (this triggers its own analytics event)
+        if (selectedAudioFileModel != null) {
+            val audioModel = selectedAudioFileModel.preferredLanguage(languageSelector)
+            audioService.playPlayer(articObject, audioModel)
+        } else {
+            audioService.playPlayer(articObject)
+        }
+
+        // Switch to the details screen
+        if (audioPrefManager.hasSeenAudioTutorial) {
+            navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
+        }
+    }
     fun onClickSearch() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
