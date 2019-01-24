@@ -132,10 +132,9 @@ class AudioDetailsViewModel @Inject constructor(
 
 
         // Retrieve a list of all translations we have available for this object
-        objectObservable
-                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
+        currentAudioFileModel
                 .map {
-                    it.audioFile?.allTranslations().orEmpty()
+                    it.allTranslations()
                 }
                 .bindTo(availableTranslations)
                 .disposedBy(disposeBag)
