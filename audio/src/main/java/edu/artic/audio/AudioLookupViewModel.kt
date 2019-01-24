@@ -43,6 +43,7 @@ import javax.inject.Inject
 class AudioLookupViewModel @Inject constructor(
         private val analyticsTracker: AnalyticsTracker,
         objectLookupDao: ArticObjectDao,
+        tourLookupDao: ArticTourDao,
         generalInfoDao: GeneralInfoDao,
         languageSelector: LanguageSelector,
         private val audioPrefManager: AudioPrefManager
@@ -109,20 +110,29 @@ class AudioLookupViewModel @Inject constructor(
 
         val objectFoundObservable = lookupRequests
                 .observeOn(Schedulers.io())
-                .map {
-                    Optional(objectLookupDao.getObjectBySelectorNumber(it))
+                .map { objectSelectorNumber ->
+
+                    val likeCondition = """
+                        %"object_selector_number":"$objectSelectorNumber"%
+                    """.trimIndent()
+
+                    var result: Playable? = objectLookupDao.getObjectForGivenAudioCommentaryCriteria(likeCondition)?.getOrNull(0)
+                    if (result == null) {
+                        result = tourLookupDao.getTourBySelectorNumber(objectSelectorNumber)
+                    }
+                    objectSelectorNumber to Optional(result)
                 }
 
         objectFoundObservable
-                .filter { it.value != null}
-                .map { it.value!! }
-                .map { LookupResult.FoundAudio(it) }
+                .filter { (_, result) -> result.value != null }
+                .map { (objectSelectorNumber, result) -> objectSelectorNumber to result.value as Playable }
+                .map { (objectSelectorNumber, result) -> LookupResult.FoundAudio(result, objectSelectorNumber) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { playAndDisplay(it) }
                 .disposedBy(disposeBag)
 
         objectFoundObservable
-                .filter { it.value == null}
+                .filter { (_, result) -> result.value == null }
                 .map { LookupResult.NotFound("") }
                 .bindToMain(lookupFailures)
                 .disposedBy(disposeBag)
@@ -192,7 +202,7 @@ sealed class LookupResult {
      *
      * @see AudioLookupViewModel.lookupRequests
      */
-    class FoundAudio(val hostObject: Playable) : LookupResult()
+    class FoundAudio(val hostObject: Playable, val objectSelectorNumber: String) : LookupResult()
 
     /**
      * The requested id was found.
