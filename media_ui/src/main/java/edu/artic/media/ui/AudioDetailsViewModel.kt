@@ -7,6 +7,7 @@ import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
 import edu.artic.db.Playable
 import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
@@ -46,7 +47,9 @@ class AudioDetailsViewModel @Inject constructor(
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
     private val objectObservable: Subject<Playable> = BehaviorSubject.create()
     val relatedTours: Subject<List<ArticTour>> = BehaviorSubject.create()
-
+    val currentAudioFileModel: Subject<ArticAudioFile> = BehaviorSubject.create()
+    val tourDescription: Subject<String> = BehaviorSubject.create()
+    val tourIntroduction: Subject<String> = BehaviorSubject.create()
     /**
      * [Disposable] representing the stream of events from [AudioPlayerService.currentTrack]
      * to [audioTrackToUse].
@@ -61,6 +64,14 @@ class AudioDetailsViewModel @Inject constructor(
             field = value
             value?.let {
                 objectObservable.onNext(it)
+            }
+        }
+
+    var audioFileModel: ArticAudioFile? = null
+        set(value) {
+            field = value
+            value?.let {
+                currentAudioFileModel.onNext(it)
             }
         }
 
@@ -149,6 +160,7 @@ class AudioDetailsViewModel @Inject constructor(
     @UiThread
     fun onServiceConnected(service: AudioPlayerService) {
         playable = service.playable
+        audioFileModel = service.getActiveFileModel()
         service.player.refreshPlayBackState()
 
         // Register for updates
@@ -177,6 +189,7 @@ class AudioDetailsViewModel @Inject constructor(
     @AnyThread
     fun onServiceDisconnected() {
         playable = null
+        audioFileModel = null
         trackDisposable?.dispose()
     }
 
