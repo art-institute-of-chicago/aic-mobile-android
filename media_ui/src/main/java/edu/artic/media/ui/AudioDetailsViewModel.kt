@@ -158,10 +158,9 @@ class AudioDetailsViewModel @Inject constructor(
 
 
         // Lastly, we need to attach the translatable audio properties. These come from 'audioTrackToUse'.
-
-        audioTrackToUse
-                .map {
-                    it.transcript.orEmpty()
+        Observables.combineLatest(audioTrackToUse, objectObservable.filterTo<Playable, ArticObject>())
+                .map { (audioTrack, _) ->
+                    audioTrack.transcript.orEmpty()
                 }.bindTo(transcript)
                 .disposedBy(disposeBag)
 
