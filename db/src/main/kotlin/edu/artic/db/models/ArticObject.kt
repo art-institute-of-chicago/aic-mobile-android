@@ -119,6 +119,9 @@ data class ArticObject(
 val ArticObject.audioFile: ArticAudioFile?
     get() = this.audioCommentary.firstOrNull()?.audioFile
 
+fun ArticObject.audioFileBySelectorNumber(objectSelectorNumber: String) : ArticAudioFile? {
+    return this.audioCommentary.find { it.objectSelectorNumber == objectSelectorNumber }?.audioFile
+}
 /**
  *  Converts ArticObject to [ArticSearchArtworkObject].
  */
