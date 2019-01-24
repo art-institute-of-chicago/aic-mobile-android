@@ -45,6 +45,13 @@ interface ArticObjectDao {
     fun getObjectBySelectorNumber(selectorNumber: String): ArticObject?
 
     /**
+     * Returns the [ArticObject] when the given [criteria] matches existing
+     * [ArticObject.audioCommentary].
+     */
+    @Query("SELECT * from ArticObject where audioCommentary LIKE :criteria")
+    fun getObjectForGivenAudioCommentaryCriteria(criteria: String): List<ArticObject>?
+
+    /**
      * Retrieves all of the [ArticObject]s found in a specific
      * gallery. May be an empty list if none claim to belong to
      * the given gallery.
