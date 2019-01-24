@@ -148,7 +148,9 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.transcript
                 .map { it.isNotEmpty() }
-                .bindToMain(transcript.visibility())
+                .subscribeBy {
+                    transcript.show(it)
+                }
                 .disposedBy(disposeBag)
 
         viewModel.transcript
