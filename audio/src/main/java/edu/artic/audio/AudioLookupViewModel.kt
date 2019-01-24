@@ -11,13 +11,16 @@ import edu.artic.analytics.EventCategoryName
 import edu.artic.audio.LookupResult.FoundAudio
 import edu.artic.audio.LookupResult.NotFound
 import edu.artic.audio.NumberPadElement.*
+import edu.artic.db.Playable
+import edu.artic.db.daos.ArticAudioFileDao
 import edu.artic.db.daos.ArticObjectDao
+import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.daos.GeneralInfoDao
-import edu.artic.db.models.ArticGeneralInfo
-import edu.artic.db.models.ArticObject
+import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.audio.AudioPrefManager
+import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -145,7 +148,7 @@ class AudioLookupViewModel @Inject constructor(
             analyticsTracker.reportEvent(
                     EventCategoryName.PlayAudio,
                     AnalyticsAction.playAudioAudioGuide,
-                    foundAudio.hostObject.title
+                    foundAudio.hostObject.getPlayableTitle().orEmpty()
             )
             // Clear search prior to playPlayer since AudioTutorial may intercede
             navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ClearSearch))
@@ -189,7 +192,7 @@ sealed class LookupResult {
      *
      * @see AudioLookupViewModel.lookupRequests
      */
-    class FoundAudio(val hostObject: ArticObject) : LookupResult()
+    class FoundAudio(val hostObject: Playable) : LookupResult()
 
     /**
      * The requested id was found.
