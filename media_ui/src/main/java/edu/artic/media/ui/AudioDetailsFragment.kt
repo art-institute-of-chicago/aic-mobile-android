@@ -156,6 +156,26 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                     transcript.setContentText(it.filterHtmlEncodedText())
                 }.disposedBy(disposeBag)
 
+        viewModel.tourDescription
+                .map { it.isNotEmpty() }
+                .bindToMain(tourDescription.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.tourDescription
+                .subscribe {
+                    tourDescription.text = it.filterHtmlEncodedText()
+                }.disposedBy(disposeBag)
+
+        viewModel.tourIntroduction
+                .map { it.isNotEmpty() }
+                .bindToMain(tourIntroduction.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.tourIntroduction
+                .subscribe {
+                    tourIntroduction.text = it.filterHtmlEncodedText()
+                }.disposedBy(disposeBag)
+
         viewModel.credits
                 .map { it.isNotEmpty() }
                 .bindToMain(credit.visibility())

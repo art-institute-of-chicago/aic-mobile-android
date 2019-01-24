@@ -114,6 +114,23 @@ class AudioDetailsViewModel @Inject constructor(
                 }.bindTo(authorCulturalPlace)
                 .disposedBy(disposeBag)
 
+        Observables.combineLatest(
+                objectObservable.filterTo<Playable, ArticTour>(),
+                audioTrackToUse)
+                .map { (tour, audioFile) ->
+                    val translatedTour = languageSelector.findIn(tour.allTranslations, audioFile.underlyingLocale())
+                    translatedTour?.description?.replace("\r", "\n").orEmpty()
+                }.bindTo(tourDescription)
+                .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                objectObservable.filterTo<Playable, ArticTour>(),
+                audioTrackToUse)
+                .map { (tour, audioFile) ->
+                    val translatedTour = languageSelector.findIn(tour.allTranslations, audioFile.underlyingLocale())
+                    translatedTour?.intro?.replace("\r", "\n").orEmpty()
+                }.bindTo(tourIntroduction)
+                .disposedBy(disposeBag)
 
         objectObservable
                 .map {
