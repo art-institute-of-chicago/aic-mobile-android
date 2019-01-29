@@ -505,6 +505,10 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     /**
      * Returns currently playing [ArticAudioFile].
+     * [ArticObject] has multiple [ArticAudioFile]s, so this function returns the currently selected
+     * one.
+     *
+     * If the [playable] is not [ArticObject], this method returns [null].
      */
     fun getActiveFileModel(): ArticAudioFile? {
         val currentTrack: AudioFileModel? = (currentTrack as BehaviorSubject).value
