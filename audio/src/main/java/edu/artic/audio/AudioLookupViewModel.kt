@@ -12,10 +12,7 @@ import edu.artic.audio.LookupResult.FoundAudio
 import edu.artic.audio.LookupResult.NotFound
 import edu.artic.audio.NumberPadElement.*
 import edu.artic.db.Playable
-import edu.artic.db.daos.ArticAudioFileDao
-import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.ArticTourDao
-import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.db.daos.*
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
@@ -113,11 +110,7 @@ class AudioLookupViewModel @Inject constructor(
                 .observeOn(Schedulers.io())
                 .map { objectSelectorNumber ->
 
-                    val likeCondition = """
-                        %"object_selector_number":"$objectSelectorNumber"%
-                    """.trimIndent()
-
-                    var result: Playable? = objectLookupDao.getObjectForGivenAudioCommentaryCriteria(likeCondition)?.getOrNull(0)
+                    var result: Playable? = objectLookupDao.getObjectBySelectorNumber(objectSelectorNumber)?.getOrNull(0)
                     if (result == null) {
                         result = tourLookupDao.getTourBySelectorNumber(objectSelectorNumber)
                     }

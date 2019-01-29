@@ -6,6 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import android.support.annotation.WorkerThread
 import edu.artic.db.models.ArticObject
+import edu.artic.db.models.AudioCommentaryObject
 import io.reactivex.Flowable
 
 @Dao
@@ -32,17 +33,6 @@ interface ArticObjectDao {
      */
     @Query("select count(*) from ArticObject where nid = :id limit 1")
     fun getObjectCountWithId(id: String): Int
-
-    /**
-     * Return the object with an audio file given by this number.
-     *
-     * We should migrate to [ArticObject.objectSelectorNumbers] in future to
-     * support objects with multiple top-level audio tracks.
-     *
-     * Not expected to be used much outside the 'audio' module.
-     */
-    @Query("select * from ArticObject where objectSelectorNumber = :selectorNumber")
-    fun getObjectBySelectorNumber(selectorNumber: String): ArticObject?
 
     /**
      * Returns the [ArticObject] when the given [criteria] matches existing
@@ -79,6 +69,19 @@ interface ArticObjectDao {
  * we have an object in the database under that id, false otherwise.
  */
 @WorkerThread
-fun ArticObjectDao.hasObjectWithId(id: String?) : Boolean {
+fun ArticObjectDao.hasObjectWithId(id: String?): Boolean {
     return id != null && getObjectCountWithId(id) > 0
+}
+
+/**
+ * Looks up the object using [ArticObject.audioCommentary]'s
+ * [AudioCommentaryObject.objectSelectorNumber].
+ *
+ * Not expected to be used much outside the 'audio' module.
+ */
+fun ArticObjectDao.getObjectBySelectorNumber(objectSelectorNumber: String): List<ArticObject>? {
+    val likeStatement = """
+                        %"object_selector_number":"$objectSelectorNumber"%
+                    """.trimIndent()
+    return getObjectForGivenAudioCommentaryCriteria(likeStatement)
 }
