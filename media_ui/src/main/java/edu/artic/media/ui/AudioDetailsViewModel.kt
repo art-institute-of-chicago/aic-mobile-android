@@ -47,7 +47,7 @@ class AudioDetailsViewModel @Inject constructor(
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
     private val objectObservable: Subject<Playable> = BehaviorSubject.create()
     val relatedTours: Subject<List<ArticTour>> = BehaviorSubject.create()
-    val currentAudioFileModel: Subject<ArticAudioFile> = BehaviorSubject.create()
+    val currentAudioFile: Subject<ArticAudioFile> = BehaviorSubject.create()
     val tourDescription: Subject<String> = BehaviorSubject.create()
     val tourIntroduction: Subject<String> = BehaviorSubject.create()
     /**
@@ -71,7 +71,7 @@ class AudioDetailsViewModel @Inject constructor(
         set(value) {
             field = value
             value?.let {
-                currentAudioFileModel.onNext(it)
+                currentAudioFile.onNext(it)
             }
         }
 
@@ -149,7 +149,7 @@ class AudioDetailsViewModel @Inject constructor(
 
 
         // Retrieve a list of all translations we have available for this object
-        currentAudioFileModel
+        currentAudioFile
                 .map {
                     it.allTranslations()
                 }
