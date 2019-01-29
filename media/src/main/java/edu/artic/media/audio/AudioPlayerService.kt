@@ -502,6 +502,30 @@ class AudioPlayerService : DaggerService(), PlayerService {
         analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, (currentTrack as BehaviorSubject).value?.title.orEmpty())
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
+
+    /**
+     * Returns currently playing [ArticAudioFile].
+     * [ArticObject] has multiple [ArticAudioFile]s, so this function returns the currently selected
+     * one.
+     *
+     * If the [playable] is not [ArticObject], this method returns [null].
+     */
+    fun getActiveFileModel(): ArticAudioFile? {
+        val currentTrack: AudioFileModel? = (currentTrack as BehaviorSubject).value
+        return if (currentTrack != null) {
+            playable?.let { currentlyPlayingObject ->
+                when (currentlyPlayingObject) {
+                    is ArticObject -> currentlyPlayingObject.audioCommentary
+                            .find { it.audioFile?.nid == currentTrack.audioGroupId }
+                            ?.audioFile
+                    else -> null
+                }
+            }
+        } else {
+            return null
+        }
+
+    }
 }
 
 /**

@@ -172,6 +172,7 @@
                 app:panel_padding="@dimen/marginDouble"
                 app:content_padding="@dimen/marginDouble"
                 app:title_text="@string/transcript"
+                android:visibility="gone"
                 app:title_text_color="@color/white" />
 
             <View
@@ -187,7 +188,30 @@
                 app:panel_padding="@dimen/marginDouble"
                 app:content_padding="@dimen/marginDouble"
                 app:title_text="@string/credits"
+                android:visibility="gone"
                 app:title_text_color="@color/white" />
+
+            <TextView
+                android:id="@+id/tourDescription"
+                style="@style/BodySerifWhiteLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginDouble"
+                android:background="@color/greyText"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tourIntroduction"
+                style="@style/BodySerifWhiteLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/marginDouble"
+                android:background="@color/greyText"
+                android:includeFontPadding="false"
+                android:textColor="@color/white"
+                android:visibility="gone" />
 
         </LinearLayout>
 

@@ -5,12 +5,13 @@ import android.support.annotation.UiThread
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
+import com.fuzz.rx.filterTo
 import edu.artic.db.Playable
 import edu.artic.db.daos.ArticTourDao
+import edu.artic.db.models.ArticAudioFile
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
-import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
@@ -46,7 +47,9 @@ class AudioDetailsViewModel @Inject constructor(
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
     private val objectObservable: Subject<Playable> = BehaviorSubject.create()
     val relatedTours: Subject<List<ArticTour>> = BehaviorSubject.create()
-
+    val currentAudioFile: Subject<ArticAudioFile> = BehaviorSubject.create()
+    val tourDescription: Subject<String> = BehaviorSubject.create()
+    val tourIntroduction: Subject<String> = BehaviorSubject.create()
     /**
      * [Disposable] representing the stream of events from [AudioPlayerService.currentTrack]
      * to [audioTrackToUse].
@@ -61,6 +64,14 @@ class AudioDetailsViewModel @Inject constructor(
             field = value
             value?.let {
                 objectObservable.onNext(it)
+            }
+        }
+
+    var audioFileModel: ArticAudioFile? = null
+        set(value) {
+            field = value
+            value?.let {
+                currentAudioFile.onNext(it)
             }
         }
 
@@ -97,12 +108,29 @@ class AudioDetailsViewModel @Inject constructor(
         // that we don't need to worry about them later
 
         objectObservable
-                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
+                .filterTo<Playable, ArticObject>()
                 .map {
                     it.artistCulturePlaceDelim?.replace("\r", "\n").orEmpty()
                 }.bindTo(authorCulturalPlace)
                 .disposedBy(disposeBag)
 
+        Observables.combineLatest(
+                objectObservable.filterTo<Playable, ArticTour>(),
+                audioTrackToUse)
+                .map { (tour, audioFile) ->
+                    val translatedTour = languageSelector.findIn(tour.allTranslations, audioFile.underlyingLocale())
+                    translatedTour?.description?.replace("\r", "\n").orEmpty()
+                }.bindTo(tourDescription)
+                .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                objectObservable.filterTo<Playable, ArticTour>(),
+                audioTrackToUse)
+                .map { (tour, audioFile) ->
+                    val translatedTour = languageSelector.findIn(tour.allTranslations, audioFile.underlyingLocale())
+                    translatedTour?.intro?.replace("\r", "\n").orEmpty()
+                }.bindTo(tourIntroduction)
+                .disposedBy(disposeBag)
 
         objectObservable
                 .map {
@@ -121,20 +149,18 @@ class AudioDetailsViewModel @Inject constructor(
 
 
         // Retrieve a list of all translations we have available for this object
-        objectObservable
-                .filterFlatMap({ it is ArticObject }, { it as ArticObject })
+        currentAudioFile
                 .map {
-                    it.audioFile?.allTranslations().orEmpty()
+                    it.allTranslations()
                 }
                 .bindTo(availableTranslations)
                 .disposedBy(disposeBag)
 
 
         // Lastly, we need to attach the translatable audio properties. These come from 'audioTrackToUse'.
-
-        audioTrackToUse
-                .map {
-                    it.transcript.orEmpty()
+        Observables.combineLatest(audioTrackToUse, objectObservable.filterTo<Playable, ArticObject>())
+                .map { (audioTrack, _) ->
+                    audioTrack.transcript.orEmpty()
                 }.bindTo(transcript)
                 .disposedBy(disposeBag)
 
@@ -149,6 +175,7 @@ class AudioDetailsViewModel @Inject constructor(
     @UiThread
     fun onServiceConnected(service: AudioPlayerService) {
         playable = service.playable
+        audioFileModel = service.getActiveFileModel()
         service.player.refreshPlayBackState()
 
         // Register for updates
@@ -177,6 +204,7 @@ class AudioDetailsViewModel @Inject constructor(
     @AnyThread
     fun onServiceDisconnected() {
         playable = null
+        audioFileModel = null
         trackDisposable?.dispose()
     }
 
