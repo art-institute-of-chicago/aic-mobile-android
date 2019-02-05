@@ -9,6 +9,7 @@ import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
 import android.os.Build
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.transition.Fade
@@ -225,8 +226,17 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         val options = ActivityOptions
                 .makeSceneTransitionAnimation(this, textureView, "museumImage")
         if (!isFinishing) {
-            startActivity(intent, options.toBundle())
-            finishAfterTransition()
+            /**
+             * Shared transition element does not work properly (crashes on some devices) running
+             * Lollipop. Please check https://issuetracker.google.com/issues/35826109
+             */
+            if (Build.VERSION.SDK_INT < VERSION_CODES.M) {
+                startActivity(intent)
+                finish()
+            } else {
+                startActivity(intent, options.toBundle())
+                finishAfterTransition()
+            }
         }
     }
 
@@ -289,7 +299,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
 
         val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
         val videoHeight = (width.toFloat() * videoRatio).toInt()
-        val percentageOfScreenAboveMuseumInVideo = (636f/1280f)
+        val percentageOfScreenAboveMuseumInVideo = (636f / 1280f)
         val topScreenOffset = (videoHeight * percentageOfScreenAboveMuseumInVideo)
         val imagePadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, resources.displayMetrics)
         params.topMargin = (topScreenOffset - imagePadding).toInt()
