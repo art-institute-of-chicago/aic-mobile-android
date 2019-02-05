@@ -20,7 +20,7 @@ android {
         minSdkVersion minSdk
         targetSdkVersion sdk
         multiDexEnabled true
-        versionCode (patchVersionCode + 1100)
+        versionCode (patchVersionCode + 1200)
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
