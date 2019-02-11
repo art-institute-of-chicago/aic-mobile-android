@@ -172,7 +172,6 @@
                 app:panel_padding="@dimen/marginDouble"
                 app:content_padding="@dimen/marginDouble"
                 app:title_text="@string/transcript"
-                android:visibility="gone"
                 app:title_text_color="@color/white" />
 
             <View
@@ -188,7 +187,6 @@
                 app:panel_padding="@dimen/marginDouble"
                 app:content_padding="@dimen/marginDouble"
                 app:title_text="@string/credits"
-                android:visibility="gone"
                 app:title_text_color="@color/white" />
 
             <TextView
