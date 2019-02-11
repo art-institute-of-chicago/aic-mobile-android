@@ -148,12 +148,14 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.transcript
                 .map { it.isNotEmpty() }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy {
                     transcript.show(it)
                 }
                 .disposedBy(disposeBag)
 
         viewModel.transcript
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     transcript.setContentText(it.filterHtmlEncodedText())
                 }.disposedBy(disposeBag)
@@ -164,6 +166,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.tourDescription
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     tourDescription.text = it.filterHtmlEncodedText()
                 }.disposedBy(disposeBag)
@@ -174,17 +177,22 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.tourIntroduction
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     tourIntroduction.text = it.filterHtmlEncodedText()
                 }.disposedBy(disposeBag)
 
         viewModel.credits
                 .map { it.isNotEmpty() }
-                .bindToMain(credit.visibility())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    credit.show(it)
+                }
                 .disposedBy(disposeBag)
 
 
         viewModel.credits
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     credit.setContentText(it.filterHtmlEncodedText())
                 }.disposedBy(disposeBag)
