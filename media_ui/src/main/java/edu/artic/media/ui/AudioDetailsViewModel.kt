@@ -164,7 +164,14 @@ class AudioDetailsViewModel @Inject constructor(
                 }.bindTo(transcript)
                 .disposedBy(disposeBag)
 
-
+        /**
+         * No need to display transcript and credits while playing {ArticTour}.
+         */
+        objectObservable.filterTo<Playable, ArticTour>()
+                .subscribeBy {
+                    transcript.onNext("")
+                    credits.onNext("")
+                }.disposedBy(disposeBag)
     }
 
     /**
