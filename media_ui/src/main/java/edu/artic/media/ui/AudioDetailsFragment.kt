@@ -180,7 +180,10 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.credits
                 .map { it.isNotEmpty() }
-                .bindToMain(credit.visibility())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    credit.show(it)
+                }
                 .disposedBy(disposeBag)
 
 
