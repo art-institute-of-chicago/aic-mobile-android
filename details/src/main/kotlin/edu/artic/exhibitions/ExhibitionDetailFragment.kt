@@ -16,6 +16,8 @@ import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.asUrlViewIntent
+import edu.artic.base.utils.fromHtml
+import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticExhibition
 import edu.artic.details.R
 import edu.artic.image.GlideApp
@@ -111,6 +113,9 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .disposedBy(disposeBag)
 
         viewModel.description
+                .map {
+                    it.trimDownBlankLines().fromHtml()
+                }
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)
 
