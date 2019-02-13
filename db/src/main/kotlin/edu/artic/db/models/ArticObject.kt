@@ -31,6 +31,7 @@ data class ArticObject(
         @Json(name = "artwork_type_id") val artworkTypeId: String? = "",
         @Json(name = "credit_line") val creditLine: String? = "",
         @Json(name = "copyright_notice") val copyrightNotice: String? = "",
+        @Deprecated("Unused")
         @Json(name = "in_gallery") val inGallery: Boolean = false,
         @Json(name = "subject_id") val subjectId: String? = "",
         @Json(name = "technique_id") val techniqueId: String? = "",
@@ -57,6 +58,7 @@ data class ArticObject(
 //        @Json(name = "audio") val audio: List<String?>, Removed for now until json gets fixed as sometimes returns string othertimes object
         @Json(name = "audio_transcript") val audioTranscript: String? = null,
         @Json(name = "object_selector_number") val objectSelectorNumber: String? = null,
+        @Deprecated("Unused")
         @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?> = listOf(),
         @Json(name = "is_on_view") var isOnView: Boolean? = true,
         // manually populated via DB save.
