@@ -51,7 +51,6 @@ data class ArticObject(
         @Json(name = "reference_num") val referenceNum: String? = null,
         @Json(name = "audio_commentary") val audioCommentary: List<AudioCommentaryObject> = listOf(),
         @Json(name = "highlighted_object") val highlightedObject: String? = null,
-//        @Json(name = "audio") val audio: List<String?>, Removed for now until json gets fixed as sometimes returns string othertimes object
         @Json(name = "audio_transcript") val audioTranscript: String? = null,
         @Json(name = "object_selector_number") val objectSelectorNumber: String? = null,
         @Json(name = "is_on_view") var isOnView: Boolean? = true,
