@@ -31,7 +31,6 @@ data class ArticObject(
         @Json(name = "artwork_type_id") val artworkTypeId: String? = "",
         @Json(name = "credit_line") val creditLine: String? = "",
         @Json(name = "copyright_notice") val copyrightNotice: String? = "",
-        @Json(name = "in_gallery") val inGallery: Boolean = false,
         @Json(name = "subject_id") val subjectId: String? = "",
         @Json(name = "technique_id") val techniqueId: String? = "",
         @Json(name = "color") val color: String? = "",
@@ -52,12 +51,8 @@ data class ArticObject(
         @Json(name = "reference_num") val referenceNum: String? = null,
         @Json(name = "audio_commentary") val audioCommentary: List<AudioCommentaryObject> = listOf(),
         @Json(name = "highlighted_object") val highlightedObject: String? = null,
-        @Deprecated("Please do not use the 'full' image, as it is too large to fit on screen. Migrate to 'image_url' or 'large_image_full_path' immediately.")
-        @Json(name = "full_image_full_path") val fullImageFullPath: String? = null,
-//        @Json(name = "audio") val audio: List<String?>, Removed for now until json gets fixed as sometimes returns string othertimes object
         @Json(name = "audio_transcript") val audioTranscript: String? = null,
         @Json(name = "object_selector_number") val objectSelectorNumber: String? = null,
-        @Json(name = "object_selector_numbers") val objectSelectorNumbers: List<String?> = listOf(),
         @Json(name = "is_on_view") var isOnView: Boolean? = true,
         // manually populated via DB save.
         var floor: Int = Int.MIN_VALUE
