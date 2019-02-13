@@ -11,17 +11,19 @@ class DetailsActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (navController.currentDestination?.id == navController.graph.startDestination) {
+            when {
+                intent.hasExtra(EventDetailFragment.ARG_EVENT) -> {
+                    navController.navigate(R.id.goToEventDetails)
+                }
+                intent.hasExtra(TourDetailsFragment.ARG_TOUR) -> {
+                    navController.navigate(R.id.goToTourDetails)
+                }
+                else -> {
+                    navController.navigate(R.id.goToExhibitionDetails)
+                }
+            }
 
-        when {
-            intent.hasExtra(EventDetailFragment.ARG_EVENT) -> {
-                navController.navigate(R.id.goToEventDetails)
-            }
-            intent.hasExtra(TourDetailsFragment.ARG_TOUR) -> {
-                navController.navigate(R.id.goToTourDetails)
-            }
-            else -> {
-                navController.navigate(R.id.goToExhibitionDetails)
-            }
         }
     }
 }
