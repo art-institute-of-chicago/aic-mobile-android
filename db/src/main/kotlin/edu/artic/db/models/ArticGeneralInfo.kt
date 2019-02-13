@@ -10,6 +10,7 @@ import edu.artic.localization.SpecifiesLanguage
 @Entity
 data class ArticGeneralInfo(
         @Json(name = "title") val title: String,
+        @Deprecated("Unused Field")
         @Json(name = "status") val status: String,
         @Json(name = "nid") @PrimaryKey val nid: String,
         @Json(name = "translations") val translations: List<Translation>,
