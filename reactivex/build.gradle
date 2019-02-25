@@ -1,0 +1,11 @@
+
+dependencies {
+
+    implementation project(':base')
+
+    api libs.rx
+    api libs.rx_helpers
+    api libs.rx_android
+    api libs.rx_kotlin
+
+}

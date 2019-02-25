@@ -6,7 +6,6 @@ dependencies {
     kapt libs.dagger_android_compiler
 
     implementation project(":base")
-    implementation libs.rx_helpers
     implementation libs.constraint_layout
 
     api project(":analytics")
@@ -29,7 +28,6 @@ dependencies {
     api "com.jakewharton.rxbinding2:rxbinding-design-kotlin:${rx_binding_version}"
     api "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:${rx_binding_version}"
     api "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7-kotlin:${rx_binding_version}"
-    api libs.rx_android
 }
 
 

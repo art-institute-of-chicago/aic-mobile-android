@@ -6,7 +6,5 @@ dependencies {
     implementation project(":location")
     implementation project(":membership")
 
-    api libs.kotlin
     api libs.ga
-    implementation libs.rx_kotlin
 }

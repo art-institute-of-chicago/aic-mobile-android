@@ -65,7 +65,7 @@ constructor(dataObjectDao: ArticDataObjectDao,
                 .disposedBy(disposeBag)
 
         exhibitionObservable
-                .filterFlatMap({ it.legacyImageUrl != null }, { it.legacyImageUrl!! })
+                .filterFlatMap({ it.imageUrl != null }, { it.imageUrl!! })
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 

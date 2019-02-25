@@ -2,11 +2,9 @@
 dependencies {
     implementation project(':base')
 
+    api project(':reactivex')
+
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
 
-    implementation libs.rx_kotlin
-    implementation libs.rx
-    implementation libs.rx_android
-    implementation libs.room_rx
 }

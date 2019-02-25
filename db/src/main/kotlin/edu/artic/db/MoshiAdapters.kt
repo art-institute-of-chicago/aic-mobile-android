@@ -7,6 +7,7 @@ import com.squareup.moshi.JsonQualifier
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import edu.artic.db.models.*
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatter.ISO_DATE_TIME
@@ -23,6 +24,15 @@ fun Moshi.Builder.registerAdapters() = apply {
     add(KotlinJsonAdapterFactory())
     add(NullPrimitiveAdapter())
     add(ZonedDateTimeAdapter())
+    add(DefaultOnDataMismatchAdapter.newFactory(ArticGallery::class.java, null))
+    add(DefaultOnDataMismatchAdapter.newFactory(ArticObject::class.java, null))
+    add(DefaultOnDataMismatchAdapter.newFactory(ArticAudioFile::class.java, null))
+    add(DefaultOnDataMismatchAdapter.newFactory(ArticMapAnnotation::class.java, null))
+    add(DefaultOnDataMismatchAdapter.newFactory(DashBoard::class.java, null))
+    add(DefaultOnDataMismatchAdapter.newFactory(ArticMapFloor::class.java, null))
+    add(DefaultOnDataMismatchAdapter.newFactory(ArticTourCategory::class.java, null))
+    add(DefaultOnDataMismatchAdapter.newFactory(ArticTour::class.java, null))
+    add(DefaultOnDataMismatchAdapter.newFactory(ArticExhibitionCMS::class.java, null))
     add(FloorAdapter())
 }
 

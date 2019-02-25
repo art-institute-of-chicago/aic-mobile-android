@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:id="@+id/containerLayout"
     tools:context="edu.artic.welcome.WelcomeFragment">
 
     <edu.artic.view.ArticMainAppBarLayout
@@ -15,7 +14,7 @@
         android:layout_height="wrap_content"
         app:backgroundImage="@drawable/dashboard"
         app:backgroundImagePadding="33dp"
-        app:icon="@drawable/tours"/>
+        app:icon="@drawable/tours" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/content"
@@ -28,196 +27,64 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <View
-                android:id="@+id/topBg"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@color/geyser"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@id/tourSummaryLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread_inside"
-                />
-
             <TextView
                 android:id="@+id/welcomeMessage"
                 style="@style/BodySansSerifBlackCentered"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginActivitySubtitle"
-                android:layout_marginStart="@dimen/marginActivitySubtitle"
-                android:layout_marginTop="@dimen/marginDouble"
-                tools:text="Explore the museum with your personal, pocket-sized guide."
+                android:paddingStart="@dimen/marginActivitySubtitle"
+                android:paddingTop="@dimen/marginDouble"
+                android:paddingEnd="@dimen/marginActivitySubtitle"
+                android:background="@color/geyser"
                 app:layout_constraintBottom_toTopOf="@id/memberCardLink"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/topBg"/>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Explore the museum with your personal, pocket-sized guide." />
 
             <TextView
                 android:id="@+id/memberCardLink"
                 style="@style/BodyCtaTurquoise"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
+                android:paddingBottom="@dimen/marginDouble"
+                android:paddingEnd="@dimen/marginDouble"
+                android:paddingStart="@dimen/marginDouble"
+                android:paddingTop="@dimen/marginDouble"
                 android:text="@string/accessYourMemberCard"
-                app:layout_constraintBottom_toBottomOf="@id/topBg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/welcomeMessage"/>
+                android:background="@color/geyser"
+                app:layout_constraintTop_toBottomOf="@id/welcomeMessage" />
 
-
-            <TextView
-                android:id="@+id/tourSummaryLabel"
-                style="@style/SectionTitleBlack"
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/tourSection"
+                layout="@layout/welcome_section"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/tours"
-                app:layout_constraintBottom_toTopOf="@id/tourSummaryRecyclerView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/topBg"/>
-
-            <TextView
-                android:id="@+id/toursSeeAllLink"
-                style="@style/SeeAll"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/seeAllLinkMargin"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:text="@string/seeAll"
-                app:layout_constraintBaseline_toBaselineOf="@id/tourSummaryLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintStart_toEndOf="@id/tourSummaryLabel"
-                app:layout_constraintWidth_default="wrap"
-                />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/tourSummaryRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false"
-                android:paddingStart="@dimen/marginDouble"
-                android:paddingEnd="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toursSeeAllLink"
-                tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                tools:listitem="@layout/welcome_event_cell_layout"
-                tools:orientation="horizontal"/>
+                app:layout_constraintTop_toBottomOf="@id/memberCardLink" />
 
-            <View
-                android:id="@+id/tourDivider"
-                style="@style/divider"
-                android:layout_width="0dp"
-                android:layout_marginTop="@dimen/marginDouble"
+
+            <include
+                android:id="@+id/exhibitionSection"
+                layout="@layout/welcome_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tourSummaryRecyclerView"/>
+                app:layout_constraintTop_toBottomOf="@id/tourSection" />
 
-            <TextView
-                android:id="@+id/onViewLabel"
-                style="@style/SectionTitleBlack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/onView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tourDivider"/>
 
-            <TextView
-                android:id="@+id/onViewLink"
-                style="@style/SeeAll"
-                android:layout_width="0dp"
+            <include
+                android:id="@+id/eventSection"
+                layout="@layout/welcome_section"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/seeAllLinkMargin"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:text="@string/seeAll"
-                app:layout_constraintBaseline_toBaselineOf="@id/onViewLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintStart_toEndOf="@id/onViewLabel"
-                app:layout_constraintWidth_default="wrap"
-                />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/onViewRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false"
-                android:paddingStart="@dimen/marginDouble"
-                android:paddingEnd="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/onViewLink"
-                tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                tools:listitem="@layout/welcome_on_view_cell_layout"
-                tools:orientation="horizontal"/>
-
-            <View
-                android:id="@+id/onViewDivider"
-                style="@style/divider"
-                android:layout_width="0dp"
-                android:layout_marginTop="@dimen/marginDouble"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/onViewRecyclerView"/>
-
-            <TextView
-                android:id="@+id/eventLabel"
-                style="@style/SectionTitleBlack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/events"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/onViewDivider"/>
-
-            <TextView
-                android:id="@+id/eventsLink"
-                style="@style/SeeAll"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/seeAllLinkMargin"
-                android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
-                android:text="@string/seeAll"
-                app:layout_constraintBaseline_toBaselineOf="@id/eventLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintStart_toEndOf="@id/eventLabel"
-                app:layout_constraintWidth_default="wrap"
-                />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/eventsRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginDouble"
-                android:nestedScrollingEnabled="false"
-                android:paddingStart="@dimen/marginDouble"
-                android:paddingEnd="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/eventsLink"
-                tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                tools:listitem="@layout/welcome_event_cell_layout"
-                tools:orientation="horizontal"/>
+                app:layout_constraintTop_toBottomOf="@id/exhibitionSection" />
 
         </android.support.constraint.ConstraintLayout>
 

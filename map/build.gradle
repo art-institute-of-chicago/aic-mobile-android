@@ -20,7 +20,6 @@ dependencies {
     api libs.design_support
 
     implementation project(':adapter')
-    implementation project(':audio')
     implementation project(':base')
     implementation project(':db')
     implementation project(':image')
@@ -29,6 +28,7 @@ dependencies {
     implementation project(':media')
     implementation project(':media_ui')
     implementation project(':navigation')
+    implementation project(':search')
     implementation project(':tour_manager')
     implementation project(':ui')
     implementation project(':viewmodel')
@@ -40,6 +40,5 @@ dependencies {
     implementation libs.exo_player_core
     implementation libs.exo_player_ui
     implementation libs.glide
-    implementation libs.rx_kotlin
     implementation libs.view_indicator
 }

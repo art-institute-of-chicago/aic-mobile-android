@@ -1,8 +1,12 @@
 package edu.artic.view
 
 import android.content.Context
+import android.graphics.Typeface
 import android.support.annotation.DrawableRes
+import android.support.annotation.StyleRes
+import android.support.annotation.UiThread
 import android.support.design.widget.AppBarLayout
+import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.View
 import com.fuzz.rx.DisposeBag
@@ -19,11 +23,20 @@ import kotlinx.android.synthetic.main.view_app_bar_layout.view.*
  */
 class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : AppBarLayout(context, attrs) {
     private val disposeBag: DisposeBag = DisposeBag()
+    @StyleRes
+    private val expandedDefaultTextAppearance: Int
+    @StyleRes
+    private val expandedFixedSizeTextAppearance: Int
+
     private var clickConsumer: Consumer<Unit>? = null
+    private var expandedTypeface: Typeface? = null
 
     init {
         View.inflate(context, R.layout.view_app_bar_layout, this)
         fitsSystemWindows = true
+
+        var expandedDefaultAppearance: Int = R.style.PageTitleLargeWhite
+        var expandedFixedSizeAppearance: Int = R.style.PageTitleLargeWhite_FixedSize
 
         if (attrs != null) {
             val a = context.theme.obtainStyledAttributes(
@@ -35,12 +48,23 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             setBackgroundImage(a.getResourceId(R.styleable.ArticMainAppBarLayout_backgroundImage, 0))
             setBackgroundImagePadding(a.getDimension(R.styleable.ArticMainAppBarLayout_backgroundImagePadding, 0f))
             subTitle.text = a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
-            val setExpandedTitleTextAppearance = a.getResourceId(
+
+            expandedDefaultAppearance = a.getResourceId(
                     R.styleable.ArticMainAppBarLayout_expandedTitleStyle,
-                    R.style.PageTitleLargeWhite)
-            collapsingToolbar.setExpandedTitleTextAppearance(setExpandedTitleTextAppearance)
+                    expandedDefaultAppearance
+            )
+            expandedFixedSizeAppearance = a.getResourceId(
+                    R.styleable.ArticMainAppBarLayout_expandedFixedSizeTitleStyle,
+                    expandedFixedSizeAppearance
+            )
+
+            collapsingToolbar.setExpandedTitleTextAppearance(expandedDefaultAppearance)
             subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
         }
+
+        expandedTypeface = ResourcesCompat.getFont(context, R.font.ideal_sans_medium)
+        expandedDefaultTextAppearance = expandedDefaultAppearance
+        expandedFixedSizeTextAppearance = expandedFixedSizeAppearance
 
         // update our content when offset changes.
         addOnOffsetChangedListener(OnOffsetChangedListener { aBarLayout, verticalOffset ->
@@ -95,6 +119,32 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         disposeBag.clear()
+    }
+
+    @UiThread
+    fun adaptExpandedTextAppearance() {
+        collapsingToolbar.run {
+            val titleLength = title?.toString().orEmpty().length
+
+            if (titleLength < FULL_SIZE_TEXT_BREAKPOINT) {
+                setExpandedTitleTextAppearance(expandedDefaultTextAppearance)
+            } else {
+                setExpandedTitleTextAppearance(expandedFixedSizeTextAppearance)
+            }
+            setExpandedTitleTypeface(expandedTypeface)
+        }
+    }
+
+
+    companion object {
+
+        /**
+         * Max length of text visible with expanded style [expandedDefaultTextAppearance].
+         *
+         * If title extends beyond this, callers should switch
+         * [collapsingToolbar] over to [expandedFixedSizeTextAppearance].
+         */
+        const val FULL_SIZE_TEXT_BREAKPOINT: Int = """Welcome, And…""".length
     }
 
 }

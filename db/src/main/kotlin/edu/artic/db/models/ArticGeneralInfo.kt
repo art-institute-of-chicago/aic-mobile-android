@@ -10,7 +10,6 @@ import edu.artic.localization.SpecifiesLanguage
 @Entity
 data class ArticGeneralInfo(
         @Json(name = "title") val title: String,
-        @Json(name = "status") val status: String,
         @Json(name = "nid") @PrimaryKey val nid: String,
         @Json(name = "translations") val translations: List<Translation>,
         @Json(name = "museum_hours") val museumHours: String,

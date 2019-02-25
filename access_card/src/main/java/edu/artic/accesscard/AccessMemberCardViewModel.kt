@@ -76,6 +76,22 @@ class AccessMemberCardViewModel @Inject constructor(
     var expiration: Subject<String> = BehaviorSubject.create()
     var selectedCardHolder: Subject<String> = BehaviorSubject.create()
     var membership: Subject<String> = BehaviorSubject.create()
+    val isReciprocalMemberLevel : Subject<Boolean> = BehaviorSubject.create()
+
+    val reciprocalMemberLevels = setOf(
+            "Premium Member",
+            "Lionhearted Council",
+            "Lionhearted Roundtable",
+            "Lionhearted Circle",
+            "Sustaining Fellow Young",
+            "Sustaining Fellow",
+            "Sustaining Fellow Bronze",
+            "Sustaining Fellow Silver",
+            "Sustaining Fellow Sterling",
+            "Sustaining Fellow Gold",
+            "Sustaining Fellow Platinum",
+            "Sustaining Fellow President's",
+            "Sustaining Fellow Exhib Trust")
 
     init {
 
@@ -103,6 +119,10 @@ class AccessMemberCardViewModel @Inject constructor(
                     infoPreferencesManager.activeCardHolder = memberInfo.cardHolder
                     memberInfo.primaryConstituentID?.let {
                         displayMode.onNext(DisplayMode.DisplayAccessCard(it))
+                    }
+
+                    memberInfo.memberLevel?.let {
+                            isReciprocalMemberLevel.onNext(reciprocalMemberLevels.contains(it))
                     }
                 }.disposedBy(disposeBag)
         /**

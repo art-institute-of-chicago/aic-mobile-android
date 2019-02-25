@@ -8,9 +8,9 @@ buildscript {
         latest_helper = '72626c5db8'
         dagger_version = '2.15'
         support_version = '28.0.0'
-        arch_version = '1.1.0'
+        arch_version = '1.1.1'
         navigation_version = '1.0.0-alpha05'
-        paging_version = '1.0.0-beta1'
+        paging_version = '1.0.1'
         rx_binding_version = '2.1.1'
         kotshi_version = '1.0.4'
         moshi_version = '1.7.0'
@@ -22,13 +22,14 @@ buildscript {
 
         libs = [
                 kotlin                  : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
+                kotlin_jre7             : "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version",
                 rx_helpers              : "com.github.fuzz-productions:rx-helpers:${latest_helper}",
                 dagger                  : "com.google.dagger:dagger:${dagger_version}",
                 dagger_android          : "com.google.dagger:dagger-android-support:${dagger_version}",
                 dagger_compiler         : "com.google.dagger:dagger-compiler:${dagger_version}",
                 dagger_android_compiler : "com.google.dagger:dagger-android-processor:${dagger_version}",
-                rx                      : 'io.reactivex.rxjava2:rxjava:2.1.7',
-                rx_kotlin               : 'io.reactivex.rxjava2:rxkotlin:2.1.0',
+                rx                      : 'io.reactivex.rxjava2:rxjava:2.2.0',
+                rx_kotlin               : 'io.reactivex.rxjava2:rxkotlin:2.3.0',
                 rx_android              : 'io.reactivex.rxjava2:rxandroid:2.0.1',
                 arch_runtime            : "android.arch.lifecycle:runtime:${arch_version}",
                 arch_extensions         : "android.arch.lifecycle:extensions:${arch_version}",
@@ -50,12 +51,14 @@ buildscript {
                 room_compiler           : "android.arch.persistence.room:compiler:${room_version}",
                 room_rx                 : "android.arch.persistence.room:rxjava2:${room_version}",
                 timber                  : 'com.jakewharton.timber:timber:4.5.1',
-                threeten                : 'com.jakewharton.threetenabp:threetenabp:1.0.5',
+                threeten                : 'com.jakewharton.threetenabp:threetenabp:1.1.1',
                 v4_support              : "com.android.support:support-v4:${support_version}",
                 design_support          : "com.android.support:design:${support_version}",
                 constraint_layout       : "com.android.support.constraint:constraint-layout:2.0.0-alpha2",
                 glide                   : "com.github.bumptech.glide:glide:${glide_version}",
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",
+                glide_okhttp_integration: "com.github.bumptech.glide:okhttp3-integration:${glide_version}@aar",
+                progress_interceptor    : 'com.github.jobinlawrance:okhttp3-downloadprogress-interceptor:1.0.1',
                 ga                      : "com.google.android.gms:play-services-analytics:${firebase_version}",
                 firebase_core           : "com.google.firebase:firebase-core:${firebase_version}",
                 crashlytics             : "com.crashlytics.sdk.android:crashlytics:${crashlytics_version}",

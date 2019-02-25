@@ -7,6 +7,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
 
 /**
@@ -30,12 +31,15 @@ class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewMod
 
         item.exhibitionImageUrl
                 .filter { it.isNotEmpty() }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    GlideApp.with(context)
-                            .load(it)
-                            .placeholder(R.color.placeholderBackground)
-                            .error(R.drawable.placeholder_medium_square)
-                            .into(image)
+                    image.post {
+                        GlideApp.with(context)
+                                .load("$it?w=${image.measuredWidth}&h=${image.measuredHeight}")
+                                .placeholder(R.color.placeholderBackground)
+                                .error(R.drawable.placeholder_medium_square)
+                                .into(image)
+                    }
                 }.disposedBy(item.viewDisposeBag)
 
         this.image.transitionName = item.exhibition.title
