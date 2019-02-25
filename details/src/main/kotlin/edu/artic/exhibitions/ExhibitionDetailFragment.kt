@@ -16,6 +16,8 @@ import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.asUrlViewIntent
+import edu.artic.base.utils.fromHtml
+import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticExhibition
 import edu.artic.details.R
 import edu.artic.image.GlideApp
@@ -24,6 +26,7 @@ import edu.artic.image.listenerSetHeight
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_exhibition_details.*
 import kotlin.reflect.KClass
 
@@ -88,6 +91,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .disposedBy(disposeBag)
 
         viewModel.imageUrl
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     val options = RequestOptions()
                             .dontAnimate()
@@ -96,18 +100,22 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                     val scaleInfo = ImageViewScaleInfo(
                             placeHolderScaleType = ImageView.ScaleType.CENTER_CROP,
                             imageScaleType = ImageView.ScaleType.MATRIX)
-
-                    GlideApp.with(this)
-                            .load(it)
-                            .apply(options)
-                            .placeholder(R.color.placeholderBackground)
-                            .error(R.drawable.placeholder_large)
-                            .listenerSetHeight(image, scaleInfo)
-                            .into(image)
+                    image.post {
+                        GlideApp.with(this)
+                                .load("$it?w=${image.measuredWidth}&h=${image.measuredHeight}")
+                                .apply(options)
+                                .placeholder(R.color.placeholderBackground)
+                                .error(R.drawable.placeholder_large)
+                                .listenerSetHeight(image, scaleInfo)
+                                .into(image)
+                    }
                 }
                 .disposedBy(disposeBag)
 
         viewModel.description
+                .map {
+                    it.trimDownBlankLines().fromHtml()
+                }
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)
 

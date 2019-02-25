@@ -417,8 +417,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         locationPreferenceManager.hasSeenLocationPromptObservable,
                         locationPreferenceManager.hasClosedLocationPromptObservable,
                         tutorialPreferencesManager.hasSeenTutorialObservable
-                ).map {
-                    (hasSeenPrompt, hasClosedPrompt, hasSeenTutorial) ->
+                ).map { (hasSeenPrompt, hasClosedPrompt, hasSeenTutorial) ->
 
                     !hasSeenPrompt to (hasClosedPrompt && !hasSeenTutorial)
                 }
@@ -426,8 +425,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                     it.first || it.second
                 }
                 .withLatestFrom(floor)
-                .map {
-                    (whatToShow, floor) ->
+                .map { (whatToShow, floor) ->
                     val (shouldShowPrompt, shouldShowTutorial) = whatToShow
                     when {
                         shouldShowPrompt -> Navigate.Forward(NavigationEndpoint.LocationPrompt)
@@ -594,6 +592,19 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 }
     }
 
+    override fun cleanup() {
+        // If the associated fragment is being recreated, we'll need a new GoogleMap object
+        currentMap
+                .take(1)
+                .filterValue()
+                .subscribeBy {
+                    it.setInfoWindowAdapter(null)
+                }.disposedBy(disposeBag)
+
+
+        super.cleanup()
+    }
+
 
     override fun onCleared() {
         super.onCleared()
@@ -650,6 +661,13 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                         searchManager.selectedObject.onNext(Optional(null))
                         val startStop = requestedTourStop ?: activeTour.getIntroStop()
                         switchTourRequest.onNext(requestedTour to startStop)
+                    } else if (requestedTour != null && activeTour != null && requestedTour == activeTour) {
+                        /**
+                         * Update the tour stop.
+                         */
+                        requestedTourStop?.objectId?.let { newTourStop ->
+                            tourProgressManager.selectedStop.onNext(newTourStop)
+                        }
                     } else if (proposedTour != null) {
                         val (tour, stop) = proposedTour
                         displayModeChanged(MapDisplayMode.Tour(tour, stop))

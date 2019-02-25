@@ -8,7 +8,6 @@ dependencies {
 
     implementation libs.constraint_layout
     implementation project(':viewmodel')
-    implementation libs.rx_helpers
     implementation project(':adapter')
     implementation project(':base')
     implementation project(':db')

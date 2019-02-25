@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginStandard"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:background="@color/audioBackground"
+                android:background="@null"
                 android:clipToPadding="false"
                 android:spinnerMode="dropdown"
                 android:textColor="@android:color/white"
@@ -83,7 +83,7 @@
                 app:layout_constraintHeight_default="wrap"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 app:layout_constraintWidth_default="wrap"
-                tools:background="@drawable/exo_scrubber" />
+                tools:listitem="@layout/language_cell" />
 
             <TextView
                 android:id="@+id/tourStops"
@@ -118,16 +118,15 @@
             <edu.artic.view.DetailButton
                 android:id="@+id/startTourButton"
                 android:layout_width="0dp"
-                app:button_icon="@drawable/exo_icon_play"
-                app:button_text="@string/startTour"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginTriple"
                 android:layout_marginEnd="@dimen/marginDouble"
+                app:button_text="@string/startTour"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/languageSelector">
-            </edu.artic.view.DetailButton>
+                app:layout_constraintTop_toBottomOf="@id/languageSelector"
+                />
 
             <!--
 

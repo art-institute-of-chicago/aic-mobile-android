@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/text"
-    style="@style/AudioTranslationSans"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:layout_width="300dp"
-    android:fontFamily="@font/ideal_sans_medium"
-    android:gravity="center_vertical|start"
-    android:includeFontPadding="false"
-    android:minWidth="108dp"
-    android:minHeight="48dp"
-    android:paddingStart="@dimen/marginDouble"
-    android:paddingTop="@dimen/marginHalf"
-    android:paddingEnd="@dimen/marginQuad"
-    android:paddingBottom="@dimen/marginHalf"
-    android:background="@drawable/language_dropdown_background"
-    tools:text="@string/name_of_this_language" />
+    android:background="@drawable/language_spinner_background"
+    >
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/text"
+        style="@style/AudioTranslationSans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ideal_sans_medium"
+        android:gravity="center_vertical|start"
+        android:includeFontPadding="false"
+        android:minWidth="63dp"
+        android:minHeight="32dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/caret"
+        tools:layout_width="100dp"
+        android:maxLines="1"
+        android:layout_marginStart="@dimen/marginDouble"
+        tools:text="this is very " />
+
+    <ImageView
+        android:id="@+id/caret"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/ic_language_caret"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/marginHalf"
+        android:layout_marginEnd="@dimen/marginDouble"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

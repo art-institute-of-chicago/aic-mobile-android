@@ -34,4 +34,7 @@ interface ArticGalleryDao {
 
     @Query("select * from ArticGallery where title = :name")
     fun getGalleryByNameOrNull(name: String?): ArticGallery?
+
+    @Query("delete from ArticGallery")
+    fun clear()
 }

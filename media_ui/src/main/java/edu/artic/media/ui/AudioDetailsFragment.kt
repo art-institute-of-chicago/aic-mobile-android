@@ -24,13 +24,13 @@ import edu.artic.adapter.*
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.filterHtmlEncodedText
+import edu.artic.base.utils.show
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
 import edu.artic.image.GlideApp
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.language.LanguageAdapter
-import edu.artic.language.LanguageSelectorViewBackground
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -134,7 +134,11 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.authorCulturalPlace
                 .map { it.isNotEmpty() }
-                .bindToMain(artistCulturePlaceDenim.visibility())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { hasData ->
+                    artistCulturePlaceDenim.show(show = hasData)
+                    dividerBelowArtist.show(show = hasData)
+                }
                 .disposedBy(disposeBag)
 
         viewModel.authorCulturalPlace
@@ -144,21 +148,51 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
 
         viewModel.transcript
                 .map { it.isNotEmpty() }
-                .bindToMain(transcript.visibility())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    transcript.show(it)
+                }
                 .disposedBy(disposeBag)
 
         viewModel.transcript
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     transcript.setContentText(it.filterHtmlEncodedText())
                 }.disposedBy(disposeBag)
 
+        viewModel.tourDescription
+                .map { it.isNotEmpty() }
+                .bindToMain(tourDescription.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.tourDescription
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    tourDescription.text = it.filterHtmlEncodedText()
+                }.disposedBy(disposeBag)
+
+        viewModel.tourIntroduction
+                .map { it.isNotEmpty() }
+                .bindToMain(tourIntroduction.visibility())
+                .disposedBy(disposeBag)
+
+        viewModel.tourIntroduction
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    tourIntroduction.text = it.filterHtmlEncodedText()
+                }.disposedBy(disposeBag)
+
         viewModel.credits
                 .map { it.isNotEmpty() }
-                .bindToMain(credit.visibility())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy {
+                    credit.show(it)
+                }
                 .disposedBy(disposeBag)
 
 
         viewModel.credits
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     credit.setContentText(it.filterHtmlEncodedText())
                 }.disposedBy(disposeBag)
@@ -166,15 +200,13 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.relatedTours
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { tours ->
-                    if (tours.isEmpty()) {
-                        relatedTourTitle.visibility = View.GONE
-                        relatedToursView.visibility = View.GONE
-                        dividerBelowRelatedTours.visibility = View.GONE
-                    } else {
+                    val hasData = tours.isNotEmpty()
+                    relatedTourTitle.show(show = hasData)
+                    relatedToursView.show(show = hasData)
+                    dividerBelowRelatedTours.show(show = hasData)
+
+                    if (hasData) {
                         relatedToursView.removeAllViews()
-                        relatedTourTitle.visibility = View.VISIBLE
-                        relatedToursView.visibility = View.VISIBLE
-                        dividerBelowRelatedTours.visibility = View.VISIBLE
                         addRelatedToursToView(tours)
                     }
                 }
@@ -232,10 +264,6 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         viewModel.availableTranslations
                 .map { it.size > 1 }
                 .bindToMain(exo_translation_selector.visibility(View.INVISIBLE))
-                .disposedBy(disposeBag)
-
-        LanguageSelectorViewBackground(exo_translation_selector)
-                .listenToLayoutChanges()
                 .disposedBy(disposeBag)
 
         exo_translation_selector

@@ -18,6 +18,4 @@ dependencies {
 
     api project(':base')
     implementation project(':db')
-    implementation libs.rx_helpers
-    implementation libs.rx_kotlin
 }

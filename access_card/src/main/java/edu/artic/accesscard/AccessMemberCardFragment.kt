@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.content.ContextCompat
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import com.fuzz.rx.*
 import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.clicks
@@ -24,6 +25,7 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_validate_member_information.*
 import kotlinx.android.synthetic.main.layout_member_access_card.*
@@ -167,6 +169,18 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 .map { it.size > 1 }
                 .bindToMain(switchCardHolder.visibility())
                 .disposedBy(disposeBag)
+
+        viewModel.isReciprocalMemberLevel
+                .bindToMain(reciprocalMember.visibility())
+                .disposedBy(disposeBag)
+
+        Observables.combineLatest(
+                viewModel.isReciprocalMemberLevel.filter { it },
+                viewModel.membership)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy { (_, memberLevel) ->
+                    reciprocalMember.contentDescription = memberLevel
+                }.disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: AccessMemberCardViewModel) {
@@ -213,6 +227,18 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                     requireActivity().hideSoftKeyboard()
                 }.disposedBy(disposeBag)
 
+        zipCode.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    val isFormFilled = !zipCode.text.isNullOrBlank() && !memberId.text.isNullOrBlank()
+                    if (isFormFilled) {
+                        viewModel.onSignInClick()
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
 
         animateToolbarColor()
     }

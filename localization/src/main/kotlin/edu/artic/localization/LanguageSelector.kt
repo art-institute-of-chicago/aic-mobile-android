@@ -87,7 +87,7 @@ class LanguageSelector(private val prefs: LocalizationPreferences) {
 
     }
 
-    private fun <T : SpecifiesLanguage> findIn(languages: List<T>, wanted: Locale): T? {
+    public fun <T : SpecifiesLanguage> findIn(languages: List<T>, wanted: Locale): T? {
         return languages.firstOrNull {
             // This is very much intentional. Read the method docs fully before changing.
             it.underlyingLocale().language == wanted.language

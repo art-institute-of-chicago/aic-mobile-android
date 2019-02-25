@@ -29,21 +29,9 @@
         <item name="languageSettingsBodyTextAppearance">@style/BodySansSerifBlackLeft</item>
     </style>
 
-    <style name="LanguageButton">
-        <item name="android:fontFamily">@font/ideal_sans_medium</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:minHeight">50dp</item>
-    </style>
 
-    <style name="InformationExpandedTitle" parent="TextAppearance.AppCompat.Title">
-        <item name="android:fontFamily">@font/ideal_sans_medium</item>
-        <item name="android:gravity">center_horizontal</item>
+    <style name="InformationExpandedTitle" parent="PageTitleLargeWhite">
         <item name="android:textSize">@dimen/textPageTitle</item>
-        <item name="android:letterSpacing">0.03</item>
-        <item name="android:lineSpacingExtra">0sp</item>
     </style>
 
     <style name="InfoMenu" parent="CardTitleLargeBlack">

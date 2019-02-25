@@ -29,6 +29,7 @@ class SplashViewModel @Inject constructor(
 
 
     val percentage: Subject<Float> = BehaviorSubject.createDefault(0f)
+    val dataError: Subject<Throwable> = BehaviorSubject.create()
 
     init {
         analyticsTracker.clearSession()
@@ -44,7 +45,6 @@ class SplashViewModel @Inject constructor(
                         is ProgressDataState.Done<*> -> {
                             percentage.onNext(1.0f)
                             startVideo()
-                            appDaPrefManager.downloadedNecessaryData = true
                         }
                         is ProgressDataState.Empty -> {
                             startVideo()
@@ -52,6 +52,7 @@ class SplashViewModel @Inject constructor(
                     }
                 }, {
                     percentage.onError(it)
+                    dataError.onNext(it)
                 }, {}).disposedBy(disposeBag)
     }
 
@@ -66,8 +67,10 @@ class SplashViewModel @Inject constructor(
                 .disposedBy(disposeBag)
     }
 
-    
-    fun onNetworkErrorDialogDismissed() {
+    /**
+     * Allow user to proceed forward if app has cache data.
+     */
+    fun proceedToWelcomePageIfDataAvailable() {
         if (appDaPrefManager.downloadedNecessaryData) {
             Navigate.Forward(NavigationEndpoint.Welcome)
                     .asObservable()

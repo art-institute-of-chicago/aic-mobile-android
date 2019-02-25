@@ -38,7 +38,8 @@ class AppDataManager @Inject constructor(
         private val exhibitionDao: ArticExhibitionDao,
         private val objectDao: ArticObjectDao,
         private val articMapFloorDao: ArticMapFloorDao,
-        private val searchSuggestionDao: ArticSearchObjectDao
+        private val searchSuggestionDao: ArticSearchObjectDao,
+        private val appDataPrefManager: AppDataPreferencesManager
 ) {
     companion object {
         const val HEADER_LAST_MODIFIED = "last-modified"
@@ -78,6 +79,7 @@ class AppDataManager @Inject constructor(
             //First load app data, once app data is successfully loaded
             getBlob().subscribe({ appDataState ->
                 if (appDataState is ProgressDataState.Done<*> || appDataState === ProgressDataState.Empty) {
+                    appDataPrefManager.downloadedNecessaryData = true
                     loadSecondaryData()
                             .subscribe({ amountDownload ->
                                 observer.onNext(
@@ -138,69 +140,43 @@ class AppDataManager @Inject constructor(
                         // runs the whole operation in a transaction.
                         appDatabase.runInTransaction {
                             val result = appDataState.result as ArticAppData
-
-                            dashboardDao.setDashBoard(result.dashboard)
+                            result.dashboard?.let { dashboard ->
+                                dashboardDao.setDashBoard(dashboard)
+                            }
                             generalInfoDao.setGeneralInfo(result.generalInfo)
-                            result.mapFloors?.values?.let { floors ->
+                            result.mapFloors.values.filterNotNull().let { floors ->
                                 articMapFloorDao.insertMapFloors(floors.toList())
                             }
 
-                            val galleries = result.galleries?.values?.toList()
-                            if (galleries?.isNotEmpty() == true) {
+                            val rawGalleries : List<ArticGallery?>? = result.galleries
+                                    ?.values
+                                    ?.toList()
+
+                            val galleries = rawGalleries?.filterNotNull().orEmpty()
+                            if (rawGalleries?.isNotEmpty() == true) {
+                                galleryDao.clear()
                                 galleryDao.addGalleries(galleries)
                             }
 
                             val audioFiles = result.audioFiles
                             if (audioFiles?.isNotEmpty() == true) {
-                                audioFileDao.addAudioFiles(audioFiles.values.toList())
+                                audioFileDao.clear()
+                                audioFileDao.addAudioFiles(audioFiles.values.filterNotNull().toList())
                             }
 
                             val objects = result.objects
                             if (objects?.isNotEmpty() == true) {
-                                objects.values.forEach { articObject ->
-                                    // add a floor field to the object, since its not known in the JSON directly.
-                                    galleries?.firstOrNull { it.title == articObject.galleryLocation }
-                                            ?.let { gallery ->
-                                                articObject.floor = gallery.floor
-                                            }
-                                    articObject.audioCommentary.forEach { audioCommentaryObject ->
-                                        audioCommentaryObject.audio?.let {
-                                            audioCommentaryObject.audioFile = audioFileDao.getAudioById(it)
-                                        }
-                                    }
-                                }
-                                objectDao.addObjects(objects.values.toList())
+                                updateArticObjects(objects, rawGalleries)
+                                objectDao.clear()
+                                objectDao.addObjects(objects.values.filterNotNull().toList())
                             }
 
-                            val tours = result.tours?.filter { it.weight != null }
-                            if (tours?.isNotEmpty() == true) {
-                                tourDao.clear()
-                                tours.forEach { tour ->
-                                    // assign the first stop's floor to tour if tour's floor is invalid
-                                    if (tour.tourStops.isNotEmpty()) {
-                                        // Filter out stops without known objectIds (so-called 'ghost' stops)
-                                        val iterator = tour.tourStops.iterator()
-                                        while (iterator.hasNext()) {
-                                            val tourStop = iterator.next()
-                                            if (objectDao.hasObjectWithId(tourStop.objectId)) {
-                                                continue
-                                            } else {
-                                                iterator.remove()
-                                            }
-                                        }
-                                        // Make sure the tour itself has a floor number
-                                        if (tour.floorAsInt == INVALID_FLOOR && tour.tourStops.isNotEmpty()) {
-                                            tour.tourStops.first().objectId?.let { firstTourStopId ->
-                                                tour.floor = objects?.get(firstTourStopId)?.floor ?: INVALID_FLOOR
-                                            }
-                                        }
-                                    }
-
-                                }
-                                tourDao.addTours(tours)
+                            result.tours?.let { it ->
+                                updateTours(it, objects)
                             }
 
-                            val exhibitionsCMS = result.exhibitions
+                            val exhibitionsCMS = result.exhibitions?.filterNotNull()
+
                             if (exhibitionsCMS?.isNotEmpty() == true) {
                                 exhibitionCMSDao.clear()
                                 exhibitionCMSDao.addCMSExhibitions(exhibitionsCMS)
@@ -208,7 +184,7 @@ class AppDataManager @Inject constructor(
 
                             val mapAnnotations = result.mapAnnotations
                             if (mapAnnotations?.isNotEmpty() == true) {
-                                mapAnnotationDao.addAnnotations(mapAnnotations.values.toList())
+                                mapAnnotationDao.addAnnotations(mapAnnotations.values.filterNotNull().toList())
                             }
 
                             ArticDataObject.IMAGE_SERVER_URL = result.data.imageServerUrl
@@ -232,6 +208,61 @@ class AppDataManager @Inject constructor(
                     }
                     return@flatMap appDataState.asObservable()
                 }
+    }
+
+    private fun updateArticObjects(objects: Map<String, ArticObject?>, rawGalleries: List<ArticGallery?>?) {
+        objects.values.filterNotNull().forEach { articObject ->
+            // add a floor field to the object, since its not known in the JSON directly.
+            rawGalleries
+                    ?.asSequence()
+                    ?.filterNotNull()
+                    ?.firstOrNull { it.title == articObject.galleryLocation }
+                    ?.let { gallery ->
+                        articObject.floor = gallery.floor
+                    }
+
+            articObject.audioCommentary.forEach { audioCommentaryObject ->
+                audioCommentaryObject.audio?.let {
+                    audioCommentaryObject.audioFile = audioFileDao.getAudioById(it)
+                }
+            }
+        }
+    }
+
+    private fun updateTours(it: List<ArticTour?>, objects: Map<String, ArticObject?>?) {
+
+        val tours = it
+                .asSequence()
+                .filterNotNull()
+                .filter { it.weight != null }
+                .toList()
+
+        if (tours.isNotEmpty()) {
+            tourDao.clear()
+            tours.forEach { tour ->
+                // assign the first stop's floor to tour if tour's floor is invalid
+                if (tour.tourStops.isNotEmpty()) {
+                    // Filter out stops without known objectIds (so-called 'ghost' stops)
+                    val iterator = tour.tourStops.iterator()
+                    while (iterator.hasNext()) {
+                        val tourStop = iterator.next()
+                        if (objectDao.hasObjectWithId(tourStop.objectId)) {
+                            continue
+                        } else {
+                            iterator.remove()
+                        }
+                    }
+                    // Make sure the tour itself has a floor number
+                    if (tour.floorAsInt == INVALID_FLOOR && tour.tourStops.isNotEmpty()) {
+                        tour.tourStops.first().objectId?.let { firstTourStopId ->
+                            tour.floor = objects?.get(firstTourStopId)?.floor ?: INVALID_FLOOR
+                        }
+                    }
+                }
+
+            }
+            tourDao.addTours(tours)
+        }
     }
 
     /**
@@ -345,7 +376,7 @@ class AppDataManager @Inject constructor(
                                                 exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                                 // Override with exhibitions optional images from CMS, if available
                                                 exhibitionCMS.imageUrl?.let {
-                                                    exhibitionsById[exhibitionCMS.id]?.legacy_image_mobile_url = it
+                                                    exhibitionsById[exhibitionCMS.id]?.imageUrl = it
                                                 }
                                                 exhibitionsById[exhibitionCMS.id]?.order = exhibitionCMS.sort
                                             }

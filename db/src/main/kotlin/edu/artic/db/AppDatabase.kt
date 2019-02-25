@@ -22,8 +22,8 @@ import edu.artic.db.models.*
             ArticMapFloor::class,
             ArticSearchSuggestionsObject::class
         ],
-        version = 9,
-        exportSchema = false
+        version = 11,
+        exportSchema = true
 )
 @TypeConverters(AppConverters::class)
 abstract class AppDatabase : RoomDatabase() {

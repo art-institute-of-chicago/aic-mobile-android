@@ -18,6 +18,7 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.getThemeColors
 import edu.artic.base.utils.setWindowFlag
+import edu.artic.view.ArticMainAppBarLayout
 import javax.inject.Inject
 
 
@@ -57,7 +58,14 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
              * Ensure [toolbar] and [collapsingToolbar] have had a chance to be bound
              */
             updateToolbar(requireView())
-            collapsingToolbar?.title = proposedTitle
+            collapsingToolbar?.run {
+                title = proposedTitle
+                parent.let {
+                    if (it is ArticMainAppBarLayout) {
+                        it.adaptExpandedTextAppearance()
+                    }
+                }
+            }
         }
     }
 
@@ -149,10 +157,10 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
         }
 
         collapsingToolbar = view.findViewById(R.id.collapsingToolbar)
-        collapsingToolbar?.apply {
-            val toolbarTextTypeFace = ResourcesCompat.getFont(requireContext(), R.font.ideal_sans_medium)
-            setCollapsedTitleTypeface(toolbarTextTypeFace)
-            setExpandedTitleTypeface(toolbarTextTypeFace)
+        collapsingToolbar?.parent?.let {
+            if (it is ArticMainAppBarLayout) {
+                it.adaptExpandedTextAppearance()
+            }
         }
 
     }

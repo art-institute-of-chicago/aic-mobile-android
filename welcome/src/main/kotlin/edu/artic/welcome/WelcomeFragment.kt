@@ -10,6 +10,7 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicksWithPosition
@@ -25,6 +26,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_welcome.*
+import kotlinx.android.synthetic.main.welcome_section.view.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -50,14 +52,14 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
         /* Build tour summary list*/
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        tourSummaryRecyclerView.layoutManager = layoutManager
+        tourSection.list.layoutManager = layoutManager
 
         val decoration = DividerItemDecoration(view.context, DividerItemDecoration.HORIZONTAL)
         decoration.setDrawable(ContextCompat.getDrawable(view.context, R.drawable.space_decorator)!!)
-        tourSummaryRecyclerView.addItemDecoration(decoration)
+        tourSection.list.addItemDecoration(decoration)
 
         val tourSummaryAdapter = WelcomeToursAdapter()
-        tourSummaryRecyclerView.adapter = tourSummaryAdapter
+        tourSection.list.adapter = tourSummaryAdapter
 
         viewModel.tours
                 .bindToMain(tourSummaryAdapter.itemChanges())
@@ -66,19 +68,31 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         /* Build on view list*/
         val adapter = OnViewAdapter()
         val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        onViewRecyclerView.layoutManager = exhibitionLayoutManager
-        onViewRecyclerView.adapter = adapter
+        exhibitionSection.list.layoutManager = exhibitionLayoutManager
+        exhibitionSection.list.adapter = adapter
         viewModel.exhibitions
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
+        viewModel.exhibitions
+                .map { it.isNotEmpty() }
+                .bindToMain(exhibitionSection.visibility())
+                .disposedBy(disposeBag)
+
+
         /* Build event summary list*/
         val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        eventsRecyclerView.layoutManager = eventsLayoutManager
+        eventSection.list.layoutManager = eventsLayoutManager
         val eventsAdapter = WelcomeEventsAdapter()
-        eventsRecyclerView.adapter = eventsAdapter
+        eventSection.list.adapter = eventsAdapter
+
         viewModel.events
                 .bindToMain(eventsAdapter.itemChanges())
+                .disposedBy(disposeBag)
+
+        viewModel.events
+                .map { it.isNotEmpty() }
+                .bindToMain(eventSection.visibility())
                 .disposedBy(disposeBag)
 
         viewModel.shouldPeekTourSummary
@@ -107,32 +121,38 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                     requestTitleUpdate(title)
                 }
                 .disposedBy(disposeBag)
+
     }
 
     override fun setupBindings(viewModel: WelcomeViewModel) {
-        toursSeeAllLink.clicks()
+
+        tourSection.label.setText(R.string.tours)
+        exhibitionSection.label.setText(R.string.onView)
+        eventSection.label.setText(R.string.events)
+
+        tourSection.seeAllLink.clicks()
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllTours() }
                 .disposedBy(disposeBag)
 
-        onViewLink.clicks()
+        exhibitionSection.seeAllLink.clicks()
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllOnView() }
                 .disposedBy(disposeBag)
 
-        eventsLink.clicks()
+        eventSection.seeAllLink.clicks()
                 .defaultThrottle()
                 .subscribe { viewModel.onClickSeeAllEvents() }
                 .disposedBy(disposeBag)
 
-        val eventsAdapter = eventsRecyclerView.adapter as WelcomeEventsAdapter
+        val eventsAdapter = eventSection.list.adapter as WelcomeEventsAdapter
         eventsAdapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickEvent(pos, model.event)
                 }
                 .disposedBy(disposeBag)
 
-        val onViewAdapter = onViewRecyclerView.adapter as OnViewAdapter
+        val onViewAdapter = exhibitionSection.list.adapter as OnViewAdapter
         onViewAdapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickExhibition(pos, model.exhibition)
@@ -140,7 +160,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
 
 
-        val toursAdapter = tourSummaryRecyclerView.adapter as WelcomeToursAdapter
+        val toursAdapter = tourSection.list.adapter as WelcomeToursAdapter
         toursAdapter.itemClicksWithPosition()
                 .subscribe { (pos, model) ->
                     viewModel.onClickTour(pos, model.tour)
@@ -220,9 +240,9 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .take(2)
                 .subscribe { it ->
                     if (it == 0L) {
-                        tourSummaryRecyclerView.smoothScrollToPosition(1)
+                        tourSection.list.smoothScrollToPosition(1)
                     } else {
-                        tourSummaryRecyclerView.smoothScrollToPosition(0)
+                        tourSection.list.smoothScrollToPosition(0)
                         viewModel.onPeekedTour()
                     }
                 }

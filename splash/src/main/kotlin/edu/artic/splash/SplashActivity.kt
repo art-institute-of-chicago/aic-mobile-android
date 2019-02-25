@@ -9,6 +9,7 @@ import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
 import android.os.Build
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.support.annotation.UiThread
 import android.transition.Fade
@@ -17,9 +18,11 @@ import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import com.fuzz.rx.disposedBy
-import edu.artic.base.NetworkException
+import edu.artic.base.PermissibleError
+import edu.artic.base.asNetworkException
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.makeStatusBarTransparent
+import edu.artic.db.AppDataPreferencesManager
 import edu.artic.localization.ui.LanguageSettingsFragment
 import edu.artic.navigation.NavigationConstants
 import edu.artic.util.handleNetworkError
@@ -32,6 +35,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_splash.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
 
@@ -50,6 +54,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     private lateinit var fadeInAnimation: ViewPropertyAnimator
     private var errorDialog: AlertDialog? = null
 
+    @Inject
+    lateinit var appDataPreferencesManager: AppDataPreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         with(window) {
@@ -61,6 +67,23 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         makeStatusBarTransparent()
 
         textureView.surfaceTextureListener = this
+
+        observeDataLoadingProgress()
+
+        observeDataError()
+
+        welcome.alpha = 0f
+
+        fadeInAnimation = welcome.animate()
+                .alpha(1f)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .setDuration(1000)
+                .setStartDelay(500)
+
+        fadeInAnimation.start()
+    }
+
+    private fun observeDataLoadingProgress() {
         viewModel.percentage
                 .handleNetworkError(this)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -79,36 +102,43 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
                     if (BuildConfig.DEBUG) {
                         percentText.visibility = View.VISIBLE
                         percentText.text = errorMessage
+
+                        Timber.e(it)
                     }
 
+                }).disposedBy(disposeBag)
+    }
+
+    private fun observeDataError() {
+        viewModel.dataError
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { t -> t.asNetworkException(resources.getString(R.string.noInternetConnection)) }
+                .subscribeBy {
                     /**
                      * Display alert with error message.
                      */
-                    errorDialog?.dismiss()
-                    errorDialog = AlertDialog.Builder(this, R.style.ErrorDialog)
-                            .setTitle(resources.getString(R.string.errorDialogTitle))
-                            .setMessage(errorMessage)
-                            .setOnDismissListener { _ ->
-                                if (it is NetworkException) {
-                                    viewModel.onNetworkErrorDialogDismissed()
+                    val defaultMessage = resources.getString(R.string.loadingFailure)
+                    val errorHandler = ErrorMessagePresenter(it, defaultMessage, appDataPreferencesManager)
+
+                    if (errorHandler.shouldDisplayErrorDialog()) {
+                        errorDialog?.dismiss()
+                        errorDialog = AlertDialog.Builder(this, R.style.ErrorDialog)
+                                .setTitle(resources.getString(R.string.errorDialogTitle))
+                                .setMessage(errorHandler.getErrorMessage())
+                                .setOnDismissListener { _ ->
+                                    if (it is PermissibleError) {
+                                        viewModel.proceedToWelcomePageIfDataAvailable()
+                                    }
                                 }
-                            }
-                            .setPositiveButton(getString(android.R.string.ok)) { dialog, _->
-                                dialog.dismiss()
-                            }
-                            .show()
-                }).disposedBy(disposeBag)
+                                .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                .show()
+                    } else {
+                        viewModel.proceedToWelcomePageIfDataAvailable()
+                    }
 
-
-        welcome.alpha = 0f
-
-        fadeInAnimation = welcome.animate()
-                .alpha(1f)
-                .setInterpolator(AccelerateDecelerateInterpolator())
-                .setDuration(1000)
-                .setStartDelay(500)
-
-        fadeInAnimation.start()
+                }.disposedBy(disposeBag)
     }
 
     override fun onStart() {
@@ -196,8 +226,17 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         val options = ActivityOptions
                 .makeSceneTransitionAnimation(this, textureView, "museumImage")
         if (!isFinishing) {
-            startActivity(intent, options.toBundle())
-            finishAfterTransition()
+            /**
+             * Shared transition element does not work properly (crashes on some devices) running
+             * Lollipop. Please check https://issuetracker.google.com/issues/35826109
+             */
+            if (Build.VERSION.SDK_INT < VERSION_CODES.M) {
+                startActivity(intent)
+                finish()
+            } else {
+                startActivity(intent, options.toBundle())
+                finishAfterTransition()
+            }
         }
     }
 
@@ -260,7 +299,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
 
         val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
         val videoHeight = (width.toFloat() * videoRatio).toInt()
-        val percentageOfScreenAboveMuseumInVideo = (636f/1280f)
+        val percentageOfScreenAboveMuseumInVideo = (636f / 1280f)
         val topScreenOffset = (videoHeight * percentageOfScreenAboveMuseumInVideo)
         val imagePadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, resources.displayMetrics)
         params.topMargin = (topScreenOffset - imagePadding).toInt()

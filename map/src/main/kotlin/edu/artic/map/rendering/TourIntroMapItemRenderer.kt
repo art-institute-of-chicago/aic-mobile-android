@@ -13,7 +13,6 @@ import edu.artic.map.ArticObjectMarkerGenerator
 import edu.artic.map.MapDisplayMode
 import edu.artic.map.MapFocus
 import edu.artic.map.helpers.toLatLng
-import edu.artic.ui.util.asCDNUri
 import io.reactivex.Flowable
 import io.reactivex.Observable
 
@@ -55,6 +54,14 @@ class TourIntroMapItemRenderer : MapItemRenderer<ArticTour>(useBitmapQueue = tru
             if (item.floorAsInt == floor) ALPHA_VISIBLE else ALPHA_DIMMED
         } else {
             ALPHA_VISIBLE
+        }
+    }
+
+    override fun shouldFocusOnCreation(displayMode: MapDisplayMode): Boolean {
+        return if (displayMode is MapDisplayMode.Tour) {
+            displayMode.selectedTourStop?.objectId == INTRO_TOUR_STOP_OBJECT_ID
+        } else {
+            false
         }
     }
 }
