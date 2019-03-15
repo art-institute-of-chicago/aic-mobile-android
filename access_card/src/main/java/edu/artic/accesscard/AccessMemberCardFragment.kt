@@ -145,6 +145,11 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 .bindToMain(expiration.text())
                 .disposedBy(disposeBag)
 
+        viewModel.primaryConstituentID
+                .map { resources.getString(R.string.mID, it) }
+                .bindToMain(primaryConstituentID.text())
+                .disposedBy(disposeBag)
+
         switchCardHolder.clicks()
                 .defaultThrottle()
                 .subscribe {

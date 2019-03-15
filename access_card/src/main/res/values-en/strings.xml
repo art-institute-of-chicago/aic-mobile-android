@@ -9,6 +9,7 @@
     <string name="memberCard">Member Card</string>
     <string name="accessMemberCardLabel">Access Member Card</string>
     <string name="expires">Expires: %s</string>
+    <string name="mID">ID: %s</string>
     <string name="zipCodeHint">Enter your home zip code…</string>
     <string name="memberIdHint">Enter your Member ID…</string>
 </resources>

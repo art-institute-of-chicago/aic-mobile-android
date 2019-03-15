@@ -74,6 +74,7 @@ class AccessMemberCardViewModel @Inject constructor(
     private var selectedMember: Subject<MemberInfo> = BehaviorSubject.create()
 
     var expiration: Subject<String> = BehaviorSubject.create()
+    var primaryConstituentID: Subject<String> = BehaviorSubject.create()
     var selectedCardHolder: Subject<String> = BehaviorSubject.create()
     var membership: Subject<String> = BehaviorSubject.create()
     val isReciprocalMemberLevel : Subject<Boolean> = BehaviorSubject.create()
@@ -114,6 +115,7 @@ class AccessMemberCardViewModel @Inject constructor(
         selectedMember
                 .subscribeBy { memberInfo ->
                     expiration.onNext(memberInfo.expiration.orEmpty())
+                    primaryConstituentID.onNext(memberInfo.primaryConstituentID.orEmpty())
                     selectedCardHolder.onNext(memberInfo.cardHolder.orEmpty())
                     membership.onNext(memberInfo.memberLevel.orEmpty())
                     infoPreferencesManager.activeCardHolder = memberInfo.cardHolder
