@@ -13,6 +13,8 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
+// TODO: Move to `:reactivex` module
+
 /**
  * Perform a simple [map] call over the emitted [Result]s.
  *
@@ -43,6 +45,7 @@ fun <T> Observable<Result<T>>.mapWithDefault(onErrorValue: T): Observable<T> {
  * wait forever. Consider registering an [Observable.timeout] on
  * the returned object to address that concern.
  */
+// TODO: Is there anywhere we should use this? If not, can we remove it?
 fun <T> Observable<T>.waitForASecondOfCalmIn(other: Subject<*>): Observable<T> {
     return zipWith(other.debounce(1, TimeUnit.SECONDS))
             .map { (original, _) -> original }

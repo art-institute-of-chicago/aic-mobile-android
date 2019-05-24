@@ -93,6 +93,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
     /**
      * # Lifecycle: [onResume] -> [onPause]
      */
+    //TODO: Rename to reflect lifecycle
     val navigationDisposeBag = DisposeBag()
 
     protected fun requireView() = view
@@ -249,6 +250,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
     }
 
     override fun onDestroy() {
+        // TODO: determine if this code is still needed
         // fix for bug where viewmodel store is not cleared on 27.1.0, might be fixed later.
         val activity = activity
         if (activity != null

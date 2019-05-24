@@ -4,6 +4,8 @@ import android.animation.Animator
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 
+// TODO: Delete this file, as it not needed anymore
+
 /**
  * @author Sameer Dhakal (Fuzz)
  */

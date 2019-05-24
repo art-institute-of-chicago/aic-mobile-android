@@ -14,6 +14,7 @@ open class BaseViewModel : ViewModel() {
      */
     val viewDisposeBag = DisposeBag()
 
+    // TODO: Either start using this, or delete it. CellViewModel might be a good candidate
     lateinit var lifeCycleOwner: LifecycleOwner
 
     var onClearedListener: (() -> Unit)? = null
@@ -26,6 +27,7 @@ open class BaseViewModel : ViewModel() {
         this.lifeCycleOwner = lifeCycleOwner
     }
 
+    // TODO: When is this called? BaseFragment::onDestroy?
     @CallSuper
     public override fun onCleared() {
         super.onCleared()

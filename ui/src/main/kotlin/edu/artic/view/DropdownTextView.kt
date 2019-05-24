@@ -17,6 +17,7 @@ import edu.artic.view.changeValue
 /**
  * @author Sameer Dhakal (Fuzz)
  */
+// TODO: add documentation, explain where this file came from, and add License text if appropriate
 class DropdownTextView : LinearLayout {
 
     private lateinit var panelView: View
