@@ -6,7 +6,7 @@ buildscript {
         minSdk = 21
         kotlin_version = '1.3.31'
         latest_helper = '72626c5db8'
-        dagger_version = '2.15'
+        dagger_version = '2.19'
         support_version = '28.0.0'
         arch_version = '1.1.1'
         navigation_version = '1.0.0-alpha05'
