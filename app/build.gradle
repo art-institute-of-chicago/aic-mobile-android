@@ -90,7 +90,6 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation libs.kotlin_jre7
     implementation libs.threeten
     implementation libs.progress_interceptor
     implementation libs.firebase_core
