@@ -169,6 +169,12 @@ subprojects {
         useBuildCache = true
         mapDiagnosticLocations = true
         correctErrorTypes = true
+
+        // Workaround for https://github.com/google/dagger/issues/1449
+        javacOptions {
+            option("-source", "8")
+            option("-target", "8")
+        }
     }
 }
 
