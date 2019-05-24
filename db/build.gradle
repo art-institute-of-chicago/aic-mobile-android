@@ -22,8 +22,11 @@ android {
 }
 
 dependencies {
-    implementation project(':base')
+    api project(':base')
     api project(':localization')
+
+    // This 'kotlin_reflect' supersedes the artifact brought in by libs.moshi_kotlin
+    api libs.kotlin_reflect
 
     api libs.retrofit
     api libs.retrofit_rx
