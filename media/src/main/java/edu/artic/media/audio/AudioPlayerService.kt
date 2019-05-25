@@ -191,6 +191,20 @@ class AudioPlayerService : DaggerService(), PlayerService {
     lateinit var disposeBag: DisposeBag
     internal var currentBitmap: Bitmap? = null
 
+    /**
+     * Set this to true to tell the system we are currently in a call-like environment.
+     *
+     * On Android Pie devices, that would let the system load a reasonable
+     * volume-settings preset. Only takes effect when a [Playing] event passes
+     * through [audioPlayBackStatus].
+     *
+     * Assumption: [AudioManager.setMode] only affects the mode for this service. When
+     * we die, the mode will revert to its previous setting.
+     *
+     * @see AudioManager.MODE_IN_COMMUNICATION
+     */
+    internal var forceHeadsetMode: Boolean = true
+
 
     override fun onCreate() {
         super.onCreate()
@@ -234,9 +248,9 @@ class AudioPlayerService : DaggerService(), PlayerService {
             .subscribe {
                 when(it) {
                     is Playing -> {
-                        //Tell the system we are currently in a call like environment which
-                        //lets the system contextually update the volume on android pie
-                        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+                        if (forceHeadsetMode) {
+                            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+                        }
                         audioManager.isSpeakerphoneOn = false
                     }
                     else -> audioManager.mode = AudioManager.MODE_NORMAL
