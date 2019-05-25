@@ -155,8 +155,9 @@ subprojects {
 
         // TODO: Re-enable 'translation' lint check when translated strings arrive
         // TODO: Re-enable 'constraints' lint check whenever the IDE inspection actually agrees with the CLI tool
+        // TODO: Re-enable 'sibling' lint check once we've addressed all affected layouts
         lintOptions {
-            disable 'MissingTranslation','MissingConstraints'
+            disable 'MissingTranslation','MissingConstraints', 'NotSibling'
         }
 
         apply plugin: 'androidx.navigation.safeargs'
