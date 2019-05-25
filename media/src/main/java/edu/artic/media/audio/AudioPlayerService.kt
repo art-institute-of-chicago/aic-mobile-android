@@ -70,15 +70,16 @@ import javax.inject.Inject
 class AudioPlayerService : DaggerService(), PlayerService {
 
     companion object {
-        val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
-        val NOTIFICATION_ID = 200
+        const val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
+        const val NOTIFICATION_ID = 200
+
+        const val CANCEL_ACTION = "Cancel_Notification"
 
         fun getLaunchIntent(context: Context): Intent {
             return Intent(context, AudioPlayerService::class.java)
         }
     }
 
-    val CANCEL_ACTION = "Cancel_Notification"
     val EMPTY_AUDIO_FILE = AudioFileModel("",null,null,null,null,null, null, null, null)
 
     /**
@@ -340,10 +341,13 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
                     override fun createCustomActions(context: Context, instanceId: Int): MutableMap<String, NotificationCompat.Action> {
                         val playIntent = Intent(CANCEL_ACTION).setPackage(context.packageName)
-                        return mutableMapOf(CANCEL_ACTION to NotificationCompat.Action(
-                                R.drawable.ic_close_circle,
-                                "Close",
-                                PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_CANCEL_CURRENT)))
+                        return mutableMapOf(
+                                CANCEL_ACTION to NotificationCompat.Action(
+                                        R.drawable.ic_close_circle,
+                                        "Close",
+                                        PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+                                )
+                        )
                     }
 
                     override fun onCustomAction(player: Player?, action: String?, intent: Intent?) {
