@@ -204,7 +204,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
      *
      * @see AudioManager.MODE_IN_COMMUNICATION
      */
-    internal var forceHeadsetMode: Boolean = true
+    internal var forceHeadsetMode: Boolean = false
 
 
     override fun onCreate() {
