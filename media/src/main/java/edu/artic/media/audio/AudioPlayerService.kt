@@ -182,12 +182,22 @@ class AudioPlayerService : DaggerService(), PlayerService {
     val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
     val currentTrack: Subject<AudioFileModel> = BehaviorSubject.create()
 
-    val disposeBag = DisposeBag()
+    /**
+     * Lifetime: [onCreate] to [onDestroy].
+     *
+     * Do not use after [onDestroy] or before [onCreate] (it's easy to accidentally do that
+     * if the service is being recreated).
+     */
+    lateinit var disposeBag: DisposeBag
     internal var currentBitmap: Bitmap? = null
 
 
     override fun onCreate() {
         super.onCreate()
+
+        // Make sure to clear this out in ::onDestroy.
+        disposeBag = DisposeBag()
+
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
 
@@ -437,6 +447,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
         super.onDestroy()
         playerNotificationManager.setPlayer(null)
         player.release()
+
+        // Make sure to replace 'disposeBag' with a new instance in ::onCreate.
         disposeBag.dispose()
     }
 
