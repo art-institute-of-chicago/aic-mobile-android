@@ -2,10 +2,7 @@ package edu.artic.media.ui
 
 import android.support.annotation.AnyThread
 import android.support.annotation.UiThread
-import com.fuzz.rx.bindTo
-import com.fuzz.rx.disposedBy
-import com.fuzz.rx.filterFlatMap
-import com.fuzz.rx.filterTo
+import com.fuzz.rx.*
 import edu.artic.db.Playable
 import edu.artic.db.daos.ArticTourDao
 import edu.artic.db.models.ArticAudioFile
@@ -114,21 +111,24 @@ class AudioDetailsViewModel @Inject constructor(
                 }.bindTo(authorCulturalPlace)
                 .disposedBy(disposeBag)
 
-        Observables.combineLatest(
+        val latestMetadata = Observables.combineLatest(
                 objectObservable.filterTo<Playable, ArticTour>(),
                 audioTrackToUse)
                 .map { (tour, audioFile) ->
-                    val translatedTour = languageSelector.findIn(tour.allTranslations, audioFile.underlyingLocale())
-                    translatedTour?.description?.replace("\r", "\n").orEmpty()
+                    Optional(languageSelector.findIn(tour.allTranslations, audioFile.underlyingLocale()))
+                }
+                .filterValue()
+                .share()
+
+        latestMetadata
+                .map {
+                    it.description?.replace("\r", "\n").orEmpty()
                 }.bindTo(tourDescription)
                 .disposedBy(disposeBag)
 
-        Observables.combineLatest(
-                objectObservable.filterTo<Playable, ArticTour>(),
-                audioTrackToUse)
-                .map { (tour, audioFile) ->
-                    val translatedTour = languageSelector.findIn(tour.allTranslations, audioFile.underlyingLocale())
-                    translatedTour?.intro?.replace("\r", "\n").orEmpty()
+        latestMetadata
+                .map {
+                    it.intro?.replace("\r", "\n").orEmpty()
                 }.bindTo(tourIntroduction)
                 .disposedBy(disposeBag)
 
