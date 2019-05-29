@@ -248,8 +248,14 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     }
 
 
+    /**
+     * Ensure that changes in [AudioDetailsViewModel.audioTrackToUse]
+     * and [AudioDetailsViewModel.availableTranslations] appear in the
+     * UI.
+     */
     private fun bindTranslationSelector(viewModel: AudioDetailsViewModel) {
 
+        // Stream 1: select 'viewModel.audioTrackToUse' in the exo_translation_selector.
         viewModel.audioTrackToUse
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy { chosen ->
@@ -257,15 +263,18 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
+        // Stream 2: show 'viewModel.availableTranslations' in translationsAdapter
         viewModel.availableTranslations
                 .bindToMain(translationsAdapter.itemChanges())
                 .disposedBy(disposeBag)
 
+        // Stream 3: hide the exo_translation_selector if there aren't any 'viewModel.availableTranslations'
         viewModel.availableTranslations
                 .map { it.size > 1 }
                 .bindToMain(exo_translation_selector.visibility(View.INVISIBLE))
                 .disposedBy(disposeBag)
 
+        // Stream 4: switch audio track if someone changes the selected item in exo_translation_selector
         exo_translation_selector
                 .itemSelections()
                 .subscribe { position ->
