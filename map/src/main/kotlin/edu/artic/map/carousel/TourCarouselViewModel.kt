@@ -190,7 +190,11 @@ open class TourCarousalBaseViewModel(
 
 /**
  * ViewModel for the tour intro layout.
- * Play pause the tour introduction.
+ *
+ * The parameter [audioObjectDao] is here for one reason: to find the
+ * [ArticAudioFile] registered with [tour]'s
+ * [audio id constant][ArticTour.tourAudio]. Don't expect anything
+ * to happen until [playTourIntro] is actually invoked, though.
  */
 class TourCarousalIntroViewModel(
         adapterDisposeBag: DisposeBag,
