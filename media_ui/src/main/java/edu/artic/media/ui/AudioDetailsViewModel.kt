@@ -14,6 +14,7 @@ import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.refreshPlayBackState
 import edu.artic.tours.manager.TourProgressManager
 import edu.artic.viewmodel.BaseViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
@@ -178,6 +179,7 @@ class AudioDetailsViewModel @Inject constructor(
 
         service.getActiveFileModel()
                 .filterValue()
+                .observeOn(AndroidSchedulers.mainThread())
                 .take(1)
                 .bindTo(currentAudioFile)
                 .disposedBy(disposeBag)
