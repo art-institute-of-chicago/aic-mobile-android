@@ -177,25 +177,29 @@ class AudioDetailsViewModel @Inject constructor(
     fun onServiceConnected(service: AudioPlayerService) {
         playable = service.playable
 
+        val connectionDisposable = DisposeBag()
+
         service.getActiveFileModel()
                 .filterValue()
                 .observeOn(AndroidSchedulers.mainThread())
                 .take(1)
                 .bindTo(currentAudioFile)
                 .disposedBy(disposeBag)
+                .disposedBy(connectionDisposable)
 
         service.player.refreshPlayBackState()
 
         // Register for updates
-        trackDisposable = service.currentTrack
+        service.currentTrack
                 .subscribeBy { translation ->
                     service.playable?.let {
                         title.onNext(it.getPlayableTitle().orEmpty())
                     }
                     audioTrackToUse.onNext(translation)
                 }.disposedBy(disposeBag)
+                .disposedBy(connectionDisposable)
 
-
+        trackDisposable = connectionDisposable
 
         if (service.hasNoTrack()) {
             // Set up the default language selection.
