@@ -552,10 +552,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     /**
      * Returns currently playing [ArticAudioFile].
-     * [ArticObject] has multiple [ArticAudioFile]s, so this function returns the currently selected
-     * one.
      *
-     * If the [playable] is not [ArticObject], this method returns [null].
+     * [ArticObject]s often have multiple [ArticAudioFile]s, but this function
+     * only returns the currently selected one.
+     *
+     * If the [playable] is `null`, this method will only emit `null`.
      */
     fun getActiveFileModel(): Observable<Optional<ArticAudioFile>> {
         return currentTrack
