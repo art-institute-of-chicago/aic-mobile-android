@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
+import com.jakewharton.rxbinding2.widget.dataChanges
 import com.jakewharton.rxbinding2.widget.itemSelections
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.*
@@ -256,10 +257,19 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     private fun bindTranslationSelector(viewModel: AudioDetailsViewModel) {
 
         // Stream 1: select 'viewModel.audioTrackToUse' in the exo_translation_selector.
-        viewModel.audioTrackToUse
+        exo_translation_selector.adapter
+                // Only try to select something if the adapter has items
+                .dataChanges()
+                .filter { adapter -> adapter.count > 0 }
+                .distinctUntilChanged()
+                // Change ObservableSource to 'viewModel.audioTrackToUse'
+                .switchMap {
+                    viewModel.audioTrackToUse
+                }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { chosen ->
-                    exo_translation_selector.setSelection(translationsAdapter.itemIndexOf(chosen))
+                .map(translationsAdapter::itemIndexOf)
+                .subscribeBy { index ->
+                    exo_translation_selector.setSelection(index)
                 }
                 .disposedBy(disposeBag)
 
@@ -277,12 +287,17 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
         // Stream 4: switch audio track if someone changes the selected item in exo_translation_selector
         exo_translation_selector
                 .itemSelections()
-                .subscribe { position ->
-                    if (position >= 0) {
-                        val translation = translationsAdapter.getItem(position)
-                        viewModel.setTranslationOverride(translation)
-                        boundService?.switchAudioTrack(translation)
-                    }
+                // Require valid indices
+                .filter { it >= 0 }
+                // Skip initial value set by the exo_translation_selector stream at the beginning of ::bindTranslationSelector
+                .skip(1)
+                // Map to unique elements
+                .map { position -> translationsAdapter.getItem(position) }
+                .distinctUntilChanged()
+                // Make this AudioDetailFragment use that element as an override.
+                .subscribe { translation ->
+                    viewModel.setTranslationOverride(translation)
+                    boundService?.switchAudioTrack(translation)
                 }.disposedBy(disposeBag)
 
     }
