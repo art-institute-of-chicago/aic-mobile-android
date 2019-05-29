@@ -43,6 +43,7 @@ import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import edu.artic.tours.manager.TourProgressManager
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -558,6 +559,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
      */
     fun getActiveFileModel(): Observable<Optional<ArticAudioFile>> {
         return currentTrack
+                .observeOn(Schedulers.io())
                 .map { track ->
                     Optional(playable?.let { currentlyPlayingObject ->
                         when (currentlyPlayingObject) {
