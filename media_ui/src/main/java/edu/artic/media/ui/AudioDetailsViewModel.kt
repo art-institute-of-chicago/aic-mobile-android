@@ -64,13 +64,6 @@ class AudioDetailsViewModel @Inject constructor(
             }
         }
 
-    var audioFileModel: ArticAudioFile? = null
-        set(value) {
-            field = value
-            value?.let {
-                currentAudioFile.onNext(it)
-            }
-        }
 
     init {
 
@@ -182,7 +175,13 @@ class AudioDetailsViewModel @Inject constructor(
     @UiThread
     fun onServiceConnected(service: AudioPlayerService) {
         playable = service.playable
-        audioFileModel = service.getActiveFileModel()
+
+        service.getActiveFileModel()
+                .filterValue()
+                .take(1)
+                .bindTo(currentAudioFile)
+                .disposedBy(disposeBag)
+
         service.player.refreshPlayBackState()
 
         // Register for updates
@@ -211,7 +210,6 @@ class AudioDetailsViewModel @Inject constructor(
     @AnyThread
     fun onServiceDisconnected() {
         playable = null
-        audioFileModel = null
         trackDisposable?.dispose()
     }
 

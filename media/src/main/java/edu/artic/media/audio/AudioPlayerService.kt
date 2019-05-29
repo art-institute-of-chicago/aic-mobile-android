@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.Optional
 import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.C.STREAM_TYPE_VOICE_CALL
@@ -41,6 +42,7 @@ import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import edu.artic.tours.manager.TourProgressManager
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -540,20 +542,18 @@ class AudioPlayerService : DaggerService(), PlayerService {
      *
      * If the [playable] is not [ArticObject], this method returns [null].
      */
-    fun getActiveFileModel(): ArticAudioFile? {
-        val currentTrack: AudioFileModel? = (currentTrack as BehaviorSubject).value
-        return if (currentTrack != null) {
-            playable?.let { currentlyPlayingObject ->
-                when (currentlyPlayingObject) {
-                    is ArticObject -> currentlyPlayingObject.audioCommentary
-                            .find { it.audioFile?.nid == currentTrack.audioGroupId }
-                            ?.audioFile
-                    else -> null
+    fun getActiveFileModel(): Observable<Optional<ArticAudioFile>> {
+        return currentTrack
+                .map { track ->
+                    Optional(playable?.let { currentlyPlayingObject ->
+                        when (currentlyPlayingObject) {
+                            is ArticObject -> currentlyPlayingObject.audioCommentary
+                                    .find { it.audioFile?.nid == track.audioGroupId }
+                                    ?.audioFile
+                            else -> null
+                        }
+                    })
                 }
-            }
-        } else {
-            return null
-        }
 
     }
 }
