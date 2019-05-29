@@ -34,6 +34,7 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.Playable
+import edu.artic.db.daos.ArticAudioFileDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.nameOfLanguageForAnalytics
@@ -172,6 +173,9 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     @Inject
     lateinit var audioPrefManager: AudioPrefManager
+
+    @Inject
+    lateinit var audioFileDao: ArticAudioFileDao
 
     @Inject
     lateinit var tourProgressManager: TourProgressManager
@@ -548,13 +552,10 @@ class AudioPlayerService : DaggerService(), PlayerService {
         return currentTrack
                 .observeOn(Schedulers.io())
                 .map { track ->
-                    Optional(playable?.let { currentlyPlayingObject ->
-                        when (currentlyPlayingObject) {
-                            is ArticObject -> currentlyPlayingObject.audioCommentary
-                                    .find { it.audioFile?.nid == track.audioGroupId }
-                                    ?.audioFile
-                            else -> null
-                        }
+                    Optional(if (playable != null) {
+                        audioFileDao.getAudioById(track.audioGroupId)
+                    } else {
+                        null
                     })
                 }
 

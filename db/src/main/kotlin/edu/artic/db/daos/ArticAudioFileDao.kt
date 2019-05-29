@@ -16,7 +16,7 @@ interface ArticAudioFileDao {
     fun addAudioFiles(files: List<ArticAudioFile>)
 
     @Query("select * from ArticAudioFile where nid = :id")
-    fun getAudioById(id: String): ArticAudioFile
+    fun getAudioById(id: String): ArticAudioFile?
 
     @Query("select * from ArticAudioFile where nid = :id")
     fun getAudioByIdAsync(id: String): Flowable<ArticAudioFile>
