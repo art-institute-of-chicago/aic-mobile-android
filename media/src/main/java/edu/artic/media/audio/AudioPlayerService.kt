@@ -419,13 +419,13 @@ class AudioPlayerService : DaggerService(), PlayerService {
             playable = _articObject
 
             audio.let {
+                currentTrack.onNext(audio)
                 audio.fileUrl?.let { url ->
                     val uri = Uri.parse(url)
                     val mediaSource = buildMediaSource(uri)
                     player.prepare(mediaSource, resetPosition, false)
                     player.seekTo(0)
                 }
-                currentTrack.onNext(audio)
             }
         }
     }
