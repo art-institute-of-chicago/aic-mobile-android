@@ -230,11 +230,15 @@ class AudioPlayerService : DaggerService(), PlayerService {
                                     }.disposedBy(disposeBag)
                         }
                         playbackState == Player.STATE_ENDED -> {
-                            /*Play back completed*/
-                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value?.title.orEmpty())
-                            audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
-                            playerNotificationManager.setPlayer(null)
-                            tourProgressManager.playBackEnded(given)
+                            if (given != EMPTY_AUDIO_FILE) {
+                                /*Play back completed*/
+                                analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value?.title.orEmpty())
+                                audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
+                                playerNotificationManager.setPlayer(null)
+                                tourProgressManager.playBackEnded(given)
+                            } else {
+                                // Pause/Resume was invoked on an empty player.
+                            }
                             currentTrack.onNext(EMPTY_AUDIO_FILE)
                         }
                         playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
