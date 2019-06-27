@@ -10,6 +10,7 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
+import android.provider.Settings
 import android.support.v4.app.NotificationCompat
 import android.support.v4.media.AudioAttributesCompat
 import com.bumptech.glide.Glide
@@ -212,6 +213,9 @@ class AudioPlayerService : DaggerService(), PlayerService {
         // Make sure to clear this out in ::onDestroy.
         disposeBag = DisposeBag()
 
+        // Most devices should default to 'false'. Those with Touch Sounds on, however, should have this set to true.
+        forceHeadsetMode = soundsEnabled()
+
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
 
@@ -300,6 +304,16 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 }
             }
         }.disposedBy(disposeBag)
+    }
+
+    private fun soundsEnabled() : Boolean {
+        val effectsState = Settings.System.getInt(
+                contentResolver,
+                Settings.System.SOUND_EFFECTS_ENABLED,
+                -1
+        )
+
+        return effectsState == 1
     }
 
     private fun setUpNotificationManager() {
