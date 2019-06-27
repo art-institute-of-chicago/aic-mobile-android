@@ -22,7 +22,6 @@ import com.google.android.exoplayer2.C.STREAM_TYPE_VOICE_CALL
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.NotificationUtil
@@ -448,10 +447,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
         audioManager.isSpeakerphoneOn = false
         AudioFocusExoPlayerDecorator(audioAttributes,
                 audioManager,
-                ExoPlayerFactory.newSimpleInstance(this,
-                        DefaultRenderersFactory(this),
-                        DefaultTrackSelector(),
-                        DefaultLoadControl()).apply {
+                ExoPlayerFactory.newSimpleInstance(this).apply {
                     audioAttributes = AudioAttributes.Builder()
                             .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
                             .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
