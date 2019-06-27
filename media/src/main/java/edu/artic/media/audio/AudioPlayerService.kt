@@ -5,12 +5,14 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.provider.Settings
+import android.support.annotation.UiThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.media.AudioAttributesCompat
 import com.bumptech.glide.Glide
@@ -156,6 +158,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
     private val binder: Binder = AudioPlayerServiceBinder()
     private lateinit var playerNotificationManager: PlayerNotificationManager
 
+    private val plugChangeReceiver = PlugBroadcastReceiver(
+            onUnplug = PlayerRunnable { forceHeadsetMode = soundsEnabled() },
+            onPlugIn = PlayerRunnable { forceHeadsetMode = false }
+    )
+
     // NB: As this is an Android Service, we _CANNOT_ define '@Inject' properties in the constructor
 
     @Inject
@@ -264,6 +271,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
                     else -> audioManager.mode = AudioManager.MODE_NORMAL
                 }
             }.disposedBy(disposeBag)
+
+        registerReceiver(plugChangeReceiver, IntentFilter(AudioManager.ACTION_HEADSET_PLUG))
 
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
@@ -480,6 +489,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
         playerNotificationManager.setPlayer(null)
         player.release()
 
+        unregisterReceiver(plugChangeReceiver)
+
         // Make sure to replace 'disposeBag' with a new instance in ::onCreate.
         disposeBag.dispose()
     }
@@ -569,6 +580,20 @@ class AudioPlayerService : DaggerService(), PlayerService {
             return null
         }
 
+    }
+
+    /**
+     * Simple adaptation of [Runnable] for use with [android.content.BroadcastReceiver]
+     * implementations.
+     *
+     * When run, this pauses the player, invokes [whilePaused], then resumes the player.
+     */
+    private inner class PlayerRunnable(private val whilePaused: () -> Unit): Runnable {
+        override fun run() {
+            pausePlayer()
+            whilePaused()
+            resumePlayer()
+        }
     }
 }
 
