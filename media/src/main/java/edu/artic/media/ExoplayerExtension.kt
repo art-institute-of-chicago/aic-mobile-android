@@ -8,6 +8,10 @@ import com.google.android.exoplayer2.ExoPlayer
 
 fun ExoPlayer.refreshPlayBackState() {
     val playBackState = this.playWhenReady
-    this.playWhenReady = false
-    this.playWhenReady = playBackState
+
+    // If playback is ongoing, pause then resume.
+    if (playBackState) {
+        this.playWhenReady = false
+        this.playWhenReady = true
+    }
 }
