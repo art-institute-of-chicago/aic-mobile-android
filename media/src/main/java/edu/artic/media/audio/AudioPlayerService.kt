@@ -38,6 +38,7 @@ import edu.artic.db.Playable
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.nameOfLanguageForAnalytics
+import edu.artic.media.BuildConfig
 import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
@@ -45,6 +46,7 @@ import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
 import edu.artic.tours.manager.TourProgressManager
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -408,6 +410,17 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return Service.START_STICKY
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        try {
+            pausePlayer()
+        } catch (t: Throwable) {
+            // The app may be being killed. We don't care about exceptions at this point.
+            if (BuildConfig.DEBUG) {
+                Timber.w(t, "Had some trouble pausing audio. NB: this error will not appear in release builds.")
+            }
+        }
     }
 
     /**
