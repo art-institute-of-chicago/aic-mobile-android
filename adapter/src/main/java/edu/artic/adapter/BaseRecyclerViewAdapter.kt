@@ -31,6 +31,8 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
             override fun areItemsTheSame(oldItem: TModel, newItem: TModel): Boolean =
                     areContentsTheSame(oldItem, newItem)
 
+            // FIXME: Should we perhaps use a === check instead?
+            @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: TModel, newItem: TModel): Boolean =
                     oldItem == newItem
         }
