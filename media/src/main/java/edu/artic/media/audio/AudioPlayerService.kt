@@ -70,15 +70,16 @@ import javax.inject.Inject
 class AudioPlayerService : DaggerService(), PlayerService {
 
     companion object {
-        val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
-        val NOTIFICATION_ID = 200
+        const val FOREGROUND_CHANNEL_ID = "foreground_channel_id"
+        const val NOTIFICATION_ID = 200
+
+        const val CANCEL_ACTION = "Cancel_Notification"
 
         fun getLaunchIntent(context: Context): Intent {
             return Intent(context, AudioPlayerService::class.java)
         }
     }
 
-    val CANCEL_ACTION = "Cancel_Notification"
     val EMPTY_AUDIO_FILE = AudioFileModel("",null,null,null,null,null, null, null, null)
 
     /**
@@ -182,12 +183,36 @@ class AudioPlayerService : DaggerService(), PlayerService {
     val audioPlayBackStatus: Subject<PlayBackState> = BehaviorSubject.create()
     val currentTrack: Subject<AudioFileModel> = BehaviorSubject.create()
 
-    val disposeBag = DisposeBag()
+    /**
+     * Lifetime: [onCreate] to [onDestroy].
+     *
+     * Do not use after [onDestroy] or before [onCreate] (it's easy to accidentally do that
+     * if the service is being recreated).
+     */
+    lateinit var disposeBag: DisposeBag
     internal var currentBitmap: Bitmap? = null
+
+    /**
+     * Set this to true to tell the system we are currently in a call-like environment.
+     *
+     * On Android Pie devices, that would let the system load a reasonable
+     * volume-settings preset. Only takes effect when a [Playing] event passes
+     * through [audioPlayBackStatus].
+     *
+     * Assumption: [AudioManager.setMode] only affects the mode for this service. When
+     * we die, the mode will revert to its previous setting.
+     *
+     * @see AudioManager.MODE_IN_COMMUNICATION
+     */
+    internal var forceHeadsetMode: Boolean = false
 
 
     override fun onCreate() {
         super.onCreate()
+
+        // Make sure to clear this out in ::onDestroy.
+        disposeBag = DisposeBag()
+
         setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
 
@@ -224,9 +249,9 @@ class AudioPlayerService : DaggerService(), PlayerService {
             .subscribe {
                 when(it) {
                     is Playing -> {
-                        //Tell the system we are currently in a call like environment which
-                        //lets the system contextually update the volume on android pie
-                        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+                        if (forceHeadsetMode) {
+                            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+                        }
                         audioManager.isSpeakerphoneOn = false
                     }
                     else -> audioManager.mode = AudioManager.MODE_NORMAL
@@ -316,10 +341,13 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
                     override fun createCustomActions(context: Context, instanceId: Int): MutableMap<String, NotificationCompat.Action> {
                         val playIntent = Intent(CANCEL_ACTION).setPackage(context.packageName)
-                        return mutableMapOf(CANCEL_ACTION to NotificationCompat.Action(
-                                R.drawable.ic_close_circle,
-                                "Close",
-                                PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_CANCEL_CURRENT)))
+                        return mutableMapOf(
+                                CANCEL_ACTION to NotificationCompat.Action(
+                                        R.drawable.ic_close_circle,
+                                        "Close",
+                                        PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+                                )
+                        )
                     }
 
                     override fun onCustomAction(player: Player?, action: String?, intent: Intent?) {
@@ -437,6 +465,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
         super.onDestroy()
         playerNotificationManager.setPlayer(null)
         player.release()
+
+        // Make sure to replace 'disposeBag' with a new instance in ::onCreate.
         disposeBag.dispose()
     }
 

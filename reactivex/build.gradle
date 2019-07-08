@@ -3,6 +3,8 @@ dependencies {
 
     implementation project(':base')
 
+    // NB: libs.timber in :base overrides artifacts of the same coordinate in libs.rx_helpers
+
     api libs.rx
     api libs.rx_helpers
     api libs.rx_android

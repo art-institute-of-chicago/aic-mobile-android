@@ -18,7 +18,17 @@ interface SpecifiesLanguage {
     fun underlyingLanguage() : String?
 
     fun underlyingLocale(): Locale {
-        return Locale.forLanguageTag(underlyingLanguage())
+        return underlyingLanguage()?.asLanguageTag().orFallback(Locale.ROOT)
+    }
+
+    /**
+     * Alias to [Locale.forLanguageTag].
+     *
+     * The SDK function's javadoc says that it'll throw a NullPointerException
+     * if its parameter is null, so we disallow null receivers here.
+     */
+    private fun String.asLanguageTag(): Locale {
+        return Locale.forLanguageTag(this)
     }
 
     /**

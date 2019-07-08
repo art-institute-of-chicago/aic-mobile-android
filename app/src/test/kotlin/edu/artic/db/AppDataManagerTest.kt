@@ -1,9 +1,9 @@
 package edu.artic.db
 
 import android.arch.persistence.db.SupportSQLiteOpenHelper
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import edu.artic.db.daos.*
 import io.reactivex.Observable
 import io.reactivex.observers.TestObserver
