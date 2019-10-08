@@ -59,8 +59,8 @@ buildscript {
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",
                 glide_okhttp_integration: "com.github.bumptech.glide:okhttp3-integration:${glide_version}@aar",
                 progress_interceptor    : 'com.github.cliabhach:okhttp3-downloadprogress-interceptor:1.0.2-a1',
-                ga                      : "com.google.android.gms:play-services-analytics:${firebase_version}",
                 firebase_core           : "com.google.firebase:firebase-core:${firebase_version}",
+                firebase_analytics      : "com.google.firebase:firebase-analytics:${firebase_version}",
                 crashlytics             : "com.crashlytics.sdk.android:crashlytics:${crashlytics_version}",
                 maps                    : "com.google.android.gms:play-services-maps:15.0.1",
                 location                : "com.google.android.gms:play-services-location:15.0.1",
@@ -83,7 +83,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.4.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
-        classpath 'com.google.gms:google-services:4.1.0'
+        classpath 'com.google.gms:google-services:4.3.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -105,6 +105,7 @@ subprojects {
 
     if (name == 'app') {
         apply plugin: 'com.android.application'
+        apply plugin: 'com.google.gms.google-services'
     } else {
         apply plugin: 'com.android.library'
     }
