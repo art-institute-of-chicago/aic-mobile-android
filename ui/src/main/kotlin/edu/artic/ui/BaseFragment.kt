@@ -108,8 +108,9 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
 
     override fun onStart() {
         super.onStart()
+
         screenName?.let {
-            analyticsTracker.reportScreenView(it)
+            analyticsTracker.reportScreenView(baseActivity, it)
         }
     }
 
