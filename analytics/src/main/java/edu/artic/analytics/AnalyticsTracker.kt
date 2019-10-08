@@ -1,8 +1,6 @@
 package edu.artic.analytics
 
 import android.content.Context
-import com.google.android.gms.analytics.GoogleAnalytics
-import com.google.android.gms.analytics.HitBuilders
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.location.LocationService
@@ -39,8 +37,8 @@ class AnalyticsTrackerImpl(context: Context,
                            private val locationService: LocationService,
                            private val analyticsConfig: AnalyticsConfig) : AnalyticsTracker {
 
-    private val analytics = GoogleAnalytics.getInstance(context)
-    private val tracker = analytics.newTracker(analyticsConfig.trackingId)
+    //private val analytics = GoogleAnalytics.getInstance(context)
+    //private val tracker = analytics.newTracker(analyticsConfig.trackingId)
     private var atMusuem = false
     private var reportLocationAnalytic: Subject<Boolean> = BehaviorSubject.createDefault(true)
 
@@ -67,28 +65,28 @@ class AnalyticsTrackerImpl(context: Context,
     }
 
     override fun reportEvent(category: String, action: String, label: String) {
-        val memberId = membershipPrefs.memberID
-        tracker.send(HitBuilders.EventBuilder()
-                .setCategory(category)
-                .setAction(action)
-                .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
-                .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
-                .setCustomDimension(4, Locale.getDefault().toLanguageTag())
-                .setCustomDimension(5, atMusuem.toString())
-                .setLabel(label).build())
+//        val memberId = membershipPrefs.memberID
+//        tracker.send(HitBuilders.EventBuilder()
+//                .setCategory(category)
+//                .setAction(action)
+//                .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
+//                .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
+//                .setCustomDimension(4, Locale.getDefault().toLanguageTag())
+//                .setCustomDimension(5, atMusuem.toString())
+//                .setLabel(label).build())
     }
 
 
     override fun reportScreenView(name: String) {
-        val memberId = membershipPrefs.memberID
-        tracker.apply {
-            setScreenName(name)
-            send(HitBuilders.ScreenViewBuilder()
-                    .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
-                    .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
-                    .setCustomDimension(4, Locale.getDefault().toLanguageTag())
-                    .setCustomDimension(5, atMusuem.toString())
-                    .build())
-        }
+//        val memberId = membershipPrefs.memberID
+//        tracker.apply {
+//            setScreenName(name)
+//            send(HitBuilders.ScreenViewBuilder()
+//                    .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
+//                    .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
+//                    .setCustomDimension(4, Locale.getDefault().toLanguageTag())
+//                    .setCustomDimension(5, atMusuem.toString())
+//                    .build())
+//        }
     }
 }
