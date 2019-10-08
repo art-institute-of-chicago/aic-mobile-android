@@ -1,6 +1,8 @@
 package edu.artic.analytics
 
+import android.app.Activity
 import android.content.Context
+import com.google.firebase.analytics.FirebaseAnalytics
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.location.LocationService
@@ -26,21 +28,19 @@ interface AnalyticsTracker {
     fun reportEvent(categoryName: EventCategoryName, action: String = "", label: String = "") =
             reportEvent(categoryName.eventCategoryName, action, label)
 
-    fun reportScreenView(name: String)
+    fun reportScreenView(activity: Activity, name: String)
 
-    fun reportScreenView(categoryName: ScreenName) = reportScreenView(categoryName.screenName)
+    fun reportScreenView(activity: Activity, categoryName: ScreenName) = reportScreenView(activity, categoryName.screenName)
 }
 
 class AnalyticsTrackerImpl(context: Context,
                            private val languageSelector: LanguageSelector,
                            private val membershipPrefs: MemberInfoPreferencesManager,
-                           private val locationService: LocationService,
-                           private val analyticsConfig: AnalyticsConfig) : AnalyticsTracker {
+                           private val locationService: LocationService) : AnalyticsTracker {
 
-    //private val analytics = GoogleAnalytics.getInstance(context)
-    //private val tracker = analytics.newTracker(analyticsConfig.trackingId)
     private var atMusuem = false
     private var reportLocationAnalytic: Subject<Boolean> = BehaviorSubject.createDefault(true)
+    private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
     init {
         locationService.requestTrackingUserLocation()
@@ -64,6 +64,11 @@ class AnalyticsTrackerImpl(context: Context,
         reportLocationAnalytic.onNext(true)
     }
 
+    /*
+        Commenting out old Google Analytics code below but leaving here
+        because we will need to reference it for our new Firebase Analytics
+        custom events.
+     */
     override fun reportEvent(category: String, action: String, label: String) {
 //        val memberId = membershipPrefs.memberID
 //        tracker.send(HitBuilders.EventBuilder()
@@ -76,8 +81,13 @@ class AnalyticsTrackerImpl(context: Context,
 //                .setLabel(label).build())
     }
 
-
-    override fun reportScreenView(name: String) {
+    /*
+        Commenting out old Google Analytics code below but leaving here
+        because we will need to reference it for our new Firebase Analytics
+        custom events.
+     */
+    override fun reportScreenView(activity: Activity, name: String) {
+        firebaseAnalytics.setCurrentScreen(activity, name, null)
 //        val memberId = membershipPrefs.memberID
 //        tracker.apply {
 //            setScreenName(name)
