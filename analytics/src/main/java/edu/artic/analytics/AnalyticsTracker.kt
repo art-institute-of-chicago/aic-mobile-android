@@ -2,6 +2,7 @@ package edu.artic.analytics
 
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.nameOfLanguageForAnalytics
@@ -16,6 +17,7 @@ import java.util.*
 /**
  * Description:
  */
+
 interface AnalyticsTracker {
 
     fun clearSession()
@@ -70,6 +72,7 @@ class AnalyticsTrackerImpl(context: Context,
         custom events.
      */
     override fun reportEvent(category: String, action: String, label: String) {
+        Log.d(AnalyticsTracker::class.qualifiedName, "reportEvent(): Logging No-op for this function.")
 //        val memberId = membershipPrefs.memberID
 //        tracker.send(HitBuilders.EventBuilder()
 //                .setCategory(category)
