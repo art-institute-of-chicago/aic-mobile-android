@@ -46,6 +46,7 @@ sealed class EventCategoryName(val eventCategoryName: String) {
     object PlayAudio : EventCategoryName("play_audio")
     object PlayBack : EventCategoryName("playback")
     object Tour : EventCategoryName("tour")
+    object TourStarted : EventCategoryName("tour_started")
     object Search : EventCategoryName("search")
     object SearchTour : EventCategoryName("search_tour")
     object SearchExhibition : EventCategoryName("search_exhibition")
@@ -112,4 +113,6 @@ object AnalyticsAction {
 
 object AnalyticsLabel {
     const val Empty = ""
+    const val title = "title"
+    const val tourLanguage = "tour_language"
 }
