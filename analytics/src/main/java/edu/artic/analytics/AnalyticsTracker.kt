@@ -2,6 +2,7 @@ package edu.artic.analytics
 
 import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 import edu.artic.localization.LanguageSelector
@@ -21,6 +22,11 @@ import java.util.*
 interface AnalyticsTracker {
 
     fun clearSession()
+
+    fun reportCustomEvent(category: String, parameterMap: Map<String, String>)
+
+    fun reportCustomEvent(category: EventCategoryName, parameterMap: Map<String, String>) =
+            reportCustomEvent(category.eventCategoryName, parameterMap)
 
     fun reportEvent(category: String, action: String = "", label: String = "")
 
@@ -64,6 +70,20 @@ class AnalyticsTrackerImpl(context: Context,
 
     override fun clearSession() {
         reportLocationAnalytic.onNext(true)
+    }
+
+    override fun reportCustomEvent(category: String, parameterMap: Map<String, String>) {
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, category)
+
+        for((paramName, paramValue) in parameterMap) {
+            if(paramValue.isBlank()) {
+                Log.w(AnalyticsTracker::class.qualifiedName, "reportCustomEvent(): value for parameter \"$paramName\" is blank, not adding to Bundle.")
+            } else {
+                bundle.putString(paramName, paramValue)
+            }
+        }
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 
     /*
