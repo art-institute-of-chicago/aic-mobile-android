@@ -13,6 +13,12 @@ import java.util.*
  *
  * @author Philip Cohn-Cort (Fuzz)
  */
+
+// We will want our analytics in english, and therefore will always pull these constants
+private const val english = "English"
+private const val spanish = "Spanish"
+private const val chinese = "Chinese "
+
 interface SpecifiesLanguage {
 
     fun underlyingLanguage() : String?
@@ -54,6 +60,15 @@ interface SpecifiesLanguage {
             Locale.ENGLISH.language -> ctx.getText(R.string.english)
             SPANISH.language -> ctx.getText(R.string.spanish)
             Locale.CHINESE.language -> ctx.getText(R.string.chinese)
+            else -> underlyingLocale().displayLanguage
+        }
+    }
+
+    fun languageForAnalytics(): CharSequence  {
+        return when(underlyingLocale().language) {
+            Locale.ENGLISH.language -> english
+            SPANISH.language -> spanish
+            Locale.CHINESE.language -> chinese
             else -> underlyingLocale().displayLanguage
         }
     }

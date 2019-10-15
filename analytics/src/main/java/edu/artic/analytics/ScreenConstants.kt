@@ -20,7 +20,9 @@ sealed class ScreenName(val screenName: String) {
     object Events : ScreenName("Events")
     object OnView : ScreenName("On View")
     object Tours : ScreenName("Tours")
+    object TourStop : ScreenName("Tour Stop")
     object Search : ScreenName("Search")
+    object SearchIcon : ScreenName("Search Icon")
     object AudioPlayer : ScreenName("Audio Player")
     object TourDetails : ScreenName("Tour Details")
     object OnViewDetails : ScreenName("On View Details")
@@ -43,7 +45,7 @@ sealed class EventCategoryName(val eventCategoryName: String) {
     object LanguageTour : EventCategoryName("language_tour")
     object LanguageAudio : EventCategoryName("language_audio")
 
-    object PlayAudio : EventCategoryName("play_audio")
+    object AudioPlayed : EventCategoryName("audio_played")
     object PlayBack : EventCategoryName("playback")
     object Tour : EventCategoryName("tour")
     object TourStarted : EventCategoryName("tour_started")
@@ -114,5 +116,9 @@ object AnalyticsAction {
 object AnalyticsLabel {
     const val Empty = ""
     const val title = "title"
-    const val tourLanguage = "tour_language"
+    const val tourTitle = "tour_title"
+    const val audioTitle = "audio_title"
+    const val playbackLanguage = "playback_language"
+
+    const val playbackSource = "playback_source"
 }
