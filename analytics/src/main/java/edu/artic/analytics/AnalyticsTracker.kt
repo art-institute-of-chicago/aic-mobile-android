@@ -74,7 +74,7 @@ class AnalyticsTrackerImpl(context: Context,
 
     override fun reportCustomEvent(category: String, parameterMap: Map<String, String>) {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, category)
+        //bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, category)
 
         for((paramName, paramValue) in parameterMap) {
             if(paramValue.isBlank()) {
@@ -83,13 +83,13 @@ class AnalyticsTrackerImpl(context: Context,
                 bundle.putString(paramName, paramValue)
             }
         }
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+        firebaseAnalytics.logEvent(category, bundle)
     }
 
     /*
         Commenting out old Google Analytics code below but leaving here
         because we will need to reference it for our new Firebase Analytics
-        custom events.
+        custom events, as we are still transitioning between the two.
      */
     override fun reportEvent(category: String, action: String, label: String) {
         Log.d(AnalyticsTracker::class.qualifiedName, "reportEvent(): Logging No-op for this function.")
@@ -104,22 +104,7 @@ class AnalyticsTrackerImpl(context: Context,
 //                .setLabel(label).build())
     }
 
-    /*
-        Commenting out old Google Analytics code below but leaving here
-        because we will need to reference it for our new Firebase Analytics
-        custom events.
-     */
     override fun reportScreenView(activity: Activity, name: String) {
         firebaseAnalytics.setCurrentScreen(activity, name, null)
-//        val memberId = membershipPrefs.memberID
-//        tracker.apply {
-//            setScreenName(name)
-//            send(HitBuilders.ScreenViewBuilder()
-//                    .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
-//                    .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
-//                    .setCustomDimension(4, Locale.getDefault().toLanguageTag())
-//                    .setCustomDimension(5, atMusuem.toString())
-//                    .build())
-//        }
     }
 }

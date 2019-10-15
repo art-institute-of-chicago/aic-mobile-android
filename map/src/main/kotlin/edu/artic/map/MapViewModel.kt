@@ -254,7 +254,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
 
                     var analyticsParamMap: Map<String, String> = mapOf(
                         AnalyticsLabel.title to it.title,
-                        AnalyticsLabel.tourLanguage to languageSelector.getAppLocale().nameOfLanguageForAnalytics()
+                        AnalyticsLabel.playbackLanguage to languageSelector.getAppLocale().nameOfLanguageForAnalytics()
                     )
                     analyticsTracker.reportCustomEvent(EventCategoryName.TourStarted, analyticsParamMap)
                 }
