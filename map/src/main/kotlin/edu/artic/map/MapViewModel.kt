@@ -251,12 +251,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .filterFlatMap({ it is MapDisplayMode.Tour }, { (it as MapDisplayMode.Tour).tour })
                 .doOnNext {
                     floorChangedTo(it.floorAsInt)
-
-                    var analyticsParamMap: Map<String, String> = mapOf(
-                        AnalyticsLabel.title to it.title,
-                        AnalyticsLabel.playbackLanguage to languageSelector.getAppLocale().nameOfLanguageForAnalytics()
-                    )
-                    analyticsTracker.reportCustomEvent(EventCategoryName.TourStarted, analyticsParamMap)
                 }
                 .mapOptional()
                 .bindTo(tourProgressManager.selectedTour)

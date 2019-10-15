@@ -159,7 +159,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
                     AnalyticsLabel.title to source.title,
                     AnalyticsLabel.tourTitle to source.tourTitles.orEmpty(),
                     AnalyticsLabel.audioTitle to translation.title.orEmpty(),
-                    AnalyticsLabel.playbackLanguage to translation.languageForAnalytics().toString()
+                    AnalyticsLabel.playbackLanguage to translation.fileLanguageForAnalytics().toString()
                 )
                 analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
             }
