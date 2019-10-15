@@ -85,7 +85,7 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
                             var analyticsParamMap: MutableMap<String, String> = mutableMapOf(
                                 AnalyticsLabel.playbackSource to ScreenName.SearchIcon.screenName,
                                 AnalyticsLabel.audioTitle to playControl.audioFileModel.title.orEmpty(),
-                                AnalyticsLabel.playbackLanguage to playControl.audioFileModel.languageForAnalytics().toString())
+                                AnalyticsLabel.playbackLanguage to playControl.audioFileModel.fileLanguageForAnalytics().toString())
 
                             if( playControl.requestedObject is ArticObject ) {
                                 analyticsParamMap.put(AnalyticsLabel.title, playControl.requestedObject.title)

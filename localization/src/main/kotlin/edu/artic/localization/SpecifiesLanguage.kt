@@ -64,7 +64,7 @@ interface SpecifiesLanguage {
         }
     }
 
-    fun languageForAnalytics(): CharSequence  {
+    fun fileLanguageForAnalytics(): CharSequence  {
         return when(underlyingLocale().language) {
             Locale.ENGLISH.language -> english
             SPANISH.language -> spanish

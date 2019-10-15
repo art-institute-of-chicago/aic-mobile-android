@@ -115,7 +115,7 @@ class ArtworkDetailViewModel @Inject constructor(
                     AnalyticsLabel.playbackSource to ScreenName.Search.screenName,
                     AnalyticsLabel.title to articObject.getPlayableTitle().orEmpty(),
                     AnalyticsLabel.audioTitle to it.title.orEmpty(),
-                    AnalyticsLabel.playbackLanguage to it.asAudioFileModel().languageForAnalytics().toString()
+                    AnalyticsLabel.playbackLanguage to it.asAudioFileModel().fileLanguageForAnalytics().toString()
                 )
                 analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
             }

@@ -104,7 +104,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                                 AnalyticsLabel.title to tourObject.getPlayableTitle().orEmpty(),
                                 AnalyticsLabel.tourTitle to tourObject.title,
                                 AnalyticsLabel.audioTitle to playControl.audioFileModel.title.orEmpty(),
-                                AnalyticsLabel.playbackLanguage to playControl.audioFileModel.languageForAnalytics().toString())
+                                AnalyticsLabel.playbackLanguage to playControl.audioFileModel.fileLanguageForAnalytics().toString())
 
                             analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
                         } else {
