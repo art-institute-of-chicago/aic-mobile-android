@@ -169,7 +169,7 @@ class AudioLookupViewModel @Inject constructor(
                             AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
                             AnalyticsLabel.tourTitle to tour.title,
                             AnalyticsLabel.audioTitle to audioFile.title.orEmpty(),
-                            AnalyticsLabel.playbackLanguage to audioFile.asAudioFileModel().languageForAnalytics().toString()
+                            AnalyticsLabel.playbackLanguage to audioFile.asAudioFileModel().fileLanguageForAnalytics().toString()
                         )
                         analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
 
@@ -206,7 +206,7 @@ class AudioLookupViewModel @Inject constructor(
                 AnalyticsLabel.title to articObject.title,
                 AnalyticsLabel.tourTitle to articObject.tourTitles.orEmpty(),
                 AnalyticsLabel.audioTitle to selectedAudioFileModel.title.orEmpty(),
-                AnalyticsLabel.playbackLanguage to selectedAudioFileModel.asAudioFileModel().languageForAnalytics().toString()
+                AnalyticsLabel.playbackLanguage to selectedAudioFileModel.asAudioFileModel().fileLanguageForAnalytics().toString()
             )
             analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
 
