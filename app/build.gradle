@@ -10,8 +10,8 @@ if (project.hasProperty('build_number')) {
     buildMetadata = 'SNAPSHOT'
 }
 
-String majorAndMinorVersion = "1.1"
-Integer patchVersionCode = 3
+String majorAndMinorVersion = "1.2"
+Integer patchVersionCode = 0
 
 android {
     compileSdkVersion sdk
@@ -46,7 +46,6 @@ android {
             buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id",false)}\""
             buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",false)}\""
             buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
-            resValue "string", "google_app_id", "${envVariable("fb_application_id",false)}"
         }
         release {
             buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",true)}\""
@@ -55,7 +54,6 @@ android {
             buildConfigField "String", "GCM_SENDER_ID", "\"${envVariable("gcm_sender_id", true)}\""
             buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id",true)}\""
             buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",true)}\""
-            resValue "string", "google_app_id", "${envVariable("fb_application_id",true)}"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
