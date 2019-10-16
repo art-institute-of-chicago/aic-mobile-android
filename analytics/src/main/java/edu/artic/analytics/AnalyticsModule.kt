@@ -18,11 +18,9 @@ class AnalyticsModule {
     @Singleton
     fun analyticsTracker(context: Context,
                          languageSelector: LanguageSelector,
-                         analyticsConfig: AnalyticsConfig,
                          locationService: LocationService):
             AnalyticsTracker = AnalyticsTrackerImpl(context,
                 languageSelector,
                 MemberInfoPreferencesManager(context),
-                locationService,
-                analyticsConfig)
+                locationService)
 }

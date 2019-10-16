@@ -5,9 +5,7 @@ import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
-import edu.artic.analytics.AnalyticsAction
-import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.EventCategoryName
+import edu.artic.analytics.*
 import edu.artic.audio.LookupResult.FoundAudio
 import edu.artic.audio.LookupResult.NotFound
 import edu.artic.audio.NumberPadElement.*
@@ -150,13 +148,6 @@ class AudioLookupViewModel @Inject constructor(
         val playable = foundAudio.hostObject
 
         audioService?.let {
-            // Send Analytics for 'playback initiated'
-            analyticsTracker.reportEvent(
-                    EventCategoryName.PlayAudio,
-                    AnalyticsAction.playAudioAudioGuide,
-                    playable.getPlayableTitle().orEmpty()
-            )
-
             when (playable) {
                 is ArticObject -> playArticObject(playable, foundAudio.objectSelectorNumber, it)
                 is ArticTour -> playArticTour(playable, it)
@@ -172,6 +163,15 @@ class AudioLookupViewModel @Inject constructor(
 
                         // Clear search prior to playPlayer since AudioTutorial may intercede
                         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ClearSearch))
+
+                        // Trigger analytics for playback
+                        var analyticsParamMap: Map<String, String> = mapOf(
+                            AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
+                            AnalyticsLabel.tourTitle to tour.title,
+                            AnalyticsLabel.audioTitle to audioFile.title.orEmpty(),
+                            AnalyticsLabel.playbackLanguage to audioFile.asAudioFileModel().fileLanguageForAnalytics().toString()
+                        )
+                        analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
 
                         // Request the actual playback (this triggers its own analytics event)
                         audioService.playPlayer(tour, audioFile.preferredLanguage(languageSelector))
@@ -199,6 +199,17 @@ class AudioLookupViewModel @Inject constructor(
         if (selectedAudioFileModel != null) {
             val audioModel = selectedAudioFileModel.preferredLanguage(languageSelector)
             audioService.playPlayer(articObject, audioModel)
+
+            // Trigger analytics event for playback
+            var analyticsParamMap: Map<String, String> = mapOf(
+                AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
+                AnalyticsLabel.title to articObject.title,
+                AnalyticsLabel.tourTitle to articObject.tourTitles.orEmpty(),
+                AnalyticsLabel.audioTitle to selectedAudioFileModel.title.orEmpty(),
+                AnalyticsLabel.playbackLanguage to selectedAudioFileModel.asAudioFileModel().fileLanguageForAnalytics().toString()
+            )
+            analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
+
         } else {
             audioService.playPlayer(articObject)
         }

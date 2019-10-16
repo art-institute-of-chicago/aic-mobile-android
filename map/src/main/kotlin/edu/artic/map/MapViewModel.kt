@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.VisibleRegion
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID
@@ -19,6 +20,7 @@ import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
+import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.location.LocationPreferenceManager
 import edu.artic.location.LocationService
 import edu.artic.location.isLocationInMuseum
@@ -249,7 +251,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 .filterFlatMap({ it is MapDisplayMode.Tour }, { (it as MapDisplayMode.Tour).tour })
                 .doOnNext {
                     floorChangedTo(it.floorAsInt)
-                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourStarted, it.title)
                 }
                 .mapOptional()
                 .bindTo(tourProgressManager.selectedTour)
