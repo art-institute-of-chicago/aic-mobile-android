@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.cell_all_tours_layout.view.*
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>, viewDisposeBag: DisposeBag) : AutoHolderRecyclerViewAdapter<AllToursCellViewModel>() {
+class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>, viewDisposeBag: DisposeBag) : AutoHolderRecyclerViewAdapter<TourCellViewModel>() {
 
     private val introHolder = BaseViewHolder(recyclerView, R.layout.cell_all_tours_intro)
 
@@ -32,7 +32,7 @@ class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>
         }
     }
 
-    override fun View.onBindView(item: AllToursCellViewModel, position: Int) {
+    override fun View.onBindView(item: TourCellViewModel, position: Int) {
 
         item.tourImageUrl.subscribe {
             GlideApp.with(context)

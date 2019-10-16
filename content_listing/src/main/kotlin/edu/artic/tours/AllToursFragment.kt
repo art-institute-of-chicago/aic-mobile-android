@@ -1,7 +1,6 @@
 package edu.artic.tours
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
@@ -15,7 +14,7 @@ import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.content.listing.R
 import edu.artic.navigation.NavigationConstants
-import edu.artic.tours.recyclerview.AllToursItemDecoration
+import edu.artic.decoration.AllToursItemDecoration
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,6 +22,20 @@ import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
+/**
+ * This represents the `tour` sub-screen of the ':welcome' module.
+ *
+ * It shows titles, descriptions, number of tour stops, and other
+ * essential information about each [tour][edu.artic.db.models.ArticTour]
+ * in a dual-column vertical grid. At the top of the list is a
+ * small blurb explaining the connection between tours and audio
+ * commentaries.
+ *
+ * Unlike events and exhibitions, tours may come with translations
+ * into other languages.
+ *
+ * @see AllToursAdapter
+ */
 class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
     override val screenName: ScreenName
@@ -35,11 +48,13 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
 
     override val title = R.string.tours
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-        requireActivity().window?.statusBarColor = ContextCompat.getColor(requireContext(), R.color.colorPrimary)
-    }
+    /**
+     * The host activity can be trusted to use our preferred color,
+     * `@color/colorPrimary`, but it might have been told to hide
+     * the status bar. By returning `true` here we reaffirm that
+     * color choice.
+     */
+    override val overrideStatusBarColor: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +76,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
         recyclerView.layoutManager = layoutManager
         val toursAdapter = AllToursAdapter(recyclerView, viewModel.intro, viewModel.viewDisposeBag)
         recyclerView.adapter = toursAdapter
-        recyclerView.addItemDecoration(AllToursItemDecoration(view.context, 2))
+        recyclerView.addItemDecoration(AllToursItemDecoration(2))
 
         /* Ensure search events go through ok. */
         searchIcon

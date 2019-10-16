@@ -13,7 +13,7 @@ import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.content.listing.R
-import edu.artic.events.recyclerview.AllEventsItemDecoration
+import edu.artic.decoration.AllEventsItemDecoration
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -21,6 +21,15 @@ import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
+/**
+ * This represents the `event` sub-screen of the ':welcome' module.
+ *
+ * It shows titles, descriptions, start/end times, and a simple
+ * promotional picture of each [event][edu.artic.db.models.ArticEvent]
+ * in a single-column vertical list.
+ *
+ * @see AllEventsAdapter
+ */
 class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
     override val screenName: ScreenName
@@ -33,10 +42,6 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
 
     override val title = R.string.events
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +66,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         }
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = eventsAdapter
-        recyclerView.addItemDecoration(AllEventsItemDecoration(view.context, 2, eventsAdapter))
+        recyclerView.addItemDecoration(AllEventsItemDecoration(2, eventsAdapter))
     }
 
     override fun setupBindings(viewModel: AllEventsViewModel) {

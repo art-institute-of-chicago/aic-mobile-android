@@ -18,7 +18,7 @@ class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellBaseViewMode
 
     override fun View.onBindView(item: AllEventsCellBaseViewModel, position: Int) {
 
-        if (item is AllEventsCellViewModel) {
+        if (item is EventCellViewModel) {
 
             image.visibility = View.VISIBLE
             title.visibility = View.VISIBLE

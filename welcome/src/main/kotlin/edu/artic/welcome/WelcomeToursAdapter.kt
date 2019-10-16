@@ -7,16 +7,17 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
+import edu.artic.tours.TourCellViewModel
 import kotlinx.android.synthetic.main.welcome_tour_summary_cell_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 
-class WelcomeToursAdapter : AutoHolderRecyclerViewAdapter<WelcomeTourCellViewModel>() {
+class WelcomeToursAdapter : AutoHolderRecyclerViewAdapter<TourCellViewModel>() {
 
 
-    override fun View.onBindView(item: WelcomeTourCellViewModel, position: Int) {
+    override fun View.onBindView(item: TourCellViewModel, position: Int) {
         item.tourImageUrl.subscribe {
             GlideApp.with(context)
                     .load(it)

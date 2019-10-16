@@ -6,6 +6,7 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import edu.artic.events.EventCellViewModel
 import edu.artic.image.GlideApp
 import kotlinx.android.synthetic.main.welcome_event_cell_layout.view.*
 
@@ -14,8 +15,8 @@ import kotlinx.android.synthetic.main.welcome_event_cell_layout.view.*
  * @author Sameer Dhakal (Fuzz)
  */
 
-class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewModel>() {
-    override fun View.onBindView(item: WelcomeEventCellViewModel, position: Int) {
+class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<EventCellViewModel>() {
+    override fun View.onBindView(item: EventCellViewModel, position: Int) {
 
         item.eventTitle
                 .bindToMain(title.text())
@@ -25,11 +26,11 @@ class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewM
                 .subscribe { image.transitionName = it }
                 .disposedBy(item.viewDisposeBag)
 
-        item.eventShortDescription
+        item.eventDescription
                 .bindToMain(description.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.eventTime
+        item.eventDateTime
                 .bindToMain(date.text())
                 .disposedBy(item.viewDisposeBag)
 
