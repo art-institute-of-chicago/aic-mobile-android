@@ -7,6 +7,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import edu.artic.localization.SpecifiesLanguage
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 /**
  * Audio information for an [ArticObject].

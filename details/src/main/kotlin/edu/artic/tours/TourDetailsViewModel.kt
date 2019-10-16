@@ -3,12 +3,16 @@ package edu.artic.tours
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
+import edu.artic.analytics.AnalyticsLabel
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.getIntroStop
 import edu.artic.details.R
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.SpecifiesLanguage
+import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -21,9 +25,10 @@ import java.util.*
 import javax.inject.Inject
 
 class TourDetailsViewModel @Inject constructor(
-        private val objectDao: ArticObjectDao,
-        private val languageSelector: LanguageSelector
-) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
+    private val objectDao: ArticObjectDao,
+    private val languageSelector: LanguageSelector,
+    private val analyticsTracker: AnalyticsTracker
+    ) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
@@ -142,6 +147,13 @@ class TourDetailsViewModel @Inject constructor(
                 .take(1)
                 .subscribeBy { (tour, locale) ->
                     languageSelector.setTourLanguage(locale)
+
+                    var analyticsParamMap: Map<String, String> = mapOf(
+                        AnalyticsLabel.title to tour.title,
+                        AnalyticsLabel.playbackLanguage to locale.nameOfLanguageForAnalytics()
+                    )
+                    analyticsTracker.reportCustomEvent(EventCategoryName.TourStarted, analyticsParamMap)
+
                     navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Map(tour, tour.getIntroStop(), locale)))
                 }
                 .disposedBy(disposeBag)
