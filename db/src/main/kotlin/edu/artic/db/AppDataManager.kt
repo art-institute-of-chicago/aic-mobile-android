@@ -413,7 +413,7 @@ class AppDataManager @Inject constructor(
      * Retrieve a number of [events][ArticEvent] from the API.
      *
      * In [the above query][RetrofitAppDataServiceProvider.getEvents]
-     * the number of these events is limited to be at most 500. It is
+     * the number of these events is limited to be at most 100. It is
      * possible that no events will be found; in that case whatever
      * is stored in [eventDao] will be left alone.
      */

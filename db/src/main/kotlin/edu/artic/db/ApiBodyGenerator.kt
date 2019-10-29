@@ -152,10 +152,10 @@ sealed class ApiBodyGenerator {
                             startKey = "start_at",
                             endKey = "end_at"
                     )
-                    this["must"] = mutableListOf<Any>().apply {
+                    this["must_not"] = mutableListOf<Any>().apply {
                         this.add(mutableMapOf<String, Any>().apply {
                             this["term"] = mutableMapOf<String, Any>().apply {
-                                this["is_private"] = "false"
+                                this["is_private"] = "true"
                             }
                         })
                     }
