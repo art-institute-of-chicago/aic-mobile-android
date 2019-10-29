@@ -143,7 +143,7 @@ class RetrofitAppDataServiceProvider(
                         if (!url.contains("/search")) {
                             url += "/search"
                         }
-                        url += "?limit=500"
+                        url += "?limit=100"
 
                         val postParams = ApiBodyGenerator.createEventQueryBody()
 

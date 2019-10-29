@@ -1,8 +1,10 @@
 package edu.artic.analytics
 
+import android.app.Activity
 import android.content.Context
-import com.google.android.gms.analytics.GoogleAnalytics
-import com.google.android.gms.analytics.HitBuilders
+import android.os.Bundle
+import android.util.Log
+import com.google.firebase.analytics.FirebaseAnalytics
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.location.LocationService
@@ -16,9 +18,15 @@ import java.util.*
 /**
  * Description:
  */
+
 interface AnalyticsTracker {
 
     fun clearSession()
+
+    fun reportCustomEvent(category: String, parameterMap: Map<String, String>)
+
+    fun reportCustomEvent(category: EventCategoryName, parameterMap: Map<String, String>) =
+            reportCustomEvent(category.eventCategoryName, parameterMap)
 
     fun reportEvent(category: String, action: String = "", label: String = "")
 
@@ -28,21 +36,19 @@ interface AnalyticsTracker {
     fun reportEvent(categoryName: EventCategoryName, action: String = "", label: String = "") =
             reportEvent(categoryName.eventCategoryName, action, label)
 
-    fun reportScreenView(name: String)
+    fun reportScreenView(activity: Activity, name: String)
 
-    fun reportScreenView(categoryName: ScreenName) = reportScreenView(categoryName.screenName)
+    fun reportScreenView(activity: Activity, categoryName: ScreenName) = reportScreenView(activity, categoryName.screenName)
 }
 
 class AnalyticsTrackerImpl(context: Context,
                            private val languageSelector: LanguageSelector,
                            private val membershipPrefs: MemberInfoPreferencesManager,
-                           private val locationService: LocationService,
-                           private val analyticsConfig: AnalyticsConfig) : AnalyticsTracker {
+                           private val locationService: LocationService) : AnalyticsTracker {
 
-    private val analytics = GoogleAnalytics.getInstance(context)
-    private val tracker = analytics.newTracker(analyticsConfig.trackingId)
     private var atMusuem = false
     private var reportLocationAnalytic: Subject<Boolean> = BehaviorSubject.createDefault(true)
+    private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
     init {
         locationService.requestTrackingUserLocation()
@@ -66,29 +72,39 @@ class AnalyticsTrackerImpl(context: Context,
         reportLocationAnalytic.onNext(true)
     }
 
-    override fun reportEvent(category: String, action: String, label: String) {
-        val memberId = membershipPrefs.memberID
-        tracker.send(HitBuilders.EventBuilder()
-                .setCategory(category)
-                .setAction(action)
-                .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
-                .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
-                .setCustomDimension(4, Locale.getDefault().toLanguageTag())
-                .setCustomDimension(5, atMusuem.toString())
-                .setLabel(label).build())
+    override fun reportCustomEvent(category: String, parameterMap: Map<String, String>) {
+        val bundle = Bundle()
+        //bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, category)
+
+        for((paramName, paramValue) in parameterMap) {
+            if(paramValue.isBlank()) {
+                Log.w(AnalyticsTracker::class.qualifiedName, "reportCustomEvent(): value for parameter \"$paramName\" is blank, not adding to Bundle.")
+            } else {
+                bundle.putString(paramName, paramValue)
+            }
+        }
+        firebaseAnalytics.logEvent(category, bundle)
     }
 
+    /*
+        Commenting out old Google Analytics code below but leaving here
+        because we will need to reference it for our new Firebase Analytics
+        custom events, as we are still transitioning between the two.
+     */
+    override fun reportEvent(category: String, action: String, label: String) {
+        Log.d(AnalyticsTracker::class.qualifiedName, "reportEvent(): Logging No-op for this function.")
+//        val memberId = membershipPrefs.memberID
+//        tracker.send(HitBuilders.EventBuilder()
+//                .setCategory(category)
+//                .setAction(action)
+//                .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
+//                .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
+//                .setCustomDimension(4, Locale.getDefault().toLanguageTag())
+//                .setCustomDimension(5, atMusuem.toString())
+//                .setLabel(label).build())
+    }
 
-    override fun reportScreenView(name: String) {
-        val memberId = membershipPrefs.memberID
-        tracker.apply {
-            setScreenName(name)
-            send(HitBuilders.ScreenViewBuilder()
-                    .setCustomDimension(2, (if (memberId.isNullOrBlank()) "None" else "Member"))
-                    .setCustomDimension(3, languageSelector.getAppLocale().nameOfLanguageForAnalytics())
-                    .setCustomDimension(4, Locale.getDefault().toLanguageTag())
-                    .setCustomDimension(5, atMusuem.toString())
-                    .build())
-        }
+    override fun reportScreenView(activity: Activity, name: String) {
+        firebaseAnalytics.setCurrentScreen(activity, name, null)
     }
 }
