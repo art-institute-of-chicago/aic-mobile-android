@@ -6,8 +6,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class ArticResult<T>(
-        @Json(name = "pagination") val pagination : ResultPagination,
-        @Json(name = "data") val data : List<T>
+        @Json(name = "pagination") val pagination: ResultPagination,
+        @Json(name = "data") val data: List<T>
 )
 
 @JsonClass(generateAdapter = true)

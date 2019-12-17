@@ -9,7 +9,7 @@ import edu.artic.db.models.DashBoard
 @Dao
 interface DashboardDao {
     @Query("select * from DashBoard where id = 0")
-    fun getCurrentDashboad() : DashBoard
+    fun getCurrentDashboad(): DashBoard
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun setDashBoard(dashBoard: DashBoard): Long

@@ -77,7 +77,7 @@ class AccessMemberCardViewModel @Inject constructor(
     var primaryConstituentID: Subject<String> = BehaviorSubject.create()
     var selectedCardHolder: Subject<String> = BehaviorSubject.create()
     var membership: Subject<String> = BehaviorSubject.create()
-    val isReciprocalMemberLevel : Subject<Boolean> = BehaviorSubject.create()
+    val isReciprocalMemberLevel: Subject<Boolean> = BehaviorSubject.create()
 
     val reciprocalMemberLevels = setOf(
             "Premium Member",
@@ -124,7 +124,7 @@ class AccessMemberCardViewModel @Inject constructor(
                     }
 
                     memberInfo.memberLevel?.let {
-                            isReciprocalMemberLevel.onNext(reciprocalMemberLevels.contains(it))
+                        isReciprocalMemberLevel.onNext(reciprocalMemberLevels.contains(it))
                     }
                 }.disposedBy(disposeBag)
         /**
@@ -145,7 +145,7 @@ class AccessMemberCardViewModel @Inject constructor(
          */
         if (!savedMemberID.isNullOrBlank() && !savedMemberZipCode.isNullOrBlank()) {
             loadStatus.onNext(LoadStatus.Loading)
-            service.getMemberData(savedMemberID!!, savedMemberZipCode!!)
+            service.getMemberData(savedMemberID, savedMemberZipCode)
                     .subscribeBy(
                             onNext = { serverResponse ->
                                 onMemberInformationValidated(serverResponse)

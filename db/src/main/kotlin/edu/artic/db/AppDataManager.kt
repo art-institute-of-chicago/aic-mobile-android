@@ -148,7 +148,7 @@ class AppDataManager @Inject constructor(
                                 articMapFloorDao.insertMapFloors(floors.toList())
                             }
 
-                            val rawGalleries : List<ArticGallery?>? = result.galleries
+                            val rawGalleries: List<ArticGallery?>? = result.galleries
                                     ?.values
                                     ?.toList()
 
@@ -383,7 +383,7 @@ class AppDataManager @Inject constructor(
 
 
                                             val desiredIds = exhibitionsById.values.mapNotNull { it.gallery_id }
-                                            val galleries : List<ArticGallery> = galleryDao.getGalleriesForIdList(desiredIds)
+                                            val galleries: List<ArticGallery> = galleryDao.getGalleriesForIdList(desiredIds)
 
                                             val galleriesById: Map<String?, ArticGallery> = galleries.associateBy { it.galleryId }
 

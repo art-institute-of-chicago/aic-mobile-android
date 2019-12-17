@@ -32,10 +32,9 @@
         android:layout_height="wrap_content"
         android:background="@color/denim"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/departmentImage"
@@ -46,17 +45,17 @@
             tools:src="@color/black" />
 
         <TextView
-            style="@style/MarkerDepartmentText"
             android:id="@+id/text"
+            style="@style/MarkerDepartmentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textAlignment="center"
             android:gravity="center"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
+            android:textAlignment="center"
             app:layout_constraintStart_toEndOf="@id/departmentImage"
-            tools:text="Some long text (for testing) here."/>
+            tools:text="Some long text (for testing) here." />
 
     </LinearLayout>
 

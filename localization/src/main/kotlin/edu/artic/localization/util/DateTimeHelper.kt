@@ -5,7 +5,7 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.*
 import org.threeten.bp.temporal.ChronoField.*
-import java.util.Locale
+import java.util.*
 
 /**
  * Helper class for determining how dates should be parsed from the API and/or displayed on screen.
@@ -29,6 +29,7 @@ class DateTimeHelper {
                 }.withLocale(locale)
             }
         }
+
         object HomeExhibition : Purpose() {
             override fun obtainFormatter(locale: Locale): DateTimeFormatter {
                 return when (locale) {
@@ -38,6 +39,7 @@ class DateTimeHelper {
                 }.withLocale(locale)
             }
         }
+
         object HomeEvent : Purpose() {
             override fun obtainFormatter(locale: Locale): DateTimeFormatter {
                 val timeFormat = when (locale) {

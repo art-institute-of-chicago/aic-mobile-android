@@ -39,10 +39,10 @@ abstract class BaseViewModelActivity<TViewModel : BaseViewModel> : BaseActivity(
 
     override fun onDestroy() {
         try {
-            if(viewModelExists) {
+            if (viewModelExists) {
                 viewModel.cleanup()
             }
-        } catch (i : IllegalStateException) {
+        } catch (i: IllegalStateException) {
 
         }
         super.onDestroy()

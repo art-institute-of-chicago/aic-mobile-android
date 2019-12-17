@@ -4,7 +4,7 @@
     android:id="@+id/search_navigation_graph"
     app:startDestination="@id/searchFragment">
 
-    <include app:graph="@navigation/search_sub_navigation_graph"/>
+    <include app:graph="@navigation/search_sub_navigation_graph" />
 
     <fragment
         android:id="@+id/searchFragment"
@@ -24,8 +24,8 @@
             app:destination="@id/exhibitionDetailsFragment" />
 
         <!--<action-->
-            <!--android:id="@+id/goToSearchResults"-->
-            <!--app:destination="@id/searchRe"/>-->
+        <!--android:id="@+id/goToSearchResults"-->
+        <!--app:destination="@id/searchRe"/>-->
 
     </fragment>
 
