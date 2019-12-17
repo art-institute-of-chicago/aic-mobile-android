@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter
 class SearchResultsPagerAdapter(fm: FragmentManager, var context: Context) : FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
-        return when(position) {
+        return when (position) {
             1 -> {
                 SearchArtworkFragment()
             }
@@ -29,7 +29,7 @@ class SearchResultsPagerAdapter(fm: FragmentManager, var context: Context) : Fra
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return when(position) {
+        return when (position) {
             1 -> {
                 context.resources.getString(R.string.artworks)
             }

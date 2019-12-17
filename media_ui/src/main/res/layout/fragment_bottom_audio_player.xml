@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:layout_height="200dp"
-    android:background="@color/narrowAudioPlayerBackgroundColor">
+    android:background="@color/narrowAudioPlayerBackgroundColor"
+    tools:layout_height="200dp">
 
 
     <ImageButton
@@ -49,18 +49,18 @@
         android:layout_marginStart="@dimen/marginStandard"
         android:layout_marginEnd="@dimen/marginStandard"
         android:fontFamily="@font/ideal_sans_book"
+        android:gravity="center_vertical"
         android:textColor="@color/white"
         android:textSize="@dimen/textMedium"
-        android:gravity="center_vertical"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="@dimen/textSmall"
         app:autoSizeMaxTextSize="@dimen/textMedium"
+        app:autoSizeMinTextSize="@dimen/textSmall"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/closePlayer"
         app:layout_constraintStart_toEndOf="@id/barrier"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Test track"
-        tools:ignore="MissingPrefix"/>
+        tools:ignore="MissingPrefix"
+        tools:text="Test track" />
 
     <ImageButton
         android:id="@+id/closePlayer"

@@ -48,7 +48,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.setOnTouchListener { _, event ->
-            if(event.action == MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 viewModel.touched()
             }
             true

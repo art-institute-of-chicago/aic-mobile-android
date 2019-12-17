@@ -9,8 +9,8 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.content.listing.R
-import io.reactivex.subjects.Subject
 import edu.artic.image.GlideApp
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.cell_all_tours_intro.view.*
 import kotlinx.android.synthetic.main.cell_all_tours_layout.view.*
 
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.cell_all_tours_layout.view.*
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllToursAdapter(recyclerView : RecyclerView, introSubject: Subject<String>, viewDisposeBag: DisposeBag) : AutoHolderRecyclerViewAdapter<AllToursCellViewModel>() {
+class AllToursAdapter(recyclerView: RecyclerView, introSubject: Subject<String>, viewDisposeBag: DisposeBag) : AutoHolderRecyclerViewAdapter<AllToursCellViewModel>() {
 
     private val introHolder = BaseViewHolder(recyclerView, R.layout.cell_all_tours_intro)
 

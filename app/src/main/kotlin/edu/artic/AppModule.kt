@@ -31,6 +31,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideAnalyticsConfig(): AnalyticsConfig = AnalyticsConfigImpl()
+
     @Module
     companion object {
 

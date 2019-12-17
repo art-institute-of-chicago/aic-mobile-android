@@ -10,7 +10,6 @@ import com.google.android.gms.maps.model.VisibleRegion
 import com.jakewharton.rxrelay2.PublishRelay
 import com.jakewharton.rxrelay2.Relay
 import edu.artic.analytics.AnalyticsAction
-import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID
@@ -20,11 +19,9 @@ import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
-import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.location.LocationPreferenceManager
 import edu.artic.location.LocationService
 import edu.artic.location.isLocationInMuseum
-
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.tutorial.TutorialPreferencesManager
@@ -242,7 +239,6 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
                 }
                 .bindTo(chosenInfo)
                 .disposedBy(disposeBag)
-
 
 
         // when we change to tour mode, we notify the tourProgressManager.

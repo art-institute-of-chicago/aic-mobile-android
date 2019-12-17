@@ -1,7 +1,6 @@
 package edu.artic.map.carousel
 
 import android.view.View
-import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text

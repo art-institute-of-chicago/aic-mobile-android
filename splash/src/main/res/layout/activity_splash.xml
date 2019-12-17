@@ -7,14 +7,14 @@
     android:orientation="vertical">
 
     <TextureView
+        android:id="@+id/textureView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/textureView"/>
+        android:layout_height="match_parent" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/splashChrome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/splashChrome"
         android:orientation="vertical">
 
         <ImageView
@@ -33,9 +33,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
             android:layout_marginTop="@dimen/marginDouble"
+            android:gravity="center"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo">
@@ -45,33 +45,32 @@
                 style="@style/CardTitleLargeBlack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/ideal_sans_medium"
                 android:gravity="center"
                 android:maxLines="6"
                 android:text="@string/welcome"
                 android:textColor="@color/white"
-                android:textSize="43sp"
-                android:layout_gravity="center_horizontal"
-                />
+                android:textSize="43sp" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="170dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/marginTriple"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/marginTriple" />
 
             <TextView
                 android:id="@+id/percentText"
                 style="@style/CardTitleLargeBlack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/marginTriple"
                 android:gravity="center"
                 android:maxLines="6"
                 android:textColor="@color/white"
-                android:layout_gravity="center_horizontal"
                 android:visibility="gone"
                 tools:text="100%" />
 
@@ -113,7 +112,7 @@
         android:id="@+id/animatedMuseum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/dashboard"
+        android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:adjustViewBounds="true"/>
+        android:src="@drawable/dashboard" />
 </FrameLayout>

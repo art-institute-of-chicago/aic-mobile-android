@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval"
-    android:thickness="2dp"
-    >
-    <solid android:color="@color/number_pad_white_translucent"/>
-    <stroke android:color="@color/number_pad_white_faint" android:width="2dp"/>
+    android:thickness="2dp">
+    <solid android:color="@color/number_pad_white_translucent" />
+    <stroke
+        android:width="2dp"
+        android:color="@color/number_pad_white_faint" />
     <size
         android:width="@dimen/number_pad_bg_size"
-        android:height="@dimen/number_pad_bg_size"
-        />
+        android:height="@dimen/number_pad_bg_size" />
 </shape>

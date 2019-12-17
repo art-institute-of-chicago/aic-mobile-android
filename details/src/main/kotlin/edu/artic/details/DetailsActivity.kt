@@ -5,7 +5,7 @@ import edu.artic.events.EventDetailFragment
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.ui.BaseActivity
 
-class DetailsActivity: BaseActivity() {
+class DetailsActivity : BaseActivity() {
     override val layoutResId: Int
         get() = R.layout.activity_details
 

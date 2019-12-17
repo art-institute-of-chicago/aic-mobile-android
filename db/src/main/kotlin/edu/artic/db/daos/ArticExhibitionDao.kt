@@ -23,5 +23,5 @@ interface ArticExhibitionDao {
     fun getExhibitionSummary(): Flowable<List<ArticExhibition>>
 
     @Query("select * from ArticExhibition where id = :id")
-    fun getExhibitionById(id: Int) : Flowable<ArticExhibition>
+    fun getExhibitionById(id: Int): Flowable<ArticExhibition>
 }

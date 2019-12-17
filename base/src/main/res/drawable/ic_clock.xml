@@ -10,9 +10,9 @@
         android:pathData="M0 0h24v24H0z" />
     <path
         android:fillType="evenOdd"
-        android:strokeColor="#FFF"
+        android:pathData="M 12 5.5 C 15.5898508739 5.5 18.5 8.4101491261 18.5 12 C 18.5 15.5898508739 15.5898508739 18.5 12 18.5 C 8.4101491261 18.5 5.5 15.5898508739 5.5 12 C 5.5 8.4101491261 8.4101491261 5.5 12 5.5 Z"
         android:strokeWidth="1"
-        android:pathData="M 12 5.5 C 15.5898508739 5.5 18.5 8.4101491261 18.5 12 C 18.5 15.5898508739 15.5898508739 18.5 12 18.5 C 8.4101491261 18.5 5.5 15.5898508739 5.5 12 C 5.5 8.4101491261 8.4101491261 5.5 12 5.5 Z" />
+        android:strokeColor="#FFF" />
     <path
         android:fillColor="#FFF"
         android:fillType="evenOdd"

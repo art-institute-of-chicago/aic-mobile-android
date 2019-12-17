@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.artic.db" />
+<manifest package="edu.artic.db" />

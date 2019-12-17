@@ -30,7 +30,7 @@ interface SearchServiceProvider {
  *
  * This will always error out.
  */
-object NoSearchResultsServiceProvider: SearchServiceProvider {
+object NoSearchResultsServiceProvider : SearchServiceProvider {
     override fun getSuggestions(searchQuery: String): Observable<Result<List<String>>> {
         return Observable.error(
                 SearchUnavailableError

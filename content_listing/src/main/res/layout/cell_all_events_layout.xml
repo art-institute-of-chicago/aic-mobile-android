@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:layout_width="250dp"
     tools:layout_marginStart="@dimen/marginDouble"
-    >
+    tools:layout_width="250dp">
 
 
     <ImageView
@@ -15,11 +13,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@null"
+        android:scaleType="matrix"
         app:layout_constraintDimensionRatio="H,156:97"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="matrix"
         tools:src="@color/sea" />
 
 
@@ -46,8 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
-        tools:text="July 28    8:15 a.m."
-        />
+        tools:text="July 28    8:15 a.m." />
 
     <View
         android:id="@+id/spacerLine"
@@ -74,15 +71,14 @@
         tools:text="The Art Institute of Chicago is delighted to present the upcoming symposium UNFIXED: Material Challenges in Contemporary Art. Bringing together internationally renowned scholars, museum professionals, and artists, this symposium stages an interdisciplinary ex" />
 
     <TextView
-        style="@style/CardTitleLargeBlack"
         android:id="@+id/headerText"
+        style="@style/CardTitleLargeBlack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="July 28"
-        />
+        tools:text="July 28" />
 
 
 </android.support.constraint.ConstraintLayout>

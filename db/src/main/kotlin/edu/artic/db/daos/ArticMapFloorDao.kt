@@ -14,5 +14,5 @@ interface ArticMapFloorDao {
     fun insertMapFloors(list: List<ArticMapFloor>)
 
     @Query("select * from ArticMapFloor")
-    fun getMapFloors() : Flowable<List<ArticMapFloor>>
+    fun getMapFloors(): Flowable<List<ArticMapFloor>>
 }

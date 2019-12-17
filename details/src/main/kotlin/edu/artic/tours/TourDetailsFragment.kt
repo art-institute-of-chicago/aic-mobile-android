@@ -252,7 +252,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
     }
 
     companion object {
-        public val ARG_TOUR = "${TourDetailsFragment::class.java.simpleName}:TOUR"
+        val ARG_TOUR = "${TourDetailsFragment::class.java.simpleName}:TOUR"
 
         fun argsBundle(tour: ArticTour) = Bundle().apply {
             putParcelable(ARG_TOUR, tour)

@@ -42,14 +42,14 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
         var width = resources.displayMetrics.widthPixels
         val ten = resources.dpToPixels(10f)
         val size = resources.dpToPixels(70f)
-        val numToDisplay = ((width-ten) / size).toInt()
+        val numToDisplay = ((width - ten) / size).toInt()
         SearchResultsAdapter.MAX_ARTWORKS_PER_ROW = numToDisplay
 
         val circleSize = resources.dpToPixels(48f)
         val margins = resources.dpToPixels(24f)
-        val spaceReminding = (width - margins) - (numToDisplay*circleSize)
+        val spaceReminding = (width - margins) - (numToDisplay * circleSize)
         val endCurrentPadding = (spaceReminding / numToDisplay).toInt()
-        val endFinalPadding = (spaceReminding / (numToDisplay-1)).toInt()
+        val endFinalPadding = (spaceReminding / (numToDisplay - 1)).toInt()
 
         val lm = GridLayoutManager(view.context, SearchResultsAdapter.MAX_ARTWORKS_PER_ROW)
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

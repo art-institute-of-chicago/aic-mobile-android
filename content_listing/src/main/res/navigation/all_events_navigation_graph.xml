@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/allEventsFragment"
         android:name="edu.artic.events.AllEventsFragment"
-        android:label="AllEventsFragment" >
+        android:label="AllEventsFragment">
 
         <action
             android:id="@+id/goToEventDetailsAction"

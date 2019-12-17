@@ -20,7 +20,7 @@ class AnalyticsModule {
                          languageSelector: LanguageSelector,
                          locationService: LocationService):
             AnalyticsTracker = AnalyticsTrackerImpl(context,
-                languageSelector,
-                MemberInfoPreferencesManager(context),
-                locationService)
+            languageSelector,
+            MemberInfoPreferencesManager(context),
+            locationService)
 }
