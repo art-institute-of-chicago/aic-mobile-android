@@ -30,7 +30,7 @@ class SearchTextCellViewModel(
         val textString: String,
         highlightedText: String = ""
 ) : SearchBaseCellViewModel() {
-    val text: Subject<Pair<String,String>> = BehaviorSubject.createDefault(Pair(textString, highlightedText))
+    val text: Subject<Pair<String, String>> = BehaviorSubject.createDefault(Pair(textString, highlightedText))
 
     // Warning: overriding ::equals or ::hashCode may prevent the screen from updating correctly.
 
@@ -59,7 +59,8 @@ open class SearchBaseListItemViewModel(isHeadphonesVisible: Boolean = false)
 }
 
 class SearchArtworkCellViewModel(val artwork: ArticSearchArtworkObject)
-    : SearchBaseListItemViewModel(isHeadphonesVisible = artwork.backingObject?.audioCommentary?.isNotEmpty() ?: false) {
+    : SearchBaseListItemViewModel(isHeadphonesVisible = artwork.backingObject?.audioCommentary?.isNotEmpty()
+        ?: false) {
 
     init {
         imageUrl.onNext(artwork.thumbUrl.orEmpty())
@@ -68,7 +69,7 @@ class SearchArtworkCellViewModel(val artwork: ArticSearchArtworkObject)
     }
 }
 
-class SearchExhibitionCellViewModel (val articExhibition: ArticExhibition) : SearchBaseListItemViewModel() {
+class SearchExhibitionCellViewModel(val articExhibition: ArticExhibition) : SearchBaseListItemViewModel() {
     init {
         imageUrl.onNext(articExhibition.imageUrl.orEmpty())
         itemTitle.onNext(articExhibition.title)
@@ -98,7 +99,6 @@ class SearchCircularCellViewModel(val artwork: ArticObject?) : SearchBaseCellVie
 class SearchAmenitiesCellViewModel(@DrawableRes val value: Int, val type: SuggestedMapAmenities) : SearchBaseCellViewModel()
 
 
-
 /**
  * Adds an empty row in the RecyclerView.
  *
@@ -109,7 +109,7 @@ class SearchAmenitiesCellViewModel(@DrawableRes val value: Int, val type: Sugges
 class RowPaddingViewModel : SearchBaseCellViewModel()
 
 
-sealed class Header(@StringRes val title : Int) {
+sealed class Header(@StringRes val title: Int) {
     class Artworks(title: Int = R.string.artworks) : Header(title)
     class Tours(title: Int = R.string.tours) : Header(title)
     class Exhibitions(title: Int = R.string.exhibitions) : Header(title)

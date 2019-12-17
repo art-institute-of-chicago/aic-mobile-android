@@ -80,7 +80,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
         }
     }
 
-    val EMPTY_AUDIO_FILE = AudioFileModel("",null,null,null,null,null, null, null, null)
+    val EMPTY_AUDIO_FILE = AudioFileModel("", null, null, null, null, null, null, null, null)
 
     /**
      * These are the inputs callers can use to change which [PlayBackState] should be
@@ -222,8 +222,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
                         playWhenReady && playbackState == Player.STATE_READY -> {
                             audioPlayBackStatus
                                     .take(1)
-                                    .subscribe{
-                                        when(it) {
+                                    .subscribe {
+                                        when (it) {
                                             is Playing -> audioPlayBackStatus.onNext(PlayBackState.Paused(given))
                                             else -> audioPlayBackStatus.onNext(PlayBackState.Playing(given))
                                         }
@@ -246,17 +246,17 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
         val audioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioPlayBackStatus
-            .subscribe {
-                when(it) {
-                    is Playing -> {
-                        if (forceHeadsetMode) {
-                            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+                .subscribe {
+                    when (it) {
+                        is Playing -> {
+                            if (forceHeadsetMode) {
+                                audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+                            }
+                            audioManager.isSpeakerphoneOn = false
                         }
-                        audioManager.isSpeakerphoneOn = false
+                        else -> audioManager.mode = AudioManager.MODE_NORMAL
                     }
-                    else -> audioManager.mode = AudioManager.MODE_NORMAL
-                }
-            }.disposedBy(disposeBag)
+                }.disposedBy(disposeBag)
 
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="35dp"
-        android:height="35dp"
-        android:viewportWidth="35"
-        android:viewportHeight="35">
+    android:width="35dp"
+    android:height="35dp"
+    android:viewportWidth="35"
+    android:viewportHeight="35">
 
     <path
         android:fillType="evenOdd"

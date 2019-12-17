@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 The Android Open Source Project
      Modifications (C) 2018 Philip Cohn-Cort (Fuzz)
 
      Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +16,21 @@
 
 <!-- Used as the canonical button shape. -->
 
-<ripple
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="PrivateResource"
     android:color="?attr/colorControlHighlight"
-    >
+    tools:ignore="PrivateResource">
     <item>
         <!-- This 'item' is derived from AOSP's abc_btn_default_mtrl_shape.xml. We do not want an inset here. -->
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/abc_control_corner_material"/>
+            <corners android:radius="@dimen/abc_control_corner_material" />
             <!-- Use attr/colorAccent, not white, so theme can control this -->
-            <solid android:color="?attr/colorAccent"/>
+            <solid android:color="?attr/colorAccent" />
             <padding
                 android:bottom="@dimen/abc_button_padding_vertical_material"
                 android:left="@dimen/abc_button_padding_horizontal_material"
                 android:right="@dimen/abc_button_padding_horizontal_material"
-                android:top="@dimen/abc_button_padding_vertical_material"
-                />
+                android:top="@dimen/abc_button_padding_vertical_material" />
         </shape>
     </item>
 </ripple>

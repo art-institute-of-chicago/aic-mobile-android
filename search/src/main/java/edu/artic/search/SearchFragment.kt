@@ -29,7 +29,7 @@ import kotlin.reflect.KClass
  *
  * See [bindSearchText] for a little more info about how the input events are
  * hooked up.
-*/
+ */
 class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
     lateinit var textChangesDisposable: Disposable

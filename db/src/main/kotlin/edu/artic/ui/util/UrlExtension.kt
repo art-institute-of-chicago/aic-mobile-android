@@ -11,7 +11,7 @@ import edu.artic.db.models.ArticDataObject
  *
  * FIXME: Use [edu.artic.db.models.ArticDataObject.imageServerUrl] instead of [BuildConfig.CDN_HOST]
  */
-fun String.asCDNUri() : String {
+fun String.asCDNUri(): String {
     val parsed = Uri.parse(this)
     return when {
         parsed.authority == ArticDataObject.IMAGE_SERVER_URL -> parsed.buildUpon()

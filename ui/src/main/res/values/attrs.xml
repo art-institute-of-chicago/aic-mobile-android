@@ -19,19 +19,19 @@
     </declare-styleable>
 
     <declare-styleable name="ArticMainAppBarLayout">
-        <attr name="icon" format="reference"/>
+        <attr name="icon" format="reference" />
 
-        <attr name="backgroundImage" format="reference"/>
-        <attr name="backgroundImagePadding" format="dimension"/>
+        <attr name="backgroundImage" format="reference" />
+        <attr name="backgroundImagePadding" format="dimension" />
 
-        <attr name="subtitle" format="string"/>
+        <attr name="subtitle" format="string" />
 
-        <attr name="expandedTitleStyle" format="reference"/>
-        <attr name="expandedFixedSizeTitleStyle" format="reference"/>
+        <attr name="expandedTitleStyle" format="reference" />
+        <attr name="expandedFixedSizeTitleStyle" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="DetailButton">
-        <attr name="button_icon" format="reference"/>
-        <attr name="button_text" format="string"/>
+        <attr name="button_icon" format="reference" />
+        <attr name="button_text" format="string" />
     </declare-styleable>
 </resources>

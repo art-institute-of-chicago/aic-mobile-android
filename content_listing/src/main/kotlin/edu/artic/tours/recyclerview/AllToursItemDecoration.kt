@@ -16,8 +16,8 @@ class AllToursItemDecoration(
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         var position = parent.getChildAdapterPosition(view) // item position
-        if(position <= 0) {
-            outRect.set(0,0,0,0)
+        if (position <= 0) {
+            outRect.set(0, 0, 0, 0)
         } else {
             position -= 1
             val column = (position) % spanCount // item column

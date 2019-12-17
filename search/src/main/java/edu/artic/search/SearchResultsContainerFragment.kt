@@ -79,7 +79,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
                 .currentlySelectedPage
                 .distinctUntilChanged()
                 .subscribe {
-                    if(viewPager.currentItem != it) {
+                    if (viewPager.currentItem != it) {
                         viewPager.currentItem = it
                     }
                 }

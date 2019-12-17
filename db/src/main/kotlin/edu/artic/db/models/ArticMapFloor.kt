@@ -18,5 +18,5 @@ data class ArticMapFloor(
         @Json(name = "tile_images") val tiles: String
 ) {
     @Ignore
-    val number : Int = label.toInt()
+    val number: Int = label.toInt()
 }

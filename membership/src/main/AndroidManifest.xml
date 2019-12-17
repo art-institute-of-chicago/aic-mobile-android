@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.artic.membership" />
+<manifest package="edu.artic.membership" />

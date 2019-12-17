@@ -11,17 +11,17 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="H,41:30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"
         tools:src="@drawable/placeholder_medium_square" />
 
 
     <TextView
-        style="@style/CardTitleMediumBlack"
         android:id="@+id/title"
+        style="@style/CardTitleMediumBlack"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginStandard"
@@ -33,8 +33,8 @@
         tools:text="Flesh: Ivan Albright at the Art Institute of Chicago" />
 
     <TextView
-        style="@style/DescriptionDate"
         android:id="@+id/description"
+        style="@style/DescriptionDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginStandard"

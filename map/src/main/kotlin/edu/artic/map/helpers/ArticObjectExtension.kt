@@ -34,7 +34,7 @@ fun ArticExhibition.toLatLng(): LatLng {
     )
 }
 
-fun ArticGallery.toLatLng() : LatLng{
+fun ArticGallery.toLatLng(): LatLng {
     return LatLng(latitude, longitude)
 }
 
