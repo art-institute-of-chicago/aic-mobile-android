@@ -29,10 +29,10 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
 
     private fun getAmenitiesViewModels(): List<SearchBaseCellViewModel> {
         return listOf(
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant, SuggestedMapAmenities.Dining),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge, SuggestedMapAmenities.MembersLounge),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop, SuggestedMapAmenities.GiftShop),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms))
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant, SuggestedMapAmenities.Dining, 0),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge, SuggestedMapAmenities.MembersLounge, 1),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop, SuggestedMapAmenities.GiftShop, 2),
+                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms, 3))
     }
 
     init {
@@ -50,8 +50,8 @@ class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao
 
         getSuggestedArtworks(searchSuggestionsDao, objectDao)
                 .map { objects ->
-                    objects.map { artwork ->
-                        SearchCircularCellViewModel(artwork)
+                    objects.mapIndexed { index, articObject ->
+                        SearchCircularCellViewModel(articObject, index)
                     }
                 }
                 .bindTo(suggestedArtworks)
