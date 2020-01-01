@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="purchaseTicketsForAdmission">Purchase tickets for admission, exhibition, and events.</string>
     <string name="enjoyFreeYearLongAdmission">Enjoy free, year long admission.</string>
     <string name="joinNow">Join Now</string>
     <string name="museumInformation">Museum Information</string>

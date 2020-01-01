@@ -29,6 +29,7 @@ class InformationViewModel @Inject constructor(
 ) : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
+        class BuyTicket(val url: String) : NavigationEndpoint()
         object AccessMemberCard : NavigationEndpoint()
         object LanguageSettings : NavigationEndpoint()
         object Search : NavigationEndpoint()
@@ -42,19 +43,34 @@ class InformationViewModel @Inject constructor(
 
     init {
 
-        Observables.combineLatest(
-                languageSelector.currentLanguage,
-                generalInfoDao.getGeneralInfo().toObservable()
-        )
+        Observables
+                .combineLatest(
+                        languageSelector.currentLanguage,
+                        generalInfoDao.getGeneralInfo().toObservable()
+                )
                 .map { (_, generalInfo) ->
                     languageSelector.selectFrom(generalInfo.allTranslations())
                 }
                 .bindTo(generalInfo)
                 .disposedBy(disposeBag)
+
     }
 
     fun onClickSearch() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
+    }
+
+    fun onBuyTicketClicked() {
+        dataObjectDao.getDataObject()
+                .toObservable()
+                .take(1)
+                .map { it.ticketsUrlAndroid }
+                .filter { it.isNotEmpty() }
+                .map { url -> Navigate.Forward(NavigationEndpoint.BuyTicket(url)) }
+                .subscribe {
+                    navigateTo.onNext(it)
+                }
+                .disposedBy(disposeBag)
     }
 
     fun onClickJoinNow() {
