@@ -146,6 +146,19 @@
                 tools:text="More than 30 works from the museum’s collection present a focused retrospective of this “master of the macabre,” whose work even today retains the power to shock, move and fascinate." />
 
             <TextView
+                android:id="@+id/galleryTitle"
+                style="@style/BodySerifWhiteLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description"
+                tools:text="Gallery 186" />
+
+            <TextView
                 android:id="@+id/throughDate"
                 style="@style/DescriptionDate"
                 android:layout_width="0dp"
@@ -155,8 +168,9 @@
                 android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description"
+                app:layout_constraintTop_toBottomOf="@id/galleryTitle"
                 tools:text="Through August 5, 2018" />
+            
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v4.widget.NestedScrollView>
