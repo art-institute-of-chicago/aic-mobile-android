@@ -119,6 +119,10 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)
 
+        viewModel.galleryTitle
+                .bindToMain(galleryTitle.text())
+                .disposedBy(disposeBag)
+
         viewModel.throughDate
                 .map { getString(R.string.throughDate, it) }
                 .bindToMain(throughDate.text())
