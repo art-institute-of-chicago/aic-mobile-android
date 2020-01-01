@@ -111,6 +111,7 @@ fun Context.getThemeColors(colors: IntArray): Array<ColorStateList> {
         found = (0 until colors.size)
                 .mapNotNull { it }
                 .map { typedArray.getColorStateList(it) }
+                .mapNotNull { it }
                 .toTypedArray()
     } finally {
         typedArray?.recycle()

@@ -43,7 +43,7 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override val screenName: ScreenName
         get() = ScreenName.OnViewDetails
 
-    private val mapObject: ArticObject by lazy { arguments!!.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+    private val mapObject: ArticObject? by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
     override fun onRegisterViewModel(viewModel: MapObjectDetailsViewModel) {
