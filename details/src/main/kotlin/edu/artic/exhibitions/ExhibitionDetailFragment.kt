@@ -1,6 +1,7 @@
 package edu.artic.exhibitions
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
@@ -15,7 +16,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
-import edu.artic.base.utils.asUrlViewIntent
+import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticExhibition
@@ -28,6 +29,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_exhibition_details.*
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
 
@@ -38,6 +40,8 @@ import kotlin.reflect.KClass
  * # On View
  */
 class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel>() {
+    @Inject
+    lateinit var customTabManager: CustomTabManager
 
     override val screenName: ScreenName
         get() = ScreenName.OnViewDetails
@@ -165,7 +169,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                                 }
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
-                                    startActivity(endpoint.url.asUrlViewIntent())
+                                    customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(endpoint.url))
                                 }
                             }
                         }
