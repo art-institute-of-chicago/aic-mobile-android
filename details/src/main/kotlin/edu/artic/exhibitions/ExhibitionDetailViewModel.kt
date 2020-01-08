@@ -15,6 +15,7 @@ import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -35,6 +36,7 @@ constructor(dataObjectDao: ArticDataObjectDao,
     val title: Subject<String> = BehaviorSubject.createDefault("test")
     val metaData: Subject<String> = BehaviorSubject.createDefault("")
     val description: Subject<String> = BehaviorSubject.createDefault("")
+    val galleryTitle: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     /**
      * Pair of `latitude` to `longitude`.
@@ -82,12 +84,21 @@ constructor(dataObjectDao: ArticDataObjectDao,
                 .bindTo(description)
                 .disposedBy(disposeBag)
 
+        exhibitionObservable
+                .observeOn(Schedulers.io())
+                .map { exhibition ->
+                    exhibition.gallery_id
+                            ?.let { galleryDao.getGalleryForGalleryIdSynchronously(it)?.title }
+                            ?: ""
+                }
+                .bindTo(galleryTitle)
+                .disposedBy(disposeBag)
 
-
-        Observables.combineLatest(
-                languageSelector.currentLanguage,
-                exhibitionObservable
-        )
+        Observables
+                .combineLatest(
+                        languageSelector.currentLanguage,
+                        exhibitionObservable
+                )
                 .map { (locale, exhibition) ->
                     exhibition.endTime.format(
                             HomeExhibition.obtainFormatter(
