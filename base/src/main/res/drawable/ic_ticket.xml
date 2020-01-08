@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="25"
@@ -9,18 +8,16 @@
     <group
         android:pivotX="12.5"
         android:pivotY="12.5"
-        android:rotation="270"
-        >
+        android:rotation="270">
         <path
             android:name="stub_perforation"
             android:fillType="evenOdd"
             android:pathData="
             M 10.820312 19.375
             L 19.398438 10.796875"
-            android:strokeLineCap="square"
             android:strokeWidth="1.145"
             android:strokeColor="#FFFFFF"
-            />
+            android:strokeLineCap="square" />
 
         <path
             android:name="ticket_outline"
@@ -44,8 +41,7 @@
             C 23.421 14.843 23.425 15.167 23.230 15.375 Z"
             android:strokeWidth="1.145"
             android:strokeColor="#FFFFFF"
-            android:strokeLineCap="square"
-            />
+            android:strokeLineCap="square" />
 
     </group>
 </vector>

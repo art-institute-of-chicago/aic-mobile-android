@@ -27,13 +27,13 @@ class ArtworkDetailViewModel @Inject constructor(
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val title: Subject<String> = BehaviorSubject.create()
-    val galleryNumber : Subject<String> = BehaviorSubject.create()
+    val galleryNumber: Subject<String> = BehaviorSubject.create()
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
     val showOnMapVisible: Subject<Boolean> = BehaviorSubject.create()
     val playAudioVisible: Subject<Boolean> = BehaviorSubject.create()
     private val articObjectObservable: Subject<ArticSearchArtworkObject> = BehaviorSubject.create()
 
-    var playerService : PlayerService? = null
+    var playerService: PlayerService? = null
 
     var articObject: ArticSearchArtworkObject? = null
         set(value) {
@@ -53,7 +53,7 @@ class ArtworkDetailViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         articObjectObservable
-                .filterFlatMap({ it.largeImageUrl != null }, {it.largeImageUrl!!})
+                .filterFlatMap({ it.largeImageUrl != null }, { it.largeImageUrl!! })
                 .bindTo(imageUrl)
                 .disposedBy(disposeBag)
 
@@ -77,15 +77,15 @@ class ArtworkDetailViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         articObjectObservable
-                .filterFlatMap({ it.backingObject != null },{it.backingObject!!})
-                .map{
+                .filterFlatMap({ it.backingObject != null }, { it.backingObject!! })
+                .map {
                     it.audioCommentary.isNotEmpty()
                 }
                 .bindTo(playAudioVisible)
                 .disposedBy(disposeBag)
 
         articObjectObservable
-                .filterFlatMap({it.gallery != null} , {it.gallery!!})
+                .filterFlatMap({ it.gallery != null }, { it.gallery!! })
                 .filter { it.number != null }
                 .map { it.number.toString() }
                 .bindTo(galleryNumber)
@@ -105,17 +105,17 @@ class ArtworkDetailViewModel @Inject constructor(
     }
 
     fun onClickPlayAudio() {
-        playerService?.let {playerService ->
+        playerService?.let { playerService ->
             articObject?.backingObject?.audioFile?.let {
                 val articObject = articObject?.backingObject as Playable
                 val languageList = it.allTranslations()
                 playerService.playPlayer(articObject, languageSelector.selectFrom(languageList))
 
                 var analyticsParamMap: Map<String, String> = mapOf(
-                    AnalyticsLabel.playbackSource to ScreenName.Search.screenName,
-                    AnalyticsLabel.title to articObject.getPlayableTitle().orEmpty(),
-                    AnalyticsLabel.audioTitle to it.title.orEmpty(),
-                    AnalyticsLabel.playbackLanguage to it.asAudioFileModel().fileLanguageForAnalytics().toString()
+                        AnalyticsLabel.playbackSource to ScreenName.Search.screenName,
+                        AnalyticsLabel.title to articObject.getPlayableTitle().orEmpty(),
+                        AnalyticsLabel.audioTitle to it.title.orEmpty(),
+                        AnalyticsLabel.playbackLanguage to it.asAudioFileModel().fileLanguageForAnalytics().toString()
                 )
                 analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
             }

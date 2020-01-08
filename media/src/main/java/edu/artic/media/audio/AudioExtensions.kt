@@ -10,6 +10,6 @@ import edu.artic.localization.LanguageSelector
  * Note that the primary audio is English, as explained in further depth
  * at the docs for [AudioFileModel].
  */
-fun ArticAudioFile.preferredLanguage(selector: LanguageSelector) : AudioFileModel {
+fun ArticAudioFile.preferredLanguage(selector: LanguageSelector): AudioFileModel {
     return selector.selectFrom(this.allTranslations())
 }

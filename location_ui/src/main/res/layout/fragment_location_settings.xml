@@ -24,8 +24,7 @@
 
             <ImageView
                 android:id="@+id/searchIcon"
-                style="@style/Search.SubScreen"
-                />
+                style="@style/Search.SubScreen" />
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -42,8 +41,7 @@
         app:layout_constrainedHeight="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBar"
-        />
+        app:layout_constraintTop_toBottomOf="@id/appBar" />
 
     <View
         android:id="@+id/divider"
@@ -68,8 +66,7 @@
         android:text="@string/locationSettingsBody"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider"
-        />
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <Button
         android:id="@+id/locationSettingsButton"

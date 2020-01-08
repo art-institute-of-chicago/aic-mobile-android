@@ -70,8 +70,8 @@ internal class TransparencyProperty : Property<TileOverlay, Float>(Float::class.
 }
 
 fun LatLng.midpoint(other: LatLng): LatLng {
-    val latDiffFar = (other.latitude - latitude)/2f
-    val lonDiffFar = (other.longitude - longitude)/2f
+    val latDiffFar = (other.latitude - latitude) / 2f
+    val lonDiffFar = (other.longitude - longitude) / 2f
     return LatLng(latitude + latDiffFar, longitude + lonDiffFar)
 }
 
@@ -90,10 +90,10 @@ fun LatLng.isCloseEnoughToCenter(region: VisibleRegion): Boolean {
     val centerFar = region.farLeft.midpoint(region.farRight)
     val centerNear = region.nearLeft.midpoint(region.nearRight)
     val distanceToBack = centerNear.distanceTo(centerFar)
-    val ratio = ((nearDistance/farDistance) * (distanceToBack/2f))
+    val ratio = ((nearDistance / farDistance) * (distanceToBack / 2f))
 
-    val latDiffCenter = ((centerFar.latitude - centerNear.latitude)/distanceToBack)*ratio
-    val lonDiffCenter = ((centerFar.longitude - centerNear.longitude)/distanceToBack)*ratio
+    val latDiffCenter = ((centerFar.latitude - centerNear.latitude) / distanceToBack) * ratio
+    val lonDiffCenter = ((centerFar.longitude - centerNear.longitude) / distanceToBack) * ratio
     val center = LatLng(centerNear.latitude + latDiffCenter, centerNear.longitude + lonDiffCenter)
 
     val distanceFromCenter = center.distanceTo(this)

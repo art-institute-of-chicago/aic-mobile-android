@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".AudioActivity"
-    >
+    tools:context=".AudioActivity">
 
     <ImageView
         android:id="@+id/searchIcon"
+        style="@style/Search.PrimaryScreen"
         android:layout_marginTop="11dp"
         app:layout_constrainedHeight="true"
         app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Search.PrimaryScreen"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageView
@@ -30,8 +27,7 @@
         app:layout_constraintBottom_toTopOf="@+id/lookup_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- For the below EditText, please refer to
 
@@ -67,8 +63,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/screen_icon"
         tools:hint="Look It Up"
-        tools:ignore="Deprecated,UnusedAttribute"
-        />
+        tools:ignore="Deprecated,UnusedAttribute" />
 
     <!--
 
@@ -90,9 +85,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lookup_field"
-        tools:text="Enter the number next to the headphone icon on the artwork label."
         tools:ignore="LabelFor"
-        />
+        tools:text="Enter the number next to the headphone icon on the artwork label." />
 
 
     <!-- Assumption: the default layout_constraintVertical_bias is 0.5 -->
@@ -100,23 +94,21 @@
         android:id="@+id/number_pad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/playerGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subheader"
-        app:layout_constraintBottom_toTopOf="@id/playerGuideline"
-        app:layoutManager="android.support.v7.widget.GridLayoutManager"
         app:spanCount="3"
-        tools:listitem="@layout/view_number_pad_numeric_element"
         tools:itemCount="12"
-        />
+        tools:listitem="@layout/view_number_pad_numeric_element" />
 
     <android.support.constraint.Guideline
         android:id="@+id/playerGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/bottom_audio_player_height"
-        />
+        app:layout_constraintGuide_end="@dimen/bottom_audio_player_height" />
 
 
     <fragment
@@ -128,8 +120,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/playerGuideline"
-        tools:layout="@layout/fragment_bottom_audio_player"
-        />
+        tools:layout="@layout/fragment_bottom_audio_player" />
 
 
 </android.support.constraint.ConstraintLayout>

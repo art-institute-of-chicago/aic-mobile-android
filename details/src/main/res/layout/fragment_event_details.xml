@@ -25,8 +25,8 @@
                 style="@style/DetailToolbarText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:lines="1"
                 android:alpha="0"
+                android:lines="1"
                 android:textColor="@color/white" />
 
         </android.support.v7.widget.Toolbar>
@@ -76,27 +76,27 @@
                 style="@style/MetaDataFifteenWhite"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="13dp"
+                android:layout_marginEnd="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
-                tools:text="June 30, 1:00pm"/>
+                tools:text="June 30, 1:00pm" />
 
             <edu.artic.view.DetailButton
                 android:id="@+id/registerToday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginStandard"
-                app:button_icon="@drawable/ic_ticket"
+                android:layout_marginEnd="@dimen/marginDouble"
                 android:visibility="gone"
+                app:button_icon="@drawable/ic_ticket"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/metaData"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/description"
@@ -104,12 +104,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginRight="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
+                android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/registerToday"
-                tools:text="What’s in store to explore? Studio art-making, visits by a guest artist, or a gallery activity station? Where will the Artist’s Studio pop up next? Visit the Family Room on the day of your visit to discover what’s planned."/>
+                tools:text="What’s in store to explore? Studio art-making, visits by a guest artist, or a gallery activity station? Where will the Artist’s Studio pop up next? Visit the Family Room on the day of your visit to discover what’s planned." />
 
             <TextView
                 android:id="@+id/throughDate"
@@ -117,12 +117,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginRight="@dimen/marginDouble"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"
-                tools:text="Through August 5, 2018"/>
+                tools:text="Through August 5, 2018" />
 
             <TextView
                 android:id="@+id/location"
@@ -134,7 +134,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/throughDate"
-                tools:text="Ryan learning center"/>
+                tools:text="Ryan learning center" />
 
         </android.support.constraint.ConstraintLayout>
 

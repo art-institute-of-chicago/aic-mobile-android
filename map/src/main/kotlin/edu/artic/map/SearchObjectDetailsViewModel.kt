@@ -1,7 +1,8 @@
-package edu.artic.map;
+package edu.artic.map
 
 import com.fuzz.rx.*
 import edu.artic.db.Playable
+import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.daos.ArticMapAnnotationDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.*
@@ -26,7 +27,8 @@ class SearchObjectDetailsViewModel @Inject constructor(
         val languageSelector: LanguageSelector,
         private val articMapAnnotationDao: ArticMapAnnotationDao,
         private val searchManager: SearchManager,
-        generalInfoDao: GeneralInfoDao
+        generalInfoDao: GeneralInfoDao,
+        private val galleryDao: ArticGalleryDao
 ) : BaseViewModel() {
 
     private val generalInfo: Subject<ArticGeneralInfo.Translation> = BehaviorSubject.create()
@@ -125,7 +127,7 @@ class SearchObjectDetailsViewModel @Inject constructor(
             }
         } else if (exhibition != null) {
             Observable.just(exhibition)
-                    .map { exhibition -> ExhibitionViewModel(exhibition) }
+                    .map { exhibition -> ExhibitionViewModel(galleryDao, exhibition) }
                     .map { listOf(it) }
                     .bindTo(searchedObjectViewModels)
                     .disposedBy(disposeBag)
@@ -240,12 +242,22 @@ class ArtworkViewModel(
 /**
  * ViewModel for the Exhibition cell.
  */
-class ExhibitionViewModel(val item: ArticExhibition) : SearchObjectBaseViewModel(null) {
+class ExhibitionViewModel(private val galleryDao: ArticGalleryDao, val item: ArticExhibition) : SearchObjectBaseViewModel(null) {
     val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.artworks)
     val floor: Subject<Int> = BehaviorSubject.create()
+    val galleryTitle: Observable<Optional<String>> = Observable.create<Optional<String>> { emitter ->
+        emitter.onNext(
+                item.gallery_id?.let { galleryId ->
+                    galleryDao.getGalleryForGalleryIdSynchronously(galleryId)
+                            ?.title
+                            .let { Optional(it) }
+                } ?: Optional(null)
+        )
+        emitter.onComplete()
+    }
 
     init {
-        title.onNext(item.title?.replace("\r", "\n"))
+        title.onNext(item.title.replace("\r", "\n"))
         item.imageUrl?.let {
             imageUrl.onNext(it)
         }

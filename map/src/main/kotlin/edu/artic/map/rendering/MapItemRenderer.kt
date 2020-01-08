@@ -302,7 +302,7 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
     /**
      * This method is called by [displayMarker], later it is used to focus the marker.
      */
-    protected  open fun shouldFocusOnCreation(displayMode: MapDisplayMode): Boolean {
+    protected open fun shouldFocusOnCreation(displayMode: MapDisplayMode): Boolean {
         return false
     }
 
@@ -321,7 +321,8 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
             val existingMarker = existingMapItems[id]
             // reusing existing marker if possible.
             if (existingMarker != null) {
-                val meta = existingMarker.marker.metaData() ?: MarkerMetaData(item.item, loadedBitmap = true)
+                val meta = existingMarker.marker.metaData()
+                        ?: MarkerMetaData(item.item, loadedBitmap = true)
                 existingMarker.marker.apply {
                     // manually remove.
                     metaData<T>()?.requestDisposable?.let { toCancel ->

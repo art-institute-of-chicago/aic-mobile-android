@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/mapObjectWindowBlue"
     android:layout_gravity="bottom"
+    android:background="@color/mapObjectWindowBlue"
     android:clickable="true"
     android:focusable="true">
 
@@ -14,17 +14,17 @@
         style="@style/SectionTitleWhite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginStandard"
-        android:layout_marginBottom="@dimen/marginStandard"
-        android:layout_marginEnd="@dimen/marginTriple"
         android:layout_marginStart="@dimen/marginDouble"
+        android:layout_marginTop="@dimen/marginStandard"
+        android:layout_marginEnd="@dimen/marginTriple"
+        android:layout_marginBottom="@dimen/marginStandard"
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
+        android:text="@string/exhibition_info_title"
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/exhibition_info_title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/divider"
@@ -68,7 +68,7 @@
         tools:text="Mona Lisa" />
 
     <TextView
-        android:id="@+id/exhibitionFloor"
+        android:id="@+id/exhibitionGalleryTitle"
         style="@style/ListItemTitle2White"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -76,10 +76,10 @@
         android:layout_marginEnd="@dimen/marginStandard"
         android:gravity="start"
         android:lines="1"
+        android:paddingBottom="@dimen/marginSixtyFour"
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/exhibitionImage"
         app:layout_constraintTop_toBottomOf="@+id/exhibitionTitle"
-        android:paddingBottom="@dimen/marginSixtyFour"
         tools:text="Leonardo da vinci" />
 
     <android.support.constraint.Barrier

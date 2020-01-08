@@ -5,7 +5,6 @@ import com.fuzz.rx.*
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.localization.util.DateTimeHelper.Purpose.*
 import edu.artic.base.utils.orIfNullOrBlank
 import edu.artic.db.daos.ArticEventDao
 import edu.artic.db.daos.ArticExhibitionDao
@@ -15,6 +14,8 @@ import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticTour
 import edu.artic.localization.LanguageSelector
+import edu.artic.localization.util.DateTimeHelper.Purpose.HomeEvent
+import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.membership.MemberInfoPreferencesManager
 import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
@@ -128,7 +129,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     }
 
     fun onClickSeeAllTours() {
-         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours))
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.SeeAllTours))
     }
 
     fun onClickSeeAllOnView() {

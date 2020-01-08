@@ -9,8 +9,6 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.Subject
 import timber.log.Timber
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
 /**

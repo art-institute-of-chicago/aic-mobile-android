@@ -1,2 +1,1 @@
-<manifest package="edu.artic.image"
-          xmlns:android="http://schemas.android.com/apk/res/android"/>
+<manifest package="edu.artic.image" />

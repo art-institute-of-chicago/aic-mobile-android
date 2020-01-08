@@ -77,7 +77,7 @@ fun Context.isResourceConstrained(): Boolean {
     val am = (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?)
 
     val retVal =
-    // Restricted Contexts can't cache stuff on the filesystem
+            // Restricted Contexts can't cache stuff on the filesystem
             isRestricted or
                     // Low RAM devices have under 1GB of RAM
                     (am != null && am.isLowRamDevice) or
@@ -111,6 +111,7 @@ fun Context.getThemeColors(colors: IntArray): Array<ColorStateList> {
         found = (0 until colors.size)
                 .mapNotNull { it }
                 .map { typedArray.getColorStateList(it) }
+                .mapNotNull { it }
                 .toTypedArray()
     } finally {
         typedArray?.recycle()

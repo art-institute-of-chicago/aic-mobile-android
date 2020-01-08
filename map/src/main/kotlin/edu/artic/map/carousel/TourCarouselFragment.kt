@@ -47,7 +47,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
 
     private val adapter = TourCarouselAdapter()
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
-    private val tourObject: ArticTour by lazy { arguments!!.getParcelable<ArticTour>(ARG_TOUR_OBJECT) }
+    private val tourObject: ArticTour? by lazy { arguments?.getParcelable<ArticTour>(ARG_TOUR_OBJECT) }
 
     override fun onRegisterViewModel(viewModel: TourCarouselViewModel) {
         viewModel.tourObject = tourObject
@@ -57,18 +57,18 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         getAudioServiceObservable()
-            .bindTo(audioService)
-            .disposedBy(disposeBag)
+                .bindTo(audioService)
+                .disposedBy(disposeBag)
 
         tourCarousel.adapter = adapter.toPagerAdapter()
         viewPagerIndicator.setViewPager(tourCarousel)
         viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
 
         close.clicks()
-            .defaultThrottle()
-            .subscribe {
-                viewModel.leaveTour()
-            }.disposedBy(disposeBag)
+                .defaultThrottle()
+                .subscribe {
+                    viewModel.leaveTour()
+                }.disposedBy(disposeBag)
 
     }
 
@@ -77,69 +77,69 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
         super.setupBindings(viewModel)
 
         viewModel.tourTitle
-            .bindToMain(tourTitle.text())
-            .disposedBy(disposeBag)
+                .bindToMain(tourTitle.text())
+                .disposedBy(disposeBag)
 
         viewModel.tourStopViewModels
-            .bindToMain(adapter.itemChanges())
-            .disposedBy(disposeBag)
+                .bindToMain(adapter.itemChanges())
+                .disposedBy(disposeBag)
 
         /**
          * Upon getting the player control command, get the mediaPlayer and pass it the command.
          */
         viewModel.playerControl
-            .observeOn(AndroidSchedulers.mainThread())
-            .withLatestFrom(audioService) { playControl, service ->
-                playControl to service
-            }.subscribe { pair ->
-                val playControl = pair.first
-                val service = pair.second
-                when (playControl) {
-                    is TourCarousalBaseViewModel.PlayerAction.Play -> {
-                        if (playControl.audioFileModel != null) {
-                            service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
+                .observeOn(AndroidSchedulers.mainThread())
+                .withLatestFrom(audioService) { playControl, service ->
+                    playControl to service
+                }.subscribe { pair ->
+                    val playControl = pair.first
+                    val service = pair.second
+                    when (playControl) {
+                        is TourCarousalBaseViewModel.PlayerAction.Play -> {
+                            if (playControl.audioFileModel != null) {
+                                service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
 
-                            var analyticsParamMap: MutableMap<String, String> = mutableMapOf(
-                                AnalyticsLabel.playbackSource to ScreenName.TourStop.screenName,
-                                AnalyticsLabel.title to tourObject.getPlayableTitle().orEmpty(),
-                                AnalyticsLabel.tourTitle to tourObject.title,
-                                AnalyticsLabel.audioTitle to playControl.audioFileModel.title.orEmpty(),
-                                AnalyticsLabel.playbackLanguage to playControl.audioFileModel.fileLanguageForAnalytics().toString())
+                                var analyticsParamMap: MutableMap<String, String> = mutableMapOf(
+                                        AnalyticsLabel.playbackSource to ScreenName.TourStop.screenName,
+                                        AnalyticsLabel.title to tourObject?.getPlayableTitle().orEmpty(),
+                                        AnalyticsLabel.tourTitle to tourObject?.title.orEmpty(),
+                                        AnalyticsLabel.audioTitle to playControl.audioFileModel.title.orEmpty(),
+                                        AnalyticsLabel.playbackLanguage to playControl.audioFileModel.fileLanguageForAnalytics().toString())
 
-                            analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
-                        } else {
-                            service.playPlayer(playControl.requestedObject)
+                                analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
+                            } else {
+                                service.playPlayer(playControl.requestedObject)
+                            }
                         }
+                        is TourCarousalBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
                     }
-                    is TourCarousalBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
-                }
-            }.disposedBy(disposeBag)
+                }.disposedBy(disposeBag)
 
 
         audioService
-            .flatMap { service -> service.audioPlayBackStatus }
-            .bindTo(viewModel.audioPlayBackStatus)
-            .disposedBy(disposeBag)
+                .flatMap { service -> service.audioPlayBackStatus }
+                .bindTo(viewModel.audioPlayBackStatus)
+                .disposedBy(disposeBag)
 
         audioService
-            .flatMap { service -> service.currentTrack }
-            .mapOptional()
-            .bindTo(viewModel.currentTrack)
-            .disposedBy(disposeBag)
+                .flatMap { service -> service.currentTrack }
+                .mapOptional()
+                .bindTo(viewModel.currentTrack)
+                .disposedBy(disposeBag)
 
         viewModel.currentPage
-            .distinctUntilChanged()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { page ->
-                tourCarousel.setCurrentItem(page, true)
-            }
-            .disposedBy(disposeBag)
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { page ->
+                    tourCarousel.setCurrentItem(page, true)
+                }
+                .disposedBy(disposeBag)
 
         tourCarousel.pageSelections()
-            .skipInitialValue()
-            .distinctUntilChanged()
-            .bindTo(viewModel.currentPage)
-            .disposedBy(disposeBag)
+                .skipInitialValue()
+                .distinctUntilChanged()
+                .bindTo(viewModel.currentPage)
+                .disposedBy(disposeBag)
     }
 
     companion object {

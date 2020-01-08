@@ -5,7 +5,7 @@
     style="@style/AudioTranslationSans"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:layout_width="300dp"
+    android:background="@drawable/language_dropdown_background"
     android:fontFamily="@font/ideal_sans_medium"
     android:gravity="center_vertical|start"
     android:includeFontPadding="false"
@@ -14,5 +14,5 @@
     android:paddingTop="@dimen/marginHalf"
     android:paddingEnd="@dimen/marginQuad"
     android:paddingBottom="@dimen/marginHalf"
-    android:background="@drawable/language_dropdown_background"
+    tools:layout_width="300dp"
     tools:text="@string/name_of_this_language" />

@@ -27,7 +27,9 @@ class CustomTabManager : LifecycleAwareActivity {
     override fun onStop(host: Activity) {
         try {
             if (canBind) {
-                host.unbindService(mCustomTabsServiceConnection)
+                mCustomTabsServiceConnection?.run {
+                    host.unbindService(this)
+                }
             }
         } catch (ignore: Throwable) {
             // looks like this is thrown during fragment restart

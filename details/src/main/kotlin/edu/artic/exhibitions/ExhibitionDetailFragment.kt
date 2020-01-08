@@ -1,6 +1,7 @@
 package edu.artic.exhibitions
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
@@ -15,7 +16,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
-import edu.artic.base.utils.asUrlViewIntent
+import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticExhibition
@@ -28,6 +29,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_exhibition_details.*
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
 
@@ -38,6 +40,8 @@ import kotlin.reflect.KClass
  * # On View
  */
 class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel>() {
+    @Inject
+    lateinit var customTabManager: CustomTabManager
 
     override val screenName: ScreenName
         get() = ScreenName.OnViewDetails
@@ -119,6 +123,10 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .bindToMain(description.text())
                 .disposedBy(disposeBag)
 
+        viewModel.galleryTitle
+                .bindToMain(galleryTitle.text())
+                .disposedBy(disposeBag)
+
         viewModel.throughDate
                 .map { getString(R.string.throughDate, it) }
                 .bindToMain(throughDate.text())
@@ -155,7 +163,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                             when (endpoint) {
                                 is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
-                                    analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowExhibition, exhibition.title)
+                                    analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowExhibition, exhibition?.title.orEmpty())
                                     val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                         putExtra(NavigationConstants.ARG_EXHIBITION_OBJECT, exhibition)
                                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
@@ -165,7 +173,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                                 }
 
                                 is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
-                                    startActivity(endpoint.url.asUrlViewIntent())
+                                    customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(endpoint.url))
                                 }
                             }
                         }
@@ -177,7 +185,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     }
 
     companion object {
-        public const val ARG_EXHIBITION = "exhibition"
+        const val ARG_EXHIBITION = "exhibition"
 
         fun argsBundle(exhibition: ArticExhibition) = Bundle().apply {
             putParcelable(ARG_EXHIBITION, exhibition)

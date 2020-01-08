@@ -16,7 +16,8 @@
         <!-- Attributes for edu.artic.localization.ui.LanguageSettingsFragment -->
         <item name="languageSettingsBackgroundColor">@color/ugly_blue</item>
         <item name="languageSettingsButtonTextColor">@color/white</item>
-        <item name="languageSettingsButtonBackground">@drawable/language_radio_button_background</item>
+        <item name="languageSettingsButtonBackground">@drawable/language_radio_button_background
+        </item>
         <item name="languageSettingsContainsToolbar">false</item>
         <item name="languageSettingsBodyTextColor">@color/white</item>
         <item name="languageSettingsTitleTextColor">@color/white</item>

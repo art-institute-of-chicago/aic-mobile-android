@@ -2,9 +2,9 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/containerLayout"
     android:fitsSystemWindows="true">
 
     <edu.artic.view.ArticMainAppBarLayout
@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backgroundImage="@drawable/info_image"
-        app:expandedTitleStyle="@style/InformationExpandedTitle"
         app:expandedFixedSizeTitleStyle="@style/InformationExpandedTitle"
+        app:expandedTitleStyle="@style/InformationExpandedTitle"
         app:icon="@drawable/ic_info" />
 
     <android.support.v4.widget.NestedScrollView
@@ -27,6 +27,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/purchaseTicketsForAdmission"
+                style="@style/BodySansSerifBlackCentered"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:paddingTop="@dimen/marginOneHalf"
+                android:text="@string/purchaseTicketsForAdmission"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/buyTickets"
+                style="@style/DetailButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginTwenty"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:text="@string/buyTickets"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/purchaseTicketsForAdmission" />
+
+            <View
+                android:id="@+id/dividerBelowBuyTickets"
+                style="@style/divider"
+                android:layout_width="0dp"
+                android:layout_marginTop="@dimen/marginQuad"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buyTickets" />
 
             <TextView
                 android:id="@+id/becomeMember"
@@ -34,22 +68,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginTwenty"
                 android:layout_marginEnd="@dimen/marginDouble"
                 android:gravity="center"
-                android:paddingTop="@dimen/marginTriple"
-                android:paddingBottom="@dimen/marginTriple"
                 android:text="@string/becomeAMember"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/dividerBelowBecomeMember"
-                style="@style/divider"
-                android:layout_width="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/becomeMember" />
+                app:layout_constraintTop_toBottomOf="@id/dividerBelowBuyTickets" />
 
             <TextView
                 android:id="@+id/enjoyFreeYearLongAdmission"
@@ -62,7 +87,7 @@
                 android:text="@string/enjoyFreeYearLongAdmission"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dividerBelowBecomeMember" />
+                app:layout_constraintTop_toBottomOf="@id/becomeMember" />
 
             <TextView
                 android:id="@+id/joinNow"
@@ -70,10 +95,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
                 android:paddingTop="@dimen/marginOneHalf"
                 android:paddingBottom="@dimen/marginOneHalf"
                 android:text="@string/joinNow"
-                android:layout_marginEnd="@dimen/marginDouble"
                 android:textColor="@color/brownish_orange"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

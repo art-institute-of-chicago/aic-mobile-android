@@ -10,9 +10,9 @@
         android:pathData="M0 0h48v48H0z" />
     <path
         android:fillType="evenOdd"
-        android:strokeColor="#FEFEFE"
+        android:pathData="M8.012 41.902l15.719-2.476 16.448 2.437L36.2 29.48l-12.106-2.233-13.538 2.28z"
         android:strokeWidth=".8"
-        android:pathData="M8.012 41.902l15.719-2.476 16.448 2.437L36.2 29.48l-12.106-2.233-13.538 2.28z" />
+        android:strokeColor="#FEFEFE" />
     <path
         android:fillColor="#FEFEFE"
         android:fillType="evenOdd"

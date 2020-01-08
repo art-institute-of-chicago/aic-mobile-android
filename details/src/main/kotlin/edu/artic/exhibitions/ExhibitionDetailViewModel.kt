@@ -3,16 +3,19 @@ package edu.artic.exhibitions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
-import edu.artic.analytics.*
-import edu.artic.localization.util.DateTimeHelper.Purpose.*
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsLabel
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.models.ArticExhibition
-import edu.artic.details.R
 import edu.artic.localization.LanguageSelector
+import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import javax.inject.Inject
@@ -33,6 +36,7 @@ constructor(dataObjectDao: ArticDataObjectDao,
     val title: Subject<String> = BehaviorSubject.createDefault("test")
     val metaData: Subject<String> = BehaviorSubject.createDefault("")
     val description: Subject<String> = BehaviorSubject.createDefault("")
+    val galleryTitle: Subject<String> = BehaviorSubject.createDefault("")
     val throughDate: Subject<String> = BehaviorSubject.createDefault("")
     /**
      * Pair of `latitude` to `longitude`.
@@ -54,7 +58,7 @@ constructor(dataObjectDao: ArticDataObjectDao,
 
     init {
         dataObjectDao.getDataObject()
-                .map {it.ticketsUrlAndroid }
+                .map { it.ticketsUrlAndroid }
                 .filter { it.isNotEmpty() }
                 .subscribe {
                     ticketsUrl = it
@@ -80,12 +84,21 @@ constructor(dataObjectDao: ArticDataObjectDao,
                 .bindTo(description)
                 .disposedBy(disposeBag)
 
+        exhibitionObservable
+                .observeOn(Schedulers.io())
+                .map { exhibition ->
+                    exhibition.gallery_id
+                            ?.let { galleryDao.getGalleryForGalleryIdSynchronously(it)?.title }
+                            ?: ""
+                }
+                .bindTo(galleryTitle)
+                .disposedBy(disposeBag)
 
-
-        Observables.combineLatest(
-                languageSelector.currentLanguage,
-                exhibitionObservable
-        )
+        Observables
+                .combineLatest(
+                        languageSelector.currentLanguage,
+                        exhibitionObservable
+                )
                 .map { (locale, exhibition) ->
                     exhibition.endTime.format(
                             HomeExhibition.obtainFormatter(
