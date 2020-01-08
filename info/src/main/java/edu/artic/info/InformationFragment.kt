@@ -45,31 +45,40 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
     override fun setupBindings(viewModel: InformationViewModel) {
         super.setupBindings(viewModel)
         appBarLayout.setOnSearchClickedConsumer(Consumer { viewModel.onClickSearch() })
+
+        buyTickets.clicks()
+                .defaultThrottle()
+                .subscribeBy {
+                    viewModel.onBuyTicketClicked()
+                }
+                .disposedBy(disposeBag)
+
         joinNow.clicks()
                 .defaultThrottle()
                 .subscribeBy {
                     viewModel.onClickJoinNow()
-                }.disposedBy(disposeBag)
+                }
+                .disposedBy(disposeBag)
 
         museumInformation.clicks()
                 .defaultThrottle()
                 .subscribeBy {
                     viewModel.onMuseumInformationClicked()
-                }.disposedBy(disposeBag)
+                }
+                .disposedBy(disposeBag)
 
         locationSettings.clicks()
                 .defaultThrottle()
                 .subscribeBy {
                     viewModel.onClickLocationSettings()
-                }.disposedBy(disposeBag)
-
+                }
+                .disposedBy(disposeBag)
 
         viewModel.buildVersion
                 .subscribeBy { versionName ->
                     versionInfo.text = getString(R.string.versionInfo, versionName)
                 }
                 .disposedBy(disposeBag)
-
 
         viewModel.generalInfo
                 .observeOn(AndroidSchedulers.mainThread())
@@ -101,6 +110,10 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                 .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
                 .subscribe {
                     when (it) {
+                        is InformationViewModel.NavigationEndpoint.BuyTicket -> {
+                            val url = it.url
+                            customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(url))
+                        }
                         InformationViewModel.NavigationEndpoint.AccessMemberCard -> {
                             navController.navigate(R.id.goToAccessMemberCard)
                         }
@@ -123,7 +136,8 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                         }
                     }
 
-                }.disposedBy(navigationDisposeBag)
+                }
+                .disposedBy(navigationDisposeBag)
     }
 
 }
