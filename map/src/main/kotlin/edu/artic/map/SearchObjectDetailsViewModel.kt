@@ -1,4 +1,4 @@
-package edu.artic.map;
+package edu.artic.map
 
 import com.fuzz.rx.*
 import edu.artic.db.Playable
@@ -245,7 +245,7 @@ class ExhibitionViewModel(val item: ArticExhibition) : SearchObjectBaseViewModel
     val floor: Subject<Int> = BehaviorSubject.create()
 
     init {
-        title.onNext(item.title?.replace("\r", "\n"))
+        title.onNext(item.title.replace("\r", "\n"))
         item.imageUrl?.let {
             imageUrl.onNext(it)
         }

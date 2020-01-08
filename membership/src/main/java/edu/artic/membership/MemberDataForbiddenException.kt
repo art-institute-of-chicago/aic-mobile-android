@@ -11,6 +11,6 @@ package edu.artic.membership
  * used to build the `:info` module did not include the necessary properties. Please
  * refer to the README for more details.
  */
-object MemberDataForbiddenException: RuntimeException(
+object MemberDataForbiddenException : RuntimeException(
         "Unfortunately, this build of the app wasn't really set up to work with membership info. Maybe in a future version?"
 )

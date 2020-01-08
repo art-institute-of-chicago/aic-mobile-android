@@ -26,8 +26,7 @@ class InformationViewModel @Inject constructor(
         private val dataObjectDao: ArticDataObjectDao,
         private val generalInfoDao: GeneralInfoDao,
         @Named("VERSION") buildVersion: String
-)
-    : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
+) : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         object AccessMemberCard : NavigationEndpoint()

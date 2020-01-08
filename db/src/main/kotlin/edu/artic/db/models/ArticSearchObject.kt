@@ -19,5 +19,5 @@ data class ArticSearchObject(
 data class ArticSearchSuggestionsObject(
         val searchStrings: List<String>,
         val searchObjects: List<String>,
-        @PrimaryKey val id : Int = 0
+        @PrimaryKey val id: Int = 0
 )

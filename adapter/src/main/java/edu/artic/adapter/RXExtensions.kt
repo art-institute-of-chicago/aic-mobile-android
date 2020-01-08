@@ -42,7 +42,7 @@ fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemClicks(): Observable<T
  * Please reference [BaseRecyclerViewAdapter.onItemPositionClicked] for
  * details on the Int value used for 'position' here.
  */
-fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemClicksWithPosition(): Observable<Pair<Int,TModel>> =
+fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.itemClicksWithPosition(): Observable<Pair<Int, TModel>> =
         Observable.create { emitter ->
             onItemClickListener = edu.artic.adapter.onItemClickListenerWithPosition { pos, model ->
                 emitter.onNext(pos to model)

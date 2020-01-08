@@ -26,7 +26,7 @@ class SearchDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
             val view = parent.getChildAt(i)
             val position = parent.getChildAdapterPosition(view)
             adapter.getItemOrNull(position)?.let {
-                if ((it is SearchTextCellViewModel && it.hasDivider) && (position < adapter.itemCount - 1 )) {
+                if ((it is SearchTextCellViewModel && it.hasDivider) && (position < adapter.itemCount - 1)) {
                     c.drawRect(
                             view.left.toFloat(),
                             view.bottom.toFloat() + mBottomPadding,
@@ -34,7 +34,7 @@ class SearchDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
                             view.bottom + mBottomPadding + mDividerHeight.toFloat(),
                             mPaint
                     )
-                } else if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1 )) {
+                } else if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1)) {
                     c.drawRect(
                             view.left.toFloat(),
                             view.bottom.toFloat(),
@@ -53,9 +53,9 @@ class SearchDividerItemDecoration(context: Context) : RecyclerView.ItemDecoratio
         val position = parent.getChildAdapterPosition(view)
         val adapter = parent.adapter as SearchResultsAdapter
         adapter.getItemOrNull(position)?.let {
-            if ((it is SearchTextCellViewModel && it.hasDivider) && (position < adapter.itemCount - 1 )) {
-                outRect.set(0, 0, 0, mBottomPadding+mDividerHeight)
-            } else if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1 )) {
+            if ((it is SearchTextCellViewModel && it.hasDivider) && (position < adapter.itemCount - 1)) {
+                outRect.set(0, 0, 0, mBottomPadding + mDividerHeight)
+            } else if ((it is SearchBaseListItemViewModel || it.hasDivider) && (position < adapter.itemCount - 1)) {
                 outRect.set(0, 0, 0, mDividerHeight)
             } else {
                 outRect.set(0, 0, 0, 0)

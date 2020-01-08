@@ -53,9 +53,9 @@
         android:layout_marginEnd="@dimen/marginStandard"
         android:gravity="start"
         android:lines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintBottom_toBottomOf="@+id/image"
         tools:text="Gallery 201" />
 
 
@@ -65,8 +65,8 @@
         android:layout_height="@dimen/mapAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/ic_play"
-        android:visibility="visible"
         android:contentDescription="@string/exo_controls_play_description"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/image" />
@@ -77,8 +77,8 @@
         android:layout_height="@dimen/mapAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/ic_pause"
-        android:visibility="gone"
         android:contentDescription="@string/exo_controls_pause_description"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/image" />

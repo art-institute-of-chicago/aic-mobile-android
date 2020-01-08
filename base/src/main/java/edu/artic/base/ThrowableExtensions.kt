@@ -24,7 +24,7 @@ open class PermissibleError(
 /**
  * Tries to convert into NetworkException, if fails returns itself.
  */
-fun Throwable.asNetworkException(customErrorMessage: String) : Throwable {
+fun Throwable.asNetworkException(customErrorMessage: String): Throwable {
     var exception = this
     if (this is UnknownHostException) {
         exception = NetworkException(customErrorMessage, this)

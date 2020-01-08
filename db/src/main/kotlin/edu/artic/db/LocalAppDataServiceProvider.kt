@@ -14,14 +14,17 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import okio.Okio
-import org.threeten.bp.*
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoField
 import java.io.FileNotFoundException
 import java.io.InputStream
-import java.util.Locale
+import java.util.*
 
 /**
  * Implementation of [AppDataServiceProvider] that derives [ArticAppData] from local files.
@@ -159,8 +162,7 @@ class LocalAppDataServiceProvider(
     }
 
     class NoAppDataException(detailMessage: String, cause: Throwable? = null) :
-            NullPointerException(detailMessage)
-    {
+            NullPointerException(detailMessage) {
 
         init {
             if (cause != null) {

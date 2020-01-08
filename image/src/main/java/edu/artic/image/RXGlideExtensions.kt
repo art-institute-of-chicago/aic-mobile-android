@@ -19,8 +19,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
  * @param height Specify a height to optimize image loading.
  */
 inline fun <reified T> RequestBuilder<T>.asRequestObservable(context: Context,
-                                              width: Int = Target.SIZE_ORIGINAL,
-                                              height: Int = Target.SIZE_ORIGINAL): Observable<T> {
+                                                             width: Int = Target.SIZE_ORIGINAL,
+                                                             height: Int = Target.SIZE_ORIGINAL): Observable<T> {
     return Observable.create { emitter ->
         val target = object : SimpleTarget<T>(width, height) {
             override fun onResourceReady(resource: T, transition: Transition<in T>?) {

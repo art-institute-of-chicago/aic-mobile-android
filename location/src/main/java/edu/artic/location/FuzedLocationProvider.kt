@@ -39,7 +39,7 @@ class FuzedLocationProvider(private val context: Context) : LocationProvider, Se
     private val fuzedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
     fun configureDeviceAngle() {
-        val windowManager = context .getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         when (windowManager.defaultDisplay.rotation) {
             Surface.ROTATION_0 ->
                 SensorManager.remapCoordinateSystem(defaultRotation, SensorManager.AXIS_Z,

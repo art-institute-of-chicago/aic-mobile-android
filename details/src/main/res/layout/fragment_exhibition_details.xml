@@ -86,14 +86,14 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="@dimen/marginStandard"
-                app:button_text="@string/showOnMap"
-                app:button_icon="@drawable/ic_show_on_map"
                 android:visibility="gone"
+                app:button_icon="@drawable/ic_show_on_map"
+                app:button_text="@string/showOnMap"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 app:layout_constraintWidth_percent=".45"
-                app:layout_constraintStart_toStartOf="parent"
                 tools:visibility="visible" />
 
             <edu.artic.view.DetailButton
@@ -107,11 +107,10 @@
                 app:button_text="@string/buyTickets"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintHorizontal_weight=".5"
+                app:layout_constraintStart_toEndOf="@id/showOnMap"
                 app:layout_constraintTop_toBottomOf="@id/expandedTitle"
                 app:layout_constraintWidth_percent=".45"
-                app:layout_constraintStart_toEndOf="@id/showOnMap"
-                app:layout_goneMarginStart="@dimen/marginDouble"
-                />
+                app:layout_goneMarginStart="@dimen/marginDouble" />
 
             <!--
 

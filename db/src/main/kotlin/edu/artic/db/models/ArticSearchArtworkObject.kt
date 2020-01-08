@@ -44,7 +44,6 @@ data class ArticSearchArtworkObject(
         }
 
 
-
     /**
      * Alias for [imageUrl], adjusted to the [CDN endpoint][String.asCDNUri] if appropriate.
      */

@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.artic.adapter" />
+<manifest package="edu.artic.adapter" />

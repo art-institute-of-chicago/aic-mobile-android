@@ -8,7 +8,7 @@ class SearchSuggestedFragment : SearchBaseFragment<SearchSuggestedViewModel>() {
     override fun setupBindings(viewModel: SearchSuggestedViewModel) {
         super.setupBindings(viewModel)
         parentFragment?.let {
-            if(it is SearchResultsContainerFragment) {
+            if (it is SearchResultsContainerFragment) {
                 viewModel.parentViewModel = it.viewModel
             }
         }

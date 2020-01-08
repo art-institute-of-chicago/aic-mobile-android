@@ -101,13 +101,14 @@ abstract class ApiModule {
                             executor: Executor,
                             moshi: Moshi
         ): Retrofit? {
-            return if (baseUrl.contains("https")) {constructRetrofit(
-                    baseUrl = baseUrl,
-                    client = client,
-                    executor = executor,
-                    customConfiguration = {
-                        addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
-                    })
+            return if (baseUrl.contains("https")) {
+                constructRetrofit(
+                        baseUrl = baseUrl,
+                        client = client,
+                        executor = executor,
+                        customConfiguration = {
+                            addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
+                        })
             } else {
                 null
             }

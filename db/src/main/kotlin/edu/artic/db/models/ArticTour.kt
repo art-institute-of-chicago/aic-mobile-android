@@ -154,7 +154,7 @@ data class ArticTour(
  * Builds english translation for [ArticTour].
  * [ArticTour]'s properties are in english, so copying the required properties suffice the english translation.
  */
-fun ArticTour.toEnglishTranslation() : ArticTour.Translation {
+fun ArticTour.toEnglishTranslation(): ArticTour.Translation {
     return ArticTour.Translation(
             language = "en-US",
             title = this.title,

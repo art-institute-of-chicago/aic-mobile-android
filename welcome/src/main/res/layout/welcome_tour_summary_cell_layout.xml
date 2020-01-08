@@ -21,19 +21,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="infoBar"
-        />
+        app:constraint_referenced_ids="infoBar" />
 
     <View
         android:id="@+id/infoBar"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/transparentInfoBarColor"
-        app:layout_constraintTop_toBottomOf="@id/infoBarrier"
         app:layout_constraintBottom_toBottomOf="@id/image"
-        app:layout_constraintStart_toStartOf="@id/image"
         app:layout_constraintEnd_toEndOf="@id/image"
-        />
+        app:layout_constraintStart_toStartOf="@id/image"
+        app:layout_constraintTop_toBottomOf="@id/infoBarrier" />
 
 
     <TextView
@@ -45,10 +43,10 @@
         android:drawableStart="@drawable/ic_map_white"
         android:gravity="center"
         app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toBottomOf="@id/infoBarrier"
         app:layout_constraintBottom_toBottomOf="@id/image"
         app:layout_constraintStart_toStartOf="@id/image"
-        tools:text="5 Stops"/>
+        app:layout_constraintTop_toBottomOf="@id/infoBarrier"
+        tools:text="5 Stops" />
 
 
     <TextView
@@ -58,16 +56,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginStandard"
-        android:layout_marginBottom="@dimen/marginStandard"
         android:layout_marginEnd="@dimen/marginStandard"
+        android:layout_marginBottom="@dimen/marginStandard"
         android:drawableStart="@drawable/ic_clock"
         android:gravity="center"
         app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toTopOf="@id/infoBar"
         app:layout_constraintBottom_toBottomOf="@id/image"
-        app:layout_constraintStart_toEndOf="@id/stops"
         app:layout_constraintEnd_toEndOf="@id/image"
         app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/stops"
+        app:layout_constraintTop_toTopOf="@id/infoBar"
         tools:text="42 min" />
 
     <TextView

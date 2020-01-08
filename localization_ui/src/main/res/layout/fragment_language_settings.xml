@@ -21,8 +21,7 @@
 
             <ImageView
                 android:id="@+id/searchIcon"
-                style="@style/Search.SubScreen"
-                />
+                style="@style/Search.SubScreen" />
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -46,19 +45,19 @@
             <TextView
                 android:id="@+id/choseYourLanguage"
                 style="?attr/languageSettingsTitleTextAppearance"
-                tools:theme="@style/CardTitleLargeBlack"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/marginTriple"
-                android:paddingBottom="@dimen/marginTriple"
                 android:paddingStart="@dimen/marginDouble"
+                android:paddingTop="@dimen/marginTriple"
                 android:paddingEnd="@dimen/marginDouble"
+                android:paddingBottom="@dimen/marginTriple"
                 android:text="@string/chooseYourLanguage"
                 android:textColor="?attr/languageSettingsTitleTextColor"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:theme="@style/CardTitleLargeBlack" />
 
             <View
                 android:id="@+id/divider"
@@ -74,7 +73,6 @@
             <TextView
                 android:id="@+id/languageSettingsBody"
                 style="?attr/languageSettingsBodyTextAppearance"
-                tools:theme="@style/BodySansSerifBlackLeft"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginDouble"
@@ -86,7 +84,8 @@
                 android:textColor="?attr/languageSettingsBodyTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider" />
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                tools:theme="@style/BodySansSerifBlackLeft" />
 
             <RadioGroup
                 android:id="@+id/languageSelectionButtons"
@@ -97,8 +96,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:layout_constraintVertical_bias="0"
-                app:layout_constraintTop_toBottomOf="@id/languageSettingsBody">
+                app:layout_constraintTop_toBottomOf="@id/languageSettingsBody"
+                tools:layout_constraintVertical_bias="0">
 
                 <RadioButton
                     android:id="@+id/englishLanguage"

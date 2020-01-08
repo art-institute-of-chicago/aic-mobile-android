@@ -48,7 +48,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
                 /**
                  * this is specifically for handling the dateline above each day's events
                  */
-                return when(eventsAdapter.getItemOrNull(position)) {
+                return when (eventsAdapter.getItemOrNull(position)) {
                     is AllEventsCellHeaderViewModel -> {
                         2
                     }
