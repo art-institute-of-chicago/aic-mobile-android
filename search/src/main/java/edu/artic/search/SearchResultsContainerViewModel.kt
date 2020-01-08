@@ -10,14 +10,14 @@ class SearchResultsContainerViewModel @Inject constructor() : NavViewViewModel<S
 
     sealed class NavigationEndpoint
 
-    val currentlySelectedPage : Subject<Int> = BehaviorSubject.create()
+    val currentlySelectedPage: Subject<Int> = BehaviorSubject.create()
 
-    fun onPageChanged(page : Int) {
+    fun onPageChanged(page: Int) {
         currentlySelectedPage.onNext(page)
     }
 
     fun onClickSeeAll(header: Header) {
-        when(header) {
+        when (header) {
             is Header.Artworks -> {
                 currentlySelectedPage.onNext(1)
             }

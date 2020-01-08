@@ -89,7 +89,7 @@ class LandmarkMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : Ma
 class SpacesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao)
     : MapAnnotationItemRenderer(articMapAnnotationDao) {
 
-    private val textMarkerGenerator: TextMarkerGenerator  by lazy { TextMarkerGenerator(context) }
+    private val textMarkerGenerator: TextMarkerGenerator by lazy { TextMarkerGenerator(context) }
 
     override fun getItems(floor: Int, displayMode: MapDisplayMode): Flowable<List<ArticMapAnnotation>> {
         return when (displayMode) {
@@ -124,7 +124,7 @@ class AmenitiesMapItemRenderer(articMapAnnotationDao: ArticMapAnnotationDao) : M
                     articMapAnnotationDao.getAmenitiesByAmenityType(floor = floor.toString(), amenityType = amenityType)
                 }
             }
-            is MapDisplayMode.Tour ->{
+            is MapDisplayMode.Tour -> {
                 /**
                  * Only display restrooms on tour mode.
                  */

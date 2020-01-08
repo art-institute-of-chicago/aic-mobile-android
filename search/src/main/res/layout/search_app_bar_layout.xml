@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/greyText"
     android:elevation="5dp"
     android:fitsSystemWindows="true"
     app:contentInsetStartWithNavigation="0dp"
-    tools:showIn="@layout/fragment_search"
-    >
+    tools:showIn="@layout/fragment_search">
 
     <ImageView
         android:id="@+id/close"
@@ -27,16 +25,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        android:fontFamily="@font/ideal_sans_medium"
+        android:fontFeatureSettings="tnum"
         android:hint="@string/looking_for_artwork"
+        android:imeOptions="actionDone"
+        android:inputType="text"
         android:lines="1"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textColorHint="@color/hintColor"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:textSize="17sp"
-        android:fontFeatureSettings="tnum"
-        android:fontFamily="@font/ideal_sans_medium"
-        />
+        android:textSize="17sp" />
 
 </android.support.v7.widget.Toolbar>

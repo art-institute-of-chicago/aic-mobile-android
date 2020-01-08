@@ -1,7 +1,9 @@
 package edu.artic.search
 
 import com.jakewharton.retrofit2.adapter.rxjava2.Result
-import edu.artic.db.models.*
+import edu.artic.db.models.ApiSearchResultRawA
+import edu.artic.db.models.ApiSearchResultRawE
+import edu.artic.db.models.ApiSearchResultRawT
 import io.reactivex.Observable
 import retrofit2.http.*
 

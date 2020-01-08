@@ -28,8 +28,7 @@
 
                 <ImageView
                     android:id="@+id/searchIcon"
-                    style="@style/Search.SubScreen"
-                    />
+                    style="@style/Search.SubScreen" />
 
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>

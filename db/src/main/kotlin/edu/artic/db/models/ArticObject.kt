@@ -86,9 +86,9 @@ data class ArticObject(
      * Alias for just the artist
      */
     val tombstone: String?
-    get() {
-        return artistCulturePlaceDelim?.replace("|", "\r")
-    }
+        get() {
+            return artistCulturePlaceDelim?.replace("|", "\r")
+        }
 
     @Ignore
     constructor() : this(floor = Int.MIN_VALUE)
@@ -114,13 +114,14 @@ data class ArticObject(
 val ArticObject.audioFile: ArticAudioFile?
     get() = this.audioCommentary.firstOrNull()?.audioFile
 
-fun ArticObject.audioFileBySelectorNumber(objectSelectorNumber: String) : ArticAudioFile? {
+fun ArticObject.audioFileBySelectorNumber(objectSelectorNumber: String): ArticAudioFile? {
     return this.audioCommentary.find { it.objectSelectorNumber == objectSelectorNumber }?.audioFile
 }
+
 /**
  *  Converts ArticObject to [ArticSearchArtworkObject].
  */
-fun ArticObject.asArticSearchArtworkObject(gallery: ArticGallery? = null) : ArticSearchArtworkObject {
+fun ArticObject.asArticSearchArtworkObject(gallery: ArticGallery? = null): ArticSearchArtworkObject {
     return ArticSearchArtworkObject(
             artworkId = this.id.toString(),
             backingObject = this,

@@ -5,7 +5,10 @@ import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
-import edu.artic.analytics.*
+import edu.artic.analytics.AnalyticsLabel
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.audio.LookupResult.FoundAudio
 import edu.artic.audio.LookupResult.NotFound
 import edu.artic.audio.NumberPadElement.*
@@ -46,9 +49,9 @@ class AudioLookupViewModel @Inject constructor(
 ) : NavViewViewModel<AudioLookupViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
-        object Search: NavigationEndpoint()
-        object AudioDetails: NavigationEndpoint()
-        object ClearSearch: NavigationEndpoint()
+        object Search : NavigationEndpoint()
+        object AudioDetails : NavigationEndpoint()
+        object ClearSearch : NavigationEndpoint()
     }
 
     /**
@@ -81,7 +84,7 @@ class AudioLookupViewModel @Inject constructor(
      * [edu.artic.viewmodel.BaseViewModelFragment.onDestroyView].
      */
     @SuppressLint("StaticFieldLeak")
-    var audioService : AudioPlayerService? = null
+    var audioService: AudioPlayerService? = null
 
     /**
      * See [NumberPadAdapter] for details on all this.
@@ -166,10 +169,10 @@ class AudioLookupViewModel @Inject constructor(
 
                         // Trigger analytics for playback
                         var analyticsParamMap: Map<String, String> = mapOf(
-                            AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
-                            AnalyticsLabel.tourTitle to tour.title,
-                            AnalyticsLabel.audioTitle to audioFile.title.orEmpty(),
-                            AnalyticsLabel.playbackLanguage to audioFile.asAudioFileModel().fileLanguageForAnalytics().toString()
+                                AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
+                                AnalyticsLabel.tourTitle to tour.title,
+                                AnalyticsLabel.audioTitle to audioFile.title.orEmpty(),
+                                AnalyticsLabel.playbackLanguage to audioFile.asAudioFileModel().fileLanguageForAnalytics().toString()
                         )
                         analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
 
@@ -202,11 +205,11 @@ class AudioLookupViewModel @Inject constructor(
 
             // Trigger analytics event for playback
             var analyticsParamMap: Map<String, String> = mapOf(
-                AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
-                AnalyticsLabel.title to articObject.title,
-                AnalyticsLabel.tourTitle to articObject.tourTitles.orEmpty(),
-                AnalyticsLabel.audioTitle to selectedAudioFileModel.title.orEmpty(),
-                AnalyticsLabel.playbackLanguage to selectedAudioFileModel.asAudioFileModel().fileLanguageForAnalytics().toString()
+                    AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
+                    AnalyticsLabel.title to articObject.title,
+                    AnalyticsLabel.tourTitle to articObject.tourTitles.orEmpty(),
+                    AnalyticsLabel.audioTitle to selectedAudioFileModel.title.orEmpty(),
+                    AnalyticsLabel.playbackLanguage to selectedAudioFileModel.asAudioFileModel().fileLanguageForAnalytics().toString()
             )
             analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
 
@@ -219,6 +222,7 @@ class AudioLookupViewModel @Inject constructor(
             navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AudioDetails))
         }
     }
+
     fun onClickSearch() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }

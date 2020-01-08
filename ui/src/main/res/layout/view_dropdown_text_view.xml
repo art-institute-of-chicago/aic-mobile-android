@@ -14,12 +14,12 @@
 
         <TextView
             android:id="@+id/title_text_view"
+            style="@style/SectionTitleWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/arrow_view"
-            style="@style/SectionTitleWhite"
             android:maxLines="1"
             android:textAlignment="viewStart"
             tools:text="@tools:sample/lorem/random" />
@@ -36,10 +36,10 @@
 
     <TextView
         android:id="@+id/content_text_view"
+        style="@style/BodySerifWhiteLeft"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
-        style="@style/BodySerifWhiteLeft"
         android:textAlignment="viewStart" />
 
 </LinearLayout>

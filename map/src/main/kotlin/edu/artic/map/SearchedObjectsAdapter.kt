@@ -148,7 +148,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                     item.pauseAudioTranslation()
                 }.disposedBy(item.viewDisposeBag)
 
-        item.playState.subscribe {playBackState->
+        item.playState.subscribe { playBackState ->
             when (playBackState) {
                 is AudioPlayerService.PlayBackState.Playing -> {
                     view.post {

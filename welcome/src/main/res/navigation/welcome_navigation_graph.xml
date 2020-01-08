@@ -10,7 +10,7 @@
     <include app:graph="@navigation/event_details_navigation_graph" />
     <include app:graph="@navigation/exhibition_navigation_graph" />
     <include app:graph="@navigation/exhibition_details_navigation_graph" />
-    <include app:graph="@navigation/search_navigation_graph"/>
+    <include app:graph="@navigation/search_navigation_graph" />
 
     <fragment
         android:id="@+id/welcomeFragment"
@@ -38,8 +38,6 @@
             android:id="@+id/goToSearch"
             app:destination="@id/search_navigation_graph" />
     </fragment>
-
-
 
 
 </navigation>

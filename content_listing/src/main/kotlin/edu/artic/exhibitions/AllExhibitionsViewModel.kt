@@ -7,10 +7,10 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.db.daos.ArticExhibitionDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.localization.LanguageSelector
+import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -26,7 +26,7 @@ class AllExhibitionsViewModel @Inject constructor(
 
     sealed class NavigationEndpoint {
         class ExhibitionDetails(val pos: Int, val exhibition: ArticExhibition) : NavigationEndpoint()
-        object Search: NavigationEndpoint()
+        object Search : NavigationEndpoint()
     }
 
     val exhibitions: Subject<List<AllExhibitionsCellViewModel>> = BehaviorSubject.create()

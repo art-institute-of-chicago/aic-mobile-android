@@ -5,9 +5,10 @@ import com.fuzz.rx.disposedBy
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import edu.artic.localization.util.DateTimeHelper.Purpose.*
 import edu.artic.db.models.ArticEvent
 import edu.artic.localization.LanguageSelector
+import edu.artic.localization.util.DateTimeHelper.Purpose.HomeEvent
+import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables

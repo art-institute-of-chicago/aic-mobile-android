@@ -26,8 +26,8 @@
                 style="@style/DetailToolbarText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:lines="1"
                 android:alpha="0"
+                android:lines="1"
                 android:textColor="@color/white" />
 
         </android.support.v7.widget.Toolbar>
@@ -78,14 +78,14 @@
                     android:fontFamily="@font/ideal_sans_book"
                     android:fontFeatureSettings="tnum"
                     android:gravity="start"
-                    android:paddingTop="@dimen/marginOneHalf"
+                    android:includeFontPadding="false"
+                    android:lineSpacingExtra="4dp"
                     android:paddingStart="@dimen/marginDouble"
+                    android:paddingTop="@dimen/marginOneHalf"
                     android:paddingEnd="@dimen/marginDouble"
                     android:paddingBottom="@dimen/marginOneHalf"
                     android:textColor="@color/white"
                     android:textSize="21sp"
-                    android:includeFontPadding="false"
-                    android:lineSpacingExtra="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/audioImage"
@@ -134,8 +134,8 @@
             <View
                 android:id="@+id/dividerBelowArtist"
                 style="@style/dividerTwentyOpaque"
-                android:visibility="gone"
-                android:layout_width="match_parent" />
+                android:layout_width="match_parent"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/relatedTourTitle"
@@ -145,32 +145,32 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:visibility="gone"
                 android:text="@string/relatedTours"
+                android:visibility="gone"
                 tools:text="@string/relatedTours" />
 
             <LinearLayout
                 android:id="@+id/relatedToursView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <View
                 android:id="@+id/dividerBelowRelatedTours"
                 style="@style/dividerTwentyOpaque"
                 android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/marginQuad" />
+                android:layout_marginTop="@dimen/marginQuad"
+                android:visibility="gone" />
 
             <edu.artic.view.DropdownTextView
                 android:id="@+id/transcript"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/greyText"
+                app:content_padding="@dimen/marginDouble"
                 app:content_text_color="@color/white"
                 app:panel_padding="@dimen/marginDouble"
-                app:content_padding="@dimen/marginDouble"
                 app:title_text="@string/transcript"
                 app:title_text_color="@color/white" />
 
@@ -183,9 +183,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/greyText"
+                app:content_padding="@dimen/marginDouble"
                 app:content_text_color="@color/white"
                 app:panel_padding="@dimen/marginDouble"
-                app:content_padding="@dimen/marginDouble"
                 app:title_text="@string/credits"
                 app:title_text_color="@color/white" />
 
