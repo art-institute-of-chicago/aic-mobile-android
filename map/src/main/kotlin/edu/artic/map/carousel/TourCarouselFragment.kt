@@ -47,7 +47,7 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
 
     private val adapter = TourCarouselAdapter()
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
-    private val tourObject: ArticTour by lazy { arguments!!.getParcelable<ArticTour>(ARG_TOUR_OBJECT) }
+    private val tourObject: ArticTour? by lazy { arguments?.getParcelable<ArticTour>(ARG_TOUR_OBJECT) }
 
     override fun onRegisterViewModel(viewModel: TourCarouselViewModel) {
         viewModel.tourObject = tourObject
@@ -101,8 +101,8 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
 
                                 var analyticsParamMap: MutableMap<String, String> = mutableMapOf(
                                         AnalyticsLabel.playbackSource to ScreenName.TourStop.screenName,
-                                        AnalyticsLabel.title to tourObject.getPlayableTitle().orEmpty(),
-                                        AnalyticsLabel.tourTitle to tourObject.title,
+                                        AnalyticsLabel.title to tourObject?.getPlayableTitle().orEmpty(),
+                                        AnalyticsLabel.tourTitle to tourObject?.title.orEmpty(),
                                         AnalyticsLabel.audioTitle to playControl.audioFileModel.title.orEmpty(),
                                         AnalyticsLabel.playbackLanguage to playControl.audioFileModel.fileLanguageForAnalytics().toString())
 
