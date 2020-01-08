@@ -25,7 +25,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_event_details.*
-import java.util.Locale
+import java.util.*
 import kotlin.reflect.KClass
 
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
@@ -126,7 +126,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
         viewModel.eventButtonText
                 .map {
-                    when(it.toLowerCase(Locale.ROOT)) {
+                    when (it.toLowerCase(Locale.ROOT)) {
                         "buy tickets" -> getString(R.string.buyTickets)
                         "register" -> getString(R.string.register)
                         else -> it
@@ -158,13 +158,14 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
             }
         }.disposedBy(disposeBag)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         scrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
     }
 
     companion object {
-        public val ARG_EVENT = "${EventDetailFragment::class.java.simpleName}: event"
+        val ARG_EVENT = "${EventDetailFragment::class.java.simpleName}: event"
 
         fun argsBundle(event: ArticEvent) = Bundle().apply {
             putParcelable(ARG_EVENT, event)

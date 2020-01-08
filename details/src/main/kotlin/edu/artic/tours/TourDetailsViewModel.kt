@@ -9,7 +9,6 @@ import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticObjectDao
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.getIntroStop
-import edu.artic.details.R
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.localization.nameOfLanguageForAnalytics
@@ -25,10 +24,10 @@ import java.util.*
 import javax.inject.Inject
 
 class TourDetailsViewModel @Inject constructor(
-    private val objectDao: ArticObjectDao,
-    private val languageSelector: LanguageSelector,
-    private val analyticsTracker: AnalyticsTracker
-    ) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
+        private val objectDao: ArticObjectDao,
+        private val languageSelector: LanguageSelector,
+        private val analyticsTracker: AnalyticsTracker
+) : NavViewViewModel<TourDetailsViewModel.NavigationEndpoint>() {
 
     val imageUrl: Subject<String> = BehaviorSubject.create()
     val titleText: Subject<String> = BehaviorSubject.create()
@@ -149,8 +148,8 @@ class TourDetailsViewModel @Inject constructor(
                     languageSelector.setTourLanguage(locale)
 
                     var analyticsParamMap: Map<String, String> = mapOf(
-                        AnalyticsLabel.title to tour.title,
-                        AnalyticsLabel.playbackLanguage to locale.nameOfLanguageForAnalytics()
+                            AnalyticsLabel.title to tour.title,
+                            AnalyticsLabel.playbackLanguage to locale.nameOfLanguageForAnalytics()
                     )
                     analyticsTracker.reportCustomEvent(EventCategoryName.TourStarted, analyticsParamMap)
 

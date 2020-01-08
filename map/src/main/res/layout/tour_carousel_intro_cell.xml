@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/mapObjectWindowBlue">
@@ -11,13 +10,13 @@
         android:id="@+id/playTourIntroduction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginDouble"
         android:drawablePadding="@dimen/marginStandard"
+        android:gravity="start|center_vertical"
         android:paddingStart="@dimen/marginDouble"
         android:paddingEnd="@dimen/marginDouble"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:gravity="start|center_vertical"
-        android:layout_marginTop="@dimen/marginDouble"
         app:button_icon="@drawable/ic_play"
         app:button_text="@string/play_tour_introduction"
         app:layout_constraintBottom_toBottomOf="parent"

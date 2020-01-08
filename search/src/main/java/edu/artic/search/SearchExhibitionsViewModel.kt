@@ -12,7 +12,7 @@ class SearchExhibitionsViewModel @Inject constructor(
         analyticsTracker: AnalyticsTracker,
         dataObjectDao: ArticDataObjectDao,
         galleryDao: ArticGalleryDao
-) : SearchBaseViewModel(analyticsTracker, searchManager, dataObjectDao, galleryDao)  {
+) : SearchBaseViewModel(analyticsTracker, searchManager, dataObjectDao, galleryDao) {
 
     sealed class NavigationEndpoint
 

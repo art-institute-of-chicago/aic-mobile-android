@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/design_bottom_navigation_height"
     android:background="@color/marine"
     android:fitsSystemWindows="true"
-    android:theme="@style/AppTheme.CustomToolbar.Location"
-    android:layout_marginBottom="@dimen/design_bottom_navigation_height">
+    android:theme="@style/AppTheme.CustomToolbar.Location">
 
     <ImageView
         android:id="@+id/promptTopIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginTop="@dimen/marginDouble"
         android:importantForAccessibility="no"
+        android:src="@drawable/ic_map_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/marginDouble"
-        android:src="@drawable/ic_map_header"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/promptTitle"
@@ -47,8 +47,8 @@
 
 
     <Button
-        style="@style/DetailButton"
         android:id="@+id/promptNotNowButton"
+        style="@style/DetailButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginDouble"
@@ -65,18 +65,17 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        style="@style/DetailButton"
         android:id="@+id/promptOkButton"
+        style="@style/DetailButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
         android:layout_marginBottom="@dimen/marginDouble"
         android:background="@drawable/detail_button_background"
+        android:text="@string/locationPromptOk"
         app:layout_constraintBottom_toTopOf="@id/promptNotNowButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="@string/locationPromptOk"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

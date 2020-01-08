@@ -90,11 +90,10 @@
         android:orientation="vertical"
         android:paddingTop="@dimen/marginSixtyFour"
         android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        >
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -108,30 +107,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginDouble"
-            tools:text="Find Your Way"
-            />
+            tools:text="Find Your Way" />
 
         <TextView
             android:id="@+id/mapFirstRunHeaderSubtitle"
             style="@style/PageSubHeaderRegularWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginTen"
             android:layout_marginStart="@dimen/marginActivitySubtitle"
+            android:layout_marginTop="@dimen/marginTen"
             android:layout_marginEnd="@dimen/marginActivitySubtitle"
             android:layout_marginBottom="@dimen/marginSixtyFour"
-            tools:text="Use the map to find food, facilities, and audio-enhanced artworks."
-            />
+            tools:text="Use the map to find food, facilities, and audio-enhanced artworks." />
     </LinearLayout>
 
 
     <ImageView
         android:id="@+id/searchIcon"
+        style="@style/Search.PrimaryScreen"
         android:layout_marginTop="@dimen/statusBarHeightPlus10"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Search.PrimaryScreen"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/infocontainer"

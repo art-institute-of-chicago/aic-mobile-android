@@ -22,8 +22,8 @@
         style="@style/BodyCtaTurquoise"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:text="@string/seeAll"
         android:gravity="start"
+        android:text="@string/seeAll"
         app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent" />
 

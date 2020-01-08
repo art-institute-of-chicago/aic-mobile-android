@@ -28,7 +28,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
 
     private val dynamicCells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
     private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
-    var parentViewModel : SearchResultsContainerViewModel? = null
+    var parentViewModel: SearchResultsContainerViewModel? = null
     var lastSearchTerm: String = ""
 
     init {
@@ -47,7 +47,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                                 /**
                                  * TODO:: Refactor it, used something other than SearchAmenitiesCellViewModel (maybe PaddingAmenitiesCellViewModel)
                                  * **/
-                                SearchAmenitiesCellViewModel(0,SuggestedMapAmenities.Restrooms))
+                                SearchAmenitiesCellViewModel(0, SuggestedMapAmenities.Restrooms))
                         ),
                         suggestedArtworks)
                 { dynamicCells, amenities, suggestedArtworks ->
@@ -153,7 +153,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
     private fun filterToursForViewModel(list: List<ArticTour>): List<SearchBaseCellViewModel> {
         val cellList = mutableListOf<SearchBaseCellViewModel>()
         if (list.isNotEmpty()) {
-            cellList.add(SearchHeaderCellViewModel(Header.Tours(),this)) // TODO: use localizer
+            cellList.add(SearchHeaderCellViewModel(Header.Tours(), this)) // TODO: use localizer
             cellList.addAll(
                     list
                             .take(3)

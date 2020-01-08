@@ -1,10 +1,10 @@
 package edu.artic.base.utils
 
 import android.app.Activity
-import android.arch.lifecycle.Lifecycle.Event.*
+import android.arch.lifecycle.Lifecycle.Event.ON_START
+import android.arch.lifecycle.Lifecycle.Event.ON_STOP
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
-import android.support.v4.app.Fragment
 
 /**
  *

@@ -10,6 +10,8 @@
         android:id="@+id/tabStrip"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/marginQuarter"
+        android:layout_marginEnd="@dimen/marginQuarter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -17,11 +19,9 @@
         app:tabIndicatorColor="@android:color/transparent"
         app:tabIndicatorHeight="0dp"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/white"
-        app:tabPaddingStart="-1dp"
         app:tabPaddingEnd="-1dp"
-        android:layout_marginStart="@dimen/marginQuarter"
-        android:layout_marginEnd="@dimen/marginQuarter"
+        app:tabPaddingStart="-1dp"
+        app:tabSelectedTextColor="@color/white"
         app:tabTextColor="@color/white" />
 
     <View

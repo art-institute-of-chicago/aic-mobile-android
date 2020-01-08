@@ -119,9 +119,9 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         viewModel.navigateTo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    when(it) {
+                    when (it) {
                         is Navigate.Forward -> {
-                            when(it.endpoint) {
+                            when (it.endpoint) {
                                 AudioLookupViewModel.NavigationEndpoint.Search -> {
                                     val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
                                     startActivity(intent)

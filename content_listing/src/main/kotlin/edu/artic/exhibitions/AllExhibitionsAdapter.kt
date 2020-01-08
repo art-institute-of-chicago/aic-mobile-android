@@ -32,7 +32,7 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
                 }.disposedBy(item.viewDisposeBag)
 
         item.exhibitionTitle.bindToMain(title.text()).disposedBy(item.viewDisposeBag)
-        item.exhibitionTitle.subscribe{image.transitionName = it}.disposedBy(item.viewDisposeBag)
+        item.exhibitionTitle.subscribe { image.transitionName = it }.disposedBy(item.viewDisposeBag)
         item.exhibitionEndDate
                 .map {
                     context.getString(R.string.throughDate, it)
@@ -40,6 +40,7 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
                 .bindToMain(description.text())
                 .disposedBy(item.viewDisposeBag)
     }
+
     override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
         super.onItemViewHolderRecycled(holder, position)
         getItem(position).apply {

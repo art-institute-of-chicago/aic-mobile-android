@@ -30,7 +30,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
     }
 
     override fun View.onBindView(item: SearchBaseCellViewModel, position: Int) {
-        setTag(R.id.tag_holder,item)
+        setTag(R.id.tag_holder, item)
         when (item) {
 
             is SearchHeaderCellViewModel -> {
@@ -58,7 +58,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                                  * Scale the exhibition image.
                                  */
                                 val url = if (item is SearchExhibitionCellViewModel) {
-                                        "$it?w=${image.measuredWidth}&h=${image.measuredHeight}"
+                                    "$it?w=${image.measuredWidth}&h=${image.measuredHeight}"
                                 } else {
                                     it
                                 }

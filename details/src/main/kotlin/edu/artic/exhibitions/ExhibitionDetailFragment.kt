@@ -177,7 +177,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     }
 
     companion object {
-        public const val ARG_EXHIBITION = "exhibition"
+        const val ARG_EXHIBITION = "exhibition"
 
         fun argsBundle(exhibition: ArticExhibition) = Bundle().apply {
             putParcelable(ARG_EXHIBITION, exhibition)

@@ -5,9 +5,9 @@
     <application>
         <activity
             android:name=".SearchActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/SearchTheme"
-            android:windowSoftInputMode="adjustResize|stateVisible"
-            android:screenOrientation="sensorPortrait">
+            android:windowSoftInputMode="adjustResize|stateVisible">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

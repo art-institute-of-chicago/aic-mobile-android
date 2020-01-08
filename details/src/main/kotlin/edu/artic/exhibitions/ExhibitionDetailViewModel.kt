@@ -3,13 +3,15 @@ package edu.artic.exhibitions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
-import edu.artic.analytics.*
-import edu.artic.localization.util.DateTimeHelper.Purpose.*
+import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsLabel
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.models.ArticExhibition
-import edu.artic.details.R
 import edu.artic.localization.LanguageSelector
+import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
@@ -54,7 +56,7 @@ constructor(dataObjectDao: ArticDataObjectDao,
 
     init {
         dataObjectDao.getDataObject()
-                .map {it.ticketsUrlAndroid }
+                .map { it.ticketsUrlAndroid }
                 .filter { it.isNotEmpty() }
                 .subscribe {
                     ticketsUrl = it

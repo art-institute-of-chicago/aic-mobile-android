@@ -14,9 +14,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import java.lang.IllegalArgumentException
-import java.lang.IndexOutOfBoundsException
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Description: Default implementation of [RecyclerView.Adapter].
@@ -205,7 +203,7 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         return footerHolders
     }
 
-    open protected fun onCurrentListChanged(pagedList: PagedList<TModel>) = Unit
+    protected open fun onCurrentListChanged(pagedList: PagedList<TModel>) = Unit
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         var viewHolder: BaseViewHolder? = headerViewHolderForViewType(viewType)
@@ -327,7 +325,7 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         } else if (position > footerStartIndex && footersCount > 0) {
             viewType = footerLayoutIds[position - footerStartIndex - 1]
         } else {
-            viewType = getViewType(position - headersCount)
+            viewType = getLayoutResId(position - headersCount)
         }
         return viewType
     }
@@ -562,7 +560,7 @@ inline fun <T> onItemClickListener(crossinline function: (T) -> Unit) = object :
     }
 }
 
-inline fun <T> onItemClickListenerWithPosition(crossinline function: (pos : Int, T) -> Unit) = object : BaseRecyclerViewAdapter.OnItemClickListener<T> {
+inline fun <T> onItemClickListenerWithPosition(crossinline function: (pos: Int, T) -> Unit) = object : BaseRecyclerViewAdapter.OnItemClickListener<T> {
     override fun onItemClick(position: Int, item: T, viewHolder: BaseViewHolder) {
         function(position, item)
     }

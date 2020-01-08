@@ -177,6 +177,7 @@ open class TourCarousalBaseViewModel(
         Stop,
         Overview
     }
+
     sealed class PlayerAction {
         class Play(val requestedObject: Playable, val audioFileModel: AudioFileModel? = null, val type: Type) : PlayerAction()
         class Pause : PlayerAction()

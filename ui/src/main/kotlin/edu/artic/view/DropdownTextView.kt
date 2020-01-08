@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import edu.artic.ui.R
-import edu.artic.view.changeValue
 
 /**
  * @author Sameer Dhakal (Fuzz)
