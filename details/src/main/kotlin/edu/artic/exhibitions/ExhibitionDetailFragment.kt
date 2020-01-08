@@ -163,7 +163,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
                             when (endpoint) {
                                 is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
-                                    analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowExhibition, exhibition.title)
+                                    analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowExhibition, exhibition?.title.orEmpty())
                                     val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
                                         putExtra(NavigationConstants.ARG_EXHIBITION_OBJECT, exhibition)
                                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
