@@ -11,7 +11,7 @@ import com.jakewharton.rxbinding2.support.v4.view.pageSelections
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.adapter.toPagerAdapter
-import edu.artic.analytics.AnalyticsAction
+import edu.artic.analytics.AnalyticsLabel
 import edu.artic.analytics.EventCategoryName
 import edu.artic.analytics.ScreenName
 import edu.artic.db.models.ArticExhibition
@@ -57,68 +57,75 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
          * Bind the viewHolders to adapter.
          */
         viewModel.searchedObjectViewModels
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    adapter.setItemsList(it)
-                    adapter.notifyDataSetChanged()
-                }
-                .disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                adapter.setItemsList(it)
+                adapter.notifyDataSetChanged()
+            }
+            .disposedBy(disposeBag)
 
         /**
          * Hide the viewPagerIndicator if there's single item
          */
         viewModel.searchedObjectViewModels
-                .map { it.size > 1 }
-                .bindTo(viewPagerIndicator.visibility())
-                .disposedBy(disposeBag)
+            .map { it.size > 1 }
+            .bindTo(viewPagerIndicator.visibility())
+            .disposedBy(disposeBag)
 
         viewModel.playerControl
-                .observeOn(AndroidSchedulers.mainThread())
-                .withLatestFrom(audioService) { playControl, service ->
-                    playControl to service
-                }.subscribeBy { (playControl, service) ->
-                    when (playControl) {
-                        is SearchObjectBaseViewModel.PlayerAction.Play -> {
-                            if (playControl.audioFileModel != null) {
-                                service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
-                                analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioSearch, playControl.audioFileModel.title!!)
-                            } else {
-                                service.playPlayer(playControl.requestedObject)
-                                when(playControl.requestedObject) {
-                                    is ArticObject -> analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioSearch, playControl.requestedObject.title)
-                                }
+            .observeOn(AndroidSchedulers.mainThread())
+            .withLatestFrom(audioService) { playControl, service ->
+                playControl to service
+            }.subscribeBy { (playControl, service) ->
+                when (playControl) {
+                    is SearchObjectBaseViewModel.PlayerAction.Play -> {
+                        if (playControl.audioFileModel != null) {
+                            service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
+
+                            var analyticsParamMap: MutableMap<String, String> = mutableMapOf(
+                                AnalyticsLabel.playbackSource to ScreenName.SearchIcon.screenName,
+                                AnalyticsLabel.audioTitle to playControl.audioFileModel.title.orEmpty(),
+                                AnalyticsLabel.playbackLanguage to playControl.audioFileModel.fileLanguageForAnalytics().toString())
+
+                            if( playControl.requestedObject is ArticObject ) {
+                                analyticsParamMap.put(AnalyticsLabel.title, playControl.requestedObject.title)
+                                analyticsParamMap.put(AnalyticsLabel.tourTitle, playControl.requestedObject.tourTitles.orEmpty())
                             }
-
+                            analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
+                        } else {
+                            service.playPlayer(playControl.requestedObject)
                         }
-                        is SearchObjectBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
+
                     }
-                }.disposedBy(disposeBag)
+                    is SearchObjectBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
+                }
+            }.disposedBy(disposeBag)
 
         audioService
-                .flatMap { service -> service.audioPlayBackStatus }
-                .bindTo(viewModel.audioPlayBackStatus)
-                .disposedBy(disposeBag)
+            .flatMap { service -> service.audioPlayBackStatus }
+            .bindTo(viewModel.audioPlayBackStatus)
+            .disposedBy(disposeBag)
 
         audioService
-                .flatMap { service -> service.currentTrack }
-                .mapOptional()
-                .bindTo(viewModel.currentTrack)
-                .disposedBy(disposeBag)
+            .flatMap { service -> service.currentTrack }
+            .mapOptional()
+            .bindTo(viewModel.currentTrack)
+            .disposedBy(disposeBag)
 
         /**
          * Stop the audio player if artwork audio on progress.
          */
         viewModel.leftSearchMode
-                .filter { it }
-                .withLatestFrom(audioService)
-                .subscribeBy { (_, service) ->
-                    service.stopPlayer()
-                }.disposedBy(disposeBag)
+            .filter { it }
+            .withLatestFrom(audioService)
+            .subscribeBy { (_, service) ->
+                service.stopPlayer()
+            }.disposedBy(disposeBag)
 
         searchResults.pageSelections()
-                .distinctUntilChanged()
-                .bindTo(viewModel.currentPage)
-                .disposedBy(disposeBag)
+            .distinctUntilChanged()
+            .bindTo(viewModel.currentPage)
+            .disposedBy(disposeBag)
     }
 
     override fun onResume() {
@@ -134,8 +141,8 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
         super.onViewCreated(view, savedInstanceState)
 
         getAudioServiceObservable()
-                .bindTo(audioService)
-                .disposedBy(disposeBag)
+            .bindTo(audioService)
+            .disposedBy(disposeBag)
 
         searchResults.adapter = adapter.toPagerAdapter()
         viewPagerIndicator.setViewPager(searchResults)
@@ -145,10 +152,10 @@ class SearchObjectDetailsFragment : BaseViewModelFragment<SearchObjectDetailsVie
          * Leave search mode when user taps close button.
          */
         close.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.leaveSearchMode()
-                }.disposedBy(disposeBag)
+            .defaultThrottle()
+            .subscribe {
+                viewModel.leaveSearchMode()
+            }.disposedBy(disposeBag)
     }
 
 

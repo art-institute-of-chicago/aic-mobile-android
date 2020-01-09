@@ -3,11 +3,10 @@ package edu.artic.artwork
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
-import edu.artic.analytics.AnalyticsAction
-import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.EventCategoryName
+import edu.artic.analytics.*
 import edu.artic.db.Playable
 import edu.artic.db.models.ArticSearchArtworkObject
+import edu.artic.db.models.asAudioFileModel
 import edu.artic.db.models.audioFile
 import edu.artic.localization.LanguageSelector
 import edu.artic.media.audio.PlayerService
@@ -107,10 +106,18 @@ class ArtworkDetailViewModel @Inject constructor(
 
     fun onClickPlayAudio() {
         playerService?.let {playerService ->
-            analyticsTracker.reportEvent(EventCategoryName.SearchPlayArtwork, articObject?.title.orEmpty(), searchTerm.orEmpty())
-            articObject?.backingObject?.audioFile?.allTranslations()?.let {
+            articObject?.backingObject?.audioFile?.let {
                 val articObject = articObject?.backingObject as Playable
-                playerService.playPlayer(articObject, languageSelector.selectFrom(it))
+                val languageList = it.allTranslations()
+                playerService.playPlayer(articObject, languageSelector.selectFrom(languageList))
+
+                var analyticsParamMap: Map<String, String> = mapOf(
+                    AnalyticsLabel.playbackSource to ScreenName.Search.screenName,
+                    AnalyticsLabel.title to articObject.getPlayableTitle().orEmpty(),
+                    AnalyticsLabel.audioTitle to it.title.orEmpty(),
+                    AnalyticsLabel.playbackLanguage to it.asAudioFileModel().fileLanguageForAnalytics().toString()
+                )
+                analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
             }
         }
     }

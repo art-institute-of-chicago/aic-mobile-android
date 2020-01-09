@@ -1,13 +1,10 @@
 package edu.artic.map
 
-import android.util.Log
 import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
-import edu.artic.analytics.AnalyticsAction
-import edu.artic.analytics.AnalyticsTracker
-import edu.artic.analytics.EventCategoryName
+import edu.artic.analytics.*
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioFileModel
@@ -18,7 +15,6 @@ import edu.artic.map.MapObjectDetailsViewModel.PlayerAction.Play
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.audio.preferredLanguage
 import edu.artic.viewmodel.BaseViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
@@ -137,18 +133,17 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
 
         /**
          * Check and log audio interrupted event if current audio playback is being interrupted.
+         * No-op at this time, removed during analytics migration
          */
         playerControl
                 .filterFlatMap({ it is PlayerAction.Play }, { it as PlayerAction.Play })
                 .withLatestFrom(currentTrack, objectObservable) { playerAction, currentTrack, articObject ->
                     val requested = playerAction.audioModel
                     val isNewTrack = currentTrack.value != requested
-
                     return@withLatestFrom isNewTrack to articObject
                 }
                 .filter { (isNewTrack: Boolean, _) -> isNewTrack }
                 .subscribe { (_, articObject) ->
-                    analyticsTracker.reportEvent(EventCategoryName.PlayAudio, AnalyticsAction.playAudioMap, articObject.title)
                 }.disposedBy(disposeBag)
 
     }
@@ -158,6 +153,15 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
         articObject?.let { source: ArticObject ->
             audioFileModel?.let { translation ->
                 playerControl.onNext(PlayerAction.Play(source, translation))
+
+                var analyticsParamMap: Map<String, String> = mapOf(
+                    AnalyticsLabel.playbackSource to ScreenName.Map.screenName,
+                    AnalyticsLabel.title to source.title,
+                    AnalyticsLabel.tourTitle to source.tourTitles.orEmpty(),
+                    AnalyticsLabel.audioTitle to translation.title.orEmpty(),
+                    AnalyticsLabel.playbackLanguage to translation.fileLanguageForAnalytics().toString()
+                )
+                analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
             }
         }
     }
