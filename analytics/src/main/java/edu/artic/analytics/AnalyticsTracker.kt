@@ -6,14 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.analytics.FirebaseAnalytics
 import edu.artic.localization.LanguageSelector
-import edu.artic.localization.nameOfLanguageForAnalytics
 import edu.artic.location.LocationService
 import edu.artic.location.isLocationInMuseum
 import edu.artic.membership.MemberInfoPreferencesManager
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import java.util.*
 
 /**
  * Description:
@@ -52,7 +50,7 @@ class AnalyticsTrackerImpl(context: Context,
 
     init {
         locationService.requestTrackingUserLocation()
-        val isInMuseum = locationService.currentUserLocation.map{isLocationInMuseum(it)}
+        val isInMuseum = locationService.currentUserLocation.map { isLocationInMuseum(it) }
         isInMuseum
                 .distinctUntilChanged()
                 .subscribe {
@@ -76,8 +74,8 @@ class AnalyticsTrackerImpl(context: Context,
         val bundle = Bundle()
         //bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, category)
 
-        for((paramName, paramValue) in parameterMap) {
-            if(paramValue.isBlank()) {
+        for ((paramName, paramValue) in parameterMap) {
+            if (paramValue.isBlank()) {
                 Log.w(AnalyticsTracker::class.qualifiedName, "reportCustomEvent(): value for parameter \"$paramName\" is blank, not adding to Bundle.")
             } else {
                 bundle.putString(paramName, paramValue)

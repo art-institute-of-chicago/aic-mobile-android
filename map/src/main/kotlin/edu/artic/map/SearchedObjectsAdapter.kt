@@ -5,6 +5,7 @@ import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
+import com.fuzz.rx.filterValue
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
@@ -14,6 +15,7 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
 import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.layout_amenity_search_cell.view.*
 import kotlinx.android.synthetic.main.layout_artwork_search_cell.view.*
 import kotlinx.android.synthetic.main.layout_exhibition_search_cell.view.*
@@ -92,8 +94,20 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
         item.title
                 .bindToMain(view.exhibitionTitle.text())
                 .disposedBy(item.viewDisposeBag)
-        item.floor
-                .bindToMain(view.exhibitionFloor.textRes())
+
+        val galleryTitle = item.galleryTitle
+                .subscribeOn(Schedulers.io())
+                .share()
+
+        galleryTitle
+                .filterValue()
+                .bindToMain(view.exhibitionGalleryTitle.text())
+                .disposedBy(item.viewDisposeBag)
+
+        galleryTitle
+                .filter { it.value == null }
+                .switchMap { item.floor }
+                .bindToMain(view.exhibitionGalleryTitle.textRes())
                 .disposedBy(item.viewDisposeBag)
     }
 
@@ -148,7 +162,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
                     item.pauseAudioTranslation()
                 }.disposedBy(item.viewDisposeBag)
 
-        item.playState.subscribe {playBackState->
+        item.playState.subscribe { playBackState ->
             when (playBackState) {
                 is AudioPlayerService.PlayBackState.Playing -> {
                     view.post {

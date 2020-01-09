@@ -7,7 +7,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import edu.artic.map.carousel.*
+import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
+import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.carousel.TourCarouselViewModel
 import edu.artic.map.tutorial.TutorialFragment
 import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.map.tutorial.TutorialViewModel
@@ -79,8 +81,7 @@ abstract class MapModule {
         @JvmStatic
         @Provides
         @Singleton
-        fun provideTutorialPreferencesManager(context : Context) : TutorialPreferencesManager
-                = TutorialPreferencesManager(context)
+        fun provideTutorialPreferencesManager(context: Context): TutorialPreferencesManager = TutorialPreferencesManager(context)
 
     }
 }

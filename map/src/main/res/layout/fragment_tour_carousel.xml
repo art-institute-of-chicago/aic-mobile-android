@@ -30,9 +30,9 @@
         android:layout_marginEnd="@dimen/marginDouble"
         android:contentDescription="@string/close"
         android:src="@drawable/ic_close_white_24dp"
-        app:layout_constraintTop_toTopOf="@id/tourTitle"
         app:layout_constraintBottom_toBottomOf="@id/tourTitle"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tourTitle" />
 
     <View
         android:id="@+id/divider"
@@ -61,10 +61,10 @@
         android:layout_height="@dimen/tutorialDotSize"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/marginDouble"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tourCarousel"
-        android:layout_marginTop="@dimen/marginDouble"
         app:rcv_drawable="@drawable/icn_indicator_selected"
         app:rcv_drawable_unselected="@drawable/icn_indicator"
         app:rcv_internal_margin="8dp"

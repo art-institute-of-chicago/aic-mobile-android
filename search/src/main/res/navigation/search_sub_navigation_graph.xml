@@ -14,16 +14,14 @@
     <fragment
         android:id="@+id/searchResultsFragment"
         android:name="edu.artic.search.SearchResultsContainerFragment"
-        android:label="search_results"/>
+        android:label="search_results" />
 
     <action
         android:id="@+id/goToDefaultSuggestions"
-        app:destination="@id/defaultSearchSuggestionsFragment"
-        />
+        app:destination="@id/defaultSearchSuggestionsFragment" />
 
     <action
         android:id="@+id/goToSearchResults"
-        app:destination="@id/searchResultsFragment"
-        />
+        app:destination="@id/searchResultsFragment" />
 
 </navigation>

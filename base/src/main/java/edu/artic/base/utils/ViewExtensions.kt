@@ -74,7 +74,7 @@ fun BottomNavigationView.preventReselection() {
 /**
  * Function for showing/hiding the view.
  */
-fun View.show(show: Boolean){
+fun View.show(show: Boolean) {
     if (show) {
         this.visibility = View.VISIBLE
     } else {

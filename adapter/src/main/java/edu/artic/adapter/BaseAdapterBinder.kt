@@ -91,7 +91,7 @@ class BaseAdapterBinder<TModel>(
         val viewHolder: BaseViewHolder?
         val viewType = adapter.getItemViewType(position)
         if (localView == null || localView.getTag(R.id.tag_item_type) != viewType) {
-            viewHolder = adapter.createViewHolder(parent, viewType)?.also {
+            viewHolder = adapter.createViewHolder(parent, viewType).also {
                 localView = applyViewHolderTags(it, viewType)
             }
         } else {

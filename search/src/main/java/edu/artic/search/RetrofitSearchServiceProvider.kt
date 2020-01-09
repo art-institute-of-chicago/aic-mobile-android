@@ -90,8 +90,7 @@ class RetrofitSearchServiceProvider(
                                     queryContent = mutableListOf(queryContentE)
                             ).mapWithDefault(emptyList())
                     )
-                }.map {
-                    (a, t, e) ->
+                }.map { (a, t, e) ->
 
                     ApiSearchResult(
                             a.firstOrNull()?.internalData.orEmpty(),

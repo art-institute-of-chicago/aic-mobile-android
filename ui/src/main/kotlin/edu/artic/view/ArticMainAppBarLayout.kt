@@ -6,6 +6,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StyleRes
 import android.support.annotation.UiThread
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.AppBarLayout.OnOffsetChangedListener
 import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.view.View
@@ -59,7 +60,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             )
 
             collapsingToolbar.setExpandedTitleTextAppearance(expandedDefaultAppearance)
-            subTitle.text =  a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
+            subTitle.text = a.getString(R.styleable.ArticMainAppBarLayout_subtitle)
         }
 
         expandedTypeface = ResourcesCompat.getFont(context, R.font.ideal_sans_medium)
@@ -80,7 +81,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             subTitle.alpha = progress.toFloat()
         })
 
-        postDelayed( {
+        postDelayed({
             collapsingToolbar.expandedTitleMarginBottom = container.getChildAt(2).height
         }, 50)
 
@@ -99,7 +100,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
     }
 
     fun setBackgroundImagePadding(padding: Float) {
-        expandedImage.setPadding(0, padding.toInt(), 0,0)
+        expandedImage.setPadding(0, padding.toInt(), 0, 0)
     }
 
     fun setOnSearchClickedConsumer(clickConsumer: Consumer<Unit>) {

@@ -17,8 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/welcome_navigation_graph"
-        tools:layout="@layout/fragment_welcome"
-        />
+        tools:layout="@layout/fragment_welcome" />
 
     <fragment
         android:id="@+id/newPlayer"
@@ -28,13 +27,12 @@
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout="@layout/fragment_bottom_audio_player"/>
+        tools:layout="@layout/fragment_bottom_audio_player" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigation"
         style="@style/BottomNav"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
 </android.support.constraint.ConstraintLayout>

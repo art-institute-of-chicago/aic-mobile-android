@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/details_navigation_graph"
-            app:startDestination="@+id/emptyFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/details_navigation_graph"
+    app:startDestination="@+id/emptyFragment">
 
     <fragment
         android:id="@+id/emptyFragment"
@@ -11,18 +11,18 @@
 
         <action
             android:id="@+id/goToEventDetails"
-            app:destination="@id/eventDetailsFragment"
-            app:clearTask="true"/>
+            app:clearTask="true"
+            app:destination="@id/eventDetailsFragment" />
 
         <action
             android:id="@+id/goToTourDetails"
-            app:destination="@id/tourDetailsFragment"
-            app:clearTask="true"/>
+            app:clearTask="true"
+            app:destination="@id/tourDetailsFragment" />
 
         <action
             android:id="@+id/goToExhibitionDetails"
-            app:destination="@id/exhibitionDetailsFragment"
-            app:clearTask="true"/>
+            app:clearTask="true"
+            app:destination="@id/exhibitionDetailsFragment" />
 
     </fragment>
 

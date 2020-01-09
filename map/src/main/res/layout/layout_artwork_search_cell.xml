@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/mapObjectWindowBlue"
     android:layout_gravity="bottom"
+    android:background="@color/mapObjectWindowBlue"
     android:clickable="true"
     android:focusable="true">
 
@@ -71,9 +71,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginStandard"
+        android:ellipsize="end"
         android:gravity="start"
         android:maxLines="1"
-        android:ellipsize="end"
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toEndOf="@id/objectImage"
         app:layout_constraintTop_toBottomOf="@+id/objectTitle"
@@ -100,12 +100,12 @@
         android:layout_height="@dimen/mapAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/ic_play"
-        android:visibility="visible"
         android:contentDescription="@string/exo_controls_play_description"
-        app:layout_constraintVertical_bias="0"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/objectImage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/objectImage" />
+        app:layout_constraintTop_toTopOf="@id/objectImage"
+        app:layout_constraintVertical_bias="0" />
 
     <ImageButton
         android:id="@+id/pauseCurrent"
@@ -113,12 +113,12 @@
         android:layout_height="@dimen/mapAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/ic_pause"
-        android:visibility="gone"
         android:contentDescription="@string/exo_controls_pause_description"
-        app:layout_constraintVertical_bias="0"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/objectImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/objectImage"
+        app:layout_constraintVertical_bias="0"
         tools:visibility="gone" />
 
     <android.support.constraint.Barrier
@@ -133,10 +133,10 @@
         android:id="@+id/space"
         android:layout_width="match_parent"
         android:layout_height="@dimen/marginSixtyFour"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gallery"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/gallery" />
 
 
 </android.support.constraint.ConstraintLayout>

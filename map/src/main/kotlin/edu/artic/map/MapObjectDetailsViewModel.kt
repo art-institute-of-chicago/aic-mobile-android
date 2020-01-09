@@ -4,7 +4,10 @@ import com.fuzz.rx.Optional
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
-import edu.artic.analytics.*
+import edu.artic.analytics.AnalyticsLabel
+import edu.artic.analytics.AnalyticsTracker
+import edu.artic.analytics.EventCategoryName
+import edu.artic.analytics.ScreenName
 import edu.artic.db.daos.ArticGalleryDao
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.AudioFileModel
@@ -155,11 +158,11 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
                 playerControl.onNext(PlayerAction.Play(source, translation))
 
                 var analyticsParamMap: Map<String, String> = mapOf(
-                    AnalyticsLabel.playbackSource to ScreenName.Map.screenName,
-                    AnalyticsLabel.title to source.title,
-                    AnalyticsLabel.tourTitle to source.tourTitles.orEmpty(),
-                    AnalyticsLabel.audioTitle to translation.title.orEmpty(),
-                    AnalyticsLabel.playbackLanguage to translation.fileLanguageForAnalytics().toString()
+                        AnalyticsLabel.playbackSource to ScreenName.Map.screenName,
+                        AnalyticsLabel.title to source.title,
+                        AnalyticsLabel.tourTitle to source.tourTitles.orEmpty(),
+                        AnalyticsLabel.audioTitle to translation.title.orEmpty(),
+                        AnalyticsLabel.playbackLanguage to translation.fileLanguageForAnalytics().toString()
                 )
                 analyticsTracker.reportCustomEvent(EventCategoryName.AudioPlayed, analyticsParamMap)
             }

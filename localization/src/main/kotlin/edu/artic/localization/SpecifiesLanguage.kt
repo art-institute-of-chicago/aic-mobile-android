@@ -1,4 +1,4 @@
-package edu.artic.localization;
+package edu.artic.localization
 
 import android.content.Context
 import android.content.res.Configuration
@@ -21,7 +21,7 @@ private const val chinese = "Chinese "
 
 interface SpecifiesLanguage {
 
-    fun underlyingLanguage() : String?
+    fun underlyingLanguage(): String?
 
     fun underlyingLocale(): Locale {
         return underlyingLanguage()?.asLanguageTag().orFallback(Locale.ROOT)
@@ -56,7 +56,7 @@ interface SpecifiesLanguage {
      * config.
      */
     fun userFriendlyLanguage(ctx: Context): CharSequence {
-        return when(underlyingLocale().language) {
+        return when (underlyingLocale().language) {
             Locale.ENGLISH.language -> ctx.getText(R.string.english)
             SPANISH.language -> ctx.getText(R.string.spanish)
             Locale.CHINESE.language -> ctx.getText(R.string.chinese)
@@ -64,8 +64,8 @@ interface SpecifiesLanguage {
         }
     }
 
-    fun fileLanguageForAnalytics(): CharSequence  {
-        return when(underlyingLocale().language) {
+    fun fileLanguageForAnalytics(): CharSequence {
+        return when (underlyingLocale().language) {
             Locale.ENGLISH.language -> english
             SPANISH.language -> spanish
             Locale.CHINESE.language -> chinese

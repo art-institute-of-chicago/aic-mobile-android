@@ -1,5 +1,6 @@
 package edu.artic.membership
 
+import edu.artic.membership.NoContentMemberDataProvider.getMemberData
 import io.reactivex.Observable
 
 /**
@@ -33,7 +34,7 @@ interface MemberDataProvider {
  * Returns [MemberDataForbiddenException] to everything that tries to subscribe
  * to [getMemberData].
  */
-object NoContentMemberDataProvider: MemberDataProvider {
+object NoContentMemberDataProvider : MemberDataProvider {
     override fun getMemberData(memberID: String, zipCode: String): Observable<SOAPMemberInfoResponse> {
         return Observable.error {
             MemberDataForbiddenException

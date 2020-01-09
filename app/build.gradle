@@ -10,7 +10,7 @@ if (project.hasProperty('build_number')) {
     buildMetadata = 'SNAPSHOT'
 }
 
-String majorAndMinorVersion = "1.2"
+String majorAndMinorVersion = "1.3"
 Integer patchVersionCode = 0
 
 android {
@@ -20,7 +20,7 @@ android {
         minSdkVersion minSdk
         targetSdkVersion sdk
         multiDexEnabled true
-        versionCode (patchVersionCode + 1200)
+        versionCode (patchVersionCode + 1300)
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

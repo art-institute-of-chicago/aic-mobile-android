@@ -15,7 +15,7 @@ var Configuration.primaryLocale: Locale
             if (locales.indexOf(v) == -1) {
                 val toAssign = locales.asKotlinList()
                 toAssign.add(0, v)
-                locales = LocaleList(*toAssign.toTypedArray())
+                setLocales(LocaleList(*toAssign.toTypedArray()))
             }
         } else {
             setLocale(v)

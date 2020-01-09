@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/allExhibitionsFragment"
         android:name="edu.artic.exhibitions.AllExhibitionsFragment"
-        android:label="AllExhibitionsFragment" >
+        android:label="AllExhibitionsFragment">
         <action
             android:id="@+id/goToExhibitionDetailsAction"
             app:destination="@id/exhibition_details_navigation_graph" />

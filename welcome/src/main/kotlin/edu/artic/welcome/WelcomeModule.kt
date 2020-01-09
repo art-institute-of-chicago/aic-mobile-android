@@ -2,15 +2,12 @@ package edu.artic.welcome
 
 import android.arch.lifecycle.ViewModel
 import android.content.Context
-import android.content.Intent
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import edu.artic.viewmodel.ViewModelKey
-import javax.inject.Named
-import javax.inject.Singleton
 
 /**
  *@author Sameer Dhakal (Fuzz)
@@ -35,8 +32,7 @@ abstract class WelcomeModule {
 
         @JvmStatic
         @Provides
-        fun provideWelcomePreferenceManager(context : Context) : WelcomePreferencesManager
-                = WelcomePreferencesManager(context)
+        fun provideWelcomePreferenceManager(context: Context): WelcomePreferencesManager = WelcomePreferencesManager(context)
 
     }
 }

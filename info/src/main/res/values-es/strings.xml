@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="purchaseTicketsForAdmission">Compra boletos para admisión, exhibición y eventos.</string>
     <string name="chooseYourLanguage">Elija su idioma de preferencia</string>
     <string name="languageSettings">Configuración de idiomas</string>
     <string name="enjoyFreeYearLongAdmission">Disfrute de admisión gratuita durante todo el año.</string>

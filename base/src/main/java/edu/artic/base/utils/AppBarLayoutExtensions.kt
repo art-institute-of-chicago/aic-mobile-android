@@ -3,7 +3,7 @@ package edu.artic.base.utils
 import android.support.design.widget.AppBarLayout
 import android.widget.TextView
 
-fun AppBarLayout.updateDetailTitle(verticalOffset : Int, expandedTitle: TextView, toolbarTitle: TextView) {
+fun AppBarLayout.updateDetailTitle(verticalOffset: Int, expandedTitle: TextView, toolbarTitle: TextView) {
     val progress: Double = 1 - Math.abs(verticalOffset) / this.totalScrollRange.toDouble()
     //we only start fading after half the distance has passed
     if (progress <= .5) {

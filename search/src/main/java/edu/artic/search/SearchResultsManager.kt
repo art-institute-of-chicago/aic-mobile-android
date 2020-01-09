@@ -137,7 +137,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
     }
 
     private fun generateArtworksObjectList(baseUrl: String,
-                                          artwork: List<ApiSearchContent.SearchedArtwork>?)
+                                           artwork: List<ApiSearchContent.SearchedArtwork>?)
             : Observable<List<ArticSearchArtworkObject>> {
 
         //Create new observable to handle merging the list and stuff

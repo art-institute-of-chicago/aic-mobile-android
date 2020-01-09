@@ -64,8 +64,8 @@ abstract class BaseMapTileProvider : TileProvider {
     override fun getTile(x: Int, y: Int, zoom: Int): Tile? {
         val bounds = boundsMap[zoom] ?: throw IllegalStateException("Illegal zoom found $zoom")
         val tileLevel = (zoom - ZOOM_MIN + 2).toInt()
-        val adjustedX = if(x >=  bounds.minX && x <= bounds.maxX) x - bounds.minX - 1 else -1
-        val adjustedY = if(y >= bounds.minY && y <= bounds.maxY) y - bounds.minY else -1
+        val adjustedX = if (x >= bounds.minX && x <= bounds.maxX) x - bounds.minX - 1 else -1
+        val adjustedY = if (y >= bounds.minY && y <= bounds.maxY) y - bounds.minY else -1
 
         Timber.d("GetTile x: $x y: $y adjustedX : $adjustedX adjustedY: $adjustedY")
 

@@ -1,5 +1,6 @@
 package edu.artic.events
 
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
@@ -13,7 +14,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenName
-import edu.artic.base.utils.asUrlViewIntent
+import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticEvent
@@ -25,10 +26,14 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import kotlinx.android.synthetic.main.fragment_event_details.*
-import java.util.Locale
+import java.util.*
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
 class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
+    @Inject
+    lateinit var customTabManager: CustomTabManager
+
     override val screenName: ScreenName
         get() = ScreenName.EventDetails
     override val viewModelClass: KClass<EventDetailViewModel>
@@ -126,7 +131,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
         viewModel.eventButtonText
                 .map {
-                    when(it.toLowerCase(Locale.ROOT)) {
+                    when (it.toLowerCase(Locale.ROOT)) {
                         "buy tickets" -> getString(R.string.buyTickets)
                         "register" -> getString(R.string.register)
                         else -> it
@@ -148,7 +153,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                     when (it.endpoint) {
                         is EventDetailViewModel.NavigationEndpoint.LoadUrl -> {
                             val endpoint = it.endpoint as EventDetailViewModel.NavigationEndpoint.LoadUrl
-                            startActivity(endpoint.url.asUrlViewIntent())
+                            customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(endpoint.url))
                         }
                     }
                 }
@@ -158,13 +163,14 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
             }
         }.disposedBy(disposeBag)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         scrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
     }
 
     companion object {
-        public val ARG_EVENT = "${EventDetailFragment::class.java.simpleName}: event"
+        val ARG_EVENT = "${EventDetailFragment::class.java.simpleName}: event"
 
         fun argsBundle(event: ArticEvent) = Bundle().apply {
             putParcelable(ARG_EVENT, event)

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.artic.map">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application>
 
@@ -12,8 +12,8 @@
 
         <activity
             android:name=".MapActivity"
-            android:theme="@style/AppTheme.CustomToolbar.MapTheme"
-            android:screenOrientation="sensorPortrait">
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/AppTheme.CustomToolbar.MapTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -27,6 +27,6 @@
         </activity>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="${google_maps_api_key}"/>
+            android:value="${google_maps_api_key}" />
     </application>
 </manifest>

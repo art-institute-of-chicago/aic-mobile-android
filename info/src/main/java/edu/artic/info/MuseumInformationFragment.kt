@@ -57,12 +57,6 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
                     viewModel.onPhoneNumberClicked()
                 }.disposedBy(disposeBag)
 
-        buyTickets.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onBuyTicketClicked()
-                }.disposedBy(disposeBag)
-
         searchIcon.clicks()
                 .defaultThrottle()
                 .subscribe {
@@ -80,10 +74,6 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
                     when (it) {
                         is Navigate.Forward -> {
                             when (it.endpoint) {
-                                is MuseumInformationViewModel.NavigationEndpoint.BuyTicket -> {
-                                    val url = (it.endpoint as MuseumInformationViewModel.NavigationEndpoint.BuyTicket).url
-                                    customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(url))
-                                }
                                 is MuseumInformationViewModel.NavigationEndpoint.CallMuseum -> {
                                     val phoneId = (it.endpoint as MuseumInformationViewModel.NavigationEndpoint.CallMuseum).phone
                                     val phone = getString(phoneId)

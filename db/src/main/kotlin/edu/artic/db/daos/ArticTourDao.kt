@@ -26,10 +26,10 @@ interface ArticTourDao {
     fun getTourSummary(): Flowable<List<ArticTour>>
 
     @Query("select * from ArticTour")
-    fun getAllTours() : Flowable<List<ArticTour>>
+    fun getAllTours(): Flowable<List<ArticTour>>
 
     @Query("select * from ArticTour order by title")
-    fun getTours() : Flowable<List<ArticTour>>
+    fun getTours(): Flowable<List<ArticTour>>
 
     @Query(value = "select * from ArticTour where nid in (:ids)")
     fun getToursByIdList(ids: List<String>): Flowable<List<ArticTour>>
