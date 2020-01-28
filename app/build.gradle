@@ -36,6 +36,14 @@ android {
         }
     }
 
+    productFlavors {
+        rental {
+            applicationIdSuffix ".rental"
+            versionNameSuffix "-rental"
+            buildMetadata = "RENTAL"
+        }
+    }
+
     buildTypes {
         debug {
             buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id", false)}\""

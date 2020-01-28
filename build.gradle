@@ -140,6 +140,22 @@ subprojects {
                 return project.findProperty(key)
             }
         }
+
+        flavorDimensions "version"
+        productFlavors {
+            store {
+                dimension "version"
+
+                buildConfigField "boolean", "IS_RENTAL", "Boolean.parseBoolean(\"false\")"
+            }
+
+            rental {
+                dimension "version"
+
+                buildConfigField "boolean", "IS_RENTAL", "Boolean.parseBoolean(\"true\")"
+            }
+        }
+
         compileSdkVersion sdk
         defaultConfig {
             minSdkVersion minSdk
