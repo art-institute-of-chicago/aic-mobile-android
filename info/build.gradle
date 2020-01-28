@@ -1,5 +1,3 @@
-
-
 dependencies {
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler
