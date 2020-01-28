@@ -42,6 +42,19 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_information
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (BuildConfig.IS_RENTAL) {
+            becomeMember.visibility = View.GONE
+            enjoyFreeYearLongAdmission.visibility = View.GONE
+            joinNow.visibility = View.GONE
+            alreadyAMember.visibility = View.GONE
+            accessMemberCard.visibility = View.GONE
+            dividerBelowAccessMemberCard.visibility = View.GONE
+        }
+    }
+
     override fun setupBindings(viewModel: InformationViewModel) {
         super.setupBindings(viewModel)
         appBarLayout.setOnSearchClickedConsumer(Consumer { viewModel.onClickSearch() })
