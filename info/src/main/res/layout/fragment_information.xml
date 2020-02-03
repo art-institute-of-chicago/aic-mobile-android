@@ -34,8 +34,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginTwenty"
                 android:paddingTop="@dimen/marginOneHalf"
                 android:text="@string/purchaseTicketsForAdmission"
+                app:layout_constraintBottom_toTopOf="@id/buyTickets"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -46,9 +48,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
-                android:layout_marginTop="@dimen/marginTwenty"
                 android:layout_marginEnd="@dimen/marginDouble"
+                android:layout_marginBottom="@dimen/marginQuad"
                 android:text="@string/buyTickets"
+                app:layout_constraintBottom_toTopOf="@id/dividerBelowBuyTickets"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/purchaseTicketsForAdmission" />
@@ -57,7 +60,7 @@
                 android:id="@+id/dividerBelowBuyTickets"
                 style="@style/divider"
                 android:layout_width="0dp"
-                android:layout_marginTop="@dimen/marginQuad"
+                app:layout_constraintBottom_toTopOf="@id/becomeMember"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/buyTickets" />
