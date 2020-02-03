@@ -1,6 +1,9 @@
 package edu.artic.info
 
+import android.app.AlertDialog
 import android.net.Uri
+import android.os.Bundle
+import android.view.View
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.fuzz.rx.filterFlatMap
@@ -18,6 +21,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_information.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
+import kotlin.system.exitProcess
 
 
 class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
@@ -55,6 +59,9 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
             alreadyAMember.visibility = View.GONE
             accessMemberCard.visibility = View.GONE
             dividerBelowAccessMemberCard.visibility = View.GONE
+
+            resetDevice.visibility = View.VISIBLE
+            dividerBelowResetDevice.visibility = View.VISIBLE
         }
     }
 
@@ -87,6 +94,23 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                 .defaultThrottle()
                 .subscribeBy {
                     viewModel.onClickLocationSettings()
+                }
+                .disposedBy(disposeBag)
+
+        resetDevice.clicks()
+                .defaultThrottle()
+                .subscribeBy {
+                    AlertDialog.Builder(requireContext(), R.style.ErrorDialog)
+                            .setTitle(R.string.resetDevice)
+                            .setMessage(R.string.resetDeviceAlert)
+                            .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
+                                viewModel.onClickResetDevice()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton(getString(android.R.string.cancel)) { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .show()
                 }
                 .disposedBy(disposeBag)
 
@@ -146,6 +170,12 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                         }
                         InformationViewModel.NavigationEndpoint.LocationSettings -> {
                             navController.navigate(R.id.goToLocationSettings)
+                        }
+                        InformationViewModel.NavigationEndpoint.ResetDevice -> {
+                            activity?.run {
+                                finishAffinity()
+                                exitProcess(0)
+                            }
                         }
                         InformationViewModel.NavigationEndpoint.LanguageSettings -> {
                             navController.navigate(R.id.gotoLanguageSettings)

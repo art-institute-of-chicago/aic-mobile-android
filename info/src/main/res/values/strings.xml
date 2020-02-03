@@ -7,6 +7,8 @@
     <string name="museumInformation">Museum Information</string>
     <string name="languageSettings">Language Settings</string>
     <string name="locationSettings">Location Settings</string>
+    <string name="resetDevice" translatable="false">Reset Device</string>
+    <string name="resetDeviceAlert" translatable="false">Reset app settings? This will clear all user preferences and restart the app for a new visitor.</string>
     <string name="supportBy">Supported By</string>
     <string name="buyTickets">Buy Tickets</string>
     <string name="museumAddress" translatable="false">111 S Michigan Ave\nChicago, IL 60603</string>

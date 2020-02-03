@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.disposedBy
 import com.google.firebase.analytics.FirebaseAnalytics
 import edu.artic.localization.LanguageSelector
 import edu.artic.location.LocationService
@@ -37,6 +39,8 @@ interface AnalyticsTracker {
     fun reportScreenView(activity: Activity, name: String)
 
     fun reportScreenView(activity: Activity, categoryName: ScreenName) = reportScreenView(activity, categoryName.screenName)
+
+    fun resetAllData()
 }
 
 class AnalyticsTrackerImpl(context: Context,
@@ -44,7 +48,8 @@ class AnalyticsTrackerImpl(context: Context,
                            private val membershipPrefs: MemberInfoPreferencesManager,
                            private val locationService: LocationService) : AnalyticsTracker {
 
-    private var atMusuem = false
+    private val disposeBag = DisposeBag()
+    private var atMuseum = false
     private var reportLocationAnalytic: Subject<Boolean> = BehaviorSubject.createDefault(true)
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
@@ -54,16 +59,19 @@ class AnalyticsTrackerImpl(context: Context,
         isInMuseum
                 .distinctUntilChanged()
                 .subscribe {
-                    atMusuem = it
+                    atMuseum = it
                 }
+                .disposedBy(disposeBag)
 
         Observables.combineLatest(isInMuseum, reportLocationAnalytic)
                 .filter { (inMuseum, shouldReport) ->
                     inMuseum && shouldReport
-                }.subscribe {
+                }
+                .subscribe {
                     reportLocationAnalytic.onNext(false)
                     reportEvent(EventCategoryName.Location, AnalyticsAction.locationOnSite)
                 }
+                .disposedBy(disposeBag)
     }
 
     override fun clearSession() {
@@ -104,5 +112,9 @@ class AnalyticsTrackerImpl(context: Context,
 
     override fun reportScreenView(activity: Activity, name: String) {
         firebaseAnalytics.setCurrentScreen(activity, name, null)
+    }
+
+    override fun resetAllData() {
+        firebaseAnalytics.resetAnalyticsData()
     }
 }

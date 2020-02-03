@@ -14,11 +14,14 @@ dependencies {
     implementation project(':localization')
     implementation project(':localization_ui')
     implementation project(':location')
+    implementation project(':map')
+    implementation project(':media')
     implementation project(':media_ui')
     implementation project(':membership')
     implementation project(':navigation')
     implementation project(':search')
     implementation project(':ui')
     implementation project(':viewmodel')
+    implementation project(':welcome')
     implementation libs.constraint_layout
 }

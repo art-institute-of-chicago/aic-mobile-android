@@ -198,6 +198,26 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/locationSettings" />
 
+            <TextView
+                android:id="@+id/resetDevice"
+                style="@style/InfoMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:text="@string/resetDevice"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerBelowLocationSettings" />
+
+            <View
+                android:id="@+id/dividerBelowResetDevice"
+                style="@style/divider"
+                android:layout_width="0dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/resetDevice" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -206,7 +226,7 @@
                 android:background="@color/brownish_orange"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dividerBelowLocationSettings">
+                app:layout_constraintTop_toBottomOf="@id/dividerBelowResetDevice">
 
                 <TextView
                     android:id="@+id/supportBy"
