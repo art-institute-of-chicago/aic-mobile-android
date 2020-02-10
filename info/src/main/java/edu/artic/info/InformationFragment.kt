@@ -50,8 +50,9 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         if (BuildConfig.IS_RENTAL) {
-            purchaseTicketsForAdmission.text = context?.getString(R.string.visitWebsiteToPurchaseTickets)
+            purchaseTicketsForAdmission.visibility = View.GONE
             buyTickets.visibility = View.GONE
+            dividerBelowBuyTickets.visibility = View.GONE
 
             becomeMember.visibility = View.GONE
             enjoyFreeYearLongAdmission.visibility = View.GONE

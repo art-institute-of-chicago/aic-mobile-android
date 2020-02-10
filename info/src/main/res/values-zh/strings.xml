@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="purchaseTicketsForAdmission">購買入場，展覽和活動門票。</string>
-    <string name="visitWebsiteToPurchaseTickets">訪問我們的網站購買門票。</string>
     <string name="chooseYourLanguage">请选择您的首选语言</string>
     <string name="languageSettings">语言设置</string>
     <string name="enjoyFreeYearLongAdmission">享受免费的年票。</string>
