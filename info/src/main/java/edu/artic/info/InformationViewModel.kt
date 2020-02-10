@@ -116,7 +116,6 @@ class InformationViewModel @Inject constructor(
         tutorialPreferencesManager.clear()
         audioPrefManager.clear()
         welcomePreferencesManager.clear()
-        analyticsTracker.resetAllData()
 
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ResetDevice))
     }

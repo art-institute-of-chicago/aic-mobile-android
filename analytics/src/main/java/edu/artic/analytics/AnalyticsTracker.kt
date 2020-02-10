@@ -14,6 +14,7 @@ import edu.artic.membership.MemberInfoPreferencesManager
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import java.util.*
 
 /**
  * Description:
@@ -39,8 +40,6 @@ interface AnalyticsTracker {
     fun reportScreenView(activity: Activity, name: String)
 
     fun reportScreenView(activity: Activity, categoryName: ScreenName) = reportScreenView(activity, categoryName.screenName)
-
-    fun resetAllData()
 }
 
 class AnalyticsTrackerImpl(context: Context,
@@ -72,6 +71,10 @@ class AnalyticsTrackerImpl(context: Context,
                     reportEvent(EventCategoryName.Location, AnalyticsAction.locationOnSite)
                 }
                 .disposedBy(disposeBag)
+
+        if (BuildConfig.IS_RENTAL) {
+            firebaseAnalytics.setUserId(UUID.randomUUID()?.toString())
+        }
     }
 
     override fun clearSession() {
@@ -112,9 +115,5 @@ class AnalyticsTrackerImpl(context: Context,
 
     override fun reportScreenView(activity: Activity, name: String) {
         firebaseAnalytics.setCurrentScreen(activity, name, null)
-    }
-
-    override fun resetAllData() {
-        firebaseAnalytics.resetAnalyticsData()
     }
 }
