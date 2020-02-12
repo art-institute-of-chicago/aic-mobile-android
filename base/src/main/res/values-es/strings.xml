@@ -36,6 +36,5 @@
     <string name="register">Registro</string>
     <string name="gallery">Galería %s</string>
     <string name="welcomeUser">Bienvenido, %s</string>
-    <string name="visitWebsiteToBuyTickets">Visita nuestro sitio web para comprar boletos.</string>
     <string name="visitWebsiteToRegister">Visite nuestro sitio web para registrarse.</string>
 </resources>

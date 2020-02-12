@@ -159,21 +159,6 @@
                 tools:text="Gallery 186" />
 
             <TextView
-                android:id="@+id/visitWebsiteToBuyTickets"
-                style="@style/BodySerifWhiteLeft"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginDouble"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="@dimen/marginDouble"
-                android:fontFamily="@font/amiri_bold"
-                android:text="@string/visitWebsiteToBuyTickets"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/galleryTitle" />
-
-            <TextView
                 android:id="@+id/throughDate"
                 style="@style/DescriptionDate"
                 android:layout_width="0dp"
@@ -183,7 +168,7 @@
                 android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/visitWebsiteToBuyTickets"
+                app:layout_constraintTop_toBottomOf="@id/galleryTitle"
                 tools:text="Through August 5, 2018" />
 
         </android.support.constraint.ConstraintLayout>

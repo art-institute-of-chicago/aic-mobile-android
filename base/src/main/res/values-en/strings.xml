@@ -36,6 +36,5 @@
     <string name="showOnMap" translatable="false">Show on Map</string>
     <string name="gallery">Gallery %s</string>
     <string name="welcomeUser">Welcome, %s</string>
-    <string name="visitWebsiteToBuyTickets">Visit our website to buy tickets.</string>
     <string name="visitWebsiteToRegister">Visit our website to register.</string>
 </resources>

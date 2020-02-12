@@ -73,7 +73,6 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
         if (BuildConfig.IS_RENTAL) {
             buyTickets.visibility = View.GONE
-            visitWebsiteToBuyTickets.visibility = View.VISIBLE
         }
     }
 

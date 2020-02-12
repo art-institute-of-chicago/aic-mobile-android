@@ -43,7 +43,6 @@
     <string name="showOnMap">Show on Map</string>
     <string name="playAudio">Play Audio</string>
     <string name="buyTickets">Buy Tickets</string>
-    <string name="visitWebsiteToBuyTickets">Visit our website to buy tickets.</string>
     <string name="register">Register</string>
     <string name="visitWebsiteToRegister">Visit our website to register.</string>
     <string name="gallery">Gallery %s</string>
