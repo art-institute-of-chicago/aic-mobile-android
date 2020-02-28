@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.disposedBy
 import com.google.firebase.analytics.FirebaseAnalytics
 import edu.artic.localization.LanguageSelector
 import edu.artic.location.LocationService
@@ -12,6 +14,7 @@ import edu.artic.membership.MemberInfoPreferencesManager
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import java.util.*
 
 /**
  * Description:
@@ -44,7 +47,8 @@ class AnalyticsTrackerImpl(context: Context,
                            private val membershipPrefs: MemberInfoPreferencesManager,
                            private val locationService: LocationService) : AnalyticsTracker {
 
-    private var atMusuem = false
+    private val disposeBag = DisposeBag()
+    private var atMuseum = false
     private var reportLocationAnalytic: Subject<Boolean> = BehaviorSubject.createDefault(true)
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
 
@@ -54,16 +58,23 @@ class AnalyticsTrackerImpl(context: Context,
         isInMuseum
                 .distinctUntilChanged()
                 .subscribe {
-                    atMusuem = it
+                    atMuseum = it
                 }
+                .disposedBy(disposeBag)
 
         Observables.combineLatest(isInMuseum, reportLocationAnalytic)
                 .filter { (inMuseum, shouldReport) ->
                     inMuseum && shouldReport
-                }.subscribe {
+                }
+                .subscribe {
                     reportLocationAnalytic.onNext(false)
                     reportEvent(EventCategoryName.Location, AnalyticsAction.locationOnSite)
                 }
+                .disposedBy(disposeBag)
+
+        if (BuildConfig.IS_RENTAL) {
+            firebaseAnalytics.setUserId(UUID.randomUUID()?.toString())
+        }
     }
 
     override fun clearSession() {

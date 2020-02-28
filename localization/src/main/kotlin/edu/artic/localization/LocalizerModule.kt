@@ -18,6 +18,10 @@ abstract class LocalizerModule {
             return LanguageSelector(LocalizationPreferences(context))
         }
 
+        @JvmStatic
+        @Provides
+        fun provideLocalizationPreferences(context: Context):
+                LocalizationPreferences = LocalizationPreferences(context)
     }
 
 }

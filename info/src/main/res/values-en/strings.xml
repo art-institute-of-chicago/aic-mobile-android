@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="purchaseTicketsForAdmission">Purchase tickets for admission, exhibition, and events.</string>
+    <string name="visitWebsiteToPurchaseTickets">Visit our website to buy tickets and register.</string>
     <string name="enjoyFreeYearLongAdmission">Enjoy free, year long admission.</string>
     <string name="joinNow">Join Now</string>
     <string name="museumInformation">Museum Information</string>
@@ -7,6 +9,8 @@
     <string name="locationSettings">Location Settings</string>
     <string name="supportBy">Supported By</string>
     <string name="buyTickets">Buy Tickets</string>
+    <string name="callWith">Select an app to dial that number</string>
+    <string name="viewMapWith">Select an app to view map</string>
 
 
     <string name="versionInfo">Version %1$s</string>

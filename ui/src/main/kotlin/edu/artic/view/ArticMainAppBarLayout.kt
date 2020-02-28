@@ -132,6 +132,7 @@ class ArticMainAppBarLayout(context: Context, attrs: AttributeSet? = null) : App
             } else {
                 setExpandedTitleTextAppearance(expandedFixedSizeTextAppearance)
             }
+            setCollapsedTitleTypeface(expandedTypeface)
             setExpandedTitleTypeface(expandedTypeface)
         }
     }

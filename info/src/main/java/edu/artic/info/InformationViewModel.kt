@@ -9,8 +9,13 @@ import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.GeneralInfoDao
 import edu.artic.db.models.ArticGeneralInfo
 import edu.artic.localization.LanguageSelector
+import edu.artic.localization.LocalizationPreferences
+import edu.artic.localization.ui.LanguageSettingsPrefManager
+import edu.artic.map.tutorial.TutorialPreferencesManager
+import edu.artic.media.audio.AudioPrefManager
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
+import edu.artic.welcome.WelcomePreferencesManager
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -24,7 +29,12 @@ class InformationViewModel @Inject constructor(
         private val analyticsTracker: AnalyticsTracker,
         private val languageSelector: LanguageSelector,
         private val dataObjectDao: ArticDataObjectDao,
-        private val generalInfoDao: GeneralInfoDao,
+        generalInfoDao: GeneralInfoDao,
+        private val languageSettingsPrefManager: LanguageSettingsPrefManager,
+        private val localizationPreferences: LocalizationPreferences,
+        private val tutorialPreferencesManager: TutorialPreferencesManager,
+        private val audioPrefManager: AudioPrefManager,
+        private val welcomePreferencesManager: WelcomePreferencesManager,
         @Named("VERSION") buildVersion: String
 ) : NavViewViewModel<InformationViewModel.NavigationEndpoint>() {
 
@@ -36,6 +46,7 @@ class InformationViewModel @Inject constructor(
         class JoinNow(val url: String) : NavigationEndpoint()
         object MuseumInformation : NavigationEndpoint()
         object LocationSettings : NavigationEndpoint()
+        object ResetDevice : NavigationEndpoint()
     }
 
     val buildVersion: Subject<String> = BehaviorSubject.createDefault(buildVersion)
@@ -97,6 +108,16 @@ class InformationViewModel @Inject constructor(
 
     fun onClickLocationSettings() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.LocationSettings))
+    }
+
+    fun onClickResetDevice() {
+        languageSettingsPrefManager.clear()
+        localizationPreferences.clear()
+        tutorialPreferencesManager.clear()
+        audioPrefManager.clear()
+        welcomePreferencesManager.clear()
+
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ResetDevice))
     }
 
     fun onClickLanguageSettings() {

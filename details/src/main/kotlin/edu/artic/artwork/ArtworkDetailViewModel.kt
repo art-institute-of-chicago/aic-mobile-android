@@ -111,7 +111,7 @@ class ArtworkDetailViewModel @Inject constructor(
                 val languageList = it.allTranslations()
                 playerService.playPlayer(articObject, languageSelector.selectFrom(languageList))
 
-                var analyticsParamMap: Map<String, String> = mapOf(
+                val analyticsParamMap: Map<String, String> = mapOf(
                         AnalyticsLabel.playbackSource to ScreenName.Search.screenName,
                         AnalyticsLabel.title to articObject.getPlayableTitle().orEmpty(),
                         AnalyticsLabel.audioTitle to it.title.orEmpty(),

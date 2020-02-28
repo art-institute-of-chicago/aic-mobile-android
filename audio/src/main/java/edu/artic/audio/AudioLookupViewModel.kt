@@ -168,7 +168,7 @@ class AudioLookupViewModel @Inject constructor(
                         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ClearSearch))
 
                         // Trigger analytics for playback
-                        var analyticsParamMap: Map<String, String> = mapOf(
+                        val analyticsParamMap: Map<String, String> = mapOf(
                                 AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
                                 AnalyticsLabel.tourTitle to tour.title,
                                 AnalyticsLabel.audioTitle to audioFile.title.orEmpty(),
@@ -204,7 +204,7 @@ class AudioLookupViewModel @Inject constructor(
             audioService.playPlayer(articObject, audioModel)
 
             // Trigger analytics event for playback
-            var analyticsParamMap: Map<String, String> = mapOf(
+            val analyticsParamMap: Map<String, String> = mapOf(
                     AnalyticsLabel.playbackSource to ScreenName.AudioGuide.screenName,
                     AnalyticsLabel.title to articObject.title,
                     AnalyticsLabel.tourTitle to articObject.tourTitles.orEmpty(),

@@ -118,6 +118,7 @@ object AnalyticsLabel {
     const val Empty = ""
     const val title = "title"
     const val tourTitle = "tour_title"
+    const val tourLanguage = "tour_language"
     const val audioTitle = "audio_title"
     const val playbackLanguage = "playback_language"
 

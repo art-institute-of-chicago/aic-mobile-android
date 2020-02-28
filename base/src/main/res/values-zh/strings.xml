@@ -36,4 +36,5 @@
     <string name="showOnMap" translatable="false">在地图上显示</string>
     <string name="welcomeUser">欢迎, %s</string>
     <string name="gallery">画廊 %s</string>
+    <string name="visitWebsiteToRegister">訪問我們的網站進行註冊。</string>
 </resources>
