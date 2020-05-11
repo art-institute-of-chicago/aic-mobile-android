@@ -48,7 +48,7 @@ interface SpecifiesLanguage {
                     // Locale retrieval on pre-Nougat is somewhat lacking
                     setLocale(Locale.forLanguageTag(underlyingLocale().language))
                 }
-        ).getText(R.string.name_of_this_language)
+        ).getText(R.string.global_current_language)
     }
 
     /**
@@ -57,9 +57,9 @@ interface SpecifiesLanguage {
      */
     fun userFriendlyLanguage(ctx: Context): CharSequence {
         return when (underlyingLocale().language) {
-            Locale.ENGLISH.language -> ctx.getText(R.string.english)
-            SPANISH.language -> ctx.getText(R.string.spanish)
-            Locale.CHINESE.language -> ctx.getText(R.string.chinese)
+            Locale.ENGLISH.language -> ctx.getText(R.string.localization_english)
+            SPANISH.language -> ctx.getText(R.string.localization_spanish)
+            Locale.CHINESE.language -> ctx.getText(R.string.localization_chinese)
             else -> underlyingLocale().displayLanguage
         }
     }

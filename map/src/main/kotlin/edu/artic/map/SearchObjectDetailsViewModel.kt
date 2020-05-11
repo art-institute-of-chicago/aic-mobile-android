@@ -200,7 +200,7 @@ class ArtworkViewModel(
     val artistName: Subject<String> = BehaviorSubject.create()
     val gallery: Subject<String> = BehaviorSubject.create()
 
-    val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.artworks)
+    val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.map_card_artwork_title)
     private val audioFileModel = item.backingObject?.audioFile?.preferredLanguage(languageSelector)
     val playState: Subject<AudioPlayerService.PlayBackState> = BehaviorSubject.create()
     val hasAudio: Subject<Boolean> = BehaviorSubject.createDefault(item.backingObject != null)
@@ -243,7 +243,7 @@ class ArtworkViewModel(
  * ViewModel for the Exhibition cell.
  */
 class ExhibitionViewModel(private val galleryDao: ArticGalleryDao, val item: ArticExhibition) : SearchObjectBaseViewModel(null) {
-    val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.artworks)
+    val objectType: Subject<Int> = BehaviorSubject.createDefault(R.string.search_artworks_header)
     val floor: Subject<Int> = BehaviorSubject.create()
     val galleryTitle: Observable<Optional<String>> = Observable.create<Optional<String>> { emitter ->
         emitter.onNext(
@@ -262,11 +262,11 @@ class ExhibitionViewModel(private val galleryDao: ArticGalleryDao, val item: Art
             imageUrl.onNext(it)
         }
         when (item.floor) {
-            0 -> floor.onNext(R.string.lowerLevel)
-            1 -> floor.onNext(R.string.firstLevel)
-            2 -> floor.onNext(R.string.secondLevel)
-            3 -> floor.onNext(R.string.thirdLevel)
-            else -> floor.onNext(R.string.noTitle)
+            0 -> floor.onNext(R.string.map_lower_level)
+            1 -> floor.onNext(R.string.map_first_level)
+            2 -> floor.onNext(R.string.map_second_level)
+            3 -> floor.onNext(R.string.map_third_level)
+            else -> floor.onNext(R.string.global_empty_string)
         }
     }
 }

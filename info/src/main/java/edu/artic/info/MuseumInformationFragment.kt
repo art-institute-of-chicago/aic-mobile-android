@@ -27,7 +27,7 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
 
     override val viewModelClass: KClass<MuseumInformationViewModel> = MuseumInformationViewModel::class
 
-    override val title = R.string.museumInformation
+    override val title = R.string.info_museum_info_action
 
     override val layoutResId: Int = R.layout.fragment_museum_information
 
@@ -63,7 +63,7 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
                     viewModel.onClickSearch()
                 }.disposedBy(disposeBag)
 
-        requireActivity().title = resources.getString(R.string.museumInformation)
+        requireActivity().title = resources.getString(R.string.info_museum_info_action)
 
     }
 
@@ -79,14 +79,14 @@ class MuseumInformationFragment : BaseViewModelFragment<MuseumInformationViewMod
                                     val phone = getString(phoneId)
                                     val intent = Intent(Intent.ACTION_DIAL)
                                     intent.data = Uri.parse("tel:$phone")
-                                    val chooser = Intent.createChooser(intent, resources.getString(R.string.callWith))
+                                    val chooser = Intent.createChooser(intent, resources.getString(R.string.info_dial_prompt))
                                     startActivity(chooser)
                                 }
                                 is MuseumInformationViewModel.NavigationEndpoint.ShowMuseumInMap -> {
-                                    val url = getString(R.string.museumGoogleMapSearchQuery)
+                                    val url = getString(R.string.info_museum_google_map_query)
                                     val intent = Intent(Intent.ACTION_VIEW)
                                     intent.data = Uri.parse(url)
-                                    val chooser = Intent.createChooser(intent, resources.getString(R.string.viewMapWith))
+                                    val chooser = Intent.createChooser(intent, resources.getString(R.string.info_map_prompt))
                                     startActivity(chooser)
                                 }
                                 is MuseumInformationViewModel.NavigationEndpoint.Search -> {

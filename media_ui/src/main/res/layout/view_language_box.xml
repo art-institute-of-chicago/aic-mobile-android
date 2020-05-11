@@ -13,4 +13,4 @@
     android:paddingBottom="@dimen/marginHalf"
     tools:background="@android:color/darker_gray"
     tools:drawableEnd="@drawable/ic_language_caret"
-    tools:text="@string/name_of_this_language" />
+    tools:text="@string/global_current_language" />

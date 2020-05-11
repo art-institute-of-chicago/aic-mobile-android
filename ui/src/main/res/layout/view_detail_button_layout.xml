@@ -16,6 +16,6 @@
         android:drawablePadding="@dimen/marginStandard"
         android:minHeight="0dp"
         tools:drawableStart="@drawable/ic_play"
-        tools:text="@string/startTour" />
+        tools:text="@string/tour_start_tour_action" />
 
 </merge>

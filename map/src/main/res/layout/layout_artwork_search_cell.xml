@@ -18,10 +18,10 @@
         android:ellipsize="end"
         android:gravity="start"
         android:lines="1"
+        android:text="@string/map_card_artwork_title"
         app:layout_constraintEnd_toStartOf="@id/barrier"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Artwork" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/divider"

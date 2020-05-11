@@ -63,7 +63,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override val viewModelClass: KClass<MapViewModel>
         get() = MapViewModel::class
 
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
 
     override val layoutResId: Int
         get() = R.layout.fragment_map

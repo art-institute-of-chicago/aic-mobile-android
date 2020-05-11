@@ -51,7 +51,7 @@ fun <T> Observable<T>.waitForASecondOfCalmIn(other: Subject<*>): Observable<T> {
  */
 fun <T> Observable<T>.handleNetworkError(context: Context): Observable<T> {
     return this.onErrorResumeNext { t: Throwable ->
-        val exception = t.asNetworkException(context.getString(R.string.noInternetConnection))
+        val exception = t.asNetworkException(context.getString(R.string.global_loading_error_no_connectivity))
         Observable.error(exception)
     }
 }

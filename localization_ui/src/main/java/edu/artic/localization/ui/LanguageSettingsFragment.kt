@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
 
 class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel>() {
     override val viewModelClass: KClass<LanguageSettingsViewModel> = LanguageSettingsViewModel::class
-    override val title = R.string.languageSettings
+    override val title = R.string.language_settings_title
     override val layoutResId: Int = R.layout.fragment_language_settings
     override val screenName: ScreenName? = ScreenName.LanguageSettings
 
@@ -97,7 +97,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
     override fun setupBindings(viewModel: LanguageSettingsViewModel) {
         super.setupBindings(viewModel)
 
-        requireActivity().title = resources.getString(R.string.languageSettings)
+        requireActivity().title = resources.getString(R.string.language_settings_title)
 
         searchIcon.clicks()
                 .defaultThrottle()
@@ -109,7 +109,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
         viewModel.appLocale
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    requireActivity().title = resources.getString(R.string.languageSettings)
+                    requireActivity().title = resources.getString(R.string.language_settings_title)
                     when (it) {
                         Locale.ENGLISH -> {
                             englishLanguage.isChecked = true

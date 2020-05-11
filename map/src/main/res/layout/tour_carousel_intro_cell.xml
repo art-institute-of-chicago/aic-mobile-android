@@ -18,7 +18,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:button_icon="@drawable/ic_play"
-        app:button_text="@string/play_tour_introduction"
+        app:button_text="@string/tour_play_tour_introduction_action"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

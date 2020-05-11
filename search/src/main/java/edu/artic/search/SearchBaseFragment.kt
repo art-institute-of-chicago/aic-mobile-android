@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 
 abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
     override val layoutResId: Int = R.layout.fragment_search_results_sub
     override val screenName: ScreenName? = null
 

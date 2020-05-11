@@ -24,7 +24,7 @@ class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewMod
 
         item.exhibitionDate
                 .map {
-                    context.getString(R.string.throughDate, it)
+                    context.getString(R.string.content_through_date, it)
                 }
                 .bindToMain(exhibitionDate.text())
                 .disposedBy(item.viewDisposeBag)

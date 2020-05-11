@@ -112,18 +112,18 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     private fun observeDataError() {
         viewModel.dataError
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { t -> t.asNetworkException(resources.getString(R.string.noInternetConnection)) }
+                .map { t -> t.asNetworkException(resources.getString(R.string.global_loading_error_no_connectivity)) }
                 .subscribeBy {
                     /**
                      * Display alert with error message.
                      */
-                    val defaultMessage = resources.getString(R.string.loadingFailure)
+                    val defaultMessage = resources.getString(R.string.global_loading_error_general)
                     val errorHandler = ErrorMessagePresenter(it, defaultMessage, appDataPreferencesManager)
 
                     if (errorHandler.shouldDisplayErrorDialog()) {
                         errorDialog?.dismiss()
                         errorDialog = AlertDialog.Builder(this, R.style.ErrorDialog)
-                                .setTitle(resources.getString(R.string.errorDialogTitle))
+                                .setTitle(resources.getString(R.string.global_error_title))
                                 .setMessage(errorHandler.getErrorMessage())
                                 .setOnDismissListener { _ ->
                                     if (it is PermissibleError) {

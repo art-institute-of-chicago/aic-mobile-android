@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
         android:labelFor="@id/memberId"
-        android:text="@string/memberId"
+        android:text="@string/sign_in_member_id_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +49,7 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginTriple"
         android:labelFor="@id/zipCode"
-        android:text="@string/homeZipCode"
+        android:text="@string/sign_in_zip_code_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/memberId" />
@@ -83,7 +83,7 @@
         android:layout_marginTop="@dimen/marginQuad"
         android:layout_marginEnd="@dimen/marginDouble"
         android:background="@drawable/sign_in_background"
-        android:text="@string/signIn"
+        android:text="@string/sign_in_action"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/zipCode"

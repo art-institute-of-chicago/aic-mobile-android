@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="purchaseTicketsForAdmission">Purchase tickets for admission, exhibition, and events.</string>
-    <string name="visitWebsiteToPurchaseTickets">Visit our website to buy tickets and register.</string>
-    <string name="enjoyFreeYearLongAdmission">Enjoy free, year long admission.</string>
-    <string name="joinNow">Join Now</string>
-    <string name="museumInformation">Museum Information</string>
-    <string name="languageSettings">Language Settings</string>
-    <string name="locationSettings">Location Settings</string>
-    <string name="resetDevice" translatable="false">Reset Device</string>
-    <string name="resetDeviceAlert" translatable="false">Reset app settings? This will clear all user preferences and restart the app for a new visitor.</string>
-    <string name="supportBy">Supported By</string>
-    <string name="buyTickets">Buy Tickets</string>
-    <string name="museumAddress" translatable="false">111 S Michigan Ave\nChicago, IL 60603</string>
-    <string name="museumPhoneNumber" translatable="false">+1 312 443 3600</string>
-    <string name="callWith">Select an app to dial that number</string>
-    <string name="viewMapWith">Select an app to view map</string>
+    <string name="info_purchase_tickets_prompt">Purchase tickets for admission, exhibition, and events.</string>
+    <string name="info_purchase_tickets_rental_prompt">Visit our website to buy tickets and register.</string>
+    <string name="info_member_header">Become a Member</string>
+    <string name="info_member_prompt">Enjoy free, year long admission.</string>
+    <string name="info_member_join_action">Join Now</string>
+    <string name="info_member_card_action">Access Member Card</string>
+    <string name="info_museum_info_action">Museum Information</string>
+    <string name="info_language_settings_action">Language Settings</string>
+    <string name="info_location_settings_action">Location Settings</string>
+    <string name="info_reset_device_action" translatable="false">Reset Device</string>
+    <string name="info_reset_device_prompt" translatable="false">Reset app settings? This will clear all user preferences and restart the app for a new visitor.</string>
+    <string name="info_supported_by_header">Supported By</string>
+    <string name="info_buy_tickets_action">Buy Tickets</string>
+    <string name="info_museum_address" translatable="false">111 S Michigan Ave\nChicago, IL 60603</string>
+    <string name="info_museum_phone_number" translatable="false">+1 312 443 3600</string>
+    <string name="info_dial_prompt">Select an app to dial that number</string>
+    <string name="info_map_prompt">Select an app to view map</string>
 
 
     <!-- Since we heavily depend on the google maps api we are considering google map to handle the museum location search.-->
-    <string name="museumGoogleMapSearchQuery" translatable="false"><![CDATA[https://www.google.com/maps/search/?api=1&query=The+Art+Institute+of+Chicago]]></string>
-    <string name="versionInfo">Version %1$s</string>
+    <string name="info_museum_google_map_query" translatable="false"><![CDATA[https://www.google.com/maps/search/?api=1&query=The+Art+Institute+of+Chicago]]></string>
+    <string name="info_version">Version %1$s</string>
 
 
-    <string name="alreadyMember">Already a Member?</string>
-    <string name="whereAreYouLabel">Where are you?</string>
-    <string name="languageSettingsBody">Some content may not be available in your selected language.</string>
-    <string name="chooseYourLanguage">Please Choose Your Preferred Language</string>
-    <string name="fragmentInformationLabel" translatable="false">fragment_information</string>
+    <string name="info_member_log_in_header">Already a Member?</string>
+    <string name="info_fragment_label" translatable="false">fragment_information</string>
 
 </resources>

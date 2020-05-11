@@ -51,7 +51,7 @@
                 android:paddingTop="@dimen/marginTriple"
                 android:paddingEnd="@dimen/marginDouble"
                 android:paddingBottom="@dimen/marginTriple"
-                android:text="@string/chooseYourLanguage"
+                android:text="@string/language_settings_header"
                 android:textColor="?attr/languageSettingsTitleTextColor"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +80,7 @@
                 android:fontFeatureSettings="tnum"
                 android:paddingStart="@dimen/marginDouble"
                 android:paddingEnd="@dimen/marginDouble"
-                android:text="@string/languageSettingsBody"
+                android:text="@string/language_settings_body"
                 android:textColor="?attr/languageSettingsBodyTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -108,7 +108,7 @@
                     android:layout_marginStart="@dimen/marginDouble"
                     android:layout_marginTop="@dimen/marginQuad"
                     android:layout_marginEnd="@dimen/marginDouble"
-                    android:text="@string/english_in_english"
+                    android:text="@string/localization_english_in_english"
                     tools:checked="true" />
 
                 <RadioButton
@@ -119,7 +119,7 @@
                     android:layout_marginStart="@dimen/marginDouble"
                     android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginEnd="@dimen/marginDouble"
-                    android:text="@string/spanish_in_spanish"
+                    android:text="@string/localization_spanish_in_spanish"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/englishLanguage" />
@@ -132,7 +132,7 @@
                     android:layout_marginStart="@dimen/marginDouble"
                     android:layout_marginTop="@dimen/marginDouble"
                     android:layout_marginEnd="@dimen/marginDouble"
-                    android:text="@string/chinese_in_chinese"
+                    android:text="@string/localization_chinese_in_chinese"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/spanishLanguage" />

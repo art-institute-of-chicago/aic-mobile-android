@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
 
 class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsViewModel>() {
     override val viewModelClass: KClass<InfoLocationSettingsViewModel> = InfoLocationSettingsViewModel::class
-    override val title = R.string.location_title
+    override val title = R.string.location_settings_title
     override val layoutResId: Int = R.layout.fragment_location_settings
     override val screenName: ScreenName? = ScreenName.LocationSettings
 
@@ -32,16 +32,16 @@ class InfoLocationSettingsFragment : BaseViewModelFragment<InfoLocationSettingsV
                 .map {
                     val stringId = when (it) {
                         InfoLocationSettingsViewModel.ButtonType.LocationNeverRequested -> {
-                            R.string.locationSettingsLocationNeverAsked
+                            R.string.location_settings_location_never_asked
                         }
                         InfoLocationSettingsViewModel.ButtonType.LocationEnabled -> {
-                            R.string.locationSettingsLocationAllowed
+                            R.string.locations_settings_location_enabled
                         }
                         InfoLocationSettingsViewModel.ButtonType.LocationDisabled -> {
-                            R.string.locationSettingsLocationDenied
+                            R.string.locations_settings_location_disabled
                         }
                         InfoLocationSettingsViewModel.ButtonType.LocationServiceOff -> {
-                            R.string.locationSettingsLocationServiceOff
+                            R.string.locations_settings_location_off
                         }
                     }
                     return@map getString(stringId)

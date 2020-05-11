@@ -64,8 +64,8 @@ class AccessMemberCardViewModel @Inject constructor(
     var memberID = BehaviorSubject.createDefault<String>("")
     var isValid = BehaviorSubject.createDefault<Boolean>(false)
 
-    var zipCodeHint = BehaviorSubject.createDefault<Int>(R.string.zipCodeHint)
-    var memberIdHint = BehaviorSubject.createDefault<Int>(R.string.memberIdHint)
+    var zipCodeHint = BehaviorSubject.createDefault<Int>(R.string.sign_in_zip_code_placeholder)
+    var memberIdHint = BehaviorSubject.createDefault<Int>(R.string.sign_in_member_id_placeholder)
 
     var displayMode: Subject<DisplayMode> = BehaviorSubject.create()
 
