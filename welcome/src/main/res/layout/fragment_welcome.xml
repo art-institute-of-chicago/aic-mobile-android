@@ -32,6 +32,7 @@
                 style="@style/BodySansSerifBlackCentered"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:autoLink="web"
                 android:background="@color/geyser"
                 android:paddingStart="@dimen/marginActivitySubtitle"
                 android:paddingTop="@dimen/marginDouble"
