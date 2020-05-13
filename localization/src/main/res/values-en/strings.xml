@@ -7,4 +7,6 @@
 	<string name="localization_english">English</string>
 	<string name="localization_spanish">Spanish</string>
 	<string name="localization_chinese">Chinese</string>
+	<string name="localization_korean">Korean</string>
+	<string name="localization_french">French</string>
 </resources>

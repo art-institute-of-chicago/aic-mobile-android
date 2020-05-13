@@ -17,7 +17,9 @@ import java.util.*
 // We will want our analytics in english, and therefore will always pull these constants
 private const val english = "English"
 private const val spanish = "Spanish"
-private const val chinese = "Chinese "
+private const val chinese = "Chinese"
+private const val korean = "Korean"
+private const val french = "French"
 
 interface SpecifiesLanguage {
 
@@ -60,6 +62,8 @@ interface SpecifiesLanguage {
             Locale.ENGLISH.language -> ctx.getText(R.string.localization_english)
             SPANISH.language -> ctx.getText(R.string.localization_spanish)
             Locale.CHINESE.language -> ctx.getText(R.string.localization_chinese)
+            Locale.KOREAN.language -> ctx.getText(R.string.localization_korean)
+            Locale.FRENCH.language -> ctx.getText(R.string.localization_french)
             else -> underlyingLocale().displayLanguage
         }
     }
@@ -69,6 +73,8 @@ interface SpecifiesLanguage {
             Locale.ENGLISH.language -> english
             SPANISH.language -> spanish
             Locale.CHINESE.language -> chinese
+            Locale.KOREAN.language -> korean
+            Locale.FRENCH.language -> french
             else -> underlyingLocale().displayLanguage
         }
     }
