@@ -18,7 +18,7 @@ import javax.inject.Inject
  * @author Sameer Dhakal (Fuzz)
  */
 class LanguageSettingsViewModel @Inject constructor(
-        val languageSelector: LanguageSelector,
+        private val languageSelector: LanguageSelector,
         private val analyticsTracker: AnalyticsTracker,
         private val languageSettingsPrefManager: LanguageSettingsPrefManager
 ) : BaseViewModel() {
@@ -38,12 +38,11 @@ class LanguageSettingsViewModel @Inject constructor(
                 .skip(1)
                 .subscribe {
                     languageSelector.setDefaultLanguageForApplication(it)
-                }.disposedBy(disposeBag)
-
-
+                }
+                .disposedBy(disposeBag)
     }
 
-    private fun changeLocale(locale: Locale) {
+    fun changeLocale(locale: Locale) {
         /**
          * Log language selected event if user has not selected any language yet.
          */
@@ -69,17 +68,5 @@ class LanguageSettingsViewModel @Inject constructor(
         }
 
         selectedLocale.onNext(locale)
-    }
-
-    fun onEnglishLanguageSelected() {
-        changeLocale(Locale.ENGLISH)
-    }
-
-    fun onSpanishLanguageSelected() {
-        changeLocale(SPANISH)
-    }
-
-    fun onChineseLanguageSelected() {
-        changeLocale(Locale.CHINESE)
     }
 }
