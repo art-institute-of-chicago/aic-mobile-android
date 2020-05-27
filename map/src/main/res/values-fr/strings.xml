@@ -4,19 +4,19 @@
 <!-- Language: fr -->
 <resources>
 	<!-- SECTION: Map -->
-	<string name="map_dismiss_action">Dismiss</string>
-	<string name="map_next_action">Next</string>
-	<string name="map_back_action">Back</string>
+	<string name="map_dismiss_action">Annuler</string>
+	<string name="map_next_action">Suivant</string>
+	<string name="map_back_action">Retour</string>
 	<!-- This doesn't exist on iOS -->
-	<string name="map_close_content_description">Close</string>
-	<string name="map_tutorial_floor_picker_prompt">You are on the %s\nTap to change floors.</string>
-	<string name="map_tutorial_orient_map">Tap to Orient Map</string>
-	<string name="map_tutorial_explore_title">Explore The Map</string>
-	<string name="map_tutorial_explore_text">Pinch to explore the map.</string>
-	<string name="map_tutorial_audio_pins_title">Tap Audio Pins to Listen</string>
-	<string name="map_tutorial_audio_pins_text">Transparent pins indicate audio on a different floor.</string>
-	<string name="map_lower_level">Lower Level</string>
-	<string name="map_first_level">First Level</string>
-	<string name="map_second_level">Second Level</string>
-	<string name="map_third_level">Third Level</string>
+	<string name="map_close_content_description">Fermer</string>
+	<string name="map_tutorial_floor_picker_prompt">Vous êtes sur %s\nAppuyer pour changer d’étages.</string>
+	<string name="map_tutorial_orient_map">Appuyer sur la carte d’orientation</string>
+	<string name="map_tutorial_explore_title">Explorer la carte</string>
+	<string name="map_tutorial_explore_text">Pincer pour explorer la carte.</string>
+	<string name="map_tutorial_audio_pins_title">Appuyer sur les broches audios pour écouter</string>
+	<string name="map_tutorial_audio_pins_text">Les broches transparentes indiquent que le son se trouve à un autre étage.</string>
+	<string name="map_lower_level">Niveau inférieur</string>
+	<string name="map_first_level">Premier niveau</string>
+	<string name="map_second_level">Deuxième niveau</string>
+	<string name="map_third_level">Troisième niveau</string>
 </resources>

@@ -5,8 +5,8 @@
 <resources>
 	<!-- SECTION: Localization -->
 	<string name="localization_english">영어</string>
-	<string name="localization_spanish">스페인의</string>
-	<string name="localization_chinese">중국말</string>
+	<string name="localization_spanish">스페인어</string>
+	<string name="localization_chinese">중국어</string>
 	<string name="localization_korean">한국어</string>
 	<string name="localization_french">프랑스 국민</string>
 </resources>

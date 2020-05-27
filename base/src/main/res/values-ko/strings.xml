@@ -4,48 +4,48 @@
 <!-- Language: ko -->
 <resources>
 	<!-- SECTION: Base -->
-	<string name="global_current_language">English</string>
-	<string name="welcome_title">Welcome</string>
-	<string name="tour_play_tour_introduction_action">Play Tour Introduction</string>
-	<string name="search_suggested">Suggested</string>
-	<string name="search_on_the_map_header">On the map</string>
-	<string name="welcome_member_card_action">Access your member card</string>
-	<string name="welcome_tours_header">Tours</string>
-	<string name="welcome_on_view_header">On View</string>
-	<string name="welcome_see_all_action">See All</string>
+	<string name="global_current_language">영어</string>
+	<string name="welcome_title">반갑습니다</string>
+	<string name="tour_play_tour_introduction_action">오디오 투어 설명 플레이</string>
+	<string name="search_suggested">제안</string>
+	<string name="search_on_the_map_header">지도에 나온 대로</string>
+	<string name="welcome_member_card_action">회원 카드 액세스</string>
+	<string name="welcome_tours_header">오디오 작품 설명 투어</string>
+	<string name="welcome_on_view_header">현재 전시중</string>
+	<string name="welcome_see_all_action">모두 보기</string>
 	<string name="tour_stop_count">%s Stops</string>
-	<string name="welcome_events_header">Events</string>
-	<string name="tour_audio_channel_name">Audio</string>
-	<string name="audio_info_transcript_header">Transcript</string>
-	<string name="audio_info_credits_header">Credits</string>
-	<string name="tour_leave_tour_title">Leave Current Tour?</string>
-	<string name="tour_leave_tour_cancel_action">Continue Tour</string>
-	<string name="tour_leave_tour_leave_action">Leave Tour</string>
-	<string name="tab_home">집</string>
+	<string name="welcome_events_header">행사</string>
+	<string name="tour_audio_channel_name">오디오</string>
+	<string name="audio_info_transcript_header">기록</string>
+	<string name="audio_info_credits_header">크레딧</string>
+	<string name="tour_leave_tour_title">진행중인 작품 투어 종료</string>
+	<string name="tour_leave_tour_cancel_action">작품 투어 계속하기</string>
+	<string name="tour_leave_tour_leave_action">작품 투어 종료</string>
+	<string name="tab_home">홈</string>
 	<string name="tab_info">정보</string>
 	<string name="tab_map">지도</string>
 	<string name="tab_audio">오디오</string>
-	<string name="search_title">Search</string>
-	<string name="search_prompt">Looking for Artwork?</string>
-	<string name="tour_start_tour_action">Start Tour</string>
-	<string name="content_through_date">Through %s</string>
+	<string name="search_title">검색</string>
+	<string name="search_prompt">미술작품 찾기</string>
+	<string name="tour_start_tour_action">작품 투어 시작</string>
+	<string name="content_through_date">까지	 %s</string>
 	<!-- Currently not used in iOS -->
-	<string name="event_buy_tickets_action">Buy Tickets</string>
+	<string name="event_buy_tickets_action">티켓구매</string>
 	<!-- Currently not used in iOS -->
-	<string name="event_register_action">Register</string>
-	<string name="content_play_audio_action">Play Audio</string>
-	<string name="content_show_on_map_action">Show on Map</string>
+	<string name="event_register_action">등록</string>
+	<string name="content_play_audio_action">오디오 플레이</string>
+	<string name="content_show_on_map_action">지도에서 보기</string>
 	<!-- Currently not used in iOS -->
-	<string name="content_gallery_number">Gallery %s</string>
+	<string name="content_gallery_number">갤러리 %s</string>
 	<!-- Currently not used in iOS -->
-	<string name="welcome_title_logged_in">Welcome, %s</string>
+	<string name="welcome_title_logged_in">환영합니다 %s</string>
 	<!-- Currently not used in iOS -->
-	<string name="event_rental_visit_website_prompt">Visit our website to register.</string>
-	<string name="global_cancel_action">Not Right Now</string>
-	<string name="global_accept_action">Ok</string>
-	<string name="global_error_title">Error</string>
-	<string name="global_loading_error_title">Loading Error</string>
-	<string name="global_loading_error_general">Failed to load application data.</string>
-	<string name="global_loading_error_no_connectivity">No internet connection.</string>
-	<string name="global_loading_error_time_out">Network time out. Please try again.</string>
+	<string name="event_rental_visit_website_prompt">등록을 위해서는 웹사이트를 방문하세요</string>
+	<string name="global_cancel_action">추후에</string>
+	<string name="global_accept_action">확인</string>
+	<string name="global_error_title">오류</string>
+	<string name="global_loading_error_title">데이터 로딩 오류</string>
+	<string name="global_loading_error_general">지원 데이터 로드 실패</string>
+	<string name="global_loading_error_no_connectivity">인터넷에 연결되어 있지 않습니다.</string>
+	<string name="global_loading_error_time_out">네트워크 연결 시간 초과. 다시 시도해 보세요.</string>
 </resources>

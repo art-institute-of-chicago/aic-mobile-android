@@ -4,7 +4,7 @@
 <!-- Language: fr -->
 <resources>
 	<!-- SECTION: LocalizationUI -->
-	<string name="language_settings_title">Language Settings</string>
-	<string name="language_settings_body">Some content may not be available in your selected language.</string>
-	<string name="language_settings_header">Please Choose Your Preferred Language</string>
+	<string name="language_settings_title">Paramètres de langue</string>
+	<string name="language_settings_body">Certains contenus peuvent ne pas être disponibles dans la langue que vous avez choisie.</string>
+	<string name="language_settings_header">Veuillez choisir votre langue préférée</string>
 </resources>

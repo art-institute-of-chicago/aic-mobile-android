@@ -4,48 +4,48 @@
 <!-- Language: fr -->
 <resources>
 	<!-- SECTION: Base -->
-	<string name="global_current_language">English</string>
-	<string name="welcome_title">Welcome</string>
-	<string name="tour_play_tour_introduction_action">Play Tour Introduction</string>
-	<string name="search_suggested">Suggested</string>
-	<string name="search_on_the_map_header">On the map</string>
-	<string name="welcome_member_card_action">Access your member card</string>
-	<string name="welcome_tours_header">Tours</string>
-	<string name="welcome_on_view_header">On View</string>
-	<string name="welcome_see_all_action">See All</string>
+	<string name="global_current_language">Anglais</string>
+	<string name="welcome_title">Accueil</string>
+	<string name="tour_play_tour_introduction_action">Lancer la visite</string>
+	<string name="search_suggested">Suggéré</string>
+	<string name="search_on_the_map_header">Sur la carte</string>
+	<string name="welcome_member_card_action">Accédez à votre carte de membre</string>
+	<string name="welcome_tours_header">Visites</string>
+	<string name="welcome_on_view_header">En vue</string>
+	<string name="welcome_see_all_action">Voir tout</string>
 	<string name="tour_stop_count">%s Stops</string>
-	<string name="welcome_events_header">Events</string>
+	<string name="welcome_events_header">Événements</string>
 	<string name="tour_audio_channel_name">Audio</string>
-	<string name="audio_info_transcript_header">Transcript</string>
-	<string name="audio_info_credits_header">Credits</string>
-	<string name="tour_leave_tour_title">Leave Current Tour?</string>
-	<string name="tour_leave_tour_cancel_action">Continue Tour</string>
-	<string name="tour_leave_tour_leave_action">Leave Tour</string>
+	<string name="audio_info_transcript_header">Transcription</string>
+	<string name="audio_info_credits_header">Crédits</string>
+	<string name="tour_leave_tour_title">Quitter la visite en cours ?</string>
+	<string name="tour_leave_tour_cancel_action">Continuer la visite</string>
+	<string name="tour_leave_tour_leave_action">Quitter la visite</string>
 	<string name="tab_home">Accueil</string>
-	<string name="tab_info">Info</string>
+	<string name="tab_info">Infos</string>
 	<string name="tab_map">Carte</string>
-	<string name="tab_audio">l\'audio</string>
-	<string name="search_title">Search</string>
-	<string name="search_prompt">Looking for Artwork?</string>
-	<string name="tour_start_tour_action">Start Tour</string>
-	<string name="content_through_date">Through %s</string>
+	<string name="tab_audio">Audio</string>
+	<string name="search_title">Recherche</string>
+	<string name="search_prompt">Recherchez-vous des œuvres d’art ?</string>
+	<string name="tour_start_tour_action">Commencer la visite</string>
+	<string name="content_through_date">Par %s</string>
 	<!-- Currently not used in iOS -->
-	<string name="event_buy_tickets_action">Buy Tickets</string>
+	<string name="event_buy_tickets_action">Acheter des billets</string>
 	<!-- Currently not used in iOS -->
-	<string name="event_register_action">Register</string>
-	<string name="content_play_audio_action">Play Audio</string>
-	<string name="content_show_on_map_action">Show on Map</string>
+	<string name="event_register_action">S’inscrire</string>
+	<string name="content_play_audio_action">Jouer l’audio</string>
+	<string name="content_show_on_map_action">Afficher sur la carte</string>
 	<!-- Currently not used in iOS -->
-	<string name="content_gallery_number">Gallery %s</string>
+	<string name="content_gallery_number">Galerie %s</string>
 	<!-- Currently not used in iOS -->
-	<string name="welcome_title_logged_in">Welcome, %s</string>
+	<string name="welcome_title_logged_in">Accueil, %s</string>
 	<!-- Currently not used in iOS -->
-	<string name="event_rental_visit_website_prompt">Visit our website to register.</string>
-	<string name="global_cancel_action">Not Right Now</string>
+	<string name="event_rental_visit_website_prompt">Visitez notre site web pour vous inscrire.</string>
+	<string name="global_cancel_action">Pas maintenant</string>
 	<string name="global_accept_action">Ok</string>
-	<string name="global_error_title">Error</string>
-	<string name="global_loading_error_title">Loading Error</string>
-	<string name="global_loading_error_general">Failed to load application data.</string>
-	<string name="global_loading_error_no_connectivity">No internet connection.</string>
-	<string name="global_loading_error_time_out">Network time out. Please try again.</string>
+	<string name="global_error_title">Erreur</string>
+	<string name="global_loading_error_title">Erreur de chargement</string>
+	<string name="global_loading_error_general">Impossible de charger les données de l’application.</string>
+	<string name="global_loading_error_no_connectivity">Pas de connexion internet.</string>
+	<string name="global_loading_error_time_out">Temporisation réseau. Veuillez réessayer.</string>
 </resources>

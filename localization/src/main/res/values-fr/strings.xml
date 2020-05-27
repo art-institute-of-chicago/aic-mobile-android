@@ -4,9 +4,9 @@
 <!-- Language: fr -->
 <resources>
 	<!-- SECTION: Localization -->
-	<string name="localization_english">Anglaise</string>
+	<string name="localization_english">Anglais</string>
 	<string name="localization_spanish">Espagnol</string>
-	<string name="localization_chinese">Chinoise</string>
+	<string name="localization_chinese">Chinois</string>
 	<string name="localization_korean">Coréen</string>
 	<string name="localization_french">Française</string>
 </resources>

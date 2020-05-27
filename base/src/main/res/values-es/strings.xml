@@ -13,7 +13,7 @@
 	<string name="welcome_tours_header">Visitas</string>
 	<string name="welcome_on_view_header">En vista</string>
 	<string name="welcome_see_all_action">Ver todo</string>
-	<string name="tour_stop_count">%s Terminas</string>
+	<string name="tour_stop_count">%s Stops</string>
 	<string name="welcome_events_header">Eventos</string>
 	<string name="tour_audio_channel_name">Audio</string>
 	<string name="audio_info_transcript_header">Texto</string>

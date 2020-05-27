@@ -13,7 +13,7 @@
 	<string name="welcome_tours_header">游览</string>
 	<string name="welcome_on_view_header">当前展览</string>
 	<string name="welcome_see_all_action">查看全部</string>
-	<string name="tour_stop_count">%s 停止</string>
+	<string name="tour_stop_count">%s Stops</string>
 	<string name="welcome_events_header">活动</string>
 	<string name="tour_audio_channel_name">音频</string>
 	<string name="audio_info_transcript_header">脚本</string>

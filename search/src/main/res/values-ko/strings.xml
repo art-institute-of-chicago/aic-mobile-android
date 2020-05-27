@@ -4,12 +4,12 @@
 <!-- Language: ko -->
 <resources>
 	<!-- SECTION: Search -->
-	<string name="search_no_results_header">Sorry, we couldn’t find that.</string>
+	<string name="search_no_results_header">죄송합니다. 찾을 수 없습니다.</string>
 	<!-- This is broken up on iOS -->
-	<string name="search_no_results_message">For help, visit the nearest museum representative or</string>
-	<string name="search_no_results_visit_website_action">visit our website</string>
-	<string name="search_artworks_header">Artworks</string>
-	<string name="search_exhibitions_header">Exhibitions</string>
-	<string name="map_card_exhibition_title">Exhibition</string>
-	<string name="map_card_artwork_title">Artwork</string>
+	<string name="search_no_results_message">도움이 필요하다면, 가장 가까운 박물관 담당자를 방문하거나</string>
+	<string name="search_no_results_visit_website_action">웹사이트를 방문해 주십시오.</string>
+	<string name="search_artworks_header">작품</string>
+	<string name="search_exhibitions_header">전시</string>
+	<string name="map_card_exhibition_title">전시</string>
+	<string name="map_card_artwork_title">작품</string>
 </resources>
