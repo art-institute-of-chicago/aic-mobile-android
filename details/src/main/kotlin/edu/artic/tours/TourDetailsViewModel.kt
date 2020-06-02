@@ -147,9 +147,9 @@ class TourDetailsViewModel @Inject constructor(
                 .subscribeBy { (tour, locale) ->
                     languageSelector.setTourLanguage(locale)
 
-                    var analyticsParamMap: Map<String, String> = mapOf(
+                    val analyticsParamMap: Map<String, String> = mapOf(
                             AnalyticsLabel.title to tour.title,
-                            AnalyticsLabel.playbackLanguage to locale.nameOfLanguageForAnalytics()
+                            AnalyticsLabel.tourLanguage to locale.nameOfLanguageForAnalytics()
                     )
                     analyticsTracker.reportCustomEvent(EventCategoryName.TourStarted, analyticsParamMap)
 

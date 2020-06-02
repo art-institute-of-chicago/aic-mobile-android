@@ -2,6 +2,7 @@ package edu.artic.ui
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.media.AudioManager
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.annotation.UiThread
@@ -73,6 +74,8 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
         if (layoutResId != 0) {
             setContentView(layoutResId)
         }
+
+        volumeControlStream = AudioManager.STREAM_VOICE_CALL
     }
 
     override fun onResume() {

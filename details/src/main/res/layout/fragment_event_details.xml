@@ -112,6 +112,21 @@
                 tools:text="What’s in store to explore? Studio art-making, visits by a guest artist, or a gallery activity station? Where will the Artist’s Studio pop up next? Visit the Family Room on the day of your visit to discover what’s planned." />
 
             <TextView
+                android:id="@+id/visitWebsiteToRegister"
+                style="@style/BodySerifWhiteLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/marginDouble"
+                android:fontFamily="@font/amiri_bold"
+                android:text="@string/visitWebsiteToRegister"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description" />
+
+            <TextView
                 android:id="@+id/throughDate"
                 style="@style/DescriptionDate"
                 android:layout_width="0dp"
@@ -121,7 +136,7 @@
                 android:layout_marginRight="@dimen/marginDouble"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/description"
+                app:layout_constraintTop_toBottomOf="@id/visitWebsiteToRegister"
                 tools:text="Through August 5, 2018" />
 
             <TextView

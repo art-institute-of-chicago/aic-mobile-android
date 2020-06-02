@@ -1,15 +1,3 @@
-
-String buildMetadata
-
-if (project.hasProperty('build_number')) {
-    /**
-     * This is typically the build number produced by the CI service.
-     */
-    buildMetadata = project.getProperty('build_number')
-} else {
-    buildMetadata = 'SNAPSHOT'
-}
-
 String majorAndMinorVersion = "1.3"
 Integer patchVersionCode = 0
 
@@ -20,7 +8,7 @@ android {
         minSdkVersion minSdk
         targetSdkVersion sdk
         multiDexEnabled true
-        versionCode (patchVersionCode + 1300)
+        versionCode(patchVersionCode + 1300)
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -30,30 +18,58 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(envVariable("keystore",true) ?: "DUMMY")
-            storePassword envVariable("keystore_password",true)
-            keyAlias envVariable("keystore_alias",true)
-            keyPassword envVariable("keystore_alias_password",true)
+            storeFile file(envVariable("keystore", true) ?: "DUMMY")
+            storePassword envVariable("keystore_password", true)
+            keyAlias envVariable("keystore_alias", true)
+            keyPassword envVariable("keystore_alias_password", true)
+        }
+    }
+
+    productFlavors.all {
+        ext.buildMetadata = null
+    }
+
+    productFlavors {
+        store {
+            if (project.hasProperty('build_number')) {
+                /**
+                 * This is typically the build number produced by the CI service.
+                 */
+                buildMetadata = project.getProperty('build_number')
+            } else {
+                buildMetadata = 'SNAPSHOT'
+            }
+        }
+
+        rental {
+            applicationIdSuffix ".rental"
+            versionNameSuffix "-rental"
+
+            buildMetadata = "RENTAL"
         }
     }
 
     buildTypes {
         debug {
-            buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",false)}\""
-            buildConfigField "String", "FB_API_KEY", "\"${envVariable("fb_api_key",false)}\""
+            buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id", false)}\""
+            buildConfigField "String", "FB_API_KEY", "\"${envVariable("fb_api_key", false)}\""
             buildConfigField "String", "GA_TRACKING_ID", "\"${envVariable("ga_tracking_id", false)}\""
             buildConfigField "String", "GCM_SENDER_ID", "\"${envVariable("gcm_sender_id", false)}\""
-            buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id",false)}\""
-            buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",false)}\""
-            buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
+            buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id", false)}\""
+            buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket", false)}\""
+            productFlavors {
+                all {
+                    buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
+                }
+            }
         }
         release {
-            buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id",true)}\""
-            buildConfigField "String", "FB_API_KEY", "\"${envVariable("fb_api_key",true)}\""
+            buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id", true)}\""
+            buildConfigField "String", "FB_API_KEY", "\"${envVariable("fb_api_key", true)}\""
             buildConfigField "String", "GA_TRACKING_ID", "\"${envVariable("ga_tracking_id", true)}\""
             buildConfigField "String", "GCM_SENDER_ID", "\"${envVariable("gcm_sender_id", true)}\""
-            buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id",true)}\""
-            buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket",true)}\""
+            buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id", true)}\""
+            buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket", true)}\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release

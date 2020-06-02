@@ -44,6 +44,7 @@
     <string name="playAudio">Play Audio</string>
     <string name="buyTickets">Buy Tickets</string>
     <string name="register">Register</string>
+    <string name="visitWebsiteToRegister">Visit our website to register.</string>
     <string name="gallery">Gallery %s</string>
 
     <string name="errorDialogTitle">Error</string>

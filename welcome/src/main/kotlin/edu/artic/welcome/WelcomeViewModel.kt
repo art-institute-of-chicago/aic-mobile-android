@@ -157,7 +157,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Search))
     }
 
-    fun onAcessMemberCardClickEvent() {
+    fun onAccessMemberCardClickEvent() {
         navigateTo.onNext(Navigate.Forward(NavigationEndpoint.AccessMemberCard))
     }
 

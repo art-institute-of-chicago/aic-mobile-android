@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.math.MathUtils
 import android.support.v4.widget.NestedScrollView
+import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -20,6 +21,7 @@ import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticExhibition
+import edu.artic.details.BuildConfig
 import edu.artic.details.R
 import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
@@ -63,6 +65,14 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
             arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION)
         } else {
             requireActivity().intent.getParcelableExtra<ArticExhibition>(ARG_EXHIBITION)
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (BuildConfig.IS_RENTAL) {
+            buyTickets.visibility = View.GONE
         }
     }
 
@@ -125,6 +135,11 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
         viewModel.galleryTitle
                 .bindToMain(galleryTitle.text())
+                .disposedBy(disposeBag)
+
+        viewModel.galleryTitle
+                .map { it.isNotBlank() }
+                .bindToMain(galleryTitle.visibility())
                 .disposedBy(disposeBag)
 
         viewModel.throughDate

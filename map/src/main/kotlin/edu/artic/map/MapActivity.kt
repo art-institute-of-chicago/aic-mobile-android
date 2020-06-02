@@ -43,34 +43,11 @@ class MapActivity : BaseActivity() {
 
             disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map
-            if (BuildConfig.DEBUG) {
-                // Make sure we don't accidentally leak the activity.
-                val ctx: Context = applicationContext
-                setOnNavigationItemReselectedListener {
-                    finish()
-                    Handler().postDelayed({
-                        resetPrefs()
-                        Toast.makeText(ctx, "Map preference data erased.", Toast.LENGTH_SHORT).show()
-                    }, 200L)
-                }
-            } else {
-                preventReselection()
-            }
+
+            preventReselection()
+
             setOnNavigationItemSelectedListener(NavigationSelectListener(this.context))
         }
-    }
-
-    /**
-     * Internal, debug-only function. Wipe out all record of location and tutorial info,
-     * then propagate `false` to all four convenience observables.
-     */
-    private fun resetPrefs() {
-        locationPreferencesManager.clear()
-        tutorialPreferencesManager.clear()
-        locationPreferencesManager.hasSeenLocationPromptObservable.onNext(false)
-        locationPreferencesManager.hasClosedLocationPromptObservable.onNext(false)
-        tutorialPreferencesManager.hasSeenTutorialObservable.onNext(false)
-        tutorialPreferencesManager.hasClosedTutorialObservable.onNext(false)
     }
 
     override fun onStart() {

@@ -18,6 +18,7 @@ import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.base.utils.fromHtml
 import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticEvent
+import edu.artic.details.BuildConfig
 import edu.artic.details.R
 import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
@@ -51,6 +52,10 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         image.transitionName = event.title
+
+        if (BuildConfig.IS_RENTAL) {
+            registerToday.visibility = View.GONE
+        }
     }
 
     override fun onRegisterViewModel(viewModel: EventDetailViewModel) {
@@ -121,13 +126,25 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .bindToMain(location.text())
                 .disposedBy(disposeBag)
 
-        Observables.combineLatest(
-                viewModel.eventButtonText.map { it.isNotEmpty() },
-                viewModel.hasEventUrl
-        )
-                .map { it.first && it.second }
-                .bindToMain(registerToday.visibility())
-                .disposedBy(disposeBag)
+        if (!BuildConfig.IS_RENTAL) {
+            Observables
+                    .combineLatest(
+                            viewModel.eventButtonText.map { it.isNotEmpty() },
+                            viewModel.hasEventUrl
+                    )
+                    .map { it.first && it.second }
+                    .bindToMain(registerToday.visibility())
+                    .disposedBy(disposeBag)
+        } else {
+            Observables
+                    .combineLatest(
+                            viewModel.eventButtonText.map { it.isNotEmpty() },
+                            viewModel.hasEventUrl
+                    )
+                    .map { it.first && it.second }
+                    .bindToMain(visitWebsiteToRegister.visibility())
+                    .disposedBy(disposeBag)
+        }
 
         viewModel.eventButtonText
                 .map {

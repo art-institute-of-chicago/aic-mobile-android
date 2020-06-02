@@ -104,11 +104,15 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
         appBarLayout.setOnSearchClickedConsumer(Consumer { viewModel.onClickSearch() })
 
+        if (BuildConfig.IS_RENTAL) {
+            memberCardLink.visibility = View.GONE
+        }
         memberCardLink.clicks()
                 .defaultThrottle()
                 .subscribe {
-                    viewModel.onAcessMemberCardClickEvent()
-                }.disposedBy(disposeBag)
+                    viewModel.onAccessMemberCardClickEvent()
+                }
+                .disposedBy(disposeBag)
 
         viewModel.welcomePrompt
                 .bindToMain(welcomeMessage.text())

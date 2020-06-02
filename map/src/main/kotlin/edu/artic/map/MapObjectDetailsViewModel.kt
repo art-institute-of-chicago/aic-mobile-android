@@ -157,7 +157,7 @@ class MapObjectDetailsViewModel @Inject constructor(val analyticsTracker: Analyt
             audioFileModel?.let { translation ->
                 playerControl.onNext(PlayerAction.Play(source, translation))
 
-                var analyticsParamMap: Map<String, String> = mapOf(
+                val analyticsParamMap: Map<String, String> = mapOf(
                         AnalyticsLabel.playbackSource to ScreenName.Map.screenName,
                         AnalyticsLabel.title to source.title,
                         AnalyticsLabel.tourTitle to source.tourTitles.orEmpty(),

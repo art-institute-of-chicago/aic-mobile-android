@@ -91,7 +91,8 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .withLatestFrom(audioService) { playControl, service ->
                     playControl to service
-                }.subscribe { pair ->
+                }
+                .subscribe { pair ->
                     val playControl = pair.first
                     val service = pair.second
                     when (playControl) {
@@ -99,9 +100,9 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                             if (playControl.audioFileModel != null) {
                                 service.playPlayer(playControl.requestedObject, playControl.audioFileModel)
 
-                                var analyticsParamMap: MutableMap<String, String> = mutableMapOf(
+                                val analyticsParamMap: MutableMap<String, String> = mutableMapOf(
                                         AnalyticsLabel.playbackSource to ScreenName.TourStop.screenName,
-                                        AnalyticsLabel.title to tourObject?.getPlayableTitle().orEmpty(),
+                                        AnalyticsLabel.title to playControl.requestedObject.getPlayableTitle().orEmpty(),
                                         AnalyticsLabel.tourTitle to tourObject?.title.orEmpty(),
                                         AnalyticsLabel.audioTitle to playControl.audioFileModel.title.orEmpty(),
                                         AnalyticsLabel.playbackLanguage to playControl.audioFileModel.fileLanguageForAnalytics().toString())
@@ -113,7 +114,8 @@ class TourCarouselFragment : BaseViewModelFragment<TourCarouselViewModel>() {
                         }
                         is TourCarousalBaseViewModel.PlayerAction.Pause -> service.pausePlayer()
                     }
-                }.disposedBy(disposeBag)
+                }
+                .disposedBy(disposeBag)
 
 
         audioService
