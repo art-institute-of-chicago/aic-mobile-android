@@ -24,8 +24,8 @@ class TutorialViewModel @Inject constructor(private val tutorialPreferencesManag
 
     val cells: Subject<List<TutorialPopupItemViewModel>> = BehaviorSubject.createDefault(
             listOf(
-                    TutorialPopupItemViewModel(R.drawable.arrows, R.string.tutorial_explore_text),
-                    TutorialPopupItemViewModel(R.drawable.group_2, R.string.tutorial_audio_pins_text)
+                    TutorialPopupItemViewModel(R.drawable.arrows, R.string.map_tutorial_explore_text),
+                    TutorialPopupItemViewModel(R.drawable.group_2, R.string.map_tutorial_audio_pins_text)
             )
     )
 
@@ -48,9 +48,9 @@ class TutorialViewModel @Inject constructor(private val tutorialPreferencesManag
         tutorialPopupCurrentPage
                 .map {
                     return@map if (it == 0)
-                        R.string.tutorial_explore_title
+                        R.string.map_tutorial_explore_title
                     else
-                        R.string.tutorial_audio_pins_title
+                        R.string.map_tutorial_audio_pins_title
                 }.bindTo(tutorialTitle)
                 .disposedBy(disposeBag)
         tutorialPreferencesManager.hasSeenTutorial = true

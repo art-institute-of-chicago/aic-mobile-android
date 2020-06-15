@@ -19,7 +19,7 @@ class CircularViewItemDecoration(private val currentPadding: Int,
         adapter.getItemOrNull(position)?.let {
             if (it is SearchTextHeaderViewModel) {
                 it.text.subscribe {
-                    if (it == R.string.on_the_map) {
+                    if (it == R.string.search_on_the_map_header) {
                         onTheMapPosition = position
                     }
                 }.disposedBy(disposeBag)

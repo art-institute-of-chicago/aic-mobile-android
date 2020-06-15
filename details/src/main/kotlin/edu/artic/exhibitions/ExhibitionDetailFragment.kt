@@ -53,7 +53,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     override val layoutResId: Int
         get() = R.layout.fragment_exhibition_details
 
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
 
     override val customToolbarColorResource: Int
         get() = R.color.audioBackground
@@ -143,7 +143,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
                 .disposedBy(disposeBag)
 
         viewModel.throughDate
-                .map { getString(R.string.throughDate, it) }
+                .map { getString(R.string.content_through_date, it) }
                 .bindToMain(throughDate.text())
                 .disposedBy(disposeBag)
 

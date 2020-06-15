@@ -26,8 +26,8 @@ class MuseumInformationViewModel @Inject constructor(
     }
 
     val museumHours: Subject<String> = BehaviorSubject.create()
-    val museumAddress: Subject<Int> = BehaviorSubject.createDefault(R.string.museumAddress)
-    val museumPhone: Subject<Int> = BehaviorSubject.createDefault(R.string.museumPhoneNumber)
+    val museumAddress: Subject<Int> = BehaviorSubject.createDefault(R.string.info_museum_address)
+    val museumPhone: Subject<Int> = BehaviorSubject.createDefault(R.string.info_museum_phone_number)
 
     init {
 
@@ -42,11 +42,11 @@ class MuseumInformationViewModel @Inject constructor(
     }
 
     fun onPhoneNumberClicked() {
-        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.CallMuseum(R.string.museumPhoneNumber)))
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.CallMuseum(R.string.info_museum_phone_number)))
     }
 
     fun onMuseumAddressClicked() {
-        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ShowMuseumInMap(R.string.museumAddress)))
+        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ShowMuseumInMap(R.string.info_museum_address)))
     }
 
     fun onClickSearch() {

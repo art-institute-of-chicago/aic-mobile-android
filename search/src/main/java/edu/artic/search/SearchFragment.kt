@@ -36,7 +36,7 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
 
     override val viewModelClass: KClass<SearchViewModel>
         get() = SearchViewModel::class
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
     override val layoutResId: Int
         get() = R.layout.fragment_search
     override val screenName: ScreenName?

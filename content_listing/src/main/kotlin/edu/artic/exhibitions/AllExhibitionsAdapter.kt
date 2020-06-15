@@ -35,7 +35,7 @@ class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellVi
         item.exhibitionTitle.subscribe { image.transitionName = it }.disposedBy(item.viewDisposeBag)
         item.exhibitionEndDate
                 .map {
-                    context.getString(R.string.throughDate, it)
+                    context.getString(R.string.content_through_date, it)
                 }
                 .bindToMain(description.text())
                 .disposedBy(item.viewDisposeBag)

@@ -51,7 +51,7 @@ class AllToursAdapter(recyclerView: RecyclerView, introSubject: Subject<String>,
                 .disposedBy(item.viewDisposeBag)
 
         item.tourStops
-                .subscribe { stops.text = context.getString(R.string.stops, it) }
+                .subscribe { stops.text = context.getString(R.string.tour_stop_count, it) }
                 .disposedBy(item.viewDisposeBag)
 
         item.tourDuration

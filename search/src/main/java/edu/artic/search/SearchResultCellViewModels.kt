@@ -110,7 +110,7 @@ class RowPaddingViewModel : SearchBaseCellViewModel()
 
 
 sealed class Header(@StringRes val title: Int) {
-    class Artworks(title: Int = R.string.artworks) : Header(title)
-    class Tours(title: Int = R.string.tours) : Header(title)
-    class Exhibitions(title: Int = R.string.exhibitions) : Header(title)
+    class Artworks(title: Int = R.string.search_artworks_header) : Header(title)
+    class Tours(title: Int = R.string.welcome_tours_header) : Header(title)
+    class Exhibitions(title: Int = R.string.search_exhibitions_header) : Header(title)
 }

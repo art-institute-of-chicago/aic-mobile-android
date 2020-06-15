@@ -32,7 +32,7 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override val viewModelClass: KClass<MapObjectDetailsViewModel>
         get() = MapObjectDetailsViewModel::class
 
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
 
     override val layoutResId: Int
         get() = R.layout.fragment_map_object_details
@@ -60,7 +60,7 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter { it.isNotEmpty() }
                 .map {
-                    resources.getString(R.string.gallery, it)
+                    resources.getString(R.string.search_gallery_number, it)
                 }
                 .bindToMain(tourStopGallery.text())
                 .disposedBy(disposeBag)

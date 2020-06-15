@@ -145,9 +145,9 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
                 android:layout_marginEnd="@dimen/marginDouble"
-                android:text="@string/relatedTours"
+                android:text="@string/audio_info_related_tours"
                 android:visibility="gone"
-                tools:text="@string/relatedTours" />
+                tools:text="@string/audio_info_related_tours" />
 
             <LinearLayout
                 android:id="@+id/relatedToursView"
@@ -171,7 +171,7 @@
                 app:content_padding="@dimen/marginDouble"
                 app:content_text_color="@color/white"
                 app:panel_padding="@dimen/marginDouble"
-                app:title_text="@string/transcript"
+                app:title_text="@string/audio_info_transcript_header"
                 app:title_text_color="@color/white" />
 
             <View
@@ -186,7 +186,7 @@
                 app:content_padding="@dimen/marginDouble"
                 app:content_text_color="@color/white"
                 app:panel_padding="@dimen/marginDouble"
-                app:title_text="@string/credits"
+                app:title_text="@string/audio_info_credits_header"
                 app:title_text_color="@color/white" />
 
             <TextView

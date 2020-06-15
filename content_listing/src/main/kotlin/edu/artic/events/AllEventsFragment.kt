@@ -31,7 +31,7 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_view_all
 
-    override val title = R.string.events
+    override val title = R.string.welcome_events_header
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

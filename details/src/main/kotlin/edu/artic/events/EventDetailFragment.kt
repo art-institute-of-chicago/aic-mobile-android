@@ -42,7 +42,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_event_details
 
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
 
     override val customToolbarColorResource: Int
         get() = R.color.audioBackground
@@ -118,7 +118,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.throughDate
-                .map { getString(R.string.throughDate, it) }
+                .map { getString(R.string.content_through_date, it) }
                 .bindToMain(throughDate.text())
                 .disposedBy(disposeBag)
 
@@ -149,8 +149,8 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
         viewModel.eventButtonText
                 .map {
                     when (it.toLowerCase(Locale.ROOT)) {
-                        "buy tickets" -> getString(R.string.buyTickets)
-                        "register" -> getString(R.string.register)
+                        "buy tickets" -> getString(R.string.event_buy_tickets_action)
+                        "register" -> getString(R.string.event_register_action)
                         else -> it
                     }
                 }

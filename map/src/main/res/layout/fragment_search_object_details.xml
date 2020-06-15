@@ -53,7 +53,7 @@
         android:layout_gravity="end"
         android:layout_marginTop="@dimen/marginStandard"
         android:layout_marginEnd="@dimen/marginDouble"
-        android:contentDescription="@string/close"
+        android:contentDescription="@string/map_close_content_description"
         android:padding="@dimen/marginStandard"
         android:src="@drawable/ic_close_white_24dp" />
 

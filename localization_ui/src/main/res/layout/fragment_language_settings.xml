@@ -51,7 +51,7 @@
                 android:paddingTop="@dimen/marginTriple"
                 android:paddingEnd="@dimen/marginDouble"
                 android:paddingBottom="@dimen/marginTriple"
-                android:text="@string/chooseYourLanguage"
+                android:text="@string/language_settings_header"
                 android:textColor="?attr/languageSettingsTitleTextColor"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +80,7 @@
                 android:fontFeatureSettings="tnum"
                 android:paddingStart="@dimen/marginDouble"
                 android:paddingEnd="@dimen/marginDouble"
-                android:text="@string/languageSettingsBody"
+                android:text="@string/language_settings_body"
                 android:textColor="?attr/languageSettingsBodyTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -97,46 +97,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/languageSettingsBody"
-                tools:layout_constraintVertical_bias="0">
+                tools:layout_constraintVertical_bias="0" />
 
-                <RadioButton
-                    android:id="@+id/englishLanguage"
-                    style="@style/LanguageButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="@dimen/marginDouble"
-                    android:layout_marginTop="@dimen/marginQuad"
-                    android:layout_marginEnd="@dimen/marginDouble"
-                    android:text="@string/english_in_english"
-                    tools:checked="true" />
-
-                <RadioButton
-                    android:id="@+id/spanishLanguage"
-                    style="@style/LanguageButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="@dimen/marginDouble"
-                    android:layout_marginTop="@dimen/marginDouble"
-                    android:layout_marginEnd="@dimen/marginDouble"
-                    android:text="@string/spanish_in_spanish"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/englishLanguage" />
-
-                <RadioButton
-                    android:id="@+id/chineseLanguage"
-                    style="@style/LanguageButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="@dimen/marginDouble"
-                    android:layout_marginTop="@dimen/marginDouble"
-                    android:layout_marginEnd="@dimen/marginDouble"
-                    android:text="@string/chinese_in_chinese"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spanishLanguage" />
-            </RadioGroup>
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>
 

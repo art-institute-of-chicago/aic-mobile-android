@@ -141,7 +141,7 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
 
         item.gallery
                 .map {
-                    view.resources.getString(R.string.gallery, it)
+                    view.resources.getString(R.string.search_gallery_number, it)
                 }
                 .bindToMain(view.gallery.text())
                 .disposedBy(item.viewDisposeBag)

@@ -107,7 +107,7 @@ nothing in release builds.
 If a JSON file
 1. was present in either `db/src/main/assets/` or `db/src/debug/assets/`
 at build time
-2. had the name `app-data-v2.json`
+2. had the name `app-data-v3.json`
 and
 3. conforms to the expected format of `ArticAppData`
 

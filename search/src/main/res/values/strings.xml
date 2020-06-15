@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="couldnt_find_top_text">Sorry, we couldn’t find that.</string>
-    <string name="couldnt_find_bottom_text">For help, visit the nearest museum representative or <u>visit our website</u></string>
-    <string name="artworks">Artworks</string>
-    <string name="exhibitions">Exhibitions</string>
-    <string name="exhibition_info_title">Exhibition</string>
+    <string name="search_no_results_header">Sorry, we couldn’t find that.</string>
+    <string name="search_no_results_message">For help, visit the nearest museum representative or</string>
+    <string name="search_no_results_visit_website_action">visit our website</string>
+    <string name="search_artworks_header">Artworks</string>
+    <string name="search_exhibitions_header">Exhibitions</string>
+    <string name="map_card_exhibition_title">Exhibition</string>
+    <string name="map_card_artwork_title">Artwork</string>
 </resources>

@@ -14,6 +14,6 @@
         android:layout_width="@dimen/number_pad_text_bounds"
         android:layout_height="@dimen/number_pad_text_bounds_height"
         android:background="@drawable/number_pad_delete"
-        android:contentDescription="@string/number_pad_delete"
+        android:contentDescription="@string/number_pad_delete_description"
         android:maxLength="1" />
 </FrameLayout>

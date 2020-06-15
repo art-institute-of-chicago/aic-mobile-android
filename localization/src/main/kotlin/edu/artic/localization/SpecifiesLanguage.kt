@@ -17,7 +17,9 @@ import java.util.*
 // We will want our analytics in english, and therefore will always pull these constants
 private const val english = "English"
 private const val spanish = "Spanish"
-private const val chinese = "Chinese "
+private const val chinese = "Chinese"
+private const val korean = "Korean"
+private const val french = "French"
 
 interface SpecifiesLanguage {
 
@@ -48,7 +50,7 @@ interface SpecifiesLanguage {
                     // Locale retrieval on pre-Nougat is somewhat lacking
                     setLocale(Locale.forLanguageTag(underlyingLocale().language))
                 }
-        ).getText(R.string.name_of_this_language)
+        ).getText(R.string.global_current_language)
     }
 
     /**
@@ -57,9 +59,11 @@ interface SpecifiesLanguage {
      */
     fun userFriendlyLanguage(ctx: Context): CharSequence {
         return when (underlyingLocale().language) {
-            Locale.ENGLISH.language -> ctx.getText(R.string.english)
-            SPANISH.language -> ctx.getText(R.string.spanish)
-            Locale.CHINESE.language -> ctx.getText(R.string.chinese)
+            Locale.ENGLISH.language -> ctx.getText(R.string.localization_english)
+            SPANISH.language -> ctx.getText(R.string.localization_spanish)
+            Locale.CHINESE.language -> ctx.getText(R.string.localization_chinese)
+            Locale.KOREAN.language -> ctx.getText(R.string.localization_korean)
+            Locale.FRENCH.language -> ctx.getText(R.string.localization_french)
             else -> underlyingLocale().displayLanguage
         }
     }
@@ -69,6 +73,8 @@ interface SpecifiesLanguage {
             Locale.ENGLISH.language -> english
             SPANISH.language -> spanish
             Locale.CHINESE.language -> chinese
+            Locale.KOREAN.language -> korean
+            Locale.FRENCH.language -> french
             else -> underlyingLocale().displayLanguage
         }
     }

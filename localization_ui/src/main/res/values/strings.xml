@@ -1,6 +1,6 @@
 <resources>
-    <string name="languageSettings">Language Settings</string>
-    <string name="languageSettingsBody">Some content may not be available in your selected language.</string>
-    <string name="chooseYourLanguage">Please Choose Your Preferred Language</string>
+    <string name="language_settings_title">Language Settings</string>
+    <string name="language_settings_body">Some content may not be available in your selected language.</string>
+    <string name="language_settings_header">Please Choose Your Preferred Language</string>
 
 </resources>

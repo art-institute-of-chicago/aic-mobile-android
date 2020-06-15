@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="listenIn">Listen In.</string>
-    <string name="audioGuide">Use your headphones to listen. Don’t have headphones? Hold the phone close to your ear.</string>
-    <string name="relatedTours">Related Tours</string>
-    <string name="cancel_audio">Close</string>
+    <string name="headphone_message_title">Listen In.</string>
+    <string name="headphone_message_body">Use your headphones to listen.\n\nDon’t have headphones?\nHold the phone close to your ear.</string>
+    <string name="audio_info_related_tours">Related Tours</string>
+    <string name="audio_player_cancel_audio_content_description">Close</string>
 </resources>

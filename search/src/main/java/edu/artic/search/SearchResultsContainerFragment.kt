@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
 
 class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContainerViewModel>() {
     override val viewModelClass: KClass<SearchResultsContainerViewModel> = SearchResultsContainerViewModel::class
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
     override val layoutResId: Int = R.layout.fragment_search_results
     override val screenName: ScreenName? = ScreenName.Search
 

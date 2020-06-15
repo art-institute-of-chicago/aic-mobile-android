@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:gravity="start"
-        android:text="@string/seeAll"
+        android:text="@string/welcome_see_all_action"
         app:layout_constraintBottom_toBottomOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -46,7 +46,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_tour_details
 
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
 
     override val screenName: ScreenName
         get() = ScreenName.TourDetails
@@ -155,7 +155,7 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.stopsText
-                .map { resources.getString(R.string.stops, it) }
+                .map { resources.getString(R.string.tour_stop_count, it) }
                 .bindToMain(tourStops.text())
                 .disposedBy(disposeBag)
 

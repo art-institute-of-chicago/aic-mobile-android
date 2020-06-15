@@ -27,7 +27,7 @@ import kotlin.reflect.KClass
 class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
     override val viewModelClass: KClass<ArtworkDetailViewModel>
         get() = ArtworkDetailViewModel::class
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
     override val layoutResId: Int
         get() = R.layout.fragment_search_audio_detail
     override val screenName: ScreenName?
@@ -101,7 +101,7 @@ class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {
 
         viewModel.galleryNumber
                 .subscribe {
-                    galleryNumber.text = getString(R.string.gallery, it)
+                    galleryNumber.text = getString(R.string.search_gallery_number, it)
                 }
                 .disposedBy(disposeBag)
 

@@ -33,7 +33,7 @@ class AllToursFragment : BaseViewModelFragment<AllToursViewModel>() {
     override val layoutResId: Int
         get() = R.layout.fragment_view_all
 
-    override val title = R.string.tours
+    override val title = R.string.welcome_tours_header
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -3,7 +3,10 @@ package edu.artic.search
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.style.StyleSpan
+import android.text.style.UnderlineSpan
 import android.view.View
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
@@ -17,6 +20,7 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
+import kotlinx.android.synthetic.main.layout_cell_empty.view.*
 import kotlinx.android.synthetic.main.layout_cell_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
 import kotlinx.android.synthetic.main.layout_cell_search_list_item.view.*
@@ -117,6 +121,14 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                                     .into(circularImage)
                         }
                         .disposedBy(item.viewDisposeBag)
+            }
+            is SearchEmptyCellViewModel -> {
+                bottomText.text =
+                        SpannableStringBuilder(context.getString(R.string.search_no_results_message))
+                                .append(" ")
+                                .append(context.getString(R.string.search_no_results_visit_website_action),
+                                        UnderlineSpan(),
+                                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             is SearchAmenitiesCellViewModel -> {
                 if (item.value != 0) {

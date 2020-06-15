@@ -70,6 +70,27 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
 
         val floor = arguments!!.getInt(ARG_FLOOR, INVALID_FLOOR)
         viewModel.floor.onNext(floor)
+
+        listOf(
+                tutorial_lower_level_text,
+                tutorial_first_floor_text,
+                tutorial_second_floor_text,
+                tutorial_third_floor_text)
+                .zip(
+                        listOf(
+                                R.string.map_lower_level,
+                                R.string.map_first_level,
+                                R.string.map_second_level,
+                                R.string.map_third_level
+                        )
+                )
+                .forEach { (textView, floorResourceId) ->
+                    textView.text =
+                            getString(
+                                    R.string.map_tutorial_floor_picker_prompt,
+                                    getString(floorResourceId)
+                            )
+                }
     }
 
     override fun setupBindings(viewModel: TutorialViewModel) {
@@ -106,7 +127,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     showDismiss.toInt() == cells.size.minus(1)
                 }.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    tutorialNext.text = getString(R.string.dismiss)
+                    tutorialNext.text = getString(R.string.map_dismiss_action)
                 }.disposedBy(disposeBag)
 
         viewModel.currentIndex
@@ -115,7 +136,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     showDismiss.toInt() < cells.size.minus(1)
                 }.observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    tutorialNext.text = getString(R.string.next)
+                    tutorialNext.text = getString(R.string.map_next_action)
                 }.disposedBy(disposeBag)
 
         viewModel.currentTutorialStage

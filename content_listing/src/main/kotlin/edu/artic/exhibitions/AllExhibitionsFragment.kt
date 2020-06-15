@@ -32,7 +32,7 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
     override val layoutResId: Int
         get() = R.layout.fragment_view_all
 
-    override val title = R.string.onView
+    override val title = R.string.welcome_on_view_header
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

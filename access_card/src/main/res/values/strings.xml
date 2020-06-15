@@ -1,14 +1,14 @@
 <resources>
-    <string name="becomeAMember">Become a Member</string>
-    <string name="signIn">Sign In</string>
-    <string name="homeZipCode">Zip Code</string>
-    <string name="memberId">Member ID</string>
-    <string name="changeInformation">Change Information</string>
-    <string name="switchCardHolder">Switch Cardholder</string>
-    <string name="memberCard">Member Card</string>
-    <string name="accessMemberCardLabel">Access Member Card</string>
-    <string name="expires">Expires: %s</string>
-    <string name="mID">ID: %s</string>
-    <string name="zipCodeHint">Enter your home zip code…</string>
-    <string name="memberIdHint">Enter your Member ID…</string>
+    <string name="member_card_become_member_header">Become a Member</string>
+    <string name="sign_in_action">Sign In</string>
+    <string name="sign_in_zip_code_header">Zip Code</string>
+    <string name="sign_in_member_id_header">Member ID</string>
+    <string name="member_card_change_information_action">Change Information</string>
+    <string name="member_card_switch_cardholder_action">Switch Cardholder</string>
+    <string name="member_card_title">Member Card</string>
+    <string name="member_card_access_action">Access Member Card</string>
+    <string name="member_card_expires">Expires: %s</string>
+    <string name="member_card_member_id">ID: %s</string>
+    <string name="sign_in_zip_code_placeholder">Enter your home zip code…</string>
+    <string name="sign_in_member_id_placeholder">Enter your Member ID…</string>
 </resources>
