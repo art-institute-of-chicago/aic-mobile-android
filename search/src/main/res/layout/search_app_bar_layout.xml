@@ -27,7 +27,7 @@
         android:background="@android:color/transparent"
         android:fontFamily="@font/ideal_sans_medium"
         android:fontFeatureSettings="tnum"
-        android:hint="@string/looking_for_artwork"
+        android:hint="@string/search_prompt"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:lines="1"

@@ -68,7 +68,7 @@
         android:layout_height="@dimen/narrowAudioControlIconSize"
         android:layout_marginEnd="@dimen/marginStandard"
         android:background="@drawable/ic_close_circle"
-        android:contentDescription="@string/cancel_audio"
+        android:contentDescription="@string/audio_player_cancel_audio_content_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

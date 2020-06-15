@@ -153,7 +153,7 @@ abstract class ApiModule {
                 dataObjectDao: ArticDataObjectDao
         ): AppDataServiceProvider {
             return if (retrofit == null) {
-                LocalAppDataServiceProvider("app-data-v2.json", moshi, context, dataObjectDao)
+                LocalAppDataServiceProvider("app-data-v3.json", moshi, context, dataObjectDao)
             } else {
                 RetrofitAppDataServiceProvider(retrofit, progressEventBus, dataObjectDao)
             }

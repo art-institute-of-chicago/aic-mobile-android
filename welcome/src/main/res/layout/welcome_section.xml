@@ -13,7 +13,7 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
-        android:text="@string/onView"
+        android:text="@string/welcome_on_view_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Label" />
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/seeAllLinkMargin"
-        android:text="@string/seeAll"
+        android:text="@string/welcome_see_all_action"
         app:layout_constraintBaseline_toBaselineOf="@id/label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"

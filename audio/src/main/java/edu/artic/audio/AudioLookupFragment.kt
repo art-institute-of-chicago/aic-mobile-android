@@ -45,7 +45,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
     override val viewModelClass: KClass<AudioLookupViewModel>
         get() = AudioLookupViewModel::class
 
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
 
     override val layoutResId: Int
         get() = R.layout.fragment_audio_lookup
@@ -132,7 +132,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                                     startActivity(intent)
                                 }
                                 AudioLookupViewModel.NavigationEndpoint.ClearSearch -> {
-                                    lookup_field.setText(R.string.noTitle)
+                                    lookup_field.setText(R.string.global_empty_string)
                                 }
                             }
                         }

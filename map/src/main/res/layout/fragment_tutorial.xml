@@ -84,11 +84,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginDouble"
             android:gravity="end"
-            android:text="@string/tutorial_mark_third_floor"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/floorThree"
             app:layout_constraintEnd_toStartOf="@id/floorThree"
-            app:layout_constraintTop_toTopOf="@id/floorThree" />
+            app:layout_constraintTop_toTopOf="@id/floorThree"
+            tools:text="You are on Third Level.\nTap to change floors." />
 
         <TextView
             android:id="@+id/tutorial_second_floor_text"
@@ -97,11 +97,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginDouble"
             android:gravity="end"
-            android:text="@string/tutorial_mark_second_floor"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/floorTwo"
             app:layout_constraintEnd_toStartOf="@id/floorTwo"
-            app:layout_constraintTop_toTopOf="@id/floorTwo" />
+            app:layout_constraintTop_toTopOf="@id/floorTwo"
+            tools:text="You are on Second Level.\nTap to change floors." />
 
         <TextView
             android:id="@+id/tutorial_first_floor_text"
@@ -110,11 +110,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginDouble"
             android:gravity="end"
-            android:text="@string/tutorial_mark_first_floor"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/floorOne"
             app:layout_constraintEnd_toStartOf="@id/floorOne"
-            app:layout_constraintTop_toTopOf="@id/floorOne" />
+            app:layout_constraintTop_toTopOf="@id/floorOne"
+            tools:text="You are on First Level.\nTap to change floors." />
 
         <TextView
             android:id="@+id/tutorial_lower_level_text"
@@ -124,11 +124,11 @@
             android:layout_marginEnd="@dimen/marginDouble"
             android:layout_marginBottom="5dp"
             android:gravity="end"
-            android:text="@string/tutorial_mark_lower_level"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/lowerLevel"
             app:layout_constraintEnd_toStartOf="@id/lowerLevel"
-            app:layout_constraintTop_toTopOf="@id/lowerLevel" />
+            app:layout_constraintTop_toTopOf="@id/lowerLevel"
+            tools:text="You are on Lower Level.\nTap to change floors." />
 
 
         <TextView
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/marginDouble"
-            android:text="@string/tutorial_mark_compass"
+            android:text="@string/map_tutorial_orient_map"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/compass"
             app:layout_constraintEnd_toStartOf="@id/compass"
@@ -186,7 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:alpha="0"
-                android:text="@string/back"
+                android:text="@string/map_back_action"
                 tools:text="Back" />
 
             <View
@@ -218,7 +218,7 @@
                 style="@style/Widget.AppCompat.Button.Borderless.IdealSansBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/next" />
+                android:text="@string/map_next_action" />
 
         </LinearLayout>
 

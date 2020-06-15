@@ -35,7 +35,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
     override val screenName: ScreenName
         get() = ScreenName.Home
 
-    override val title = R.string.welcome
+    override val title = R.string.welcome_title
 
     override val viewModelClass: KClass<WelcomeViewModel>
         get() = WelcomeViewModel::class
@@ -121,7 +121,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         viewModel.currentCardHolder
                 .subscribeBy { cardHolder ->
                     val firstName = cardHolder.split(" ").first()
-                    val title = resources.getString(R.string.welcomeUser, firstName)
+                    val title = resources.getString(R.string.welcome_title_logged_in, firstName)
                     requestTitleUpdate(title)
                 }
                 .disposedBy(disposeBag)
@@ -130,9 +130,9 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun setupBindings(viewModel: WelcomeViewModel) {
 
-        tourSection.label.setText(R.string.tours)
-        exhibitionSection.label.setText(R.string.onView)
-        eventSection.label.setText(R.string.events)
+        tourSection.label.setText(R.string.welcome_tours_header)
+        exhibitionSection.label.setText(R.string.welcome_on_view_header)
+        eventSection.label.setText(R.string.welcome_events_header)
 
         tourSection.seeAllLink.clicks()
                 .defaultThrottle()

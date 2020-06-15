@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginTriple"
-        android:text="@string/listenIn"
+        android:text="@string/headphone_message_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/listen"
@@ -38,7 +38,7 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginTriple"
         android:layout_marginEnd="@dimen/marginDouble"
-        android:text="@string/audioGuide"
+        android:text="@string/headphone_message_body"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/listenLabel" />

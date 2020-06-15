@@ -41,7 +41,7 @@ import kotlin.reflect.KClass
  */
 class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel>() {
     override val viewModelClass: KClass<AccessMemberCardViewModel> = AccessMemberCardViewModel::class
-    override val title = R.string.accessMemberCardLabel
+    override val title = R.string.member_card_access_action
     override val layoutResId: Int = R.layout.fragment_validate_member_information
     override val screenName: ScreenName? = null
 
@@ -84,7 +84,7 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                              * TODO:: Upgrade to DialogFragment once design is finalized.
                              */
                             AlertDialog.Builder(requireContext(), R.style.ErrorDialog)
-                                    .setTitle(getString(R.string.errorDialogTitle))
+                                    .setTitle(getString(R.string.global_error_title))
                                     .setMessage(loadStatus.error.message)
                                     .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
                                         dialog.dismiss()
@@ -104,18 +104,18 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                         AccessMemberCardViewModel.DisplayMode.DisplayForm -> {
                             memberInfoFormLayout.visibility = View.VISIBLE
                             memberAccessCardLayout.visibility = View.GONE
-                            requireActivity().setTitle(R.string.accessMemberCardLabel)
+                            requireActivity().setTitle(R.string.member_card_access_action)
                         }
                         is AccessMemberCardViewModel.DisplayMode.DisplayAccessCard -> {
                             memberInfoFormLayout.visibility = View.GONE
                             memberAccessCardLayout.visibility = View.VISIBLE
                             updateBarCode(it.memberID)
-                            requireActivity().setTitle(R.string.memberCard)
+                            requireActivity().setTitle(R.string.member_card_title)
                         }
                         is AccessMemberCardViewModel.DisplayMode.UpdateForm -> {
                             memberInfoFormLayout.visibility = View.VISIBLE
                             memberAccessCardLayout.visibility = View.GONE
-                            requireActivity().setTitle(R.string.accessMemberCardLabel)
+                            requireActivity().setTitle(R.string.member_card_access_action)
                             zipCode.setText(it.zipCode)
                             memberId.setText(it.memberID)
                         }
@@ -141,12 +141,12 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
                 .disposedBy(disposeBag)
 
         viewModel.expiration
-                .map { resources.getString(R.string.expires, it) }
+                .map { resources.getString(R.string.member_card_expires, it) }
                 .bindToMain(expiration.text())
                 .disposedBy(disposeBag)
 
         viewModel.primaryConstituentID
-                .map { resources.getString(R.string.mID, it) }
+                .map { resources.getString(R.string.member_card_member_id, it) }
                 .bindToMain(primaryConstituentID.text())
                 .disposedBy(disposeBag)
 

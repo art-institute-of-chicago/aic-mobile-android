@@ -49,7 +49,7 @@
                 android:fontFamily="@font/ideal_sans_medium"
                 android:gravity="center"
                 android:maxLines="6"
-                android:text="@string/welcome"
+                android:text="@string/welcome_title"
                 android:textColor="@color/white"
                 android:textSize="43sp" />
 

@@ -1,4 +1,4 @@
-String majorAndMinorVersion = "1.3"
+String majorAndMinorVersion = "1.4"
 Integer patchVersionCode = 0
 
 android {
@@ -8,7 +8,7 @@ android {
         minSdkVersion minSdk
         targetSdkVersion sdk
         multiDexEnabled true
-        versionCode(patchVersionCode + 1300)
+        versionCode(patchVersionCode + 1400)
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -70,6 +70,7 @@ android {
             buildConfigField "String", "GCM_SENDER_ID", "\"${envVariable("gcm_sender_id", true)}\""
             buildConfigField "String", "FB_PROJECT_ID", "\"${envVariable("fb_project_id", true)}\""
             buildConfigField "String", "FB_STORAGE_BUCKET", "\"${envVariable("fb_storage_bucket", true)}\""
+            buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "VERSION_NAME"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release

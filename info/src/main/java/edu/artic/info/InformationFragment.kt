@@ -37,7 +37,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
     override val viewModelClass: KClass<InformationViewModel>
         get() = InformationViewModel::class
 
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
 
     override fun hasTransparentStatusBar(): Boolean = true
 
@@ -50,7 +50,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         if (BuildConfig.IS_RENTAL) {
-            purchaseTicketsForAdmission.text = context?.getString(R.string.visitWebsiteToPurchaseTickets)
+            purchaseTicketsForAdmission.text = context?.getString(R.string.info_purchase_tickets_rental_prompt)
             buyTickets.visibility = View.GONE
 
             becomeMember.visibility = View.GONE
@@ -101,8 +101,8 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
                 .defaultThrottle()
                 .subscribeBy {
                     AlertDialog.Builder(requireContext(), R.style.ErrorDialog)
-                            .setTitle(R.string.resetDevice)
-                            .setMessage(R.string.resetDeviceAlert)
+                            .setTitle(R.string.info_reset_device_action)
+                            .setMessage(R.string.info_reset_device_prompt)
                             .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
                                 viewModel.onClickResetDevice()
                                 dialog.dismiss()
@@ -116,7 +116,7 @@ class InformationFragment : BaseViewModelFragment<InformationViewModel>() {
 
         viewModel.buildVersion
                 .subscribeBy { versionName ->
-                    versionInfo.text = getString(R.string.versionInfo, versionName)
+                    versionInfo.text = getString(R.string.info_version, versionName)
                 }
                 .disposedBy(disposeBag)
 

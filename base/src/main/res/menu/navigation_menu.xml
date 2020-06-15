@@ -6,28 +6,28 @@
         android:id="@+id/action_home"
         android:enabled="true"
         android:icon="@drawable/ic_home"
-        android:title="@string/home"
+        android:title="@string/tab_home"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_audio"
         android:enabled="true"
         android:icon="@drawable/ic_audio"
-        android:title="@string/audio"
+        android:title="@string/tab_audio"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_map"
         android:enabled="true"
         android:icon="@drawable/ic_map"
-        android:title="@string/map"
+        android:title="@string/tab_map"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_info"
         android:enabled="true"
         android:icon="@drawable/ic_info"
-        android:title="@string/info"
+        android:title="@string/tab_info"
         app:showAsAction="always" />
 
 </menu>

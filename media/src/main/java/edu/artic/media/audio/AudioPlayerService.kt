@@ -284,7 +284,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     private fun setUpNotificationManager() {
         NotificationUtil.createNotificationChannel(
-                this, FOREGROUND_CHANNEL_ID, R.string.channel_name, NotificationUtil.IMPORTANCE_LOW)
+                this, FOREGROUND_CHANNEL_ID, R.string.tour_audio_channel_name, NotificationUtil.IMPORTANCE_LOW)
         playerNotificationManager = PlayerNotificationManager(
                 this,
                 FOREGROUND_CHANNEL_ID,

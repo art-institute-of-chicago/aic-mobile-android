@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
  */
 class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() {
     override val viewModelClass: KClass<LocationPromptViewModel> = LocationPromptViewModel::class
-    override val title = R.string.noTitle
+    override val title = R.string.global_empty_string
     override val layoutResId: Int = R.layout.fragment_location_prompt
     override val screenName: ScreenName? = null
 

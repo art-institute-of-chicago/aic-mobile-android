@@ -11,11 +11,11 @@ import retrofit2.http.*
 
 interface AppDataApi {
 
-    @HEAD("appData-v2.json")
+    @HEAD("appData-v3.json")
     fun getBlobHeaders(): Observable<Response<Void>>
 
 
-    @GET("appData-v2.json")
+    @GET("appData-v3.json")
     fun getBlob(
             @Header(DOWNLOAD_IDENTIFIER_HEADER) header: String
     ): Observable<Result<ArticAppData>>

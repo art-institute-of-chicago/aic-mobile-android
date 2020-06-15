@@ -122,7 +122,7 @@
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginTriple"
                 android:layout_marginEnd="@dimen/marginDouble"
-                app:button_text="@string/startTour"
+                app:button_text="@string/tour_start_tour_action"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/languageSelector" />

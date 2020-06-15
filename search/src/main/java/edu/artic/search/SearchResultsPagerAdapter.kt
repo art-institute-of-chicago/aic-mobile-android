@@ -31,16 +31,16 @@ class SearchResultsPagerAdapter(fm: FragmentManager, var context: Context) : Fra
     override fun getPageTitle(position: Int): CharSequence? {
         return when (position) {
             1 -> {
-                context.resources.getString(R.string.artworks)
+                context.resources.getString(R.string.search_artworks_header)
             }
             2 -> {
-                context.resources.getString(R.string.tours)
+                context.resources.getString(R.string.welcome_tours_header)
             }
             3 -> {
-                context.resources.getString(R.string.exhibitions)
+                context.resources.getString(R.string.search_exhibitions_header)
             }
             else -> {
-                context.resources.getString(R.string.suggested)
+                context.resources.getString(R.string.search_suggested)
             }
         }
     }

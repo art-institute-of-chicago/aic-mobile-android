@@ -36,6 +36,8 @@ fun Locale.nameOfLanguageForAnalytics(): String {
         Locale.ENGLISH.language -> "English"
         SPANISH.language -> "Spanish"
         Locale.CHINESE.language -> "Chinese"
+        Locale.KOREAN.language -> "Korean"
+        Locale.FRENCH.language -> "French"
         else -> getDisplayLanguage(Locale.ENGLISH)
     }
 }

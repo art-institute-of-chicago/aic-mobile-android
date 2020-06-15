@@ -53,7 +53,7 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                 { dynamicCells, amenities, suggestedArtworks ->
                     return@combineLatest mutableListOf<SearchBaseCellViewModel>().apply {
                         addAll(dynamicCells)
-                        add(SearchTextHeaderViewModel(R.string.on_the_map))
+                        add(SearchTextHeaderViewModel(R.string.search_on_the_map_header))
                         addAll(amenities)
                         addAll(suggestedArtworks)
                     }

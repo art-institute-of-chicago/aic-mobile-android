@@ -27,7 +27,7 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginDouble"
         android:layout_marginEnd="@dimen/marginDouble"
-        android:text="@string/locationSettingsHeader"
+        android:text="@string/location_settings_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/promptTopIcon" />
@@ -40,7 +40,7 @@
         android:layout_marginStart="@dimen/marginDouble"
         android:layout_marginTop="@dimen/marginQuad"
         android:layout_marginEnd="@dimen/marginDouble"
-        android:text="@string/locationSettingsBody"
+        android:text="@string/location_settings_body"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/promptTitle" />
@@ -56,7 +56,7 @@
         android:layout_marginBottom="@dimen/marginTriple"
         android:background="@drawable/button_not_now"
         android:fontFamily="@font/ideal_sans_medium"
-        android:text="@string/locationPromptNotNow"
+        android:text="@string/global_cancel_action"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/textSmall"
@@ -73,7 +73,7 @@
         android:layout_marginEnd="@dimen/marginDouble"
         android:layout_marginBottom="@dimen/marginDouble"
         android:background="@drawable/detail_button_background"
-        android:text="@string/locationPromptOk"
+        android:text="@string/global_accept_action"
         app:layout_constraintBottom_toTopOf="@id/promptNotNowButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

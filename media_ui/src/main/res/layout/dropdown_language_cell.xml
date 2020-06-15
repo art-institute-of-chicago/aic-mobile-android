@@ -15,4 +15,4 @@
     android:paddingEnd="@dimen/marginQuad"
     android:paddingBottom="@dimen/marginHalf"
     tools:layout_width="300dp"
-    tools:text="@string/name_of_this_language" />
+    tools:text="@string/global_current_language" />
