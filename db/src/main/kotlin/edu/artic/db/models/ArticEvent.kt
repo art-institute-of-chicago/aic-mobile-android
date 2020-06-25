@@ -22,7 +22,7 @@ data class ArticEvent(
         @Json(name = "button_url") val button_url: String?,
         @Json(name = "description") val description: String?,
         @Json(name = "location") val location: String?,
-        @Json(name = "id") @PrimaryKey val id: Int,
+        @Json(name = "id") @PrimaryKey val id: String,
         @Json(name = "button_text") val button_text: String?,
         @Json(name = "title") val title: String,
         @Json(name = "start_at") val start_at: ZonedDateTime
