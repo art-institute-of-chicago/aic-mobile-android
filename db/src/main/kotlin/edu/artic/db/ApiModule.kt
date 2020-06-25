@@ -52,6 +52,7 @@ abstract class ApiModule {
                 objectDao: ArticObjectDao,
                 articMapFloorDao: ArticMapFloorDao,
                 searchSuggestionDao: ArticSearchObjectDao,
+                messageDao: ArticMessageDao,
                 appDataPrefManager: AppDataPreferencesManager
         ): AppDataManager = AppDataManager(
                 serviceProvider,
@@ -70,6 +71,7 @@ abstract class ApiModule {
                 objectDao,
                 articMapFloorDao,
                 searchSuggestionDao,
+                messageDao,
                 appDataPrefManager
         )
 

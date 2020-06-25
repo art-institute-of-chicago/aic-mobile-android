@@ -39,6 +39,7 @@ class AppDataManager @Inject constructor(
         private val objectDao: ArticObjectDao,
         private val articMapFloorDao: ArticMapFloorDao,
         private val searchSuggestionDao: ArticSearchObjectDao,
+        private val messageDao: ArticMessageDao,
         private val appDataPrefManager: AppDataPreferencesManager
 ) {
     companion object {
@@ -196,6 +197,13 @@ class AppDataManager @Inject constructor(
                                 searchSuggestionDao.setDataObject(ArticSearchSuggestionsObject(searchKeywordSuggestions, artworkSuggestions))
                             }
 
+                            result.messages?.let { messages ->
+                                for ((nid, articMessage) in messages) {
+                                    articMessage.nid = nid
+                                }
+                                messageDao.clear()
+                                messageDao.insertMessages(messages.values.toList())
+                            }
 
                             // Now that the transaction has reached its end successfully, we may
                             // save the last-modified date

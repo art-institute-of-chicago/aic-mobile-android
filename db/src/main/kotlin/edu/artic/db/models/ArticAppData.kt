@@ -18,7 +18,8 @@ data class ArticAppData(
         @Json(name = "tour_categories") val tourCategories: Map<String, ArticTourCategory?>?,
         @Json(name = "exhibitions") val exhibitions: List<ArticExhibitionCMS?>?,
         @Json(name = "data") val data: ArticDataObject,
-        @Json(name = "search") val search: ArticSearchObject?
+        @Json(name = "search") val search: ArticSearchObject?,
+        @Json(name = "messages") val messages: Map<String, ArticMessage>?
 )
 
 @Entity
