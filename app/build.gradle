@@ -96,6 +96,7 @@ dependencies {
     implementation project(':media')
     implementation project(':media_ui')
     implementation project(':membership')
+    implementation project(':message')
     implementation project(':search')
     implementation project(':splash')
     implementation project(':tour_manager')

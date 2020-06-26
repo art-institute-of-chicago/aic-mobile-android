@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/marine">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/marginQuad">
+
+            <TextView
+                android:id="@+id/titleTextView"
+                style="@style/IdealSansBook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="153dp"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:gravity="center_horizontal"
+                android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Restricted Access" />
+
+            <View
+                android:id="@+id/dividerView"
+                style="@style/divider"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/marginQuad"
+                android:background="@color/white50alpha"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+
+            <TextView
+                android:id="@+id/messageTextView"
+                style="@style/BodySansSerifBlackLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginQuad"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:paddingBottom="@dimen/marginSixtyFour"
+                android:textColor="@color/white"
+                android:textColorLink="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dividerView"
+                tools:text="Welcome. The museum is operating under temporary restrictions due to COVID-19.\nPlease tap here for more info.\n\nTickets must be pre-purchased for entry." />
+
+            <Button
+                android:id="@+id/actionButton"
+                style="@style/DetailButton"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/messageTextView"
+                tools:background="@color/bluegreen"
+                tools:text="Buy Tickets" />
+
+            <Button
+                android:id="@+id/nextButton"
+                style="@style/DetailButton"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:text="@string/messages_next_action"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/actionButton"
+                tools:background="@color/bluegreen" />
+
+            <Button
+                android:id="@+id/previousButton"
+                style="@style/DetailButton"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:text="@string/messages_previous_action"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nextButton"
+                tools:background="@color/bluegreen" />
+
+            <Button
+                android:id="@+id/closeButton"
+                style="@style/DetailButton"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/marginDouble"
+                android:layout_marginTop="@dimen/marginDouble"
+                android:layout_marginEnd="@dimen/marginDouble"
+                android:text="@string/global_accept_action"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/previousButton"
+                tools:background="@color/bluegreen" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>
