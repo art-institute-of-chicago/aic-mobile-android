@@ -13,10 +13,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID
-import edu.artic.db.daos.ArticMapAnnotationDao
-import edu.artic.db.daos.ArticMapFloorDao
-import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.db.daos.*
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.location.LocationPreferenceManager
@@ -25,6 +22,7 @@ import edu.artic.location.isLocationInMuseum
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.MapItemRenderer
 import edu.artic.map.tutorial.TutorialPreferencesManager
+import edu.artic.message.MessagePreferencesManager
 import edu.artic.tours.manager.TourProgressManager
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
@@ -44,24 +42,28 @@ import javax.inject.Inject
  *
  * Most of the fields are documented, so take a look at those first.
  */
-class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstructor,
-                                       private val articObjectDao: ArticObjectDao,
-                                       private val languageSelector: LanguageSelector,
-                                       private val searchManager: SearchManager,
-                                       private val analyticsTracker: AnalyticsTracker,
-                                       private val tourProgressManager: TourProgressManager,
-                                       private val locationService: LocationService,
-                                       private val tutorialPreferencesManager: TutorialPreferencesManager,
-                                       private val locationPreferenceManager: LocationPreferenceManager,
-                                       articMapAnnotationDao: ArticMapAnnotationDao,
-                                       generalInfoDao: GeneralInfoDao,
-                                       mapFloorDao: ArticMapFloorDao
+class MapViewModel @Inject constructor(
+        val mapMarkerConstructor: MapMarkerConstructor,
+        private val articObjectDao: ArticObjectDao,
+        private val languageSelector: LanguageSelector,
+        private val searchManager: SearchManager,
+        private val analyticsTracker: AnalyticsTracker,
+        private val tourProgressManager: TourProgressManager,
+        private val locationService: LocationService,
+        private val tutorialPreferencesManager: TutorialPreferencesManager,
+        private val locationPreferenceManager: LocationPreferenceManager,
+        private val messageDao: ArticMessageDao,
+        private val messagePreferencesManager: MessagePreferencesManager,
+        articMapAnnotationDao: ArticMapAnnotationDao,
+        generalInfoDao: GeneralInfoDao,
+        mapFloorDao: ArticMapFloorDao
 ) : NavViewViewModel<MapViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         object LocationPrompt : NavigationEndpoint()
         class Tutorial(val currentFloor: Int) : NavigationEndpoint()
         object Search : NavigationEndpoint()
+        class Messages(val messages: List<ArticMessage>) : NavigationEndpoint()
     }
 
     private val articMapFloorMap: Subject<Map<Int, ArticMapFloor>> = BehaviorSubject.create()
@@ -88,6 +90,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Defaults to [edu.artic.map.MapDisplayMode.CurrentFloor].
      */
     val displayMode: Subject<MapDisplayMode> = BehaviorSubject.create()
+
     /**
      * Current object of interest.
      *
@@ -96,6 +99,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Not set by default.
      */
     val selectedArticObject: Subject<ArticObject> = BehaviorSubject.create()
+
     /**
      * Which [ArticGeneralInfo.Translation] to use for important, general-purpose text.
      *
@@ -106,6 +110,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * @see LanguageSelector.currentLanguage
      */
     val chosenInfo: Subject<ArticGeneralInfo.Translation> = BehaviorSubject.create()
+
     /**
      * Current exhibition of interest.
      *
@@ -114,6 +119,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Not set by default.
      */
     val selectedExhibition: Subject<ArticExhibition> = BehaviorSubject.create()
+
     /**
      * Position and desired [MapFocus].
      *
@@ -122,6 +128,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Not set by default.
      */
     val individualMapChange: Subject<Optional<Pair<LatLng, MapFocus>>> = PublishSubject.create()
+
     /**
      * Points that should be visible on the map.
      *
@@ -130,6 +137,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Not set by default.
      */
     val boundsOfInterestChanged: Relay<List<LatLng>> = PublishRelay.create()
+
     /**
      * Reference to the [GoogleMap] we're displaying stuff in.
      *
@@ -138,6 +146,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Defaults to Optional(null).
      */
     val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
+
     /**
      * Proxy link to [TourProgressManager.leaveTourRequest]. Only receives `true` events.
      *
@@ -146,6 +155,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Not set by default.
      */
     val leaveTourRequest: Subject<Boolean> = PublishSubject.create()
+
     /**
      * Callback to release [MapDisplayMode.Tour]-related resources.
      *
@@ -154,6 +164,7 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Not set by default.
      */
     val leftActiveTour: Subject<Boolean> = PublishSubject.create()
+
     /**
      * Suggestion that maybe we should leave the current tour and show this one instead.
      *
@@ -736,14 +747,20 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
      * Emits tour ended event via [MapViewModel.leftActiveTour] subject.
      */
     fun leaveCurrentTour() {
+        var tourNid: String? = null
+
         /**
          * Update analytics : user left tour : <tour title>
          */
-        tourProgressManager.selectedTour.take(1)
+        tourProgressManager
+                .selectedTour
+                .take(1)
                 .filterFlatMap({ it.value != null }, { it.value!! })
-                .subscribe {
-                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourLeft, it.title)
-                }.disposedBy(disposeBag)
+                .subscribe { tour ->
+                    tourNid = tour.nid
+                    analyticsTracker.reportEvent(EventCategoryName.Tour, AnalyticsAction.tourLeft, tour.title)
+                }
+                .disposedBy(disposeBag)
 
         /**
          * Clear selected tour language.
@@ -761,6 +778,33 @@ class MapViewModel @Inject constructor(val mapMarkerConstructor: MapMarkerConstr
          */
         leftActiveTour.onNext(true)
 
+        /**
+         * Show any relevant messages after exiting this tour.
+         */
+        tourNid?.let { nid ->
+            messageDao
+                    .getMessages()
+                    .subscribeBy { messages ->
+                        val seenMessageNids = messagePreferencesManager.getSeenMessageNids()
+                        val tourMessages = messages
+                                .filter { message ->
+                                    when (message.messageType) {
+                                        "tour_exit" -> when {
+                                            message.tourExit != nid -> false
+                                            message.isPersistent == true -> true
+                                            else -> !seenMessageNids.contains(message.nid)
+                                        }
+                                        else -> false
+                                    }
+                                }
+                        if (tourMessages.isNotEmpty()) {
+                            navigateTo.onNext(
+                                    Navigate.Forward(NavigationEndpoint.Messages(tourMessages))
+                            )
+                        }
+                    }
+                    .disposedBy(disposeBag)
+        }
     }
 
     /**

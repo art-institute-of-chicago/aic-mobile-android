@@ -27,6 +27,7 @@ dependencies {
     implementation project(':location_ui')
     implementation project(':media')
     implementation project(':media_ui')
+    implementation project(':message')
     implementation project(':navigation')
     implementation project(':search')
     implementation project(':tour_manager')
