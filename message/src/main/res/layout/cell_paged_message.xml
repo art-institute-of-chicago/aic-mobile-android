@@ -59,7 +59,7 @@
             <Button
                 android:id="@+id/actionButton"
                 style="@style/DetailButton"
-                android:layout_width="140dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
@@ -73,7 +73,7 @@
             <Button
                 android:id="@+id/nextButton"
                 style="@style/DetailButton"
-                android:layout_width="140dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
@@ -87,7 +87,7 @@
             <Button
                 android:id="@+id/previousButton"
                 style="@style/DetailButton"
-                android:layout_width="140dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
@@ -101,7 +101,7 @@
             <Button
                 android:id="@+id/closeButton"
                 style="@style/DetailButton"
-                android:layout_width="140dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
                 android:layout_marginTop="@dimen/marginDouble"
