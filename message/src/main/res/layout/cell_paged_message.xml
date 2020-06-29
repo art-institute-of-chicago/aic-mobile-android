@@ -101,6 +101,7 @@
             <Button
                 android:id="@+id/closeButton"
                 style="@style/DetailButton"
+                android:background="@drawable/message_close_button_background"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/marginDouble"
@@ -109,8 +110,7 @@
                 android:text="@string/global_accept_action"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/previousButton"
-                tools:background="@color/bluegreen" />
+                app:layout_constraintTop_toBottomOf="@id/previousButton" />
 
         </android.support.constraint.ConstraintLayout>
 
