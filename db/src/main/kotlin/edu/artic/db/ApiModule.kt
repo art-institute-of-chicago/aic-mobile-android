@@ -11,6 +11,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.Multibinds
 import edu.artic.db.daos.*
+import edu.artic.membership.MemberDataProvider
+import edu.artic.membership.MemberInfoPreferencesManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -53,7 +55,9 @@ abstract class ApiModule {
                 articMapFloorDao: ArticMapFloorDao,
                 searchSuggestionDao: ArticSearchObjectDao,
                 messageDao: ArticMessageDao,
-                appDataPrefManager: AppDataPreferencesManager
+                appDataPrefManager: AppDataPreferencesManager,
+                memberDataProvider: MemberDataProvider,
+                memberInfoPreferencesManager: MemberInfoPreferencesManager
         ): AppDataManager = AppDataManager(
                 serviceProvider,
                 appDataPreferencesManager,
@@ -72,7 +76,9 @@ abstract class ApiModule {
                 articMapFloorDao,
                 searchSuggestionDao,
                 messageDao,
-                appDataPrefManager
+                appDataPrefManager,
+                memberDataProvider,
+                memberInfoPreferencesManager
         )
 
         @JvmStatic

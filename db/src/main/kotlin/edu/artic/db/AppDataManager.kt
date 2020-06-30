@@ -4,6 +4,9 @@ import android.support.annotation.WorkerThread
 import com.fuzz.rx.asObservable
 import edu.artic.db.daos.*
 import edu.artic.db.models.*
+import edu.artic.membership.MemberDataProvider
+import edu.artic.membership.MemberInfo
+import edu.artic.membership.MemberInfoPreferencesManager
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
@@ -40,16 +43,25 @@ class AppDataManager @Inject constructor(
         private val articMapFloorDao: ArticMapFloorDao,
         private val searchSuggestionDao: ArticSearchObjectDao,
         private val messageDao: ArticMessageDao,
-        private val appDataPrefManager: AppDataPreferencesManager
+        private val appDataPrefManager: AppDataPreferencesManager,
+        private val memberDataProvider: MemberDataProvider,
+        private val memberInfoPreferencesManager: MemberInfoPreferencesManager
 ) {
     companion object {
         const val HEADER_LAST_MODIFIED = "last-modified"
-        private const val PRIMARY_DOWNLOADED_PERCENT = .34f
-        //Currently calculated because we are downloading only 3 endpoints
-        private const val PER_OBJECT_PERCENT = .33f
-        private const val MAX_SECONDARY_DOWNLOADS = 2
+        private const val PRIMARY_DOWNLOADED_PERCENT = .2f
+
+        //Currently calculated because we are downloading only 4 endpoints
+        private const val PER_OBJECT_PERCENT = .2f
+        private const val MAX_SECONDARY_DOWNLOADS = 3
     }
 
+    /**
+     * We fetch and cache in memory the current logged in user's MemberInfo for use
+     * later in the app (for instance determining if the user's membership is about to
+     * expire.
+     */
+    var currentMemberInfo: MemberInfo? = null
 
     /**
      * The returned observable emits multiple 'state's before completing.
@@ -325,8 +337,12 @@ class AppDataManager @Inject constructor(
                 getEvents()
                         .onErrorReturn {
                             ProgressDataState.Interrupted(it)
+                        },
+                getCurrentMemberInfo()
+                        .onErrorReturn {
+                            ProgressDataState.Interrupted(it)
                         }
-        ) { exhibitions, events ->
+        ) { exhibitions, events, memberInfo ->
 
             // XXX: Instead of just throwing the first error we see, perhaps
             // we ought to figure out how to use rx's CompositeException
@@ -339,6 +355,13 @@ class AppDataManager @Inject constructor(
             when (events) {
                 is ProgressDataState.Done<*> -> currentDownloads++
                 is ProgressDataState.Interrupted -> throw events.error
+            }
+            when (memberInfo) {
+                is ProgressDataState.Done<*> -> {
+                    currentMemberInfo = memberInfo.result as? MemberInfo
+                    currentDownloads++
+                }
+                is ProgressDataState.Interrupted -> throw memberInfo.error
             }
 
             return@zip currentDownloads
@@ -442,5 +465,41 @@ class AppDataManager @Inject constructor(
 
                     progressDataState.asObservable()
                 }
+    }
+
+    /**
+     * Retrieve the currently logged in member's info to cache in memory
+     */
+    private fun getCurrentMemberInfo(): Observable<ProgressDataState> {
+        val memberID = memberInfoPreferencesManager.memberID
+                ?: return Observable.just(ProgressDataState.Done(null))
+        val memberZipCode = memberInfoPreferencesManager.memberZipCode
+                ?: return Observable.just(ProgressDataState.Done(null))
+        val activeCardHolder = memberInfoPreferencesManager.activeCardHolder
+
+        return memberDataProvider.getMemberData(memberID, memberZipCode)
+                .map { memberResponse ->
+                    val members = memberResponse
+                            .responseBody
+                            ?.soapResponse
+                            ?.memberResponseObject
+                            ?.members
+                            ?: return@map ProgressDataState.Done(null)
+                    val accountMembers = mutableListOf<MemberInfo>()
+
+                    members.member1?.let {
+                        accountMembers.add(it)
+                    }
+                    members.member2?.let {
+                        accountMembers.add(it)
+                    }
+
+                    ProgressDataState.Done(
+                            activeCardHolder?.let { cardHolder ->
+                                accountMembers.firstOrNull { it.cardHolder == cardHolder }
+                            } ?: accountMembers.firstOrNull()
+                    ) as ProgressDataState
+                }
+                .onErrorReturn { ProgressDataState.Interrupted(it) }
     }
 }

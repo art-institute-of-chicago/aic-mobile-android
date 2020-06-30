@@ -6,6 +6,7 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.orIfNullOrBlank
+import edu.artic.db.AppDataManager
 import edu.artic.db.daos.*
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
@@ -23,7 +24,10 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -35,6 +39,7 @@ class WelcomeViewModel @Inject constructor(
         exhibitionDao: ArticExhibitionDao,
         private val messageDao: ArticMessageDao,
         private val messagePreferencesManager: MessagePreferencesManager,
+        private val appDataManager: AppDataManager,
         private val memberInfoPreferencesManager: MemberInfoPreferencesManager,
         generalInfoDao: GeneralInfoDao,
         languageSelector: LanguageSelector,
@@ -140,6 +145,22 @@ class WelcomeViewModel @Inject constructor(
                                     true
                                 } else {
                                     !seenMessageNids.contains(message.nid)
+                                }
+                            }
+                            "member_expiration" -> {
+                                val memberInfo = appDataManager.currentMemberInfo
+                                        ?: return@filter false
+                                val threshold = message.expirationThreshold
+                                        ?: return@filter false
+                                val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+                                val expiration = memberInfo
+                                        .expiration
+                                        ?.let { dateFormat.parse(it) }
+                                        ?: return@filter false
+                                when {
+                                    ((expiration.time - Date().time) / 1000 > threshold) -> false
+                                    message.isPersistent == true -> true
+                                    else -> !seenMessageNids.contains(message.nid)
                                 }
                             }
                             else -> false
