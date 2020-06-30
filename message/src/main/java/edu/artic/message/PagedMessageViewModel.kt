@@ -1,7 +1,9 @@
 package edu.artic.message
 
 import com.fuzz.rx.DisposeBag
+import edu.artic.db.AppDataManager
 import edu.artic.db.models.ArticMessage
+import edu.artic.membership.MemberInfoPreferencesManager
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.CellViewModel
 import io.reactivex.subjects.BehaviorSubject
@@ -9,6 +11,8 @@ import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 class PagedMessageViewModel @Inject constructor(
+        private val appDataManager: AppDataManager,
+        private val memberInfoPreferencesManager: MemberInfoPreferencesManager,
         private val messagePreferencesManager: MessagePreferencesManager
 ) : BaseViewModel() {
     private var currentMessages: List<ArticMessage> = listOf()
@@ -20,7 +24,19 @@ class PagedMessageViewModel @Inject constructor(
                 messages.mapIndexed { index, message ->
                     PagedMessageCellViewModel(
                             adapterDisposeBag = viewDisposeBag,
-                            message = message,
+                            message = message.let {
+                                ArticMessage(
+                                        nid = it.nid,
+                                        title = it.title,
+                                        messageType = it.messageType,
+                                        expirationThreshold = it.expirationThreshold,
+                                        tourExit = it.tourExit,
+                                        isPersistent = it.isPersistent,
+                                        message = replaceMemberDetails(it.message),
+                                        action = replaceMemberDetails(it.action),
+                                        actionTitle = it.actionTitle
+                                )
+                            },
                             isFirstPage = index == 0,
                             isLastPage = index == messageSize - 1
                     )
@@ -32,6 +48,17 @@ class PagedMessageViewModel @Inject constructor(
 
     fun markMessagesAsSeen() {
         messagePreferencesManager.markMessagesAsSeen(currentMessages)
+    }
+
+    private fun replaceMemberDetails(string: String?): String? {
+        val memberInfo = appDataManager.currentMemberInfo ?: return string
+        val zipCode = memberInfoPreferencesManager.memberZipCode ?: return string
+
+        return string?.replace("%CARD_ID%", memberInfo.primaryConstituentID ?: "")
+                ?.replace("%ZIP_CODE%", zipCode)
+                ?.replace("%NAME%", memberInfo.cardHolder ?: "")
+                ?.replace("%FIRST_NAME%", memberInfo.cardHolder?.split(" ")?.firstOrNull() ?: "")
+                ?.replace("%EXPIRATION_DATE%", memberInfo.expiration ?: "")
     }
 }
 
