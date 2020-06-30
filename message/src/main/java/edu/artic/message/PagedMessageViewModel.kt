@@ -1,8 +1,11 @@
 package edu.artic.message
 
 import com.fuzz.rx.DisposeBag
+import com.fuzz.rx.bindTo
+import com.fuzz.rx.disposedBy
 import edu.artic.db.AppDataManager
 import edu.artic.db.models.ArticMessage
+import edu.artic.localization.LanguageSelector
 import edu.artic.membership.MemberInfoPreferencesManager
 import edu.artic.viewmodel.BaseViewModel
 import edu.artic.viewmodel.CellViewModel
@@ -13,35 +16,45 @@ import javax.inject.Inject
 class PagedMessageViewModel @Inject constructor(
         private val appDataManager: AppDataManager,
         private val memberInfoPreferencesManager: MemberInfoPreferencesManager,
-        private val messagePreferencesManager: MessagePreferencesManager
+        private val messagePreferencesManager: MessagePreferencesManager,
+        private val languageSelector: LanguageSelector
 ) : BaseViewModel() {
     private var currentMessages: List<ArticMessage> = listOf()
     val messages: Subject<List<PagedMessageCellViewModel>> = BehaviorSubject.createDefault(listOf())
 
     fun update(messages: List<ArticMessage>) {
         val messageSize = messages.size
-        this.messages.onNext(
-                messages.mapIndexed { index, message ->
-                    PagedMessageCellViewModel(
-                            adapterDisposeBag = viewDisposeBag,
-                            message = message.let {
-                                ArticMessage(
-                                        nid = it.nid,
-                                        title = it.title,
-                                        messageType = it.messageType,
-                                        expirationThreshold = it.expirationThreshold,
-                                        tourExit = it.tourExit,
-                                        isPersistent = it.isPersistent,
-                                        message = replaceMemberDetails(it.message),
-                                        action = replaceMemberDetails(it.action),
-                                        actionTitle = it.actionTitle
-                                )
-                            },
-                            isFirstPage = index == 0,
-                            isLastPage = index == messageSize - 1
-                    )
+
+        disposeBag.clear()
+
+        languageSelector
+                .currentLanguage
+                .map {
+                    messages.mapIndexed { index, message ->
+                        val translation = languageSelector.selectFrom(message.allTranslations)
+                        PagedMessageCellViewModel(
+                                adapterDisposeBag = viewDisposeBag,
+                                message = message.let {
+                                    ArticMessage(
+                                            nid = it.nid,
+                                            title = translation.title,
+                                            messageType = it.messageType,
+                                            expirationThreshold = it.expirationThreshold,
+                                            tourExit = it.tourExit,
+                                            isPersistent = it.isPersistent,
+                                            message = replaceMemberDetails(translation.message),
+                                            action = replaceMemberDetails(it.action),
+                                            actionTitle = translation.actionTitle,
+                                            translations = it.translations
+                                    )
+                                },
+                                isFirstPage = index == 0,
+                                isLastPage = index == messageSize - 1
+                        )
+                    }
                 }
-        )
+                .bindTo(this.messages)
+                .disposedBy(disposeBag)
 
         currentMessages = messages
     }

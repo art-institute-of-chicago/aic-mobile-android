@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 12,
-    "identityHash": "ebd9fc6cc24b674c19ed318d0cdf8158",
+    "identityHash": "26b76ade3852398ca026390596969a94",
     "entities": [
       {
         "tableName": "DashBoard",
@@ -1346,7 +1346,7 @@
       },
       {
         "tableName": "ArticMessage",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`nid` TEXT NOT NULL, `title` TEXT, `messageType` TEXT, `expirationThreshold` INTEGER, `tourExit` TEXT, `isPersistent` INTEGER, `message` TEXT, `action` TEXT, `actionTitle` TEXT, PRIMARY KEY(`nid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`nid` TEXT NOT NULL, `title` TEXT, `messageType` TEXT, `expirationThreshold` INTEGER, `tourExit` TEXT, `isPersistent` INTEGER, `message` TEXT, `action` TEXT, `actionTitle` TEXT, `translations` TEXT NOT NULL, PRIMARY KEY(`nid`))",
         "fields": [
           {
             "fieldPath": "nid",
@@ -1401,6 +1401,12 @@
             "columnName": "actionTitle",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "translations",
+            "columnName": "translations",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1415,7 +1421,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ebd9fc6cc24b674c19ed318d0cdf8158\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"26b76ade3852398ca026390596969a94\")"
     ]
   }
 }
