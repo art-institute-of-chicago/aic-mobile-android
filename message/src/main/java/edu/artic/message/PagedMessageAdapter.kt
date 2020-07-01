@@ -1,5 +1,7 @@
 package edu.artic.message
 
+import android.app.Activity
+import android.content.res.Resources
 import android.text.method.LinkMovementMethod
 import android.view.View
 import com.fuzz.rx.bindTo
@@ -24,6 +26,14 @@ class PagedMessageAdapter : AutoHolderRecyclerViewAdapter<PagedMessageCellViewMo
 
     override fun View.onBindView(item: PagedMessageCellViewModel, position: Int) {
         messageTextView.movementMethod = LinkMovementMethod.getInstance()
+
+        // Set top padding based on screen height
+        titleTextView.setPadding(
+                0,
+                (Resources.getSystem().displayMetrics.heightPixels.toFloat() * 0.15f).toInt(),
+                0,
+                0
+        )
 
         item.titleText
                 .bindToMain(titleTextView.text())
