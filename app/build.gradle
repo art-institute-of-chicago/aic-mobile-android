@@ -1,4 +1,4 @@
-String majorAndMinorVersion = "1.4"
+String majorAndMinorVersion = "1.5"
 Integer patchVersionCode = 0
 
 android {
@@ -8,7 +8,7 @@ android {
         minSdkVersion minSdk
         targetSdkVersion sdk
         multiDexEnabled true
-        versionCode(patchVersionCode + 1400)
+        versionCode(patchVersionCode + 1500)
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -96,6 +96,7 @@ dependencies {
     implementation project(':media')
     implementation project(':media_ui')
     implementation project(':membership')
+    implementation project(':message')
     implementation project(':search')
     implementation project(':splash')
     implementation project(':tour_manager')

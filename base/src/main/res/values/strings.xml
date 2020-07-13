@@ -55,4 +55,7 @@
     <string name="global_loading_error_no_connectivity">No internet connection.</string>
     <string name="global_loading_error_time_out">Network time out. Please try again.</string>
 
+    <string name="messages_next_action">Next Message</string>
+    <string name="messages_previous_action">Previous Message</string>
+
 </resources>

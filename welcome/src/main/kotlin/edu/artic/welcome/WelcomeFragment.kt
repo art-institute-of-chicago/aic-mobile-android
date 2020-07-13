@@ -2,7 +2,9 @@ package edu.artic.welcome
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.text.HtmlCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -18,6 +20,7 @@ import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.events.EventDetailFragment
 import edu.artic.exhibitions.ExhibitionDetailFragment
+import edu.artic.message.PagedMessageFragment
 import edu.artic.navigation.NavigationConstants
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -115,6 +118,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .disposedBy(disposeBag)
 
         viewModel.welcomePrompt
+                .map { HtmlCompat.fromHtml(it, HtmlCompat.FROM_HTML_MODE_COMPACT).toString() }
                 .bindToMain(welcomeMessage.text())
                 .disposedBy(disposeBag)
 
@@ -174,7 +178,9 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
     override fun onResume() {
         super.onResume()
+
         viewModel.updateData()
+        viewModel.onScreenAppeared()
     }
 
     override fun setupNavigationBindings(viewModel: WelcomeViewModel) {
@@ -182,7 +188,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                 .subscribe { navigation ->
                     when (navigation) {
                         is Navigate.Forward -> {
-                            when (navigation.endpoint) {
+                            when (val endpoint = navigation.endpoint) {
                                 is WelcomeViewModel.NavigationEndpoint.SeeAllTours -> {
                                     navController.navigate(R.id.goToAllToursAction)
                                 }
@@ -193,21 +199,18 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                     navController.navigate(R.id.goToAllEventsAction)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.TourDetail -> {
-                                    val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.TourDetail
                                     val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
                                         putExtras(TourDetailsFragment.argsBundle(endpoint.tour))
                                     }
                                     startActivity(intent)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.ExhibitionDetail -> {
-                                    val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.ExhibitionDetail
                                     val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
                                         putExtras(ExhibitionDetailFragment.argsBundle(endpoint.exhibition))
                                     }
                                     startActivity(intent)
                                 }
                                 is WelcomeViewModel.NavigationEndpoint.EventDetail -> {
-                                    val endpoint = navigation.endpoint as WelcomeViewModel.NavigationEndpoint.EventDetail
                                     val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
                                         putExtras(EventDetailFragment.argsBundle(endpoint.event))
                                     }
@@ -222,6 +225,13 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                         flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                     }
                                     startActivity(deepLinkIntent)
+                                }
+                                is WelcomeViewModel.NavigationEndpoint.Messages -> {
+                                    val manager = activity?.supportFragmentManager
+                                            ?: return@subscribe
+                                    val tag = "PagedMessageFragment"
+                                    (manager.findFragmentByTag(tag) as? DialogFragment)?.dismiss()
+                                    PagedMessageFragment.create(endpoint.messages).show(manager, tag)
                                 }
                             }
                         }

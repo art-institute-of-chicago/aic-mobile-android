@@ -42,10 +42,12 @@
 	<!-- Currently not used in iOS -->
 	<string name="event_rental_visit_website_prompt">Visite nuestro sitio web para registrarse.</string>
 	<string name="global_cancel_action">No Ahora</string>
-	<string name="global_accept_action">Ok</string>
 	<string name="global_error_title">Error</string>
 	<string name="global_loading_error_title">Loading Error</string>
 	<string name="global_loading_error_general">Failed to load application data.</string>
 	<string name="global_loading_error_no_connectivity">No internet connection.</string>
 	<string name="global_loading_error_time_out">Network time out. Please try again.</string>
+	<string name="global_accept_action">OK</string>
+	<string name="messages_next_action">Mensaje siguiente</string>
+	<string name="messages_previous_action">Mensaje anterior</string>
 </resources>

@@ -20,9 +20,10 @@ import edu.artic.db.models.*
             ArticEvent::class,
             ArticDataObject::class,
             ArticMapFloor::class,
-            ArticSearchSuggestionsObject::class
+            ArticSearchSuggestionsObject::class,
+            ArticMessage::class
         ],
-        version = 11,
+        version = 12,
         exportSchema = true
 )
 @TypeConverters(AppConverters::class)
@@ -40,4 +41,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val eventDao: ArticEventDao
     abstract val articMapFloorDao: ArticMapFloorDao
     abstract val searchSuggestionDao: ArticSearchObjectDao
+    abstract val messageDao: ArticMessageDao
 }

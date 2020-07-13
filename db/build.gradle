@@ -24,6 +24,7 @@ android {
 dependencies {
     api project(':base')
     api project(':localization')
+    api project(':membership')
 
     // This 'kotlin_reflect' supersedes the artifact brought in by libs.moshi_kotlin
     api libs.kotlin_reflect

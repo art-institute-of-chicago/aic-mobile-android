@@ -72,4 +72,7 @@ class DBModule {
 
     @Provides
     fun provideArticMapFloorDao(appDatabase: AppDatabase) = appDatabase.articMapFloorDao
+
+    @Provides
+    fun provideMessageDao(appDatabase: AppDatabase) = appDatabase.messageDao
 }
