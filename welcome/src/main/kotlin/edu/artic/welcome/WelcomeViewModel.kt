@@ -166,7 +166,11 @@ class WelcomeViewModel @Inject constructor(
                             else -> false
                         }
                     }
-                    navigateTo.onNext(Navigate.Forward(NavigationEndpoint.Messages(launchMessages)))
+                    if (launchMessages.isNotEmpty()) {
+                        navigateTo.onNext(
+                                Navigate.Forward(NavigationEndpoint.Messages(launchMessages))
+                        )
+                    }
                 }
                 .disposedBy(disposeBag)
 
