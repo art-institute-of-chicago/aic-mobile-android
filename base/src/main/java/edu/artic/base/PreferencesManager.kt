@@ -16,11 +16,15 @@ interface PreferencesManager {
 
     fun putBoolean(key: String, value: Boolean)
 
+    fun putStringSet(key: String, value: Set<String>)
+
     fun getBoolean(key: String, defaultValue: Boolean = false): Boolean
 
     fun getString(key: String, defaultValue: String? = ""): String?
 
     fun getLong(key: String, defaultValue: Long = 0): Long
+
+    fun getStringSet(key: String, defaultValue: Set<String> = setOf()): Set<String>?
 
     fun remove(key: String)
 }
@@ -58,6 +62,10 @@ open class BasePreferencesManager : PreferencesManager {
         edit().putBoolean(key, value).commit()
     }
 
+    override fun putStringSet(key: String, value: Set<String>) {
+        edit().putStringSet(key, value).commit()
+    }
+
     override fun remove(key: String) {
         edit().remove(key).commit()
     }
@@ -65,6 +73,7 @@ open class BasePreferencesManager : PreferencesManager {
     override fun getBoolean(key: String, defaultValue: Boolean): Boolean = sharedPreferences.getBoolean(key, defaultValue)
     override fun getString(key: String, defaultValue: String?): String? = sharedPreferences.getString(key, defaultValue)
     override fun getLong(key: String, defaultValue: Long): Long = sharedPreferences.getLong(key, defaultValue)
+    override fun getStringSet(key: String, defaultValue: Set<String>): Set<String>? = sharedPreferences.getStringSet(key, defaultValue)
 
     @SuppressLint("CommitPrefEdits")
     private fun edit(): SharedPreferences.Editor = sharedPreferences.edit()

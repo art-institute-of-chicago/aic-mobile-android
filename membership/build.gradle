@@ -17,5 +17,17 @@ dependencies {
     kapt libs.dagger_android_compiler
 
     api project(':base')
-    implementation project(':db')
+
+    // This 'kotlin_reflect' supersedes the artifact brought in by libs.moshi_kotlin
+    api libs.kotlin_reflect
+
+    api libs.retrofit
+    api libs.retrofit_rx
+    api libs.retrofit_scalars
+
+    api (libs.retrofit_xml_converter, {
+        exclude module: 'xpp3'
+    })
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 }

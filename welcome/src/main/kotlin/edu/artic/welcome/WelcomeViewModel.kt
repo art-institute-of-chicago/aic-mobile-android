@@ -6,36 +6,44 @@ import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.base.utils.orIfNullOrBlank
-import edu.artic.db.daos.ArticEventDao
-import edu.artic.db.daos.ArticExhibitionDao
-import edu.artic.db.daos.ArticTourDao
-import edu.artic.db.daos.GeneralInfoDao
+import edu.artic.db.AppDataManager
+import edu.artic.db.daos.*
 import edu.artic.db.models.ArticEvent
 import edu.artic.db.models.ArticExhibition
+import edu.artic.db.models.ArticMessage
 import edu.artic.db.models.ArticTour
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.util.DateTimeHelper.Purpose.HomeEvent
 import edu.artic.localization.util.DateTimeHelper.Purpose.HomeExhibition
 import edu.artic.membership.MemberInfoPreferencesManager
+import edu.artic.message.MessagePreferencesManager
 import edu.artic.viewmodel.CellViewModel
 import edu.artic.viewmodel.NavViewViewModel
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager: WelcomePreferencesManager,
-                                           private val toursDao: ArticTourDao,
-                                           private val eventsDao: ArticEventDao,
-                                           private val exhibitionDao: ArticExhibitionDao,
-                                           private val memberInfoPreferencesManager: MemberInfoPreferencesManager,
-                                           generalInfoDao: GeneralInfoDao,
-                                           languageSelector: LanguageSelector,
-                                           val analyticsTracker: AnalyticsTracker) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
+class WelcomeViewModel @Inject constructor(
+        private val welcomePreferencesManager: WelcomePreferencesManager,
+        toursDao: ArticTourDao,
+        eventsDao: ArticEventDao,
+        exhibitionDao: ArticExhibitionDao,
+        private val messageDao: ArticMessageDao,
+        private val messagePreferencesManager: MessagePreferencesManager,
+        private val appDataManager: AppDataManager,
+        private val memberInfoPreferencesManager: MemberInfoPreferencesManager,
+        generalInfoDao: GeneralInfoDao,
+        languageSelector: LanguageSelector,
+        val analyticsTracker: AnalyticsTracker) : NavViewViewModel<WelcomeViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         object Search : NavigationEndpoint()
@@ -46,6 +54,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
         class TourDetail(val pos: Int, val tour: ArticTour) : NavigationEndpoint()
         class ExhibitionDetail(val pos: Int, val exhibition: ArticExhibition) : NavigationEndpoint()
         class EventDetail(val pos: Int, val event: ArticEvent) : NavigationEndpoint()
+        class Messages(val messages: List<ArticMessage>) : NavigationEndpoint()
     }
 
 
@@ -55,6 +64,7 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
     val events: Subject<List<WelcomeEventCellViewModel>> = BehaviorSubject.create()
     val welcomePrompt: Subject<String> = BehaviorSubject.create()
     val currentCardHolder: Subject<String> = BehaviorSubject.create()
+    private var didShowMessages = false
 
     init {
         shouldPeekTourSummary.distinctUntilChanged()
@@ -104,8 +114,6 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                     languageSelector.selectFrom(generalObject.allTranslations()).homeMemberPromptText
                 }.bindTo(welcomePrompt)
                 .disposedBy(disposeBag)
-
-
     }
 
     override fun register(lifeCycleOwner: LifecycleOwner) {
@@ -120,6 +128,53 @@ class WelcomeViewModel @Inject constructor(private val welcomePreferencesManager
                 currentCardHolder.onNext(activeCardHolder)
             }
         }
+    }
+
+    fun onScreenAppeared() {
+        if (didShowMessages) {
+            return
+        }
+
+        messageDao.getMessages()
+                .subscribeBy { messages ->
+                    val seenMessageNids = messagePreferencesManager.getSeenMessageNids()
+                    val launchMessages = messages.filter { message ->
+                        when (message.messageType) {
+                            "launch" -> {
+                                if (message.isPersistent == true) {
+                                    true
+                                } else {
+                                    !seenMessageNids.contains(message.nid)
+                                }
+                            }
+                            "member_expiration" -> {
+                                val memberInfo = appDataManager.currentMemberInfo
+                                        ?: return@filter false
+                                val threshold = message.expirationThreshold
+                                        ?: return@filter false
+                                val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+                                val expiration = memberInfo
+                                        .expiration
+                                        ?.let { dateFormat.parse(it) }
+                                        ?: return@filter false
+                                when {
+                                    ((expiration.time - Date().time) / 1000 > threshold) -> false
+                                    message.isPersistent == true -> true
+                                    else -> !seenMessageNids.contains(message.nid)
+                                }
+                            }
+                            else -> false
+                        }
+                    }
+                    if (launchMessages.isNotEmpty()) {
+                        navigateTo.onNext(
+                                Navigate.Forward(NavigationEndpoint.Messages(launchMessages))
+                        )
+                    }
+                }
+                .disposedBy(disposeBag)
+
+        didShowMessages = true
     }
 
     fun onPeekedTour() {

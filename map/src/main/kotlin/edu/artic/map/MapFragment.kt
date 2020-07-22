@@ -3,6 +3,7 @@ package edu.artic.map
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.annotation.UiThread
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.view.MotionEvent
@@ -29,6 +30,7 @@ import edu.artic.map.rendering.*
 import edu.artic.map.tutorial.TutorialFragment
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
+import edu.artic.message.PagedMessageFragment
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
 import edu.artic.navigation.NavigationConstants.Companion.ARG_EXHIBITION_OBJECT
@@ -560,12 +562,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
                 .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
-                .subscribe {
+                .subscribe { endpoint ->
 
                     val act = requireActivity()
                     val manager: FragmentManager = act.supportFragmentManager ?: return@subscribe
 
-                    when (it) {
+                    when (endpoint) {
                         MapViewModel.NavigationEndpoint.Search -> {
                             val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
                             startActivity(intent)
@@ -585,9 +587,14 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         is MapViewModel.NavigationEndpoint.Tutorial -> {
                             manager
                                     .beginTransaction()
-                                    .replace(R.id.overlayContainer, TutorialFragment.withExtras(it.currentFloor), "TutorialFragment")
+                                    .replace(R.id.overlayContainer, TutorialFragment.withExtras(endpoint.currentFloor), "TutorialFragment")
                                     .addToBackStack("TutorialFragment")
                                     .commit()
+                        }
+                        is MapViewModel.NavigationEndpoint.Messages -> {
+                            val tag = "PagedMessageFragment"
+                            (manager.findFragmentByTag(tag) as? DialogFragment)?.dismiss()
+                            PagedMessageFragment.create(endpoint.messages).show(manager, tag)
                         }
                     }
                 }.disposedBy(navigationDisposeBag)

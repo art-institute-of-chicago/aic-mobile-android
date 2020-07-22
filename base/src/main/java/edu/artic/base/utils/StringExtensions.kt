@@ -44,7 +44,7 @@ fun String.trimDownBlankLines(): String {
  * parameter. See [Html.fromHtml] and overloads thereof for more details.
  */
 @SuppressLint("InlinedApi")
-fun String.fromHtml(flags: Int = Html.FROM_HTML_MODE_LEGACY): CharSequence {
+fun String.fromHtml(flags: Int = Html.FROM_HTML_MODE_LEGACY, shouldRemoveAnchors: Boolean = true): CharSequence {
     val htmlText: Spanned = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         Html.fromHtml(this, flags)
     } else {
@@ -52,7 +52,7 @@ fun String.fromHtml(flags: Int = Html.FROM_HTML_MODE_LEGACY): CharSequence {
     }
     return htmlText
             .asSpannable()
-            .removeAnchors()
+            .let { if (shouldRemoveAnchors) it.removeAnchors() else it }
             .trim()
 }
 

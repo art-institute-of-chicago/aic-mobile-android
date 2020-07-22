@@ -68,6 +68,14 @@ class AppConverters {
         )
     }
 
+    private val messageTranslationListAdapter: JsonAdapter<List<ArticMessage.Translation>> by lazy {
+        moshi.adapter<List<ArticMessage.Translation>>(
+                Types.newParameterizedType(
+                        List::class.java,
+                        ArticMessage.Translation::class.java
+                )
+        )
+    }
 
     @TypeConverter
     fun stringToList(data: String?): List<String> {
@@ -139,6 +147,16 @@ class AppConverters {
     @TypeConverter
     fun stringToTourCategoryList(json: String?): List<ArticTourCategory> {
         return safeList(json, tourCategoryListAdapter)
+    }
+
+    @TypeConverter
+    fun messageTranslationListToString(objects: List<ArticMessage.Translation>): String {
+        return messageTranslationListAdapter.toJson(objects)
+    }
+
+    @TypeConverter
+    fun stringToMessageTranslationList(json: String?): List<ArticMessage.Translation> {
+        return safeList(json, messageTranslationListAdapter)
     }
 
     @TypeConverter
