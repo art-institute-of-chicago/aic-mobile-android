@@ -1,5 +1,5 @@
 String majorAndMinorVersion = "1.5"
-Integer patchVersionCode = 0
+Integer patchVersionCode = 1
 
 android {
     compileSdkVersion sdk
