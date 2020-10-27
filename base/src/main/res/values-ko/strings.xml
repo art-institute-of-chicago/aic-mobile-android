@@ -10,8 +10,8 @@
 	<string name="search_suggested">제안</string>
 	<string name="search_on_the_map_header">지도에 나온 대로</string>
 	<string name="welcome_member_card_action">회원 카드 액세스</string>
-	<string name="welcome_tours_header">오디오 작품 설명 투어</string>
-	<string name="welcome_on_view_header">현재 전시중</string>
+	<string name="welcome_tours_header">오디오 가이드 투어</string>
+	<string name="welcome_on_view_header">전시 중</string>
 	<string name="welcome_see_all_action">모두 보기</string>
 	<string name="tour_stop_count">%s Stops</string>
 	<string name="welcome_events_header">행사</string>
@@ -28,7 +28,7 @@
 	<string name="search_title">검색</string>
 	<string name="search_prompt">미술작품 찾기</string>
 	<string name="tour_start_tour_action">작품 투어 시작</string>
-	<string name="content_through_date">까지	 %s</string>
+	<string name="content_through_date">%s 까지</string>
 	<!-- Currently not used in iOS -->
 	<string name="event_buy_tickets_action">티켓구매</string>
 	<!-- Currently not used in iOS -->
