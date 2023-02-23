@@ -1,8 +1,10 @@
 package edu.artic.info
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import edu.artic.base.utils.disableShiftMode
+import edu.artic.info.databinding.ActivityInfoBinding
 import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
 import edu.artic.navigation.NavigationSelectListener
@@ -12,7 +14,7 @@ import edu.artic.ui.findNavController
 //import kotlinx.android.synthetic.main.activity_info.*
 import javax.inject.Inject
 
-class InfoActivity : BaseActivity() {
+class InfoActivity : BaseActivity<ActivityInfoBinding>() {
 
     /**
      * locationService is here so it gets generated before the onResume flow happens
@@ -20,12 +22,9 @@ class InfoActivity : BaseActivity() {
     @Inject
     lateinit var locationService: LocationService
 
-    override val layoutResId: Int
-        get() = R.layout.activity_info
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bottomNavigation.apply {
+        binding.bottomNavigation.apply {
             disableShiftMode(R.color.info_menu_color_list)
             selectedItemId = R.id.action_info
             setOnNavigationItemReselectedListener {
@@ -58,7 +57,7 @@ class InfoActivity : BaseActivity() {
              * We expect at most two fragment at a time in this graph.
              */
             popBackStack(R.id.informationFragment, false)
-            onHandleDeepLink(intent)
+            handleDeepLink(intent)
         }
     }
 
