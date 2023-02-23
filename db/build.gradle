@@ -11,11 +11,11 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "BLOB_URL", "\"${envVariable("blob_url",false)}\""
+            buildConfigField "String", "BLOB_URL", "${envVariable("blob_url",false)}"
             buildConfigField "String", "DEFAULT_BUY_URL", "\"${envVariable("default_buy_url",false)}\""
         }
         release {
-            buildConfigField "String", "BLOB_URL", "\"${envVariable("blob_url",true)}\""
+            buildConfigField "String", "BLOB_URL", "${envVariable("blob_url",true)}"
             buildConfigField "String", "DEFAULT_BUY_URL", "\"${envVariable("default_buy_url",true)}\""
         }
     }

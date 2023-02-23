@@ -5,7 +5,8 @@
     <application>
         <activity
             android:name=".AudioTutorialActivity"
-            android:theme="@style/AudioTutorialTheme">
+            android:theme="@style/AudioTutorialTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -20,7 +21,8 @@
 
         <activity
             android:name=".AudioDetailsActivity"
-            android:theme="@style/AudioTutorialTheme">
+            android:theme="@style/AudioTutorialTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

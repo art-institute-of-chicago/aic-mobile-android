@@ -51,7 +51,7 @@ class EventDetailFragment : BaseViewModelFragment<EventDetailViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        image.transitionName = event.title
+        image.transitionName = event?.title
 
         if (BuildConfig.IS_RENTAL) {
             registerToday.visibility = View.GONE

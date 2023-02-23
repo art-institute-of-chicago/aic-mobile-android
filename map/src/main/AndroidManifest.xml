@@ -13,7 +13,8 @@
         <activity
             android:name=".MapActivity"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/AppTheme.CustomToolbar.MapTheme">
+            android:theme="@style/AppTheme.CustomToolbar.MapTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

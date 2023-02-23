@@ -192,7 +192,7 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
                     // Be explicit about preferred interpolator
                     interpolator = LinearInterpolator()
                     addListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animator: Animator?) {
+                        override fun onAnimationEnd(animator: Animator) {
                             // Reset to default at end of animation
                             ((animator as ObjectAnimator).target as View).translationX = 0F
                         }

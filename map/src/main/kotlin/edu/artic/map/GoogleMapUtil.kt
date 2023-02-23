@@ -16,6 +16,7 @@ import edu.artic.map.rendering.ALPHA_INVISIBLE
 import edu.artic.map.rendering.ALPHA_VISIBLE
 import edu.artic.map.rendering.TRANSPARENCY_INVISIBLE
 import edu.artic.map.rendering.TRANSPARENCY_VISIBLE
+import timber.log.Timber
 
 
 /**
@@ -127,7 +128,7 @@ fun LatLng.distanceTo(other: LatLng): Float {
 fun TileOverlay.removeWithFadeOut() {
     val animator: ObjectAnimator = ObjectAnimator.ofFloat(this, OVERLAY_TRANSPARENCY, transparency, TRANSPARENCY_INVISIBLE)
     animator.addListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator?) {
+        override fun onAnimationEnd(animation: Animator) {
             remove()
         }
     })
@@ -175,7 +176,7 @@ fun <T> Marker.tryExpectingFailure(retry: Boolean = false, action: (Marker) -> T
             return tryExpectingFailure(false, action)
         } else {
             if (BuildConfig.DEBUG) {
-                Log.w("MapMarker", ex.message)
+                ex.message?.let { Timber.tag("MapMarker").w(it) }
             }
             true
         }
@@ -206,7 +207,7 @@ fun Marker.fadeIn(finalAlpha: Float = ALPHA_VISIBLE) {
 fun Marker.removeWithFadeOut() {
     val fadeOut: ObjectAnimator = ObjectAnimator.ofFloat(this, MARKER_ALPHA, alpha, ALPHA_INVISIBLE)
     fadeOut.addListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator?) {
+        override fun onAnimationEnd(animation: Animator) {
             tryExpectingFailure(true) {
                 remove()
             }

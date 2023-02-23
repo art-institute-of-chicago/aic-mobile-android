@@ -7,7 +7,8 @@
             android:name=".WelcomeActivity"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/AppTheme.CustomToolbar"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -170,18 +170,18 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         errorDialog?.dismiss()
     }
 
-    override fun onSurfaceTextureSizeChanged(p0: SurfaceTexture?, p1: Int, p2: Int) {
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, p1: Int, p2: Int) {
     }
 
-    override fun onSurfaceTextureUpdated(p0: SurfaceTexture?) {
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
     }
 
-    override fun onSurfaceTextureDestroyed(p0: SurfaceTexture?): Boolean {
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
         return true
     }
 
-    override fun onSurfaceTextureAvailable(p0: SurfaceTexture?, width: Int, height: Int) {
-        surface = Surface(p0)
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+        this.surface = Surface(surface)
         updateTextureViewSize(width, height)
 
         try {
@@ -189,7 +189,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
             val mediaPlayer = MediaPlayer()
             mMediaPlayer = mediaPlayer
             mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-            mediaPlayer.setSurface(surface)
+            mediaPlayer.setSurface(this.surface)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnCompletionListener {
                 goToWelcomeActivity()
@@ -203,7 +203,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         textureView.alpha = 0f
         mMediaPlayer?.seekTo(0)
         splashChrome.animate().alpha(0f).setListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(p0: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 fadeInVideo(displayDialog)
             }
         }).start()
@@ -212,7 +212,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     private fun fadeInVideo(displayDialog: Boolean) {
         animatedMuseum.animate().alpha(0f).start()
         textureView.animate().alpha(1f).setListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(p0: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 mMediaPlayer?.start()
                 if (displayDialog) {
                     pauseVideo(4)
