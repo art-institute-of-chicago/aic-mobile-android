@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
@@ -74,10 +75,10 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSupportF
         }
         super.onCreate(savedInstanceState)
 
-        val vbClass =
-            (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VB>
-        val method = vbClass.getMethod("inflate", layoutInflater.javaClass)
+        val vbClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+        val method = vbClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
         _binding = method.invoke(null, layoutInflater) as VB
+
         setContentView(binding.root)
 
         volumeControlStream = AudioManager.STREAM_VOICE_CALL

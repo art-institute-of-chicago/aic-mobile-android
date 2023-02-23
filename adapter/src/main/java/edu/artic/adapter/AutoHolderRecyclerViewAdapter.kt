@@ -3,6 +3,7 @@ package edu.artic.adapter
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.viewbinding.ViewBinding
 
 /**
  * Description: Assumes the ViewHolder is a [BaseViewHolder] and then scopes the [onBindView] method
@@ -29,15 +30,15 @@ abstract class AutoHolderRecyclerViewAdapter<TModel> :
         }
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: TModel?, position: Int) {
-        holder.itemView.onBindNullableView(item, position)
+        holder.itemView.onBindNullableView(item,holder, position)
     }
 
     /**
      * Called when an item is ready to be bound. It may be null.
      */
-    private fun View.onBindNullableView(item: TModel?, position: Int) {
+    private fun View.onBindNullableView(item: TModel?, holder: BaseViewHolder, position: Int) {
         if (item != null) {
-            onBindView(item, position)
+            onBindView(item,holder, position)
         } else {
             onBindPlaceHolder(position)
         }
@@ -51,7 +52,7 @@ abstract class AutoHolderRecyclerViewAdapter<TModel> :
     /**
      * Called when [TModel] is not null and ready for binding.
      */
-    abstract fun View.onBindView(item: TModel, position: Int)
+    abstract fun View.onBindView(item: TModel, holder: BaseViewHolder, position: Int)
 
     /**
      * Called when the [BaseViewHolder] is first created in the scope of it's itemView. Perform

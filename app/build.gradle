@@ -122,6 +122,7 @@ dependencies {
 
     //The following four lines enable our usage of dagger2 dependency injection
     implementation libs.dagger
+    implementation 'androidx.lifecycle:lifecycle-process:2.5.1'
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler

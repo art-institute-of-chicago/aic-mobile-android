@@ -21,7 +21,8 @@ import java.lang.reflect.ParameterizedType
 import javax.inject.Inject
 
 
-abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFragment(), OnBackPressedListener {
+abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFragment(),
+    OnBackPressedListener {
 
     var toolbar: Toolbar? = null
     var collapsingToolbar: CollapsingToolbarLayout? = null
@@ -96,9 +97,6 @@ abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFrag
      */
     val navigationDisposeBag = DisposeBag()
 
-    protected fun requireView() = view
-        ?: throw IllegalStateException("Fragment " + this + " view is not created yet.")
-
     protected val navController
         get() = Navigation.findNavController(requireView())
 
@@ -130,10 +128,16 @@ abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFrag
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-        val vbClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VB>
-        val method = vbClass.getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        val vbClass =
+            (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VB>
+        val method = vbClass.getMethod(
+            "inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java,
+            Boolean::class.java
+        )
         _binding = method.invoke(null, inflater, container, false) as VB
         return binding.root
     }
@@ -241,7 +245,7 @@ abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFrag
                 act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
 
                 if (customToolbarColorResource == 0) {
-                    val primaryDarkColor = intArrayOf(R.attr.colorPrimaryDark)
+                    val primaryDarkColor = intArrayOf(android.R.attr.colorPrimary)
                     ctx.getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
                         act.window?.statusBarColor = it
                     }

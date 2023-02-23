@@ -40,7 +40,7 @@ dependencies {
     kapt libs.dagger_android_compiler
 
     api libs.arch_runtime
-    api libs.arch_extensions
+    
     api libs.arch_rx
 }
 

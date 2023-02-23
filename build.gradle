@@ -31,12 +31,11 @@ buildscript {
                 rx                      : 'io.reactivex.rxjava2:rxjava:2.2.0',
                 rx_kotlin               : 'io.reactivex.rxjava2:rxkotlin:2.3.0',
                 rx_android              : 'io.reactivex.rxjava2:rxandroid:2.0.1',
-                arch_runtime            : 'androidx.lifecycle:lifecycle-runtime:2.0.0',
-                arch_extensions         : 'androidx.lifecycle:lifecycle-extensions:2.0.0',
+                arch_runtime            : 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1',
                 arch_paging             : 'androidx.paging:paging-runtime:2.0.0',
                 arch_common             : "android.arch.paging:common:${arch_version}",
-                arch_navigation         : 'androidx.navigation:navigation-fragment-ktx:2.0.0-rc02',
-                arch_navigation_ui      : 'androidx.navigation:navigation-ui-ktx:2.0.0-rc02',
+                arch_navigation         : 'androidx.navigation:navigation-fragment-ktx:2.5.3',
+                arch_navigation_ui      : 'androidx.navigation:navigation-ui-ktx:2.5.3',
                 arch_rx                 : 'androidx.lifecycle:lifecycle-reactivestreams:2.0.0',
                 retrofit                : 'com.squareup.retrofit2:retrofit:2.3.0',
                 retrofit_rx             : 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0',
@@ -91,7 +90,7 @@ subprojects {
 
     configurations.all {
         resolutionStrategy {
-            force   libs.v4_support, libs.design_support, libs.media_compat
+            force libs.v4_support, libs.design_support, libs.media_compat
         }
     }
 
@@ -166,7 +165,7 @@ subprojects {
         // TODO: Re-enable 'constraints' lint check whenever the IDE inspection actually agrees with the CLI tool
         // TODO: Re-enable 'sibling' lint check once we've addressed all affected layouts
         lintOptions {
-            disable 'MissingTranslation','MissingConstraints', 'NotSibling'
+            disable 'MissingTranslation', 'MissingConstraints', 'NotSibling'
         }
 
         apply plugin: 'androidx.navigation.safeargs'

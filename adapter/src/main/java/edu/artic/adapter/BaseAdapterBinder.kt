@@ -1,6 +1,5 @@
 package edu.artic.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.util.SparseIntArray
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +7,13 @@ import android.widget.Adapter
 import android.widget.BaseAdapter
 import android.widget.Spinner
 import android.widget.SpinnerAdapter
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Description: Convenience conversion method that turns this object into a [BaseAdapter].
  */
 fun <TModel> BaseRecyclerViewAdapter<TModel, *>.toBaseAdapter(): BaseAdapter =
-        BaseAdapterBinder(this)
+    BaseAdapterBinder(this)
 
 /**
  * Retrieve original [BaseRecyclerViewAdapter] from this [BaseAdapter]. It must be created with [toBaseAdapter] first.
@@ -21,7 +21,7 @@ fun <TModel> BaseRecyclerViewAdapter<TModel, *>.toBaseAdapter(): BaseAdapter =
  */
 @Suppress("UNCHECKED_CAST")
 fun <TModel> SpinnerAdapter.baseRecyclerViewAdapter(): BaseRecyclerViewAdapter<TModel, BaseViewHolder> =
-        (this as BaseAdapterBinder<TModel>).adapter as BaseRecyclerViewAdapter<TModel, BaseViewHolder>
+    (this as BaseAdapterBinder<TModel>).adapter as BaseRecyclerViewAdapter<TModel, BaseViewHolder>
 
 /**
  * Implement this interface to add the ability for dropdown view functionality within a [Spinner], for example.
@@ -33,14 +33,14 @@ interface DropDownAdapter<TModel, VH : BaseViewHolder> {
      * cannot be configured to display differently in this adapter.
      */
     fun onCreateDropdownItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder? =
-            BaseViewHolder(parent, viewType).apply {
-                itemView.onDropdownHolderCreated(parent, viewType)
-            }
+        BaseViewHolder(parent, viewType).apply {
+            itemView.onDropdownHolderCreated(parent, viewType)
+        }
 
-    fun onBindDropdownItemViewHolder(baseViewHolder: VH, item: TModel, position: Int) =
-            baseViewHolder.itemView.onBindDropdownView(item, position)
+    fun onBindDropdownItemViewHolder(viewHolder: VH, item: TModel, position: Int) =
+        viewHolder.itemView.onBindDropdownView(item, viewHolder, position)
 
-    fun View.onBindDropdownView(item: TModel, position: Int) = Unit
+    fun View.onBindDropdownView(item: TModel, baseViewHolder: VH, position: Int) = Unit
 
     /**
      * Called when the [BaseViewHolder] is first created in the scope of it's itemView. Perform
@@ -57,7 +57,8 @@ interface DropDownAdapter<TModel, VH : BaseViewHolder> {
  * @author Andrew Grosner (Fuzz)
  */
 class BaseAdapterBinder<TModel>(
-        val adapter: BaseRecyclerViewAdapter<TModel, *>) : BaseAdapter() {
+    val adapter: BaseRecyclerViewAdapter<TModel, *>,
+) : BaseAdapter() {
 
     private var currentMaxViewType = 0
     private val cachedLayoutIdToViewTypes = SparseIntArray()
@@ -109,9 +110,10 @@ class BaseAdapterBinder<TModel>(
      */
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View? {
         if (adapter is DropDownAdapter<*, *> &&
-                // headers and footers are not supported in dropdowns.
-                !adapter.isFooterPosition(position) &&
-                !adapter.isHeaderPosition(position)) {
+            // headers and footers are not supported in dropdowns.
+            !adapter.isFooterPosition(position) &&
+            !adapter.isHeaderPosition(position)
+        ) {
             @Suppress("UNCHECKED_CAST")
             val dropDownAdapter = adapter as DropDownAdapter<TModel, BaseViewHolder>
             var viewToReturn = convertView
@@ -126,7 +128,13 @@ class BaseAdapterBinder<TModel>(
                 viewHolder = viewToReturn?.getTag(R.id.tag_holder) as BaseViewHolder?
             }
 
-            viewHolder?.let { dropDownAdapter.onBindDropdownItemViewHolder(viewHolder, adapter.getItem(position), position) }
+            viewHolder?.let {
+                dropDownAdapter.onBindDropdownItemViewHolder(
+                    viewHolder,
+                    adapter.getItem(position),
+                    position
+                )
+            }
             return viewToReturn
         } else {
             return getView(position, convertView, parent)
@@ -134,19 +142,21 @@ class BaseAdapterBinder<TModel>(
     }
 
     private fun applyViewHolderTags(viewHolder: BaseViewHolder, viewType: Int) =
-            viewHolder.itemView.apply {
-                setTag(R.id.tag_holder, viewHolder)
-                setTag(R.id.tag_item_type, viewType)
-            }
+        viewHolder.itemView.apply {
+            setTag(R.id.tag_holder, viewHolder)
+            setTag(R.id.tag_item_type, viewType)
+        }
 
     private inner class RecyclerViewToBaseAdapterObserver : RecyclerView.AdapterDataObserver() {
-        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) = notifyDataSetChanged()
+        override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) =
+            notifyDataSetChanged()
 
         override fun onChanged() = notifyDataSetChanged()
 
         override fun onItemRangeChanged(positionStart: Int, itemCount: Int) = notifyDataSetChanged()
 
-        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) = notifyDataSetChanged()
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) =
+            notifyDataSetChanged()
 
         override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) = notifyDataSetChanged()
     }
