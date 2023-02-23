@@ -1,6 +1,6 @@
 package edu.artic.message
 
-//import kotlinx.android.synthetic.main.fragment_paged_message.*
+
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -45,7 +45,7 @@ class PagedMessageFragment :
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(
                 view.context,
-                LinearLayoutManager.HORIZONTAL,
+                LinearLayoutManager.VERTICAL,
                 false
             )
             adapter = this@PagedMessageFragment.adapter

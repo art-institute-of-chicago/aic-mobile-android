@@ -62,7 +62,7 @@ class ExhibitionDetailFragment :
     private val exhibition by lazy {
         //Support arguments from the search activity
         if (arguments?.containsKey(ARG_EXHIBITION) == true) {
-            arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION)
+            requireArguments().getParcelable<ArticExhibition>(ARG_EXHIBITION)
         } else {
             requireActivity().intent.getParcelableExtra<ArticExhibition>(ARG_EXHIBITION)
         }
@@ -167,7 +167,6 @@ class ExhibitionDetailFragment :
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.scrollView.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
     }
 
     override fun setupNavigationBindings(viewModel: ExhibitionDetailViewModel) {

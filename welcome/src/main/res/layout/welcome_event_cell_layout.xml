@@ -46,7 +46,7 @@
         <TextView
             android:id="@+id/title"
             style="@style/CardTitleLargeBlack"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/eventTileWidth"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginStandard"
             android:ellipsize="end"
@@ -59,7 +59,7 @@
         <TextView
             android:id="@+id/description"
             style="@style/CardBodySerifGray"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/eventTileWidth"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lineSpacingMultiplier="0.8"

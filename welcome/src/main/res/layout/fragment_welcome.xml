@@ -67,39 +67,23 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/memberCardLink" />
 
-
-            <FrameLayout
-                android:id="@+id/exhibitionSectionContainer"
+            <include
+                android:id="@+id/exhibitionSection"
+                layout="@layout/welcome_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tourSection">
+                app:layout_constraintTop_toBottomOf="@id/tourSection" />
 
-                <include
-                    android:id="@+id/exhibitionSection"
-                    layout="@layout/welcome_section"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/eventSectionContainer"
+            <include
+                android:id="@+id/eventSection"
+                layout="@layout/welcome_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tourSection">
-
-                <include
-                    android:id="@+id/eventSection"
-                    layout="@layout/welcome_section"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/exhibitionSectionContainer" />
-            </FrameLayout>
+                app:layout_constraintTop_toBottomOf="@id/exhibitionSection" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,5 @@
 package edu.artic.welcome
 
-//import kotlinx.android.synthetic.main.fragment_welcome.*
-//import kotlinx.android.synthetic.main.welcome_section.view.*
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -28,7 +26,6 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import edu.artic.welcome.databinding.FragmentWelcomeBinding
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -93,7 +90,7 @@ class WelcomeFragment : BaseViewModelFragment<FragmentWelcomeBinding, WelcomeVie
 
         viewModel.exhibitions
             .map { it.isNotEmpty() }
-            .bindToMain(binding.exhibitionSectionContainer.visibility())
+            .bindToMain(binding.exhibitionSection.root.visibility())
             .disposedBy(disposeBag)
 
 
@@ -114,7 +111,7 @@ class WelcomeFragment : BaseViewModelFragment<FragmentWelcomeBinding, WelcomeVie
 
         viewModel.events
             .map { it.isNotEmpty() }
-            .bindToMain(binding.eventSectionContainer.visibility())
+            .bindToMain(binding.eventSection.root.visibility())
             .disposedBy(disposeBag)
 
         viewModel.shouldPeekTourSummary

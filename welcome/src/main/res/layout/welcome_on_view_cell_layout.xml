@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/exhibitionTileWidth"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
     android:layout_marginEnd="@dimen/marginTwenty"
     android:minHeight="335dp">
 
@@ -21,7 +20,7 @@
     <TextView
         android:id="@+id/exhibitionTitle"
         style="@style/CardTitleLargeBlack"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/exhibitionTileWidth"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/marginStandard"
         android:ellipsize="end"
@@ -34,7 +33,7 @@
     <TextView
         android:id="@+id/exhibitionDate"
         style="@style/CardBodySmallItalic"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/exhibitionTileWidth"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/exhibitionTitle"
