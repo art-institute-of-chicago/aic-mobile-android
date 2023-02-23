@@ -18,7 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
  * For the carousel screen, see `edu.artic.map.carousel.TourCarouselAdapter` in
  * the `:map` module.
  */
-class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<TourDetailsStopCellViewModel>() {
+class TourDetailsStopAdapter : AutoHolderRecyclerViewAdapter<CellTourDetailsStopBinding,TourDetailsStopCellViewModel>() {
 
     override fun View.onBindView(
         item: TourDetailsStopCellViewModel,

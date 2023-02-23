@@ -32,10 +32,7 @@ interface DropDownAdapter<TModel, VH : BaseViewHolder> {
      * Return the item view based on type. The headers + footers will not be called from here. Those
      * cannot be configured to display differently in this adapter.
      */
-    fun onCreateDropdownItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder? =
-        BaseViewHolder(parent, viewType).apply {
-            itemView.onDropdownHolderCreated(parent, viewType)
-        }
+    fun onCreateDropdownItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder?
 
     fun onBindDropdownItemViewHolder(viewHolder: VH, item: TModel, position: Int) =
         viewHolder.itemView.onBindDropdownView(item, viewHolder, position)

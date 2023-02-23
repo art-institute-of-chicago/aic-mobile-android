@@ -7,7 +7,10 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.bindToMain
@@ -21,17 +24,56 @@ import edu.artic.image.GlideApp
 import edu.artic.search.databinding.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-//import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
-//import kotlinx.android.synthetic.main.layout_cell_empty.view.*
-//import kotlinx.android.synthetic.main.layout_cell_header.view.*
-//import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
-//import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
-//import kotlinx.android.synthetic.main.layout_cell_suggested_map_object.view.*
-
-class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewModel>() {
+class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<ViewBinding, SearchBaseCellViewModel>() {
 
     companion object {
         var MAX_ARTWORKS_PER_ROW = 5
+    }
+
+    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = when (viewType) {
+            R.layout.layout_cell_result_header -> LayoutCellResultHeaderBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_cell_header -> LayoutCellResultHeaderBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_cell_search_list_item -> LayoutCellResultHeaderBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_cell_suggested_keyword -> LayoutCellResultHeaderBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_cell_empty -> LayoutCellResultHeaderBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_cell_amenity -> LayoutCellResultHeaderBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_cell_divider -> LayoutCellResultHeaderBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            else -> LayoutCellResultHeaderBinding.inflate(inflater, parent, false)
+        }
+
+        return BaseViewHolder(binding, viewType).apply {
+            itemView.onHolderCreated(parent, viewType)
+        }
     }
 
     override fun View.onBindView(

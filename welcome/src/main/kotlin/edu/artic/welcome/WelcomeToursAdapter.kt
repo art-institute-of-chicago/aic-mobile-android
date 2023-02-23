@@ -13,13 +13,14 @@ import edu.artic.welcome.databinding.WelcomeTourSummaryCellLayoutBinding
  * @author Sameer Dhakal (Fuzz)
  */
 
-class WelcomeToursAdapter : AutoHolderRecyclerViewAdapter<WelcomeTourCellViewModel>() {
+class WelcomeToursAdapter :
+    AutoHolderRecyclerViewAdapter<WelcomeTourSummaryCellLayoutBinding, WelcomeTourCellViewModel>() {
 
 
     override fun View.onBindView(
         item: WelcomeTourCellViewModel,
         holder: BaseViewHolder,
-        position: Int
+        position: Int,
     ) {
         with(holder.binding as WelcomeTourSummaryCellLayoutBinding) {
             item.tourImageUrl.subscribe {

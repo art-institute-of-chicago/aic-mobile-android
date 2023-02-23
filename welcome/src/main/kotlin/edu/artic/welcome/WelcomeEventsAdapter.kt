@@ -9,14 +9,13 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
 import edu.artic.welcome.databinding.WelcomeEventCellLayoutBinding
 
-//import kotlinx.android.synthetic.main.welcome_event_cell_layout.view.*
-
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 
-class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewModel>() {
+class WelcomeEventsAdapter :
+    AutoHolderRecyclerViewAdapter<WelcomeEventCellLayoutBinding, WelcomeEventCellViewModel>() {
     override fun View.onBindView(
         item: WelcomeEventCellViewModel,
         holder: BaseViewHolder,

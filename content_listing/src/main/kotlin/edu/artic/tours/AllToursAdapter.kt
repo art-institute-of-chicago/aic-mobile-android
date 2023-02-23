@@ -1,5 +1,6 @@
 package edu.artic.tours
 
+import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.fuzz.rx.DisposeBag
@@ -22,9 +23,15 @@ class AllToursAdapter(
     recyclerView: RecyclerView,
     introSubject: Subject<String>,
     viewDisposeBag: DisposeBag,
-) : AutoHolderRecyclerViewAdapter<AllToursCellViewModel>() {
+) : AutoHolderRecyclerViewAdapter<CellAllToursLayoutBinding, AllToursCellViewModel>() {
 
-    private val introHolder = BaseViewHolder(recyclerView, R.layout.cell_all_tours_intro)
+    private val introHolder = BaseViewHolder(
+        CellAllToursIntroBinding.inflate(
+            LayoutInflater.from(recyclerView.context),
+            recyclerView,
+            false
+        ), R.layout.cell_all_tours_intro
+    )
 
     init {
         addHeaderHolder(introHolder)

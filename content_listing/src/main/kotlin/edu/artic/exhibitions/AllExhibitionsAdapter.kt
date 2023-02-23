@@ -11,13 +11,13 @@ import edu.artic.content.listing.databinding.CellAllExhibitionsLayoutBinding
 import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-//import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellViewModel>() {
+class AllExhibitionsAdapter :
+    AutoHolderRecyclerViewAdapter<CellAllExhibitionsLayoutBinding, AllExhibitionsCellViewModel>() {
 
     override fun View.onBindView(
         item: AllExhibitionsCellViewModel,

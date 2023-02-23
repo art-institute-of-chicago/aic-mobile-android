@@ -180,8 +180,9 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         notifyItemRangeRemoved(0, count)
     }
 
-    fun addHeaderView(layoutResId: Int, parent: ViewGroup) {
-        addHeaderHolder(BaseViewHolder(parent, layoutResId))
+    private fun addHeaderView(layoutResId: Int, parent: ViewGroup) {
+        //fixme
+//        addHeaderHolder(BaseViewHolder(parent, layoutResId))
     }
 
     fun addHeaderHolder(baseViewHolder: BaseViewHolder) {
@@ -198,8 +199,8 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         notifyItemInserted(footerStartIndex + footersCount)
     }
 
-    fun addFooterView(footerResId: Int, parent: ViewGroup) {
-        addFooterHolder(BaseViewHolder(parent, footerResId))
+    private fun addFooterView(footerResId: Int, parent: ViewGroup) {
+//        addFooterHolder(BaseViewHolder(parent, footerResId))
     }
 
     fun getHeaderHolders(): List<BaseViewHolder> {

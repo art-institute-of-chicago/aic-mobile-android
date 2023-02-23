@@ -199,7 +199,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
         // Make sure to clear this out in ::onDestroy.
         disposeBag = DisposeBag()
 
-        setUpNotificationManager()
+//        setUpNotificationManager()
         player.addListener(object : Player.DefaultEventListener() {
 
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {

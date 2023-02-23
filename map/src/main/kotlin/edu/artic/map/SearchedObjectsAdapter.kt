@@ -1,6 +1,9 @@
 package edu.artic.map
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
@@ -19,14 +22,11 @@ import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-//import kotlinx.android.synthetic.main.layout_amenity_search_cell.view.*
-//import kotlinx.android.synthetic.main.layout_artwork_search_cell.view.*
-//import kotlinx.android.synthetic.main.layout_exhibition_search_cell.view.*
-
 /**
 @author Sameer Dhakal (Fuzz)
  */
-class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseViewModel>() {
+class SearchedObjectsAdapter :
+    AutoHolderRecyclerViewAdapter<ViewBinding, SearchObjectBaseViewModel>() {
 
     override fun View.onBindView(
         item: SearchObjectBaseViewModel,
@@ -54,6 +54,39 @@ class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseVie
             is ArtworkViewModel -> {
                 bindArtworkView(item, holder, this)
             }
+        }
+    }
+
+    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = when (viewType) {
+            R.layout.layout_amenity_search_cell -> LayoutAmenitySearchCellBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_amenity_search_cell -> LayoutAmenitySearchCellBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_artwork_search_cell -> LayoutArtworkSearchCellBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_exhibition_search_cell -> LayoutExhibitionSearchCellBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            else -> {
+                /* should never reach here*/
+                null
+            }
+        }
+        return BaseViewHolder(binding!!, viewType).apply {
+            itemView.onHolderCreated(parent, viewType)
         }
     }
 

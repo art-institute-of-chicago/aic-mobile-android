@@ -15,7 +15,8 @@ import edu.artic.image.GlideApp
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellBaseViewModel>() {
+class AllEventsAdapter :
+    AutoHolderRecyclerViewAdapter<CellAllEventsLayoutBinding, AllEventsCellBaseViewModel>() {
 
     override fun View.onBindView(
         item: AllEventsCellBaseViewModel,

@@ -1,6 +1,9 @@
 package edu.artic.audio
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.audio.databinding.ViewNumberPadNumericElementBinding
@@ -34,7 +37,26 @@ sealed class NumberPadElement {
  * This means that [getLayoutResId] will return one of two resIds and that
  * [onBindView] will use one of 3 bind algorithms.
  */
-class NumberPadAdapter : AutoHolderRecyclerViewAdapter<NumberPadElement>() {
+class NumberPadAdapter : AutoHolderRecyclerViewAdapter<ViewBinding, NumberPadElement>() {
+    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = when (viewType) {
+            R.layout.view_number_pad_delete_back_element -> ViewNumberPadNumericElementBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            else -> ViewNumberPadNumericElementBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+        }
+        return BaseViewHolder(binding, viewType).apply {
+            itemView.onHolderCreated(parent, viewType)
+        }
+
+    }
 
     override fun getLayoutResId(position: Int): Int {
         return if (getItem(position) is NumberPadElement.DeleteBack) {

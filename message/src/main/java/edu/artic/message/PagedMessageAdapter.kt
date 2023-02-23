@@ -16,7 +16,8 @@ import edu.artic.message.databinding.CellPagedMessageBinding
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
-class PagedMessageAdapter : AutoHolderRecyclerViewAdapter<PagedMessageCellViewModel>() {
+class PagedMessageAdapter :
+    AutoHolderRecyclerViewAdapter<CellPagedMessageBinding, PagedMessageCellViewModel>() {
 
     val nextButtonClicks: Subject<Unit> = PublishSubject.create()
     val previousButtonClicks: Subject<Unit> = PublishSubject.create()
