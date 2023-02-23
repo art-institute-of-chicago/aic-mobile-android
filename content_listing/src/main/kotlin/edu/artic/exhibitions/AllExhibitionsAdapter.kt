@@ -7,8 +7,10 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.content.listing.R
+import edu.artic.content.listing.databinding.CellAllExhibitionsLayoutBinding
 import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
+
 //import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 
 /**
@@ -17,28 +19,35 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 
 class AllExhibitionsAdapter : AutoHolderRecyclerViewAdapter<AllExhibitionsCellViewModel>() {
 
-    override fun View.onBindView(item: AllExhibitionsCellViewModel, position: Int) {
-        item.exhibitionImageUrl
+    override fun View.onBindView(
+        item: AllExhibitionsCellViewModel,
+        holder: BaseViewHolder,
+        position: Int,
+    ) {
+        with(holder.binding as CellAllExhibitionsLayoutBinding) {
+            item.exhibitionImageUrl
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     image.post {
                         GlideApp.with(context)
-                                .load("$it?w=${image.measuredWidth}&h=${image.measuredHeight}")
-                                .error(R.drawable.placeholder_medium_square)
-                                .placeholder(R.color.placeholderBackground)
-                                .into(image)
+                            .load("$it?w=${image.measuredWidth}&h=${image.measuredHeight}")
+                            .error(R.drawable.placeholder_medium_square)
+                            .placeholder(R.color.placeholderBackground)
+                            .into(image)
 
                     }
                 }.disposedBy(item.viewDisposeBag)
 
-        item.exhibitionTitle.bindToMain(title.text()).disposedBy(item.viewDisposeBag)
-        item.exhibitionTitle.subscribe { image.transitionName = it }.disposedBy(item.viewDisposeBag)
-        item.exhibitionEndDate
+            item.exhibitionTitle.bindToMain(title.text()).disposedBy(item.viewDisposeBag)
+            item.exhibitionTitle.subscribe { image.transitionName = it }
+                .disposedBy(item.viewDisposeBag)
+            item.exhibitionEndDate
                 .map {
                     context.getString(R.string.content_through_date, it)
                 }
                 .bindToMain(description.text())
                 .disposedBy(item.viewDisposeBag)
+        }
     }
 
     override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
