@@ -21,10 +21,10 @@ import edu.artic.media.ui.databinding.LanguageCellBinding
  * of the list (i.e. the 'currently selected' language).
  */
 class LanguageAdapter :
-    AutoHolderRecyclerViewAdapter<DropdownLanguageCellBinding, SpecifiesLanguage>(),
+    AutoHolderRecyclerViewAdapter<LanguageCellBinding, SpecifiesLanguage>(),
     DropDownAdapter<SpecifiesLanguage, BaseViewHolder> {
     override fun View.onBindView(item: SpecifiesLanguage, holder: BaseViewHolder, position: Int) {
-        val binding = holder.binding as DropdownLanguageCellBinding
+        val binding = holder.binding as LanguageCellBinding
         binding.text.text = item.userFriendlyLanguage(context)
         binding.text.setTextColor(Color.WHITE)
     }
