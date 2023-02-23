@@ -1,7 +1,7 @@
 package edu.artic.map.carousel
 
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.View
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -10,7 +10,7 @@ import edu.artic.analytics.ScreenName
 import edu.artic.map.R
 import edu.artic.ui.BaseFragment
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_leave_tour_dialog.*
+//import kotlinx.android.synthetic.main.fragment_leave_tour_dialog.*
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -34,7 +34,7 @@ class LeaveCurrentTourDialogFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.LeaveTourDialogTheme)
+        setStyle(androidx.fragment.app.DialogFragment.STYLE_NO_TITLE, R.style.LeaveTourDialogTheme)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

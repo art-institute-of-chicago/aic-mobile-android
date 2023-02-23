@@ -19,13 +19,13 @@ import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
-import kotlinx.android.synthetic.main.layout_cell_empty.view.*
-import kotlinx.android.synthetic.main.layout_cell_header.view.*
-import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
-import kotlinx.android.synthetic.main.layout_cell_search_list_item.view.*
-import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
-import kotlinx.android.synthetic.main.layout_cell_suggested_map_object.view.*
+//import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
+//import kotlinx.android.synthetic.main.layout_cell_empty.view.*
+//import kotlinx.android.synthetic.main.layout_cell_header.view.*
+//import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
+//import kotlinx.android.synthetic.main.layout_cell_search_list_item.view.*
+//import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
+//import kotlinx.android.synthetic.main.layout_cell_suggested_map_object.view.*
 
 class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewModel>() {
 

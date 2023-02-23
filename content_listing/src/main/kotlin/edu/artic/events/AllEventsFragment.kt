@@ -1,7 +1,7 @@
 package edu.artic.events
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
@@ -18,7 +18,7 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_view_all.*
+//import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
 class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
@@ -42,7 +42,12 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         val eventsAdapter = AllEventsAdapter()
-        val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
+        val layoutManager = GridLayoutManager(
+            activity,
+            2,
+            GridLayoutManager.VERTICAL,
+            false
+        )
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 /**

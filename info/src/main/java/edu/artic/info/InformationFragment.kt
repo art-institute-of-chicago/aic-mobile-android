@@ -18,7 +18,7 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_information.*
+//import kotlinx.android.synthetic.main.fragment_information.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 import kotlin.system.exitProcess

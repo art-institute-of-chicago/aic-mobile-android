@@ -15,7 +15,7 @@ import edu.artic.base.utils.customTab.CustomTabManager
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
-import kotlinx.android.synthetic.main.fragment_museum_information.*
+//import kotlinx.android.synthetic.main.fragment_museum_information.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 

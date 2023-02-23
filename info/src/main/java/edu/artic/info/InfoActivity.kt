@@ -9,7 +9,7 @@ import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.findNavController
-import kotlinx.android.synthetic.main.activity_info.*
+//import kotlinx.android.synthetic.main.activity_info.*
 import javax.inject.Inject
 
 class InfoActivity : BaseActivity() {

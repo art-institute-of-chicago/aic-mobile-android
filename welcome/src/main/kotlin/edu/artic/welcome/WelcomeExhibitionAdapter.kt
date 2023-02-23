@@ -8,7 +8,7 @@ import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
+//import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)

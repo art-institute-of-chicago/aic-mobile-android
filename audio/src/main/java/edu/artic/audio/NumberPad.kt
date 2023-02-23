@@ -2,7 +2,7 @@ package edu.artic.audio
 
 import android.view.View
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
-import kotlinx.android.synthetic.main.view_number_pad_numeric_element.view.*
+//import kotlinx.android.synthetic.main.view_number_pad_numeric_element.view.*
 
 
 /**

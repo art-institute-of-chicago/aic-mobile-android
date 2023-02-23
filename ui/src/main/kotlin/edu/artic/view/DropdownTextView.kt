@@ -3,9 +3,9 @@ package edu.artic.view
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.*
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
+import androidx.annotation.*
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View

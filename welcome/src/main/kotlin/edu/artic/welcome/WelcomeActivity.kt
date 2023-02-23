@@ -7,7 +7,7 @@ import android.view.Window
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
-import kotlinx.android.synthetic.main.activity_welcome.*
+//import kotlinx.android.synthetic.main.activity_welcome.*
 
 class WelcomeActivity : BaseActivity() {
 

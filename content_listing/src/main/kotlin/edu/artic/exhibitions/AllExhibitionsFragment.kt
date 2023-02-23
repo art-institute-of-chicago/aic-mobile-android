@@ -1,7 +1,7 @@
 package edu.artic.exhibitions
 
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
@@ -19,7 +19,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_view_all.*
+//import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
 class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() {
@@ -38,7 +38,12 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
         super.onViewCreated(view, savedInstanceState)
 
         /* Build tour summary list*/
-        val layoutManager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
+        val layoutManager = GridLayoutManager(
+            activity,
+            1,
+            GridLayoutManager.VERTICAL,
+            false
+        )
         recyclerView.layoutManager = layoutManager
         val exhibitionsAdapter = AllExhibitionsAdapter()
         recyclerView.adapter = exhibitionsAdapter

@@ -12,7 +12,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -90,14 +90,14 @@
         app:layout_constraintTop_toBottomOf="@id/exo_position">
 
         <ImageButton
-            android:id="@id/exo_play"
+            android:id="@id/exoPlay"
             android:layout_width="@dimen/audioPlayerControllerSize"
             android:layout_height="@dimen/audioPlayerControllerSize"
             android:background="@drawable/ic_play"
             android:contentDescription="@string/exo_controls_play_description" />
 
         <ImageButton
-            android:id="@id/exo_pause"
+            android:id="@id/exoPause"
             android:layout_width="@dimen/audioPlayerControllerSize"
             android:layout_height="@dimen/audioPlayerControllerSize"
             android:background="@drawable/ic_pause"
@@ -119,4 +119,4 @@
         app:played_color="@color/sea"
         app:scrubber_drawable="@drawable/exo_scrubber" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

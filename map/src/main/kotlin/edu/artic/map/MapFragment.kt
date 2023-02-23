@@ -2,10 +2,10 @@ package edu.artic.map
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.annotation.UiThread
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
+import androidx.annotation.UiThread
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
@@ -46,7 +46,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.fragment_map.*
+//import kotlinx.android.synthetic.main.fragment_map.*
 import kotlin.reflect.KClass
 
 /**
@@ -565,7 +565,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                 .subscribe { endpoint ->
 
                     val act = requireActivity()
-                    val manager: FragmentManager = act.supportFragmentManager ?: return@subscribe
+                    val manager: androidx.fragment.app.FragmentManager = act.supportFragmentManager ?: return@subscribe
 
                     when (endpoint) {
                         MapViewModel.NavigationEndpoint.Search -> {
@@ -593,7 +593,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
                         }
                         is MapViewModel.NavigationEndpoint.Messages -> {
                             val tag = "PagedMessageFragment"
-                            (manager.findFragmentByTag(tag) as? DialogFragment)?.dismiss()
+                            (manager.findFragmentByTag(tag) as? androidx.fragment.app.DialogFragment)?.dismiss()
                             PagedMessageFragment.create(endpoint.messages).show(manager, tag)
                         }
                     }
@@ -606,7 +606,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
      * Shows contextual information below the map. Also, it adjusts padding on the map to stay
      * in line with product requirements.
      */
-    private fun displayFragmentInInfoContainer(fragment: Fragment, tag: String = OBJECT_DETAILS) {
+    private fun displayFragmentInInfoContainer(fragment: androidx.fragment.app.Fragment, tag: String = OBJECT_DETAILS) {
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
                 .replace(R.id.infocontainer, fragment, tag)

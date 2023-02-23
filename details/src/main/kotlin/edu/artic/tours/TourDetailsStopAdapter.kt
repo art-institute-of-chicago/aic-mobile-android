@@ -9,7 +9,7 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.details.R
 import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
+//import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
 
 /**
  * Adapter for [tour stops][edu.artic.db.models.ArticTour.TourStop]. Does not include

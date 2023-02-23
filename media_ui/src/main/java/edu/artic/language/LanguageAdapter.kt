@@ -8,7 +8,7 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.adapter.DropDownAdapter
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.media.ui.R
-import kotlinx.android.synthetic.main.dropdown_language_cell.view.*
+//import kotlinx.android.synthetic.main.dropdown_language_cell.view.*
 
 /**
  * List adapter for the language-selection dropdown.
@@ -37,7 +37,9 @@ class LanguageAdapter : AutoHolderRecyclerViewAdapter<SpecifiesLanguage>(),
         return DropDownViewHolder(parent, getLayoutResId(0))
     }
 
-    class DropDownViewHolder(viewGroup: ViewGroup, layout: Int) : BaseViewHolder(viewGroup, layout)
+    class DropDownViewHolder(viewGroup: ViewGroup, layout: Int) : BaseViewHolder(viewGroup, layout){
+
+    }
 
     class ContentViewHolder(viewGroup: ViewGroup, layout: Int) : BaseViewHolder(viewGroup, layout)
 }

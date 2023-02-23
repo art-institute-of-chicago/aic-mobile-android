@@ -3,8 +3,8 @@ package edu.artic.exhibitions
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.math.MathUtils
-import android.support.v4.widget.NestedScrollView
+import androidx.core.math.MathUtils
+import androidx.core.widget.NestedScrollView
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.request.RequestOptions
@@ -30,7 +30,7 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_exhibition_details.*
+//import kotlinx.android.synthetic.main.fragment_exhibition_details.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 

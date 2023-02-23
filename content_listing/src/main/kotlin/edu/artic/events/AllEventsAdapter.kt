@@ -8,7 +8,7 @@ import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.content.listing.R
 import edu.artic.image.GlideApp
-import kotlinx.android.synthetic.main.cell_all_events_layout.view.*
+//import kotlinx.android.synthetic.main.cell_all_events_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)

@@ -2,8 +2,8 @@ package edu.artic.events
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.math.MathUtils
-import android.support.v4.widget.NestedScrollView
+import androidx.core.math.MathUtils
+import androidx.core.widget.NestedScrollView
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -26,7 +26,7 @@ import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
-import kotlinx.android.synthetic.main.fragment_event_details.*
+//import kotlinx.android.synthetic.main.fragment_event_details.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.reflect.KClass

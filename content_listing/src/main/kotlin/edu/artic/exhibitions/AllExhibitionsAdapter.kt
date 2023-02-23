@@ -9,7 +9,7 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.content.listing.R
 import edu.artic.image.GlideApp
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
+//import kotlinx.android.synthetic.main.cell_all_exhibitions_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)

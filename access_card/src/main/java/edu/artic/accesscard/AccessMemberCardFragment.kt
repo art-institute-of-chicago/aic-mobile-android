@@ -1,14 +1,17 @@
 package edu.artic.accesscard
 
+//import kotlinx.android.synthetic.main.fragment_validate_member_information.*
+//import kotlinx.android.synthetic.main.layout_member_access_card.*
+//import kotlinx.android.synthetic.main.layout_member_information_form.*
 import android.animation.ValueAnimator
 import android.animation.ValueAnimator.INFINITE
 import android.animation.ValueAnimator.REVERSE
 import android.app.AlertDialog
 import android.os.Bundle
-import android.support.annotation.UiThread
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import com.fuzz.rx.*
 import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.clicks
@@ -17,6 +20,7 @@ import com.jakewharton.rxbinding2.widget.hintRes
 import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textChanges
 import edu.artic.accesscard.barcode.BarcodeEncoder
+import edu.artic.accesscard.databinding.FragmentValidateMemberInformationBinding
 import edu.artic.analytics.ScreenName
 import edu.artic.base.LoadStatus
 import edu.artic.base.utils.asDeepLinkIntent
@@ -27,9 +31,6 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_validate_member_information.*
-import kotlinx.android.synthetic.main.layout_member_access_card.*
-import kotlinx.android.synthetic.main.layout_member_information_form.*
 import kotlin.reflect.KClass
 
 
@@ -39,10 +40,11 @@ import kotlin.reflect.KClass
  * 1. Displays the member information form (with memberID & ZIP code fields) for validation .
  * 2. Displays the cardHolder information with the barcode (encodes memberID to PDF417) and hides the form.
  */
-class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel>() {
-    override val viewModelClass: KClass<AccessMemberCardViewModel> = AccessMemberCardViewModel::class
+class AccessMemberCardFragment :
+    BaseViewModelFragment<FragmentValidateMemberInformationBinding, AccessMemberCardViewModel>() {
+    override val viewModelClass: KClass<AccessMemberCardViewModel> =
+        AccessMemberCardViewModel::class
     override val title = R.string.member_card_access_action
-    override val layoutResId: Int = R.layout.fragment_validate_member_information
     override val screenName: ScreenName? = null
 
     private lateinit var toolbarColorAnimator: ValueAnimator
@@ -50,158 +52,159 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
     override fun setupBindings(viewModel: AccessMemberCardViewModel) {
         super.setupBindings(viewModel)
         viewModel.isValid
-                .subscribeBy {
-                    signIn.isEnabled = it
-                }.disposedBy(disposeBag)
+            .subscribeBy {
+                binding.memberInfoFormLayout.signIn.isEnabled = it
+            }.disposedBy(disposeBag)
 
-        zipCode.textChanges()
-                .skipInitialValue()
-                .map { it.toString() }
-                .bindTo(viewModel.zipCode)
-                .disposedBy(disposeBag)
+        binding.memberInfoFormLayout.zipCode.textChanges()
+            .skipInitialValue()
+            .map { it.toString() }
+            .bindTo(viewModel.zipCode)
+            .disposedBy(disposeBag)
 
-        memberId.textChanges()
-                .skipInitialValue()
-                .map { it.toString() }
-                .bindTo(viewModel.memberID)
-                .disposedBy(disposeBag)
+        binding.memberInfoFormLayout.memberId.textChanges()
+            .skipInitialValue()
+            .map { it.toString() }
+            .bindTo(viewModel.memberID)
+            .disposedBy(disposeBag)
 
         viewModel.loadStatus
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { loadStatus ->
-                    when (loadStatus) {
-                        is LoadStatus.Loading -> {
-                            loading.visibility = View.VISIBLE
-                            mask.visibility = View.VISIBLE
-                        }
-                        is LoadStatus.Error -> {
-                            loading.visibility = View.GONE
-                            mask.visibility = View.GONE
-                            /**
-                             * Designs does not exist for error dialogs yet.
-                             * Temporarily using [AlertDialog].
-                             *
-                             * TODO:: Upgrade to DialogFragment once design is finalized.
-                             */
-                            AlertDialog.Builder(requireContext(), R.style.ErrorDialog)
-                                    .setTitle(getString(R.string.global_error_title))
-                                    .setMessage(loadStatus.error.message)
-                                    .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
-                                        dialog.dismiss()
-                                    }.show()
-                        }
-                        is LoadStatus.None -> {
-                            loading.visibility = View.GONE
-                            mask.visibility = View.GONE
-                        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { loadStatus ->
+                when (loadStatus) {
+                    is LoadStatus.Loading -> {
+                        binding.loading.visibility = View.VISIBLE
+                        binding.mask.visibility = View.VISIBLE
                     }
-                }.disposedBy(disposeBag)
+                    is LoadStatus.Error -> {
+                        binding.loading.visibility = View.GONE
+                        binding.mask.visibility = View.GONE
+                        /**
+                         * Designs does not exist for error dialogs yet.
+                         * Temporarily using [AlertDialog].
+                         *
+                         * TODO:: Upgrade to DialogFragment once design is finalized.
+                         */
+                        AlertDialog.Builder(requireContext(), R.style.ErrorDialog)
+                            .setTitle(getString(R.string.global_error_title))
+                            .setMessage(loadStatus.error.message)
+                            .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
+                                dialog.dismiss()
+                            }.show()
+                    }
+                    is LoadStatus.None -> {
+                        binding.loading.visibility = View.GONE
+                        binding.mask.visibility = View.GONE
+                    }
+                }
+            }.disposedBy(disposeBag)
 
         viewModel.displayMode
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
-                    when (it) {
-                        AccessMemberCardViewModel.DisplayMode.DisplayForm -> {
-                            memberInfoFormLayout.visibility = View.VISIBLE
-                            memberAccessCardLayout.visibility = View.GONE
-                            requireActivity().setTitle(R.string.member_card_access_action)
-                        }
-                        is AccessMemberCardViewModel.DisplayMode.DisplayAccessCard -> {
-                            memberInfoFormLayout.visibility = View.GONE
-                            memberAccessCardLayout.visibility = View.VISIBLE
-                            updateBarCode(it.memberID)
-                            requireActivity().setTitle(R.string.member_card_title)
-                        }
-                        is AccessMemberCardViewModel.DisplayMode.UpdateForm -> {
-                            memberInfoFormLayout.visibility = View.VISIBLE
-                            memberAccessCardLayout.visibility = View.GONE
-                            requireActivity().setTitle(R.string.member_card_access_action)
-                            zipCode.setText(it.zipCode)
-                            memberId.setText(it.memberID)
-                        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                when (it) {
+                    AccessMemberCardViewModel.DisplayMode.DisplayForm -> {
+                        binding.memberInfoFormLayoutContainer.visibility = View.VISIBLE
+                        binding.memberAccessCardLayoutContainer.visibility = View.GONE
+                        requireActivity().setTitle(R.string.member_card_access_action)
                     }
-                }.disposedBy(disposeBag)
-
-        searchIcon
-                .clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onClickSearch()
+                    is AccessMemberCardViewModel.DisplayMode.DisplayAccessCard -> {
+                        binding.memberInfoFormLayoutContainer.visibility = View.GONE
+                        binding.memberAccessCardLayoutContainer.visibility = View.VISIBLE
+                        updateBarCode(it.memberID)
+                        requireActivity().setTitle(R.string.member_card_title)
+                    }
+                    is AccessMemberCardViewModel.DisplayMode.UpdateForm -> {
+                        binding.memberInfoFormLayoutContainer.visibility = View.VISIBLE
+                        binding.memberAccessCardLayoutContainer.visibility = View.GONE
+                        requireActivity().setTitle(R.string.member_card_access_action)
+                        binding.memberInfoFormLayout.zipCode.setText(it.zipCode)
+                        binding.memberInfoFormLayout.memberId.setText(it.memberID)
+                    }
                 }
-                .disposedBy(disposeBag)
+            }.disposedBy(disposeBag)
+
+        binding.searchIcon
+            .clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onClickSearch()
+            }
+            .disposedBy(disposeBag)
 
         viewModel.selectedCardHolder
-                .observeOn(AndroidSchedulers.mainThread())
-                .bindTo(cardHolder.text())
-                .disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .bindTo(binding.memberAccessCardLayout.cardHolder.text())
+            .disposedBy(disposeBag)
 
         viewModel.membership
-                .observeOn(AndroidSchedulers.mainThread())
-                .bindTo(membershipType.text())
-                .disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .bindTo(binding.memberAccessCardLayout.membershipType.text())
+            .disposedBy(disposeBag)
 
         viewModel.expiration
-                .map { resources.getString(R.string.member_card_expires, it) }
-                .bindToMain(expiration.text())
-                .disposedBy(disposeBag)
+            .map { resources.getString(R.string.member_card_expires, it) }
+            .bindToMain(binding.memberAccessCardLayout.expiration.text())
+            .disposedBy(disposeBag)
 
         viewModel.primaryConstituentID
-                .map { resources.getString(R.string.member_card_member_id, it) }
-                .bindToMain(primaryConstituentID.text())
-                .disposedBy(disposeBag)
+            .map { resources.getString(R.string.member_card_member_id, it) }
+            .bindToMain(binding.memberAccessCardLayout.primaryConstituentID.text())
+            .disposedBy(disposeBag)
 
-        switchCardHolder.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onSwitchCardholderClicked()
-                }.disposedBy(disposeBag)
+        binding.memberAccessCardLayout.switchCardHolder.clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onSwitchCardholderClicked()
+            }.disposedBy(disposeBag)
 
-        changeInformation.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onUpdateInformationClicked()
-                }.disposedBy(disposeBag)
+        binding.memberAccessCardLayout.changeInformation.clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onUpdateInformationClicked()
+            }.disposedBy(disposeBag)
 
         viewModel.zipCodeHint
-                .bindToMain(zipCode.hintRes())
-                .disposedBy(disposeBag)
+            .bindToMain(binding.memberInfoFormLayout.zipCode.hintRes())
+            .disposedBy(disposeBag)
 
         viewModel.memberIdHint
-                .bindToMain(memberId.hintRes())
-                .disposedBy(disposeBag)
+            .bindToMain(binding.memberInfoFormLayout.memberId.hintRes())
+            .disposedBy(disposeBag)
 
         viewModel.members
-                .map { it.size > 1 }
-                .bindToMain(switchCardHolder.visibility())
-                .disposedBy(disposeBag)
+            .map { it.size > 1 }
+            .bindToMain(binding.memberAccessCardLayout.switchCardHolder.visibility())
+            .disposedBy(disposeBag)
 
         viewModel.isReciprocalMemberLevel
-                .bindToMain(reciprocalMember.visibility())
-                .disposedBy(disposeBag)
+            .bindToMain(binding.memberAccessCardLayout.reciprocalMember.visibility())
+            .disposedBy(disposeBag)
 
         Observables.combineLatest(
-                viewModel.isReciprocalMemberLevel.filter { it },
-                viewModel.membership)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (_, memberLevel) ->
-                    reciprocalMember.contentDescription = memberLevel
-                }.disposedBy(disposeBag)
+            viewModel.isReciprocalMemberLevel.filter { it },
+            viewModel.membership
+        )
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { (_, memberLevel) ->
+                binding.memberAccessCardLayout.reciprocalMember.contentDescription = memberLevel
+            }.disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: AccessMemberCardViewModel) {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
-                .observeOn(AndroidSchedulers.mainThread())
-                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
-                .subscribeBy {
-                    when (it) {
-                        AccessMemberCardViewModel.NavigationEndpoint.Search -> {
-                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                            startActivity(intent)
-                        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
+            .subscribeBy {
+                when (it) {
+                    AccessMemberCardViewModel.NavigationEndpoint.Search -> {
+                        val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                        startActivity(intent)
                     }
                 }
-                .disposedBy(navigationDisposeBag)
+            }
+            .disposedBy(navigationDisposeBag)
     }
 
     /**
@@ -214,8 +217,13 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
             val barCodeHeight = resources.getDimensionPixelSize(R.dimen.barcodeHeight)
             val barCodeWidth = resources.displayMetrics.widthPixels
 
-            val bitmap = barcodeEncoder.encodeBitmap(memberID, BarcodeFormat.PDF_417, barCodeWidth, barCodeHeight)
-            barcode.setImageBitmap(bitmap)
+            val bitmap = barcodeEncoder.encodeBitmap(
+                memberID,
+                BarcodeFormat.PDF_417,
+                barCodeWidth,
+                barCodeHeight
+            )
+            binding.memberAccessCardLayout.barcode.setImageBitmap(bitmap)
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -225,17 +233,20 @@ class AccessMemberCardFragment : BaseViewModelFragment<AccessMemberCardViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        signIn.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onSignInClick()
-                    requireActivity().hideSoftKeyboard()
-                }.disposedBy(disposeBag)
+        binding.memberInfoFormLayout.signIn.clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onSignInClick()
+                requireActivity().hideSoftKeyboard()
+            }.disposedBy(disposeBag)
 
-        zipCode.setOnEditorActionListener { _, actionId, _ ->
+        binding.memberInfoFormLayout.zipCode.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
-                    val isFormFilled = !zipCode.text.isNullOrBlank() && !memberId.text.isNullOrBlank()
+                    val isFormFilled =
+                        !binding.memberInfoFormLayout.zipCode.text.isNullOrBlank()
+                                && !binding.memberInfoFormLayout.memberId.text.isNullOrBlank()
+
                     if (isFormFilled) {
                         viewModel.onSignInClick()
                     }

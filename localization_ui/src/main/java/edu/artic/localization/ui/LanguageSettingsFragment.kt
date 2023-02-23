@@ -2,13 +2,14 @@ package edu.artic.localization.ui
 
 
 import android.os.Bundle
-import android.support.annotation.UiThread
-import android.support.constraint.ConstraintSet
+import androidx.annotation.UiThread
+import androidx.constraintlayout.widget.ConstraintSet
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import androidx.core.content.ContextCompat.startActivity
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
@@ -16,19 +17,19 @@ import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.base.utils.dpToPixels
 import edu.artic.localization.SPANISH
+import edu.artic.localization.ui.databinding.FragmentLanguageSettingsBinding
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_language_settings.*
+//import kotlinx.android.synthetic.main.fragment_language_settings.*
 import java.util.*
 import kotlin.math.max
 import kotlin.reflect.KClass
 
 
-class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel>() {
+class LanguageSettingsFragment : BaseViewModelFragment<FragmentLanguageSettingsBinding,LanguageSettingsViewModel>() {
     override val viewModelClass: KClass<LanguageSettingsViewModel> = LanguageSettingsViewModel::class
     override val title = R.string.language_settings_title
-    override val layoutResId: Int = R.layout.fragment_language_settings
     override val screenName: ScreenName? = ScreenName.LanguageSettings
 
     /**
@@ -62,7 +63,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                                 else -> R.string.localization_english_in_english
                             }
                     )
-                    languageSelectionButtons.addView(
+                    binding.languageSelectionButtons.addView(
                             radioButton,
                             LinearLayout.LayoutParams(
                                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -103,21 +104,21 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
         a.recycle()
 
         if (hasToolbar) {
-            appBar?.visibility = View.VISIBLE
+            binding.appBar?.visibility = View.VISIBLE
         } else {
-            appBar?.visibility = View.GONE
+            binding.appBar?.visibility = View.GONE
         }
 
         if (hasDivider) {
-            divider.visibility = View.VISIBLE
+            binding.divider.visibility = View.VISIBLE
         } else {
-            divider.visibility = View.GONE
+            binding.divider.visibility = View.GONE
         }
 
         val constraintSet = ConstraintSet()
-        constraintSet.clone(constraintContainer)
+        constraintSet.clone(binding.constraintContainer)
         constraintSet.setVerticalBias(R.id.languageSelectionButtons, verticalBias)
-        constraintSet.applyTo(constraintContainer)
+        constraintSet.applyTo(binding.constraintContainer)
     }
 
     override fun setupBindings(viewModel: LanguageSettingsViewModel) {
@@ -125,7 +126,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
 
         requireActivity().title = resources.getString(R.string.language_settings_title)
 
-        searchIcon.clicks()
+        binding.searchIcon.clicks()
                 .defaultThrottle()
                 .subscribe {
                     val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
@@ -137,7 +138,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<LanguageSettingsViewModel
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { locale ->
                     val index = max(availableLocales.indexOf(locale), 0)
-                    val radioButton = languageSelectionButtons.getChildAt(index) as? RadioButton
+                    val radioButton = binding.languageSelectionButtons.getChildAt(index) as? RadioButton
                             ?: return@subscribe
                     radioButton.isChecked = true
                 }

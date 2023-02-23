@@ -1,22 +1,23 @@
 package edu.artic.splash
 
+//import kotlinx.android.synthetic.main.activity_splash.*
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.ActivityOptions
 import android.app.AlertDialog
-import android.app.DialogFragment.STYLE_NO_FRAME
 import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.support.annotation.UiThread
 import android.transition.Fade
 import android.util.TypedValue
 import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
+import androidx.annotation.UiThread
+import androidx.fragment.app.DialogFragment
 import com.fuzz.rx.disposedBy
 import edu.artic.base.PermissibleError
 import edu.artic.base.asNetworkException
@@ -25,6 +26,7 @@ import edu.artic.base.utils.makeStatusBarTransparent
 import edu.artic.db.AppDataPreferencesManager
 import edu.artic.localization.ui.LanguageSettingsFragment
 import edu.artic.navigation.NavigationConstants
+import edu.artic.splash.databinding.ActivitySplashBinding
 import edu.artic.util.handleNetworkError
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
@@ -32,19 +34,16 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_splash.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
 
-class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.SurfaceTextureListener {
+class SplashActivity : BaseViewModelActivity<ActivitySplashBinding, SplashViewModel>(),
+    TextureView.SurfaceTextureListener {
     private var mMediaPlayer: MediaPlayer? = null
     private lateinit var surface: Surface
-
-    override val layoutResId: Int
-        get() = R.layout.activity_splash
 
     override val viewModelClass: KClass<SplashViewModel>
         get() = SplashViewModel::class
@@ -66,96 +65,93 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         super.onCreate(savedInstanceState)
         makeStatusBarTransparent()
 
-        textureView.surfaceTextureListener = this
+        binding.textureView.surfaceTextureListener = this
 
         observeDataLoadingProgress()
 
         observeDataError()
 
-        welcome.alpha = 0f
+        binding.welcome.alpha = 0f
 
-        fadeInAnimation = welcome.animate()
-                .alpha(1f)
-                .setInterpolator(AccelerateDecelerateInterpolator())
-                .setDuration(1000)
-                .setStartDelay(500)
+        fadeInAnimation = binding.welcome.animate()
+            .alpha(1f)
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .setDuration(1000)
+            .setStartDelay(500)
 
         fadeInAnimation.start()
     }
 
     private fun observeDataLoadingProgress() {
         viewModel.percentage
-                .handleNetworkError(this)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(onNext = {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        progressBar.setProgress((it * 100).toInt(), true)
-                    } else {
-                        progressBar.progress = (it * 100).toInt()
-                    }
-                }, onError = {
-                    /**
-                     * Display error message below the progressbar.
-                     */
-                    val errorMessage = it.localizedMessage
+            .handleNetworkError(this)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(onNext = {
+                binding.progressBar.setProgress((it * 100).toInt(), true)
+            }, onError = {
+                /**
+                 * Display error message below the progressbar.
+                 */
+                val errorMessage = it.localizedMessage
 
-                    if (BuildConfig.DEBUG) {
-                        percentText.visibility = View.VISIBLE
-                        percentText.text = errorMessage
+                if (BuildConfig.DEBUG) {
+                    binding.percentText.visibility = View.VISIBLE
+                    binding.percentText.text = errorMessage
 
-                        Timber.e(it)
-                    }
+                    Timber.e(it)
+                }
 
-                }).disposedBy(disposeBag)
+            }).disposedBy(disposeBag)
     }
 
     private fun observeDataError() {
         viewModel.dataError
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { t -> t.asNetworkException(resources.getString(R.string.global_loading_error_no_connectivity)) }
-                .subscribeBy {
-                    /**
-                     * Display alert with error message.
-                     */
-                    val defaultMessage = resources.getString(R.string.global_loading_error_general)
-                    val errorHandler = ErrorMessagePresenter(it, defaultMessage, appDataPreferencesManager)
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { t -> t.asNetworkException(resources.getString(R.string.global_loading_error_no_connectivity)) }
+            .subscribeBy {
+                /**
+                 * Display alert with error message.
+                 */
+                val defaultMessage = resources.getString(R.string.global_loading_error_general)
+                val errorHandler =
+                    ErrorMessagePresenter(it, defaultMessage, appDataPreferencesManager)
 
-                    if (errorHandler.shouldDisplayErrorDialog()) {
-                        errorDialog?.dismiss()
-                        errorDialog = AlertDialog.Builder(this, R.style.ErrorDialog)
-                                .setTitle(resources.getString(R.string.global_error_title))
-                                .setMessage(errorHandler.getErrorMessage())
-                                .setOnDismissListener { _ ->
-                                    if (it is PermissibleError) {
-                                        viewModel.proceedToWelcomePageIfDataAvailable()
-                                    }
-                                }
-                                .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
-                                    dialog.dismiss()
-                                }
-                                .show()
-                    } else {
-                        viewModel.proceedToWelcomePageIfDataAvailable()
-                    }
+                if (errorHandler.shouldDisplayErrorDialog()) {
+                    errorDialog?.dismiss()
+                    errorDialog = AlertDialog.Builder(this, R.style.ErrorDialog)
+                        .setTitle(resources.getString(R.string.global_error_title))
+                        .setMessage(errorHandler.getErrorMessage())
+                        .setOnDismissListener { _ ->
+                            if (it is PermissibleError) {
+                                viewModel.proceedToWelcomePageIfDataAvailable()
+                            }
+                        }
+                        .setPositiveButton(getString(android.R.string.ok)) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                } else {
+                    viewModel.proceedToWelcomePageIfDataAvailable()
+                }
 
-                }.disposedBy(disposeBag)
+            }.disposedBy(disposeBag)
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.navigateTo
-                .filter { it is Navigate.Forward }
-                .map { it as Navigate.Forward }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { navigation ->
-                    val endpoint = navigation.endpoint
-                    when (endpoint) {
-                        is SplashViewModel.NavigationEndpoint.StartVideo ->
-                            fadeOutChrome(endpoint.displayLanguageSettings)
-                        is SplashViewModel.NavigationEndpoint.Welcome ->
-                            goToWelcomeActivity()
-                    }
-                }.disposedBy(navDisposeBag)
+            .filter { it is Navigate.Forward }
+            .map { it as Navigate.Forward }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { navigation ->
+                val endpoint = navigation.endpoint
+                when (endpoint) {
+                    is SplashViewModel.NavigationEndpoint.StartVideo ->
+                        fadeOutChrome(endpoint.displayLanguageSettings)
+                    is SplashViewModel.NavigationEndpoint.Welcome ->
+                        goToWelcomeActivity()
+                }
+            }.disposedBy(navDisposeBag)
     }
 
     override fun onStop() {
@@ -200,9 +196,9 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     }
 
     private fun fadeOutChrome(displayDialog: Boolean) {
-        textureView.alpha = 0f
+        binding.textureView.alpha = 0f
         mMediaPlayer?.seekTo(0)
-        splashChrome.animate().alpha(0f).setListener(object : AnimatorListenerAdapter() {
+        binding.splashChrome.animate().alpha(0f).setListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 fadeInVideo(displayDialog)
             }
@@ -210,8 +206,8 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     }
 
     private fun fadeInVideo(displayDialog: Boolean) {
-        animatedMuseum.animate().alpha(0f).start()
-        textureView.animate().alpha(1f).setListener(object : AnimatorListenerAdapter() {
+        binding.animatedMuseum.animate().alpha(0f).start()
+        binding.textureView.animate().alpha(1f).setListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 mMediaPlayer?.start()
                 if (displayDialog) {
@@ -224,7 +220,7 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
     private fun goToWelcomeActivity() {
         val intent = NavigationConstants.HOME.asDeepLinkIntent()
         val options = ActivityOptions
-                .makeSceneTransitionAnimation(this, textureView, "museumImage")
+            .makeSceneTransitionAnimation(this, binding.textureView, "museumImage")
         if (!isFinishing) {
             /**
              * Shared transition element does not work properly (crashes on some devices) running
@@ -246,19 +242,19 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
      */
     private fun pauseVideo(time: Long) {
         Observable.timer(time, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onNext = {
-                            Timber.d(it.toString())
-                            mMediaPlayer?.pause()
-                            displayLanguageSelectionDialog()
-                        },
-                        onError = {
-                            it.printStackTrace()
-                        }
-                )
-                .disposedBy(disposeBag)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = {
+                    Timber.d(it.toString())
+                    mMediaPlayer?.pause()
+                    displayLanguageSelectionDialog()
+                },
+                onError = {
+                    it.printStackTrace()
+                }
+            )
+            .disposedBy(disposeBag)
     }
 
     /**
@@ -268,19 +264,20 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
      */
     private fun displayLanguageSelectionDialog() {
         val fragment = LanguageSettingsFragment.getLanguageSettingsDialogForSplash()
-        fragment.attachTourStateListener(object : LanguageSettingsFragment.LanguageSelectionListener {
+        fragment.attachTourStateListener(object :
+            LanguageSettingsFragment.LanguageSelectionListener {
             override fun languageSelected() {
                 resumeVideo()
             }
         })
-        fragment.setStyle(STYLE_NO_FRAME, R.style.SplashTheme)
+        fragment.setStyle(DialogFragment.STYLE_NO_FRAME, R.style.SplashTheme)
         fragment.show(supportFragmentManager, "language_settings")
     }
 
     @UiThread
     private fun resumeVideo() {
         try {
-            splashChrome.postDelayed({ mMediaPlayer?.start() }, 400)
+            binding.splashChrome.postDelayed({ mMediaPlayer?.start() }, 400)
         } catch (exception: Exception) {
             exception.printStackTrace()
         }
@@ -295,14 +292,18 @@ class SplashActivity : BaseViewModelActivity<SplashViewModel>(), TextureView.Sur
         val videoRatio = 16f / 9f
         val scaleRatio = videoRatio / ratioOfScreen
         matrix.setScale(1.0f, scaleRatio, 0f, 0f)
-        textureView.setTransform(matrix)
+        binding.textureView.setTransform(matrix)
 
-        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+        val params = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
         val videoHeight = (width.toFloat() * videoRatio).toInt()
         val percentageOfScreenAboveMuseumInVideo = (636f / 1280f)
         val topScreenOffset = (videoHeight * percentageOfScreenAboveMuseumInVideo)
-        val imagePadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, resources.displayMetrics)
+        val imagePadding =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, resources.displayMetrics)
         params.topMargin = (topScreenOffset - imagePadding).toInt()
-        animatedMuseum.layoutParams = params
+        binding.animatedMuseum.layoutParams = params
     }
 }

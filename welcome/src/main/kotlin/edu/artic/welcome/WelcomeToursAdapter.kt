@@ -7,7 +7,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
-import kotlinx.android.synthetic.main.welcome_tour_summary_cell_layout.view.*
+//import kotlinx.android.synthetic.main.welcome_tour_summary_cell_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)

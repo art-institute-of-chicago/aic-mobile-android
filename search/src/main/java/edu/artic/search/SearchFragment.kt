@@ -13,7 +13,7 @@ import edu.artic.analytics.ScreenName
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.search_app_bar_layout.*
+//import kotlinx.android.synthetic.main.search_app_bar_layout.*
 import kotlin.reflect.KClass
 
 /**

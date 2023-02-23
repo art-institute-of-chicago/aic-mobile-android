@@ -16,9 +16,9 @@ import edu.artic.image.GlideApp
 import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.layout_amenity_search_cell.view.*
-import kotlinx.android.synthetic.main.layout_artwork_search_cell.view.*
-import kotlinx.android.synthetic.main.layout_exhibition_search_cell.view.*
+//import kotlinx.android.synthetic.main.layout_amenity_search_cell.view.*
+//import kotlinx.android.synthetic.main.layout_artwork_search_cell.view.*
+//import kotlinx.android.synthetic.main.layout_exhibition_search_cell.view.*
 
 /**
 @author Sameer Dhakal (Fuzz)

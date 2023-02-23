@@ -1,11 +1,13 @@
 package edu.artic.viewmodel
 
 import android.os.Bundle
+import androidx.viewbinding.ViewBinding
 import edu.artic.ui.BaseActivity
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-abstract class BaseViewModelActivity<TViewModel : BaseViewModel> : BaseActivity() {
+abstract class BaseViewModelActivity<VB : ViewBinding, TViewModel : BaseViewModel> :
+    BaseActivity<VB>() {
 
     protected abstract val viewModelClass: KClass<TViewModel>
 

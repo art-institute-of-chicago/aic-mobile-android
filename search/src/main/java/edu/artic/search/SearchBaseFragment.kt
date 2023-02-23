@@ -3,7 +3,7 @@ package edu.artic.search
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.View
 import com.fuzz.rx.disposedBy
 import edu.artic.adapter.itemClicksWithPosition
@@ -21,7 +21,7 @@ import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_search_results_sub.*
+//import kotlinx.android.synthetic.main.fragment_search_results_sub.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -51,7 +51,10 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
         val endCurrentPadding = (spaceReminding / numToDisplay).toInt()
         val endFinalPadding = (spaceReminding / (numToDisplay - 1)).toInt()
 
-        val lm = GridLayoutManager(view.context, SearchResultsAdapter.MAX_ARTWORKS_PER_ROW)
+        val lm = GridLayoutManager(
+            view.context,
+            SearchResultsAdapter.MAX_ARTWORKS_PER_ROW
+        )
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return (resultsRV.adapter as SearchResultsAdapter).getSpanCount(position)

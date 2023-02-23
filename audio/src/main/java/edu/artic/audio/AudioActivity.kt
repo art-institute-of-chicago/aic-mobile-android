@@ -7,7 +7,7 @@ import edu.artic.media.ui.NarrowAudioPlayerFragment
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
-import kotlinx.android.synthetic.main.activity_audio.*
+//import kotlinx.android.synthetic.main.activity_audio.*
 
 /**
  * One of the four primary sections of the app. This Activity may host either

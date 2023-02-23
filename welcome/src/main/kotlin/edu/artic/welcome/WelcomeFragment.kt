@@ -2,11 +2,11 @@ package edu.artic.welcome
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.text.HtmlCompat
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.DialogFragment
+import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
@@ -28,8 +28,8 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_welcome.*
-import kotlinx.android.synthetic.main.welcome_section.view.*
+//import kotlinx.android.synthetic.main.fragment_welcome.*
+//import kotlinx.android.synthetic.main.welcome_section.view.*
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -54,10 +54,17 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         /* Build tour summary list*/
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = LinearLayoutManager(
+            activity,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
         tourSection.list.layoutManager = layoutManager
 
-        val decoration = DividerItemDecoration(view.context, DividerItemDecoration.HORIZONTAL)
+        val decoration = DividerItemDecoration(
+            view.context,
+            DividerItemDecoration.HORIZONTAL
+        )
         decoration.setDrawable(ContextCompat.getDrawable(view.context, R.drawable.space_decorator)!!)
         tourSection.list.addItemDecoration(decoration)
 
@@ -70,7 +77,12 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
         /* Build on view list*/
         val adapter = OnViewAdapter()
-        val exhibitionLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val exhibitionLayoutManager =
+            LinearLayoutManager(
+                activity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
         exhibitionSection.list.layoutManager = exhibitionLayoutManager
         exhibitionSection.list.adapter = adapter
         viewModel.exhibitions
@@ -84,7 +96,12 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
 
 
         /* Build event summary list*/
-        val eventsLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val eventsLayoutManager =
+            LinearLayoutManager(
+                activity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
         eventSection.list.layoutManager = eventsLayoutManager
         val eventsAdapter = WelcomeEventsAdapter()
         eventSection.list.adapter = eventsAdapter
@@ -230,7 +247,7 @@ class WelcomeFragment : BaseViewModelFragment<WelcomeViewModel>() {
                                     val manager = activity?.supportFragmentManager
                                             ?: return@subscribe
                                     val tag = "PagedMessageFragment"
-                                    (manager.findFragmentByTag(tag) as? DialogFragment)?.dismiss()
+                                    (manager.findFragmentByTag(tag) as? androidx.fragment.app.DialogFragment)?.dismiss()
                                     PagedMessageFragment.create(endpoint.messages).show(manager, tag)
                                 }
                             }

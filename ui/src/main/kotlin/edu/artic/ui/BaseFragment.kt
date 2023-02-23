@@ -2,29 +2,33 @@ package edu.artic.ui
 
 import android.graphics.Color
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
-import android.support.annotation.UiThread
-import android.support.design.widget.CollapsingToolbarLayout
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.Toolbar
 import android.view.*
+import androidx.annotation.StringRes
+import androidx.annotation.UiThread
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
+import androidx.viewbinding.ViewBinding
 import com.fuzz.rx.DisposeBag
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import dagger.android.support.AndroidSupportInjection
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.getThemeColors
 import edu.artic.base.utils.setWindowFlag
 import edu.artic.view.ArticMainAppBarLayout
+import java.lang.reflect.ParameterizedType
 import javax.inject.Inject
 
 
-abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
+abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFragment(), OnBackPressedListener {
 
     var toolbar: Toolbar? = null
     var collapsingToolbar: CollapsingToolbarLayout? = null
+
+    private var _binding: VB? = null
+    protected val binding: VB
+        get() = _binding ?: throw IllegalStateException("Binding is not available yet.")
 
     @get:StringRes
     protected abstract val title: Int
@@ -72,16 +76,13 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
         return requestedTitle ?: getString(title)
     }
 
-    @get:LayoutRes
-    protected abstract val layoutResId: Int
-
     abstract val screenName: ScreenName?
 
     @Inject
     lateinit var analyticsTracker: AnalyticsTracker
 
-    val baseActivity: BaseActivity
-        get() = activity as BaseActivity
+    val baseActivity: BaseActivity<*>
+        get() = activity as BaseActivity<*>
 
     /**
      * # Lifecycle: `init{}` -> [onDestroyView]
@@ -89,13 +90,14 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
      * Do not add navigation observers to this; those belong in [navigationDisposeBag].
      */
     val disposeBag = DisposeBag()
+
     /**
      * # Lifecycle: [onResume] -> [onPause]
      */
     val navigationDisposeBag = DisposeBag()
 
     protected fun requireView() = view
-            ?: throw IllegalStateException("Fragment " + this + " view is not created yet.")
+        ?: throw IllegalStateException("Fragment " + this + " view is not created yet.")
 
     protected val navController
         get() = Navigation.findNavController(requireView())
@@ -125,8 +127,15 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
         updateWindowProperties()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layoutResId, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val vbClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<VB>
+        val method = vbClass.getMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+        _binding = method.invoke(null, inflater, container, false) as VB
+        return binding.root
     }
 
     protected open fun hasTransparentStatusBar(): Boolean = false
@@ -216,9 +225,9 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
 
                 var uiOptions = decorView.systemUiVisibility
                 uiOptions =
-                        uiOptions or
-                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    uiOptions or
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
                 act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
                 act.window?.statusBarColor = Color.TRANSPARENT
@@ -232,12 +241,13 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
                 act.setWindowFlag(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
 
                 if (customToolbarColorResource == 0) {
-                    val primaryDarkColor = intArrayOf(android.support.design.R.attr.colorPrimaryDark)
+                    val primaryDarkColor = intArrayOf(R.attr.colorPrimaryDark)
                     ctx.getThemeColors(primaryDarkColor).getOrNull(0)?.defaultColor?.let {
                         act.window?.statusBarColor = it
                     }
                 } else {
-                    act.window?.statusBarColor = ContextCompat.getColor(ctx, customToolbarColorResource)
+                    act.window?.statusBarColor =
+                        ContextCompat.getColor(ctx, customToolbarColorResource)
                 }
             }
         }
@@ -245,6 +255,7 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         disposeBag.clear()
     }
 
@@ -252,8 +263,9 @@ abstract class BaseFragment : DialogFragment(), OnBackPressedListener {
         // fix for bug where viewmodel store is not cleared on 27.1.0, might be fixed later.
         val activity = activity
         if (activity != null
-                && activity.isFinishing
-                && !activity.isChangingConfigurations) {
+            && activity.isFinishing
+            && !activity.isChangingConfigurations
+        ) {
             viewModelStore.clear()
         }
         super.onDestroy()

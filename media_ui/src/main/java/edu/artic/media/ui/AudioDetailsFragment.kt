@@ -7,10 +7,10 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.support.annotation.UiThread
-import android.support.v4.math.MathUtils
-import android.support.v4.widget.NestedScrollView
-import android.support.v4.widget.TextViewCompat
+import androidx.annotation.UiThread
+import androidx.core.math.MathUtils
+import androidx.core.widget.NestedScrollView
+import androidx.core.widget.TextViewCompat
 import android.view.View
 import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
@@ -36,8 +36,8 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.exo_playback_control_view.*
-import kotlinx.android.synthetic.main.fragment_audio_details.*
+//import kotlinx.android.synthetic.main.exo_playback_control_view.*
+//import kotlinx.android.synthetic.main.fragment_audio_details.*
 import kotlin.reflect.KClass
 
 /**

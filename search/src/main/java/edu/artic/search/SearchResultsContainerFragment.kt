@@ -2,15 +2,15 @@ package edu.artic.search
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.ViewPager
+import com.google.android.material.tabs.TabLayout
+import androidx.core.content.res.ResourcesCompat
+import androidx.viewpager.widget.ViewPager
 import android.view.View
 import android.widget.TextView
 import com.fuzz.rx.disposedBy
 import edu.artic.analytics.ScreenName
 import edu.artic.viewmodel.BaseViewModelFragment
-import kotlinx.android.synthetic.main.fragment_search_results.*
+//import kotlinx.android.synthetic.main.fragment_search_results.*
 import kotlin.reflect.KClass
 
 class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContainerViewModel>() {
@@ -84,7 +84,7 @@ class SearchResultsContainerFragment : BaseViewModelFragment<SearchResultsContai
                     }
                 }
                 .disposedBy(disposeBag)
-        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+        viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 viewModel.onPageChanged(position)
             }

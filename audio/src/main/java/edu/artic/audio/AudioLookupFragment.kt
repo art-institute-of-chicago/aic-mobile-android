@@ -23,7 +23,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_audio_lookup.*
+//import kotlinx.android.synthetic.main.fragment_audio_lookup.*
 import java.text.BreakIterator
 import kotlin.reflect.KClass
 

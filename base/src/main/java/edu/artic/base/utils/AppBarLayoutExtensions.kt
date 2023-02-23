@@ -1,6 +1,6 @@
 package edu.artic.base.utils
 
-import android.support.design.widget.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout
 import android.widget.TextView
 
 fun AppBarLayout.updateDetailTitle(verticalOffset: Int, expandedTitle: TextView, toolbarTitle: TextView) {

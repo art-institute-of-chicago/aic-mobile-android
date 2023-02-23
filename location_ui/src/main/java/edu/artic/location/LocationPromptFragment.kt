@@ -8,10 +8,12 @@ import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenName
 import edu.artic.location_ui.R
+import edu.artic.location_ui.databinding.FragmentLocationPromptBinding
+import edu.artic.location_ui.databinding.FragmentLocationSettingsBinding
 import edu.artic.map.overrideMapAccess
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
-import kotlinx.android.synthetic.main.fragment_location_prompt.*
+//import kotlinx.android.synthetic.main.fragment_location_prompt.*
 import kotlin.reflect.KClass
 
 
@@ -19,10 +21,9 @@ import kotlin.reflect.KClass
  * One of the three primary `edu.artic.map.MapActivity` fragments, along
  * with `MapFragment` and `TutorialFragment`.
  */
-class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() {
+class LocationPromptFragment : BaseViewModelFragment<FragmentLocationPromptBinding,LocationPromptViewModel>() {
     override val viewModelClass: KClass<LocationPromptViewModel> = LocationPromptViewModel::class
     override val title = R.string.global_empty_string
-    override val layoutResId: Int = R.layout.fragment_location_prompt
     override val screenName: ScreenName? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,14 +34,14 @@ class LocationPromptFragment : BaseViewModelFragment<LocationPromptViewModel>() 
 
     override fun setupBindings(viewModel: LocationPromptViewModel) {
         super.setupBindings(viewModel)
-        promptNotNowButton
+        binding.promptNotNowButton
                 .clicks()
                 .subscribe {
                     viewModel.onClickNotNowButton()
                 }
                 .disposedBy(disposeBag)
 
-        promptOkButton
+        binding.promptOkButton
                 .clicks()
                 .subscribe {
                     viewModel.onClickOk()

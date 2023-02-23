@@ -2,8 +2,8 @@ package edu.artic.artwork
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.math.MathUtils
-import android.support.v4.widget.NestedScrollView
+import androidx.core.math.MathUtils
+import androidx.core.widget.NestedScrollView
 import android.view.View
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
@@ -21,7 +21,7 @@ import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
-import kotlinx.android.synthetic.main.fragment_search_audio_detail.*
+//import kotlinx.android.synthetic.main.fragment_search_audio_detail.*
 import kotlin.reflect.KClass
 
 class ArtworkDetailFragment : BaseViewModelFragment<ArtworkDetailViewModel>() {

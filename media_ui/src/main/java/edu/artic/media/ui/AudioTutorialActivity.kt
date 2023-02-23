@@ -8,7 +8,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.base.utils.makeStatusBarTransparent
 import edu.artic.viewmodel.BaseViewModelActivity
 import edu.artic.viewmodel.Navigate
-import kotlinx.android.synthetic.main.activity_audio_tutorial.*
+//import kotlinx.android.synthetic.main.activity_audio_tutorial.*
 import kotlin.reflect.KClass
 
 

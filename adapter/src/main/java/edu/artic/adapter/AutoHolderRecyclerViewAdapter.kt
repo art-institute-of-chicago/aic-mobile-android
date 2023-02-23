@@ -1,8 +1,8 @@
 package edu.artic.adapter
 
-import android.support.v7.util.DiffUtil
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 
 /**
  * Description: Assumes the ViewHolder is a [BaseViewHolder] and then scopes the [onBindView] method
@@ -16,16 +16,17 @@ import android.view.ViewGroup
  * * In [onBindView], implement binding logic in reference to `this` (where
  *    `this` is the inflated version of that same layout).
  */
-abstract class AutoHolderRecyclerViewAdapter<TModel> : BaseRecyclerViewAdapter<TModel, BaseViewHolder> {
+abstract class AutoHolderRecyclerViewAdapter<TModel> :
+    BaseRecyclerViewAdapter<TModel, BaseViewHolder> {
 
     constructor(diffItemCallback: DiffUtil.ItemCallback<TModel>) : super(diffItemCallback)
 
     constructor() : super()
 
     override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder =
-            BaseViewHolder(parent, viewType).apply {
-                itemView.onHolderCreated(parent, viewType)
-            }
+        BaseViewHolder(parent, viewType).apply {
+            itemView.onHolderCreated(parent, viewType)
+        }
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: TModel?, position: Int) {
         holder.itemView.onBindNullableView(item, position)

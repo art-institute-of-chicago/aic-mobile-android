@@ -5,7 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.location.Location
-import android.support.annotation.UiThread
+import androidx.annotation.UiThread
 import android.util.Log
 import android.util.Property
 import com.google.android.gms.maps.GoogleMap

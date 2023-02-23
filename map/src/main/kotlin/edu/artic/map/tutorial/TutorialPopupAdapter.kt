@@ -3,8 +3,6 @@ package edu.artic.map.tutorial
 import android.view.View
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.map.R
-import kotlinx.android.synthetic.main.tutorial_popup_item.view.*
-
 
 class TutorialPopupAdapter : AutoHolderRecyclerViewAdapter<TutorialPopupItemViewModel>() {
 

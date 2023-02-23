@@ -1,6 +1,6 @@
 package edu.artic.db.models
 
-import android.arch.persistence.room.Entity
+import androidx.room.Entity
 import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import edu.artic.ui.util.asCDNUri

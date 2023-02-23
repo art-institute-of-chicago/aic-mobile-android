@@ -3,7 +3,7 @@ package edu.artic.map.tutorial
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.view.MotionEvent
 import android.view.View
 import com.fuzz.indicator.OffSetHint
@@ -24,7 +24,7 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
-import kotlinx.android.synthetic.main.fragment_tutorial.*
+//import kotlinx.android.synthetic.main.fragment_tutorial.*
 import kotlin.reflect.KClass
 
 /**
@@ -58,7 +58,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
         viewPagerIndicator.setViewPager(viewPager)
         viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
 
-        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+        viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 viewModel.currentIndex.onNext(position + positionOffset)
             }

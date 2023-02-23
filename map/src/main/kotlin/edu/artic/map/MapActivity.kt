@@ -13,7 +13,7 @@ import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
-import kotlinx.android.synthetic.main.activity_map.*
+//import kotlinx.android.synthetic.main.activity_map.*
 import javax.inject.Inject
 
 /**

@@ -3,11 +3,11 @@ package edu.artic.tours
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.math.MathUtils
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.core.math.MathUtils
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.widget.ImageView
 import com.fuzz.rx.*
@@ -35,8 +35,8 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
-import kotlinx.android.synthetic.main.fragment_tour_details.*
+//import kotlinx.android.synthetic.main.cell_tour_details_stop.view.*
+//import kotlinx.android.synthetic.main.fragment_tour_details.*
 import kotlin.reflect.KClass
 
 class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
@@ -69,7 +69,11 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.apply {
-            layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(
+                view.context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
             adapter = TourDetailsStopAdapter()
             addItemDecoration(obtainDecoration(view.context))
             isNestedScrollingEnabled = true
@@ -84,7 +88,10 @@ class TourDetailsFragment : BaseViewModelFragment<TourDetailsViewModel>() {
     }
 
     private fun obtainDecoration(context: Context): DividerItemDecoration {
-        val decoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        val decoration = DividerItemDecoration(
+            context,
+            DividerItemDecoration.VERTICAL
+        )
 
         decoration.setDrawable(SizedColorDrawable(
                 color = ContextCompat.getColor(context, R.color.tourDetailTourStopDivider),

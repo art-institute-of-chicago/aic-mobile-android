@@ -9,8 +9,8 @@ import edu.artic.image.GlideApp
 import edu.artic.map.R
 import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.tour_carousel_cell.view.*
-import kotlinx.android.synthetic.main.tour_carousel_intro_cell.view.*
+//import kotlinx.android.synthetic.main.tour_carousel_cell.view.*
+//import kotlinx.android.synthetic.main.tour_carousel_intro_cell.view.*
 
 /**
  * Designed for a horizontally-scrolling list of

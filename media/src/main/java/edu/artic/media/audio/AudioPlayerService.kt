@@ -10,8 +10,8 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import android.support.v4.app.NotificationCompat
-import android.support.v4.media.AudioAttributesCompat
+import androidx.core.app.NotificationCompat
+import androidx.media.AudioAttributesCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
@@ -207,23 +207,37 @@ class AudioPlayerService : DaggerService(), PlayerService {
                     when {
                         playWhenReady && playbackState == Player.STATE_READY -> {
                             audioPlayBackStatus
-                                    .take(1)
-                                    .subscribe {
-                                        when (it) {
-                                            is Playing -> audioPlayBackStatus.onNext(PlayBackState.Paused(given))
-                                            else -> audioPlayBackStatus.onNext(PlayBackState.Playing(given))
-                                        }
-                                    }.disposedBy(disposeBag)
+                                .take(1)
+                                .subscribe {
+                                    when (it) {
+                                        is Playing -> audioPlayBackStatus.onNext(
+                                            PlayBackState.Paused(
+                                                given
+                                            )
+                                        )
+                                        else -> audioPlayBackStatus.onNext(
+                                            PlayBackState.Playing(
+                                                given
+                                            )
+                                        )
+                                    }
+                                }.disposedBy(disposeBag)
                         }
                         playbackState == Player.STATE_ENDED -> {
                             /*Play back completed*/
-                            analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackCompleted, currentTrack.value?.title.orEmpty())
+                            analyticsTracker.reportEvent(
+                                EventCategoryName.PlayBack,
+                                AnalyticsAction.playbackCompleted,
+                                currentTrack.value?.title.orEmpty()
+                            )
                             audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
                             playerNotificationManager.setPlayer(null)
                             tourProgressManager.playBackEnded(given)
                             currentTrack.onNext(EMPTY_AUDIO_FILE)
                         }
-                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
+                        playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(
+                            PlayBackState.Stopped(given)
+                        )
                         else -> audioPlayBackStatus.onNext(PlayBackState.Paused(given))
                     }
                 }
@@ -232,14 +246,14 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
         val audioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioPlayBackStatus
-                .subscribe {
-                    when (it) {
-                        is Playing -> {
-                            audioManager.isSpeakerphoneOn = false
-                        }
-                        else -> audioManager.mode = AudioManager.MODE_NORMAL
+            .subscribe {
+                when (it) {
+                    is Playing -> {
+                        audioManager.isSpeakerphoneOn = false
                     }
-                }.disposedBy(disposeBag)
+                    else -> audioManager.mode = AudioManager.MODE_NORMAL
+                }
+            }.disposedBy(disposeBag)
 
         audioControl.subscribe { playBackAction ->
             when (playBackAction) {
@@ -284,61 +298,82 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     private fun setUpNotificationManager() {
         NotificationUtil.createNotificationChannel(
-                this, FOREGROUND_CHANNEL_ID, R.string.tour_audio_channel_name, NotificationUtil.IMPORTANCE_LOW)
+            this,
+            FOREGROUND_CHANNEL_ID,
+            R.string.tour_audio_channel_name,
+            NotificationUtil.IMPORTANCE_LOW
+        )
         playerNotificationManager = PlayerNotificationManager(
-                this,
-                FOREGROUND_CHANNEL_ID,
-                NOTIFICATION_ID,
-                object : PlayerNotificationManager.MediaDescriptionAdapter {
-                    override fun createCurrentContentIntent(player: Player?): PendingIntent? {
-                        //TODO make it dynamic so that activity that started the audio stream will be the destination of Intent
-                        val notificationIntent = "edu.artic.audio".asDeepLinkIntent()
-                        return PendingIntent.getActivity(this@AudioPlayerService, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    }
+            this,
+            FOREGROUND_CHANNEL_ID,
+            NOTIFICATION_ID,
+            object : PlayerNotificationManager.MediaDescriptionAdapter {
+                override fun createCurrentContentIntent(player: Player?): PendingIntent? {
+                    //TODO make it dynamic so that activity that started the audio stream will be the destination of Intent
+                    val notificationIntent = "edu.artic.audio".asDeepLinkIntent()
+                    return PendingIntent.getActivity(
+                        this@AudioPlayerService,
+                        0,
+                        notificationIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+                }
 
-                    override fun getCurrentContentText(player: Player?): String? {
-                        return null
-                    }
+                override fun getCurrentContentText(player: Player?): String? {
+                    return null
+                }
 
-                    override fun getCurrentContentTitle(player: Player?): String {
-                        return playable?.getPlayableTitle().orEmpty()
-                    }
+                override fun getCurrentContentTitle(player: Player?): String {
+                    return playable?.getPlayableTitle().orEmpty()
+                }
 
 
-                    override fun getCurrentLargeIcon(player: Player?, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
-                        if (currentBitmap == null) {
-                            playable?.getPlayableThumbnailUrl()?.let {
-                                Glide.with(this@AudioPlayerService)
-                                        .asBitmap()
-                                        .load(it)
-                                        .into(BitmapCallbackTarget(this@AudioPlayerService, callback))
-                            }
+                override fun getCurrentLargeIcon(
+                    player: Player?,
+                    callback: PlayerNotificationManager.BitmapCallback,
+                ): Bitmap? {
+                    if (currentBitmap == null) {
+                        playable?.getPlayableThumbnailUrl()?.let {
+                            Glide.with(this@AudioPlayerService)
+                                .asBitmap()
+                                .load(it)
+                                .into(BitmapCallbackTarget(this@AudioPlayerService, callback))
                         }
-                        return currentBitmap
                     }
-                },
-                object : PlayerNotificationManager.CustomActionReceiver {
-                    override fun getCustomActions(player: Player?): MutableList<String> {
-                        return mutableListOf(CANCEL_ACTION)
-                    }
+                    return currentBitmap
+                }
+            },
+            object : PlayerNotificationManager.CustomActionReceiver {
+                override fun getCustomActions(player: Player?): MutableList<String> {
+                    return mutableListOf(CANCEL_ACTION)
+                }
 
-                    override fun createCustomActions(context: Context, instanceId: Int): MutableMap<String, NotificationCompat.Action> {
-                        val playIntent = Intent(CANCEL_ACTION).setPackage(context.packageName)
-                        return mutableMapOf(
-                                CANCEL_ACTION to NotificationCompat.Action(
-                                        R.drawable.ic_close_circle,
-                                        "Close",
-                                        PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-                                )
+                override fun createCustomActions(
+                    context: Context,
+                    instanceId: Int,
+                ): MutableMap<String, NotificationCompat.Action> {
+                    val playIntent = Intent(CANCEL_ACTION).setPackage(context.packageName)
+                    return mutableMapOf(
+                        CANCEL_ACTION to NotificationCompat.Action(
+                            R.drawable.ic_close_circle,
+                            "Close",
+                            PendingIntent.getBroadcast(
+                                context,
+                                0,
+                                playIntent,
+                                PendingIntent.FLAG_CANCEL_CURRENT
+                            )
                         )
-                    }
+                    )
+                }
 
-                    override fun onCustomAction(player: Player?, action: String?, intent: Intent?) {
-                        stopPlayer()
-                    }
-                })
+                override fun onCustomAction(player: Player?, action: String?, intent: Intent?) {
+                    stopPlayer()
+                }
+            })
 
-        playerNotificationManager.setNotificationListener(object : PlayerNotificationManager.NotificationListener {
+        playerNotificationManager.setNotificationListener(object :
+            PlayerNotificationManager.NotificationListener {
             override fun onNotificationCancelled(notificationId: Int) {
                 stopForeground(true)
             }
@@ -384,9 +419,9 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
         if (isDifferentAudio) {
             analyticsTracker.reportEvent(
-                    EventCategoryName.LanguageAudio,
-                    audio.underlyingLocale().nameOfLanguageForAnalytics(),
-                    audio.title.orEmpty()
+                EventCategoryName.LanguageAudio,
+                audio.underlyingLocale().nameOfLanguageForAnalytics(),
+                audio.title.orEmpty()
             )
         }
 
@@ -396,7 +431,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
             /** Check if the current audio is being interrupted by other audio object.**/
             playable?.let { articObject ->
                 if (player.playbackState != Player.STATE_IDLE) {
-                    analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, articObject.getPlayableTitle().orEmpty())
+                    analyticsTracker.reportEvent(
+                        EventCategoryName.PlayBack,
+                        AnalyticsAction.playbackInterrupted,
+                        articObject.getPlayableTitle().orEmpty()
+                    )
                 }
             }
             playable = _articObject
@@ -418,30 +457,33 @@ class AudioPlayerService : DaggerService(), PlayerService {
      * @see SimpleExoPlayer.setAudioStreamType
      */
     private val audioAttributes = AudioAttributesCompat.Builder()
-            .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
-            .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
-            .build()
+        .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
+        .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
+        .build()
 
     val player: ExoPlayer by lazy {
         val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         audioManager.isSpeakerphoneOn = false
         AudioFocusExoPlayerDecorator(audioAttributes,
-                audioManager,
-                ExoPlayerFactory.newSimpleInstance(this,
-                        DefaultRenderersFactory(this),
-                        DefaultTrackSelector(),
-                        DefaultLoadControl()).apply {
-                    audioAttributes = AudioAttributes.Builder()
-                            .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
-                            .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
-                            .build()
-                }
+            audioManager,
+            ExoPlayerFactory.newSimpleInstance(
+                this,
+                DefaultRenderersFactory(this),
+                DefaultTrackSelector(),
+                DefaultLoadControl()
+            ).apply {
+                audioAttributes = AudioAttributes.Builder()
+                    .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
+                    .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
+                    .build()
+            }
         )
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
         return ExtractorMediaSource.Factory(
-                DefaultHttpDataSourceFactory("exoplayer-aic")).createMediaSource(uri)
+            DefaultHttpDataSourceFactory("exoplayer-aic")
+        ).createMediaSource(uri)
     }
 
     override fun onDestroy() {
@@ -512,7 +554,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
     }
 
     override fun stopPlayer() {
-        analyticsTracker.reportEvent(EventCategoryName.PlayBack, AnalyticsAction.playbackInterrupted, (currentTrack as BehaviorSubject).value?.title.orEmpty())
+        analyticsTracker.reportEvent(
+            EventCategoryName.PlayBack,
+            AnalyticsAction.playbackInterrupted,
+            (currentTrack as BehaviorSubject).value?.title.orEmpty()
+        )
         audioControl.onNext(AudioPlayerService.PlayBackAction.Stop())
     }
 
@@ -529,8 +575,8 @@ class AudioPlayerService : DaggerService(), PlayerService {
             playable?.let { currentlyPlayingObject ->
                 when (currentlyPlayingObject) {
                     is ArticObject -> currentlyPlayingObject.audioCommentary
-                            .find { it.audioFile?.nid == currentTrack.audioGroupId }
-                            ?.audioFile
+                        .find { it.audioFile?.nid == currentTrack.audioGroupId }
+                        ?.audioFile
                     else -> null
                 }
             }
@@ -545,8 +591,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
  * Kotlin(version:1.2.51) was unable to resolve this class when it was defined anonymously,
  * so had to create this class.
  */
-class BitmapCallbackTarget(private val service: AudioPlayerService, private val callback: PlayerNotificationManager.BitmapCallback) : SimpleTarget<Bitmap>() {
-    override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
+class BitmapCallbackTarget(
+    private val service: AudioPlayerService,
+    private val callback: PlayerNotificationManager.BitmapCallback,
+) : SimpleTarget<Bitmap>() {
+    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
         callback.onBitmap(resource)
         service.currentBitmap = resource
     }

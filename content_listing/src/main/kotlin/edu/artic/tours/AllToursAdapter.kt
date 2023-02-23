@@ -1,6 +1,6 @@
 package edu.artic.tours
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.bindToMain
@@ -11,8 +11,8 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.content.listing.R
 import edu.artic.image.GlideApp
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.cell_all_tours_intro.view.*
-import kotlinx.android.synthetic.main.cell_all_tours_layout.view.*
+//import kotlinx.android.synthetic.main.cell_all_tours_intro.view.*
+//import kotlinx.android.synthetic.main.cell_all_tours_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)
