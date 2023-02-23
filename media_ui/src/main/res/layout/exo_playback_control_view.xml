@@ -30,7 +30,7 @@
         android:includeFontPadding="false"
         android:paddingEnd="@dimen/marginQuarter"
         android:textSize="@dimen/textMedium"
-        app:layout_constraintBaseline_toBaselineOf="@id/exo_translation_selector"
+        app:layout_constraintBaseline_toBaselineOf="@id/exoTranslationSelector"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="0:15" />
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
         android:text="/"
-        app:layout_constraintBaseline_toBaselineOf="@id/exo_translation_selector"
+        app:layout_constraintBaseline_toBaselineOf="@id/exoTranslationSelector"
         app:layout_constraintStart_toEndOf="@id/exo_position"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,13 +56,13 @@
         android:paddingStart="@dimen/marginQuarter"
         android:paddingEnd="@dimen/marginQuarter"
         android:textSize="@dimen/textMedium"
-        app:layout_constraintBaseline_toBaselineOf="@id/exo_translation_selector"
+        app:layout_constraintBaseline_toBaselineOf="@id/exoTranslationSelector"
         app:layout_constraintStart_toEndOf="@id/divider"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1:30" />
 
     <Spinner
-        android:id="@+id/exo_translation_selector"
+        android:id="@+id/exoTranslationSelector"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/marginStandard"

@@ -8,6 +8,8 @@ import edu.artic.adapter.BaseViewHolder
 import edu.artic.adapter.DropDownAdapter
 import edu.artic.localization.SpecifiesLanguage
 import edu.artic.media.ui.R
+import edu.artic.media.ui.databinding.DropdownLanguageCellBinding
+
 //import kotlinx.android.synthetic.main.dropdown_language_cell.view.*
 
 /**
@@ -17,16 +19,22 @@ import edu.artic.media.ui.R
  * of the list (i.e. the 'currently selected' language).
  */
 class LanguageAdapter : AutoHolderRecyclerViewAdapter<SpecifiesLanguage>(),
-        DropDownAdapter<SpecifiesLanguage, BaseViewHolder> {
-    override fun View.onBindView(item: SpecifiesLanguage, position: Int) {
-        text.text = item.userFriendlyLanguage(context)
-        text.setTextColor(Color.WHITE)
+    DropDownAdapter<SpecifiesLanguage, BaseViewHolder> {
+    override fun View.onBindView(item: SpecifiesLanguage, holder: BaseViewHolder, position: Int) {
+        val binding = holder.binding as DropdownLanguageCellBinding
+        binding.text.text = item.userFriendlyLanguage(context)
+        binding.text.setTextColor(Color.WHITE)
     }
 
     override fun getLayoutResId(position: Int): Int = R.layout.dropdown_language_cell
 
-    override fun View.onBindDropdownView(item: SpecifiesLanguage, position: Int) {
-        text.text = item.userFriendlyLanguage(context)
+    override fun View.onBindDropdownView(
+        item: SpecifiesLanguage,
+        baseViewHolder: BaseViewHolder,
+        position: Int,
+    ) {
+        val binding = baseViewHolder.binding as DropdownLanguageCellBinding
+        binding.text.text = item.userFriendlyLanguage(context)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -37,7 +45,8 @@ class LanguageAdapter : AutoHolderRecyclerViewAdapter<SpecifiesLanguage>(),
         return DropDownViewHolder(parent, getLayoutResId(0))
     }
 
-    class DropDownViewHolder(viewGroup: ViewGroup, layout: Int) : BaseViewHolder(viewGroup, layout){
+    class DropDownViewHolder(viewGroup: ViewGroup, layout: Int) :
+        BaseViewHolder(viewGroup, layout) {
 
     }
 
