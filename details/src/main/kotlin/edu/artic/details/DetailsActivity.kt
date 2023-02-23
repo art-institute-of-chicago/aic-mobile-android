@@ -1,17 +1,16 @@
 package edu.artic.details
 
 import android.os.Bundle
+import edu.artic.details.databinding.ActivityDetailsBinding
 import edu.artic.events.EventDetailFragment
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.ui.BaseActivity
 
-class DetailsActivity : BaseActivity() {
-    override val layoutResId: Int
-        get() = R.layout.activity_details
+class DetailsActivity : BaseActivity<ActivityDetailsBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (navController.currentDestination?.id == navController.graph.startDestination) {
+        if (navController.currentDestination?.id == navController.graph.startDestinationId) {
             when {
                 intent.hasExtra(EventDetailFragment.ARG_EVENT) -> {
                     navController.navigate(R.id.goToEventDetails)
