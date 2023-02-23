@@ -17,8 +17,11 @@ import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C.USAGE_VOICE_COMMUNICATION
+import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
@@ -197,23 +200,20 @@ class AudioPlayerService : DaggerService(), PlayerService {
     override fun onCreate() {
         super.onCreate()
 
-        player = ExoPlayer.Builder(this).build()
-
-//            .setRenderersFactory(DefaultRenderersFactory(this))
-//            .setTrackSelector(DefaultTrackSelector(this))
-//            .setLoadControl(DefaultLoadControl())
-//            .setAudioAttributes(
-//                AudioAttributes.Builder()
-//                    .setUsage(C.USAGE_VOICE_COMMUNICATION)
-//                    .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
-//                    .build(),
-//                false
-//            )
-//
+        player = ExoPlayer.Builder(this)
+            .setRenderersFactory(DefaultRenderersFactory(this))
+            .setTrackSelector(DefaultTrackSelector(this))
+            .setLoadControl(DefaultLoadControl())
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(USAGE_VOICE_COMMUNICATION)
+                    .build(),
+                /* handleAudioFocus = */ false
+            )
+            .build()
 
         // Make sure to clear this out in ::onDestroy.
         disposeBag = DisposeBag()
-
         setUpNotificationManager()
         player.addListener(object : Player.Listener {
 
