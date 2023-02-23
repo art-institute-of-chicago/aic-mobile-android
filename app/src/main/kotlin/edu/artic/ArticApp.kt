@@ -4,7 +4,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.crashlytics.android.Crashlytics
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -12,8 +11,6 @@ import dagger.android.DaggerApplication
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
-import io.fabric.sdk.android.Fabric
-import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,13 +32,13 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
         FirebaseApp.initializeApp(this, firebaseOptions())
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
-        val fabric = Fabric.Builder(this)
-                .kits(Crashlytics())
-                .build()
-        Fabric.with(fabric)
-
-        // Ensure unhandled RX errors get reported to Crashlytics
-        RxJavaPlugins.setErrorHandler { Crashlytics.logException(it); throw it }
+//        val fabric = Fabric.Builder(this)
+//                .kits(Crashlytics())
+//                .build()
+//        Fabric.with(fabric)
+//
+//        // Ensure unhandled RX errors get reported to Crashlytics
+//        RxJavaPlugins.setErrorHandler { Crashlytics.logException(it); throw it }
     }
 
     override fun applicationInjector() = seedBuilder(DaggerAppComponent.builder())
