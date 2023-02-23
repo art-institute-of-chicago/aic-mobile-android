@@ -68,24 +68,39 @@
                 app:layout_constraintTop_toBottomOf="@id/memberCardLink" />
 
 
-            <include
-                android:id="@+id/exhibitionSection"
-                layout="@layout/welcome_section"
+            <FrameLayout
+                android:id="@+id/exhibitionSectionContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tourSection" />
+                app:layout_constraintTop_toBottomOf="@id/tourSection">
 
+                <include
+                    android:id="@+id/exhibitionSection"
+                    layout="@layout/welcome_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
 
-            <include
-                android:id="@+id/eventSection"
-                layout="@layout/welcome_section"
+            <FrameLayout
+                android:id="@+id/eventSectionContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/exhibitionSection" />
+                app:layout_constraintTop_toBottomOf="@id/tourSection">
+
+                <include
+                    android:id="@+id/eventSection"
+                    layout="@layout/welcome_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/exhibitionSectionContainer" />
+            </FrameLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

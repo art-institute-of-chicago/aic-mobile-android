@@ -7,12 +7,12 @@ import android.view.Window
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.ui.BaseActivity
+import edu.artic.welcome.databinding.ActivityWelcomeBinding
+
 //import kotlinx.android.synthetic.main.activity_welcome.*
 
-class WelcomeActivity : BaseActivity() {
+class WelcomeActivity : BaseActivity<ActivityWelcomeBinding>() {
 
-    override val layoutResId: Int
-        get() = R.layout.activity_welcome
 
     override fun onCreate(savedInstanceState: Bundle?) {
         with(window) {
@@ -24,7 +24,7 @@ class WelcomeActivity : BaseActivity() {
 
         super.onCreate(savedInstanceState)
 
-        bottomNavigation.apply {
+        binding.bottomNavigation.apply {
             disableShiftMode(R.color.menu_color_list)
             selectedItemId = R.id.action_home
             setOnNavigationItemReselectedListener {

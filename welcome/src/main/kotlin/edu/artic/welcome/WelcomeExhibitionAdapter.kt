@@ -7,42 +7,48 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
+import edu.artic.welcome.databinding.WelcomeOnViewCellLayoutBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
-//import kotlinx.android.synthetic.main.welcome_on_view_cell_layout.view.*
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 
+
 class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeExhibitionCellViewModel>() {
 
-    override fun View.onBindView(item: WelcomeExhibitionCellViewModel, position: Int) {
-
-        item.exhibitionTitleStream
+    override fun View.onBindView(
+        item: WelcomeExhibitionCellViewModel,
+        holder: BaseViewHolder,
+        position: Int,
+    ) {
+        with(holder.binding as WelcomeOnViewCellLayoutBinding) {
+            item.exhibitionTitleStream
                 .bindToMain(exhibitionTitle.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.exhibitionDate
+            item.exhibitionDate
                 .map {
                     context.getString(R.string.content_through_date, it)
                 }
                 .bindToMain(exhibitionDate.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.exhibitionImageUrl
+            item.exhibitionImageUrl
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     image.post {
                         GlideApp.with(context)
-                                .load("$it?w=${image.measuredWidth}&h=${image.measuredHeight}")
-                                .placeholder(R.color.placeholderBackground)
-                                .error(R.drawable.placeholder_medium_square)
-                                .into(image)
+                            .load("$it?w=${image.measuredWidth}&h=${image.measuredHeight}")
+                            .placeholder(R.color.placeholderBackground)
+                            .error(R.drawable.placeholder_medium_square)
+                            .into(image)
                     }
                 }.disposedBy(item.viewDisposeBag)
 
-        this.image.transitionName = item.exhibition.title
+            this.image.transitionName = item.exhibition.title
+        }
     }
 
     override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {

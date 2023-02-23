@@ -7,6 +7,8 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
+import edu.artic.welcome.databinding.WelcomeEventCellLayoutBinding
+
 //import kotlinx.android.synthetic.main.welcome_event_cell_layout.view.*
 
 
@@ -15,33 +17,39 @@ import edu.artic.image.GlideApp
  */
 
 class WelcomeEventsAdapter : AutoHolderRecyclerViewAdapter<WelcomeEventCellViewModel>() {
-    override fun View.onBindView(item: WelcomeEventCellViewModel, position: Int) {
-
-        item.eventTitle
+    override fun View.onBindView(
+        item: WelcomeEventCellViewModel,
+        holder: BaseViewHolder,
+        position: Int,
+    ) {
+        with(holder.binding as WelcomeEventCellLayoutBinding) {
+            item.eventTitle
                 .bindToMain(title.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.eventTitle
+
+            item.eventTitle
                 .subscribe { image.transitionName = it }
                 .disposedBy(item.viewDisposeBag)
 
-        item.eventShortDescription
+            item.eventShortDescription
                 .bindToMain(description.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.eventTime
+            item.eventTime
                 .bindToMain(date.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.eventImageUrl
+            item.eventImageUrl
                 .filter { it.isNotEmpty() }
                 .subscribe {
                     GlideApp.with(context)
-                            .load(it)
-                            .placeholder(R.color.placeholderBackground)
-                            .error(R.drawable.placeholder_medium_rect)
-                            .into(image)
+                        .load(it)
+                        .placeholder(R.color.placeholderBackground)
+                        .error(R.drawable.placeholder_medium_rect)
+                        .into(image)
                 }.disposedBy(item.viewDisposeBag)
+        }
 
     }
 

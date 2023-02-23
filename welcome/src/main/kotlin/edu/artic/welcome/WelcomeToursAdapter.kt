@@ -7,7 +7,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
-//import kotlinx.android.synthetic.main.welcome_tour_summary_cell_layout.view.*
+import edu.artic.welcome.databinding.WelcomeTourSummaryCellLayoutBinding
 
 /**
  * @author Sameer Dhakal (Fuzz)
@@ -16,28 +16,34 @@ import edu.artic.image.GlideApp
 class WelcomeToursAdapter : AutoHolderRecyclerViewAdapter<WelcomeTourCellViewModel>() {
 
 
-    override fun View.onBindView(item: WelcomeTourCellViewModel, position: Int) {
-        item.tourImageUrl.subscribe {
-            GlideApp.with(context)
+    override fun View.onBindView(
+        item: WelcomeTourCellViewModel,
+        holder: BaseViewHolder,
+        position: Int
+    ) {
+        with(holder.binding as WelcomeTourSummaryCellLayoutBinding) {
+            item.tourImageUrl.subscribe {
+                GlideApp.with(context)
                     .load(it)
                     .placeholder(R.color.placeholderBackground)
                     .error(R.drawable.placeholder_medium_rect)
                     .into(image)
-        }.disposedBy(item.viewDisposeBag)
+            }.disposedBy(item.viewDisposeBag)
 
-        item.tourTitle.bindToMain(tourTitle.text()).disposedBy(item.viewDisposeBag)
+            item.tourTitle.bindToMain(tourTitle.text()).disposedBy(item.viewDisposeBag)
 
-        item.tourDescription
+            item.tourDescription
                 .map {
                     it.replace("&nbsp;", " ")
                 }.subscribe { tourDescription.text = it }
                 .disposedBy(item.viewDisposeBag)
 
-        item.tourStops
+            item.tourStops
                 .subscribe { stops.text = context.getString(R.string.tour_stop_count, it) }
                 .disposedBy(item.viewDisposeBag)
 
-        item.tourDuration.bindToMain(tourTime.text()).disposedBy(item.viewDisposeBag)
+            item.tourDuration.bindToMain(tourTime.text()).disposedBy(item.viewDisposeBag)
+        }
     }
 
     override fun onItemViewHolderRecycled(holder: BaseViewHolder, position: Int) {
