@@ -1,19 +1,17 @@
 package edu.artic.map
 
-import android.content.Context
+//import kotlinx.android.synthetic.main.activity_map.*
 import android.os.Bundle
-import android.os.Handler
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
 import edu.artic.base.utils.disableShiftMode
 import edu.artic.base.utils.preventReselection
 import edu.artic.location.LocationPreferenceManager
+import edu.artic.map.databinding.ActivityMapBinding
 import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
 import edu.artic.ui.BaseActivity
-//import kotlinx.android.synthetic.main.activity_map.*
 import javax.inject.Inject
 
 /**
@@ -26,20 +24,18 @@ import javax.inject.Inject
  * As a primary section, this class always contains a
  * [NarrowAudioPlayerFragment][edu.artic.media.ui.NarrowAudioPlayerFragment].
  */
-class MapActivity : BaseActivity() {
+class MapActivity : BaseActivity<ActivityMapBinding>() {
 
     @Inject
     lateinit var locationPreferencesManager: LocationPreferenceManager
+
     @Inject
     lateinit var tutorialPreferencesManager: TutorialPreferencesManager
-
-    override val layoutResId: Int
-        get() = R.layout.activity_map
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        bottomNavigation.apply {
+        binding.bottomNavigation.apply {
 
             disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map

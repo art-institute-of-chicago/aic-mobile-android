@@ -1,21 +1,22 @@
 package edu.artic.map.carousel
 
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import android.view.View
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenName
 import edu.artic.map.R
+import edu.artic.map.databinding.FragmentLeaveTourDialogBinding
 import edu.artic.ui.BaseFragment
 import io.reactivex.rxkotlin.subscribeBy
+
 //import kotlinx.android.synthetic.main.fragment_leave_tour_dialog.*
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class LeaveCurrentTourDialogFragment : BaseFragment() {
+class LeaveCurrentTourDialogFragment : BaseFragment<FragmentLeaveTourDialogBinding>() {
 
     private var callback: LeaveTourCallback? = null
 
@@ -28,8 +29,6 @@ class LeaveCurrentTourDialogFragment : BaseFragment() {
     override val screenName: ScreenName?
         get() = null
 
-    override val layoutResId: Int = R.layout.fragment_leave_tour_dialog
-
     override val overrideStatusBarColor: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,21 +38,21 @@ class LeaveCurrentTourDialogFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        leave.clicks()
-                .defaultThrottle()
-                .subscribeBy {
-                    dismiss()
-                    callback?.leftTour()
-                }
-                .disposedBy(disposeBag)
+        binding.leave.clicks()
+            .defaultThrottle()
+            .subscribeBy {
+                dismiss()
+                callback?.leftTour()
+            }
+            .disposedBy(disposeBag)
 
-        stay.clicks()
-                .defaultThrottle()
-                .subscribeBy {
-                    dismiss()
-                    callback?.stayed()
-                }
-                .disposedBy(disposeBag)
+        binding.stay.clicks()
+            .defaultThrottle()
+            .subscribeBy {
+                dismiss()
+                callback?.stayed()
+            }
+            .disposedBy(disposeBag)
     }
 
     interface LeaveTourCallback {

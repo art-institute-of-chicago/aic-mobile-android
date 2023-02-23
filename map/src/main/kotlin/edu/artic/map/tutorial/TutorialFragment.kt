@@ -1,9 +1,9 @@
 package edu.artic.map.tutorial
 
+//import kotlinx.android.synthetic.main.fragment_tutorial.*
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
 import android.view.MotionEvent
 import android.view.View
 import com.fuzz.indicator.OffSetHint
@@ -18,13 +18,13 @@ import edu.artic.adapter.toPagerAdapter
 import edu.artic.analytics.ScreenName
 import edu.artic.db.INVALID_FLOOR
 import edu.artic.map.R
+import edu.artic.map.databinding.FragmentTutorialBinding
 import edu.artic.map.overrideMapAccess
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.withLatestFrom
-//import kotlinx.android.synthetic.main.fragment_tutorial.*
 import kotlin.reflect.KClass
 
 /**
@@ -37,82 +37,91 @@ import kotlin.reflect.KClass
  * a cool shadow
  * * a few little [TextViews][android.widget.TextView] on top of a translucent scrim
  */
-class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
+class TutorialFragment : BaseViewModelFragment<FragmentTutorialBinding, TutorialViewModel>() {
     override val viewModelClass: KClass<TutorialViewModel> = TutorialViewModel::class
     override val title: Int = 0
-    override val layoutResId: Int = R.layout.fragment_tutorial
     override val screenName: ScreenName? = null
 
     private val adapter = TutorialPopupAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.setOnTouchListener { _, event ->
+        view.setOnTouchListener { view, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 viewModel.touched()
+                view.performClick()
             }
             true
         }
+        with(binding) {
 
-        viewPager.adapter = adapter.toPagerAdapter()
-        viewPagerIndicator.setViewPager(viewPager)
-        viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
 
-        viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                viewModel.currentIndex.onNext(position + positionOffset)
-            }
+            viewPager.adapter = adapter.toPagerAdapter()
+            viewPagerIndicator.setViewPager(viewPager)
+            viewPagerIndicator.setOffsetHints(OffSetHint.IMAGE_ALPHA)
 
-            override fun onPageSelected(position: Int) {
-                viewModel.onTutorialPageChanged(position)
-            }
-        })
+            viewPager.addOnPageChangeListener(object :
+                androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener() {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int,
+                ) {
+                    viewModel.currentIndex.onNext(position + positionOffset)
+                }
 
-        val floor = arguments!!.getInt(ARG_FLOOR, INVALID_FLOOR)
-        viewModel.floor.onNext(floor)
+                override fun onPageSelected(position: Int) {
+                    viewModel.onTutorialPageChanged(position)
+                }
+            })
 
-        listOf(
-                tutorial_lower_level_text,
-                tutorial_first_floor_text,
-                tutorial_second_floor_text,
-                tutorial_third_floor_text)
+            val floor = requireArguments().getInt(ARG_FLOOR, INVALID_FLOOR)
+            viewModel.floor.onNext(floor)
+
+            listOf(
+                tutorialLowerLevelText,
+                tutorialFirstFloorText,
+                tutorialSecondFloorText,
+                tutorialThirdFloorText
+            )
                 .zip(
-                        listOf(
-                                R.string.map_lower_level,
-                                R.string.map_first_level,
-                                R.string.map_second_level,
-                                R.string.map_third_level
-                        )
+                    listOf(
+                        R.string.map_lower_level,
+                        R.string.map_first_level,
+                        R.string.map_second_level,
+                        R.string.map_third_level
+                    )
                 )
                 .forEach { (textView, floorResourceId) ->
                     textView.text =
-                            getString(
-                                    R.string.map_tutorial_floor_picker_prompt,
-                                    getString(floorResourceId)
-                            )
+                        getString(
+                            R.string.map_tutorial_floor_picker_prompt,
+                            getString(floorResourceId)
+                        )
                 }
+        }
     }
 
     override fun setupBindings(viewModel: TutorialViewModel) {
         super.setupBindings(viewModel)
-
-        viewModel.cells
+        with(binding) {
+            viewModel.cells
                 .bindToMain(adapter.itemChanges())
                 .disposedBy(disposeBag)
 
-        viewModel.tutorialPopupCurrentPage
+            viewModel.tutorialPopupCurrentPage
                 .subscribe {
                     if (viewPager.currentItem != it) {
                         viewPager.currentItem = it
                     }
                 }.disposedBy(disposeBag)
 
-        viewModel.tutorialTitle
+            viewModel.tutorialTitle
                 .map { getString(it) }
                 .bindToMain(tutorialPopupTitle.text())
                 .disposedBy(disposeBag)
 
-        viewModel.currentIndex
+            viewModel.currentIndex
                 // Defensive coding: we really only expect values from 0f to 1f (both inclusive).
                 .filter { it >= 0 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -121,7 +130,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
-        viewModel.currentIndex
+            viewModel.currentIndex
                 .withLatestFrom(viewModel.cells)
                 .filter { (showDismiss, cells) ->
                     showDismiss.toInt() == cells.size.minus(1)
@@ -130,7 +139,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     tutorialNext.text = getString(R.string.map_dismiss_action)
                 }.disposedBy(disposeBag)
 
-        viewModel.currentIndex
+            viewModel.currentIndex
                 .withLatestFrom(viewModel.cells)
                 .filter { (showDismiss, cells) ->
                     showDismiss.toInt() < cells.size.minus(1)
@@ -139,7 +148,7 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                     tutorialNext.text = getString(R.string.map_next_action)
                 }.disposedBy(disposeBag)
 
-        viewModel.currentTutorialStage
+            viewModel.currentTutorialStage
                 .map { it == TutorialViewModel.Stage.One }
                 .subscribe {
                     tutorialLevelOne.visibility = if (it) View.VISIBLE else View.GONE
@@ -147,49 +156,50 @@ class TutorialFragment : BaseViewModelFragment<TutorialViewModel>() {
                 }
                 .disposedBy(disposeBag)
 
-        tutorialNext.clicks()
+            tutorialNext.clicks()
                 .subscribe {
                     viewModel.onPopupNextClick()
                 }
                 .disposedBy(disposeBag)
 
-        tutorialBack.clicks()
+            tutorialBack.clicks()
                 .subscribe {
                     viewModel.onPopupBackClick()
                 }
                 .disposedBy(disposeBag)
 
-        viewModel.floor
+            viewModel.floor
                 .map { it == 0 }
-                .bindToMain(tutorial_lower_level_text.visibility())
+                .bindToMain(tutorialLowerLevelText.visibility())
                 .disposedBy(disposeBag)
 
-        viewModel.floor
+            viewModel.floor
                 .map { it == 1 }
-                .bindToMain(tutorial_first_floor_text.visibility())
+                .bindToMain(tutorialFirstFloorText.visibility())
                 .disposedBy(disposeBag)
 
-        viewModel.floor
+            viewModel.floor
                 .map { it == 2 }
-                .bindToMain(tutorial_second_floor_text.visibility())
+                .bindToMain(tutorialSecondFloorText.visibility())
                 .disposedBy(disposeBag)
 
-        viewModel.floor
+            viewModel.floor
                 .map { it == 3 }
-                .bindToMain(tutorial_third_floor_text.visibility())
+                .bindToMain(tutorialThirdFloorText.visibility())
                 .disposedBy(disposeBag)
+        }
     }
 
     override fun setupNavigationBindings(viewModel: TutorialViewModel) {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
-                .filterFlatMap({ it is Navigate.Back }, { it as Navigate.Back })
-                .subscribe {
-                    activity?.onBackPressed()
-                }.disposedBy(navigationDisposeBag)
+            .filterFlatMap({ it is Navigate.Back }, { it as Navigate.Back })
+            .subscribe {
+                activity?.onBackPressed()
+            }.disposedBy(navigationDisposeBag)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is Activity) {
             overrideMapAccess(context, View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS)

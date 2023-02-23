@@ -5,10 +5,14 @@ import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
 import edu.artic.map.R
+import edu.artic.map.databinding.TourCarouselCellBinding
+import edu.artic.map.databinding.TourCarouselIntroCellBinding
 import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
+
 //import kotlinx.android.synthetic.main.tour_carousel_cell.view.*
 //import kotlinx.android.synthetic.main.tour_carousel_intro_cell.view.*
 
@@ -23,36 +27,42 @@ import io.reactivex.android.schedulers.AndroidSchedulers
  */
 class TourCarouselAdapter : AutoHolderRecyclerViewAdapter<TourCarousalBaseViewModel>() {
 
-    override fun View.onBindView(item: TourCarousalBaseViewModel, position: Int) {
+    override fun View.onBindView(
+        item: TourCarousalBaseViewModel,
+        holder: BaseViewHolder,
+        position: Int,
+    ) {
         when (item) {
 
             is TourCarousalIntroViewModel -> {
-                playTourIntroduction.setOnClickListener {
+                val binding = holder.binding as TourCarouselIntroCellBinding
+                binding.playTourIntroduction.setOnClickListener {
                     item.playTourIntro()
                 }
             }
 
             is TourCarousalStopCellViewModel -> {
-                item.titleText
+                with(holder.binding as TourCarouselCellBinding) {
+                    item.titleText
                         .bindToMain(stopTitle.text())
                         .disposedBy(item.viewDisposeBag)
-                item.galleryText
+                    item.galleryText
                         .bindToMain(stopSubTitle.text())
                         .disposedBy(item.viewDisposeBag)
 
-                item.imageUrl
+                    item.imageUrl
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
-                            GlideApp.with(this)
-                                    .load(it)
-                                    .placeholder(R.drawable.placeholder_thumb)
-                                    .into(image)
+                            GlideApp.with(image.context)
+                                .load(it)
+                                .placeholder(R.drawable.placeholder_thumb)
+                                .into(image)
                         }
                         .disposedBy(item.viewDisposeBag)
 
-                tourNumber.text = context.getString(R.string.tour_stop_position, position)
+                    tourNumber.text = context.getString(R.string.tour_stop_position, position)
 
-                item.viewPlayBackState
+                    item.viewPlayBackState
                         .subscribe { playBackState ->
                             when (playBackState) {
                                 is AudioPlayerService.PlayBackState.Playing -> {
@@ -73,12 +83,13 @@ class TourCarouselAdapter : AutoHolderRecyclerViewAdapter<TourCarousalBaseViewMo
                         }
                         .disposedBy(item.viewDisposeBag)
 
-                playCurrent.setOnClickListener {
-                    item.playCurrentObject()
-                }
+                    playCurrent.setOnClickListener {
+                        item.playCurrentObject()
+                    }
 
-                pauseCurrent.setOnClickListener {
-                    item.pauseCurrentObject()
+                    pauseCurrent.setOnClickListener {
+                        item.pauseCurrentObject()
+                    }
                 }
             }
         }

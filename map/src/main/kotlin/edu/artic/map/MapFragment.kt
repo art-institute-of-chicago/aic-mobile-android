@@ -2,13 +2,10 @@ package edu.artic.map
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.annotation.UiThread
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.UiThread
 import com.fuzz.rx.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -25,6 +22,7 @@ import edu.artic.location.centerOfMuseumOnMap
 import edu.artic.location.mapDisplayBounds
 import edu.artic.map.carousel.LeaveCurrentTourDialogFragment
 import edu.artic.map.carousel.TourCarouselFragment
+import edu.artic.map.databinding.FragmentMapBinding
 import edu.artic.map.helpers.toLatLng
 import edu.artic.map.rendering.*
 import edu.artic.map.tutorial.TutorialFragment
@@ -46,7 +44,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-//import kotlinx.android.synthetic.main.fragment_map.*
 import kotlin.reflect.KClass
 
 /**
@@ -60,15 +57,13 @@ import kotlin.reflect.KClass
  *
  * @see [MapActivity]
  */
-class MapFragment : BaseViewModelFragment<MapViewModel>() {
+class MapFragment : BaseViewModelFragment<FragmentMapBinding, MapViewModel>() {
 
     override val viewModelClass: KClass<MapViewModel>
         get() = MapViewModel::class
 
     override val title = R.string.global_empty_string
 
-    override val layoutResId: Int
-        get() = R.layout.fragment_map
     override val screenName: ScreenName
         get() = ScreenName.Map
 
@@ -103,12 +98,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapView.onCreate(savedInstanceState)
+        binding.mapView.onCreate(savedInstanceState)
         viewModel.mapMarkerConstructor.associateContext(view.context)
 
         MapsInitializer.initialize(view.context)
-        val mapStyleOptions = requireActivity().assets.fileAsString(filename = "google_map_config.json")
-        mapView.getMapAsync { map ->
+        val mapStyleOptions =
+            requireActivity().assets.fileAsString(filename = "google_map_config.json")
+        binding.mapView.getMapAsync { map ->
             viewModel.setMap(map)
             configureMap(map, mapStyleOptions)
 
@@ -137,11 +133,11 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
              * Remove the map object details fragment when user taps outside of object.
              */
             mapClicks
-                    .defaultThrottle()
-                    .withLatestFromOther(viewModel.displayMode)
-                    .filterTo<MapDisplayMode, MapDisplayMode.CurrentFloor>()
-                    .subscribeBy { hideFragmentInInfoContainer() }
-                    .disposedBy(disposeBag)
+                .defaultThrottle()
+                .withLatestFromOther(viewModel.displayMode)
+                .filterTo<MapDisplayMode, MapDisplayMode.CurrentFloor>()
+                .subscribeBy { hideFragmentInInfoContainer() }
+                .disposedBy(disposeBag)
 
             map.setOnMarkerClickListener { marker ->
                 val markerTag = marker.tag
@@ -183,13 +179,13 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
         val infoAdapter = object : GoogleMap.InfoWindowAdapter {
 
-            override fun getInfoContents(marker: Marker?): View? {
+            override fun getInfoContents(marker: Marker): View? {
                 return context?.let { ctx ->
                     View(ctx)
                 }
             }
 
-            override fun getInfoWindow(marker: Marker?): View? {
+            override fun getInfoWindow(marker: Marker): View? {
                 /**
                  * Returning empty textView or view didn't work so added TextView with spaces.
                  */
@@ -251,7 +247,7 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     }
 
     fun dismissFirstRunHeader() {
-        if (mapFirstRunHeaderFrame.visibility == View.VISIBLE) {
+        if (binding.mapFirstRunHeaderFrame.visibility == View.VISIBLE) {
             viewModel.onTouchWithHeader()
         }
     }
@@ -260,50 +256,50 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     override fun setupBindings(viewModel: MapViewModel) {
 
         getAudioServiceObservable()
-                .bindTo(audioService)
-                .disposedBy(disposeBag)
+            .bindTo(audioService)
+            .disposedBy(disposeBag)
 
-        lowerLevel.clicks()
-                .subscribe {
-                    dismissFirstRunHeader()
-                    viewModel.floorChangedTo(0)
-                }
-                .disposedBy(disposeBag)
+        binding.lowerLevel.clicks()
+            .subscribe {
+                dismissFirstRunHeader()
+                viewModel.floorChangedTo(0)
+            }
+            .disposedBy(disposeBag)
 
-        floorOne.clicks()
-                .subscribe {
-                    dismissFirstRunHeader()
-                    viewModel.floorChangedTo(1)
-                }
-                .disposedBy(disposeBag)
+        binding.floorOne.clicks()
+            .subscribe {
+                dismissFirstRunHeader()
+                viewModel.floorChangedTo(1)
+            }
+            .disposedBy(disposeBag)
 
-        floorTwo.clicks()
-                .subscribe {
-                    dismissFirstRunHeader()
-                    viewModel.floorChangedTo(2)
-                }
-                .disposedBy(disposeBag)
+        binding.floorTwo.clicks()
+            .subscribe {
+                dismissFirstRunHeader()
+                viewModel.floorChangedTo(2)
+            }
+            .disposedBy(disposeBag)
 
-        floorThree.clicks()
-                .subscribe {
-                    dismissFirstRunHeader()
-                    viewModel.floorChangedTo(3)
-                }
-                .disposedBy(disposeBag)
+        binding.floorThree.clicks()
+            .subscribe {
+                dismissFirstRunHeader()
+                viewModel.floorChangedTo(3)
+            }
+            .disposedBy(disposeBag)
 
-        compass.clicks()
-                .subscribeBy {
-                    dismissFirstRunHeader()
-                    viewModel.onClickCompass()
-                }.disposedBy(disposeBag)
+        binding.compass.clicks()
+            .subscribeBy {
+                dismissFirstRunHeader()
+                viewModel.onClickCompass()
+            }.disposedBy(disposeBag)
 
-        searchIcon.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onClickSearch()
-                }.disposedBy(disposeBag)
+        binding.searchIcon.clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onClickSearch()
+            }.disposedBy(disposeBag)
 
-        mapFirstRunHeaderFrame.setOnTouchListener { _, event ->
+        binding.mapFirstRunHeaderFrame.setOnTouchListener { view, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 viewModel.onTouchWithHeader()
             }
@@ -311,142 +307,152 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
         }
 
         viewModel.showFirstRunHeader
-                .bindToMain(mapFirstRunHeaderFrame.visibility())
-                .disposedBy(disposeBag)
+            .bindToMain(binding.mapFirstRunHeaderFrame.visibility())
+            .disposedBy(disposeBag)
 
         viewModel.chosenInfo
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
-                    mapFirstRunHeaderTitle.text = it.mapTitle
-                    mapFirstRunHeaderSubtitle.text = it.mapSubtitle
-                }
-                .disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                binding.mapFirstRunHeaderTitle.text = it.mapTitle
+                binding.mapFirstRunHeaderSubtitle.text = it.mapSubtitle
+            }
+            .disposedBy(disposeBag)
 
         viewModel.displayMode
-                .filterTo<MapDisplayMode, MapDisplayMode.Tour>()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (tour) -> displayFragmentInInfoContainer(TourCarouselFragment.create(tour)) }
-                .disposedBy(disposeBag)
+            .filterTo<MapDisplayMode, MapDisplayMode.Tour>()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { (tour) ->
+                displayFragmentInInfoContainer(
+                    TourCarouselFragment.create(
+                        tour
+                    )
+                )
+            }
+            .disposedBy(disposeBag)
 
         viewModel.displayMode
-                .filterTo<MapDisplayMode, MapDisplayMode.Search<*>>()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { searchObject ->
-                    when (searchObject) {
-                        is MapDisplayMode.Search.ObjectSearch -> {
-                            displayFragmentInInfoContainer(
-                                    SearchObjectDetailsFragment.loadArtworkResults(searchObject.item),
-                                    SEARCH_DETAILS
-                            )
-                        }
-                        is MapDisplayMode.Search.AmenitiesSearch ->
-                            displayFragmentInInfoContainer(
-                                    SearchObjectDetailsFragment.loadAmenitiesByType(searchObject.item),
-                                    SEARCH_DETAILS
-                            )
-                        is MapDisplayMode.Search.ExhibitionSearch ->
-                            displayFragmentInInfoContainer(
-                                    SearchObjectDetailsFragment.loadExhibitionResults(searchObject.item),
-                                    SEARCH_DETAILS
-                            )
+            .filterTo<MapDisplayMode, MapDisplayMode.Search<*>>()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { searchObject ->
+                when (searchObject) {
+                    is MapDisplayMode.Search.ObjectSearch -> {
+                        displayFragmentInInfoContainer(
+                            SearchObjectDetailsFragment.loadArtworkResults(searchObject.item),
+                            SEARCH_DETAILS
+                        )
                     }
+                    is MapDisplayMode.Search.AmenitiesSearch ->
+                        displayFragmentInInfoContainer(
+                            SearchObjectDetailsFragment.loadAmenitiesByType(searchObject.item),
+                            SEARCH_DETAILS
+                        )
+                    is MapDisplayMode.Search.ExhibitionSearch ->
+                        displayFragmentInInfoContainer(
+                            SearchObjectDetailsFragment.loadExhibitionResults(searchObject.item),
+                            SEARCH_DETAILS
+                        )
                 }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
 
         /**
          * If displayMode is not [MapDisplayMode.Tour], hide the carousel.
          */
         viewModel.displayMode
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
-                    when (it) {
-                        is MapDisplayMode.Tour -> hideFragmentInInfoContainer(SEARCH_DETAILS)
-                        is MapDisplayMode.CurrentFloor -> hideFragmentInInfoContainer(SEARCH_DETAILS)
-                        is MapDisplayMode.Search<*> -> hideFragmentInInfoContainer(OBJECT_DETAILS)
-                    }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                when (it) {
+                    is MapDisplayMode.Tour -> hideFragmentInInfoContainer(SEARCH_DETAILS)
+                    is MapDisplayMode.CurrentFloor -> hideFragmentInInfoContainer(SEARCH_DETAILS)
+                    is MapDisplayMode.Search<*> -> hideFragmentInInfoContainer(OBJECT_DETAILS)
                 }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
 
         viewModel.boundsOfInterestChanged
-                .withLatestFrom(viewModel.currentMap.filterValue(), viewModel.displayMode)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (bounds, map, mode) ->
+            .withLatestFrom(viewModel.currentMap.filterValue(), viewModel.displayMode)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { (bounds, map, mode) ->
 
-                    if (mode is MapDisplayMode.Search<*>) {
-                        // Only need to zoom out all the way. Specific bounds are irrelevant
-                        map.animateCamera(
-                                CameraUpdateFactory.newLatLngZoom(
-                                        centerOfMuseumOnMap,
-                                        ZOOM_INITIAL
-                                )
-                        )
-                    } else {
-                        // Make sure we can see all of the specified positions
-                        val aoiBounds = LatLngBounds.builder().includeAll(bounds).build()
-                        map.animateCamera(
-                                CameraUpdateFactory.newLatLngZoom(
-                                        aoiBounds.center,
-                                        Math.max(ZOOM_INDIVIDUAL, map.cameraPosition.zoom)
-                                )
-                        )
-                    }
-                }
-                .disposedBy(disposeBag)
-
-        viewModel.individualMapChange
-                .filterValue()
-                .withLatestFrom(viewModel.currentMap.filterValue())
-                .subscribeBy { (change, map) ->
-                    val (newPosition, focus) = change
+                if (mode is MapDisplayMode.Search<*>) {
+                    // Only need to zoom out all the way. Specific bounds are irrelevant
                     map.animateCamera(
-                            CameraUpdateFactory.newLatLngZoom(newPosition, focus.toZoomLevel())
+                        CameraUpdateFactory.newLatLngZoom(
+                            centerOfMuseumOnMap,
+                            ZOOM_INITIAL
+                        )
+                    )
+                } else {
+                    // Make sure we can see all of the specified positions
+                    val aoiBounds = LatLngBounds.builder().includeAll(bounds).build()
+                    map.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            aoiBounds.center,
+                            Math.max(ZOOM_INDIVIDUAL, map.cameraPosition.zoom)
+                        )
                     )
                 }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
+
+        viewModel.individualMapChange
+            .filterValue()
+            .withLatestFrom(viewModel.currentMap.filterValue())
+            .subscribeBy { (change, map) ->
+                val (newPosition, focus) = change
+                map.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(newPosition, focus.toZoomLevel())
+                )
+            }
+            .disposedBy(disposeBag)
 
         viewModel.distinctFloor
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { floor: ArticMapFloor ->
-                    fun backgroundForState(whichFloor: Int): Int {
-                        return when (floor.label.toInt()) {
-                            whichFloor -> R.drawable.map_floor_background_selected
-                            else -> R.drawable.map_floor_background_default
-                        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { floor: ArticMapFloor ->
+                fun backgroundForState(whichFloor: Int): Int {
+                    return when (floor.label.toInt()) {
+                        whichFloor -> R.drawable.map_floor_background_selected
+                        else -> R.drawable.map_floor_background_default
                     }
-                    lowerLevel.setBackgroundResource(backgroundForState(0))
-                    floorOne.setBackgroundResource(backgroundForState(1))
-                    floorTwo.setBackgroundResource(backgroundForState(2))
-                    floorThree.setBackgroundResource(backgroundForState(3))
                 }
-                .disposedBy(disposeBag)
+                binding.lowerLevel.setBackgroundResource(backgroundForState(0))
+                binding.floorOne.setBackgroundResource(backgroundForState(1))
+                binding.floorTwo.setBackgroundResource(backgroundForState(2))
+                binding.floorThree.setBackgroundResource(backgroundForState(3))
+            }
+            .disposedBy(disposeBag)
 
         viewModel.distinctFloor
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter { floor -> floor.number in 0..3 }
-                .withLatestFrom(viewModel.currentMap.filterValue())
-                .subscribeBy { (floor, map) ->
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter { floor -> floor.number in 0..3 }
+            .withLatestFrom(viewModel.currentMap.filterValue())
+            .subscribeBy { (floor, map) ->
 
-                    // We want to add the new `TileOverlay` before removing the old one
-                    val nextFloorPlan = map.addTileOverlay(TileOverlayOptions()
-                            .zIndex(0.2f)
-                            .fadeIn(false)
-                            .transparency(TRANSPARENCY_INVISIBLE)
-                            .tileProvider(GlideMapTileProvider(requireContext(), floor)))
+                // We want to add the new `TileOverlay` before removing the old one
+                val nextFloorPlan = map.addTileOverlay(
+                    TileOverlayOptions()
+                        .zIndex(0.2f)
+                        .fadeIn(false)
+                        .transparency(TRANSPARENCY_INVISIBLE)
+                        .tileProvider(GlideMapTileProvider(requireContext(), floor))
+                )
 
-                    nextFloorPlan.graduallyFadeIn()
+                nextFloorPlan?.graduallyFadeIn()
 
-                    tileOverlay?.removeWithFadeOut()
-                    tileOverlay = nextFloorPlan
-                }
-                .disposedBy(disposeBag)
+                tileOverlay?.removeWithFadeOut()
+                tileOverlay = nextFloorPlan
+            }
+            .disposedBy(disposeBag)
 
         viewModel.selectedArticObject
-                .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
-                .filterFlatMap({ (_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor }, { (selected) -> selected })
-                .subscribeBy { selected ->
-                    displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
-                }
-                .disposedBy(disposeBag)
+            .withLatestFrom(viewModel.displayMode) { selected, mapMode -> selected to mapMode }
+            .filterFlatMap(
+                { (_, mapMode) -> mapMode is MapDisplayMode.CurrentFloor },
+                { (selected) -> selected })
+            .subscribeBy { selected ->
+                displayFragmentInInfoContainer(MapObjectDetailsFragment.create(selected))
+            }
+            .disposedBy(disposeBag)
         /**
          * Center the full object marker in the map.
          *
@@ -459,70 +465,78 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
          * this function handles all that.
          */
         viewModel
-                .selectedTourStopMarkerId
-                .flatMap { viewModel.retrieveMarkerByObjectId(it) }
-                .filterValue()
-                .withLatestFrom(viewModel.currentMap.filterValue())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (marker, map) ->
+            .selectedTourStopMarkerId
+            .flatMap { viewModel.retrieveMarkerByObjectId(it) }
+            .filterValue()
+            .withLatestFrom(viewModel.currentMap.filterValue())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { (marker, map) ->
 
-                    /**
-                     * showInfoWindow() is only used for bringing targeted marker to front.
-                     */
-                    marker.showInfoWindow()
-                    val currentZoomLevel = map.cameraPosition.zoom
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position,
-                            Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
-                }
-                .disposedBy(disposeBag)
+                /**
+                 * showInfoWindow() is only used for bringing targeted marker to front.
+                 */
+                marker.showInfoWindow()
+                val currentZoomLevel = map.cameraPosition.zoom
+                map.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        marker.position,
+                        Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)
+                    )
+                )
+            }
+            .disposedBy(disposeBag)
 
         viewModel.selectedDiningPlace
-                .filterValue()
-                .withLatestFrom(viewModel.currentMap.filterValue())
-                .subscribeBy { (annotation, map) ->
-                    val currentZoomLevel = map.cameraPosition.zoom
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(annotation.toLatLng(),
-                            Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
-                }
-                .disposedBy(disposeBag)
+            .filterValue()
+            .withLatestFrom(viewModel.currentMap.filterValue())
+            .subscribeBy { (annotation, map) ->
+                val currentZoomLevel = map.cameraPosition.zoom
+                map.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        annotation.toLatLng(),
+                        Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)
+                    )
+                )
+            }
+            .disposedBy(disposeBag)
 
         viewModel
-                .leaveTourRequest
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    displayLeaveTourConfirmation()
-                }.disposedBy(disposeBag)
+            .leaveTourRequest
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                displayLeaveTourConfirmation()
+            }.disposedBy(disposeBag)
 
         viewModel
-                .switchTourRequest
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { (_, _) ->
-                    displayLeaveTourConfirmation()
-                }.disposedBy(disposeBag)
+            .switchTourRequest
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { (_, _) ->
+                displayLeaveTourConfirmation()
+            }.disposedBy(disposeBag)
 
         /**
          * Stop the active tour & dismiss the tour carousel if user leaves tour.
          */
         viewModel.leftActiveTour
-                .filter { it }
-                .withLatestFrom(audioService)
-                .subscribeBy { (_, service) ->
-                    service.stopPlayer()
-                    hideFragmentInInfoContainer()
-                    refreshMapDisplayMode()
-                }
-                .disposedBy(disposeBag)
+            .filter { it }
+            .withLatestFrom(audioService)
+            .subscribeBy { (_, service) ->
+                service.stopPlayer()
+                hideFragmentInInfoContainer()
+                refreshMapDisplayMode()
+            }
+            .disposedBy(disposeBag)
 
         Observables.combineLatest(
-                viewModel.isUserInMuseum,
-                viewModel.currentMap
+            viewModel.isUserInMuseum,
+            viewModel.currentMap
         ).filter { (_, currentMap) -> currentMap.value != null }
-                .subscribe { (inMuseum, currentMap) ->
-                    val map = currentMap.value!!
-                    if (map.isMyLocationEnabled != inMuseum) {
-                        map.isMyLocationEnabled = inMuseum
-                    }
-                }.disposedBy(disposeBag)
+            .subscribe { (inMuseum, currentMap) ->
+                val map = currentMap.value!!
+                if (map.isMyLocationEnabled != inMuseum) {
+                    map.isMyLocationEnabled = inMuseum
+                }
+            }.disposedBy(disposeBag)
 
         //TODO re-enable once we figure out why this feature isn't working great on site
 //        viewModel.showCompass
@@ -530,74 +544,84 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 //                .disposedBy(disposeBag)
 
         viewModel.focusToTracking
-                .distinctUntilChanged()
-                .subscribe { (map, wrapped) ->
-                    val location = wrapped.value
-                    if (location != null) {
-                        compass.rotation = 0.0f
-                        compass.alpha = 1.0f
-                        map.uiSettings.isRotateGesturesEnabled = false
-                        map.uiSettings.isScrollGesturesEnabled = false
+            .distinctUntilChanged()
+            .subscribe { (map, wrapped) ->
+                val location = wrapped.value
+                if (location != null) {
+                    binding.compass.rotation = 0.0f
+                    binding.compass.alpha = 1.0f
+                    map.uiSettings.isRotateGesturesEnabled = false
+                    map.uiSettings.isScrollGesturesEnabled = false
 
-                        map.animateCamera(
-                                CameraUpdateFactory
-                                        .newCameraPosition(
-                                                CameraPosition.Builder(map.cameraPosition)
-                                                        .bearing(location.bearing)
-                                                        .target(LatLng(location.latitude, location.longitude))
-                                                        .build()
-                                        )
-                        )
-                    } else {
-                        map.uiSettings.isRotateGesturesEnabled = true
-                        map.uiSettings.isScrollGesturesEnabled = true
-                        compass.rotation = 30f
-                        compass.alpha = .5f
-                    }
+                    map.animateCamera(
+                        CameraUpdateFactory
+                            .newCameraPosition(
+                                CameraPosition.Builder(map.cameraPosition)
+                                    .bearing(location.bearing)
+                                    .target(LatLng(location.latitude, location.longitude))
+                                    .build()
+                            )
+                    )
+                } else {
+                    map.uiSettings.isRotateGesturesEnabled = true
+                    map.uiSettings.isScrollGesturesEnabled = true
+                    binding.compass.rotation = 30f
+                    binding.compass.alpha = .5f
                 }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
+
     }
 
     override fun setupNavigationBindings(viewModel: MapViewModel) {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
-                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
-                .subscribe { endpoint ->
+            .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
+            .subscribe { endpoint ->
 
-                    val act = requireActivity()
-                    val manager: androidx.fragment.app.FragmentManager = act.supportFragmentManager ?: return@subscribe
+                val act = requireActivity()
+                val manager: androidx.fragment.app.FragmentManager =
+                    act.supportFragmentManager ?: return@subscribe
 
-                    when (endpoint) {
-                        MapViewModel.NavigationEndpoint.Search -> {
-                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                            startActivity(intent)
-                        }
-                        MapViewModel.NavigationEndpoint.LocationPrompt -> {
-                            /**
-                             * Display location prompt iff location permission is not granted.
-                             */
-                            if (!act.hasFineLocationPermission()) {
-                                manager
-                                        .beginTransaction()
-                                        .replace(R.id.overlayContainer, LocationPromptFragment(), "LocationPromptFragment")
-                                        .addToBackStack("LocationPromptFragment")
-                                        .commit()
-                            }
-                        }
-                        is MapViewModel.NavigationEndpoint.Tutorial -> {
+                when (endpoint) {
+                    MapViewModel.NavigationEndpoint.Search -> {
+                        val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                        startActivity(intent)
+                    }
+                    MapViewModel.NavigationEndpoint.LocationPrompt -> {
+                        /**
+                         * Display location prompt iff location permission is not granted.
+                         */
+                        if (!act.hasFineLocationPermission()) {
                             manager
-                                    .beginTransaction()
-                                    .replace(R.id.overlayContainer, TutorialFragment.withExtras(endpoint.currentFloor), "TutorialFragment")
-                                    .addToBackStack("TutorialFragment")
-                                    .commit()
-                        }
-                        is MapViewModel.NavigationEndpoint.Messages -> {
-                            val tag = "PagedMessageFragment"
-                            (manager.findFragmentByTag(tag) as? androidx.fragment.app.DialogFragment)?.dismiss()
-                            PagedMessageFragment.create(endpoint.messages).show(manager, tag)
+                                .beginTransaction()
+                                .replace(
+                                    R.id.overlayContainer,
+                                    LocationPromptFragment(),
+                                    "LocationPromptFragment"
+                                )
+                                .addToBackStack("LocationPromptFragment")
+                                .commit()
                         }
                     }
-                }.disposedBy(navigationDisposeBag)
+                    is MapViewModel.NavigationEndpoint.Tutorial -> {
+                        manager
+                            .beginTransaction()
+                            .replace(
+                                R.id.overlayContainer,
+                                TutorialFragment.withExtras(endpoint.currentFloor),
+                                "TutorialFragment"
+                            )
+                            .addToBackStack("TutorialFragment")
+                            .commit()
+                    }
+                    is MapViewModel.NavigationEndpoint.Messages -> {
+                        val tag = "PagedMessageFragment"
+                        (manager.findFragmentByTag(tag) as? androidx.fragment.app.DialogFragment)?.dismiss()
+                        PagedMessageFragment.create(endpoint.messages).show(manager, tag)
+                    }
+                }
+            }.disposedBy(navigationDisposeBag)
 
         viewModel.setupPreferenceBindings(navigationDisposeBag)
     }
@@ -606,21 +630,24 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
      * Shows contextual information below the map. Also, it adjusts padding on the map to stay
      * in line with product requirements.
      */
-    private fun displayFragmentInInfoContainer(fragment: androidx.fragment.app.Fragment, tag: String = OBJECT_DETAILS) {
+    private fun displayFragmentInInfoContainer(
+        fragment: androidx.fragment.app.Fragment,
+        tag: String = OBJECT_DETAILS,
+    ) {
         val fragmentManager = requireActivity().supportFragmentManager
         fragmentManager.beginTransaction()
-                .replace(R.id.infocontainer, fragment, tag)
-                .commit()
+            .replace(R.id.infocontainer, fragment, tag)
+            .commit()
 
         // wait for it to update first time
-        infocontainer.globalLayouts()
-                .withLatestFromOther(viewModel.currentMap.filterValue())
-                .take(1)
-                .subscribe { map ->
-                    val height = infocontainer.height
-                    map.setMapPadding(activity = requireActivity(), bottom = height)
-                }
-                .disposedBy(disposeBag)
+        binding.infocontainer.globalLayouts()
+            .withLatestFromOther(viewModel.currentMap.filterValue())
+            .take(1)
+            .subscribe { map ->
+                val height = binding.infocontainer.height
+                map.setMapPadding(activity = requireActivity(), bottom = height)
+            }
+            .disposedBy(disposeBag)
     }
 
     /**
@@ -630,20 +657,20 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
     private fun hideFragmentInInfoContainer(tag: String = OBJECT_DETAILS) {
         val supportFragmentManager = requireActivity().supportFragmentManager
         supportFragmentManager
-                .findFragmentByTag(tag)
-                ?.let {
-                    supportFragmentManager
-                            .beginTransaction()
-                            .remove(it)
-                            .commit()
-                }
+            .findFragmentByTag(tag)
+            ?.let {
+                supportFragmentManager
+                    .beginTransaction()
+                    .remove(it)
+                    .commit()
+            }
 
         // reset back to initial.
         viewModel.currentMap
-                .take(1)
-                .filterValue()
-                .subscribeBy { map -> map.setMapPadding(requireActivity()) }
-                .disposedBy(disposeBag)
+            .take(1)
+            .filterValue()
+            .subscribeBy { map -> map.setMapPadding(requireActivity()) }
+            .disposedBy(disposeBag)
     }
 
 
@@ -666,36 +693,41 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     }
 
-    private fun refreshMapDisplayMode(requestedTour: ArticTour? = null, requestedStop: ArticTour.TourStop? = null) {
+    private fun refreshMapDisplayMode(
+        requestedTour: ArticTour? = null,
+        requestedStop: ArticTour.TourStop? = null,
+    ) {
         viewModel.loadMapDisplayMode(requestedTour to requestedStop)
     }
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        binding.mapView.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
-        viewModel.onResume(getLatestTourObject() to getStartTourStop(),
-                getLatestSearchObject(),
-                getLatestSearchObjectType(),
-                getLatestExhibitionObject())
+        binding.mapView.onResume()
+        viewModel.onResume(
+            getLatestTourObject() to getStartTourStop(),
+            getLatestSearchObject(),
+            getLatestSearchObjectType(),
+            getLatestExhibitionObject()
+        )
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        binding.mapView.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        binding.mapView.onStop()
     }
 
     override fun onDestroyView() {
-        mapView.onDestroy()
+        binding.mapView.onDestroy()
         leaveTourDialog?.dismissAllowingStateLoss()
 
         // NB: this call leads directly to viewModel::cleanup
@@ -704,12 +736,12 @@ class MapFragment : BaseViewModelFragment<MapViewModel>() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView?.onSaveInstanceState(outState)
+        binding.mapView.onSaveInstanceState(outState)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        binding.mapView.onLowMemory()
     }
 
 

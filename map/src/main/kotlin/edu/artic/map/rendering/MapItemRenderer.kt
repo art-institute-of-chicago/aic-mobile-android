@@ -32,14 +32,16 @@ import java.util.concurrent.TimeUnit
  * fetching, and listening to events on the map. Subclass this to add other custom markers.
  */
 abstract class MapItemRenderer<T : AccessibilityAware>(
-        /**
-         * Minor optimization to register or not register the bitmap queue within a subclass.
-         */
-        protected val useBitmapQueue: Boolean = false
+    /**
+     * Minor optimization to register or not register the bitmap queue within a subclass.
+     */
+    protected val useBitmapQueue: Boolean = false,
 ) {
 
-    protected val mapItems: Subject<Map<String, MarkerHolder<T>>> = BehaviorSubject.createDefault(emptyMap())
-    private val currentMap: Subject<Optional<GoogleMap>> = BehaviorSubject.createDefault(Optional(null))
+    protected val mapItems: Subject<Map<String, MarkerHolder<T>>> =
+        BehaviorSubject.createDefault(emptyMap())
+    private val currentMap: Subject<Optional<GoogleMap>> =
+        BehaviorSubject.createDefault(Optional(null))
     private var currentFloor: Int = INVALID_FLOOR
 
     protected val imageQueueDisposeBag = DisposeBag()
@@ -57,40 +59,51 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
     init {
         if (useBitmapQueue) {
             bitmapQueue
-                    .toFlowable(BackpressureStrategy.BUFFER)
-                    .buffer(100, TimeUnit.MILLISECONDS, 20)
-                    .filter { it.isNotEmpty() }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .withLatestFrom(currentMap.filterValue().toFlowable(BackpressureStrategy.LATEST),
-                            mapItems.toFlowable(BackpressureStrategy.LATEST))
-                    .subscribe { (newMarkers, map, existingMapItems) ->
-                        // concat our observables to not overload the main thread. Delay each one by 50ms.
-                        Single.concat(newMarkers
-                                .map { item -> newDeferredMarkerCreationSingle(item, existingMapItems, map) })
-                                .observeOn(TrampolineScheduler.instance()) // sequential
-                                .toList()
-                                .toObservable()
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .withLatestFrom(mapItems)
-                                .map { (newMarkersList, existingMarkers) ->
-                                    Timber.d("Updating ${existingMarkers.size} with set of ${newMarkers.size} for ${this::class}")
-                                    val modifiedMarkers = existingMarkers.toMutableMap()
-                                    newMarkersList.forEach { (newMarker) ->
-                                        if (newMarker != null) {
-                                            synchronized(tempMarkers) {
-                                                tempMarkers -= newMarker
-                                            }
-                                            // double-check in case marker exists already.
-                                            modifiedMarkers[newMarker.id]?.marker?.tryExpectingFailure(true, Marker::removeWithFadeOut)
-                                            modifiedMarkers[newMarker.id] = newMarker
-                                        }
+                .toFlowable(BackpressureStrategy.BUFFER)
+                .buffer(100, TimeUnit.MILLISECONDS, 20)
+                .filter { it.isNotEmpty() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .withLatestFrom(
+                    currentMap.filterValue().toFlowable(BackpressureStrategy.LATEST),
+                    mapItems.toFlowable(BackpressureStrategy.LATEST)
+                )
+                .subscribe { (newMarkers, map, existingMapItems) ->
+                    // concat our observables to not overload the main thread. Delay each one by 50ms.
+                    Single.concat(newMarkers
+                        .map { item ->
+                            newDeferredMarkerCreationSingle(
+                                item,
+                                existingMapItems,
+                                map
+                            )
+                        })
+                        .observeOn(TrampolineScheduler.instance()) // sequential
+                        .toList()
+                        .toObservable()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .withLatestFrom(mapItems)
+                        .map { (newMarkersList, existingMarkers) ->
+                            Timber.d("Updating ${existingMarkers.size} with set of ${newMarkers.size} for ${this::class}")
+                            val modifiedMarkers = existingMarkers.toMutableMap()
+                            newMarkersList.forEach { (newMarker) ->
+                                if (newMarker != null) {
+                                    synchronized(tempMarkers) {
+                                        tempMarkers -= newMarker
                                     }
-                                    modifiedMarkers
+                                    // double-check in case marker exists already.
+                                    modifiedMarkers[newMarker.id]?.marker?.tryExpectingFailure(
+                                        true,
+                                        Marker::removeWithFadeOut
+                                    )
+                                    modifiedMarkers[newMarker.id] = newMarker
                                 }
-                                .subscribeBy { mapItems.onNext(it) }
-                                .disposedBy(imageFetcherDisposeBag)
-                    }
-                    .disposedBy(imageQueueDisposeBag)
+                            }
+                            modifiedMarkers
+                        }
+                        .subscribeBy { mapItems.onNext(it) }
+                        .disposedBy(imageFetcherDisposeBag)
+                }
+                .disposedBy(imageQueueDisposeBag)
         }
     }
 
@@ -137,7 +150,8 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
      * If implemented, we enqueue a new [Observable] that when completes, forwards its data
      * and re-renders an existing [MarkerHolder]
      */
-    open fun getBitmapFetcher(item: T, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? = null
+    open fun getBitmapFetcher(item: T, displayMode: MapDisplayMode): Observable<BitmapDescriptor>? =
+        null
 
     /**
      * Return marker alpha based on map configuration. By default, all markers are [ALPHA_VISIBLE],
@@ -145,30 +159,33 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
      * a different floor than current.
      */
     @AnyThread
-    open fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: T): Float = ALPHA_VISIBLE
+    open fun getMarkerAlpha(floor: Int, mapDisplayMode: MapDisplayMode, item: T): Float =
+        ALPHA_VISIBLE
 
     fun getMarkerHolderById(id: String): Observable<Optional<MarkerHolder<T>>> =
-            mapItems.take(1).map { mapItems -> optionalOf(mapItems[id]) }
+        mapItems.take(1).map { mapItems -> optionalOf(mapItems[id]) }
 
     /**
      * Binds this [MapItemRenderer] to changes to the map, based on [MapChangeEvent] and if the [GoogleMap]
      * is active.
      */
-    fun bindToMapChanges(map: Observable<GoogleMap>,
-                         mapChangeEvents: Flowable<MapChangeEvent>,
-                         visibleRegionChanges: Observable<VisibleRegion>,
-                         disposeBag: DisposeBag) {
+    fun bindToMapChanges(
+        map: Observable<GoogleMap>,
+        mapChangeEvents: Flowable<MapChangeEvent>,
+        visibleRegionChanges: Observable<VisibleRegion>,
+        disposeBag: DisposeBag,
+    ) {
         renderMarkers(map, mapChangeEvents)
-                .subscribeBy { markers -> this.mapItems.onNext(markers.associateBy { it.id }) }
-                .disposedBy(disposeBag)
+            .subscribeBy { markers -> this.mapItems.onNext(markers.associateBy { it.id }) }
+            .disposedBy(disposeBag)
 
         visibleRegionChanges
-                .bindTo(this.visibleRegionChanges)
-                .disposedBy(disposeBag)
+            .bindTo(this.visibleRegionChanges)
+            .disposedBy(disposeBag)
 
         mapChangeEvents
-                .bindTo(this.mapChangeEvents)
-                .disposedBy(disposeBag)
+            .bindTo(this.mapChangeEvents)
+            .disposedBy(disposeBag)
     }
 
     /**
@@ -186,54 +203,63 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
     protected fun enqueueBitmapFetch(item: T, mapChangeEvent: MapChangeEvent): Disposable? {
         getBitmapFetcher(item, mapChangeEvent.displayMode)?.let { fetcher ->
             return@let fetcher
-                    .map { DelayedMapItemRenderEvent(mapChangeEvent, item, it) }
-                    .subscribeBy { bitmapQueue.onNext(it) }
-                    .disposedBy(imageFetcherDisposeBag)
+                .map { DelayedMapItemRenderEvent(mapChangeEvent, item, it) }
+                .subscribeBy { bitmapQueue.onNext(it) }
+                .disposedBy(imageFetcherDisposeBag)
         }
         return null
     }
 
-    private fun renderMarkers(mapObservable: Observable<GoogleMap>, floorFocus: Flowable<MapChangeEvent>)
+    private fun renderMarkers(
+        mapObservable: Observable<GoogleMap>,
+        floorFocus: Flowable<MapChangeEvent>,
+    )
             : Flowable<List<MarkerHolder<T>>> {
         return floorFocus
-                .withLatestFrom(mapObservable
-                        .doOnNext { currentMap.onNext(optionalOf(it)) }
-                        .toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
-                .debug("New Map Event")
-                .observeOn(Schedulers.io())
-                .flatMap { (mapEvent, map) ->
-                    val visibleMapFocus = getVisibleMapFocus(mapEvent.displayMode)
-                    if (!visibleMapFocus.contains(mapEvent.focus)) {
-                        // clear out list if the focus is not within scope of the renderer.
-                        MapItemRendererEvent(map, mapEvent, emptyList<T>()).asFlowable()
-                    } else {
-                        getItems(mapEvent.floor, mapEvent.displayMode).map {
-                            Timber.d("Found ${it.size} items for ${this::class}")
-                            MapItemRendererEvent(map, mapEvent, it)
-                        }
+            .withLatestFrom(mapObservable
+                .doOnNext { currentMap.onNext(optionalOf(it)) }
+                .toFlowable(BackpressureStrategy.LATEST)) { first, second -> first to second }
+            .debug("New Map Event")
+            .observeOn(Schedulers.io())
+            .flatMap { (mapEvent, map) ->
+                val visibleMapFocus = getVisibleMapFocus(mapEvent.displayMode)
+                if (!visibleMapFocus.contains(mapEvent.focus)) {
+                    // clear out list if the focus is not within scope of the renderer.
+                    MapItemRendererEvent(map, mapEvent, emptyList<T>()).asFlowable()
+                } else {
+                    getItems(mapEvent.floor, mapEvent.displayMode).map {
+                        Timber.d("Found ${it.size} items for ${this::class}")
+                        MapItemRendererEvent(map, mapEvent, it)
                     }
                 }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(TrampolineScheduler.instance()) // execute serially so we don't overlap on other events on the main thread.
-                .withLatestFrom(mapItems.toFlowable(BackpressureStrategy.LATEST),
-                        visibleRegionChanges.toFlowable(BackpressureStrategy.LATEST))
-                .map { (mapItemRendererEvent, existingMapItems, visibleRegion) ->
-                    val (_, _, items) = mapItemRendererEvent
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(TrampolineScheduler.instance()) // execute serially so we don't overlap on other events on the main thread.
+            .withLatestFrom(
+                mapItems.toFlowable(BackpressureStrategy.LATEST),
+                visibleRegionChanges.toFlowable(BackpressureStrategy.LATEST)
+            )
+            .map { (mapItemRendererEvent, existingMapItems, visibleRegion) ->
+                val (_, _, items) = mapItemRendererEvent
 
-                    imageFetcherDisposeBag.clear()
-                    val foundItemsMap = removeOldMarkers(existingMapItems, items)
+                imageFetcherDisposeBag.clear()
+                val foundItemsMap = removeOldMarkers(existingMapItems, items)
 
-                    // any markers in between loading and done are removed here.
-                    flushTempMarkers()
+                // any markers in between loading and done are removed here.
+                flushTempMarkers()
 
-                    // don't emit an empty event (which empty zip list does), rather emit an
-                    // empty list here.
-                    if (items.isEmpty()) {
-                        listOf<MarkerHolder<T>>()
-                    } else {
-                        return@map mapAndFetchDisplayMarkers(foundItemsMap, mapItemRendererEvent, visibleRegion)
-                    }
+                // don't emit an empty event (which empty zip list does), rather emit an
+                // empty list here.
+                if (items.isEmpty()) {
+                    listOf<MarkerHolder<T>>()
+                } else {
+                    return@map mapAndFetchDisplayMarkers(
+                        foundItemsMap,
+                        mapItemRendererEvent,
+                        visibleRegion
+                    )
                 }
+            }
     }
 
     /**
@@ -242,9 +268,11 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
      * and adjust alpha, if needed.
      */
     @UiThread
-    private fun mapAndFetchDisplayMarkers(foundItemsMap: Map<String, MarkerHolder<T>>,
-                                          mapRenderEvent: MapItemRendererEvent<T>,
-                                          visibleRegion: VisibleRegion): List<MarkerHolder<T>> {
+    private fun mapAndFetchDisplayMarkers(
+        foundItemsMap: Map<String, MarkerHolder<T>>,
+        mapRenderEvent: MapItemRendererEvent<T>,
+        visibleRegion: VisibleRegion,
+    ): List<MarkerHolder<T>> {
         val (map, mapChangeEvent, items) = mapRenderEvent
         val (_, floor, displayMode) = mapChangeEvent
         return items.mapNotNull { item ->
@@ -257,8 +285,10 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
                 adjustVisibleMarker(existing, visibleRegion, mapChangeEvent)
                 existing
             } else {
-                displayMarker(item,
-                        mapChangeEvent, visibleRegion, displayMode, map, floor, id)
+                displayMarker(
+                    item,
+                    mapChangeEvent, visibleRegion, displayMode, map, floor, id
+                )
             }
         }
     }
@@ -268,34 +298,37 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
      */
     @UiThread
     protected open fun adjustVisibleMarker(
-            existing: MarkerHolder<T>,
-            visibleRegion: VisibleRegion,
-            mapChangeEvent: MapChangeEvent
+        existing: MarkerHolder<T>,
+        visibleRegion: VisibleRegion,
+        mapChangeEvent: MapChangeEvent,
     ) = Unit
 
     @UiThread
-    protected open fun displayMarker(item: T,
-                                     mapChangeEvent: MapChangeEvent,
-                                     visibleRegion: VisibleRegion,
-                                     displayMode: MapDisplayMode,
-                                     map: GoogleMap,
-                                     floor: Int,
-                                     id: String): MarkerHolder<T>? {
+    protected open fun displayMarker(
+        item: T,
+        mapChangeEvent: MapChangeEvent,
+        visibleRegion: VisibleRegion,
+        displayMode: MapDisplayMode,
+        map: GoogleMap,
+        floor: Int,
+        id: String,
+    ): MarkerHolder<T>? {
         val requestDisposable = enqueueBitmapFetch(item = item, mapChangeEvent = mapChangeEvent)
 
         // fast bitmap returns immediately.
         return getFastBitmap(item, displayMode)?.let { bitmapDescriptor ->
             constructAndAddMarkerHolder(
-                    item = item,
-                    bitmap = bitmapDescriptor,
-                    displayMode = displayMode,
-                    map = map,
-                    floor = floor,
-                    id = id,
-                    isSelected = shouldFocusOnCreation(mapChangeEvent.displayMode),
-                    // bitmap queue not used, means bitmap is considered loaded
-                    loadedBitmap = !useBitmapQueue,
-                    requestDisposable = requestDisposable)
+                item = item,
+                bitmap = bitmapDescriptor,
+                displayMode = displayMode,
+                map = map,
+                floor = floor,
+                id = id,
+                isSelected = shouldFocusOnCreation(mapChangeEvent.displayMode),
+                // bitmap queue not used, means bitmap is considered loaded
+                loadedBitmap = !useBitmapQueue,
+                requestDisposable = requestDisposable
+            )
         }
     }
 
@@ -311,9 +344,9 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
      * the marker to the map.
      */
     private fun newDeferredMarkerCreationSingle(
-            item: DelayedMapItemRenderEvent<T>,
-            existingMapItems: Map<String, MarkerHolder<T>>,
-            map: GoogleMap
+        item: DelayedMapItemRenderEvent<T>,
+        existingMapItems: Map<String, MarkerHolder<T>>,
+        map: GoogleMap,
     ): Single<Optional<MarkerHolder<T>>>? {
         return Single.fromCallable {
             val (_, floor, displayMode) = item.mapChangeEvent
@@ -322,7 +355,7 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
             // reusing existing marker if possible.
             if (existingMarker != null) {
                 val meta = existingMarker.marker.metaData()
-                        ?: MarkerMetaData(item.item, loadedBitmap = true)
+                    ?: MarkerMetaData(item.item, loadedBitmap = true)
                 existingMarker.marker.apply {
                     // manually remove.
                     metaData<T>()?.requestDisposable?.let { toCancel ->
@@ -334,22 +367,24 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
                 }
                 return@fromCallable Optional(null)
             } else {
-                val holder = constructAndAddMarkerHolder(item = item.item,
-                        bitmap = item.bitmap,
-                        displayMode = displayMode,
-                        map = map,
-                        floor = floor,
-                        id = id,
-                        isSelected = shouldFocusOnCreation(displayMode),
-                        loadedBitmap = true,
-                        requestDisposable = null)
+                val holder = constructAndAddMarkerHolder(
+                    item = item.item,
+                    bitmap = item.bitmap,
+                    displayMode = displayMode,
+                    map = map,
+                    floor = floor,
+                    id = id,
+                    isSelected = shouldFocusOnCreation(displayMode),
+                    loadedBitmap = true,
+                    requestDisposable = null
+                )
                 synchronized(tempMarkers) {
                     tempMarkers += holder
                 }
                 return@fromCallable Optional(holder)
             }
         }.delay(100, TimeUnit.MILLISECONDS)
-                .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(AndroidSchedulers.mainThread())
     }
 
     private fun flushTempMarkers() {
@@ -359,10 +394,17 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
         }
     }
 
-    private fun removeOldMarkers(existingMapItems: Map<String, MarkerHolder<T>>, items: List<T>): Map<String, MarkerHolder<T>> {
+    private fun removeOldMarkers(
+        existingMapItems: Map<String, MarkerHolder<T>>,
+        items: List<T>,
+    ): Map<String, MarkerHolder<T>> {
         // separate the list into two separate lists, one for items to be removed
         // one for existing items in the new list too.
-        val (existingFoundItems, toBeRemoved) = existingMapItems.values.partition { items.contains(it.item) }
+        val (existingFoundItems, toBeRemoved) = existingMapItems.values.partition {
+            items.contains(
+                it.item
+            )
+        }
 
         // trim down items not in the new list
         toBeRemoved.forEach {
@@ -379,33 +421,37 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
      */
     @UiThread
     internal fun constructAndAddMarkerHolder(
-            item: T,
-            bitmap: BitmapDescriptor?,
-            displayMode: MapDisplayMode,
-            map: GoogleMap,
-            floor: Int,
-            id: String,
-            loadedBitmap: Boolean,
-            isSelected: Boolean,
-            requestDisposable: Disposable?
+        item: T,
+        bitmap: BitmapDescriptor?,
+        displayMode: MapDisplayMode,
+        map: GoogleMap,
+        floor: Int,
+        id: String,
+        loadedBitmap: Boolean,
+        isSelected: Boolean,
+        requestDisposable: Disposable?,
     ): MarkerHolder<T> {
-        val targetAlpha = getMarkerAlpha(floor,
-                displayMode,
-                item)
+        val targetAlpha = getMarkerAlpha(
+            floor,
+            displayMode,
+            item
+        )
 
         val options = MarkerOptions()
-                .zIndex(zIndex)
-                .position(getAdjustedLocationFromItem(item))
-                .title(item.getContentDescription())
-                .icon(bitmap)
-                .alpha(0f)
+            .zIndex(zIndex)
+            .position(getAdjustedLocationFromItem(item))
+            .title(item.getContentDescription())
+            .icon(bitmap)
+            .alpha(0f)
+
 
         val markerHolder = MarkerHolder(
-                id,
-                item,
-                map.addMarker(options).apply {
-                    tag = MarkerMetaData(item, loadedBitmap, requestDisposable)
-                })
+            id = id,
+            item = item,
+            marker =map.addMarker(options)!!.apply {
+                tag = MarkerMetaData(item, loadedBitmap, requestDisposable)
+            }
+        )
 
 
         val marker = markerHolder.marker
@@ -417,8 +463,12 @@ abstract class MapItemRenderer<T : AccessibilityAware>(
         if (isSelected) {
             marker.showInfoWindow()
             val currentZoomLevel = map.cameraPosition.zoom
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position,
-                    Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)))
+            map.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    marker.position,
+                    Math.max(ZOOM_INDIVIDUAL, currentZoomLevel)
+                )
+            )
         }
 
         return markerHolder
