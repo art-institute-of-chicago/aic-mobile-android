@@ -1,15 +1,15 @@
 package edu.artic.localization.ui
 
 
+//import kotlinx.android.synthetic.main.fragment_language_settings.*
 import android.os.Bundle
-import androidx.annotation.UiThread
-import androidx.constraintlayout.widget.ConstraintSet
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
-import androidx.core.content.ContextCompat.startActivity
+import androidx.annotation.UiThread
+import androidx.constraintlayout.widget.ConstraintSet
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
@@ -21,14 +21,15 @@ import edu.artic.localization.ui.databinding.FragmentLanguageSettingsBinding
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
-//import kotlinx.android.synthetic.main.fragment_language_settings.*
 import java.util.*
 import kotlin.math.max
 import kotlin.reflect.KClass
 
 
-class LanguageSettingsFragment : BaseViewModelFragment<FragmentLanguageSettingsBinding,LanguageSettingsViewModel>() {
-    override val viewModelClass: KClass<LanguageSettingsViewModel> = LanguageSettingsViewModel::class
+class LanguageSettingsFragment :
+    BaseViewModelFragment<FragmentLanguageSettingsBinding, LanguageSettingsViewModel>() {
+    override val viewModelClass: KClass<LanguageSettingsViewModel> =
+        LanguageSettingsViewModel::class
     override val title = R.string.language_settings_title
     override val screenName: ScreenName? = ScreenName.LanguageSettings
 
@@ -42,7 +43,7 @@ class LanguageSettingsFragment : BaseViewModelFragment<FragmentLanguageSettingsB
     private val splashMode by lazy { arguments!!.getBoolean(ARG_LANGUAGE_SETTINGS) }
 
     private val availableLocales =
-            listOf(Locale.ENGLISH, SPANISH, Locale.CHINESE, Locale.KOREAN, Locale.FRENCH)
+        listOf(Locale.ENGLISH, SPANISH, Locale.CHINESE, Locale.KOREAN, Locale.FRENCH)
 
     override val overrideStatusBarColor: Boolean
         get() = !splashMode
@@ -51,40 +52,44 @@ class LanguageSettingsFragment : BaseViewModelFragment<FragmentLanguageSettingsB
         super.onViewCreated(view, savedInstanceState)
 
         availableLocales
-                .forEach { locale ->
-                    val radioButton = RadioButton(ContextThemeWrapper(requireContext(), R.style.LanguageButton), null, R.style.LanguageButton)
-                    radioButton.setText(
-                            when (locale) {
-                                Locale.ENGLISH -> R.string.localization_english_in_english
-                                SPANISH -> R.string.localization_spanish_in_spanish
-                                Locale.CHINESE -> R.string.localization_chinese_in_chinese
-                                Locale.KOREAN -> R.string.localization_korean_in_korean
-                                Locale.FRENCH -> R.string.localization_french_in_french
-                                else -> R.string.localization_english_in_english
-                            }
-                    )
-                    binding.languageSelectionButtons.addView(
-                            radioButton,
-                            LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    resources.dpToPixels(50.0f).toInt()
-                            ).apply {
-                                setMargins(
-                                        resources.getDimensionPixelSize(R.dimen.marginDouble),
-                                        resources.getDimensionPixelSize(R.dimen.marginQuad),
-                                        resources.getDimensionPixelSize(R.dimen.marginDouble),
-                                        0
-                                )
-                                gravity = Gravity.CENTER
-                            }
-                    )
+            .forEach { locale ->
+                val radioButton = RadioButton(
+                    ContextThemeWrapper(requireContext(), R.style.LanguageButton),
+                    null,
+                    R.style.LanguageButton
+                )
+                radioButton.setText(
+                    when (locale) {
+                        Locale.ENGLISH -> R.string.localization_english_in_english
+                        SPANISH -> R.string.localization_spanish_in_spanish
+                        Locale.CHINESE -> R.string.localization_chinese_in_chinese
+                        Locale.KOREAN -> R.string.localization_korean_in_korean
+                        Locale.FRENCH -> R.string.localization_french_in_french
+                        else -> R.string.localization_english_in_english
+                    }
+                )
+                binding.languageSelectionButtons.addView(
+                    radioButton,
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        resources.dpToPixels(50.0f).toInt()
+                    ).apply {
+                        setMargins(
+                            resources.getDimensionPixelSize(R.dimen.marginDouble),
+                            resources.getDimensionPixelSize(R.dimen.marginQuad),
+                            resources.getDimensionPixelSize(R.dimen.marginDouble),
+                            0
+                        )
+                        gravity = Gravity.CENTER
+                    }
+                )
 
-                    radioButton
-                            .clicks()
-                            .defaultThrottle()
-                            .subscribe { viewModel.changeLocale(locale) }
-                            .disposedBy(disposeBag)
-                }
+                radioButton
+                    .clicks()
+                    .defaultThrottle()
+                    .subscribe { viewModel.changeLocale(locale) }
+                    .disposedBy(disposeBag)
+            }
 
         configureToolbar()
     }
@@ -95,11 +100,13 @@ class LanguageSettingsFragment : BaseViewModelFragment<FragmentLanguageSettingsB
     private fun configureToolbar() {
 
         val a = requireContext().theme.obtainStyledAttributes(
-                R.styleable.LanguageSettings
+            R.styleable.LanguageSettings
         )
-        val hasToolbar = a.getBoolean(R.styleable.LanguageSettings_languageSettingsContainsToolbar, true)
+        val hasToolbar =
+            a.getBoolean(R.styleable.LanguageSettings_languageSettingsContainsToolbar, true)
         val hasDivider = a.getBoolean(R.styleable.LanguageSettings_languageSettingsHasDivider, true)
-        val verticalBias = a.getFloat(R.styleable.LanguageSettings_languageSettingsButtonVerticalBias, 0f)
+        val verticalBias =
+            a.getFloat(R.styleable.LanguageSettings_languageSettingsButtonVerticalBias, 0f)
 
         a.recycle()
 
@@ -127,45 +134,45 @@ class LanguageSettingsFragment : BaseViewModelFragment<FragmentLanguageSettingsB
         requireActivity().title = resources.getString(R.string.language_settings_title)
 
         binding.searchIcon.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                    startActivity(intent)
-                }.disposedBy(disposeBag)
+            .defaultThrottle()
+            .subscribe {
+                val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                startActivity(intent)
+            }.disposedBy(disposeBag)
 
         viewModel
-                .appLocale
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { locale ->
-                    val index = max(availableLocales.indexOf(locale), 0)
-                    val radioButton = binding.languageSelectionButtons.getChildAt(index) as? RadioButton
-                            ?: return@subscribe
-                    radioButton.isChecked = true
-                }
-                .disposedBy(disposeBag)
+            .appLocale
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { locale ->
+                val index = max(availableLocales.indexOf(locale), 0)
+                val radioButton = binding.languageSelectionButtons.getChildAt(index) as? RadioButton
+                    ?: return@subscribe
+                radioButton.isChecked = true
+            }
+            .disposedBy(disposeBag)
 
         /**
          * Only listen to new locale change.
          */
         if (splashMode) {
             viewModel.selectedLocale
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        dismissDialog()
-                    }.disposedBy(disposeBag)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    dismissDialog()
+                }.disposedBy(disposeBag)
         }
     }
 
     @UiThread
     private fun dismissDialog() {
         requireView()
-                .animate()
-                .alpha(0f)
-                .setDuration(1000)
-                .withEndAction {
-                    callback?.languageSelected()
-                    dismiss()
-                }
+            .animate()
+            .alpha(0f)
+            .setDuration(1000)
+            .withEndAction {
+                callback?.languageSelected()
+                dismiss()
+            }
 
     }
 
