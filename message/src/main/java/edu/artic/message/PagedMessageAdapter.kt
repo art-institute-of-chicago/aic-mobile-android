@@ -12,6 +12,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.base.utils.fromHtml
+import edu.artic.message.databinding.CellPagedMessageBinding
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
@@ -22,11 +23,16 @@ class PagedMessageAdapter : AutoHolderRecyclerViewAdapter<PagedMessageCellViewMo
     val closeButtonClicks: Subject<Unit> = PublishSubject.create()
     val actionButtonClicks: Subject<String> = PublishSubject.create()
 
-    override fun View.onBindView(item: PagedMessageCellViewModel, position: Int) {
-        messageTextView.movementMethod = LinkMovementMethod.getInstance()
+    override fun View.onBindView(
+        item: PagedMessageCellViewModel,
+        holder: BaseViewHolder,
+        position: Int,
+    ) {
+        val binding = holder.binding as CellPagedMessageBinding
+        binding.messageTextView.movementMethod = LinkMovementMethod.getInstance()
 
         // Set top padding based on screen height
-        titleTextView.setPadding(
+        binding.titleTextView.setPadding(
             0,
             (Resources.getSystem().displayMetrics.heightPixels.toFloat() * 0.15f).toInt(),
             0,
@@ -34,53 +40,53 @@ class PagedMessageAdapter : AutoHolderRecyclerViewAdapter<PagedMessageCellViewMo
         )
 
         item.titleText
-            .bindToMain(titleTextView.text())
+            .bindToMain(binding.titleTextView.text())
             .disposedBy(item.viewDisposeBag)
 
         item.messageText
             .map { it.fromHtml(shouldRemoveAnchors = false) }
-            .bindToMain(messageTextView.text())
+            .bindToMain(binding.messageTextView.text())
             .disposedBy(item.viewDisposeBag)
 
         item.actionTitle
-            .bindToMain(actionButton.text())
+            .bindToMain(binding.actionButton.text())
             .disposedBy(item.viewDisposeBag)
 
         item.hasAction
-            .bindToMain(actionButton.visibility())
+            .bindToMain(binding.actionButton.visibility())
             .disposedBy(item.viewDisposeBag)
 
         item.isFirstPage
             .map { !it }
-            .bindToMain(previousButton.visibility())
+            .bindToMain(binding.previousButton.visibility())
             .disposedBy(item.viewDisposeBag)
 
         item.isLastPage
             .map { !it }
-            .bindToMain(nextButton.visibility())
+            .bindToMain(binding.nextButton.visibility())
             .disposedBy(item.viewDisposeBag)
 
         item.isLastPage
-            .bindToMain(closeButton.visibility())
+            .bindToMain(binding.closeButton.visibility())
             .disposedBy(item.viewDisposeBag)
 
-        actionButton
+        binding.actionButton
             .clicks()
             .switchMap { item.action }
             .bindTo(actionButtonClicks)
             .disposedBy(item.viewDisposeBag)
 
-        nextButton
+        binding.nextButton
             .clicks()
             .bindTo(nextButtonClicks)
             .disposedBy(item.viewDisposeBag)
 
-        previousButton
+        binding.previousButton
             .clicks()
             .bindTo(previousButtonClicks)
             .disposedBy(item.viewDisposeBag)
 
-        closeButton
+        binding.closeButton
             .clicks()
             .bindTo(closeButtonClicks)
             .disposedBy(item.viewDisposeBag)

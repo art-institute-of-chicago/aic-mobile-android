@@ -2,6 +2,9 @@ package edu.artic.audio
 
 import android.view.View
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
+import edu.artic.adapter.BaseViewHolder
+import edu.artic.audio.databinding.ViewNumberPadNumericElementBinding
+
 //import kotlinx.android.synthetic.main.view_number_pad_numeric_element.view.*
 
 
@@ -43,10 +46,17 @@ class NumberPadAdapter : AutoHolderRecyclerViewAdapter<NumberPadElement>() {
         }
     }
 
-    override fun View.onBindView(item: NumberPadElement, position: Int) {
+    override fun View.onBindView(item: NumberPadElement, holder: BaseViewHolder, position: Int) {
         when (item) {
-            is NumberPadElement.Numeric -> number_content.text = item.value
-            is NumberPadElement.GoSearch -> number_content.text = context.getString(R.string.number_pad_go_action)
+            is NumberPadElement.Numeric -> {
+                val binding = holder.binding as ViewNumberPadNumericElementBinding
+                binding.numberContent.text = item.value
+            }
+            is NumberPadElement.GoSearch -> {
+                val binding = holder.binding as ViewNumberPadNumericElementBinding
+                binding.numberContent.text =
+                    context.getString(R.string.number_pad_go_action)
+            }
             else -> {
                 // Other types of NumberPadElements do not need to be bound.
             }
