@@ -3,6 +3,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.firebase.crashlytics'
 }
 
 String majorAndMinorVersion = "1.5"
@@ -118,7 +119,9 @@ dependencies {
     implementation libs.progress_interceptor
 
     implementation platform('com.google.firebase:firebase-bom:31.2.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'
 
     //The following four lines enable our usage of dagger2 dependency injection
     implementation libs.dagger

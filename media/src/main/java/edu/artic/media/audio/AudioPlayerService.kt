@@ -9,24 +9,20 @@ import android.graphics.Bitmap
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
-import androidx.core.app.NotificationCompat
-import androidx.media.AudioAttributesCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.C.STREAM_TYPE_VOICE_CALL
-import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.ui.PlayerNotificationManager.NotificationListener
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.NotificationUtil
-import com.google.android.exoplayer2.util.Util
 import dagger.android.DaggerService
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker
@@ -36,7 +32,6 @@ import edu.artic.db.Playable
 import edu.artic.db.models.*
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.nameOfLanguageForAnalytics
-import edu.artic.media.R
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction
 import edu.artic.media.audio.AudioPlayerService.PlayBackAction.*
 import edu.artic.media.audio.AudioPlayerService.PlayBackState.*
@@ -192,16 +187,37 @@ class AudioPlayerService : DaggerService(), PlayerService {
     lateinit var disposeBag: DisposeBag
     internal var currentBitmap: Bitmap? = null
 
+    /**
+     * AIC wants to play the music through the ear piece.
+     * @see SimpleExoPlayer.setAudioStreamType
+     */
+
+    lateinit var player: ExoPlayer
 
     override fun onCreate() {
         super.onCreate()
 
+        player = ExoPlayer.Builder(this).build()
+
+//            .setRenderersFactory(DefaultRenderersFactory(this))
+//            .setTrackSelector(DefaultTrackSelector(this))
+//            .setLoadControl(DefaultLoadControl())
+//            .setAudioAttributes(
+//                AudioAttributes.Builder()
+//                    .setUsage(C.USAGE_VOICE_COMMUNICATION)
+//                    .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+//                    .build(),
+//                false
+//            )
+//
+
         // Make sure to clear this out in ::onDestroy.
         disposeBag = DisposeBag()
 
-//        setUpNotificationManager()
-        player.addListener(object : Player.DefaultEventListener() {
+        setUpNotificationManager()
+        player.addListener(object : Player.Listener {
 
+            @Deprecated("Deprecated in Java")
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 (currentTrack as BehaviorSubject).value?.let { given ->
                     when {
@@ -300,98 +316,90 @@ class AudioPlayerService : DaggerService(), PlayerService {
         NotificationUtil.createNotificationChannel(
             this,
             FOREGROUND_CHANNEL_ID,
-            R.string.tour_audio_channel_name,
+            edu.artic.media.R.string.tour_audio_channel_name,
+            edu.artic.media.R.string.tour_audio_channel_name,
             NotificationUtil.IMPORTANCE_LOW
         )
-        playerNotificationManager = PlayerNotificationManager(
-            this,
-            FOREGROUND_CHANNEL_ID,
-            NOTIFICATION_ID,
-            object : PlayerNotificationManager.MediaDescriptionAdapter {
-                override fun createCurrentContentIntent(player: Player?): PendingIntent? {
-                    //TODO make it dynamic so that activity that started the audio stream will be the destination of Intent
-                    val notificationIntent = "edu.artic.audio".asDeepLinkIntent()
-                    return PendingIntent.getActivity(
+        playerNotificationManager = PlayerNotificationManager.Builder(
+            this, NOTIFICATION_ID,
+            FOREGROUND_CHANNEL_ID
+        ).setMediaDescriptionAdapter(object : PlayerNotificationManager.MediaDescriptionAdapter {
+            override fun createCurrentContentIntent(player: Player): PendingIntent? {
+                //TODO make it dynamic so that activity that started the audio stream will be the destination of Intent
+                val notificationIntent = "edu.artic.audio".asDeepLinkIntent()
+                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    PendingIntent.getActivity(
+                        this@AudioPlayerService,
+                        0,
+                        notificationIntent,
+                        PendingIntent.FLAG_MUTABLE
+                    )
+                } else {
+                    PendingIntent.getActivity(
                         this@AudioPlayerService,
                         0,
                         notificationIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT
                     )
                 }
+            }
 
-                override fun getCurrentContentText(player: Player?): String? {
-                    return null
-                }
+            override fun getCurrentContentText(player: Player): CharSequence? {
+                return null
+            }
 
-                override fun getCurrentContentTitle(player: Player?): String {
-                    return playable?.getPlayableTitle().orEmpty()
-                }
+            override fun getCurrentContentTitle(player: Player): CharSequence {
+                return playable?.getPlayableTitle().orEmpty()
+            }
 
 
-                override fun getCurrentLargeIcon(
-                    player: Player?,
-                    callback: PlayerNotificationManager.BitmapCallback,
-                ): Bitmap? {
-                    if (currentBitmap == null) {
-                        playable?.getPlayableThumbnailUrl()?.let {
-                            Glide.with(this@AudioPlayerService)
-                                .asBitmap()
-                                .load(it)
-                                .into(BitmapCallbackTarget(this@AudioPlayerService, callback))
-                        }
+            override fun getCurrentLargeIcon(
+                player: Player,
+                callback: PlayerNotificationManager.BitmapCallback,
+            ): Bitmap? {
+                if (currentBitmap == null) {
+                    playable?.getPlayableThumbnailUrl()?.let {
+                        Glide.with(this@AudioPlayerService)
+                            .asBitmap()
+                            .load(it)
+                            .into(BitmapCallbackTarget(this@AudioPlayerService, callback))
                     }
-                    return currentBitmap
                 }
-            },
-            object : PlayerNotificationManager.CustomActionReceiver {
-                override fun getCustomActions(player: Player?): MutableList<String> {
-                    return mutableListOf(CANCEL_ACTION)
-                }
+                return currentBitmap
+            }
+        }).setNotificationListener(object : NotificationListener {
+            override fun onNotificationPosted(
+                notificationId: Int,
+                notification: Notification,
+                ongoing: Boolean,
+            ) {
+                super.onNotificationPosted(notificationId, notification, ongoing)
+                if (ongoing) // allow notification to be dismissed if player is stopped
+                    startForeground(notificationId, notification)
+                else
+                    stopForeground(false)
+            }
 
-                override fun createCustomActions(
-                    context: Context,
-                    instanceId: Int,
-                ): MutableMap<String, NotificationCompat.Action> {
-                    val playIntent = Intent(CANCEL_ACTION).setPackage(context.packageName)
-                    return mutableMapOf(
-                        CANCEL_ACTION to NotificationCompat.Action(
-                            R.drawable.ic_close_circle,
-                            "Close",
-                            PendingIntent.getBroadcast(
-                                context,
-                                0,
-                                playIntent,
-                                PendingIntent.FLAG_CANCEL_CURRENT
-                            )
-                        )
-                    )
-                }
-
-                override fun onCustomAction(player: Player?, action: String?, intent: Intent?) {
-                    stopPlayer()
-                }
-            })
-
-        playerNotificationManager.setNotificationListener(object :
-            PlayerNotificationManager.NotificationListener {
-            override fun onNotificationCancelled(notificationId: Int) {
+            override fun onNotificationCancelled(
+                notificationId: Int,
+                dismissedByUser: Boolean,
+            ) {
+                super.onNotificationCancelled(notificationId, dismissedByUser)
+                stopSelf()
                 stopForeground(true)
             }
-
-            override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
-                startForeground(notificationId, notification)
-            }
         })
-        playerNotificationManager.apply {
-            setUseNavigationActions(false)
-            setStopAction(null)
-            setFastForwardIncrementMs(10 * 1000)
-            setRewindIncrementMs(10 * 1000)
-            setOngoing(false)
-            setPlayer(player)
-            setSmallIcon(R.drawable.icn_notification)
-        }
+            .setChannelNameResourceId(edu.artic.media.R.string.tour_audio_channel_name)
+            .setChannelDescriptionResourceId(edu.artic.media.R.string.exo_download_description)
+            .build()
 
+        playerNotificationManager.apply {
+            setUseStopAction(true)
+            setUseFastForwardAction(true)
+            setUseRewindAction(true)
+            setPlayer(player)
+            setSmallIcon(edu.artic.media.R.drawable.icn_notification)
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -452,38 +460,10 @@ class AudioPlayerService : DaggerService(), PlayerService {
         }
     }
 
-    /**
-     * AIC wants to play the music through the ear piece.
-     * @see SimpleExoPlayer.setAudioStreamType
-     */
-    private val audioAttributes = AudioAttributesCompat.Builder()
-        .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
-        .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
-        .build()
-
-    val player: ExoPlayer by lazy {
-        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.isSpeakerphoneOn = false
-        AudioFocusExoPlayerDecorator(audioAttributes,
-            audioManager,
-            ExoPlayerFactory.newSimpleInstance(
-                this,
-                DefaultRenderersFactory(this),
-                DefaultTrackSelector(),
-                DefaultLoadControl()
-            ).apply {
-                audioAttributes = AudioAttributes.Builder()
-                    .setUsage(Util.getAudioUsageForStreamType(STREAM_TYPE_VOICE_CALL))
-                    .setContentType(Util.getAudioContentTypeForStreamType(STREAM_TYPE_VOICE_CALL))
-                    .build()
-            }
-        )
-    }
 
     private fun buildMediaSource(uri: Uri): MediaSource {
-        return ExtractorMediaSource.Factory(
-            DefaultHttpDataSourceFactory("exoplayer-aic")
-        ).createMediaSource(uri)
+        return ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory())
+            .createMediaSource(MediaItem.fromUri(uri))
     }
 
     override fun onDestroy() {

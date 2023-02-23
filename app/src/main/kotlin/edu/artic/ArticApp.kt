@@ -31,27 +31,19 @@ class ArticApp : DaggerApplication(), LifecycleObserver {
         AndroidThreeTen.init(this)
         FirebaseApp.initializeApp(this, firebaseOptions())
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
-
-//        val fabric = Fabric.Builder(this)
-//                .kits(Crashlytics())
-//                .build()
-//        Fabric.with(fabric)
-//
-//        // Ensure unhandled RX errors get reported to Crashlytics
-//        RxJavaPlugins.setErrorHandler { Crashlytics.logException(it); throw it }
     }
 
     override fun applicationInjector() = seedBuilder(DaggerAppComponent.builder())
 
     fun firebaseOptions(): FirebaseOptions {
         return FirebaseOptions.Builder()
-                .setApiKey(BuildConfig.FB_API_KEY)
-                .setApplicationId(BuildConfig.FB_APPLICATION_ID)
-                .setGaTrackingId(BuildConfig.GA_TRACKING_ID)
-                .setGcmSenderId(BuildConfig.GCM_SENDER_ID)
-                .setProjectId(BuildConfig.FB_PROJECT_ID)
-                .setStorageBucket(BuildConfig.FB_STORAGE_BUCKET)
-                .build()
+            .setApiKey(BuildConfig.FB_API_KEY)
+            .setApplicationId(BuildConfig.FB_APPLICATION_ID)
+            .setGaTrackingId(BuildConfig.GA_TRACKING_ID)
+            .setGcmSenderId(BuildConfig.GCM_SENDER_ID)
+            .setProjectId(BuildConfig.FB_PROJECT_ID)
+            .setStorageBucket(BuildConfig.FB_STORAGE_BUCKET)
+            .build()
     }
 
     fun seedBuilder(builder: AppComponent.Builder): AppComponent {
