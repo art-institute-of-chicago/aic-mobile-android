@@ -18,12 +18,13 @@ import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.image.GlideApp
+import edu.artic.search.databinding.*
 import io.reactivex.android.schedulers.AndroidSchedulers
+
 //import kotlinx.android.synthetic.main.layout_cell_amenity.view.*
 //import kotlinx.android.synthetic.main.layout_cell_empty.view.*
 //import kotlinx.android.synthetic.main.layout_cell_header.view.*
 //import kotlinx.android.synthetic.main.layout_cell_result_header.view.*
-//import kotlinx.android.synthetic.main.layout_cell_search_list_item.view.*
 //import kotlinx.android.synthetic.main.layout_cell_suggested_keyword.view.*
 //import kotlinx.android.synthetic.main.layout_cell_suggested_map_object.view.*
 
@@ -33,28 +34,37 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
         var MAX_ARTWORKS_PER_ROW = 5
     }
 
-    override fun View.onBindView(item: SearchBaseCellViewModel, position: Int) {
+    override fun View.onBindView(
+        item: SearchBaseCellViewModel,
+        holder: BaseViewHolder,
+        position: Int,
+    ) {
         setTag(R.id.tag_holder, item)
         when (item) {
 
             is SearchHeaderCellViewModel -> {
+                val binding = holder.binding as LayoutCellResultHeaderBinding
                 item.text
-                        .bindToMain(title.textRes())
-                        .disposedBy(item.viewDisposeBag)
+                    .bindToMain(binding.title.textRes())
+                    .disposedBy(item.viewDisposeBag)
 
                 //Rx version of clicks does not work here for some reason :(
-                seeAllText.setOnClickListener {
+                binding.seeAllText.setOnClickListener {
                     item.onClickSeeAll()
                 }
+
             }
 
             is SearchTextHeaderViewModel -> {
+                val binding = holder.binding as LayoutCellHeaderBinding
                 item.text
-                        .bindToMain(headerText.textRes())
-                        .disposedBy(item.viewDisposeBag)
+                    .bindToMain(binding.headerText.textRes())
+                    .disposedBy(item.viewDisposeBag)
             }
             is SearchBaseListItemViewModel -> {
-                item.imageUrl
+                with(holder.binding as LayoutCellSearchListItemBinding)
+                {
+                    item.imageUrl
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe {
                             image.post {
@@ -68,73 +78,80 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
                                 }
 
                                 GlideApp.with(context)
-                                        .load(url)
-                                        .placeholder(R.color.placeholderBackground)
-                                        .error(R.drawable.placeholder_thumb)
-                                        .into(image)
+                                    .load(url)
+                                    .placeholder(R.color.placeholderBackground)
+                                    .error(R.drawable.placeholder_thumb)
+                                    .into(image)
                             }
 
                         }.disposedBy(item.viewDisposeBag)
-                item.isHeadphonesVisible
+                    item.isHeadphonesVisible
                         .bindToMain(headphonesIcon.visibility(View.INVISIBLE))
                         .disposedBy(item.viewDisposeBag)
 
-                item.itemTitle
+                    item.itemTitle
                         .bindToMain(itemTitle.text())
                         .disposedBy(item.viewDisposeBag)
 
-                item.itemSubTitle
+                    item.itemSubTitle
                         .bindToMain(itemSubTitle.text())
                         .disposedBy(item.viewDisposeBag)
 
-                if (item is SearchTourCellViewModel) {
-                    itemSubTitle.visibility = View.GONE
-                } else {
-                    itemSubTitle.visibility = View.VISIBLE
+                    if (item is SearchTourCellViewModel) {
+                        itemSubTitle.visibility = View.GONE
+                    } else {
+                        itemSubTitle.visibility = View.VISIBLE
+                    }
                 }
 
             }
             is SearchTextCellViewModel -> {
+                val binding = holder.binding as LayoutCellSuggestedKeywordBinding
                 item.text
-                        .map { (text, highlightedText) ->
-                            if (highlightedText.isEmpty()) {
-                                return@map text
-                            } else {
-                                val withSpans = SpannableString(text)
+                    .map { (text, highlightedText) ->
+                        if (highlightedText.isEmpty()) {
+                            return@map text
+                        } else {
+                            val withSpans = SpannableString(text)
 
-                                applyHighlight(withSpans, highlightedText)
+                            applyHighlight(withSpans, highlightedText)
 
-                                return@map withSpans
-                            }
+                            return@map withSpans
                         }
-                        .bindTo(suggestedKeyword.text())
-                        .disposedBy(item.viewDisposeBag)
+                    }
+                    .bindTo(binding.suggestedKeyword.text())
+                    .disposedBy(item.viewDisposeBag)
             }
             is SearchCircularCellViewModel -> {
+                val binding = holder.binding as LayoutCellSuggestedMapObjectBinding
                 item.imageUrl
-                        .subscribe {
-                            GlideApp.with(this)
-                                    .load(it)
-                                    .placeholder(R.drawable.circular_placeholder_no_frame)
-                                    .error(R.drawable.circular_placeholder)
-                                    .apply(RequestOptions.circleCropTransform())
-                                    .into(circularImage)
-                        }
-                        .disposedBy(item.viewDisposeBag)
+                    .subscribe {
+                        GlideApp.with(this)
+                            .load(it)
+                            .placeholder(R.drawable.circular_placeholder_no_frame)
+                            .error(R.drawable.circular_placeholder)
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(binding.circularImage)
+                    }
+                    .disposedBy(item.viewDisposeBag)
             }
             is SearchEmptyCellViewModel -> {
-                bottomText.text =
-                        SpannableStringBuilder(context.getString(R.string.search_no_results_message))
-                                .append(" ")
-                                .append(context.getString(R.string.search_no_results_visit_website_action),
-                                        UnderlineSpan(),
-                                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                val binding = holder.binding as LayoutCellEmptyBinding
+                binding.bottomText.text =
+                    SpannableStringBuilder(context.getString(R.string.search_no_results_message))
+                        .append(" ")
+                        .append(
+                            context.getString(R.string.search_no_results_visit_website_action),
+                            UnderlineSpan(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
             }
             is SearchAmenitiesCellViewModel -> {
+                val binding = holder.binding as LayoutCellAmenityBinding
                 if (item.value != 0) {
-                    icon.setImageResource(item.value)
+                    binding.icon.setImageResource(item.value)
                 } else {
-                    icon.setImageDrawable(null)
+                    binding.icon.setImageDrawable(null)
                 }
             }
             else -> {
@@ -150,10 +167,10 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<SearchBaseCellViewMod
         val startIndex = target.indexOf(string = highlightedText, ignoreCase = true)
         if (startIndex > -1) {
             target.setSpan(
-                    StyleSpan(Typeface.BOLD),
-                    startIndex,
-                    startIndex + highlightedText.length,
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                StyleSpan(Typeface.BOLD),
+                startIndex,
+                startIndex + highlightedText.length,
+                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
             )
         }
     }

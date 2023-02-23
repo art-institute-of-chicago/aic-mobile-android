@@ -1,11 +1,9 @@
 package edu.artic.search
 
 import android.content.Context
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 
-class SearchResultsPagerAdapter(fm: androidx.fragment.app.FragmentManager, var context: Context) : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
+class SearchResultsPagerAdapter(fm: androidx.fragment.app.FragmentManager, var context: Context) :
+    androidx.fragment.app.FragmentStatePagerAdapter(fm) {
 
     override fun getItem(position: Int): androidx.fragment.app.Fragment {
         return when (position) {

@@ -17,6 +17,7 @@ import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.exhibitions.ExhibitionDetailFragment
 import edu.artic.navigation.NavigationConstants
 import edu.artic.navigation.NavigationConstants.Companion.ARG_AMENITY_TYPE
+import edu.artic.search.databinding.FragmentSearchResultsSubBinding
 import edu.artic.tours.TourDetailsFragment
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
@@ -26,9 +27,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<TViewModel>() {
+abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewModelFragment<FragmentSearchResultsSubBinding,TViewModel>() {
     override val title = R.string.global_empty_string
-    override val layoutResId: Int = R.layout.fragment_search_results_sub
     override val screenName: ScreenName? = null
 
     override val overrideStatusBarColor: Boolean = false
@@ -57,11 +57,11 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
         )
         lm.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return (resultsRV.adapter as SearchResultsAdapter).getSpanCount(position)
+                return (binding.resultsRV.adapter as SearchResultsAdapter).getSpanCount(position)
             }
         }
 
-        resultsRV.apply {
+        binding.resultsRV.apply {
             adapter = SearchResultsAdapter()
             layoutManager = lm
             addItemDecoration(SearchDividerItemDecoration(this.context))
@@ -73,7 +73,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
     override fun setupBindings(viewModel: TViewModel) {
         super.setupBindings(viewModel)
 
-        val adapter = resultsRV.adapter as SearchResultsAdapter
+        val adapter = binding.resultsRV.adapter as SearchResultsAdapter
 
         viewModel.cells
                 .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +90,7 @@ abstract class SearchBaseFragment<TViewModel : SearchBaseViewModel> : BaseViewMo
         viewModel.cells
                 .delay(50, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { resultsRV.layoutManager?.scrollToPosition(0) }
+                .subscribe { binding.resultsRV.layoutManager?.scrollToPosition(0) }
                 .disposedBy(disposeBag)
 
 
