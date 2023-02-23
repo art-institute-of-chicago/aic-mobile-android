@@ -188,7 +188,6 @@ class EventDetailFragment :
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.scrollView.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
     }
 
     companion object {

@@ -233,11 +233,6 @@ class TourDetailsFragment :
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.tourScrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
-    }
-
     override fun setupNavigationBindings(viewModel: TourDetailsViewModel) {
         viewModel.navigateTo
             .filterTo<Navigate<TourDetailsViewModel.NavigationEndpoint>,

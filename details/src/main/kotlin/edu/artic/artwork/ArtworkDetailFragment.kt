@@ -139,11 +139,6 @@ class ArtworkDetailFragment :
             }.disposedBy(navigationDisposeBag)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.scrollView.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
-    }
-
 
     companion object {
         private val ARG_OBJECT = "${ArtworkDetailFragment::class.java.simpleName}: object"
