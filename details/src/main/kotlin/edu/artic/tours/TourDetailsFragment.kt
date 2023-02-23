@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.core.math.MathUtils
 import androidx.core.widget.NestedScrollView
@@ -231,6 +232,13 @@ class TourDetailsFragment :
             .disposedBy(disposeBag)
 
 
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finish()
+        }
     }
 
     override fun setupNavigationBindings(viewModel: TourDetailsViewModel) {

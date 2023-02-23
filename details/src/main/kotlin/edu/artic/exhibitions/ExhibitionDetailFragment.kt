@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.addCallback
 import androidx.core.math.MathUtils
 import androidx.core.widget.NestedScrollView
 import com.bumptech.glide.request.RequestOptions
@@ -165,8 +166,11 @@ class ExhibitionDetailFragment :
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finish()
+        }
     }
 
     override fun setupNavigationBindings(viewModel: ExhibitionDetailViewModel) {

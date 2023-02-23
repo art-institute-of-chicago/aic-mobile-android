@@ -1,10 +1,10 @@
 package edu.artic.events
 
-//import kotlinx.android.synthetic.main.fragment_event_details.*
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.addCallback
 import androidx.core.math.MathUtils
 import androidx.core.widget.NestedScrollView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -161,6 +161,13 @@ class EventDetailFragment :
         binding.registerToday.clicks()
             .subscribe { viewModel.onClickRegisterToday() }
             .disposedBy(disposeBag)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finish()
+        }
     }
 
     override fun setupNavigationBindings(viewModel: EventDetailViewModel) {
