@@ -58,7 +58,7 @@ class LocationPromptFragment : BaseViewModelFragment<FragmentLocationPromptBindi
                 }.disposedBy(navigationDisposeBag)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is Activity) {
             // We expect this will be reset to 'auto' by 'TutorialFragment'.
