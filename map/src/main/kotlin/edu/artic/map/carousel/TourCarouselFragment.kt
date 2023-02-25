@@ -165,10 +165,4 @@ class TourCarouselFragment :
         }
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.viewPagerIndicator.setViewPager(null)
-    }
-
 }
