@@ -16,61 +16,76 @@ import javax.inject.Inject
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class DefaultSearchSuggestionsViewModel @Inject constructor(searchSuggestionsDao: ArticSearchObjectDao,
-                                                            objectDao: ArticObjectDao,
-                                                            analyticsTracker: AnalyticsTracker,
-                                                            searchManager: SearchResultsManager,
-                                                            dataObjectDao: ArticDataObjectDao,
-                                                            galleryDao: ArticGalleryDao
+class DefaultSearchSuggestionsViewModel @Inject constructor(
+    searchSuggestionsDao: ArticSearchObjectDao,
+    objectDao: ArticObjectDao,
+    analyticsTracker: AnalyticsTracker,
+    searchManager: SearchResultsManager,
+    dataObjectDao: ArticDataObjectDao,
+    galleryDao: ArticGalleryDao,
 ) : SearchBaseViewModel(analyticsTracker, searchManager, dataObjectDao, galleryDao) {
 
     private val suggestedKeywords: Subject<List<SearchTextCellViewModel>> = BehaviorSubject.create()
-    private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
+    private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> =
+        BehaviorSubject.create()
 
     private fun getAmenitiesViewModels(): List<SearchBaseCellViewModel> {
         return listOf(
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant, SuggestedMapAmenities.Dining),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge, SuggestedMapAmenities.MembersLounge),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop, SuggestedMapAmenities.GiftShop),
-                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms))
+            SearchAmenitiesCellViewModel(
+                R.drawable.ic_icon_amenity_map_restaurant,
+                SuggestedMapAmenities.Dining
+            ),
+            SearchAmenitiesCellViewModel(
+                R.drawable.ic_icon_amenity_map_lounge,
+                SuggestedMapAmenities.MembersLounge
+            ),
+            SearchAmenitiesCellViewModel(
+                R.drawable.ic_icon_amenity_map_shop,
+                SuggestedMapAmenities.GiftShop
+            ),
+            SearchAmenitiesCellViewModel(
+                R.drawable.ic_icon_amenity_map_restroom,
+                SuggestedMapAmenities.Restrooms
+            )
+        )
     }
 
     init {
         searchSuggestionsDao.getDataObject()
-                .toObservable()
-                .map { suggestedSearchOptions ->
-                    suggestedSearchOptions
-                            .searchStrings
-                            .map { keyword ->
-                                SearchTextCellViewModel(keyword)
-                            }
-                }
-                .bindTo(suggestedKeywords)
-                .disposedBy(disposeBag)
+            .toObservable()
+            .map { suggestedSearchOptions ->
+                suggestedSearchOptions
+                    .searchStrings
+                    .map { keyword ->
+                        SearchTextCellViewModel(keyword)
+                    }
+            }
+            .bindTo(suggestedKeywords)
+            .disposedBy(disposeBag)
 
         getSuggestedArtworks(searchSuggestionsDao, objectDao)
-                .map { objects ->
-                    objects.map { artwork ->
-                        SearchCircularCellViewModel(artwork)
-                    }
+            .map { objects ->
+                objects.map { artwork ->
+                    SearchCircularCellViewModel(artwork)
                 }
-                .bindTo(suggestedArtworks)
-                .disposedBy(disposeBag)
+            }
+            .bindTo(suggestedArtworks)
+            .disposedBy(disposeBag)
 
         Observables.combineLatest(suggestedArtworks, suggestedKeywords)
         { artworks, keywords ->
             mutableListOf<SearchBaseCellViewModel>()
-                    .apply {
-                        add(0, SearchTextHeaderViewModel(R.string.search_suggested))
-                        addAll(keywords)
-                        add(SearchTextHeaderViewModel(R.string.search_on_the_map_header))
-                        addAll(getAmenitiesViewModels())
-                        add(RowPaddingViewModel())
-                        addAll(artworks)
-                    }
+                .apply {
+                    add(0, SearchTextHeaderViewModel(R.string.search_suggested))
+                    addAll(keywords)
+                    add(SearchTextHeaderViewModel(R.string.search_on_the_map_header))
+                    addAll(getAmenitiesViewModels())
+                    add(RowPaddingViewModel())
+                    addAll(artworks)
+                }
         }
-                .bindTo(cells)
-                .disposedBy(disposeBag)
+            .bindTo(cells)
+            .disposedBy(disposeBag)
 
     }
 }

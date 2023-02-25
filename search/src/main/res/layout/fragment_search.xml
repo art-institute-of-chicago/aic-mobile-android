@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/searchContainer"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"

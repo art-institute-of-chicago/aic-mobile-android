@@ -38,36 +38,42 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<ViewBinding, SearchBa
                 parent,
                 false
             )
-            R.layout.layout_cell_header -> LayoutCellResultHeaderBinding.inflate(
+            R.layout.layout_cell_header -> LayoutCellHeaderBinding.inflate(
                 inflater,
                 parent,
                 false
             )
-            R.layout.layout_cell_search_list_item -> LayoutCellResultHeaderBinding.inflate(
+            R.layout.layout_cell_search_list_item -> LayoutCellSearchListItemBinding.inflate(
                 inflater,
                 parent,
                 false
             )
-            R.layout.layout_cell_suggested_keyword -> LayoutCellResultHeaderBinding.inflate(
+            R.layout.layout_cell_suggested_keyword -> LayoutCellSuggestedKeywordBinding.inflate(
                 inflater,
                 parent,
                 false
             )
-            R.layout.layout_cell_empty -> LayoutCellResultHeaderBinding.inflate(
+            R.layout.layout_cell_empty -> LayoutCellEmptyBinding.inflate(
                 inflater,
                 parent,
                 false
             )
-            R.layout.layout_cell_amenity -> LayoutCellResultHeaderBinding.inflate(
+            R.layout.layout_cell_amenity -> LayoutCellAmenityBinding.inflate(
                 inflater,
                 parent,
                 false
             )
-            R.layout.layout_cell_divider -> LayoutCellResultHeaderBinding.inflate(
+            R.layout.layout_cell_divider -> LayoutCellDividerBinding.inflate(
                 inflater,
                 parent,
                 false
             )
+            R.layout.layout_cell_suggested_map_object -> LayoutCellSuggestedMapObjectBinding .inflate(
+                inflater,
+                parent,
+                false
+            )
+
             else -> LayoutCellResultHeaderBinding.inflate(inflater, parent, false)
         }
 
@@ -227,6 +233,7 @@ class SearchResultsAdapter : AutoHolderRecyclerViewAdapter<ViewBinding, SearchBa
             is SearchEmptyCellViewModel -> R.layout.layout_cell_empty
             is SearchAmenitiesCellViewModel -> R.layout.layout_cell_amenity
             is RowPaddingViewModel -> R.layout.layout_cell_divider
+            is SearchCircularCellViewModel -> R.layout.layout_cell_suggested_map_object
             else -> R.layout.layout_cell_suggested_map_object
         }
     }

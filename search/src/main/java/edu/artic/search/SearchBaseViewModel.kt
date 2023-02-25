@@ -22,16 +22,20 @@ import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 open class SearchBaseViewModel @Inject constructor(
-        protected val analyticsTracker: AnalyticsTracker,
-        protected val searchResultsManager: SearchResultsManager,
-        private val dataObjectDao: ArticDataObjectDao,
-        private val galleryDao: ArticGalleryDao
+    protected val analyticsTracker: AnalyticsTracker,
+    protected val searchResultsManager: SearchResultsManager,
+    private val dataObjectDao: ArticDataObjectDao,
+    private val galleryDao: ArticGalleryDao,
 ) : NavViewViewModel<SearchBaseViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint {
         data class TourDetails(val tour: ArticTour) : NavigationEndpoint()
         data class ExhibitionDetails(val exhibition: ArticExhibition) : NavigationEndpoint()
-        data class ArtworkDetails(val articObject: ArticSearchArtworkObject, val searchTerm: String) : NavigationEndpoint()
+        data class ArtworkDetails(
+            val articObject: ArticSearchArtworkObject,
+            val searchTerm: String,
+        ) : NavigationEndpoint()
+
         data class ArtworkOnMap(val articObject: ArticSearchArtworkObject) : NavigationEndpoint()
         data class AmenityOnMap(val type: SuggestedMapAmenities) : NavigationEndpoint()
         object HideKeyboard : NavigationEndpoint()
@@ -43,105 +47,131 @@ open class SearchBaseViewModel @Inject constructor(
 
 
     open fun onClickItem(pos: Int, viewModel: SearchBaseCellViewModel) {
-        val searchText = (searchResultsManager.currentSearchText as BehaviorSubject<String>).value.orEmpty()
+        val searchText =
+            (searchResultsManager.currentSearchText as BehaviorSubject<String>).value.orEmpty()
         when (viewModel) {
             is SearchTourCellViewModel -> {
                 analyticsTracker.reportEvent(
-                        EventCategoryName.SearchTour,
-                        viewModel.articTour.title,
-                        searchText
+                    EventCategoryName.SearchTour,
+                    viewModel.articTour.title,
+                    searchText
                 )
                 navigateTo.onNext(
-                        Navigate.Forward(NavigationEndpoint.TourDetails(viewModel.articTour))
+                    Navigate.Forward(NavigationEndpoint.TourDetails(viewModel.articTour))
                 )
             }
             is SearchExhibitionCellViewModel -> {
                 analyticsTracker.reportEvent(
-                        EventCategoryName.SearchExhibition,
-                        viewModel.articExhibition.title,
-                        searchText
+                    EventCategoryName.SearchExhibition,
+                    viewModel.articExhibition.title,
+                    searchText
                 )
                 navigateTo.onNext(
-                        Navigate.Forward(
-                                NavigationEndpoint.ExhibitionDetails(viewModel.articExhibition)
-                        )
+                    Navigate.Forward(
+                        NavigationEndpoint.ExhibitionDetails(viewModel.articExhibition)
+                    )
                 )
             }
             is SearchArtworkCellViewModel -> {
                 analyticsTracker.reportEvent(
-                        EventCategoryName.SearchArtwork,
-                        viewModel.artwork.title,
-                        searchText
+                    EventCategoryName.SearchArtwork,
+                    viewModel.artwork.title,
+                    searchText
                 )
                 navigateTo.onNext(
-                        Navigate.Forward(
-                                NavigationEndpoint.ArtworkDetails(viewModel.artwork, searchText)
-                        )
+                    Navigate.Forward(
+                        NavigationEndpoint.ArtworkDetails(viewModel.artwork, searchText)
+                    )
                 )
             }
             is SearchAmenitiesCellViewModel -> {
                 when (viewModel.type) {
                     SuggestedMapAmenities.Dining -> {
-                        analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowDining)
+                        analyticsTracker.reportEvent(
+                            EventCategoryName.Map,
+                            AnalyticsAction.mapShowDining
+                        )
                     }
                     SuggestedMapAmenities.Restrooms -> {
-                        analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowRestrooms)
+                        analyticsTracker.reportEvent(
+                            EventCategoryName.Map,
+                            AnalyticsAction.mapShowRestrooms
+                        )
                     }
                     SuggestedMapAmenities.GiftShop -> {
-                        analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowGiftShops)
+                        analyticsTracker.reportEvent(
+                            EventCategoryName.Map,
+                            AnalyticsAction.mapShowGiftShops
+                        )
                     }
                     SuggestedMapAmenities.MembersLounge -> {
-                        analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowMemberLounge)
+                        analyticsTracker.reportEvent(
+                            EventCategoryName.Map,
+                            AnalyticsAction.mapShowMemberLounge
+                        )
                     }
                 }
                 navigateTo.onNext(
-                        Navigate.Forward(
-                                NavigationEndpoint.AmenityOnMap(viewModel.type)
-                        )
+                    Navigate.Forward(
+                        NavigationEndpoint.AmenityOnMap(viewModel.type)
+                    )
                 )
             }
             is SearchEmptyCellViewModel -> {
                 dataObjectDao.getDataObject()
-                        .map { it.websiteUrlAndroid }
-                        .take(1)
-                        .map { url -> Navigate.Forward(NavigationEndpoint.Web(url)) }
-                        .bindTo(navigateTo)
+                    .map { it.websiteUrlAndroid }
+                    .take(1)
+                    .map { url -> Navigate.Forward(NavigationEndpoint.Web(url)) }
+                    .bindTo(navigateTo)
             }
             is SearchCircularCellViewModel -> {
                 viewModel.artwork?.let { articObject ->
 
                     Observable.just(Optional(articObject.galleryLocation))
-                            .flatMap {
-                                val galleryLocation = it.value
-                                if (galleryLocation != null) {
-                                    galleryDao.getGalleryByTitle(galleryLocation)
-                                            .toObservable()
-                                            .mapOptional()
-                                } else {
-                                    /**
-                                     * If the ArticObject.galleryLocation is null, return empty
-                                     * optional to down stream.
-                                     */
-                                    Observable.just(Optional<ArticGallery>(null))
-                                }
+                        .flatMap {
+                            val galleryLocation = it.value
+                            if (galleryLocation != null) {
+                                galleryDao.getGalleryByTitle(galleryLocation)
+                                    .toObservable()
+                                    .mapOptional()
+                            } else {
+                                /**
+                                 * If the ArticObject.galleryLocation is null, return empty
+                                 * optional to down stream.
+                                 */
+                                Observable.just(Optional<ArticGallery>(null))
                             }
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribeBy(
-                                    onNext = { gallery ->
-                                        val articSearchArtworkObject: ArticSearchArtworkObject = if (gallery.value != null) {
-                                            articObject.asArticSearchArtworkObject(gallery.value)
-                                        } else {
-                                            articObject.asArticSearchArtworkObject()
-                                        }
-
-                                        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ArtworkOnMap(articSearchArtworkObject)))
-                                    },
-                                    onError = {
-                                        val searchedObject = articObject.asArticSearchArtworkObject()
-                                        navigateTo.onNext(Navigate.Forward(NavigationEndpoint.ArtworkOnMap(searchedObject)))
+                        }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy(
+                            onNext = { gallery ->
+                                val articSearchArtworkObject: ArticSearchArtworkObject =
+                                    if (gallery.value != null) {
+                                        articObject.asArticSearchArtworkObject(gallery.value)
+                                    } else {
+                                        articObject.asArticSearchArtworkObject()
                                     }
-                            )
+
+                                navigateTo.onNext(
+                                    Navigate.Forward(
+                                        NavigationEndpoint.ArtworkOnMap(
+                                            articSearchArtworkObject
+                                        )
+                                    )
+                                )
+                            },
+                            onError = {
+                                val searchedObject = articObject.asArticSearchArtworkObject()
+                                navigateTo.onNext(
+                                    Navigate.Forward(
+                                        NavigationEndpoint.ArtworkOnMap(
+                                            searchedObject
+                                        )
+                                    )
+                                )
+                            }
+                        )
 
 
                 }
@@ -149,21 +179,21 @@ open class SearchBaseViewModel @Inject constructor(
             is SearchTextCellViewModel -> {
                 if (this is DefaultSearchSuggestionsViewModel) {
                     analyticsTracker.reportEvent(
-                            EventCategoryName.Search,
-                            AnalyticsAction.searchPromoted,
-                            viewModel.textString
+                        EventCategoryName.Search,
+                        AnalyticsAction.searchPromoted,
+                        viewModel.textString
                     )
                 } else {
                     analyticsTracker.reportEvent(
-                            EventCategoryName.Search,
-                            AnalyticsAction.searchAutocomplete,
-                            viewModel.textString
+                        EventCategoryName.Search,
+                        AnalyticsAction.searchAutocomplete,
+                        viewModel.textString
                     )
                 }
                 navigateTo.onNext(
-                        Navigate.Forward(
-                                NavigationEndpoint.HideKeyboard
-                        )
+                    Navigate.Forward(
+                        NavigationEndpoint.HideKeyboard
+                    )
                 )
                 searchResultsManager.search(viewModel.textString)
             }
@@ -180,27 +210,28 @@ open class SearchBaseViewModel @Inject constructor(
     /**
      * Returns suggested artworks preserving the CMS order.
      */
-    protected fun getSuggestedArtworks(searchSuggestionsDao: ArticSearchObjectDao,
-                                       objectDao: ArticObjectDao
+    protected fun getSuggestedArtworks(
+        searchSuggestionsDao: ArticSearchObjectDao,
+        objectDao: ArticObjectDao,
     ): Observable<List<ArticObject>> {
         return searchSuggestionsDao.getDataObject()
-                .toObservable()
-                .map { suggestedSearchOptions -> suggestedSearchOptions.searchObjects }
-                .flatMap { idsList ->
-                    /**
-                     * Database does not preserve the order of ids.
-                     */
-                    objectDao.getObjectsByIdList(idsList)
-                            .toObservable()
-                            .map { unSortedObjects ->
-                                /**
-                                 * Sorting the objects based on idsList
-                                 */
-                                val sortedObjects: List<ArticObject> = idsList.mapNotNull { id ->
-                                    unSortedObjects.find { it.nid == id }
-                                }
-                                sortedObjects
-                            }
-                }
+            .toObservable()
+            .map { suggestedSearchOptions -> suggestedSearchOptions.searchObjects }
+            .flatMap { idsList ->
+                /**
+                 * Database does not preserve the order of ids.
+                 */
+                objectDao.getObjectsByIdList(idsList)
+                    .toObservable()
+                    .map { unSortedObjects ->
+                        /**
+                         * Sorting the objects based on idsList
+                         */
+                        val sortedObjects: List<ArticObject> = idsList.mapNotNull { id ->
+                            unSortedObjects.find { it.nid == id }
+                        }
+                        sortedObjects
+                    }
+            }
     }
 }
