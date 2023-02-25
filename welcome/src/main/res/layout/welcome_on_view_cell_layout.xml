@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/exhibitionTileWidth"
     android:layout_height="wrap_content"
+    android:padding="@dimen/marginStandard"
     android:layout_marginEnd="@dimen/marginTwenty"
     android:minHeight="335dp">
 

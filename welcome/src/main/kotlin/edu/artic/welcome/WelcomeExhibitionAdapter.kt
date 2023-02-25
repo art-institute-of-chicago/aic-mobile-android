@@ -15,7 +15,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
  */
 
 
-class OnViewAdapter : AutoHolderRecyclerViewAdapter<WelcomeOnViewCellLayoutBinding,WelcomeExhibitionCellViewModel>() {
+class OnViewAdapter :
+    AutoHolderRecyclerViewAdapter<WelcomeOnViewCellLayoutBinding, WelcomeExhibitionCellViewModel>() {
 
     override fun View.onBindView(
         item: WelcomeExhibitionCellViewModel,

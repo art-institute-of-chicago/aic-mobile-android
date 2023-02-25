@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/eventTileWidth"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/marginTwenty">
+    android:layout_marginEnd="@dimen/marginTwenty"
+    android:padding="@dimen/marginStandard">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
