@@ -377,7 +377,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 if (ongoing) // allow notification to be dismissed if player is stopped
                     startForeground(notificationId, notification)
                 else
-                    stopForeground(false)
+                    stopForeground(STOP_FOREGROUND_DETACH)
             }
 
             override fun onNotificationCancelled(
@@ -385,8 +385,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 dismissedByUser: Boolean,
             ) {
                 super.onNotificationCancelled(notificationId, dismissedByUser)
-                stopSelf()
-                stopForeground(true)
+                stopForeground(STOP_FOREGROUND_REMOVE)
             }
         })
             .setChannelNameResourceId(edu.artic.media.R.string.tour_audio_channel_name)
