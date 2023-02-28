@@ -49,13 +49,12 @@
 
                 <FrameLayout
                     android:id="@+id/memberInfoFormLayoutContainer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <include
                         android:id="@+id/memberInfoFormLayout"
-                        layout="@layout/layout_member_information_form"
-                        android:visibility="gone" />
+                        layout="@layout/layout_member_information_form" />
                 </FrameLayout>
 
                 <FrameLayout

@@ -149,7 +149,6 @@ class AccessMemberCardViewModel @Inject constructor(
                     .subscribeBy(
                             onNext = { serverResponse ->
                                 onMemberInformationValidated(serverResponse)
-
                             },
                             onError = {
                                 loadStatus.onNext(LoadStatus.Error(it))
