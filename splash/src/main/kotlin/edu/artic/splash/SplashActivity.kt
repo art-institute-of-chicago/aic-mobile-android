@@ -1,6 +1,5 @@
 package edu.artic.splash
 
-//import kotlinx.android.synthetic.main.activity_splash.*
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.ActivityOptions
@@ -149,7 +148,7 @@ class SplashActivity : BaseViewModelActivity<ActivitySplashBinding, SplashViewMo
                     is SplashViewModel.NavigationEndpoint.StartVideo ->
                         fadeOutChrome(endpoint.displayLanguageSettings)
                     is SplashViewModel.NavigationEndpoint.Welcome ->
-                        goToWelcomeActivity()
+                        goToWelcomeActivity(binding.textureView)
                 }
             }.disposedBy(navDisposeBag)
     }
@@ -188,9 +187,11 @@ class SplashActivity : BaseViewModelActivity<ActivitySplashBinding, SplashViewMo
             mediaPlayer.setSurface(this.surface)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnCompletionListener {
-                goToWelcomeActivity()
+                goToWelcomeActivity(binding.textureView)
             }
         } catch (ignored: Throwable) {
+            ///TODO: instead, handle errors when we receive the Navigate.Forward event (i.e. when the progressBar is full)
+        } catch (ignore: Exception) {
             ///TODO: instead, handle errors when we receive the Navigate.Forward event (i.e. when the progressBar is full)
         }
     }
@@ -217,10 +218,10 @@ class SplashActivity : BaseViewModelActivity<ActivitySplashBinding, SplashViewMo
         }).start()
     }
 
-    private fun goToWelcomeActivity() {
+    private fun goToWelcomeActivity(textureView: TextureView) {
         val intent = NavigationConstants.HOME.asDeepLinkIntent()
         val options = ActivityOptions
-            .makeSceneTransitionAnimation(this, binding.textureView, "museumImage")
+            .makeSceneTransitionAnimation(this, textureView, "museumImage")
         if (!isFinishing) {
             /**
              * Shared transition element does not work properly (crashes on some devices) running
