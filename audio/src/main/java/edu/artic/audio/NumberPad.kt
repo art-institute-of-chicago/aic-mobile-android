@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
+import edu.artic.audio.databinding.ViewNumberPadDeleteBackElementBinding
 import edu.artic.audio.databinding.ViewNumberPadNumericElementBinding
 
 //import kotlinx.android.synthetic.main.view_number_pad_numeric_element.view.*
@@ -41,7 +42,7 @@ class NumberPadAdapter : AutoHolderRecyclerViewAdapter<ViewBinding, NumberPadEle
     override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = when (viewType) {
-            R.layout.view_number_pad_delete_back_element -> ViewNumberPadNumericElementBinding.inflate(
+            R.layout.view_number_pad_delete_back_element -> ViewNumberPadDeleteBackElementBinding.inflate(
                 inflater,
                 parent,
                 false
