@@ -55,6 +55,8 @@ import kotlin.reflect.KClass
 class AudioDetailsFragment :
     BaseViewModelFragment<FragmentAudioDetailsBinding, AudioDetailsViewModel>() {
     private var exoTranslationSelector: Spinner? = null
+    private var exoPause: View? = null
+    private var exoPlay: View? = null
 
     override val viewModelClass: KClass<AudioDetailsViewModel>
         get() = AudioDetailsViewModel::class
@@ -81,16 +83,42 @@ class AudioDetailsFragment :
 
             boundService?.let {
                 binding.audioPlayer.player = it.player
-
                 viewModel.onServiceConnected(it)
             }
+            setUpAudioServiceBindings()
+        }
+    }
+
+    private fun setUpAudioServiceBindings() {
+        boundService?.resumePlayer()
+        boundService?.let { audioService ->
+            audioService.audioPlayBackStatus
+                .map { it is AudioPlayerService.PlayBackState.Playing }
+                .bindToMain(exoPause!!.visibility())
+                .disposedBy(disposeBag)
+
+            audioService.audioPlayBackStatus
+                .map { it is AudioPlayerService.PlayBackState.Paused }
+                .bindToMain(exoPlay!!.visibility())
+                .disposedBy(disposeBag)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         exoTranslationSelector =
-            binding.audioPlayer.overlayFrameLayout!!.findViewById(R.id.exoTranslationSelector)
+            binding.root.findViewById(R.id.exoTranslationSelector)
+        exoPlay = binding.root.findViewById(R.id.exoPlay)
+        exoPause = binding.root.findViewById(R.id.exoPause)
+
+
+        exoPlay?.setOnClickListener {
+            boundService?.resumePlayer()
+        }
+
+        exoPause?.setOnClickListener {
+            boundService?.pausePlayer()
+        }
 
         exoTranslationSelector!!.adapter = LanguageAdapter().toBaseAdapter()
     }
@@ -121,7 +149,6 @@ class AudioDetailsFragment :
             .disposedBy(disposeBag)
 
         viewModel.image.subscribe {
-
             Glide.with(this)
                 .load(it)
                 .apply(options)
@@ -288,16 +315,9 @@ class AudioDetailsFragment :
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.scrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
-    }
-
-
     override fun onPause() {
         super.onPause()
         requireActivity().unbindService(serviceConnection)
     }
 
 }
-
