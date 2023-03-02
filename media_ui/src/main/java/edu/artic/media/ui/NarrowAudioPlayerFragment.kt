@@ -79,12 +79,16 @@ class NarrowAudioPlayerFragment :
         }
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onResume() {
+        super.onResume()
         audioIntent = AudioPlayerService.getLaunchIntent(requireContext())
         requireActivity().startService(audioIntent)
         requireActivity().bindService(audioIntent, serviceConnection, 0)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         requireView().visibility = View.GONE
         binding.closePlayer.setOnClickListener {
             boundService?.stopPlayer()
@@ -216,7 +220,7 @@ class NarrowAudioPlayerFragment :
  */
 fun BaseFragment<*>.getAudioServiceObservable(
     fragmentId: Int = R.id.newPlayer,
-    fm: androidx.fragment.app.FragmentManager = requireActivity().supportFragmentManager,
+    fm: FragmentManager = requireActivity().supportFragmentManager,
 ): Subject<AudioPlayerService> {
     val audioFragment: NarrowAudioPlayerFragment = findFragmentInHierarchy(fm, fragmentId)!!
     return audioFragment.observableAudioService

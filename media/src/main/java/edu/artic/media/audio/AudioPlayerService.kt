@@ -246,13 +246,13 @@ class AudioPlayerService : DaggerService(), PlayerService {
                                 AnalyticsAction.playbackCompleted,
                                 currentTrack.value?.title.orEmpty()
                             )
-                            audioPlayBackStatus.onNext(PlayBackState.Stopped(given))
+                            audioPlayBackStatus.onNext(Stopped(given))
                             playerNotificationManager.setPlayer(null)
                             tourProgressManager.playBackEnded(given)
                             currentTrack.onNext(EMPTY_AUDIO_FILE)
                         }
                         playbackState == Player.STATE_IDLE -> audioPlayBackStatus.onNext(
-                            PlayBackState.Stopped(given)
+                            Stopped(given)
                         )
                         else -> audioPlayBackStatus.onNext(PlayBackState.Paused(given))
                     }
@@ -299,7 +299,7 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
                 is PlayBackAction.Stop -> {
                     (currentTrack as BehaviorSubject).value?.let { audioFile ->
-                        audioPlayBackStatus.onNext(PlayBackState.Stopped(audioFile))
+                        audioPlayBackStatus.onNext(Stopped(audioFile))
                     }
                     playerNotificationManager.setPlayer(null)
                     player.stop()
@@ -467,6 +467,11 @@ class AudioPlayerService : DaggerService(), PlayerService {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        (currentTrack as BehaviorSubject).value?.let { audioFile ->
+            audioPlayBackStatus.onNext(Stopped(audioFile))
+        }
+
         playerNotificationManager.setPlayer(null)
         player.release()
 
