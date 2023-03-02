@@ -50,7 +50,8 @@
                 <FrameLayout
                     android:id="@+id/memberInfoFormLayoutContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <include
                         android:id="@+id/memberInfoFormLayout"
@@ -59,13 +60,13 @@
 
                 <FrameLayout
                     android:id="@+id/memberAccessCardLayoutContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <include
                         android:id="@+id/memberAccessCardLayout"
-                        layout="@layout/layout_member_access_card"
-                        android:visibility="gone" />
+                        layout="@layout/layout_member_access_card" />
                 </FrameLayout>
 
             </FrameLayout>
