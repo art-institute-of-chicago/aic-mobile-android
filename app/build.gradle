@@ -6,8 +6,8 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
-String majorAndMinorVersion = "1.5"
-Integer patchVersionCode = 1
+String majorAndMinorVersion = "1.6"
+Integer patchVersionCode = 4
 
 android {
     compileSdkVersion 33
