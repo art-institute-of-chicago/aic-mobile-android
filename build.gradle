@@ -2,9 +2,9 @@
 
 buildscript {
     ext {
-        sdk = 32
+        compileSdk = 34
         minSdk = 21
-        kotlin_version = '1.6.21'
+        kotlin_version = '1.8.0'
         latest_helper = '72626c5db8'
         dagger_version = '2.19'
         support_version = '28.0.0'
@@ -58,7 +58,7 @@ buildscript {
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",
                 glide_okhttp_integration: "com.github.bumptech.glide:okhttp3-integration:${glide_version}@aar",
                 progress_interceptor    : 'com.github.cliabhach:okhttp3-downloadprogress-interceptor:1.0.2-a1',
-                maps                    : "com.google.android.gms:play-services-maps:18.1.0",
+                maps                    : "com.google.android.gms:play-services-maps:18.2.0",
                 location                : "com.google.android.gms:play-services-location:21.0.1",
                 exo_player_core         : "com.google.android.exoplayer:exoplayer-core:$exo_player_version",
                 exo_player_dash         : "com.google.android.exoplayer:exoplayer-dash:$exo_player_version",
@@ -77,7 +77,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.android.tools.build:gradle:7.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3"
         classpath 'com.google.gms:google-services:4.3.15'
@@ -181,12 +181,6 @@ subprojects {
         useBuildCache = true
         mapDiagnosticLocations = true
         correctErrorTypes = true
-
-        // Workaround for https://github.com/google/dagger/issues/1449
-        javacOptions {
-            option("-source", "8")
-            option("-target", "8")
-        }
     }
 }
 
