@@ -1,6 +1,6 @@
 package edu.artic.db
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import edu.artic.db.models.*

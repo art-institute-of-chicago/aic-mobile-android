@@ -1,19 +1,20 @@
 package edu.artic.adapter
 
 import android.annotation.SuppressLint
-import android.arch.core.executor.ArchTaskExecutor
-import android.arch.paging.AsyncPagedListDiffer
-import android.arch.paging.PagedList
 import android.content.Context
-import android.support.annotation.LayoutRes
-import android.support.annotation.UiThread
-import android.support.v7.recyclerview.extensions.AsyncDifferConfig
-import android.support.v7.util.DiffUtil
-import android.support.v7.util.ListUpdateCallback
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.annotation.UiThread
+import androidx.arch.core.executor.ArchTaskExecutor
+import androidx.paging.AsyncPagedListDiffer
+import androidx.paging.PagedList
+import androidx.recyclerview.widget.AsyncDifferConfig
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListUpdateCallback
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import java.util.*
 
 /**
@@ -24,16 +25,16 @@ import java.util.*
  * follows:
  */
 abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
-        private val diffItemCallback: DiffUtil.ItemCallback<TModel> = object :
-                DiffUtil.ItemCallback<TModel>() {
-            override fun areItemsTheSame(oldItem: TModel, newItem: TModel): Boolean =
-                    areContentsTheSame(oldItem, newItem)
+    private val diffItemCallback: DiffUtil.ItemCallback<TModel> = object :
+        DiffUtil.ItemCallback<TModel>() {
+        override fun areItemsTheSame(oldItem: TModel, newItem: TModel): Boolean =
+            areContentsTheSame(oldItem, newItem)
 
-            // FIXME: Should we perhaps use a === check instead?
-            @SuppressLint("DiffUtilEquals")
-            override fun areContentsTheSame(oldItem: TModel, newItem: TModel): Boolean =
-                    oldItem == newItem
-        }
+        // FIXME: Should we perhaps use a === check instead?
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(oldItem: TModel, newItem: TModel): Boolean =
+            oldItem == newItem
+    },
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
     interface OnItemClickListener<in T> {
@@ -110,8 +111,10 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     private var onFooterClickListener: OnHFItemClickListener? = null
 
     private val pagedListAdapterHelper: AsyncPagedListDiffer<TModel> by lazy {
-        AsyncPagedListDiffer(adapterHelperWrapper,
-                AsyncDifferConfig.Builder<TModel>(diffItemCallback).build())
+        AsyncPagedListDiffer(
+            adapterHelperWrapper,
+            AsyncDifferConfig.Builder<TModel>(diffItemCallback).build()
+        )
     }
 
     /**
@@ -138,14 +141,18 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         if (itemsList is PagedList) { // submit directly
             pagedListAdapterHelper.submitList(itemsList)
         } else {
-            pagedListAdapterHelper.submitList(PagedList.Builder(provider.create(),
+            pagedListAdapterHelper.submitList(
+                PagedList.Builder(
+                    provider.create(),
                     PagedList.Config.Builder().setPageSize(10)
-                            .setEnablePlaceholders(false)
-                            .setPrefetchDistance(10)
-                            .build())
+                        .setEnablePlaceholders(false)
+                        .setPrefetchDistance(10)
+                        .build()
+                )
                     .setNotifyExecutor(ArchTaskExecutor.getMainThreadExecutor())
                     .setFetchExecutor(ArchTaskExecutor.getIOThreadExecutor())
-                    .build())
+                    .build()
+            )
         }
     }
 
@@ -173,8 +180,9 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         notifyItemRangeRemoved(0, count)
     }
 
-    fun addHeaderView(layoutResId: Int, parent: ViewGroup) {
-        addHeaderHolder(BaseViewHolder(parent, layoutResId))
+    private fun addHeaderView(layoutResId: Int, parent: ViewGroup) {
+        //fixme
+//        addHeaderHolder(BaseViewHolder(parent, layoutResId))
     }
 
     fun addHeaderHolder(baseViewHolder: BaseViewHolder) {
@@ -191,8 +199,8 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
         notifyItemInserted(footerStartIndex + footersCount)
     }
 
-    fun addFooterView(footerResId: Int, parent: ViewGroup) {
-        addFooterHolder(BaseViewHolder(parent, footerResId))
+    private fun addFooterView(footerResId: Int, parent: ViewGroup) {
+//        addFooterHolder(BaseViewHolder(parent, footerResId))
     }
 
     fun getHeaderHolders(): List<BaseViewHolder> {
@@ -221,7 +229,8 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
                 if (onFooterClickListener != null) {
                     val finalViewHolder1 = viewHolder
                     viewHolder.itemView.setOnClickListener {
-                        val position = getViewHolderPosition(finalViewHolder1) - footerStartIndex - 1
+                        val position =
+                            getViewHolderPosition(finalViewHolder1) - footerStartIndex - 1
                         onFooterClickListener?.onItemClick(position, finalViewHolder1)
                     }
                 }
@@ -231,7 +240,8 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
                 if (this.onItemClickListener != null) {
                     val finalViewHolder2 = viewHolder
                     setItemClickListener(viewHolder, View.OnClickListener {
-                        val position = getAdjustedItemPosition(getViewHolderPosition(finalViewHolder2))
+                        val position =
+                            getAdjustedItemPosition(getViewHolderPosition(finalViewHolder2))
                         onItemPositionClicked(finalViewHolder2, position)
                     })
                 }
@@ -239,8 +249,12 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
                 if (this.onItemLongClickListener != null) {
                     val finalViewHolder2 = viewHolder
                     setItemLongPressListener(viewHolder, View.OnLongClickListener {
-                        val position = getAdjustedItemPosition(getViewHolderPosition(finalViewHolder2))
-                        return@OnLongClickListener onItemPositionLongClicked(finalViewHolder2, position)
+                        val position =
+                            getAdjustedItemPosition(getViewHolderPosition(finalViewHolder2))
+                        return@OnLongClickListener onItemPositionLongClicked(
+                            finalViewHolder2,
+                            position
+                        )
                     })
                 }
             }
@@ -302,7 +316,7 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
 
     fun getItem(position: Int): TModel {
         return pagedListAdapterHelper.getItem(position)
-                ?: throw IndexOutOfBoundsException("Invalid position $position")
+            ?: throw IndexOutOfBoundsException("Invalid position $position")
     }
 
     override fun getItemCount(): Int {
@@ -376,14 +390,23 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
      * the same layout but require different binding logic, isolate that
      * distinction to the 3-args `onBindViewHolder(VH, TModel?, Int)`.
      */
-    @Deprecated("Implementors should not need to override this method; please migrate to 'getLayoutResId'.", ReplaceWith("getLayoutResId(position)"))
+    @Deprecated(
+        "Implementors should not need to override this method; please migrate to 'getLayoutResId'.",
+        ReplaceWith("getLayoutResId(position)")
+    )
     protected open fun getViewType(position: Int) = getLayoutResId(position)
 
-    protected open fun setItemClickListener(viewHolder: BaseViewHolder, onClickListener: View.OnClickListener) {
+    protected open fun setItemClickListener(
+        viewHolder: BaseViewHolder,
+        onClickListener: View.OnClickListener,
+    ) {
         viewHolder.itemView.setOnClickListener(onClickListener)
     }
 
-    protected open fun setItemLongPressListener(viewHolder: BaseViewHolder, onClickListener: View.OnLongClickListener) {
+    protected open fun setItemLongPressListener(
+        viewHolder: BaseViewHolder,
+        onClickListener: View.OnLongClickListener,
+    ) {
         viewHolder.itemView.setOnLongClickListener(onClickListener)
     }
 
@@ -443,7 +466,10 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
     protected open fun onItemClicked(position: Int, item: TModel, viewHolder: BaseViewHolder) = Unit
 
     @UiThread
-    protected open fun onItemPositionLongClicked(viewHolder: BaseViewHolder, position: Int): Boolean {
+    protected open fun onItemPositionLongClicked(
+        viewHolder: BaseViewHolder,
+        position: Int,
+    ): Boolean {
         return getItemOrNull(position)?.let { item ->
             return@let this.onItemLongClickListener?.onItemLongPress(position, item, viewHolder)
         } ?: false
@@ -541,10 +567,11 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
          */
         @JvmStatic
         protected fun preventReuseOfIdsFrom(
-                forbiddenIds: List<Int>, id: Int, forbiddenType: String) {
+            forbiddenIds: List<Int>, id: Int, forbiddenType: String,
+        ) {
             if (forbiddenIds.contains(id)) {
                 throw IllegalArgumentException(
-                        "The layout id $id is already registered to a $forbiddenType."
+                    "The layout id $id is already registered to a $forbiddenType."
                 )
             }
         }
@@ -554,43 +581,48 @@ abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
 /**
  * Convenience call that utilizes just the viewmodel
  */
-inline fun <T> onItemClickListener(crossinline function: (T) -> Unit) = object : BaseRecyclerViewAdapter.OnItemClickListener<T> {
-    override fun onItemClick(position: Int, item: T, viewHolder: BaseViewHolder) {
-        function(item)
+inline fun <T> onItemClickListener(crossinline function: (T) -> Unit) =
+    object : BaseRecyclerViewAdapter.OnItemClickListener<T> {
+        override fun onItemClick(position: Int, item: T, viewHolder: BaseViewHolder) {
+            function(item)
+        }
     }
-}
 
-inline fun <T> onItemClickListenerWithPosition(crossinline function: (pos: Int, T) -> Unit) = object : BaseRecyclerViewAdapter.OnItemClickListener<T> {
-    override fun onItemClick(position: Int, item: T, viewHolder: BaseViewHolder) {
-        function(position, item)
+inline fun <T> onItemClickListenerWithPosition(crossinline function: (pos: Int, T) -> Unit) =
+    object : BaseRecyclerViewAdapter.OnItemClickListener<T> {
+        override fun onItemClick(position: Int, item: T, viewHolder: BaseViewHolder) {
+            function(position, item)
+        }
     }
-}
 
 /**
  * Convenience call that utilizes just the viewmodel
  */
-inline fun <T> onItemLongClickListener(crossinline function: (T) -> Boolean) = object : BaseRecyclerViewAdapter.OnItemLongClickListener<T> {
-    override fun onItemLongPress(position: Int, item: T, viewHolder: BaseViewHolder): Boolean {
-        return function(item)
+inline fun <T> onItemLongClickListener(crossinline function: (T) -> Boolean) =
+    object : BaseRecyclerViewAdapter.OnItemLongClickListener<T> {
+        override fun onItemLongPress(position: Int, item: T, viewHolder: BaseViewHolder): Boolean {
+            return function(item)
+        }
     }
-}
 
 /**
  * Convenience call that utilizes just the viewHolder
  */
-inline fun onHFClickListener(crossinline function: (BaseViewHolder) -> Unit) = object : BaseRecyclerViewAdapter.OnHFItemClickListener {
+inline fun onHFClickListener(crossinline function: (BaseViewHolder) -> Unit) =
+    object : BaseRecyclerViewAdapter.OnHFItemClickListener {
 
-    override fun onItemClick(position: Int, viewHolder: BaseViewHolder) {
-        function(viewHolder)
+        override fun onItemClick(position: Int, viewHolder: BaseViewHolder) {
+            function(viewHolder)
+        }
     }
-}
 
 /**
  * Convenience call
  */
-inline fun onHFClickListener(crossinline function: (Int, BaseViewHolder) -> Unit) = object : BaseRecyclerViewAdapter.OnHFItemClickListener {
+inline fun onHFClickListener(crossinline function: (Int, BaseViewHolder) -> Unit) =
+    object : BaseRecyclerViewAdapter.OnHFItemClickListener {
 
-    override fun onItemClick(position: Int, viewHolder: BaseViewHolder) {
-        function(position, viewHolder)
+        override fun onItemClick(position: Int, viewHolder: BaseViewHolder) {
+            function(position, viewHolder)
+        }
     }
-}

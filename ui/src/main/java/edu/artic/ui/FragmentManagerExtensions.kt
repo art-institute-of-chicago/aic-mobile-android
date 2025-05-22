@@ -1,8 +1,8 @@
 package edu.artic.ui
 
-import android.support.annotation.IdRes
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
+import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 
@@ -14,7 +14,7 @@ import androidx.navigation.fragment.NavHostFragment
  *
  * Analogous to [androidx.navigation.fragment.findNavController].
  */
-fun FragmentManager.findNavController(): NavController? {
+fun androidx.fragment.app.FragmentManager.findNavController(): NavController? {
     val navFragment = primaryNavigationFragment
     return (navFragment as? NavHostFragment)?.navController
 }
@@ -24,10 +24,10 @@ fun FragmentManager.findNavController(): NavController? {
  *
  * Returns null if there is no such fragment.
  */
-inline fun <reified T : BaseFragment> findFragmentInHierarchy(fm: FragmentManager, @IdRes fragmentId: Int): T? {
+inline fun <reified T : BaseFragment<*>> findFragmentInHierarchy(fm: androidx.fragment.app.FragmentManager, @IdRes fragmentId: Int): T? {
     var found: T? = null
-    var potential: Fragment?
-    var manager: FragmentManager? = fm
+    var potential: androidx.fragment.app.Fragment?
+    var manager: androidx.fragment.app.FragmentManager? = fm
     do {
         potential = manager?.findFragmentById(fragmentId)
         if (potential is T) {

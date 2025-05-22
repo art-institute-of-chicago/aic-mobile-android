@@ -1,8 +1,11 @@
 package edu.artic.adapter
 
-import android.support.v7.util.DiffUtil
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.viewbinding.ViewBinding
+import java.lang.reflect.ParameterizedType
 
 /**
  * Description: Assumes the ViewHolder is a [BaseViewHolder] and then scopes the [onBindView] method
@@ -16,27 +19,35 @@ import android.view.ViewGroup
  * * In [onBindView], implement binding logic in reference to `this` (where
  *    `this` is the inflated version of that same layout).
  */
-abstract class AutoHolderRecyclerViewAdapter<TModel> : BaseRecyclerViewAdapter<TModel, BaseViewHolder> {
+abstract class AutoHolderRecyclerViewAdapter<VB : ViewBinding, TModel> :
+    BaseRecyclerViewAdapter<TModel, BaseViewHolder> {
 
     constructor(diffItemCallback: DiffUtil.ItemCallback<TModel>) : super(diffItemCallback)
 
     constructor() : super()
 
-    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder =
-            BaseViewHolder(parent, viewType).apply {
-                itemView.onHolderCreated(parent, viewType)
-            }
+    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val vbClass =
+            (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+        val method = vbClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
+        val binding = method.invoke(null, layoutInflater) as VB
+
+        return BaseViewHolder(binding, viewType).apply {
+            itemView.onHolderCreated(parent, viewType)
+        }
+    }
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: TModel?, position: Int) {
-        holder.itemView.onBindNullableView(item, position)
+        holder.itemView.onBindNullableView(item, holder, position)
     }
 
     /**
      * Called when an item is ready to be bound. It may be null.
      */
-    private fun View.onBindNullableView(item: TModel?, position: Int) {
+    private fun View.onBindNullableView(item: TModel?, holder: BaseViewHolder, position: Int) {
         if (item != null) {
-            onBindView(item, position)
+            onBindView(item, holder, position)
         } else {
             onBindPlaceHolder(position)
         }
@@ -50,7 +61,7 @@ abstract class AutoHolderRecyclerViewAdapter<TModel> : BaseRecyclerViewAdapter<T
     /**
      * Called when [TModel] is not null and ready for binding.
      */
-    abstract fun View.onBindView(item: TModel, position: Int)
+    abstract fun View.onBindView(item: TModel, holder: BaseViewHolder, position: Int)
 
     /**
      * Called when the [BaseViewHolder] is first created in the scope of it's itemView. Perform

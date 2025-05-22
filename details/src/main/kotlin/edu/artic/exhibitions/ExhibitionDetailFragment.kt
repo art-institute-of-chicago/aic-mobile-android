@@ -1,12 +1,14 @@
 package edu.artic.exhibitions
 
+//import kotlinx.android.synthetic.main.fragment_exhibition_details.*
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.math.MathUtils
-import android.support.v4.widget.NestedScrollView
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.addCallback
+import androidx.core.math.MathUtils
+import androidx.core.widget.NestedScrollView
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -23,6 +25,7 @@ import edu.artic.base.utils.trimDownBlankLines
 import edu.artic.db.models.ArticExhibition
 import edu.artic.details.BuildConfig
 import edu.artic.details.R
+import edu.artic.details.databinding.FragmentExhibitionDetailsBinding
 import edu.artic.image.GlideApp
 import edu.artic.image.ImageViewScaleInfo
 import edu.artic.image.listenerSetHeight
@@ -30,7 +33,6 @@ import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_exhibition_details.*
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -41,7 +43,8 @@ import kotlin.reflect.KClass
  * In the UI, it is more frequently called
  * # On View
  */
-class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel>() {
+class ExhibitionDetailFragment :
+    BaseViewModelFragment<FragmentExhibitionDetailsBinding, ExhibitionDetailViewModel>() {
     @Inject
     lateinit var customTabManager: CustomTabManager
 
@@ -50,8 +53,6 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     override val viewModelClass: KClass<ExhibitionDetailViewModel>
         get() = ExhibitionDetailViewModel::class
-    override val layoutResId: Int
-        get() = R.layout.fragment_exhibition_details
 
     override val title = R.string.global_empty_string
 
@@ -62,7 +63,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
     private val exhibition by lazy {
         //Support arguments from the search activity
         if (arguments?.containsKey(ARG_EXHIBITION) == true) {
-            arguments!!.getParcelable<ArticExhibition>(ARG_EXHIBITION)
+            requireArguments().getParcelable<ArticExhibition>(ARG_EXHIBITION)
         } else {
             requireActivity().intent.getParcelableExtra<ArticExhibition>(ARG_EXHIBITION)
         }
@@ -72,7 +73,7 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
         super.onViewCreated(view, savedInstanceState)
 
         if (BuildConfig.IS_RENTAL) {
-            buyTickets.visibility = View.GONE
+            binding.buyTickets.visibility = View.GONE
         }
     }
 
@@ -82,121 +83,132 @@ class ExhibitionDetailFragment : BaseViewModelFragment<ExhibitionDetailViewModel
 
     override fun setupBindings(viewModel: ExhibitionDetailViewModel) {
         viewModel.title
-                .subscribe {
-                    expandedTitle.text = it
-                    toolbarTitle.text = it
-                    /**
-                     * When the scrollView is
-                     * - scrolled down and expandedTitle is about to go behind the toolbar,
-                     *   update the toolbar's title.
-                     * - scrolled up and expandedTitle is visible (seen in scrollView) clear
-                     *   the toolbar's title.
-                     */
-                    val toolbarHeight = toolbar?.layoutParams?.height ?: 0
-                    scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
-                    { _, _, scrollY, _, _ ->
-                        val threshold = image.measuredHeight + toolbarHeight / 2
-                        val alpha: Float = (scrollY - threshold + 40f) / 40f
-                        toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
-                        expandedTitle.alpha = 1 - alpha
-                    })
+            .subscribe {
+                binding.expandedTitle.text = it
+                binding.toolbarTitle.text = it
+                /**
+                 * When the scrollView is
+                 * - scrolled down and expandedTitle is about to go behind the toolbar,
+                 *   update the toolbar's title.
+                 * - scrolled up and expandedTitle is visible (seen in scrollView) clear
+                 *   the toolbar's title.
+                 */
+                val toolbarHeight = toolbar?.layoutParams?.height ?: 0
+                binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
+                { _, _, scrollY, _, _ ->
+                    val threshold = binding.image.measuredHeight + toolbarHeight / 2
+                    val alpha: Float = (scrollY - threshold + 40f) / 40f
+                    binding.toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
+                    binding.expandedTitle.alpha = 1 - alpha
+                })
 
-                }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
 
         viewModel.imageUrl
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    val options = RequestOptions()
-                            .dontAnimate()
-                            .dontTransform()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                val options = RequestOptions()
+                    .dontAnimate()
+                    .dontTransform()
 
-                    val scaleInfo = ImageViewScaleInfo(
-                            placeHolderScaleType = ImageView.ScaleType.CENTER_CROP,
-                            imageScaleType = ImageView.ScaleType.MATRIX)
-                    image.post {
-                        GlideApp.with(this)
-                                .load("$it?w=${image.measuredWidth}&h=${image.measuredHeight}")
-                                .apply(options)
-                                .placeholder(R.color.placeholderBackground)
-                                .error(R.drawable.placeholder_large)
-                                .listenerSetHeight(image, scaleInfo)
-                                .into(image)
-                    }
+                val scaleInfo = ImageViewScaleInfo(
+                    placeHolderScaleType = ImageView.ScaleType.CENTER_CROP,
+                    imageScaleType = ImageView.ScaleType.MATRIX
+                )
+                binding.image.post {
+                    GlideApp.with(this)
+                        .load("$it?w=${binding.image.measuredWidth}&h=${binding.image.measuredHeight}")
+                        .apply(options)
+                        .placeholder(R.color.placeholderBackground)
+                        .error(R.drawable.placeholder_large)
+                        .listenerSetHeight(binding.image, scaleInfo)
+                        .into(binding.image)
                 }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
 
         viewModel.description
-                .map {
-                    it.trimDownBlankLines().fromHtml()
-                }
-                .bindToMain(description.text())
-                .disposedBy(disposeBag)
+            .map {
+                it.trimDownBlankLines().fromHtml()
+            }
+            .bindToMain(binding.description.text())
+            .disposedBy(disposeBag)
 
         viewModel.galleryTitle
-                .bindToMain(galleryTitle.text())
-                .disposedBy(disposeBag)
+            .bindToMain(binding.galleryTitle.text())
+            .disposedBy(disposeBag)
 
         viewModel.galleryTitle
-                .map { it.isNotBlank() }
-                .bindToMain(galleryTitle.visibility())
-                .disposedBy(disposeBag)
+            .map { it.isNotBlank() }
+            .bindToMain(binding.galleryTitle.visibility())
+            .disposedBy(disposeBag)
 
         viewModel.throughDate
-                .map { getString(R.string.content_through_date, it) }
-                .bindToMain(throughDate.text())
-                .disposedBy(disposeBag)
+            .map { getString(R.string.content_through_date, it) }
+            .bindToMain(binding.throughDate.text())
+            .disposedBy(disposeBag)
 
 
 
         viewModel.location
-                .map { (lat, long) -> lat != null && long != null }
-                .bindToMain(showOnMap.visibility())
-                .disposedBy(disposeBag)
+            .map { (lat, long) -> lat != null && long != null }
+            .bindToMain(binding.showOnMap.visibility())
+            .disposedBy(disposeBag)
 
-        showOnMap.clicks()
-                .subscribe { viewModel.onClickShowOnMap() }
-                .disposedBy(disposeBag)
+        binding.showOnMap.clicks()
+            .subscribe { viewModel.onClickShowOnMap() }
+            .disposedBy(disposeBag)
 
-        buyTickets.clicks()
-                .subscribe { viewModel.onClickBuyTickets() }
-                .disposedBy(disposeBag)
+        binding.buyTickets.clicks()
+            .subscribe { viewModel.onClickBuyTickets() }
+            .disposedBy(disposeBag)
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        scrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            requireActivity().finish()
+        }
     }
 
     override fun setupNavigationBindings(viewModel: ExhibitionDetailViewModel) {
         viewModel.navigateTo
-                .subscribe { navEvent ->
-                    when (navEvent) {
-                        is Navigate.Forward -> {
-                            val endpoint = navEvent.endpoint
+            .subscribe { navEvent ->
+                when (navEvent) {
+                    is Navigate.Forward -> {
+                        val endpoint = navEvent.endpoint
 
-                            when (endpoint) {
-                                is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
-                                    analyticsTracker.reportEvent(EventCategoryName.Map, AnalyticsAction.mapShowExhibition, exhibition?.title.orEmpty())
-                                    val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
-                                        putExtra(NavigationConstants.ARG_EXHIBITION_OBJECT, exhibition)
-                                        flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                                    }
-                                    startActivity(mapIntent)
-                                    requireActivity().finish()
+                        when (endpoint) {
+                            is ExhibitionDetailViewModel.NavigationEndpoint.ShowOnMap -> {
+                                analyticsTracker.reportEvent(
+                                    EventCategoryName.Map,
+                                    AnalyticsAction.mapShowExhibition,
+                                    exhibition?.title.orEmpty()
+                                )
+                                val mapIntent = NavigationConstants.MAP.asDeepLinkIntent().apply {
+                                    putExtra(NavigationConstants.ARG_EXHIBITION_OBJECT, exhibition)
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                                 }
+                                startActivity(mapIntent)
+                                requireActivity().finish()
+                            }
 
-                                is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
-                                    customTabManager.openUrlOnChromeCustomTab(requireContext(), Uri.parse(endpoint.url))
-                                }
+                            is ExhibitionDetailViewModel.NavigationEndpoint.BuyTickets -> {
+                                customTabManager.openUrlOnChromeCustomTab(
+                                    requireContext(),
+                                    Uri.parse(endpoint.url)
+                                )
                             }
                         }
-                        is Navigate.Back -> {
-
-                        }
                     }
-                }.disposedBy(navigationDisposeBag)
+                    is Navigate.Back -> {
+
+                    }
+                }
+            }.disposedBy(navigationDisposeBag)
     }
 
     companion object {

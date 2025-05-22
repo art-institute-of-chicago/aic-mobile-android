@@ -4,13 +4,14 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.annotation.UiThread
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import android.view.LayoutInflater
 import android.view.MenuItem
+import androidx.annotation.UiThread
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.viewbinding.ViewBinding
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import dagger.android.AndroidInjection
@@ -19,12 +20,14 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import edu.artic.localization.LanguageSelector
 import edu.artic.localization.primaryLocale
+import java.lang.reflect.ParameterizedType
 import javax.inject.Inject
 
-abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
+abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSupportFragmentInjector {
 
-    @get:LayoutRes
-    protected abstract val layoutResId: Int
+    private var _binding: VB? = null
+    protected val binding: VB
+        get() = _binding ?: throw IllegalStateException("Binding is not available yet.")
 
     val disposeBag = DisposeBag()
     val navDisposeBag = DisposeBag()
@@ -55,25 +58,28 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
             AndroidInjection.inject(this)
 
             languageSelector.currentLanguage
-                    .take(1)
-                    .subscribe {
-                        ensureConfigIncludesAppLocale()
-                    }.disposedBy(disposeBag)
+                .take(1)
+                .subscribe {
+                    ensureConfigIncludesAppLocale()
+                }.disposedBy(disposeBag)
 
             languageSelector.currentLanguage
-                    // Ignore current value; we only want to receive updates
-                    .skip(1)
-                    .subscribe {
-                        ensureConfigIncludesAppLocale()
-                        if (shouldRecreateUponLanguageChange) {
-                            recreate()
-                        }
-                    }.disposedBy(disposeBag)
+                // Ignore current value; we only want to receive updates
+                .skip(1)
+                .subscribe {
+                    ensureConfigIncludesAppLocale()
+                    if (shouldRecreateUponLanguageChange) {
+                        recreate()
+                    }
+                }.disposedBy(disposeBag)
         }
         super.onCreate(savedInstanceState)
-        if (layoutResId != 0) {
-            setContentView(layoutResId)
-        }
+
+        val vbClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+        val method = vbClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
+        _binding = method.invoke(null, layoutInflater) as VB
+
+        setContentView(binding.root)
 
         volumeControlStream = AudioManager.STREAM_VOICE_CALL
     }
@@ -112,6 +118,7 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onDestroy() {
         super.onDestroy()
         disposeBag.clear()
+        _binding = null
     }
 
     /**
@@ -127,7 +134,7 @@ abstract class BaseActivity : AppCompatActivity(), HasSupportFragmentInjector {
             super.onBackPressed()
         } else {
             val lastFragment = primaryNavFragment.childFragmentManager.fragments.last()
-            if (lastFragment == null || lastFragment !is BaseFragment || !lastFragment.onBackPressed()) {
+            if (lastFragment == null || lastFragment !is BaseFragment<*> || !lastFragment.onBackPressed()) {
                 super.onBackPressed()
             }
         }

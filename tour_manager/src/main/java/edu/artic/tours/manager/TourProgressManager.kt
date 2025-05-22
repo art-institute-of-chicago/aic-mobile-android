@@ -1,7 +1,7 @@
 package edu.artic.tours.manager
 
 import android.annotation.SuppressLint
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import com.fuzz.rx.Optional
 import com.fuzz.rx.filterValue
 import edu.artic.db.INTRO_TOUR_STOP_OBJECT_ID

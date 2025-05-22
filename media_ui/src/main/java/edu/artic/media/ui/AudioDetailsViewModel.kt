@@ -1,7 +1,7 @@
 package edu.artic.media.ui
 
-import android.support.annotation.AnyThread
-import android.support.annotation.UiThread
+import androidx.annotation.AnyThread
+import androidx.annotation.UiThread
 import com.fuzz.rx.*
 import edu.artic.db.Playable
 import edu.artic.db.daos.ArticTourDao

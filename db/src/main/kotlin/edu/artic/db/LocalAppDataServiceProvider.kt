@@ -14,6 +14,8 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import okio.Okio
+import okio.buffer
+import okio.source
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
@@ -121,7 +123,9 @@ class LocalAppDataServiceProvider(
 
             stream.use {
 
-                val data = moshi.adapter(ArticAppData::class.java).fromJson(Okio.buffer(Okio.source(it)))
+                val data = moshi.adapter(ArticAppData::class.java).fromJson(
+                    it.source().buffer()
+                )
 
                 if (data != null) {
                     observer.onNext(

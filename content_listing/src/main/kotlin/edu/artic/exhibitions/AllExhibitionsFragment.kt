@@ -1,8 +1,9 @@
 package edu.artic.exhibitions
 
+//import kotlinx.android.synthetic.main.fragment_view_all.*
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -13,24 +14,23 @@ import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.content.listing.R
+import edu.artic.content.listing.databinding.FragmentViewAllBinding
 import edu.artic.exhibitions.recyclerview.AllExhibitionsItemDecoration
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
-class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() {
+class AllExhibitionsFragment :
+    BaseViewModelFragment<FragmentViewAllBinding, AllExhibitionsViewModel>() {
 
     override val screenName: ScreenName
         get() = ScreenName.OnView
 
     override val viewModelClass: KClass<AllExhibitionsViewModel>
         get() = AllExhibitionsViewModel::class
-    override val layoutResId: Int
-        get() = R.layout.fragment_view_all
 
     override val title = R.string.welcome_on_view_header
 
@@ -38,55 +38,60 @@ class AllExhibitionsFragment : BaseViewModelFragment<AllExhibitionsViewModel>() 
         super.onViewCreated(view, savedInstanceState)
 
         /* Build tour summary list*/
-        val layoutManager = GridLayoutManager(activity, 1, GridLayoutManager.VERTICAL, false)
-        recyclerView.layoutManager = layoutManager
+        val layoutManager = GridLayoutManager(
+            activity,
+            1,
+            GridLayoutManager.VERTICAL,
+            false
+        )
+        binding.recyclerView.layoutManager = layoutManager
         val exhibitionsAdapter = AllExhibitionsAdapter()
-        recyclerView.adapter = exhibitionsAdapter
-        recyclerView.addItemDecoration(AllExhibitionsItemDecoration(view.context, 1))
+        binding.recyclerView.adapter = exhibitionsAdapter
+        binding.recyclerView.addItemDecoration(AllExhibitionsItemDecoration(view.context, 1))
 
     }
 
     override fun setupBindings(viewModel: AllExhibitionsViewModel) {
-        val adapter = (recyclerView.adapter as AllExhibitionsAdapter)
+        val adapter = (binding.recyclerView.adapter as AllExhibitionsAdapter)
 
         /* Ensure search events go through ok. */
-        searchIcon
-                .clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onClickSearch()
-                }
-                .disposedBy(disposeBag)
+        binding.searchIcon
+            .clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onClickSearch()
+            }
+            .disposedBy(disposeBag)
 
         viewModel.exhibitions
-                .bindToMain(adapter.itemChanges())
-                .disposedBy(disposeBag)
+            .bindToMain(adapter.itemChanges())
+            .disposedBy(disposeBag)
 
         adapter.itemClicksWithPosition()
-                .subscribe { (pos, model) ->
-                    viewModel.onClickExhibition(pos, model.exhibition)
-                }.disposedBy(disposeBag)
+            .subscribe { (pos, model) ->
+                viewModel.onClickExhibition(pos, model.exhibition)
+            }.disposedBy(disposeBag)
 
 
     }
 
     override fun setupNavigationBindings(viewModel: AllExhibitionsViewModel) {
         viewModel.navigateTo
-                .observeOn(AndroidSchedulers.mainThread())
-                .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
-                .subscribeBy {
-                    when (it) {
-                        is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {
-                            val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
-                                putExtras(ExhibitionDetailFragment.argsBundle(it.exhibition))
-                            }
-                            startActivity(intent)
+            .observeOn(AndroidSchedulers.mainThread())
+            .filterFlatMap({ it is Navigate.Forward }, { (it as Navigate.Forward).endpoint })
+            .subscribeBy {
+                when (it) {
+                    is AllExhibitionsViewModel.NavigationEndpoint.ExhibitionDetails -> {
+                        val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                            putExtras(ExhibitionDetailFragment.argsBundle(it.exhibition))
                         }
-                        AllExhibitionsViewModel.NavigationEndpoint.Search -> {
-                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                            startActivity(intent)
-                        }
+                        startActivity(intent)
                     }
-                }.disposedBy(navigationDisposeBag)
+                    AllExhibitionsViewModel.NavigationEndpoint.Search -> {
+                        val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                        startActivity(intent)
+                    }
+                }
+            }.disposedBy(navigationDisposeBag)
     }
 }

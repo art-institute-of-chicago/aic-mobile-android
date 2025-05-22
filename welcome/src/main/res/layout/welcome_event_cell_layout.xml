@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/eventTileWidth"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/marginTwenty">
+    android:layout_marginEnd="@dimen/marginTwenty"
+    android:padding="@dimen/marginStandard">
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
@@ -46,7 +47,7 @@
         <TextView
             android:id="@+id/title"
             style="@style/CardTitleLargeBlack"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/eventTileWidth"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginStandard"
             android:ellipsize="end"
@@ -59,7 +60,7 @@
         <TextView
             android:id="@+id/description"
             style="@style/CardBodySerifGray"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/eventTileWidth"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lineSpacingMultiplier="0.8"
@@ -68,7 +69,7 @@
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="Event description details  Event description details  Event description details  Event description details  Event description details  Event description details  " />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>

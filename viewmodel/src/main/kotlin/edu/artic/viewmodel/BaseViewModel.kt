@@ -1,8 +1,8 @@
 package edu.artic.viewmodel
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.ViewModel
-import android.support.annotation.CallSuper
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModel
+import androidx.annotation.CallSuper
 import com.fuzz.rx.DisposeBag
 
 open class BaseViewModel : ViewModel() {

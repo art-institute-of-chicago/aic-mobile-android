@@ -8,6 +8,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.analytics.ScreenName
 import edu.artic.db.models.ArticObject
 import edu.artic.image.GlideApp
+import edu.artic.map.databinding.FragmentMapObjectDetailsBinding
 import edu.artic.media.audio.AudioPlayerService
 import edu.artic.media.ui.getAudioServiceObservable
 import edu.artic.viewmodel.BaseViewModelFragment
@@ -15,13 +16,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.fragment_map_object_details.*
+//import kotlinx.android.synthetic.main.fragment_map_object_details.*
 import kotlin.reflect.KClass
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
-class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel>() {
+class MapObjectDetailsFragment :
+    BaseViewModelFragment<FragmentMapObjectDetailsBinding, MapObjectDetailsViewModel>() {
 
     enum class Type {
         Map,
@@ -34,16 +36,17 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
 
     override val title = R.string.global_empty_string
 
-    override val layoutResId: Int
-        get() = R.layout.fragment_map_object_details
-
     override val overrideStatusBarColor: Boolean
         get() = false
 
     override val screenName: ScreenName
         get() = ScreenName.OnViewDetails
 
-    private val mapObject: ArticObject? by lazy { arguments?.getParcelable<ArticObject>(ARG_MAP_OBJECT) }
+    private val mapObject: ArticObject? by lazy {
+        arguments?.getParcelable<ArticObject>(
+            ARG_MAP_OBJECT
+        )
+    }
     private var audioService: Subject<AudioPlayerService> = BehaviorSubject.create()
 
     override fun onRegisterViewModel(viewModel: MapObjectDetailsViewModel) {
@@ -53,44 +56,44 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
     override fun setupBindings(viewModel: MapObjectDetailsViewModel) {
 
         viewModel.title
-                .bindToMain(tourStopTitle.text())
-                .disposedBy(disposeBag)
+            .bindToMain(binding.tourStopTitle.text())
+            .disposedBy(disposeBag)
 
         viewModel.galleryNumber
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter { it.isNotEmpty() }
-                .map {
-                    resources.getString(R.string.search_gallery_number, it)
-                }
-                .bindToMain(tourStopGallery.text())
-                .disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .filter { it.isNotEmpty() }
+            .map {
+                resources.getString(R.string.search_gallery_number, it)
+            }
+            .bindToMain(binding.tourStopGallery.text())
+            .disposedBy(disposeBag)
 
         viewModel.image.subscribe {
             GlideApp.with(this)
-                    .load(it)
-                    .placeholder(R.color.placeholderBackground)
-                    .error(R.drawable.placeholder_thumb)
-                    .into(image)
+                .load(it)
+                .placeholder(R.color.placeholderBackground)
+                .error(R.drawable.placeholder_thumb)
+                .into(binding.image)
         }.disposedBy(disposeBag)
 
 
         viewModel.playerControl
-                .observeOn(AndroidSchedulers.mainThread())
-                .withLatestFrom(audioService) { playerAction, service ->
-                    playerAction to service
-                }.subscribe { actionWithService ->
-                    val playerAction = actionWithService.first
-                    val service = actionWithService.second
+            .observeOn(AndroidSchedulers.mainThread())
+            .withLatestFrom(audioService) { playerAction, service ->
+                playerAction to service
+            }.subscribe { actionWithService ->
+                val playerAction = actionWithService.first
+                val service = actionWithService.second
 
-                    when (playerAction) {
-                        is MapObjectDetailsViewModel.PlayerAction.Play -> {
-                            service.playPlayer(playerAction.requestedObject)
-                        }
-                        is MapObjectDetailsViewModel.PlayerAction.Pause -> {
-                            service.pausePlayer()
-                        }
+                when (playerAction) {
+                    is MapObjectDetailsViewModel.PlayerAction.Play -> {
+                        service.playPlayer(playerAction.requestedObject)
                     }
-                }.disposedBy(disposeBag)
+                    is MapObjectDetailsViewModel.PlayerAction.Pause -> {
+                        service.pausePlayer()
+                    }
+                }
+            }.disposedBy(disposeBag)
 
 
         viewModel.playState.subscribe { playBackState ->
@@ -113,44 +116,44 @@ class MapObjectDetailsFragment : BaseViewModelFragment<MapObjectDetailsViewModel
         super.onViewCreated(view, savedInstanceState)
 
         getAudioServiceObservable()
-                .bindTo(audioService)
-                .disposedBy(disposeBag)
+            .bindTo(audioService)
+            .disposedBy(disposeBag)
 
         audioService.flatMap { service -> service.audioPlayBackStatus }
-                .bindTo(viewModel.audioPlayBackStatus)
-                .disposedBy(disposeBag)
+            .bindTo(viewModel.audioPlayBackStatus)
+            .disposedBy(disposeBag)
 
         audioService.flatMap { service -> service.currentTrack }
-                .mapOptional()
-                .bindTo(viewModel.currentTrack)
-                .disposedBy(disposeBag)
+            .mapOptional()
+            .bindTo(viewModel.currentTrack)
+            .disposedBy(disposeBag)
 
 
-        playCurrent
-                .clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.playCurrentObject()
-                }.disposedBy(disposeBag)
+        binding.playCurrent
+            .clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.playCurrentObject()
+            }.disposedBy(disposeBag)
 
-        pauseCurrent
-                .clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.pauseCurrentObject()
-                }.disposedBy(disposeBag)
+        binding.pauseCurrent
+            .clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.pauseCurrentObject()
+            }.disposedBy(disposeBag)
 
     }
 
     private fun displayPause() {
-        playCurrent.visibility = View.INVISIBLE
-        pauseCurrent.visibility = View.VISIBLE
+        binding.playCurrent.visibility = View.INVISIBLE
+        binding.pauseCurrent.visibility = View.VISIBLE
 
     }
 
     private fun displayPlayButton() {
-        playCurrent.visibility = View.VISIBLE
-        pauseCurrent.visibility = View.INVISIBLE
+        binding.playCurrent.visibility = View.VISIBLE
+        binding.pauseCurrent.visibility = View.INVISIBLE
     }
 
 

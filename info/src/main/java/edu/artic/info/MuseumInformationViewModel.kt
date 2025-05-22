@@ -1,6 +1,6 @@
 package edu.artic.info
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.GeneralInfoDao

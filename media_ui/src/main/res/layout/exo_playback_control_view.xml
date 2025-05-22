@@ -12,7 +12,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,16 +23,16 @@
     android:paddingBottom="@dimen/marginDouble">
 
     <TextView
-        android:id="@id/exo_position"
+        android:id="@+id/exo_position"
         style="@style/MetadataMediumGray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
         android:paddingEnd="@dimen/marginQuarter"
         android:textSize="@dimen/textMedium"
-        app:layout_constraintBaseline_toBaselineOf="@id/exo_translation_selector"
+        app:layout_constraintBottom_toBottomOf="@id/exoTranslationSelector"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+
         tools:text="0:15" />
 
     <TextView
@@ -42,9 +42,9 @@
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
         android:text="/"
-        app:layout_constraintBaseline_toBaselineOf="@id/exo_translation_selector"
+        app:layout_constraintBottom_toBottomOf="@id/exo_position"
         app:layout_constraintStart_toEndOf="@id/exo_position"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/exo_position" />
 
 
     <TextView
@@ -55,16 +55,18 @@
         android:includeFontPadding="false"
         android:paddingStart="@dimen/marginQuarter"
         android:paddingEnd="@dimen/marginQuarter"
+        android:textColor="@color/white"
         android:textSize="@dimen/textMedium"
-        app:layout_constraintBaseline_toBaselineOf="@id/exo_translation_selector"
+        app:layout_constraintBottom_toBottomOf="@id/exo_position"
         app:layout_constraintStart_toEndOf="@id/divider"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/exo_position"
         tools:text="1:30" />
 
     <Spinner
-        android:id="@+id/exo_translation_selector"
+        android:id="@+id/exoTranslationSelector"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/marginTriple"
         android:layout_marginEnd="@dimen/marginStandard"
         android:background="@null"
         android:clipToPadding="false"
@@ -72,7 +74,6 @@
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@id/exo_progress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_default="wrap"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toEndOf="@id/exo_duration"
         app:layout_constraintTop_toTopOf="parent"
@@ -85,19 +86,19 @@
         android:id="@+id/playPause"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginTwenty"
+        android:layout_marginTop="@dimen/marginStandard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/exo_position">
 
         <ImageButton
-            android:id="@id/exo_play"
+            android:id="@id/exoPlay"
             android:layout_width="@dimen/audioPlayerControllerSize"
             android:layout_height="@dimen/audioPlayerControllerSize"
             android:background="@drawable/ic_play"
             android:contentDescription="@string/exo_controls_play_description" />
 
         <ImageButton
-            android:id="@id/exo_pause"
+            android:id="@id/exoPause"
             android:layout_width="@dimen/audioPlayerControllerSize"
             android:layout_height="@dimen/audioPlayerControllerSize"
             android:background="@drawable/ic_pause"
@@ -108,7 +109,7 @@
         android:id="@id/exo_progress"
         android:layout_width="0dp"
         android:layout_height="@dimen/audioPlayerControllerSize"
-        android:layout_marginTop="@dimen/marginTwenty"
+        android:layout_marginTop="@dimen/marginStandard"
         android:paddingStart="@dimen/marginStandard"
         android:paddingEnd="@dimen/marginStandard"
         app:bar_height="@dimen/marginQuarter"
@@ -119,4 +120,4 @@
         app:played_color="@color/sea"
         app:scrubber_drawable="@drawable/exo_scrubber" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

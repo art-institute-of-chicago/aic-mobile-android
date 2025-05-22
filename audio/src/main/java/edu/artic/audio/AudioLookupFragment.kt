@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.itemChanges
 import edu.artic.adapter.itemClicks
 import edu.artic.analytics.ScreenName
+import edu.artic.audio.databinding.FragmentAudioLookupBinding
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.db.models.ArticObject
 import edu.artic.media.ui.getAudioServiceObservable
@@ -23,7 +24,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_audio_lookup.*
+//import kotlinx.android.synthetic.main.fragment_audio_lookup.*
 import java.text.BreakIterator
 import kotlin.reflect.KClass
 
@@ -40,15 +41,14 @@ import kotlin.reflect.KClass
  *
  * @author Philip Cohn-Cort (Fuzz)
  */
-class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
+class AudioLookupFragment :
+    BaseViewModelFragment<FragmentAudioLookupBinding, AudioLookupViewModel>() {
 
     override val viewModelClass: KClass<AudioLookupViewModel>
         get() = AudioLookupViewModel::class
 
     override val title = R.string.global_empty_string
 
-    override val layoutResId: Int
-        get() = R.layout.fragment_audio_lookup
     override val screenName: ScreenName
         get() = ScreenName.AudioGuide
 
@@ -61,55 +61,55 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
 
         // These first two bindings set the hint and instructional text.
         viewModel.chosenInfo
-                .map { info ->
-                    info.audioTitle
-                }.bindToMain(lookup_field.hint())
-                .disposedBy(disposeBag)
+            .map { info ->
+                info.audioTitle
+            }.bindToMain(binding.lookupField.hint())
+            .disposedBy(disposeBag)
 
         viewModel.chosenInfo
-                .map { info ->
-                    info.audioSubtitle
-                }.bindToMain(subheader.text())
-                .disposedBy(disposeBag)
+            .map { info ->
+                info.audioSubtitle
+            }.bindToMain(binding.subheader.text())
+            .disposedBy(disposeBag)
 
 
-        searchIcon.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onClickSearch()
-                }
-                .disposedBy(disposeBag)
+        binding.searchIcon.clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onClickSearch()
+            }
+            .disposedBy(disposeBag)
 
 
         val numberPadAdapter = NumberPadAdapter()
 
         viewModel.preferredNumberPadElements
-                .bindToMain(numberPadAdapter.itemChanges())
-                .disposedBy(disposeBag)
+            .bindToMain(numberPadAdapter.itemChanges())
+            .disposedBy(disposeBag)
 
-        number_pad.adapter = numberPadAdapter
+        binding.numberPad.adapter = numberPadAdapter
 
         numberPadAdapter.itemClicks()
-                .subscribeBy { element ->
-                    viewModel.adapterClicks
-                            .onNext(element)
-                }
-                .disposedBy(disposeBag)
+            .subscribeBy { element ->
+                viewModel.adapterClicks
+                    .onNext(element)
+            }
+            .disposedBy(disposeBag)
 
         registerNumPadSubscription()
 
         getAudioServiceObservable(fm = childFragmentManager)
-                .subscribeBy {
-                    viewModel.audioService = it
-                }
-                .disposedBy(disposeBag)
+            .subscribeBy {
+                viewModel.audioService = it
+            }
+            .disposedBy(disposeBag)
 
         viewModel.lookupFailures
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { _ ->
-                    shakeLookupField()
-                }
-                .disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { _ ->
+                shakeLookupField()
+            }
+            .disposedBy(disposeBag)
 
     }
 
@@ -117,27 +117,25 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
         super.setupNavigationBindings(viewModel)
 
         viewModel.navigateTo
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    when (it) {
-                        is Navigate.Forward -> {
-                            when (it.endpoint) {
-                                AudioLookupViewModel.NavigationEndpoint.Search -> {
-                                    val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                                    startActivity(intent)
-                                }
-                                AudioLookupViewModel.NavigationEndpoint.AudioDetails -> {
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                if (it is Navigate.Forward) {
+                    when (it.endpoint) {
+                        AudioLookupViewModel.NavigationEndpoint.Search -> {
+                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                            startActivity(intent)
+                        }
+                        AudioLookupViewModel.NavigationEndpoint.AudioDetails -> {
 
-                                    val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
-                                    startActivity(intent)
-                                }
-                                AudioLookupViewModel.NavigationEndpoint.ClearSearch -> {
-                                    lookup_field.setText(R.string.global_empty_string)
-                                }
-                            }
+                            val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
+                            startActivity(intent)
+                        }
+                        AudioLookupViewModel.NavigationEndpoint.ClearSearch -> {
+                            binding.lookupField.setText(R.string.global_empty_string)
                         }
                     }
-                }.disposedBy(navigationDisposeBag)
+                }
+            }.disposedBy(navigationDisposeBag)
     }
 
 
@@ -145,58 +143,60 @@ class AudioLookupFragment : BaseViewModelFragment<AudioLookupViewModel>() {
      * XXX: This may somehow be split (at least partially) into the [viewModel].
      */
     private fun registerNumPadSubscription() {
-        val entryField: EditText = lookup_field
+        val entryField: EditText = binding.lookupField
         val perCharacter = BreakIterator.getCharacterInstance()
 
         viewModel.adapterClicks
-                .subscribeBy { element ->
-                    when (element) {
-                        is NumberPadElement.Numeric -> {
-                            if (entryField.length() < 5) {
-                                entryField.append(element.value)
-                            }
-                        }
-                        NumberPadElement.DeleteBack -> {
-                            entryField.text.apply {
-                                if (isNotEmpty()) {
-                                    perCharacter.setText(this.toString())
-
-                                    val end = perCharacter.last()
-                                    val start = perCharacter.previous()
-
-                                    delete(start, end)
-                                }
-                            }
-                        }
-                        NumberPadElement.GoSearch -> {
-                            viewModel.lookupRequests
-                                    .onNext(lookup_field.text.toString())
+            .subscribeBy { element ->
+                when (element) {
+                    is NumberPadElement.Numeric -> {
+                        if (entryField.length() < 5) {
+                            entryField.append(element.value)
                         }
                     }
-                }.disposedBy(disposeBag)
+                    NumberPadElement.DeleteBack -> {
+                        entryField.text.apply {
+                            if (isNotEmpty()) {
+                                perCharacter.setText(this.toString())
+
+                                val end = perCharacter.last()
+                                val start = perCharacter.previous()
+
+                                delete(start, end)
+                            }
+                        }
+                    }
+                    NumberPadElement.GoSearch -> {
+                        viewModel.lookupRequests
+                            .onNext(binding.lookupField.text.toString())
+                    }
+                }
+            }.disposedBy(disposeBag)
     }
 
     /**
      * Call this if the input is not usable.
      */
     private fun shakeLookupField() {
-        val shaker = ObjectAnimator.ofFloat(lookup_field, View.TRANSLATION_X,
-                0F, 10F, -10F)
+        val shaker = ObjectAnimator.ofFloat(
+            binding.lookupField, View.TRANSLATION_X,
+            0F, 10F, -10F
+        )
 
         shaker
-                // According to iOS source code, the duration should be 0.07 seconds
-                .setDuration(70L)
-                .apply {
-                    // Back and forth four times.
-                    repeatCount = 4
-                    // Be explicit about preferred interpolator
-                    interpolator = LinearInterpolator()
-                    addListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animator: Animator?) {
-                            // Reset to default at end of animation
-                            ((animator as ObjectAnimator).target as View).translationX = 0F
-                        }
-                    })
-                }.start()
+            // According to iOS source code, the duration should be 0.07 seconds
+            .setDuration(70L)
+            .apply {
+                // Back and forth four times.
+                repeatCount = 4
+                // Be explicit about preferred interpolator
+                interpolator = LinearInterpolator()
+                addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animator: Animator) {
+                        // Reset to default at end of animation
+                        ((animator as ObjectAnimator).target as View).translationX = 0F
+                    }
+                })
+            }.start()
     }
 }

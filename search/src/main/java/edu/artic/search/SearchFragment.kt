@@ -10,10 +10,11 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.visibility
 import com.jakewharton.rxbinding2.widget.afterTextChangeEvents
 import edu.artic.analytics.ScreenName
+import edu.artic.search.databinding.FragmentSearchBinding
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.search_app_bar_layout.*
+//import kotlinx.android.synthetic.main.search_app_bar_layout.*
 import kotlin.reflect.KClass
 
 /**
@@ -30,15 +31,14 @@ import kotlin.reflect.KClass
  * See [bindSearchText] for a little more info about how the input events are
  * hooked up.
  */
-class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
+class SearchFragment : BaseViewModelFragment<FragmentSearchBinding, SearchViewModel>() {
 
     lateinit var textChangesDisposable: Disposable
 
     override val viewModelClass: KClass<SearchViewModel>
         get() = SearchViewModel::class
     override val title = R.string.global_empty_string
-    override val layoutResId: Int
-        get() = R.layout.fragment_search
+
     override val screenName: ScreenName?
         get() = null
 
@@ -50,7 +50,7 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
     override fun setupBindings(viewModel: SearchViewModel) {
         super.setupBindings(viewModel)
 
-        searchEditText.setOnEditorActionListener { v, actionId, event ->
+        binding.toolbar.searchEditText.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.onClickSearch()
             }
@@ -61,35 +61,35 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
         bindSearchText()
 
         viewModel.searchText
-                .subscribe {
-                    if (searchEditText.text.toString() != it) {
-                        // It is important to dispose here as otherwise we would get into
-                        // an infinite loop of text updated, update edit text,
-                        // notify edit text updated etc etc
-                        textChangesDisposable.dispose()
-                        searchEditText.setText(it)
-                        searchEditText.setSelection(it.length)
-                        bindSearchText()
-                    }
-                }.disposedBy(disposeBag)
+            .subscribe {
+                if (binding.toolbar.searchEditText.text.toString() != it) {
+                    // It is important to dispose here as otherwise we would get into
+                    // an infinite loop of text updated, update edit text,
+                    // notify edit text updated etc etc
+                    textChangesDisposable.dispose()
+                    binding.toolbar.searchEditText.setText(it)
+                    binding.toolbar.searchEditText.setSelection(it.length)
+                    bindSearchText()
+                }
+            }.disposedBy(disposeBag)
 
         viewModel.closeButtonVisible
-                .bindToMain(close.visibility())
-                .disposedBy(disposeBag)
+            .bindToMain(binding.toolbar.close.visibility())
+            .disposedBy(disposeBag)
 
         viewModel.shouldClearTextInput
-                .distinctUntilChanged()
-                .filter { it }
-                .subscribe {
-                    searchEditText.setText("")
-                }.disposedBy(disposeBag)
+            .distinctUntilChanged()
+            .filter { it }
+            .subscribe {
+                binding.toolbar.searchEditText.setText("")
+            }.disposedBy(disposeBag)
 
-        close.clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onCloseClicked()
-                }
-                .disposedBy(disposeBag)
+        binding.toolbar.close.clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onCloseClicked()
+            }
+            .disposedBy(disposeBag)
 
 
     }
@@ -97,21 +97,22 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
     override fun setupNavigationBindings(viewModel: SearchViewModel) {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
-                .filterFlatMap({ it is Navigate.Forward }, { it as Navigate.Forward })
-                .map { it.endpoint }
-                .distinctUntilChanged()
-                .subscribe {
-                    val navController = Navigation.findNavController(requireActivity(), R.id.searchContainer)
-                    when (it) {
-                        SearchViewModel.NavigationEndpoint.DefaultSearchResults -> {
-                            navController.popBackStack(R.id.defaultSearchSuggestionsFragment, false)
-                        }
-                        SearchViewModel.NavigationEndpoint.DynamicSearchResults -> {
-                            navController.navigate(R.id.goToSearchResults)
-                        }
+            .filterFlatMap({ it is Navigate.Forward }, { it as Navigate.Forward })
+            .map { it.endpoint }
+            .distinctUntilChanged()
+            .subscribe {
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.searchContainer)
+                when (it) {
+                    SearchViewModel.NavigationEndpoint.DefaultSearchResults -> {
+                        navController.popBackStack(R.id.defaultSearchSuggestionsFragment, false)
+                    }
+                    SearchViewModel.NavigationEndpoint.DynamicSearchResults -> {
+                        navController.navigate(R.id.goToSearchResults)
                     }
                 }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
     }
 
     /**
@@ -122,19 +123,19 @@ class SearchFragment : BaseViewModelFragment<SearchViewModel>() {
      * 3. must default to being empty (we skip the initial value under that assumption)
      */
     private fun bindSearchText() {
-        textChangesDisposable = searchEditText
-                .afterTextChangeEvents()
-                .skipInitialValue()
-                .subscribe { event ->
-                    event.editable()?.let { editable ->
-                        viewModel.onTextChanged(editable.toString())
-                    }
+        textChangesDisposable = binding.toolbar.searchEditText
+            .afterTextChangeEvents()
+            .skipInitialValue()
+            .subscribe { event ->
+                event.editable()?.let { editable ->
+                    viewModel.onTextChanged(editable.toString())
                 }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
     }
 
     override fun onBackPressed(): Boolean {
-        return if (searchEditText.text.isNotEmpty()) {
+        return if (binding.toolbar.searchEditText.text.isNotEmpty()) {
             viewModel.onTextChanged("")
             true
         } else {

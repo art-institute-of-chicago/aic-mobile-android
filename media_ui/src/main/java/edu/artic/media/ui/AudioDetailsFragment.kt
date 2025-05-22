@@ -7,13 +7,15 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.support.annotation.UiThread
-import android.support.v4.math.MathUtils
-import android.support.v4.widget.NestedScrollView
-import android.support.v4.widget.TextViewCompat
 import android.view.View
 import android.widget.LinearLayout.LayoutParams
+import android.widget.Spinner
 import android.widget.TextView
+import androidx.annotation.UiThread
+import androidx.core.math.MathUtils
+import androidx.core.widget.NestedScrollView
+import androidx.core.widget.TextViewCompat
+import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
@@ -28,16 +30,14 @@ import edu.artic.base.utils.show
 import edu.artic.db.models.ArticTour
 import edu.artic.db.models.AudioFileModel
 import edu.artic.db.models.getIntroStop
-import edu.artic.image.GlideApp
 import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.language.LanguageAdapter
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.ui.databinding.FragmentAudioDetailsBinding
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.exo_playback_control_view.*
-import kotlinx.android.synthetic.main.fragment_audio_details.*
 import kotlin.reflect.KClass
 
 /**
@@ -52,15 +52,16 @@ import kotlin.reflect.KClass
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
+class AudioDetailsFragment :
+    BaseViewModelFragment<FragmentAudioDetailsBinding, AudioDetailsViewModel>() {
+    private var exoTranslationSelector: Spinner? = null
+    private var exoPause: View? = null
+    private var exoPlay: View? = null
 
     override val viewModelClass: KClass<AudioDetailsViewModel>
         get() = AudioDetailsViewModel::class
 
     override val title = R.string.global_empty_string
-
-    override val layoutResId: Int
-        get() = R.layout.fragment_audio_details
 
     override val screenName: ScreenName
         get() = ScreenName.AudioPlayer
@@ -68,7 +69,7 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     var boundService: AudioPlayerService? = null
 
     private val translationsAdapter: BaseRecyclerViewAdapter<AudioFileModel, BaseViewHolder>
-        get() = exo_translation_selector.adapter.baseRecyclerViewAdapter()
+        get() = exoTranslationSelector!!.adapter.baseRecyclerViewAdapter()
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -81,136 +82,164 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
             boundService = binder.getService()
 
             boundService?.let {
-                audioPlayer.player = it.player
-
+                binding.audioPlayer.player = it.player
                 viewModel.onServiceConnected(it)
             }
+            setUpAudioServiceBindings()
+        }
+    }
+
+    private fun setUpAudioServiceBindings() {
+        boundService?.resumePlayer()
+        boundService?.let { audioService ->
+            audioService.audioPlayBackStatus
+                .map { it is AudioPlayerService.PlayBackState.Playing }
+                .bindToMain(exoPause!!.visibility())
+                .disposedBy(disposeBag)
+
+            audioService.audioPlayBackStatus
+                .map { it is AudioPlayerService.PlayBackState.Paused }
+                .bindToMain(exoPlay!!.visibility())
+                .disposedBy(disposeBag)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        exo_translation_selector.adapter = LanguageAdapter().toBaseAdapter()
+        exoTranslationSelector =
+            binding.root.findViewById(R.id.exoTranslationSelector)
+        exoPlay = binding.root.findViewById(R.id.exoPlay)
+        exoPause = binding.root.findViewById(R.id.exoPause)
+
+
+        exoPlay?.setOnClickListener {
+            boundService?.resumePlayer()
+        }
+
+        exoPause?.setOnClickListener {
+            boundService?.pausePlayer()
+        }
+
+        exoTranslationSelector!!.adapter = LanguageAdapter().toBaseAdapter()
     }
 
     override fun setupBindings(viewModel: AudioDetailsViewModel) {
 
         viewModel.title.subscribe {
-            expandedTitle.text = it
-            toolbarTitle.text = it
+            binding.expandedTitle.text = it
+            binding.toolbarTitle.text = it
 
             val toolbarHeight = toolbar?.layoutParams?.height ?: 0
-            scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
+            binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener
             { _, _, scrollY, _, _ ->
-                val threshold = audioImage.measuredHeight + toolbarHeight / 2
+                val threshold = binding.audioImage.measuredHeight + toolbarHeight / 2
                 val alpha: Float = (scrollY - threshold + 40f) / 40f
-                toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
-                expandedTitle.alpha = 1 - alpha
+                binding.toolbarTitle.alpha = MathUtils.clamp(alpha, 0f, 1f)
+                binding.expandedTitle.alpha = 1 - alpha
             })
         }.disposedBy(disposeBag)
 
         val options = RequestOptions()
-                .dontAnimate()
-                .dontTransform()
+            .dontAnimate()
+            .dontTransform()
 
         viewModel.image
-                .map { it.isNotEmpty() }
-                .bindToMain(audioImage.visibility())
-                .disposedBy(disposeBag)
+            .map { it.isNotEmpty() }
+            .bindToMain(binding.audioImage.visibility())
+            .disposedBy(disposeBag)
 
         viewModel.image.subscribe {
-
-            GlideApp.with(this)
-                    .load(it)
-                    .apply(options)
-                    .placeholder(R.color.placeholderBackground)
-                    .error(R.drawable.placeholder_large)
-                    .listenerAnimateSharedTransaction(this, audioImage)
-                    .into(audioImage)
+            Glide.with(this)
+                .load(it)
+                .apply(options)
+                .placeholder(R.color.placeholderBackground)
+                .error(R.drawable.placeholder_large)
+                .listenerAnimateSharedTransaction(this, binding.audioImage)
+                .into(binding.audioImage)
         }.disposedBy(disposeBag)
 
 
         bindTranslationSelector(viewModel)
 
         viewModel.authorCulturalPlace
-                .map { it.isNotEmpty() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { hasData ->
-                    artistCulturePlaceDenim.show(show = hasData)
-                    dividerBelowArtist.show(show = hasData)
-                }
-                .disposedBy(disposeBag)
+            .map { it.isNotEmpty() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { hasData ->
+                binding.artistCulturePlaceDenim.show(show = hasData)
+                binding.dividerBelowArtist.show(show = hasData)
+            }
+            .disposedBy(disposeBag)
 
         viewModel.authorCulturalPlace
-                .map { it.filterHtmlEncodedText() }
-                .bindToMain(artistCulturePlaceDenim.text())
-                .disposedBy(disposeBag)
+            .map { it.filterHtmlEncodedText() }
+            .bindToMain(binding.artistCulturePlaceDenim.text())
+            .disposedBy(disposeBag)
 
         viewModel.transcript
-                .map { it.isNotEmpty() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
-                    transcript.show(it)
-                }
-                .disposedBy(disposeBag)
+            .map { it.isNotEmpty() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                binding.transcript.show(it)
+            }
+            .disposedBy(disposeBag)
 
         viewModel.transcript
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    transcript.setContentText(it.filterHtmlEncodedText())
-                }.disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                binding.transcript.setContentText(it.filterHtmlEncodedText())
+            }.disposedBy(disposeBag)
 
         viewModel.tourDescription
-                .map { it.isNotEmpty() }
-                .bindToMain(tourDescription.visibility())
-                .disposedBy(disposeBag)
+            .map { it.isNotEmpty() }
+            .bindToMain(binding.tourDescription.visibility())
+            .disposedBy(disposeBag)
 
         viewModel.tourDescription
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    tourDescription.text = it.filterHtmlEncodedText()
-                }.disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                binding.tourDescription.text = it.filterHtmlEncodedText()
+            }.disposedBy(disposeBag)
 
         viewModel.tourIntroduction
-                .map { it.isNotEmpty() }
-                .bindToMain(tourIntroduction.visibility())
-                .disposedBy(disposeBag)
+            .map { it.isNotEmpty() }
+            .bindToMain(binding.tourIntroduction.visibility())
+            .disposedBy(disposeBag)
 
         viewModel.tourIntroduction
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    tourIntroduction.text = it.filterHtmlEncodedText()
-                }.disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                binding.tourIntroduction.text = it.filterHtmlEncodedText()
+            }.disposedBy(disposeBag)
 
         viewModel.credits
-                .map { it.isNotEmpty() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy {
-                    credit.show(it)
-                }
-                .disposedBy(disposeBag)
+            .map { it.isNotEmpty() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy {
+                binding.credit.show(it)
+            }
+            .disposedBy(disposeBag)
 
 
         viewModel.credits
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    credit.setContentText(it.filterHtmlEncodedText())
-                }.disposedBy(disposeBag)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                binding.credit.setContentText(it.filterHtmlEncodedText())
+            }.disposedBy(disposeBag)
 
         viewModel.relatedTours
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { tours ->
-                    val hasData = tours.isNotEmpty()
-                    relatedTourTitle.show(show = hasData)
-                    relatedToursView.show(show = hasData)
-                    dividerBelowRelatedTours.show(show = hasData)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { tours ->
+                val hasData = tours.isNotEmpty()
+                binding.relatedTourTitle.show(show = hasData)
+                binding.relatedToursView.show(show = hasData)
+                binding.dividerBelowRelatedTours.show(show = hasData)
 
-                    if (hasData) {
-                        relatedToursView.removeAllViews()
-                        addRelatedToursToView(tours)
-                    }
+                if (hasData) {
+                    binding.relatedToursView.removeAllViews()
+                    addRelatedToursToView(tours)
                 }
-                .disposedBy(disposeBag)
+            }
+            .disposedBy(disposeBag)
     }
 
     @UiThread
@@ -221,9 +250,9 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
          */
         val doubleMargin = resources.getDimensionPixelSize(R.dimen.marginDouble)
         val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-                .apply {
-                    setMargins(doubleMargin, doubleMargin, doubleMargin, 0)
-                }
+            .apply {
+                setMargins(doubleMargin, doubleMargin, doubleMargin, 0)
+            }
 
         /**
          * Add related tour titles to relatedToursView [LinearLayout]
@@ -236,14 +265,15 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
             tourTextView.layoutParams = params
             tourTextView.setOnClickListener {
                 startActivity(NavigationConstants.MAP.asDeepLinkIntent()
-                        .apply {
-                            putExtra(NavigationConstants.ARG_TOUR, tour)
-                            putExtra(NavigationConstants.ARG_TOUR_START_STOP, tour.getIntroStop())
-                            flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
-                        }
+                    .apply {
+                        putExtra(NavigationConstants.ARG_TOUR, tour)
+                        putExtra(NavigationConstants.ARG_TOUR_START_STOP, tour.getIntroStop())
+                        flags =
+                            Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                    }
                 )
             }
-            relatedToursView.addView(tourTextView)
+            binding.relatedToursView.addView(tourTextView)
         }
     }
 
@@ -251,44 +281,39 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     private fun bindTranslationSelector(viewModel: AudioDetailsViewModel) {
 
         viewModel.audioTrackToUse
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { chosen ->
-                    exo_translation_selector.setSelection(translationsAdapter.itemIndexOf(chosen))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy { chosen ->
+                exoTranslationSelector!!.setSelection(translationsAdapter.itemIndexOf(chosen))
+            }
+            .disposedBy(disposeBag)
+
+        viewModel.availableTranslations
+            .bindToMain(translationsAdapter.itemChanges())
+            .disposedBy(disposeBag)
+
+        viewModel.availableTranslations
+            .map { it.size > 1 }
+            .bindToMain(exoTranslationSelector!!.visibility(View.INVISIBLE))
+            .disposedBy(disposeBag)
+
+        exoTranslationSelector!!.itemSelections()
+            .subscribe { position ->
+                if (position >= 0) {
+                    val translation = translationsAdapter.getItem(position)
+                    viewModel.setTranslationOverride(translation)
+                    boundService?.switchAudioTrack(translation)
                 }
-                .disposedBy(disposeBag)
-
-        viewModel.availableTranslations
-                .bindToMain(translationsAdapter.itemChanges())
-                .disposedBy(disposeBag)
-
-        viewModel.availableTranslations
-                .map { it.size > 1 }
-                .bindToMain(exo_translation_selector.visibility(View.INVISIBLE))
-                .disposedBy(disposeBag)
-
-        exo_translation_selector
-                .itemSelections()
-                .subscribe { position ->
-                    if (position >= 0) {
-                        val translation = translationsAdapter.getItem(position)
-                        viewModel.setTranslationOverride(translation)
-                        boundService?.switchAudioTrack(translation)
-                    }
-                }.disposedBy(disposeBag)
+            }.disposedBy(disposeBag)
 
     }
 
     override fun onResume() {
         super.onResume()
-        requireActivity().bindService(AudioPlayerService.getLaunchIntent(requireContext()),
-                serviceConnection, BIND_AUTO_CREATE)
+        requireActivity().bindService(
+            AudioPlayerService.getLaunchIntent(requireContext()),
+            serviceConnection, BIND_AUTO_CREATE
+        )
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        scrollView?.setOnScrollChangeListener(null as NestedScrollView.OnScrollChangeListener?)
-    }
-
 
     override fun onPause() {
         super.onPause()
@@ -296,4 +321,3 @@ class AudioDetailsFragment : BaseViewModelFragment<AudioDetailsViewModel>() {
     }
 
 }
-

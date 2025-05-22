@@ -1,7 +1,6 @@
 package edu.artic
 
 import android.util.Log
-import com.crashlytics.android.Crashlytics
 import timber.log.Timber
 
 
@@ -20,10 +19,10 @@ class CrashlyticsTree : Timber.Tree() {
             return
         }
 
-        Crashlytics.log(message)
-
-        if (t != null) {
-            Crashlytics.logException(t)
-        }
+//        Crashlytics.log(message)
+//
+//        if (t != null) {
+//            Crashlytics.logException(t)
+//        }
     }
 }

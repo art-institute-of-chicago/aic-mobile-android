@@ -1,8 +1,10 @@
 package edu.artic.search
 
+import edu.artic.search.databinding.FragmentSearchResultsSubBinding
 import kotlin.reflect.KClass
 
-class SearchSuggestedFragment : SearchBaseFragment<SearchSuggestedViewModel>() {
+class SearchSuggestedFragment :
+    SearchBaseFragment<FragmentSearchResultsSubBinding, SearchSuggestedViewModel>() {
     override val viewModelClass: KClass<SearchSuggestedViewModel> = SearchSuggestedViewModel::class
 
     override fun setupBindings(viewModel: SearchSuggestedViewModel) {

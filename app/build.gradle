@@ -1,16 +1,24 @@
-String majorAndMinorVersion = "1.5"
-Integer patchVersionCode = 1
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.firebase.crashlytics'
+}
+
+String majorAndMinorVersion = "1.6"
+Integer patchVersionCode = 4
 
 android {
-    compileSdkVersion sdk
+    compileSdkVersion 33
     defaultConfig {
         applicationId "edu.artic"
-        minSdkVersion minSdk
-        targetSdkVersion sdk
+        minSdkVersion 24
+        targetSdkVersion 33
         multiDexEnabled true
         versionCode(patchVersionCode + 1500)
         versionName "$majorAndMinorVersion.$patchVersionCode"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "VERSION_NAME"
         resValue "string", "com.crashlytics.android.build_id", "$majorAndMinorVersion.$patchVersionCode"
@@ -76,6 +84,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    namespace 'edu.artic'
 }
 
 dependencies {
@@ -108,11 +117,15 @@ dependencies {
 
     implementation libs.threeten
     implementation libs.progress_interceptor
-    implementation libs.firebase_core
-    implementation libs.crashlytics
+
+    implementation platform('com.google.firebase:firebase-bom:31.2.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'
 
     //The following four lines enable our usage of dagger2 dependency injection
     implementation libs.dagger
+    implementation 'androidx.lifecycle:lifecycle-process:2.5.1'
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler

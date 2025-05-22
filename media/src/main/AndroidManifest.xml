@@ -1,5 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.artic.media">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application>
         <service
@@ -8,5 +9,5 @@
             android:exported="false" />
     </application>
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    
 </manifest>

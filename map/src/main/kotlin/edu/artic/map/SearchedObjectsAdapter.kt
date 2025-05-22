@@ -1,6 +1,9 @@
 package edu.artic.map
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
@@ -12,178 +15,228 @@ import com.jakewharton.rxbinding2.widget.text
 import com.jakewharton.rxbinding2.widget.textRes
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
-import edu.artic.image.GlideApp
+import edu.artic.map.databinding.LayoutAmenitySearchCellBinding
+import edu.artic.map.databinding.LayoutArtworkSearchCellBinding
+import edu.artic.map.databinding.LayoutExhibitionSearchCellBinding
 import edu.artic.media.audio.AudioPlayerService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.layout_amenity_search_cell.view.*
-import kotlinx.android.synthetic.main.layout_artwork_search_cell.view.*
-import kotlinx.android.synthetic.main.layout_exhibition_search_cell.view.*
 
 /**
 @author Sameer Dhakal (Fuzz)
  */
-class SearchedObjectsAdapter : AutoHolderRecyclerViewAdapter<SearchObjectBaseViewModel>() {
+class SearchedObjectsAdapter :
+    AutoHolderRecyclerViewAdapter<ViewBinding, SearchObjectBaseViewModel>() {
 
-    override fun View.onBindView(item: SearchObjectBaseViewModel, position: Int) {
+    override fun View.onBindView(
+        item: SearchObjectBaseViewModel,
+        holder: BaseViewHolder,
+        position: Int,
+    ) {
         when (item) {
             is DiningAnnotationViewModel -> {
-                bindDiningAnnotationView(item, this)
+                bindDiningAnnotationView(item, holder, this)
             }
             is AnnotationViewModel -> {
-                item.title
+                with(holder.binding as LayoutAmenitySearchCellBinding) {
+                    item.title
                         .bindToMain(amenityType.text())
                         .disposedBy(item.viewDisposeBag)
 
-                item.description
+                    item.description
                         .bindToMain(amenityDetails.text())
                         .disposedBy(item.viewDisposeBag)
+                }
             }
             is ExhibitionViewModel -> {
-                bindExhibitionView(item, this)
+                bindExhibitionView(item, holder, this)
             }
             is ArtworkViewModel -> {
-                bindArtworkView(item, this)
+                bindArtworkView(item, holder, this)
             }
         }
     }
 
-    fun bindDiningAnnotationView(item: DiningAnnotationViewModel, view: View) {
-        item.imageUrl
+    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = when (viewType) {
+            R.layout.layout_amenity_search_cell -> LayoutAmenitySearchCellBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_amenity_search_cell -> LayoutAmenitySearchCellBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_artwork_search_cell -> LayoutArtworkSearchCellBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            R.layout.layout_exhibition_search_cell -> LayoutExhibitionSearchCellBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            else -> {
+                /* should never reach here*/
+                null
+            }
+        }
+        return BaseViewHolder(binding!!, viewType).apply {
+            itemView.onHolderCreated(parent, viewType)
+        }
+    }
+
+    fun bindDiningAnnotationView(
+        item: DiningAnnotationViewModel,
+        holder: BaseViewHolder,
+        view: View,
+    ) {
+        with(holder.binding as LayoutAmenitySearchCellBinding) {
+            item.imageUrl
                 .map { it.isNotEmpty() }
-                .bindToMain(view.amenityImage.visibility())
+                .bindToMain(amenityImage.visibility())
                 .disposedBy(item.viewDisposeBag)
 
-        item.imageUrl
+            item.imageUrl
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     Glide.with(view)
-                            .load(it)
-                            .into(view.amenityImage)
+                        .load(it)
+                        .into(amenityImage)
                 }
                 .disposedBy(item.viewDisposeBag)
 
-        item.title
-                .bindToMain(view.amenityType.text())
+            item.title
+                .bindToMain(amenityType.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.description
-                .bindToMain(view.amenityDetails.text())
+            item.description
+                .bindToMain(amenityDetails.text())
                 .disposedBy(item.viewDisposeBag)
 
-        view.amenitySpace.visibility = View.GONE
+            amenitySpace.visibility = View.GONE
+        }
     }
 
-    fun bindExhibitionView(item: ExhibitionViewModel, view: View) {
-        item.imageUrl
+    fun bindExhibitionView(item: ExhibitionViewModel, holder: BaseViewHolder, view: View) {
+        with(holder.binding as LayoutExhibitionSearchCellBinding) {
+            item.imageUrl
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    view.exhibitionImage.post {
-                        view.exhibitionImage.post {
-                            GlideApp.with(view)
-                                    .load("$it?w=${view.exhibitionImage.measuredWidth}&h=${view.exhibitionImage.measuredWidth}")
-                                    .placeholder(R.color.placeholderBackground)
-                                    .error(R.drawable.placeholder_thumb)
-                                    .into(view.exhibitionImage)
+                    exhibitionImage.post {
+                        exhibitionImage.post {
+                            Glide.with(view)
+                                .load("$it?w=${exhibitionImage.measuredWidth}&h=${exhibitionImage.measuredWidth}")
+                                .placeholder(R.color.placeholderBackground)
+                                .error(R.drawable.placeholder_thumb)
+                                .into(exhibitionImage)
                         }
                     }
                 }
                 .disposedBy(item.viewDisposeBag)
-        item.title
-                .bindToMain(view.exhibitionTitle.text())
+            item.title
+                .bindToMain(exhibitionTitle.text())
                 .disposedBy(item.viewDisposeBag)
 
-        val galleryTitle = item.galleryTitle
+            val galleryTitle = item.galleryTitle
                 .subscribeOn(Schedulers.io())
                 .share()
 
-        galleryTitle
+            galleryTitle
                 .filterValue()
-                .bindToMain(view.exhibitionGalleryTitle.text())
+                .bindToMain(exhibitionGalleryTitle.text())
                 .disposedBy(item.viewDisposeBag)
 
-        galleryTitle
+            galleryTitle
                 .filter { it.value == null }
                 .switchMap { item.floor }
-                .bindToMain(view.exhibitionGalleryTitle.textRes())
+                .bindToMain(exhibitionGalleryTitle.textRes())
                 .disposedBy(item.viewDisposeBag)
+        }
     }
 
-    fun bindArtworkView(item: ArtworkViewModel, view: View) {
-        item.imageUrl
+    fun bindArtworkView(item: ArtworkViewModel, holder: BaseViewHolder, view: View) {
+        with(holder.binding as LayoutArtworkSearchCellBinding)
+        {
+            item.imageUrl
                 .filter { it.isNotEmpty() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    GlideApp.with(view)
-                            .load(it)
-                            .placeholder(R.color.placeholderBackground)
-                            .error(R.drawable.placeholder_thumb)
-                            .into(view.objectImage)
+                    Glide.with(view)
+                        .load(it)
+                        .placeholder(R.color.placeholderBackground)
+                        .error(R.drawable.placeholder_thumb)
+                        .into(objectImage)
                 }
                 .disposedBy(item.viewDisposeBag)
 
-        item.artworkTitle
-                .bindToMain(view.objectTitle.text())
+            item.artworkTitle
+                .bindToMain(objectTitle.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.artistName
-                .bindToMain(view.artist.text())
+            item.artistName
+                .bindToMain(artist.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.artistName
+            item.artistName
                 .map {
                     it.isNotEmpty()
                 }
-                .bindToMain(view.artist.visibility(View.GONE))
+                .bindToMain(artist.visibility(View.GONE))
                 .disposedBy(item.viewDisposeBag)
 
-        item.gallery
+            item.gallery
                 .map {
                     view.resources.getString(R.string.search_gallery_number, it)
                 }
-                .bindToMain(view.gallery.text())
+                .bindToMain(gallery.text())
                 .disposedBy(item.viewDisposeBag)
 
-        item.objectType
-                .bindToMain(view.objectType.textRes())
+            item.objectType
+                .bindToMain(objectType.textRes())
                 .disposedBy(item.viewDisposeBag)
 
-        view.playCurrent.clicks()
+            playCurrent.clicks()
                 .defaultThrottle()
                 .subscribe {
                     item.playAudioTranslation()
                 }.disposedBy(item.viewDisposeBag)
 
-        view.pauseCurrent.clicks()
+            pauseCurrent.clicks()
                 .defaultThrottle()
                 .subscribe {
                     item.pauseAudioTranslation()
                 }.disposedBy(item.viewDisposeBag)
 
-        item.playState.subscribe { playBackState ->
-            when (playBackState) {
-                is AudioPlayerService.PlayBackState.Playing -> {
-                    view.post {
-                        view.playCurrent.visibility = View.INVISIBLE
-                        view.pauseCurrent.visibility = View.VISIBLE
+            item.playState.subscribe { playBackState ->
+                when (playBackState) {
+                    is AudioPlayerService.PlayBackState.Playing -> {
+                        view.post {
+                            playCurrent.visibility = View.INVISIBLE
+                            pauseCurrent.visibility = View.VISIBLE
+                        }
+                    }
+                    is AudioPlayerService.PlayBackState.Paused -> {
+                        playCurrent.visibility = View.VISIBLE
+                        pauseCurrent.visibility = View.INVISIBLE
+                    }
+                    is AudioPlayerService.PlayBackState.Stopped -> {
+                        playCurrent.visibility = View.VISIBLE
+                        pauseCurrent.visibility = View.INVISIBLE
                     }
                 }
-                is AudioPlayerService.PlayBackState.Paused -> {
-                    view.playCurrent.visibility = View.VISIBLE
-                    view.pauseCurrent.visibility = View.INVISIBLE
-                }
-                is AudioPlayerService.PlayBackState.Stopped -> {
-                    view.playCurrent.visibility = View.VISIBLE
-                    view.pauseCurrent.visibility = View.INVISIBLE
-                }
-            }
-        }.disposedBy(item.viewDisposeBag)
+            }.disposedBy(item.viewDisposeBag)
 
-        item.hasAudio
-                .bindToMain(view.playCurrent.visibility())
+            item.hasAudio
+                .bindToMain(playCurrent.visibility())
                 .disposedBy(item.viewDisposeBag)
+        }
     }
 
     override fun getLayoutResId(position: Int): Int {

@@ -1,8 +1,9 @@
 package edu.artic.viewmodel
 
-import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
+import androidx.viewbinding.ViewBinding
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.BaseFragment
 import javax.inject.Inject
@@ -12,9 +13,11 @@ import kotlin.reflect.KClass
  * Description: Provides common ParentViewModel methods for subclasses, so duplicate code doesn't
  * happen.
  */
-abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment() {
+abstract class BaseViewModelFragment<Vb : ViewBinding, TViewModel : BaseViewModel> :
+    BaseFragment<Vb>() {
 
     protected abstract val viewModelClass: KClass<TViewModel>
+
     /**
      * @return True by default if we use fragment for view model provider. Otherwise we use the [BaseActivity]
      * * as where the [TViewModel] lives.
@@ -46,9 +49,11 @@ abstract class BaseViewModelFragment<TViewModel : BaseViewModel> : BaseFragment(
 
     val viewModel: TViewModel by viewModelLazy
     var isViewJustCreated: Boolean = true
-    protected open fun getViewModelForClass(viewModelProvider: ViewModelProvider,
-                                            kClass: KClass<TViewModel>): TViewModel =
-            viewModelProvider.get(kClass.java)
+    protected open fun getViewModelForClass(
+        viewModelProvider: ViewModelProvider,
+        kClass: KClass<TViewModel>
+    ): TViewModel =
+        viewModelProvider.get(kClass.java)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

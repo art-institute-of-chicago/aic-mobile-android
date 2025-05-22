@@ -53,7 +53,7 @@ class GlideModule : AppGlideModule() {
 
     }
 
-    override fun registerComponents(context: Context, glide: Glide?, registry: Registry?) {
+    override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         /**
          * Configuration to use OkHttp client as the network client for Glide.
          * OkHttp is also configured here to cache the image.
@@ -70,7 +70,7 @@ class GlideModule : AppGlideModule() {
         val client = clientBuilder.cache(Cache(context.cacheDir, cacheSize)).build()
         val okHttpFactory = OkHttpUrlLoader.Factory(client)
 
-        registry?.replace(GlideUrl::class.java, InputStream::class.java, okHttpFactory)
+        registry.replace(GlideUrl::class.java, InputStream::class.java, okHttpFactory)
 
     }
 

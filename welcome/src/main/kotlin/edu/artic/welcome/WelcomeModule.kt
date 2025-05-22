@@ -1,6 +1,6 @@
 package edu.artic.welcome
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import android.content.Context
 import dagger.Binds
 import dagger.Module
