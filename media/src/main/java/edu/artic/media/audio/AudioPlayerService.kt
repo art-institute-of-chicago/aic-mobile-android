@@ -327,21 +327,12 @@ class AudioPlayerService : DaggerService(), PlayerService {
             override fun createCurrentContentIntent(player: Player): PendingIntent? {
                 //TODO make it dynamic so that activity that started the audio stream will be the destination of Intent
                 val notificationIntent = "edu.artic.audio".asDeepLinkIntent()
-                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    PendingIntent.getActivity(
-                        this@AudioPlayerService,
-                        0,
-                        notificationIntent,
-                        PendingIntent.FLAG_MUTABLE
-                    )
-                } else {
-                    PendingIntent.getActivity(
-                        this@AudioPlayerService,
-                        0,
-                        notificationIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                }
+                return PendingIntent.getActivity(
+                    this@AudioPlayerService,
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
             }
 
             override fun getCurrentContentText(player: Player): CharSequence? {

@@ -18,11 +18,6 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
-
-        <provider
-            android:name="com.google.firebase.provider.FirebaseInitProvider"
-            android:authorities="${applicationId}.firebaseinitprovider"
-            tools:node="remove" />
+            android:value="true" />
     </application>
 </manifest>

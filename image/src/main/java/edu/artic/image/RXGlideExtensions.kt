@@ -18,7 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
  * @param width Specify a width to optimize image loading.
  * @param height Specify a height to optimize image loading.
  */
-inline fun <reified T> RequestBuilder<T>.asRequestObservable(context: Context,
+inline fun <reified T : Any> RequestBuilder<T>.asRequestObservable(context: Context,
                                                              width: Int = Target.SIZE_ORIGINAL,
                                                              height: Int = Target.SIZE_ORIGINAL): Observable<T> {
     return Observable.create { emitter ->

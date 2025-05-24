@@ -42,23 +42,27 @@ class AppDataManagerTest {
         doReturn(openHelper).`when`(database).openHelper
 
         appDataProvider = mock()
-        appDataManager = AppDataManager(serviceProvider = appDataProvider,
-                appDataPreferencesManager = appDataPrefManager,
-                dashboardDao = dashboardDao,
-                generalInfoDao = generalInfoDao,
-                galleryDao = galleryDao,
-                objectDao = objectDao,
-                audioFileDao = audioFileDao,
-                appDatabase = database,
-                dataObjectDao = mock(),
-                eventDao = mock(),
-                exhibitionCMSDao = mock(),
-                exhibitionDao = mock(),
-                mapAnnotationDao = mock(),
-                tourDao = mock(),
-                searchSuggestionDao = mock(),
-                articMapFloorDao = mock(),
-                appDataPrefManager = mock()
+        appDataManager = AppDataManager(
+            serviceProvider = appDataProvider,
+            appDataPreferencesManager = appDataPrefManager,
+            dashboardDao = dashboardDao,
+            generalInfoDao = generalInfoDao,
+            galleryDao = galleryDao,
+            objectDao = objectDao,
+            audioFileDao = audioFileDao,
+            appDatabase = database,
+            dataObjectDao = mock(),
+            eventDao = mock(),
+            exhibitionCMSDao = mock(),
+            exhibitionDao = mock(),
+            mapAnnotationDao = mock(),
+            tourDao = mock(),
+            searchSuggestionDao = mock(),
+            articMapFloorDao = mock(),
+            appDataPrefManager = mock(),
+            messageDao = mock(),
+            memberDataProvider = mock(),
+            memberInfoPreferencesManager = mock()
         )
     }
 
@@ -71,21 +75,22 @@ class AppDataManagerTest {
 
         val mockedAppData: ProgressDataState = mock()
 
-        doReturn(Observable.just(HashMap<String, List<String>>())).`when`(appDataProvider).getBlobHeaders()
+        doReturn(Observable.just(HashMap<String, List<String>>())).`when`(appDataProvider)
+            .getBlobHeaders()
         doReturn(Observable.just(mockedAppData)).`when`(appDataProvider).getBlob()
 
         val subscriptionInterceptor = LinkedBlockingQueue<Runnable>()
         val testObserver = TestObserver<ProgressDataState>()
 
         appDataManager.getBlob()
-                .observeOn(Schedulers.from { r -> subscriptionInterceptor.add(r) })
-                .subscribe(testObserver)
+            .observeOn(Schedulers.from { r -> subscriptionInterceptor.add(r) })
+            .subscribe(testObserver)
 
         subscriptionInterceptor
-                // This blocks until we observe the first emission from the ::getBlob call...
-                .take()
-                // ..at which point we can synchronously execute ::subscribeActual
-                .run()
+            // This blocks until we observe the first emission from the ::getBlob call...
+            .take()
+            // ..at which point we can synchronously execute ::subscribeActual
+            .run()
 
         verify(appDataProvider, Times(1)).getBlobHeaders()
         verify(appDataProvider, Times(1)).getBlob()

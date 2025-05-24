@@ -9,12 +9,12 @@ import android.view.ViewGroup
  * @author Sameer Dhakal (Fuzz)
  */
 
-fun <TModel> BaseRecyclerViewAdapter<TModel, *>.toPagerAdapter() = ViewPagerAdapterBinder(this)
+fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.toPagerAdapter() = ViewPagerAdapterBinder(this)
 
 /**
  * Description: Binds a [BaseRecyclerViewAdapter] to a [PagerAdapter]
  */
-open class ViewPagerAdapterBinder<TModel>(
+open class ViewPagerAdapterBinder<TModel : Any>(
         val adapter: BaseRecyclerViewAdapter<TModel, *>) : androidx.viewpager.widget.PagerAdapter() {
 
     init {

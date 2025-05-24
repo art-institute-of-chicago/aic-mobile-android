@@ -19,7 +19,7 @@ import java.lang.reflect.ParameterizedType
  * * In [onBindView], implement binding logic in reference to `this` (where
  *    `this` is the inflated version of that same layout).
  */
-abstract class AutoHolderRecyclerViewAdapter<VB : ViewBinding, TModel> :
+abstract class AutoHolderRecyclerViewAdapter<VB : ViewBinding, TModel : Any> :
     BaseRecyclerViewAdapter<TModel, BaseViewHolder> {
 
     constructor(diffItemCallback: DiffUtil.ItemCallback<TModel>) : super(diffItemCallback)

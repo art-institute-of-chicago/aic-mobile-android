@@ -24,7 +24,7 @@ import java.util.*
  * `Model-View-ViewModel`) architectures. Main selling points are as
  * follows:
  */
-abstract class BaseRecyclerViewAdapter<TModel, VH : BaseViewHolder>(
+abstract class BaseRecyclerViewAdapter<TModel : Any, VH : BaseViewHolder>(
     private val diffItemCallback: DiffUtil.ItemCallback<TModel> = object :
         DiffUtil.ItemCallback<TModel>() {
         override fun areItemsTheSame(oldItem: TModel, newItem: TModel): Boolean =
