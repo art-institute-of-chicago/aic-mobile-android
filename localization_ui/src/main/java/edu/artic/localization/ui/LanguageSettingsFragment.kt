@@ -40,7 +40,7 @@ class LanguageSettingsFragment :
      * No need to recreate the activity in splash mode ([LanguageSettingsFragment] is dismissed
      * upon language selection).
      */
-    private val splashMode by lazy { arguments!!.getBoolean(ARG_LANGUAGE_SETTINGS) }
+    private val splashMode by lazy { arguments?.getBoolean(ARG_LANGUAGE_SETTINGS) ?: false }
 
     private val availableLocales =
         listOf(Locale.ENGLISH, SPANISH, Locale.CHINESE, Locale.KOREAN, Locale.FRENCH)
