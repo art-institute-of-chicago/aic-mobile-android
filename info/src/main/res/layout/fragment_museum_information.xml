@@ -81,7 +81,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/dividerBelowMuseumInformation"
-                    tools:text="Open daily 10:30am to 5:00pm Thursday until 8:00am" />
+                    android:text="@string/info_museum_hours_fallback" />
 
                 <TextView
                     android:id="@+id/museumAddress"
