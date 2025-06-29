@@ -1,11 +1,14 @@
 package edu.artic.media.ui
 
 //import kotlinx.android.synthetic.main.fragment_bottom_audio_player.*
+import android.app.ActivityManager
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
@@ -23,6 +26,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import kotlin.reflect.KClass
 
 
@@ -81,10 +85,24 @@ class NarrowAudioPlayerFragment :
 
     override fun onResume() {
         super.onResume()
-        val newAudioIntent = AudioPlayerService.getLaunchIntent(requireContext())
-        audioIntent = newAudioIntent
-        requireActivity().startService(newAudioIntent)
-        requireActivity().bindService(newAudioIntent, serviceConnection, 0)
+        // Workaround from https://stackoverflow.com/a/55376015
+        val activityManager =
+            requireActivity().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningAppProcesses = activityManager.runningAppProcesses
+        if (runningAppProcesses != null) {
+            val importance = runningAppProcesses[0].importance;
+            // higher importance has lower number
+            if (importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                val newAudioIntent = AudioPlayerService.getLaunchIntent(requireContext())
+                audioIntent = newAudioIntent
+                requireActivity().startService(newAudioIntent)
+                requireActivity().bindService(newAudioIntent, serviceConnection, 0)
+            } else {
+                Timber.tag(TAG).log(
+                    Log.WARN,
+                    "PlayerFragment's onResume called from the background")
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -194,6 +212,7 @@ class NarrowAudioPlayerFragment :
     companion object {
         const val ARG_SKIP_TO_DETAILS = "ARG_SKIP_TO_DETAILS"
         const val AUDIO_CONFIRMATION = 777
+        private const val TAG = "NarrowAudioPlayerFragment"
 
         /**
          * Use this to modify an [Intent] for launching the AudioActivity's
