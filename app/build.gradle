@@ -70,6 +70,7 @@ android {
                     buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
                 }
             }
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
         }
         release {
             buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id", true)}\""
@@ -82,6 +83,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
         }
     }
     namespace 'edu.artic'

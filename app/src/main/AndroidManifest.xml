@@ -18,6 +18,6 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
-            android:value="true" />
+            android:value="${crashlyticsCollectionEnabled}" />
     </application>
 </manifest>
