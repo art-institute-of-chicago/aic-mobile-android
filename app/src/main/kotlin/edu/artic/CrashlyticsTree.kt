@@ -1,6 +1,7 @@
 package edu.artic
 
 import android.util.Log
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 
 
@@ -10,19 +11,15 @@ import timber.log.Timber
  */
 
 class CrashlyticsTree : Timber.Tree() {
-
-    private val reportableLogs: Set<Int> = setOf(Log.ERROR)
+    override fun isLoggable(tag: String?, priority: Int): Boolean {
+        return priority >= Log.WARN
+    }
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+        FirebaseCrashlytics.getInstance().log("$tag: $message")
 
-        if (reportableLogs.contains(priority)) {
-            return
+        if (t != null) {
+            FirebaseCrashlytics.getInstance().recordException(t)
         }
-
-//        Crashlytics.log(message)
-//
-//        if (t != null) {
-//            Crashlytics.logException(t)
-//        }
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar.Ideal</item>
+        <item name="buttonStyle">@style/Widget.AppCompat.Button.Tinted</item>
+        <item name="android:fontFamily">@font/ideal_sans_book</item>
+        <item name="android:fontFeatureSettings">tnum</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+    </style>
+</resources>

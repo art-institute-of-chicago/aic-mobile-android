@@ -6,17 +6,17 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
-String majorAndMinorVersion = "1.6"
-Integer patchVersionCode = 4
+String majorAndMinorVersion = "1.7"
+Integer patchVersionCode = 0
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 36
     defaultConfig {
         applicationId "edu.artic"
         minSdkVersion 24
-        targetSdkVersion 33
+        targetSdkVersion 35
         multiDexEnabled true
-        versionCode(patchVersionCode + 1500)
+        versionCode(patchVersionCode + 1600)
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -70,6 +70,7 @@ android {
                     buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
                 }
             }
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
         }
         release {
             buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id", true)}\""
@@ -82,6 +83,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
         }
     }
     namespace 'edu.artic'
@@ -118,14 +120,14 @@ dependencies {
     implementation libs.threeten
     implementation libs.progress_interceptor
 
-    implementation platform('com.google.firebase:firebase-bom:31.2.1')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation platform('com.google.firebase:firebase-bom:33.4.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
     implementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'
 
     //The following four lines enable our usage of dagger2 dependency injection
     implementation libs.dagger
-    implementation 'androidx.lifecycle:lifecycle-process:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-process:2.9.1'
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler

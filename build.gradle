@@ -2,23 +2,18 @@
 
 buildscript {
     ext {
-        compileSdk = 34
+        compileSdk = 35
         minSdk = 21
-        kotlin_version = '1.8.0'
+        kotlin_version = '1.9.25'
         latest_helper = '72626c5db8'
         dagger_version = '2.19'
-        support_version = '28.0.0'
         arch_version = '1.1.1'
-        navigation_version = '1.0.0-alpha05'
         paging_version = '1.0.1'
         rx_binding_version = '2.1.1'
-        kotshi_version = '1.0.4'
-        moshi_version = '1.14.0'
-        room_version = '1.1.1'
-        glide_version = '4.12.0'
-        firebase_version = '16.0.4'
-        crashlytics_version = '2.9.5'
-        exo_player_version = '2.16.0'
+        moshi_version = '1.15.2'
+        room_version = '2.6.1'
+        glide_version = '4.16.0'
+        exo_player_version = '2.19.1'
 
         libs = [
                 kotlin                  : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version",
@@ -42,46 +37,45 @@ buildscript {
                 retrofit_scalars        : 'com.squareup.retrofit2:converter-scalars:2.1.0',
                 retrofit_moshi          : 'com.squareup.retrofit2:converter-moshi:2.1.0',
                 retrofit_xml_converter  : "com.squareup.retrofit2:converter-simplexml:2.3.0",
-                maps_utils              : "com.google.maps.android:android-maps-utils:0.5",
+                maps_utils              : "com.google.maps.android:android-maps-utils:3.8.2",
                 moshi                   : "com.squareup.moshi:moshi:${moshi_version}",
                 moshi_kotlin_compiler   : "com.squareup.moshi:moshi-kotlin-codegen:${moshi_version}",
                 moshi_kotlin            : "com.squareup.moshi:moshi-kotlin:${moshi_version}",
-                room                    : 'androidx.room:room-runtime:2.4.3',
-                room_compiler           : 'androidx.room:room-compiler:2.4.3',
-                room_rx                 : 'androidx.room:room-rxjava2:2.4.3',
-                timber                  : 'com.jakewharton.timber:timber:4.5.1',
+                room                    : "androidx.room:room-runtime:${room_version}",
+                room_compiler           : "androidx.room:room-compiler:${room_version}",
+                room_rx                 : "androidx.room:room-rxjava2:${room_version}",
+                timber                  : 'com.jakewharton.timber:timber:5.0.1',
                 threeten                : 'com.jakewharton.threetenabp:threetenabp:1.1.1',
                 v4_support              : 'androidx.legacy:legacy-support-v4:1.0.0',
                 design_support          : 'com.google.android.material:material:1.0.0',
-                constraint_layout       : 'androidx.constraintlayout:constraintlayout:2.1.4',
+                constraint_layout       : 'androidx.constraintlayout:constraintlayout:2.2.1',
                 glide                   : "com.github.bumptech.glide:glide:${glide_version}",
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",
                 glide_okhttp_integration: "com.github.bumptech.glide:okhttp3-integration:${glide_version}@aar",
                 progress_interceptor    : 'com.github.cliabhach:okhttp3-downloadprogress-interceptor:1.0.2-a1',
-                maps                    : "com.google.android.gms:play-services-maps:18.2.0",
-                location                : "com.google.android.gms:play-services-location:21.0.1",
+                maps                    : "com.google.android.gms:play-services-maps:19.2.0",
+                location                : "com.google.android.gms:play-services-location:21.3.0",
                 exo_player_core         : "com.google.android.exoplayer:exoplayer-core:$exo_player_version",
                 exo_player_dash         : "com.google.android.exoplayer:exoplayer-dash:$exo_player_version",
                 exo_player_ui           : "com.google.android.exoplayer:exoplayer-ui:$exo_player_version",
                 exo_player_media_session: "com.google.android.exoplayer:extension-mediasession:$exo_player_version",
                 media_compat            : 'androidx.media:media:1.0.0',
                 view_indicator          : "com.github.fuzz-productions:CutoutViewIndicator:v0.8.2",
-                custom_tabs             : 'androidx.browser:browser:1.0.0',
-                zxing_core              : 'com.google.zxing:core:3.3.0'
+                custom_tabs             : 'androidx.browser:browser:1.8.0',
+                zxing_core              : 'com.google.zxing:core:3.5.3'
 
         ]
     }
     repositories {
         google()
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.11.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.3"
-        classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.4'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.9.0"
+        classpath 'com.google.gms:google-services:4.4.3'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.4'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -97,9 +91,8 @@ subprojects {
 
     repositories {
         google()
-        jcenter()
-        maven { url "https://www.jitpack.io" }
         mavenCentral()
+        maven { url "https://www.jitpack.io" }
     }
 
     if (name == 'app') {
@@ -154,8 +147,8 @@ subprojects {
         }
 
         compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
+            sourceCompatibility JavaVersion.VERSION_17
+            targetCompatibility JavaVersion.VERSION_17
         }
         sourceSets {
             main.java.srcDirs += 'src/main/kotlin'

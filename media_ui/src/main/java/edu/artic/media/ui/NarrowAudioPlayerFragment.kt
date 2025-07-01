@@ -81,9 +81,10 @@ class NarrowAudioPlayerFragment :
 
     override fun onResume() {
         super.onResume()
-        audioIntent = AudioPlayerService.getLaunchIntent(requireContext())
-        requireActivity().startService(audioIntent)
-        requireActivity().bindService(audioIntent, serviceConnection, 0)
+        val newAudioIntent = AudioPlayerService.getLaunchIntent(requireContext())
+        audioIntent = newAudioIntent
+        requireActivity().startService(newAudioIntent)
+        requireActivity().bindService(newAudioIntent, serviceConnection, 0)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

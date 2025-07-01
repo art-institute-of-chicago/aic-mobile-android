@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Description: Convenience conversion method that turns this object into a [BaseAdapter].
  */
-fun <TModel> BaseRecyclerViewAdapter<TModel, *>.toBaseAdapter(): BaseAdapter =
+fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.toBaseAdapter(): BaseAdapter =
     BaseAdapterBinder(this)
 
 /**
@@ -20,7 +20,7 @@ fun <TModel> BaseRecyclerViewAdapter<TModel, *>.toBaseAdapter(): BaseAdapter =
  * Must be a function due to Kotlin's type inference.
  */
 @Suppress("UNCHECKED_CAST")
-fun <TModel> SpinnerAdapter.baseRecyclerViewAdapter(): BaseRecyclerViewAdapter<TModel, BaseViewHolder> =
+fun <TModel : Any> SpinnerAdapter.baseRecyclerViewAdapter(): BaseRecyclerViewAdapter<TModel, BaseViewHolder> =
     (this as BaseAdapterBinder<TModel>).adapter as BaseRecyclerViewAdapter<TModel, BaseViewHolder>
 
 /**
@@ -43,7 +43,7 @@ interface DropDownAdapter<TModel, VH : BaseViewHolder> {
      * Called when the [BaseViewHolder] is first created in the scope of it's itemView. Perform
      * initial registering of view bindings here that respond outside normal onClickListener.
      */
-    @Suppress("UNUSED_PARAMETER", "unused")
+    @Suppress("unused")
     fun View.onDropdownHolderCreated(parent: ViewGroup, viewType: Int) = Unit
 }
 
@@ -53,7 +53,7 @@ interface DropDownAdapter<TModel, VH : BaseViewHolder> {
  * without needing to use a different implementation.
  * @author Andrew Grosner (Fuzz)
  */
-class BaseAdapterBinder<TModel>(
+class BaseAdapterBinder<TModel : Any>(
     val adapter: BaseRecyclerViewAdapter<TModel, *>,
 ) : BaseAdapter() {
 

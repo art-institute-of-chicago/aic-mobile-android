@@ -38,14 +38,15 @@ class CustomTabManager : LifecycleAwareActivity {
 
 
     override fun onStart(host: Activity) {
-
         try {
             // We want to support alternative CustomTabs packages, like chrome dev
             // and firefox, so we're not hardcoding a package name here.
             val packageName = CustomTabsHelper.getPackageNameToUse(host)
             canBind = !TextUtils.isEmpty(packageName)
             if (canBind) {
-                CustomTabsClient.bindCustomTabsService(host, packageName, mCustomTabsServiceConnection)
+                mCustomTabsServiceConnection?.let {
+                    CustomTabsClient.bindCustomTabsService(host, packageName, it)
+                }
             }
         } catch (t: Throwable) {
             // Package lookup failed. Nothing to be done.
