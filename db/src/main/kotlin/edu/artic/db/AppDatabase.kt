@@ -23,7 +23,7 @@ import edu.artic.db.models.*
             ArticSearchSuggestionsObject::class,
             ArticMessage::class
         ],
-        version = 12,
+        version = 13,
         exportSchema = true
 )
 @TypeConverters(AppConverters::class)

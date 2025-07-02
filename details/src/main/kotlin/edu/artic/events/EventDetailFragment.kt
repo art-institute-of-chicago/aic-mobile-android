@@ -28,7 +28,7 @@ import edu.artic.image.listenerAnimateSharedTransaction
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
@@ -131,9 +131,10 @@ class EventDetailFragment :
             Observables
                 .combineLatest(
                     viewModel.eventButtonText.map { it.isNotEmpty() },
-                    viewModel.hasEventUrl
+                    viewModel.hasEventUrl,
+                    viewModel.isOnSale
                 )
-                .map { it.first && it.second }
+                .map { it.first && it.second && it.third }
                 .bindToMain(binding.registerToday.visibility())
                 .disposedBy(disposeBag)
         } else {
@@ -156,6 +157,16 @@ class EventDetailFragment :
                 }
             }
             .bindToMain(binding.registerToday.text())
+            .disposedBy(disposeBag)
+
+        viewModel.buttonCaptionText
+            .map { it.trimDownBlankLines().fromHtml() }
+            .bindToMain(binding.buttonCaption.text())
+            .disposedBy(disposeBag)
+
+        viewModel.buttonCaptionText
+            .map { it.isNotBlank() }
+            .bindToMain(binding.buttonCaption.visibility())
             .disposedBy(disposeBag)
 
         binding.registerToday.clicks()

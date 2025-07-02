@@ -25,7 +25,12 @@ data class ArticEvent(
         @Json(name = "id") @PrimaryKey val id: String,
         @Json(name = "button_text") val button_text: String?,
         @Json(name = "title") val title: String,
-        @Json(name = "start_at") val start_at: ZonedDateTime
+        @Json(name = "start_at") val start_at: ZonedDateTime,
+        @Json(name = "is_ticketed") val isTicketed: Boolean,
+        @Json(name = "is_sales_button_hidden") val isSalesButtonHidden: Boolean?,
+        @Json(name = "on_sale_at") val onSaleAt: ZonedDateTime?,
+        @Json(name = "off_sale_at") val offSaleAt: ZonedDateTime?,
+        @Json(name = "button_caption") val buttonCaption: String?
         //button_caption, event_id, is_private, short_description
 ) : Parcelable {
     val startTime: ZonedDateTime

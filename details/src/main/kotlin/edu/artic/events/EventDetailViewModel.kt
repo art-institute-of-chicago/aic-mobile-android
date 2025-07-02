@@ -14,6 +14,7 @@ import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import org.threeten.bp.ZonedDateTime
 import javax.inject.Inject
 
 class EventDetailViewModel @Inject constructor(
@@ -33,6 +34,8 @@ class EventDetailViewModel @Inject constructor(
     val location: Subject<String> = BehaviorSubject.createDefault("")
     val eventButtonText: Subject<String> = BehaviorSubject.createDefault("")
     val hasEventUrl: Subject<Boolean> = BehaviorSubject.create()
+    val isOnSale: Subject<Boolean> = BehaviorSubject.create()
+    val buttonCaptionText: Subject<String?> = BehaviorSubject.createDefault("")
     private val eventObservable: Subject<ArticEvent> = BehaviorSubject.create()
 
 
@@ -106,6 +109,29 @@ class EventDetailViewModel @Inject constructor(
                 .map { it.location!! }
                 .bindTo(location)
                 .disposedBy(disposeBag)
+
+        eventObservable
+                .map {
+                    it.isTicketed && it.isSalesButtonHidden != true
+                            && currentlyInSaleWindow(it.onSaleAt, it.offSaleAt)
+                }
+                .bindTo(isOnSale)
+                .disposedBy(disposeBag)
+
+        eventObservable
+                .map { it.buttonCaption.orEmpty() }
+                .bindTo(buttonCaptionText)
+                .disposedBy(disposeBag)
+    }
+
+    private fun currentlyInSaleWindow(onSaleAt: ZonedDateTime?, offSaleAt: ZonedDateTime?) : Boolean {
+        val currentTime = ZonedDateTime.now()
+        return when {
+            onSaleAt == null -> true
+            currentTime.isBefore(onSaleAt) -> false
+            offSaleAt != null && currentTime.isAfter(offSaleAt) -> false
+            else -> true
+        }
     }
 
     fun onClickRegisterToday() {

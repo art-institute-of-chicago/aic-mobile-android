@@ -140,7 +140,12 @@ sealed class ApiBodyGenerator {
                     "start_at",
                     "end_at",
                     "button_text",
-                    "button_url"
+                    "button_url",
+                    "is_ticketed",
+                    "is_sales_button_hidden",
+                    "on_sale_at",
+                    "off_sale_at",
+                    "button_caption"
             )
             postParams["sort"] = listOf("start_at", "end_at")
             postParams["query"] = mutableMapOf<String, Any>().apply {
