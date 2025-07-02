@@ -36,6 +36,8 @@ class MuseumInformationViewModel @Inject constructor(
                 .toObservable()
                 .map { languageSelector.selectFrom(it.allTranslations()) }
                 .map { it.museumHours }
+                // prevent an empty field in the CMS from overwriting the local copy
+                .filter { it.isNotBlank() }
                 .bindTo(museumHours)
                 .disposedBy(disposeBag)
 
