@@ -26,6 +26,7 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import edu.artic.welcome.databinding.FragmentWelcomeBinding
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -130,6 +131,33 @@ class WelcomeFragment : BaseViewModelFragment<FragmentWelcomeBinding, WelcomeVie
             .defaultThrottle()
             .subscribe {
                 viewModel.onAccessMemberCardClickEvent()
+            }
+            .disposedBy(disposeBag)
+
+        viewModel.welcomePrompt
+            .map { it.isBlank() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { promptIsBlank ->
+                if (promptIsBlank) {
+                    //Hide the welcome prompt's view and adjust the card link view's padding
+                    binding.welcomeMessage.visibility = View.GONE
+
+                    binding.memberCardLink.setPaddingRelative(
+                        resources.getDimensionPixelSize(R.dimen.marginDouble),
+                        resources.getDimensionPixelSize(R.dimen.marginQuad),
+                        resources.getDimensionPixelSize(R.dimen.marginDouble),
+                        resources.getDimensionPixelSize(R.dimen.marginQuad)
+                    )
+                } else {
+                    binding.welcomeMessage.visibility = View.VISIBLE
+
+                    binding.memberCardLink.setPaddingRelative(
+                        resources.getDimensionPixelSize(R.dimen.marginDouble),
+                        0,
+                        resources.getDimensionPixelSize(R.dimen.marginDouble),
+                        resources.getDimensionPixelSize(R.dimen.marginDouble)
+                    )
+                }
             }
             .disposedBy(disposeBag)
 
