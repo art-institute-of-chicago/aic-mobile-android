@@ -46,12 +46,6 @@ abstract class SearchBaseFragment<VB : ViewBinding, TViewModel : SearchBaseViewM
         val numToDisplay = ((width - ten) / size).toInt()
         SearchResultsAdapter.MAX_ARTWORKS_PER_ROW = numToDisplay
 
-        val circleSize = resources.dpToPixels(48f)
-        val margins = resources.dpToPixels(24f)
-        val spaceReminding = (width - margins) - (numToDisplay * circleSize)
-        val endCurrentPadding = (spaceReminding / numToDisplay).toInt()
-        val endFinalPadding = (spaceReminding / (numToDisplay - 1)).toInt()
-
         val lm = GridLayoutManager(
             view.context,
             SearchResultsAdapter.MAX_ARTWORKS_PER_ROW
@@ -69,13 +63,6 @@ abstract class SearchBaseFragment<VB : ViewBinding, TViewModel : SearchBaseViewM
             adapter = SearchResultsAdapter()
             layoutManager = lm
             addItemDecoration(SearchDividerItemDecoration(this.context))
-            addItemDecoration(
-                CircularViewItemDecoration(
-                    endCurrentPadding,
-                    endFinalPadding,
-                    disposeBag
-                )
-            )
         }
 
     }
