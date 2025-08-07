@@ -2,8 +2,8 @@
 <resources>
     <!-- Style for android.support.design.widget.BottomNavigationView layouts -->
     <style name="BottomNav">
-        <item name="itemBackground">@color/white</item>
-        <item name="itemTextColor">@color/colorPrimary</item>
+        <item name="itemBackground">@color/nav_bar_background</item>
+        <item name="itemTextColor">@color/nav_bar_unselected</item>
         <item name="layout_constraintBottom_toBottomOf">parent</item>
         <item name="layout_constraintEnd_toEndOf">parent</item>
         <item name="layout_constraintStart_toStartOf">parent</item>
