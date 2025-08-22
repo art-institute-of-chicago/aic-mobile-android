@@ -7,8 +7,6 @@ import edu.artic.analytics.AnalyticsTracker
 import edu.artic.analytics.EventCategoryName
 import edu.artic.db.daos.ArticDataObjectDao
 import edu.artic.db.daos.ArticGalleryDao
-import edu.artic.db.daos.ArticObjectDao
-import edu.artic.db.daos.ArticSearchObjectDao
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticSearchArtworkObject
 import edu.artic.db.models.ArticTour
@@ -19,21 +17,16 @@ import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 class SearchSuggestedViewModel @Inject constructor(private val manager: SearchResultsManager,
-                                                   private val searchSuggestionsDao: ArticSearchObjectDao,
-                                                   private val objectDao: ArticObjectDao,
                                                    analyticsTracker: AnalyticsTracker,
                                                    dataObjectDao: ArticDataObjectDao,
                                                    galleryDao: ArticGalleryDao)
     : SearchBaseViewModel(analyticsTracker, manager, dataObjectDao, galleryDao) {
 
     private val dynamicCells: Subject<List<SearchBaseCellViewModel>> = BehaviorSubject.create()
-    private val suggestedArtworks: Subject<List<SearchCircularCellViewModel>> = BehaviorSubject.create()
     var parentViewModel: SearchResultsContainerViewModel? = null
     var lastSearchTerm: String = ""
 
     init {
-        setupOnMapSuggestionsBind()
-
         setupResultsBind()
 
         Observables
@@ -43,35 +36,20 @@ class SearchSuggestedViewModel @Inject constructor(private val manager: SearchRe
                                 SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restaurant, SuggestedMapAmenities.Dining),
                                 SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_lounge, SuggestedMapAmenities.MembersLounge),
                                 SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_shop, SuggestedMapAmenities.GiftShop),
-                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms),
-                                /**
-                                 * TODO:: Refactor it, used something other than SearchAmenitiesCellViewModel (maybe PaddingAmenitiesCellViewModel)
-                                 * **/
-                                SearchAmenitiesCellViewModel(0, SuggestedMapAmenities.Restrooms))
-                        ),
-                        suggestedArtworks)
-                { dynamicCells, amenities, suggestedArtworks ->
+                                SearchAmenitiesCellViewModel(R.drawable.ic_icon_amenity_map_restroom, SuggestedMapAmenities.Restrooms)
+                        )
+                        )
+                )
+                { dynamicCells, amenities ->
                     return@combineLatest mutableListOf<SearchBaseCellViewModel>().apply {
                         addAll(dynamicCells)
                         add(SearchTextHeaderViewModel(R.string.search_on_the_map_header))
                         addAll(amenities)
-                        addAll(suggestedArtworks)
                     }
                 }
                 .bindTo(cells)
                 .disposedBy(disposeBag)
 
-    }
-
-    private fun setupOnMapSuggestionsBind() {
-        getSuggestedArtworks(searchSuggestionsDao, objectDao)
-                .map { objects ->
-                    objects.map {
-                        SearchCircularCellViewModel(it)
-                    }
-                }
-                .bindTo(suggestedArtworks)
-                .disposedBy(disposeBag)
     }
 
     private fun setupResultsBind() {

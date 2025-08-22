@@ -121,17 +121,16 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
      * may crash.
      */
     fun makeIcon(imageViewBitmap: Bitmap?, scale: Float = 1f, overlay: String? = null, selected: Boolean = false): Bitmap {
+        if (imageViewBitmap != null) {
+            imageView.setImageBitmap(imageViewBitmap)
+        } else {
+            imageView.setImageDrawable(defaultImage)
+        }
 
         if (selected) {
             imageView.borderWidth = imageView.resources.dpToPixels(4f).toInt()
         } else {
             imageView.borderWidth = imageView.resources.dpToPixels(2f).toInt()
-        }
-
-        if (imageViewBitmap != null) {
-            imageView.setImageBitmap(imageViewBitmap)
-        } else {
-            imageView.setImageDrawable(defaultImage)
         }
 
         if (overlay != null) {

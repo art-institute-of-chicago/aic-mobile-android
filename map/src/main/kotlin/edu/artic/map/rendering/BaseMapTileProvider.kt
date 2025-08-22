@@ -34,7 +34,7 @@ internal val evaluatedBoundsMap
             18 to Bounds(minX = 67263, minY = 97426, maxX = 67270, maxY = 97433),
             19 to Bounds(minX = 134527, minY = 194852, maxX = 134541, maxY = 194868),
             20 to Bounds(minX = 269055, minY = 389704, maxX = 269084, maxY = 389733),
-            21 to Bounds(minX = 538108, minY = 779412, maxX = 538167, maxY = 779471),
+            21 to Bounds(minX = 538111, minY = 779408, maxX = 538170, maxY = 77947100),
             22 to Bounds(minX = 1076217, minY = 1558824, maxX = 1076334, maxY = 1558942))
 
 abstract class BaseMapTileProvider : TileProvider {

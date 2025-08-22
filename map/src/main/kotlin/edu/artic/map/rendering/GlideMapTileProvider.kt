@@ -1,12 +1,12 @@
 package edu.artic.map.rendering
 
 import android.content.Context
+import android.util.Log
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.gms.maps.model.Tile
 import edu.artic.db.models.ArticMapFloor
 import edu.artic.image.GlideApp
 import timber.log.Timber
-import java.io.IOException
 import kotlin.math.pow
 
 /**
@@ -14,6 +14,9 @@ import kotlin.math.pow
  */
 class GlideMapTileProvider(private val context: Context,
                            private val floor: ArticMapFloor) : BaseMapTileProvider() {
+    companion object {
+        private const val TAG = "GlideMapTileProvider"
+    }
 
     val defaultTile = Tile(
             TILE_SIZE.toInt(),
@@ -48,8 +51,8 @@ class GlideMapTileProvider(private val context: Context,
                             TILE_SIZE.toInt(),
                             array
                     )
-                } catch (e: IOException) {
-                    Timber.e("Could not find tile with $path")
+                } catch (e: Exception) {
+                    Timber.tag(TAG).log(Log.ERROR, e, "Could not find tile with $path")
                     null
                 }
             }

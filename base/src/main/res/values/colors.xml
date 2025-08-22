@@ -69,4 +69,12 @@
     <!-- Splash/logo-related -->
     <color name="splashGradientStart">#1c515e</color>
     <color name="splashGradientEnd">#2ea1a2</color>
+
+    <!-- New nav bar colors -->
+    <color name="nav_bar_background">#272727</color>
+    <color name="nav_bar_unselected">#878787</color>
+    <color name="nav_bar_home_selected">@color/sea</color>
+    <color name="nav_bar_audio_selected">@color/grape</color>
+    <color name="nav_bar_map_selected">@color/denim</color>
+    <color name="nav_bar_info_selected">@color/brownishOrange</color>
 </resources>
