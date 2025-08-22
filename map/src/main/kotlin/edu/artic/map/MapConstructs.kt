@@ -17,7 +17,7 @@ const val ZOOM_INITIAL: ZoomLevel = 17.4f
 const val ZOOM_DEPARTMENTS: ZoomLevel = 18.0f
 const val ZOOM_DEPARTMENT_AND_SPACES: ZoomLevel = 19.0f
 const val ZOOM_INDIVIDUAL: ZoomLevel = 20.3f
-const val ZOOM_MAX: ZoomLevel = 20.999999f
+const val ZOOM_MAX: ZoomLevel = 21.999999f
 const val ZOOM_MIN: ZoomLevel = 17.0f
 
 /**
