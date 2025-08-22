@@ -6,7 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.ColorDrawable
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -121,17 +121,16 @@ class ArticObjectMarkerGenerator(context: Context) : BaseMarkerGenerator(context
      * may crash.
      */
     fun makeIcon(imageViewBitmap: Bitmap?, scale: Float = 1f, overlay: String? = null, selected: Boolean = false): Bitmap {
+        if (imageViewBitmap != null) {
+            imageView.setImageBitmap(imageViewBitmap)
+        } else {
+            imageView.setImageDrawable(defaultImage)
+        }
 
         if (selected) {
             imageView.borderWidth = imageView.resources.dpToPixels(4f).toInt()
         } else {
             imageView.borderWidth = imageView.resources.dpToPixels(2f).toInt()
-        }
-
-        if (imageViewBitmap != null) {
-            imageView.setImageBitmap(imageViewBitmap)
-        } else {
-            imageView.setImageDrawable(defaultImage)
         }
 
         if (overlay != null) {

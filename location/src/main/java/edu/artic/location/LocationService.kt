@@ -11,8 +11,8 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.fuzz.rx.bindTo
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
@@ -96,32 +96,32 @@ class LocationServiceImpl(
         val app = app as Application
 
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
-            override fun onActivityPaused(activity: Activity?) {
+            override fun onActivityPaused(activity: Activity) {
 
             }
 
-            override fun onActivityResumed(activity: Activity?) {
+            override fun onActivityResumed(activity: Activity) {
                 currentActivity = activity
                 calculateAndUpdateStatus()
             }
 
-            override fun onActivityStarted(activity: Activity?) {
+            override fun onActivityStarted(activity: Activity) {
 
             }
 
-            override fun onActivityDestroyed(activity: Activity?) {
+            override fun onActivityDestroyed(activity: Activity) {
 
             }
 
-            override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
 
             }
 
-            override fun onActivityStopped(activity: Activity?) {
+            override fun onActivityStopped(activity: Activity) {
 
             }
 
-            override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
 
             }
 

@@ -1,8 +1,15 @@
 package edu.artic.audio
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
-import kotlinx.android.synthetic.main.view_number_pad_numeric_element.view.*
+import edu.artic.adapter.BaseViewHolder
+import edu.artic.audio.databinding.ViewNumberPadDeleteBackElementBinding
+import edu.artic.audio.databinding.ViewNumberPadNumericElementBinding
+
+//import kotlinx.android.synthetic.main.view_number_pad_numeric_element.view.*
 
 
 /**
@@ -31,7 +38,26 @@ sealed class NumberPadElement {
  * This means that [getLayoutResId] will return one of two resIds and that
  * [onBindView] will use one of 3 bind algorithms.
  */
-class NumberPadAdapter : AutoHolderRecyclerViewAdapter<NumberPadElement>() {
+class NumberPadAdapter : AutoHolderRecyclerViewAdapter<ViewBinding, NumberPadElement>() {
+    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = when (viewType) {
+            R.layout.view_number_pad_delete_back_element -> ViewNumberPadDeleteBackElementBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+            else -> ViewNumberPadNumericElementBinding.inflate(
+                inflater,
+                parent,
+                false
+            )
+        }
+        return BaseViewHolder(binding, viewType).apply {
+            itemView.onHolderCreated(parent, viewType)
+        }
+
+    }
 
     override fun getLayoutResId(position: Int): Int {
         return if (getItem(position) is NumberPadElement.DeleteBack) {
@@ -43,10 +69,17 @@ class NumberPadAdapter : AutoHolderRecyclerViewAdapter<NumberPadElement>() {
         }
     }
 
-    override fun View.onBindView(item: NumberPadElement, position: Int) {
+    override fun View.onBindView(item: NumberPadElement, holder: BaseViewHolder, position: Int) {
         when (item) {
-            is NumberPadElement.Numeric -> number_content.text = item.value
-            is NumberPadElement.GoSearch -> number_content.text = context.getString(R.string.number_pad_go_action)
+            is NumberPadElement.Numeric -> {
+                val binding = holder.binding as ViewNumberPadNumericElementBinding
+                binding.numberContent.text = item.value
+            }
+            is NumberPadElement.GoSearch -> {
+                val binding = holder.binding as ViewNumberPadNumericElementBinding
+                binding.numberContent.text =
+                    context.getString(R.string.number_pad_go_action)
+            }
             else -> {
                 // Other types of NumberPadElements do not need to be bound.
             }

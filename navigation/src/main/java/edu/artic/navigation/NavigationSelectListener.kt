@@ -2,7 +2,7 @@ package edu.artic.navigation
 
 import android.content.Context
 import android.content.Intent
-import android.support.design.widget.BottomNavigationView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.MenuItem
 import edu.artic.base.R
 import edu.artic.base.utils.asDeepLinkIntent

@@ -1,7 +1,7 @@
 package edu.artic.db
 
 import android.annotation.SuppressLint
-import android.support.annotation.Nullable
+import androidx.annotation.Nullable
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonQualifier
 import com.squareup.moshi.Moshi

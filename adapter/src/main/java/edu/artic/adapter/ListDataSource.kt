@@ -1,6 +1,6 @@
 package edu.artic.adapter
 
-import android.arch.paging.PositionalDataSource
+import androidx.paging.PositionalDataSource
 import java.util.*
 
 /**

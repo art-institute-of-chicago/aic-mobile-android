@@ -1,16 +1,24 @@
-String majorAndMinorVersion = "1.5"
-Integer patchVersionCode = 1
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.firebase.crashlytics'
+}
+
+String majorAndMinorVersion = "1.7"
+Integer patchVersionCode = 0
 
 android {
-    compileSdkVersion sdk
+    compileSdkVersion 36
     defaultConfig {
         applicationId "edu.artic"
-        minSdkVersion minSdk
-        targetSdkVersion sdk
+        minSdkVersion 24
+        targetSdkVersion 35
         multiDexEnabled true
-        versionCode(patchVersionCode + 1500)
+        versionCode(patchVersionCode + 1600)
         versionName "$majorAndMinorVersion.$patchVersionCode"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "VERSION_NAME"
         resValue "string", "com.crashlytics.android.build_id", "$majorAndMinorVersion.$patchVersionCode"
@@ -62,6 +70,7 @@ android {
                     buildConfigField "String", "VERSION_NAME_FOR_DISPLAY", "\"$majorAndMinorVersion.$patchVersionCode+$buildMetadata\""
                 }
             }
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
         }
         release {
             buildConfigField "String", "FB_APPLICATION_ID", "\"${envVariable("fb_application_id", true)}\""
@@ -74,8 +83,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
         }
     }
+    namespace 'edu.artic'
 }
 
 dependencies {
@@ -108,11 +119,15 @@ dependencies {
 
     implementation libs.threeten
     implementation libs.progress_interceptor
-    implementation libs.firebase_core
-    implementation libs.crashlytics
+
+    implementation platform('com.google.firebase:firebase-bom:33.4.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'
 
     //The following four lines enable our usage of dagger2 dependency injection
     implementation libs.dagger
+    implementation 'androidx.lifecycle:lifecycle-process:2.9.1'
     kapt libs.dagger_compiler
     implementation libs.dagger_android
     kapt libs.dagger_android_compiler

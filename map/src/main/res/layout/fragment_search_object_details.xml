@@ -10,7 +10,7 @@
     android:clickable="true"
     android:focusable="true">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -44,7 +44,7 @@
             app:rcv_tools_indicator_count="2"
             tools:visibility="visible" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/close"

@@ -1,5 +1,6 @@
 package edu.artic.search
 
+import edu.artic.search.databinding.ActivitySearchBinding
 import edu.artic.viewmodel.BaseViewModelActivity
 import kotlin.reflect.KClass
 
@@ -9,11 +10,8 @@ import kotlin.reflect.KClass
  *
  * Launched by `edu.artic.navigation.NavigationConstants.SEARCH`.
  */
-class SearchActivity : BaseViewModelActivity<SearchViewModel>() {
+class SearchActivity : BaseViewModelActivity<ActivitySearchBinding, SearchViewModel>() {
     override val viewModelClass: KClass<SearchViewModel>
         get() = SearchViewModel::class
-
-    override val layoutResId: Int
-        get() = R.layout.activity_search
 
 }

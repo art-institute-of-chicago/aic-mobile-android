@@ -23,4 +23,5 @@
 	<!-- This is only used on iOS -->
 	<string name="info_designed_by">Conçu par Potion</string>
 	<string name="info_member_log_in_header">Déjà membre ?</string>
+    <string name="info_museum_hours_fallback">Apprenez nos heures et politiques de visiteur à artic.edu/visit</string>
 </resources>

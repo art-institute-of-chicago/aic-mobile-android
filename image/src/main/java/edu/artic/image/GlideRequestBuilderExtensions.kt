@@ -3,7 +3,7 @@ package edu.artic.image
 import android.animation.ValueAnimator
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
@@ -39,7 +39,7 @@ inline fun RequestBuilder<Drawable>.listenerClean(
         crossinline onResourceReady: (resource: Drawable) -> Boolean)
         : RequestBuilder<Drawable> {
     return this.listener(object : RequestListener<Drawable> {
-        override fun onLoadFailed(e: GlideException?, model: Any, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
+        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
             return onFailed.invoke()
         }
 
@@ -51,9 +51,9 @@ inline fun RequestBuilder<Drawable>.listenerClean(
 }
 
 fun RequestBuilder<Drawable>.listenerAnimateSharedTransaction(
-        fragment: Fragment,
-        image: ImageView,
-        scaleOverride: ImageViewScaleInfo? = null
+    fragment: androidx.fragment.app.Fragment,
+    image: ImageView,
+    scaleOverride: ImageViewScaleInfo? = null
 ): RequestBuilder<Drawable> {
     return listenerClean({
         scaleOverride?.let {

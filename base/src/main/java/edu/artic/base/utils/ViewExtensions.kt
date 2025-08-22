@@ -2,11 +2,11 @@ package edu.artic.base.utils
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
-import android.support.design.internal.BottomNavigationItemView
-import android.support.design.internal.BottomNavigationMenuView
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView

@@ -7,56 +7,61 @@ import com.jakewharton.rxbinding2.widget.text
 import edu.artic.adapter.AutoHolderRecyclerViewAdapter
 import edu.artic.adapter.BaseViewHolder
 import edu.artic.content.listing.R
+import edu.artic.content.listing.databinding.CellAllEventsLayoutBinding
 import edu.artic.image.GlideApp
-import kotlinx.android.synthetic.main.cell_all_events_layout.view.*
+
 
 /**
  * @author Sameer Dhakal (Fuzz)
  */
 
-class AllEventsAdapter : AutoHolderRecyclerViewAdapter<AllEventsCellBaseViewModel>() {
+class AllEventsAdapter :
+    AutoHolderRecyclerViewAdapter<CellAllEventsLayoutBinding, AllEventsCellBaseViewModel>() {
 
-    override fun View.onBindView(item: AllEventsCellBaseViewModel, position: Int) {
-
+    override fun View.onBindView(
+        item: AllEventsCellBaseViewModel,
+        holder: BaseViewHolder,
+        position: Int,
+    ) {
+        val binding = holder.binding as CellAllEventsLayoutBinding
         if (item is AllEventsCellViewModel) {
-
-            image.visibility = View.VISIBLE
-            title.visibility = View.VISIBLE
-            description.visibility = View.VISIBLE
-            dateTime.visibility = View.VISIBLE
-            spacerLine.visibility = View.VISIBLE
-            headerText.visibility = View.GONE
+            binding.image.visibility = View.VISIBLE
+            binding.title.visibility = View.VISIBLE
+            binding.description.visibility = View.VISIBLE
+            binding.dateTime.visibility = View.VISIBLE
+            binding.spacerLine.visibility = View.VISIBLE
+            binding.headerText.visibility = View.GONE
 
             item.eventImageUrl.subscribe {
                 GlideApp.with(context)
-                        .load(it)
-                        .placeholder(R.color.placeholderBackground)
-                        .error(R.drawable.placeholder_small)
-                        .into(image)
+                    .load(it)
+                    .placeholder(R.color.placeholderBackground)
+                    .error(R.drawable.placeholder_small)
+                    .into(binding.image)
             }.disposedBy(item.viewDisposeBag)
 
             item.eventTitle
-                    .bindToMain(title.text())
-                    .disposedBy(item.viewDisposeBag)
+                .bindToMain(binding.title.text())
+                .disposedBy(item.viewDisposeBag)
 
             item.eventDescription
-                    .bindToMain(description.text())
-                    .disposedBy(item.viewDisposeBag)
+                .bindToMain(binding.description.text())
+                .disposedBy(item.viewDisposeBag)
 
             item.eventDateTime
-                    .bindToMain(dateTime.text())
-                    .disposedBy(item.viewDisposeBag)
+                .bindToMain(binding.dateTime.text())
+                .disposedBy(item.viewDisposeBag)
         } else if (item is AllEventsCellHeaderViewModel) {
-            image.visibility = View.GONE
-            title.visibility = View.GONE
-            description.visibility = View.GONE
-            dateTime.visibility = View.GONE
-            spacerLine.visibility = View.GONE
-            headerText.visibility = View.VISIBLE
+            binding.image.visibility = View.GONE
+            binding.title.visibility = View.GONE
+            binding.description.visibility = View.GONE
+            binding.dateTime.visibility = View.GONE
+            binding.spacerLine.visibility = View.GONE
+            binding.headerText.visibility = View.VISIBLE
 
             item.text
-                    .bindToMain(headerText.text())
-                    .disposedBy(item.viewDisposeBag)
+                .bindToMain(binding.headerText.text())
+                .disposedBy(item.viewDisposeBag)
         }
 
 

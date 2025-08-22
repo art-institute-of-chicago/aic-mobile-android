@@ -1,8 +1,8 @@
 package edu.artic.db
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.TypeConverters
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import edu.artic.db.daos.*
 import edu.artic.db.models.*
 
@@ -23,7 +23,7 @@ import edu.artic.db.models.*
             ArticSearchSuggestionsObject::class,
             ArticMessage::class
         ],
-        version = 12,
+        version = 13,
         exportSchema = true
 )
 @TypeConverters(AppConverters::class)

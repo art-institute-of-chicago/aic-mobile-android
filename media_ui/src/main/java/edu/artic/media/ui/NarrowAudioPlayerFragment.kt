@@ -1,19 +1,21 @@
 package edu.artic.media.ui
 
+//import kotlinx.android.synthetic.main.fragment_bottom_audio_player.*
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.media.audio.AudioPlayerService
+import edu.artic.media.ui.databinding.FragmentBottomAudioPlayerBinding
 import edu.artic.navigation.NavigationConstants
 import edu.artic.ui.BaseFragment
 import edu.artic.ui.findFragmentInHierarchy
@@ -21,7 +23,6 @@ import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import kotlinx.android.synthetic.main.fragment_bottom_audio_player.*
 import kotlin.reflect.KClass
 
 
@@ -37,15 +38,13 @@ import kotlin.reflect.KClass
  *
  * @author Sameer Dhakal (Fuzz)
  */
-class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewModel>() {
+class NarrowAudioPlayerFragment :
+    BaseViewModelFragment<FragmentBottomAudioPlayerBinding, NarrowAudioPlayerViewModel>() {
 
     override val viewModelClass: KClass<NarrowAudioPlayerViewModel>
         get() = NarrowAudioPlayerViewModel::class
 
     override val title = R.string.global_empty_string
-
-    override val layoutResId: Int
-        get() = R.layout.fragment_bottom_audio_player
 
     override val screenName: ScreenName?
         get() = null
@@ -80,23 +79,28 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val newAudioIntent = AudioPlayerService.getLaunchIntent(requireContext())
+        audioIntent = newAudioIntent
+        requireActivity().startService(newAudioIntent)
+        requireActivity().bindService(newAudioIntent, serviceConnection, 0)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        audioIntent = AudioPlayerService.getLaunchIntent(requireContext())
-        requireActivity().startService(audioIntent)
-        requireActivity().bindService(audioIntent, serviceConnection, 0)
+
         requireView().visibility = View.GONE
-        closePlayer.setOnClickListener {
+        binding.closePlayer.setOnClickListener {
             boundService?.stopPlayer()
             requireView().visibility = View.GONE
         }
 
-        exo_play.setOnClickListener {
+        binding.exoPlay.setOnClickListener {
             boundService?.resumePlayer()
         }
 
-        exo_pause.setOnClickListener {
+        binding.exoPause.setOnClickListener {
             boundService?.pausePlayer()
         }
 
@@ -104,7 +108,7 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
             requireView().visibility = View.GONE
         }?.disposedBy(disposeBag)
 
-        trackTitle.setOnClickListener {
+        binding.trackTitle.setOnClickListener {
             viewModel.userClickPlayer()
         }
     }
@@ -116,31 +120,32 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
          * Resume the audio translation.
          */
         viewModel.resumeAudioPlayBack
-                .filter { it }
-                .subscribe {
-                    boundService?.resumePlayer()
-                }.disposedBy(disposeBag)
+            .filter { it }
+            .subscribe {
+                boundService?.resumePlayer()
+            }.disposedBy(disposeBag)
     }
 
     override fun setupNavigationBindings(viewModel: NarrowAudioPlayerViewModel) {
         super.setupNavigationBindings(viewModel)
         viewModel.navigateTo
-                .subscribe {
-                    when (it) {
-                        is Navigate.Forward -> {
-                            when (it.endpoint) {
-                                is NarrowAudioPlayerViewModel.NavigationEndpoint.AudioTutorial -> {
-                                    val intent = NavigationConstants.AUDIO_TUTORIAL.asDeepLinkIntent()
-                                    startActivityForResult(intent, AUDIO_CONFIRMATION)
-                                }
-                                is NarrowAudioPlayerViewModel.NavigationEndpoint.AudioDetails -> {
-                                    val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
-                                    startActivity(intent)
-                                }
+            .subscribe {
+                when (it) {
+                    is Navigate.Forward -> {
+                        when (it.endpoint) {
+                            is NarrowAudioPlayerViewModel.NavigationEndpoint.AudioTutorial -> {
+                                val intent = NavigationConstants.AUDIO_TUTORIAL.asDeepLinkIntent()
+                                startActivityForResult(intent, AUDIO_CONFIRMATION)
+                            }
+                            is NarrowAudioPlayerViewModel.NavigationEndpoint.AudioDetails -> {
+                                val intent = NavigationConstants.AUDIO_DETAILS.asDeepLinkIntent()
+                                startActivity(intent)
                             }
                         }
                     }
-                }.disposedBy(navigationDisposeBag)
+                    else -> {}
+                }
+            }.disposedBy(navigationDisposeBag)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -165,24 +170,24 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
         boundService?.let { audioService ->
 
             audioService.currentTrack
-                    .subscribe { audioFile ->
-                        trackTitle.text = audioService.playable?.getPlayableTitle()
-                    }.disposedBy(disposeBag)
+                .subscribe { audioFile ->
+                    binding.trackTitle.text = audioService.playable?.getPlayableTitle()
+                }.disposedBy(disposeBag)
 
             audioService.audioPlayBackStatus
-                    .map { it is AudioPlayerService.PlayBackState.Playing }
-                    .bindToMain(exo_pause.visibility())
-                    .disposedBy(disposeBag)
+                .map { it is AudioPlayerService.PlayBackState.Playing }
+                .bindToMain(binding.exoPause.visibility())
+                .disposedBy(disposeBag)
 
             audioService.audioPlayBackStatus
-                    .map { it is AudioPlayerService.PlayBackState.Paused }
-                    .bindToMain(exo_play.visibility())
-                    .disposedBy(disposeBag)
+                .map { it is AudioPlayerService.PlayBackState.Paused }
+                .bindToMain(binding.exoPlay.visibility())
+                .disposedBy(disposeBag)
 
             audioService.audioPlayBackStatus
-                    .map { it is AudioPlayerService.PlayBackState.Paused || it is AudioPlayerService.PlayBackState.Playing }
-                    .bindToMain(requireView().visibility())
-                    .disposedBy(disposeBag)
+                .map { it is AudioPlayerService.PlayBackState.Paused || it is AudioPlayerService.PlayBackState.Playing }
+                .bindToMain(requireView().visibility())
+                .disposedBy(disposeBag)
         }
     }
 
@@ -214,9 +219,9 @@ class NarrowAudioPlayerFragment : BaseViewModelFragment<NarrowAudioPlayerViewMod
  * @param fragmentId id of a ViewGroup where [NarrowAudioPlayerFragment] is added
  * @param fm         which [FragmentManager] this id is registered with
  */
-fun BaseFragment.getAudioServiceObservable(
-        fragmentId: Int = R.id.newPlayer,
-        fm: FragmentManager = requireActivity().supportFragmentManager
+fun BaseFragment<*>.getAudioServiceObservable(
+    fragmentId: Int = R.id.newPlayer,
+    fm: FragmentManager = requireActivity().supportFragmentManager,
 ): Subject<AudioPlayerService> {
     val audioFragment: NarrowAudioPlayerFragment = findFragmentInHierarchy(fm, fragmentId)!!
     return audioFragment.observableAudioService

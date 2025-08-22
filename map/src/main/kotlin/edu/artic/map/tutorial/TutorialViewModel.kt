@@ -11,8 +11,8 @@ import io.reactivex.subjects.Subject
 import timber.log.Timber
 import javax.inject.Inject
 
-class TutorialViewModel @Inject constructor(private val tutorialPreferencesManager: TutorialPreferencesManager)
-    : NavViewViewModel<TutorialViewModel.NavigationEndpoint>() {
+class TutorialViewModel @Inject constructor(private val tutorialPreferencesManager: TutorialPreferencesManager) :
+    NavViewViewModel<TutorialViewModel.NavigationEndpoint>() {
 
     sealed class NavigationEndpoint
 
@@ -23,10 +23,10 @@ class TutorialViewModel @Inject constructor(private val tutorialPreferencesManag
     }
 
     val cells: Subject<List<TutorialPopupItemViewModel>> = BehaviorSubject.createDefault(
-            listOf(
-                    TutorialPopupItemViewModel(R.drawable.arrows, R.string.map_tutorial_explore_text),
-                    TutorialPopupItemViewModel(R.drawable.group_2, R.string.map_tutorial_audio_pins_text)
-            )
+        listOf(
+            TutorialPopupItemViewModel(R.drawable.arrows, R.string.map_tutorial_explore_text),
+            TutorialPopupItemViewModel(R.drawable.group_2, R.string.map_tutorial_audio_pins_text)
+        )
     )
 
     val tutorialTitle: Subject<Int> = BehaviorSubject.create()
@@ -46,13 +46,13 @@ class TutorialViewModel @Inject constructor(private val tutorialPreferencesManag
 
     init {
         tutorialPopupCurrentPage
-                .map {
-                    return@map if (it == 0)
-                        R.string.map_tutorial_explore_title
-                    else
-                        R.string.map_tutorial_audio_pins_title
-                }.bindTo(tutorialTitle)
-                .disposedBy(disposeBag)
+            .map {
+                return@map if (it == 0)
+                    R.string.map_tutorial_explore_title
+                else
+                    R.string.map_tutorial_audio_pins_title
+            }.bindTo(tutorialTitle)
+            .disposedBy(disposeBag)
         tutorialPreferencesManager.hasSeenTutorial = true
 
     }

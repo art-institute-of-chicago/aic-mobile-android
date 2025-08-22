@@ -11,17 +11,14 @@
 
         <action
             android:id="@+id/goToEventDetails"
-            app:clearTask="true"
             app:destination="@id/eventDetailsFragment" />
 
         <action
             android:id="@+id/goToTourDetails"
-            app:clearTask="true"
             app:destination="@id/tourDetailsFragment" />
 
         <action
             android:id="@+id/goToExhibitionDetails"
-            app:clearTask="true"
             app:destination="@id/exhibitionDetailsFragment" />
 
     </fragment>

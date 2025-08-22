@@ -1,7 +1,7 @@
 package edu.artic.adapter
 
-import android.support.v4.view.PagerAdapter
-import android.support.v7.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 
@@ -9,13 +9,13 @@ import android.view.ViewGroup
  * @author Sameer Dhakal (Fuzz)
  */
 
-fun <TModel> BaseRecyclerViewAdapter<TModel, *>.toPagerAdapter() = ViewPagerAdapterBinder(this)
+fun <TModel : Any> BaseRecyclerViewAdapter<TModel, *>.toPagerAdapter() = ViewPagerAdapterBinder(this)
 
 /**
  * Description: Binds a [BaseRecyclerViewAdapter] to a [PagerAdapter]
  */
-open class ViewPagerAdapterBinder<TModel>(
-        val adapter: BaseRecyclerViewAdapter<TModel, *>) : PagerAdapter() {
+open class ViewPagerAdapterBinder<TModel : Any>(
+        val adapter: BaseRecyclerViewAdapter<TModel, *>) : androidx.viewpager.widget.PagerAdapter() {
 
     init {
         adapter.registerAdapterDataObserver(RecyclerViewToBaseAdapterObserver())

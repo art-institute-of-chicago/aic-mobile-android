@@ -15,7 +15,7 @@ import android.location.Location.distanceBetween
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.Surface
 import android.view.WindowManager
 import com.google.android.gms.location.LocationCallback
@@ -57,9 +57,9 @@ class FuzedLocationProvider(private val context: Context) : LocationProvider, Se
     }
 
     private val locationCallback: LocationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult?) {
+        override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
-            locationResult?.lastLocation?.let {
+            locationResult.lastLocation?.let {
                 val success = SensorManager.getRotationMatrix(defaultRotation, null, mGravity, mGeomagnetic)
                 if (success) {
                     val orientation = FloatArray(3)
@@ -96,34 +96,34 @@ class FuzedLocationProvider(private val context: Context) : LocationProvider, Se
 
         app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
 
-            override fun onActivityPaused(activity: Activity?) {
+            override fun onActivityPaused(activity: Activity) {
                 if (trackingRequested) {
                     stopLocationTracking()
                 }
             }
 
-            override fun onActivityResumed(activity: Activity?) {
+            override fun onActivityResumed(activity: Activity) {
                 if (trackingRequested) {
                     startLocationTracking()
                 }
             }
 
-            override fun onActivityStarted(activity: Activity?) {
+            override fun onActivityStarted(activity: Activity) {
             }
 
-            override fun onActivityDestroyed(activity: Activity?) {
-
-            }
-
-            override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+            override fun onActivityDestroyed(activity: Activity) {
 
             }
 
-            override fun onActivityStopped(activity: Activity?) {
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
 
             }
 
-            override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
+            override fun onActivityStopped(activity: Activity) {
+
+            }
+
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
 
             }
 
@@ -147,7 +147,7 @@ class FuzedLocationProvider(private val context: Context) : LocationProvider, Se
         trackingRequested = true
         handler.removeCallbacks(stopTrackingRunnable)
         if (!isTracking && isPermissionGranted()) {
-            fuzedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+            locationRequest?.let { fuzedLocationClient.requestLocationUpdates(it, locationCallback, null) }
             mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
                 mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME)
             }

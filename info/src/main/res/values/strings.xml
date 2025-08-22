@@ -17,7 +17,7 @@
     <string name="info_museum_phone_number" translatable="false">+1 312 443 3600</string>
     <string name="info_dial_prompt">Select an app to dial that number</string>
     <string name="info_map_prompt">Select an app to view map</string>
-
+    <string name="info_museum_hours_fallback">Learn about our hours and visiting policies at artic.edu/visit</string>
 
     <!-- Since we heavily depend on the google maps api we are considering google map to handle the museum location search.-->
     <string name="info_museum_google_map_query" translatable="false"><![CDATA[https://www.google.com/maps/search/?api=1&query=The+Art+Institute+of+Chicago]]></string>

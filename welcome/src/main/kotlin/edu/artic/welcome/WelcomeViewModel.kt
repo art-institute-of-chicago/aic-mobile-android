@@ -1,6 +1,6 @@
 package edu.artic.welcome
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import com.fuzz.rx.*
 import edu.artic.analytics.AnalyticsAction
 import edu.artic.analytics.AnalyticsTracker

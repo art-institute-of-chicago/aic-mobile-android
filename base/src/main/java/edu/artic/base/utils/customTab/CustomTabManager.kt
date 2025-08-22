@@ -4,11 +4,11 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.net.Uri
-import android.support.customtabs.CustomTabsClient
-import android.support.customtabs.CustomTabsIntent
-import android.support.customtabs.CustomTabsServiceConnection
-import android.support.customtabs.CustomTabsSession
-import android.support.v4.content.ContextCompat
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsServiceConnection
+import androidx.browser.customtabs.CustomTabsSession
+import androidx.core.content.ContextCompat
 import android.text.TextUtils
 import edu.artic.base.R
 import edu.artic.base.utils.LifecycleAwareActivity
@@ -38,14 +38,15 @@ class CustomTabManager : LifecycleAwareActivity {
 
 
     override fun onStart(host: Activity) {
-
         try {
             // We want to support alternative CustomTabs packages, like chrome dev
             // and firefox, so we're not hardcoding a package name here.
             val packageName = CustomTabsHelper.getPackageNameToUse(host)
             canBind = !TextUtils.isEmpty(packageName)
             if (canBind) {
-                CustomTabsClient.bindCustomTabsService(host, packageName, mCustomTabsServiceConnection)
+                mCustomTabsServiceConnection?.let {
+                    CustomTabsClient.bindCustomTabsService(host, packageName, it)
+                }
             }
         } catch (t: Throwable) {
             // Package lookup failed. Nothing to be done.

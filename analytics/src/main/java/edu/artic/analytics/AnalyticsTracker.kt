@@ -3,7 +3,6 @@ package edu.artic.analytics
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import com.fuzz.rx.DisposeBag
 import com.fuzz.rx.disposedBy
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -14,7 +13,8 @@ import edu.artic.membership.MemberInfoPreferencesManager
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import java.util.*
+import timber.log.Timber
+import java.util.UUID
 
 /**
  * Description:
@@ -27,25 +27,31 @@ interface AnalyticsTracker {
     fun reportCustomEvent(category: String, parameterMap: Map<String, String>)
 
     fun reportCustomEvent(category: EventCategoryName, parameterMap: Map<String, String>) =
-            reportCustomEvent(category.eventCategoryName, parameterMap)
+        reportCustomEvent(category.eventCategoryName, parameterMap)
 
     fun reportEvent(category: String, action: String = "", label: String = "")
 
     fun reportEvent(categoryName: ScreenName, action: String = "", label: String = "") =
-            reportEvent(categoryName.screenName, action, label)
+        reportEvent(categoryName.screenName, action, label)
 
     fun reportEvent(categoryName: EventCategoryName, action: String = "", label: String = "") =
-            reportEvent(categoryName.eventCategoryName, action, label)
+        reportEvent(categoryName.eventCategoryName, action, label)
 
     fun reportScreenView(activity: Activity, name: String)
 
-    fun reportScreenView(activity: Activity, categoryName: ScreenName) = reportScreenView(activity, categoryName.screenName)
+    fun reportScreenView(activity: Activity, categoryName: ScreenName) =
+        reportScreenView(activity, categoryName.screenName)
 }
 
-class AnalyticsTrackerImpl(context: Context,
-                           private val languageSelector: LanguageSelector,
-                           private val membershipPrefs: MemberInfoPreferencesManager,
-                           private val locationService: LocationService) : AnalyticsTracker {
+class AnalyticsTrackerImpl(
+    context: Context,
+    private val languageSelector: LanguageSelector,
+    private val membershipPrefs: MemberInfoPreferencesManager,
+    private val locationService: LocationService
+) : AnalyticsTracker {
+    companion object {
+        private const val TAG = "AnalyticsTracker"
+    }
 
     private val disposeBag = DisposeBag()
     private var atMuseum = false
@@ -56,21 +62,21 @@ class AnalyticsTrackerImpl(context: Context,
         locationService.requestTrackingUserLocation()
         val isInMuseum = locationService.currentUserLocation.map { isLocationInMuseum(it) }
         isInMuseum
-                .distinctUntilChanged()
-                .subscribe {
-                    atMuseum = it
-                }
-                .disposedBy(disposeBag)
+            .distinctUntilChanged()
+            .subscribe {
+                atMuseum = it
+            }
+            .disposedBy(disposeBag)
 
         Observables.combineLatest(isInMuseum, reportLocationAnalytic)
-                .filter { (inMuseum, shouldReport) ->
-                    inMuseum && shouldReport
-                }
-                .subscribe {
-                    reportLocationAnalytic.onNext(false)
-                    reportEvent(EventCategoryName.Location, AnalyticsAction.locationOnSite)
-                }
-                .disposedBy(disposeBag)
+            .filter { (inMuseum, shouldReport) ->
+                inMuseum && shouldReport
+            }
+            .subscribe {
+                reportLocationAnalytic.onNext(false)
+                reportEvent(EventCategoryName.Location, AnalyticsAction.locationOnSite)
+            }
+            .disposedBy(disposeBag)
 
         if (BuildConfig.IS_RENTAL) {
             firebaseAnalytics.setUserId(UUID.randomUUID()?.toString())
@@ -87,7 +93,8 @@ class AnalyticsTrackerImpl(context: Context,
 
         for ((paramName, paramValue) in parameterMap) {
             if (paramValue.isBlank()) {
-                Log.w(AnalyticsTracker::class.qualifiedName, "reportCustomEvent(): value for parameter \"$paramName\" is blank, not adding to Bundle.")
+                Timber.tag(TAG)
+                    .w("reportCustomEvent(): value for parameter \"$paramName\" is blank, not adding to Bundle.")
             } else {
                 bundle.putString(paramName, paramValue)
             }
@@ -101,7 +108,7 @@ class AnalyticsTrackerImpl(context: Context,
         custom events, as we are still transitioning between the two.
      */
     override fun reportEvent(category: String, action: String, label: String) {
-        Log.d(AnalyticsTracker::class.qualifiedName, "reportEvent(): Logging No-op for this function.")
+        Timber.tag(TAG).d("reportEvent(): Logging No-op for this function.")
 //        val memberId = membershipPrefs.memberID
 //        tracker.send(HitBuilders.EventBuilder()
 //                .setCategory(category)

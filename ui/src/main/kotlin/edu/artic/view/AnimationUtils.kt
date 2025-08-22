@@ -8,16 +8,17 @@ import android.animation.ValueAnimator
  * @author Sameer Dhakal (Fuzz)
  */
 open class AnimListenerImpl : Animator.AnimatorListener {
-    override fun onAnimationRepeat(animation: Animator?) {}
-    override fun onAnimationEnd(animation: Animator?) {}
-    override fun onAnimationCancel(animation: Animator?) {}
-    override fun onAnimationStart(animation: Animator?) {}
+    override fun onAnimationRepeat(animation: Animator) {}
+    override fun onAnimationEnd(animation: Animator) {}
+    override fun onAnimationCancel(animation: Animator) {}
+    override fun onAnimationStart(animation: Animator) {}
 }
 
-inline fun <reified V> changeValue(from: V,
-                                   to: V,
-                                   duration: Long,
-                                   crossinline update: (value: V) -> Unit
+inline fun <reified V> changeValue(
+    from: V,
+    to: V,
+    duration: Long,
+    crossinline update: (value: V) -> Unit
 ) {
     val vH: PropertyValuesHolder = when (from) {
         is Int -> PropertyValuesHolder.ofInt("prop", from as Int, to as Int)

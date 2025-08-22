@@ -1,8 +1,9 @@
 package edu.artic.events
 
+//import kotlinx.android.synthetic.main.fragment_view_all.*
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
@@ -13,23 +14,21 @@ import edu.artic.adapter.itemClicksWithPosition
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.content.listing.R
+import edu.artic.content.listing.databinding.FragmentViewAllBinding
 import edu.artic.events.recyclerview.AllEventsItemDecoration
 import edu.artic.navigation.NavigationConstants
 import edu.artic.viewmodel.BaseViewModelFragment
 import edu.artic.viewmodel.Navigate
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.fragment_view_all.*
 import kotlin.reflect.KClass
 
-class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
+class AllEventsFragment : BaseViewModelFragment<FragmentViewAllBinding, AllEventsViewModel>() {
 
     override val screenName: ScreenName
         get() = ScreenName.Events
 
     override val viewModelClass: KClass<AllEventsViewModel>
         get() = AllEventsViewModel::class
-    override val layoutResId: Int
-        get() = R.layout.fragment_view_all
 
     override val title = R.string.welcome_events_header
 
@@ -42,7 +41,12 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
         super.onViewCreated(view, savedInstanceState)
 
         val eventsAdapter = AllEventsAdapter()
-        val layoutManager = GridLayoutManager(activity, 2, GridLayoutManager.VERTICAL, false)
+        val layoutManager = GridLayoutManager(
+            activity,
+            2,
+            GridLayoutManager.VERTICAL,
+            false
+        )
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 /**
@@ -59,53 +63,59 @@ class AllEventsFragment : BaseViewModelFragment<AllEventsViewModel>() {
             }
 
         }
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = eventsAdapter
-        recyclerView.addItemDecoration(AllEventsItemDecoration(view.context, 2, eventsAdapter))
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = eventsAdapter
+        binding.recyclerView.addItemDecoration(
+            AllEventsItemDecoration(
+                view.context,
+                2,
+                eventsAdapter
+            )
+        )
     }
 
     override fun setupBindings(viewModel: AllEventsViewModel) {
-        val adapter = recyclerView.adapter as AllEventsAdapter
+        val adapter = binding.recyclerView.adapter as AllEventsAdapter
 
 
         /* Ensure search events go through ok. */
-        searchIcon
-                .clicks()
-                .defaultThrottle()
-                .subscribe {
-                    viewModel.onClickSearch()
-                }
-                .disposedBy(disposeBag)
+        binding.searchIcon
+            .clicks()
+            .defaultThrottle()
+            .subscribe {
+                viewModel.onClickSearch()
+            }
+            .disposedBy(disposeBag)
 
         viewModel.events
-                .bindToMain(adapter.itemChanges())
-                .disposedBy(disposeBag)
+            .bindToMain(adapter.itemChanges())
+            .disposedBy(disposeBag)
 
         adapter.itemClicksWithPosition()
-                .subscribe { (pos, model) ->
-                    viewModel.onClickEvent(pos, model.event)
-                }
-                .disposedBy(disposeBag)
+            .subscribe { (pos, model) ->
+                viewModel.onClickEvent(pos, model.event)
+            }
+            .disposedBy(disposeBag)
 
     }
 
     override fun setupNavigationBindings(viewModel: AllEventsViewModel) {
         viewModel.navigateTo
-                .filterTo<Navigate<AllEventsViewModel.NavigationEndpoint>, Navigate.Forward<AllEventsViewModel.NavigationEndpoint>>()
-                .subscribeBy { navigation ->
-                    val endpoint = navigation.endpoint
-                    when (endpoint) {
-                        is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
-                            val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
-                                putExtras(EventDetailFragment.argsBundle(endpoint.event))
-                            }
-                            startActivity(intent)
+            .filterTo<Navigate<AllEventsViewModel.NavigationEndpoint>, Navigate.Forward<AllEventsViewModel.NavigationEndpoint>>()
+            .subscribeBy { navigation ->
+                val endpoint = navigation.endpoint
+                when (endpoint) {
+                    is AllEventsViewModel.NavigationEndpoint.EventDetail -> {
+                        val intent = NavigationConstants.DETAILS.asDeepLinkIntent().apply {
+                            putExtras(EventDetailFragment.argsBundle(endpoint.event))
                         }
-                        AllEventsViewModel.NavigationEndpoint.Search -> {
-                            val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
-                            startActivity(intent)
-                        }
+                        startActivity(intent)
                     }
-                }.disposedBy(navigationDisposeBag)
+                    AllEventsViewModel.NavigationEndpoint.Search -> {
+                        val intent = NavigationConstants.SEARCH.asDeepLinkIntent()
+                        startActivity(intent)
+                    }
+                }
+            }.disposedBy(navigationDisposeBag)
     }
 }

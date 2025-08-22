@@ -1,7 +1,7 @@
 package edu.artic.map
 
 import android.content.Context
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.View
 
@@ -11,7 +11,7 @@ import android.view.View
  * @see http://stackoverflow.com/questions/8394681/android-i-am-unable-to-have-viewpager-wrap-content/20784791#20784791
  * @author Sameer Dhakal (Fuzz)
  */
-class WrapContentHeightViewPager(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
+class WrapContentHeightViewPager(context: Context, attrs: AttributeSet? = null) : androidx.viewpager.widget.ViewPager(context, attrs) {
 
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

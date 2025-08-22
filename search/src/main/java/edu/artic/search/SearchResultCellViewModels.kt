@@ -1,7 +1,7 @@
 package edu.artic.search
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import edu.artic.db.models.ArticExhibition
 import edu.artic.db.models.ArticObject
 import edu.artic.db.models.ArticSearchArtworkObject

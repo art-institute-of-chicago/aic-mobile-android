@@ -1,3 +1,35 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'org.jetbrains.kotlin.plugin.parcelize'
+}
+
+android {
+    compileSdkVersion 36
+
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 35
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
 
 android {
     defaultConfig {
@@ -19,6 +51,7 @@ android {
             buildConfigField "String", "DEFAULT_BUY_URL", "\"${envVariable("default_buy_url",true)}\""
         }
     }
+    namespace 'edu.artic.db'
 }
 
 dependencies {
@@ -63,6 +96,3 @@ dependencies {
 
 }
 
-androidExtensions {
-    experimental = true
-}

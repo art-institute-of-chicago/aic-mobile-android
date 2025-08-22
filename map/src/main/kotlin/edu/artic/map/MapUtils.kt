@@ -1,6 +1,6 @@
 package edu.artic.map
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import edu.artic.db.models.ArticMapAmenityType
 import edu.artic.db.models.ArticObject
 import timber.log.Timber

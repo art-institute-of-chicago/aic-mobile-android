@@ -1,7 +1,7 @@
 package edu.artic.ui
 
 import android.graphics.drawable.ColorDrawable
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 
 /**
  * Simple extension to [ColorDrawable] with configurable height and width.

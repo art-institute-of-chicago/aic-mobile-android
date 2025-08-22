@@ -1,6 +1,6 @@
 package edu.artic.info
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.fuzz.rx.bindTo
 import com.fuzz.rx.disposedBy
 import edu.artic.db.daos.GeneralInfoDao
@@ -36,6 +36,8 @@ class MuseumInformationViewModel @Inject constructor(
                 .toObservable()
                 .map { languageSelector.selectFrom(it.allTranslations()) }
                 .map { it.museumHours }
+                // prevent an empty field in the CMS from overwriting the local copy
+                .filter { it.isNotBlank() }
                 .bindTo(museumHours)
                 .disposedBy(disposeBag)
 
