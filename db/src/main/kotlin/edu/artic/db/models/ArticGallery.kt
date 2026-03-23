@@ -35,7 +35,8 @@ data class ArticGallery(
          */
         @Json(name = "title_t") val titleT: String?,
         @Json(name = "gallery_id") val galleryId: String?,
-        @Json(name = "number") val number: String?
+        @Json(name = "number") val number: String?,
+        @Json(name = "closed") val closed: Boolean?,
 ) : Parcelable, AccessibilityAware {
 
     override fun getContentDescription(): String {
