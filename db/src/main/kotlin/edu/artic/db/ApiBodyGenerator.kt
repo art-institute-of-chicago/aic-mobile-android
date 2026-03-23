@@ -75,13 +75,11 @@ sealed class ApiBodyGenerator {
                     "artist_display",
                     "image_id",
                     "gallery_id",
-                    "latlon"
+                    "latlon",
+                    "latitude",
+                    "longitude",
+                    "is_boosted"
             )
-            artworkParams["query"] = mutableMapOf<String, Any>().apply {
-                this["term"] = mutableMapOf<String, Any>().apply {
-                    this["is_on_view"] = "true"
-                }
-            }
             return artworkParams
         }
 

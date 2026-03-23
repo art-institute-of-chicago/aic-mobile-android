@@ -47,7 +47,7 @@ sealed class ApiSearchContent {
     @JsonClass(generateAdapter = true)
     data class SearchedArtwork(
             @Json(name = "id") val artworkId: Int,
-            @Json(name = "is_on_view") val isOnView: Boolean,
+            @Json(name = "is_on_view") val isOnView: Boolean?,
             @Json(name = "title") val title: String,
             /**
              * Just the name of the artist.
@@ -60,7 +60,7 @@ sealed class ApiSearchContent {
              */
             @Json(name = "artist_display") val artist_display: String,
             @Json(name = "image_id") val image_id: String?,
-            @Json(name = "gallery_id") val gallery_id: String,
+            @Json(name = "gallery_id") val gallery_id: String?,
             @Json(name = "latlon") val latlon: String?,
             @Json(name = "latitude") val latitude: String?,
             @Json(name = "longitude") val longitude: String?,

@@ -93,11 +93,11 @@ class ArtworkDetailFragment :
             .disposedBy(disposeBag)
 
         viewModel.showOnMapVisible
-            .bindToMain(binding.showOnMap.visibility())
+            .bindToMain(binding.showOnMap.visibility(View.GONE))
             .disposedBy(disposeBag)
 
         viewModel.playAudioVisible
-            .bindToMain(binding.playAudio.visibility(View.INVISIBLE))
+            .bindToMain(binding.playAudio.visibility(View.GONE))
             .disposedBy(disposeBag)
 
         viewModel.galleryNumber
