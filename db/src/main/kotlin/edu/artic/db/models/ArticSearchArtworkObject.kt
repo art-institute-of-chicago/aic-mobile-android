@@ -31,7 +31,8 @@ data class ArticSearchArtworkObject(
         val artistDisplay: String?,
         val location: String?,
         val floor: Int,
-        val gallery: ArticGallery?
+        val gallery: ArticGallery?,
+        val isOnView: Boolean
 
 ) : Parcelable {
 

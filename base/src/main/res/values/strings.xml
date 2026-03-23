@@ -42,6 +42,7 @@
     <string name="event_register_action">Register</string>
     <string name="event_rental_visit_website_prompt">Visit our website to register.</string>
     <string name="search_gallery_number">Gallery %s</string>
+    <string name="search_currently_off_view">Currently Off View</string>
 
     <!--use this string resource if empty string required-->
     <string name="global_empty_string" translatable="false" />

@@ -132,6 +132,7 @@ fun ArticObject.asArticSearchArtworkObject(gallery: ArticGallery? = null): Artic
             artistDisplay = this.artistCulturePlaceDelim,
             location = this.location,
             floor = this.floor,
-            gallery = gallery
+            gallery = gallery,
+            isOnView = isOnView ?: false
     )
 }

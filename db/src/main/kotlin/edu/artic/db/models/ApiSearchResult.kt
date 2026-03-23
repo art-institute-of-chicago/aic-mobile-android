@@ -61,8 +61,17 @@ sealed class ApiSearchContent {
             @Json(name = "artist_display") val artist_display: String,
             @Json(name = "image_id") val image_id: String?,
             @Json(name = "gallery_id") val gallery_id: String,
-            @Json(name = "latlon") val latlon: String?
-    ) : ApiSearchContent()
+            @Json(name = "latlon") val latlon: String?,
+            @Json(name = "latitude") val latitude: String?,
+            @Json(name = "longitude") val longitude: String?,
+            @Json(name = "is_boosted") val isBoosted: Boolean?,
+    ) : ApiSearchContent() {
+        val combinedLatLng = if (latitude != null && longitude != null) {
+            "$latitude,$longitude"
+        } else {
+            latlon
+        }
+    }
 
     @JsonClass(generateAdapter = true)
     data class SearchedTour(

@@ -106,6 +106,14 @@ class ArtworkDetailFragment :
             }
             .disposedBy(disposeBag)
 
+        viewModel.galleryNumberVisible
+            .bindToMain(binding.galleryNumber.visibility())
+            .disposedBy(disposeBag)
+
+        viewModel.currentlyOffViewVisible
+            .bindToMain(binding.offView.visibility())
+            .disposedBy(disposeBag)
+
         binding.showOnMap.clicks()
             .subscribe { viewModel.onClickShowOnMap() }
             .disposedBy(disposeBag)
