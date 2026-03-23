@@ -95,7 +95,7 @@ class ArtworkDetailViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         articObjectObservable
-            .map { it.isOnView }
+            .map { it.isOnView && it.gallery?.number != null }
             .bindTo(galleryNumberVisible)
             .disposedBy(disposeBag)
 
