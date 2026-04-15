@@ -186,10 +186,10 @@ class AppDataManager @Inject constructor(
                             updateArticObjects(objects, rawGalleries)
                             objectDao.clear()
                             objectDao.addObjects(objects.values.filterNotNull().toList())
-                        }
 
-                        result.tours?.let { it ->
-                            updateTours(it, objects)
+                            result.tours?.let {
+                                updateTours(it, objects, galleries)
+                            }
                         }
 
                         val exhibitionsCMS = result.exhibitions?.filterNotNull()
@@ -235,9 +235,7 @@ class AppDataManager @Inject constructor(
                         appDataState.headers[HEADER_LAST_MODIFIED]?.let {
                             appDataPreferencesManager.lastModified = it[0]
                         }
-
                     }
-
                 }
                 return@flatMap appDataState.asObservable()
             }
@@ -265,7 +263,7 @@ class AppDataManager @Inject constructor(
         }
     }
 
-    private fun updateTours(it: List<ArticTour?>, objects: Map<String, ArticObject?>?) {
+    private fun updateTours(it: List<ArticTour?>, objects: Map<String, ArticObject?>?, galleries: List<ArticGallery?>?) {
 
         val tours = it
             .asSequence()
@@ -278,11 +276,20 @@ class AppDataManager @Inject constructor(
             tours.forEach { tour ->
                 // assign the first stop's floor to tour if tour's floor is invalid
                 if (tour.tourStops.isNotEmpty()) {
-                    // Filter out stops without known objectIds (so-called 'ghost' stops)
+                    // Filter out stops without known objectIds (so-called 'ghost' stops) and stops
+                    // in galleries which are currently closed
                     val iterator = tour.tourStops.iterator()
                     while (iterator.hasNext()) {
                         val tourStop = iterator.next()
-                        if (objectDao.hasObjectWithId(tourStop.objectId)) {
+
+                        val tourStopObject = objects?.get(tourStop.objectId)
+                        val tourStopGallery = tourStopObject?.galleryLocation?.let { location ->
+                            galleries?.firstOrNull {
+                                it?.title == location
+                            }
+                        }
+
+                        if (tourStopObject != null && tourStopGallery?.closed != true) {
                             continue
                         } else {
                             iterator.remove()
@@ -295,9 +302,10 @@ class AppDataManager @Inject constructor(
                         }
                     }
                 }
-
             }
-            tourDao.addTours(tours)
+
+            // Only save the tours which have at least one stop after updating
+            tourDao.addTours(tours.filter { it.tourStops.isNotEmpty() })
         }
     }
 
