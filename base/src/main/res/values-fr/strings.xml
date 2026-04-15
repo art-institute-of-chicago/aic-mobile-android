@@ -50,4 +50,5 @@
 	<string name="global_accept_action">OK</string>
 	<string name="messages_next_action">Message suivant</string>
 	<string name="messages_previous_action">Message précédent</string>
+	<string name="search_currently_off_view">Pas exposé actuellement</string>
 </resources>
