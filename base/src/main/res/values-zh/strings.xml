@@ -50,4 +50,5 @@
 	<string name="global_loading_error_time_out">Network time out. Please try again.</string>
 	<string name="messages_next_action">下一條訊息</string>
 	<string name="messages_previous_action">上一條訊息</string>
+	<string name="search_currently_off_view">目前不展出</string>
 </resources>

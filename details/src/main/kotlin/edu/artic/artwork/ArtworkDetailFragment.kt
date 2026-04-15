@@ -93,17 +93,25 @@ class ArtworkDetailFragment :
             .disposedBy(disposeBag)
 
         viewModel.showOnMapVisible
-            .bindToMain(binding.showOnMap.visibility())
+            .bindToMain(binding.showOnMap.visibility(View.GONE))
             .disposedBy(disposeBag)
 
         viewModel.playAudioVisible
-            .bindToMain(binding.playAudio.visibility(View.INVISIBLE))
+            .bindToMain(binding.playAudio.visibility(View.GONE))
             .disposedBy(disposeBag)
 
         viewModel.galleryNumber
             .subscribe {
                 binding.galleryNumber.text = getString(R.string.search_gallery_number, it)
             }
+            .disposedBy(disposeBag)
+
+        viewModel.galleryNumberVisible
+            .bindToMain(binding.galleryNumber.visibility())
+            .disposedBy(disposeBag)
+
+        viewModel.currentlyOffViewVisible
+            .bindToMain(binding.offView.visibility())
             .disposedBy(disposeBag)
 
         binding.showOnMap.clicks()

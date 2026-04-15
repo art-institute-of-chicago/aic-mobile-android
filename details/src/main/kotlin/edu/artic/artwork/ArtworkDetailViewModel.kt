@@ -31,6 +31,10 @@ class ArtworkDetailViewModel @Inject constructor(
     val authorCulturalPlace: Subject<String> = BehaviorSubject.create()
     val showOnMapVisible: Subject<Boolean> = BehaviorSubject.create()
     val playAudioVisible: Subject<Boolean> = BehaviorSubject.create()
+
+    val currentlyOffViewVisible: Subject<Boolean> = BehaviorSubject.create()
+    val galleryNumberVisible: Subject<Boolean> = BehaviorSubject.create()
+
     private val articObjectObservable: Subject<ArticSearchArtworkObject> = BehaviorSubject.create()
 
     var playerService: PlayerService? = null
@@ -65,8 +69,7 @@ class ArtworkDetailViewModel @Inject constructor(
                 .disposedBy(disposeBag)
 
         articObjectObservable
-                .map { it.locationValue }
-                .map { it.isNotEmpty() }
+                .map { it.locationValue.isNotEmpty() && it.isOnView }
                 .bindTo(showOnMapVisible)
                 .disposedBy(disposeBag)
 
@@ -91,6 +94,15 @@ class ArtworkDetailViewModel @Inject constructor(
                 .bindTo(galleryNumber)
                 .disposedBy(disposeBag)
 
+        articObjectObservable
+            .map { it.isOnView && it.gallery?.number != null }
+            .bindTo(galleryNumberVisible)
+            .disposedBy(disposeBag)
+
+        articObjectObservable
+            .map { !it.isOnView }
+            .bindTo(currentlyOffViewVisible)
+            .disposedBy(disposeBag)
     }
 
     fun onClickShowOnMap() {
