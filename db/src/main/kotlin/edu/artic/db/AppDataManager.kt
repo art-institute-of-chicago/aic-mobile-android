@@ -186,10 +186,10 @@ class AppDataManager @Inject constructor(
                             updateArticObjects(objects, rawGalleries)
                             objectDao.clear()
                             objectDao.addObjects(objects.values.filterNotNull().toList())
-                        }
 
-                        result.tours?.let {
-                            updateTours(it, objects, galleries)
+                            result.tours?.let {
+                                updateTours(it, objects, galleries)
+                            }
                         }
 
                         val exhibitionsCMS = result.exhibitions?.filterNotNull()
@@ -235,9 +235,7 @@ class AppDataManager @Inject constructor(
                         appDataState.headers[HEADER_LAST_MODIFIED]?.let {
                             appDataPreferencesManager.lastModified = it[0]
                         }
-
                     }
-
                 }
                 return@flatMap appDataState.asObservable()
             }
