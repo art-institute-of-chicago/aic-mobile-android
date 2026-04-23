@@ -7,6 +7,7 @@ import edu.artic.base.utils.preventReselection
 import edu.artic.media.ui.NarrowAudioPlayerFragment
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
+import edu.artic.navigation.overrideTransition
 import edu.artic.ui.BaseActivity
 
 //import kotlinx.android.synthetic.main.activity_audio.*
@@ -37,6 +38,7 @@ class AudioActivity : BaseActivity<ActivityAudioBinding>() {
     override fun onBackPressed() {
         if (isRootFragment(R.id.audioLookupFragment)) {
             startActivity(linkHome())
+            overrideTransition()
             return
         }
         super.onBackPressed()
