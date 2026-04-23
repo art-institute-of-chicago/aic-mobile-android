@@ -1,6 +1,8 @@
 package edu.artic.media.ui
 
 //import kotlinx.android.synthetic.main.fragment_bottom_audio_player.*
+import android.app.ActivityManager
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -83,8 +85,15 @@ class NarrowAudioPlayerFragment :
         super.onResume()
         val newAudioIntent = AudioPlayerService.getLaunchIntent(requireContext())
         audioIntent = newAudioIntent
-        requireActivity().startService(newAudioIntent)
-        requireActivity().bindService(newAudioIntent, serviceConnection, 0)
+
+        // Only start the service if the app is in the foreground to prevent a background crash.
+        // See https://issuetracker.google.com/issues/113122354 for context
+        val info = RunningAppProcessInfo()
+        ActivityManager.getMyMemoryState(info)
+        if (info.importance <= RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+            requireActivity().startService(newAudioIntent)
+            requireActivity().bindService(newAudioIntent, serviceConnection, 0)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
