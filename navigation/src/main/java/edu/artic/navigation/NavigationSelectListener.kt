@@ -2,8 +2,8 @@ package edu.artic.navigation
 
 import android.content.Context
 import android.content.Intent
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.MenuItem
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import edu.artic.base.R
 import edu.artic.base.utils.asDeepLinkIntent
 
@@ -22,24 +22,28 @@ class NavigationSelectListener(val context: Context) : BottomNavigationView.OnNa
         return when (item.itemId) {
             R.id.action_home -> {
                 context.startActivity(linkHome())
+                context.overrideTransition()
                 false
             }
             R.id.action_map -> {
                 val intent = NavigationConstants.MAP.asDeepLinkIntent()
                 intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 context.startActivity(intent)
+                context.overrideTransition()
                 false
             }
             R.id.action_audio -> {
                 val intent = NavigationConstants.AUDIO.asDeepLinkIntent()
                 intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 context.startActivity(intent)
+                context.overrideTransition()
                 false
             }
             R.id.action_info -> {
                 val intent = NavigationConstants.INFO.asDeepLinkIntent()
                 intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
                 context.startActivity(intent)
+                context.overrideTransition()
                 false
             }
             else -> {

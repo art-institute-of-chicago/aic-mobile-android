@@ -11,6 +11,7 @@ import edu.artic.map.databinding.ActivityMapBinding
 import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
+import edu.artic.navigation.overrideTransition
 import edu.artic.ui.BaseActivity
 import javax.inject.Inject
 
@@ -62,6 +63,7 @@ class MapActivity : BaseActivity<ActivityMapBinding>() {
     override fun onBackPressed() {
         if (isRootFragment(R.id.mapFragment)) {
             startActivity(linkHome())
+            overrideTransition()
             return
         }
         super.onBackPressed()

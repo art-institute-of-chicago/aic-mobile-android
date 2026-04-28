@@ -60,6 +60,13 @@ class SplashViewModel @Inject constructor(
      * Play the museum floor animation video.
      */
     private fun startVideo() {
+        if (!appDaPrefManager.shouldShowVideo) {
+            Navigate.Forward(NavigationEndpoint.Welcome)
+                    .asObservable()
+                    .bindTo(navigateTo)
+            return
+        }
+
         val seenLanguageSettingsDialogBefore = languageSettingsPrefManager.userSelectedLanguage
         Navigate.Forward(NavigationEndpoint.StartVideo(!seenLanguageSettingsDialogBefore))
                 .asObservable().delay(1, TimeUnit.SECONDS)
@@ -77,5 +84,12 @@ class SplashViewModel @Inject constructor(
                     .bindTo(navigateTo)
                     .disposedBy(disposeBag)
         }
+    }
+
+    /**
+     * Mark the video as shown so the user doesn't see it again on future startups
+     */
+    fun onVideoShown() {
+        appDaPrefManager.shouldShowVideo = false
     }
 }

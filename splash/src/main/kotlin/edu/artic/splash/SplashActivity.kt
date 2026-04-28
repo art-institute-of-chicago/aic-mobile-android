@@ -7,6 +7,7 @@ import android.app.AlertDialog
 import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.media.MediaPlayer
+import android.media.PlaybackParams
 import android.os.Build
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -187,7 +188,8 @@ class SplashActivity : BaseViewModelActivity<ActivitySplashBinding, SplashViewMo
             mediaPlayer.setSurface(this.surface)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnCompletionListener {
-                goToWelcomeActivity(binding.textureView)
+                viewModel.onVideoShown()
+                goToWelcomeActivity(binding.textureView, true)
             }
         } catch (ignored: Throwable) {
             ///TODO: instead, handle errors when we receive the Navigate.Forward event (i.e. when the progressBar is full)
@@ -218,22 +220,15 @@ class SplashActivity : BaseViewModelActivity<ActivitySplashBinding, SplashViewMo
         }).start()
     }
 
-    private fun goToWelcomeActivity(textureView: TextureView) {
+    private fun goToWelcomeActivity(textureView: TextureView, fromVideo: Boolean = false) {
         val intent = NavigationConstants.HOME.asDeepLinkIntent()
-        val options = ActivityOptions
-            .makeSceneTransitionAnimation(this, textureView, "museumImage")
+        val options = if (fromVideo) {
+            ActivityOptions.makeSceneTransitionAnimation(this, textureView, "museumImage")
+        } else {
+            ActivityOptions.makeSceneTransitionAnimation(this)
+        }
         if (!isFinishing) {
-            /**
-             * Shared transition element does not work properly (crashes on some devices) running
-             * Lollipop. Please check https://issuetracker.google.com/issues/35826109
-             */
-            if (Build.VERSION.SDK_INT < VERSION_CODES.M) {
-                startActivity(intent)
-                finish()
-            } else {
-                startActivity(intent, options.toBundle())
-                finishAfterTransition()
-            }
+            startActivity(intent, options.toBundle())
         }
     }
 
