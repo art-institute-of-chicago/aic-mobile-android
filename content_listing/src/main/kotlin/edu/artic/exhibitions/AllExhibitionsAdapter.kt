@@ -43,7 +43,11 @@ class AllExhibitionsAdapter :
                 .disposedBy(item.viewDisposeBag)
             item.exhibitionEndDate
                 .map {
-                    context.getString(R.string.content_through_date, it)
+                    if (it.isNotBlank()) {
+                        context.getString(edu.artic.details.R.string.content_through_date, it)
+                    } else {
+                        context.getString(edu.artic.details.R.string.content_ongoing)
+                    }
                 }
                 .bindToMain(description.text())
                 .disposedBy(item.viewDisposeBag)
