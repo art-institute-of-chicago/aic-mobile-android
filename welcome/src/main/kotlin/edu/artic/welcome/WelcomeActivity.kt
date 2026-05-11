@@ -3,7 +3,6 @@ package edu.artic.welcome
 import android.os.Bundle
 import android.transition.Fade
 import android.view.Window
-import edu.artic.base.utils.disableShiftMode
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.overrideTransition
 import edu.artic.ui.BaseActivity
@@ -25,7 +24,6 @@ class WelcomeActivity : BaseActivity<ActivityWelcomeBinding>() {
         super.onCreate(savedInstanceState)
 
         binding.bottomNavigation.apply {
-            disableShiftMode(R.color.menu_color_list)
             selectedItemId = R.id.action_home
             setOnNavigationItemReselectedListener {
                 navController.popBackStack(R.id.welcomeFragment, false)
