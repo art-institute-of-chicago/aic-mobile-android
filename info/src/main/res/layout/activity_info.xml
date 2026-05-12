@@ -32,6 +32,8 @@
         android:id="@+id/bottomNavigation"
         style="@style/BottomNav"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:itemTextColor="@color/info_menu_color_list"
+        app:itemIconTint="@color/info_menu_color_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
