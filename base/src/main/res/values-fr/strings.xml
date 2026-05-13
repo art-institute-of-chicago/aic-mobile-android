@@ -51,4 +51,5 @@
 	<string name="messages_next_action">Message suivant</string>
 	<string name="messages_previous_action">Message précédent</string>
 	<string name="search_currently_off_view">Pas exposé actuellement</string>
+    <string name="content_ongoing">En cours</string>
 </resources>
