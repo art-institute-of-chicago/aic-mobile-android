@@ -51,4 +51,5 @@
 	<string name="messages_next_action">다음 메시지</string>
 	<string name="messages_previous_action">이전 메시지</string>
 	<string name="search_currently_off_view">현재 전시 중</string>
+    <string name="content_ongoing">진행 중</string>
 </resources>
