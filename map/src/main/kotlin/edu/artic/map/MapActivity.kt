@@ -4,13 +4,13 @@ package edu.artic.map
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
-import edu.artic.base.utils.disableShiftMode
 import edu.artic.base.utils.preventReselection
 import edu.artic.location.LocationPreferenceManager
 import edu.artic.map.databinding.ActivityMapBinding
 import edu.artic.map.tutorial.TutorialPreferencesManager
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
+import edu.artic.navigation.overrideTransition
 import edu.artic.ui.BaseActivity
 import javax.inject.Inject
 
@@ -37,7 +37,6 @@ class MapActivity : BaseActivity<ActivityMapBinding>() {
 
         binding.bottomNavigation.apply {
 
-            disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map
 
             preventReselection()
@@ -62,6 +61,7 @@ class MapActivity : BaseActivity<ActivityMapBinding>() {
     override fun onBackPressed() {
         if (isRootFragment(R.id.mapFragment)) {
             startActivity(linkHome())
+            overrideTransition()
             return
         }
         super.onBackPressed()

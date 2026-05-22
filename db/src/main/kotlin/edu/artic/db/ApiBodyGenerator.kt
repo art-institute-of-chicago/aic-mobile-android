@@ -1,5 +1,8 @@
 package edu.artic.db
 
+import kotlin.String
+import kotlin.collections.mutableMapOf
+
 /**
  * This file contains mechanisms for creating API calls to the general-purpose
  * [data API][edu.artic.db.models.ArticDataObject.dataApiUrl].
@@ -18,29 +21,33 @@ sealed class ApiBodyGenerator {
         fun createExhibitionQueryBody(): MutableMap<String, Any> {
             val postParams = mutableMapOf<String, Any>()
             postParams["fields"] = listOf(
-                    "id",
-                    "title",
-                    "short_description",
-                    "image_url",
-                    "gallery_id",
-                    "web_url",
-                    "aic_start_at",
-                    "aic_end_at"
+                "id",
+                "title",
+                "aic_start_at",
+                "aic_end_at",
+                "short_description",
+                "image_url",
+                "gallery_id",
+                "web_url",
+                "position"
             )
-            postParams["sort"] = listOf("aic_start_at", "aic_end_at")
+
             postParams["query"] = mutableMapOf<String, Any>().apply {
                 //Boolean map
                 this["bool"] = mutableMapOf<String, Any>().apply {
-                    this["must"] = restrictToTimeFrame(
-                            startKey = "aic_start_at",
-                            endKey = "aic_end_at"
-                    )
+                    this["must"] = mutableListOf<Any>().apply {
 
-                    this["must_not"] = mutableListOf<Any>().apply {
                         this.add(mutableMapOf<String, Any>().apply {
-                            //range
                             this["term"] = mutableMapOf<String, Any>().apply {
-                                this["status"] = "Closed"
+                                this["is_featured"] = "true"
+                            }
+                        })
+
+                        this.add(mutableMapOf<String, Any>().apply {
+                            this["range"] = mutableMapOf<String, Any>().apply {
+                                this["aic_start_at"] = mutableMapOf<String, String>().apply {
+                                    this["lte"] = "now"
+                                }
                             }
                         })
                     }
@@ -75,13 +82,11 @@ sealed class ApiBodyGenerator {
                     "artist_display",
                     "image_id",
                     "gallery_id",
-                    "latlon"
+                    "latlon",
+                    "latitude",
+                    "longitude",
+                    "is_boosted"
             )
-            artworkParams["query"] = mutableMapOf<String, Any>().apply {
-                this["term"] = mutableMapOf<String, Any>().apply {
-                    this["is_on_view"] = "true"
-                }
-            }
             return artworkParams
         }
 

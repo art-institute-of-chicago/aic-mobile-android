@@ -146,7 +146,9 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
             artwork?.forEach { searchedArtwork ->
                 val artworkId = searchedArtwork.artworkId.toString()
                 val articObject = articObjectDao.getObjectByIdSynchronously(artworkId)
-                val gallery = articGalleryDao.getGalleryForGalleryIdSynchronously(searchedArtwork.gallery_id)
+                val gallery = searchedArtwork.gallery_id?.let {
+                    articGalleryDao.getGalleryForGalleryIdSynchronously(it)
+                }
                 if (articObject != null) {
                     returnList.add(
                             transformArticObjectToArticSearchObject(
@@ -155,7 +157,7 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                                     gallery
                             )
                     )
-                } else if (searchedArtwork.isOnView) {
+                } else if (searchedArtwork.isOnView == true || searchedArtwork.isBoosted == true) {
                     returnList.add(
                             transformSearchedArtworkToSearchArtworkObject(
                                     searchedArtwork,
@@ -191,9 +193,10 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 imageUrl,
                 searchedArtwork.artistTitle,
                 searchedArtwork.artist_display,
-                searchedArtwork.latlon,
+                searchedArtwork.combinedLatLng,
                 gallery?.floor ?: INVALID_FLOOR,
-                gallery
+                gallery,
+                searchedArtwork.isOnView ?: false
         )
     }
 
@@ -212,7 +215,8 @@ class SearchResultsManager(private val searchService: SearchServiceProvider,
                 articObject.artistCulturePlaceDelim,
                 articObject.location,
                 gallery?.floor ?: INVALID_FLOOR,
-                gallery
+                gallery,
+                articObject.isOnView ?: false
         )
     }
 

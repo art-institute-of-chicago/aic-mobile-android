@@ -47,7 +47,7 @@ buildscript {
                 timber                  : 'com.jakewharton.timber:timber:5.0.1',
                 threeten                : 'com.jakewharton.threetenabp:threetenabp:1.1.1',
                 v4_support              : 'androidx.legacy:legacy-support-v4:1.0.0',
-                design_support          : 'com.google.android.material:material:1.0.0',
+                design_support          : 'com.google.android.material:material:1.13.0',
                 constraint_layout       : 'androidx.constraintlayout:constraintlayout:2.2.1',
                 glide                   : "com.github.bumptech.glide:glide:${glide_version}",
                 glide_compiler          : "com.github.bumptech.glide:compiler:${glide_version}",

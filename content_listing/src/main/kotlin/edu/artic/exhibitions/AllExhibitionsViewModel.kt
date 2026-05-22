@@ -73,9 +73,9 @@ class AllExhibitionsCellViewModel(
 
         languageSelector.currentLanguage
                 .map {
-                    exhibition.endTime.format(
+                    exhibition.endTime?.format(
                             HomeExhibition.obtainFormatter(it)
-                    )
+                    ) ?: ""
                 }
                 .bindToMain(exhibitionEndDate)
                 .disposedBy(disposeBag)

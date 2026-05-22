@@ -145,7 +145,13 @@ class ExhibitionDetailFragment :
             .disposedBy(disposeBag)
 
         viewModel.throughDate
-            .map { getString(R.string.content_through_date, it) }
+            .map {
+                if (it.isNotBlank()) {
+                    getString(R.string.content_through_date, it)
+                } else {
+                    getString(R.string.content_ongoing)
+                }
+            }
             .bindToMain(binding.throughDate.text())
             .disposedBy(disposeBag)
 

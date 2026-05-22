@@ -6,7 +6,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
-String majorAndMinorVersion = "1.7"
+String majorAndMinorVersion = "1.8"
 Integer patchVersionCode = 0
 
 android {
@@ -16,7 +16,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 35
         multiDexEnabled true
-        versionCode(patchVersionCode + 1600)
+        versionCode(patchVersionCode + 1800)
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 

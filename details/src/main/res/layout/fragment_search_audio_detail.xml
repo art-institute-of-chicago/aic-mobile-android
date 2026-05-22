@@ -116,14 +116,6 @@
                 app:layout_constraintWidth_percent=".45"
                 tools:visibility="visible" />
 
-            <!--
-
-            The below Barrier is aligned to 'showOnMap', since we
-            don't expect that to be marked GONE at any of the current
-            uses of this file.
-
-            -->
-
             <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/buttonPanelGuide"
                 android:layout_width="0dp"
@@ -132,8 +124,7 @@
                 app:barrierDirection="bottom"
                 app:constraint_referenced_ids="showOnMap,playAudio"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/showOnMap" />
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
                 android:id="@+id/description"
@@ -161,6 +152,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description"
                 tools:text="Through August 5, 2018" />
+            <TextView
+                android:id="@+id/offView"
+                style="@style/DescriptionDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginDouble"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="@dimen/marginDouble"
+                android:text="@string/search_currently_off_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description"
+                tools:visibility="gone"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -1,14 +1,13 @@
 package edu.artic.info
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import edu.artic.base.utils.disableShiftMode
 import edu.artic.info.databinding.ActivityInfoBinding
 import edu.artic.location.LocationService
 import edu.artic.location.LocationServiceImpl
 import edu.artic.navigation.NavigationSelectListener
 import edu.artic.navigation.linkHome
+import edu.artic.navigation.overrideTransition
 import edu.artic.ui.BaseActivity
 import edu.artic.ui.findNavController
 //import kotlinx.android.synthetic.main.activity_info.*
@@ -25,7 +24,6 @@ class InfoActivity : BaseActivity<ActivityInfoBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.bottomNavigation.apply {
-            disableShiftMode(R.color.info_menu_color_list)
             selectedItemId = R.id.action_info
             setOnNavigationItemReselectedListener {
                 navController.popBackStack(R.id.informationFragment, false)
@@ -64,6 +62,7 @@ class InfoActivity : BaseActivity<ActivityInfoBinding>() {
     override fun onBackPressed() {
         if (isRootFragment(R.id.informationFragment)) {
             startActivity(linkHome())
+            overrideTransition()
             return
         }
         super.onBackPressed()

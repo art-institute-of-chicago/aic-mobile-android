@@ -1,6 +1,10 @@
 package edu.artic.navigation
 
+import android.app.Activity
+import android.app.Activity.OVERRIDE_TRANSITION_OPEN
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import edu.artic.base.utils.asDeepLinkIntent
 
 /**
@@ -31,4 +35,15 @@ fun linkHome(): Intent {
     val intent = NavigationConstants.HOME.asDeepLinkIntent()
     intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NO_ANIMATION
     return intent
+}
+
+@Suppress("DEPRECATION")
+fun Context.overrideTransition() {
+    if (this is Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, 0, 0)
+        } else {
+            overridePendingTransition(0, 0)
+        }
+    }
 }

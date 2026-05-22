@@ -50,4 +50,6 @@
 	<string name="global_accept_action">OK</string>
 	<string name="messages_next_action">Mensaje siguiente</string>
 	<string name="messages_previous_action">Mensaje anterior</string>
+	<string name="search_currently_off_view">Acutualmente no está exhibido</string>
+    <string name="content_ongoing">En curso</string>
 </resources>
