@@ -4,7 +4,6 @@ package edu.artic.map
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
-import edu.artic.base.utils.disableShiftMode
 import edu.artic.base.utils.preventReselection
 import edu.artic.location.LocationPreferenceManager
 import edu.artic.map.databinding.ActivityMapBinding
@@ -38,7 +37,6 @@ class MapActivity : BaseActivity<ActivityMapBinding>() {
 
         binding.bottomNavigation.apply {
 
-            disableShiftMode(R.color.map_menu_color_list)
             selectedItemId = R.id.action_map
 
             preventReselection()

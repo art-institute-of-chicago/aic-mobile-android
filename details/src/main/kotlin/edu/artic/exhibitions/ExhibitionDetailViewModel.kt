@@ -100,11 +100,11 @@ constructor(dataObjectDao: ArticDataObjectDao,
                         exhibitionObservable
                 )
                 .map { (locale, exhibition) ->
-                    exhibition.endTime.format(
+                    exhibition.endTime?.format(
                             HomeExhibition.obtainFormatter(
                                     locale
                             )
-                    )
+                    ) ?: ""
                 }.bindTo(throughDate)
                 .disposedBy(disposeBag)
     }

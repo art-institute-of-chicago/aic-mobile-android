@@ -2,6 +2,7 @@
 <resources>
     <!-- Style for android.support.design.widget.BottomNavigationView layouts -->
     <style name="BottomNav">
+        <item name="android:background">@color/nav_bar_background</item>
         <item name="itemBackground">@color/nav_bar_background</item>
         <item name="itemTextColor">@color/nav_bar_unselected</item>
         <item name="layout_constraintBottom_toBottomOf">parent</item>
@@ -9,5 +10,8 @@
         <item name="layout_constraintStart_toStartOf">parent</item>
         <item name="labelVisibilityMode">labeled</item>
         <item name="menu">@menu/navigation_menu</item>
+        <item name="android:fontFamily">@font/ideal_sans_semibold</item>
+        <item name="itemPaddingTop">@dimen/marginHalf</item>
+        <item name="itemPaddingBottom">@dimen/marginHalf</item>
     </style>
 </resources>

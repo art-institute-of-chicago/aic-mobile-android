@@ -17,9 +17,9 @@ data class ArticExhibition(
         @Json(name = "web_url") val web_url: String?,
         @Json(name = "gallery_id") val gallery_id: String?,
         @Json(name = "id") @PrimaryKey val id: Int,
-        @Json(name = "aic_end_at") val aic_end_at: ZonedDateTime,
+        @Json(name = "aic_end_at") val aic_end_at: ZonedDateTime?,
         @Json(name = "title") val title: String,
-        var order: Int = -1,
+        @Json(name = "position") val position: Int,
 
         /**
          * This value is defined by the associated [ArticGallery], associated
@@ -50,9 +50,9 @@ data class ArticExhibition(
             }
         }
 
-    val endTime: ZonedDateTime
+    val endTime: ZonedDateTime?
         get() {
-            return aic_end_at.toCurrentTimeZone()
+            return aic_end_at?.toCurrentTimeZone()
         }
 
 }

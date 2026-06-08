@@ -25,6 +25,8 @@
         style="@style/BottomNav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:itemTextColor="@color/audio_menu_color_list"
+        app:itemIconTint="@color/audio_menu_color_list"
         app:layout_constrainedHeight="true"
         app:layout_constraintTop_toBottomOf="@id/container" />
 

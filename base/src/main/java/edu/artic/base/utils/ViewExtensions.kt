@@ -1,56 +1,9 @@
 package edu.artic.base.utils
 
-import android.annotation.SuppressLint
-import android.graphics.Typeface
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
-import edu.artic.base.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-
-/**
- * This hack is required for displaying title below icon.
- * There is an api available to achieve this in support library 28-alpha1 (labelVisibilityMode mode).
- * Once support library goes stable we can remove this hack.
- *
- * @see https://stackoverflow.com/a/47407229/4253091
- * @param colorList ColorStateList for icon and text
- */
-fun BottomNavigationView.disableShiftMode(colorList: Int = 0) {
-    val menuView = getChildAt(0) as BottomNavigationMenuView
-
-    // While we're adjusting the other properties, we can normalize the font in use too.
-    val type: Typeface? = ResourcesCompat.getFont(context, R.font.ideal_sans_semibold)
-
-    @SuppressLint("RestrictedApi")
-    for (i in 0 until menuView.childCount) {
-        (menuView.getChildAt(i) as BottomNavigationItemView).apply {
-            setChecked(false)
-            if (type != null) {
-                overrideLabelFont(type)
-            }
-            if (colorList > 0) {
-                setIconTintList(ContextCompat.getColorStateList(this.context, colorList))
-                setTextColor(ContextCompat.getColorStateList(this.context, colorList))
-            }
-        }
-    }
-}
-
-/**
- * There's no other API for defining these font styles. We just
- * find and set Typeface on the `smallLabel` and 'largeLabel`
- * directly.
- */
-private fun BottomNavigationItemView.overrideLabelFont(font: Typeface) {
-    findViewById<TextView?>(R.id.smallLabel)?.typeface = font
-    findViewById<TextView?>(R.id.largeLabel)?.typeface = font
-}
 
 /**
  * Special implementation of [BottomNavigationView.OnNavigationItemReselectedListener]

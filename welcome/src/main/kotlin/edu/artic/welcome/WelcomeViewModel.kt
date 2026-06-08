@@ -291,7 +291,7 @@ class WelcomeExhibitionCellViewModel(
                     HomeExhibition.obtainFormatter(it)
                 }
                 .map {
-                    exhibition.endTime.format(it)
+                    exhibition.endTime?.format(it) ?: ""
                 }
                 .bindToMain(exhibitionDate)
                 .disposedBy(disposeBag)

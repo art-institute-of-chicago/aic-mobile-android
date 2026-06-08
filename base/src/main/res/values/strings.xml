@@ -59,5 +59,6 @@
     <string name="messages_next_action">Next Message</string>
     <string name="messages_previous_action">Previous Message</string>
     <string name="content_gallery_number">Gallery %s</string>
+    <string name="content_ongoing">Ongoing</string>
 
 </resources>

@@ -30,7 +30,11 @@ class OnViewAdapter :
 
             item.exhibitionDate
                 .map {
-                    context.getString(R.string.content_through_date, it)
+                    if (it.isNotBlank()) {
+                        context.getString(edu.artic.details.R.string.content_through_date, it)
+                    } else {
+                        context.getString(edu.artic.details.R.string.content_ongoing)
+                    }
                 }
                 .bindToMain(exhibitionDate.text())
                 .disposedBy(item.viewDisposeBag)
