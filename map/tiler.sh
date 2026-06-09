@@ -59,7 +59,7 @@ generateZoomLevels(){
   #generate a scaled down and rotated by -1 degree image from PDF
   # This accounts for the slight angle that the museum is at in relation to the google map tiles
   magick \
-    -density 300 $FILENAME \
+    -density 300 "$FILENAME" \
     -scale "${IMG_SIZE}x${IMG_SIZE}" \
     -background "${BACKGROUND_COLOR}" \
     -rotate "-1.00" $TRANSFORM_FILE
@@ -108,7 +108,7 @@ setup
 # we only support these five zoom levels (2 through 6) as we max it out, but you could add more
 # zoom level 1 does not seem to be used at this point
 FILENAME="$1"
-if [ -z $FILENAME ]; then
+if [ -z "$FILENAME" ]; then
   echo "You must provide a map file"
   exit 1
 fi
