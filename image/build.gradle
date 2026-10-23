@@ -16,9 +16,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "USER_AGENT", "\"${envVariable("user_agent", false)}\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "USER_AGENT", "\"${envVariable("user_agent", true)}\""
         }
     }
     compileOptions {
