@@ -17,6 +17,9 @@ import android.view.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.annotation.UiThread
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import com.fuzz.rx.disposedBy
 import edu.artic.base.PermissibleError
@@ -64,6 +67,12 @@ class SplashActivity : BaseViewModelActivity<ActivitySplashBinding, SplashViewMo
 
         super.onCreate(savedInstanceState)
         makeStatusBarTransparent()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.splashChrome) { v, windowInsets ->
+            val navInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            v.updatePadding(bottom = navInsets.bottom)
+            windowInsets
+        }
 
         binding.textureView.surfaceTextureListener = this
 

@@ -127,10 +127,11 @@
         android:fitsSystemWindows="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    <ImageView
-        android:id="@+id/searchIcon"
-        style="@style/Search.PrimaryScreen"
-        android:layout_marginTop="@dimen/marginOneHalf"/>
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            style="@style/Search.PrimaryScreen"
+            android:layout_marginTop="11dp" />
 
     </FrameLayout>
 

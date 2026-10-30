@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 35
+        targetSdkVersion 36
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -35,6 +35,7 @@ dependencies {
     implementation project(':localization')
     implementation project(':ui')
     implementation project(':viewmodel')
+    implementation 'androidx.core:core-ktx:1.12.0'
 
     kapt libs.dagger_compiler
     kapt libs.dagger_android_compiler

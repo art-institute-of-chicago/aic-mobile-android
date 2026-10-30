@@ -34,6 +34,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:itemTextColor="@color/info_menu_color_list"
-        app:itemIconTint="@color/info_menu_color_list" />
+        app:itemIconTint="@color/info_menu_color_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

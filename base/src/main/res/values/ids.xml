@@ -3,4 +3,6 @@
     <item name="toolbar" type="id" />
     <item name="collapsingToolbar" type="id" />
     <item name="tag_position" type="id" />
+    <item name="bottomNavigation" type="id" />
+    <item name="newPlayer" type="id" />
 </resources>

@@ -10,6 +10,8 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.annotation.UiThread
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.fuzz.rx.defaultThrottle
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
@@ -114,6 +116,11 @@ class LanguageSettingsFragment :
             binding.appBar?.visibility = View.VISIBLE
         } else {
             binding.appBar?.visibility = View.GONE
+            ViewCompat.setOnApplyWindowInsetsListener(binding.content) { v, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+                v.setPadding(v.paddingLeft, insets.top, v.paddingRight, v.paddingBottom)
+                windowInsets
+            }
         }
 
         if (hasDivider) {

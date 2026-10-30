@@ -2,10 +2,13 @@ package edu.artic.ui
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -73,6 +76,12 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSupportF
                     }
                 }.disposedBy(disposeBag)
         }
+
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
+        )
+
         super.onCreate(savedInstanceState)
 
         val vbClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>

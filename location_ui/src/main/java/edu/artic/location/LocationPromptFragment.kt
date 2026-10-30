@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.clicks
 import edu.artic.analytics.ScreenName
@@ -26,10 +29,31 @@ class LocationPromptFragment : BaseViewModelFragment<FragmentLocationPromptBindi
     override val title = R.string.global_empty_string
     override val screenName: ScreenName? = null
 
+    private var baseBottomMargin: Int = -1
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //Do not allow any touch events to go below this view
         view.setOnTouchListener { _, _ -> true }
+
+        val lp = view.layoutParams as? ViewGroup.MarginLayoutParams
+        if (lp != null && baseBottomMargin == -1) {
+            baseBottomMargin = lp.bottomMargin
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+            val statusInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            
+            v.setPadding(v.paddingLeft, statusInsets.top, v.paddingRight, v.paddingBottom)
+
+            val marginParams = v.layoutParams as? ViewGroup.MarginLayoutParams
+            if (marginParams != null && baseBottomMargin != -1) {
+                marginParams.bottomMargin = baseBottomMargin + navInsets.bottom
+                v.layoutParams = marginParams
+            }
+            windowInsets
+        }
     }
 
     override fun setupBindings(viewModel: LocationPromptViewModel) {

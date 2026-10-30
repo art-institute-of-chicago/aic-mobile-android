@@ -12,13 +12,23 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintBottom_toTopOf="@id/newPlayer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/audio_navigation_graph"
         tools:background="#fab" />
 
+
+    <fragment
+        android:id="@+id/newPlayer"
+        android:name="edu.artic.media.ui.NarrowAudioPlayerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_audio_player_height"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_bottom_audio_player" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
@@ -28,6 +38,8 @@
         app:itemTextColor="@color/audio_menu_color_list"
         app:itemIconTint="@color/audio_menu_color_list"
         app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toBottomOf="@id/container" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
