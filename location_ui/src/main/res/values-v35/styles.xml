@@ -9,7 +9,6 @@
         <item name="android:colorAccent">@color/sea</item>
         <item name="android:statusBarColor">@color/marine</item>
         <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
 </resources>

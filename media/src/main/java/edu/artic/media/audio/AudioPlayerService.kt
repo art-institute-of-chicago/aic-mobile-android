@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.media.AudioManager
 import android.net.Uri
@@ -365,9 +366,13 @@ class AudioPlayerService : DaggerService(), PlayerService {
                 ongoing: Boolean,
             ) {
                 super.onNotificationPosted(notificationId, notification, ongoing)
-                if (ongoing) // allow notification to be dismissed if player is stopped
-                    startForeground(notificationId, notification)
-                else
+                if (ongoing) { // allow notification to be dismissed if player is stopped
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+                    } else {
+                        startForeground(notificationId, notification)
+                    }
+                } else
                     stopForeground(STOP_FOREGROUND_DETACH)
             }
 

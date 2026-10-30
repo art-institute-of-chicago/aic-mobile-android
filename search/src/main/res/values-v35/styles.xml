@@ -6,7 +6,6 @@
         <item name="colorPrimaryDark">@color/greyText</item>
         <item name="android:colorPrimaryDark">@color/greyText</item>
         <item name="colorControlNormal">@color/white</item>
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
 </resources>

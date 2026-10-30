@@ -1,12 +1,20 @@
 package edu.artic.ui
 
+import android.app.Activity
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
+import androidx.core.view.updatePadding
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.navigation.Navigation
 import androidx.viewbinding.ViewBinding
 import com.fuzz.rx.DisposeBag
@@ -20,6 +28,32 @@ import edu.artic.view.ArticMainAppBarLayout
 import java.lang.reflect.ParameterizedType
 import javax.inject.Inject
 
+
+private fun Activity.hasView(id: Int): Boolean {
+    return findViewById<View>(id) != null
+}
+
+private fun Activity.isPlayerActive(): Boolean {
+    if (this !is androidx.fragment.app.FragmentActivity) return false
+    val fragment = supportFragmentManager.findFragmentById(edu.artic.base.R.id.newPlayer)
+    return fragment?.view?.visibility == View.VISIBLE
+}
+
+private fun findScrollableContainer(view: View): ViewGroup? {
+    if (view is NestedScrollView ||
+        view is android.widget.ScrollView ||
+        view is RecyclerView
+    ) {
+        return view as ViewGroup
+    }
+    if (view is ViewGroup) {
+        for (child in view.children) {
+            val found = findScrollableContainer(child)
+            if (found != null) return found
+        }
+    }
+    return null
+}
 
 abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFragment(),
     OnBackPressedListener {
@@ -140,6 +174,47 @@ abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFrag
         )
         _binding = method.invoke(null, inflater, container, false) as VB
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            if (v.fitsSystemWindows) {
+                v.updatePadding(top = insets.top)
+            }
+
+            val act = activity
+            val hasBottomNav = act?.hasView(R.id.bottomNavigation) == true
+            val isPlayerActive = act?.isPlayerActive() == true
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && act != null) {
+                act.window.isNavigationBarContrastEnforced = !(hasBottomNav || isPlayerActive)
+            }
+
+            val playerHeight = try {
+                v.resources.getDimensionPixelSize(R.dimen.bottom_audio_player_height)
+            } catch (_: Exception) {
+                0
+            }
+
+            val actName = act?.javaClass?.simpleName
+            val bottomPadding = when {
+                isPlayerActive && actName == "WelcomeActivity" -> playerHeight
+                isPlayerActive -> 0
+                !hasBottomNav && insets.bottom > 0 -> insets.bottom
+                else -> 0
+            }
+
+            val target = findScrollableContainer(v) ?: v
+            (target as? ViewGroup)?.clipToPadding = false
+            target.updatePadding(bottom = bottomPadding)
+
+            windowInsets
+        }
     }
 
     protected open fun hasTransparentStatusBar(): Boolean = false

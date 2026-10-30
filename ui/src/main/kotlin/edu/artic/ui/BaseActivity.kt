@@ -2,7 +2,9 @@ package edu.artic.ui
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -80,6 +82,12 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSupportF
         _binding = method.invoke(null, layoutInflater) as VB
 
         setContentView(binding.root)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
+        @Suppress("DEPRECATION")
+        window.navigationBarColor = Color.TRANSPARENT
 
         volumeControlStream = AudioManager.STREAM_VOICE_CALL
     }

@@ -6,7 +6,6 @@
         <item name="colorPrimaryDark">@color/audioBackground</item>
         <item name="android:colorPrimaryDark">@color/audioBackground</item>
         <item name="colorControlNormal">@color/white</item>
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
 </resources>

@@ -269,8 +269,10 @@ class AccessMemberCardFragment :
 
         toolbarColorAnimator = ValueAnimator.ofArgb(fromColor, toColor)
         toolbarColorAnimator.addUpdateListener { valueAnimator ->
-            requireActivity().window.statusBarColor = valueAnimator.animatedValue as Int
-            toolbar?.setBackgroundColor(valueAnimator.animatedValue as Int)
+            val color = valueAnimator.animatedValue as Int
+            requireActivity().window.statusBarColor = color
+            toolbar?.setBackgroundColor(color)
+            binding.appBar.setBackgroundColor(color)
         }
         toolbarColorAnimator.duration = 1000
         toolbarColorAnimator.repeatCount = INFINITE
