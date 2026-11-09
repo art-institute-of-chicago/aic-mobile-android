@@ -195,19 +195,7 @@ abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFrag
                 act.window.isNavigationBarContrastEnforced = !(hasBottomNav || isPlayerActive)
             }
 
-            val playerHeight = try {
-                v.resources.getDimensionPixelSize(R.dimen.bottom_audio_player_height)
-            } catch (_: Exception) {
-                0
-            }
-
-            val actName = act?.javaClass?.simpleName
-            val bottomPadding = when {
-                isPlayerActive && actName == "WelcomeActivity" -> playerHeight
-                isPlayerActive -> 0
-                !hasBottomNav && insets.bottom > 0 -> insets.bottom
-                else -> 0
-            }
+            val bottomPadding = if (!hasBottomNav && !isPlayerActive && insets.bottom > 0) insets.bottom else 0
 
             val target = findScrollableContainer(v) ?: v
             (target as? ViewGroup)?.clipToPadding = false
