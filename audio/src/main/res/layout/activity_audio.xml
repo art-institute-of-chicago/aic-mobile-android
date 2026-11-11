@@ -37,9 +37,6 @@
         android:layout_height="wrap_content"
         app:itemTextColor="@color/audio_menu_color_list"
         app:itemIconTint="@color/audio_menu_color_list"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constrainedHeight="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
