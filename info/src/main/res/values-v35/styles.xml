@@ -28,7 +28,6 @@
         <item name="languageSettingsHasDivider">true</item>
         <item name="languageSettingsTitleTextAppearance">@style/CardTitleLargeBlack</item>
         <item name="languageSettingsBodyTextAppearance">@style/BodySansSerifBlackLeft</item>
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
 </resources>

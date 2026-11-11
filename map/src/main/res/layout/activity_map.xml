@@ -35,9 +35,6 @@
         android:layout_height="wrap_content"
         app:itemTextColor="@color/map_menu_color_list"
         app:itemIconTint="@color/map_menu_color_list"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         tools:layout_height="50dp" />
 
     <FrameLayout

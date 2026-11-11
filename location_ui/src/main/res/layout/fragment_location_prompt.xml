@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/design_bottom_navigation_height"
     android:background="@color/marine"
-    android:fitsSystemWindows="true"
     android:theme="@style/AppTheme.CustomToolbar.Location">
 
     <ImageView

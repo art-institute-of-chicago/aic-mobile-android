@@ -1,6 +1,7 @@
 package edu.artic.media.ui
 
 //import kotlinx.android.synthetic.main.fragment_bottom_audio_player.*
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.ComponentName
@@ -10,10 +11,13 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
+import io.reactivex.android.schedulers.AndroidSchedulers
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.media.audio.AudioPlayerService
@@ -36,7 +40,7 @@ import kotlin.reflect.KClass
  *
  * NB: This binds and unbinds with the background [AudioPlayerService] in [onViewCreated] and
  * [onDestroyView] (respectively speaking; see the linked audio player documentation for
- * details). For that reason, it must be bound to an [Activity][android.app.Activity].
+ * details). For that reason, it must be bound to an [Activity][Activity].
  *
  * @author Sameer Dhakal (Fuzz)
  */
@@ -98,6 +102,21 @@ class NarrowAudioPlayerFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+            val navInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val parentHasBottomNav = (v.context as? Activity)?.findViewById<View>(R.id.bottomNavigation) != null
+
+            val bottomPadding = if (parentHasBottomNav) 0 else navInsets.bottom
+            val baseHeight = resources.getDimensionPixelSize(edu.artic.base.R.dimen.bottom_audio_player_height)
+
+            val lp = v.layoutParams
+            lp.height = baseHeight + bottomPadding
+            v.layoutParams = lp
+
+            v.setPadding(v.paddingLeft, 0, v.paddingRight, bottomPadding)
+            windowInsets
+        }
 
         requireView().visibility = View.GONE
         binding.closePlayer.setOnClickListener {
@@ -171,6 +190,14 @@ class NarrowAudioPlayerFragment :
         requireActivity().unbindService(serviceConnection)
     }
 
+    private fun isAudioDetailsActive(): Boolean {
+        val act = activity ?: return false
+        if (act is AudioDetailsActivity) return true
+        val navHost = (act as? AppCompatActivity)?.supportFragmentManager?.findFragmentById(edu.artic.base.R.id.container)
+        val currentFrag = navHost?.childFragmentManager?.fragments?.firstOrNull()
+        return currentFrag is AudioDetailsFragment
+    }
+
     /**
      * Binds the current track info and audio control actions with the service.
      */
@@ -194,8 +221,19 @@ class NarrowAudioPlayerFragment :
                 .disposedBy(disposeBag)
 
             audioService.audioPlayBackStatus
-                .map { it is AudioPlayerService.PlayBackState.Paused || it is AudioPlayerService.PlayBackState.Playing }
-                .bindToMain(requireView().visibility())
+                .map { status ->
+                    val isPlaying = status is AudioPlayerService.PlayBackState.Paused || status is AudioPlayerService.PlayBackState.Playing
+                    isPlaying && !isAudioDetailsActive()
+                }
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { isVisible ->
+                    view?.visibility = if (isVisible) View.VISIBLE else View.GONE
+                    val decor = activity?.window?.decorView
+                    if (decor != null) {
+                        ViewCompat.requestApplyInsets(decor)
+                    }
+                }
                 .disposedBy(disposeBag)
         }
     }

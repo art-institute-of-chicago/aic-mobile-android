@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/greyText"
-    android:fitsSystemWindows="true"
     android:paddingStart="@dimen/marginDouble"
     android:paddingEnd="@dimen/marginDouble"
     tools:background="#fab"
