@@ -2,7 +2,6 @@ package edu.artic.ui
 
 import android.app.Activity
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.StringRes
@@ -191,15 +190,15 @@ abstract class BaseFragment<VB : ViewBinding> : androidx.fragment.app.DialogFrag
             val hasBottomNav = act?.hasView(R.id.bottomNavigation) == true
             val isPlayerActive = act?.isPlayerActive() == true
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && act != null) {
-                act.window.isNavigationBarContrastEnforced = !(hasBottomNav || isPlayerActive)
-            }
-
             val bottomPadding = if (!hasBottomNav && !isPlayerActive && insets.bottom > 0) insets.bottom else 0
 
             val target = findScrollableContainer(v) ?: v
             (target as? ViewGroup)?.clipToPadding = false
-            target.updatePadding(bottom = bottomPadding)
+
+            val initialBottomPadding = (target.getTag(R.id.tag_position) as? Int) ?: run {
+                target.paddingBottom.also { target.setTag(R.id.tag_position, it) }
+            }
+            target.updatePadding(bottom = initialBottomPadding + bottomPadding)
 
             windowInsets
         }

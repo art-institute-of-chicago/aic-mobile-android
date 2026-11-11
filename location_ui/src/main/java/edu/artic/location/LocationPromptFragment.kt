@@ -41,11 +41,12 @@ class LocationPromptFragment : BaseViewModelFragment<FragmentLocationPromptBindi
             baseBottomMargin = lp.bottomMargin
         }
 
+        val initialTopPadding = view.paddingTop
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
             val statusInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
             val navInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
             
-            v.setPadding(v.paddingLeft, statusInsets.top, v.paddingRight, v.paddingBottom)
+            v.setPadding(v.paddingLeft, initialTopPadding + statusInsets.top, v.paddingRight, v.paddingBottom)
 
             val marginParams = v.layoutParams as? ViewGroup.MarginLayoutParams
             if (marginParams != null && baseBottomMargin != -1) {

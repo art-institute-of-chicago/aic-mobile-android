@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager
 import com.fuzz.rx.bindToMain
 import com.fuzz.rx.disposedBy
 import com.jakewharton.rxbinding2.view.visibility
+import io.reactivex.android.schedulers.AndroidSchedulers
 import edu.artic.analytics.ScreenName
 import edu.artic.base.utils.asDeepLinkIntent
 import edu.artic.media.audio.AudioPlayerService
@@ -189,6 +190,14 @@ class NarrowAudioPlayerFragment :
         requireActivity().unbindService(serviceConnection)
     }
 
+    private fun isAudioDetailsActive(): Boolean {
+        val act = activity ?: return false
+        if (act is AudioDetailsActivity) return true
+        val navHost = (act as? AppCompatActivity)?.supportFragmentManager?.findFragmentById(edu.artic.base.R.id.container)
+        val currentFrag = navHost?.childFragmentManager?.fragments?.firstOrNull()
+        return currentFrag is AudioDetailsFragment
+    }
+
     /**
      * Binds the current track info and audio control actions with the service.
      */
@@ -212,14 +221,19 @@ class NarrowAudioPlayerFragment :
                 .disposedBy(disposeBag)
 
             audioService.audioPlayBackStatus
-                .map { it is AudioPlayerService.PlayBackState.Paused || it is AudioPlayerService.PlayBackState.Playing }
-                .doOnNext {
-                    view?.post {
-                        val decor = activity?.window?.decorView
-                        if (decor != null) ViewCompat.requestApplyInsets(decor)
+                .map { status ->
+                    val isPlaying = status is AudioPlayerService.PlayBackState.Paused || status is AudioPlayerService.PlayBackState.Playing
+                    isPlaying && !isAudioDetailsActive()
+                }
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { isVisible ->
+                    view?.visibility = if (isVisible) View.VISIBLE else View.GONE
+                    val decor = activity?.window?.decorView
+                    if (decor != null) {
+                        ViewCompat.requestApplyInsets(decor)
                     }
                 }
-                .bindToMain(requireView().visibility())
                 .disposedBy(disposeBag)
         }
     }

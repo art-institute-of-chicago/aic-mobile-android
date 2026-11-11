@@ -116,9 +116,10 @@ class LanguageSettingsFragment :
             binding.appBar?.visibility = View.VISIBLE
         } else {
             binding.appBar?.visibility = View.GONE
+            val initialTopPadding = binding.content.paddingTop
             ViewCompat.setOnApplyWindowInsetsListener(binding.content) { v, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-                v.setPadding(v.paddingLeft, insets.top, v.paddingRight, v.paddingBottom)
+                v.setPadding(v.paddingLeft, initialTopPadding + insets.top, v.paddingRight, v.paddingBottom)
                 windowInsets
             }
         }
