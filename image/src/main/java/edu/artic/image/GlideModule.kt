@@ -35,6 +35,9 @@ import java.io.InputStream
 @GlideModule
 @Suppress("unused")
 class GlideModule : AppGlideModule() {
+    companion object {
+        const val USER_AGENT_HEADER = "aic-user-agent"
+    }
 
     // NB: 'appcontext' and 'builder' are guaranteed non-null, based on analysis of sources for Glide 4.4.0
     override fun applyOptions(appContext: Context, builder: GlideBuilder) {
@@ -67,6 +70,14 @@ class GlideModule : AppGlideModule() {
         if (BuildConfig.DEBUG) {
             clientBuilder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
         }
+        clientBuilder.addInterceptor { chain ->
+            val requestWithHeaders = chain.request().newBuilder()
+                .header(USER_AGENT_HEADER, BuildConfig.USER_AGENT)
+                .build()
+
+            chain.proceed(requestWithHeaders)
+        }
+
         val client = clientBuilder.cache(Cache(context.cacheDir, cacheSize)).build()
         val okHttpFactory = OkHttpUrlLoader.Factory(client)
 

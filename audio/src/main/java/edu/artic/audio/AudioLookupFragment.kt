@@ -98,7 +98,7 @@ class AudioLookupFragment :
 
         registerNumPadSubscription()
 
-        getAudioServiceObservable(fm = childFragmentManager)
+        getAudioServiceObservable()
             .subscribeBy {
                 viewModel.audioService = it
             }

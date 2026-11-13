@@ -9,16 +9,20 @@ android {
 
     defaultConfig {
         minSdkVersion 24
-        targetSdkVersion 35
+        targetSdkVersion 36
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "USER_AGENT", "\"${envVariable("user_agent", false)}\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "USER_AGENT", "\"${envVariable("user_agent", true)}\""
         }
     }
     compileOptions {

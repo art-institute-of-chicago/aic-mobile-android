@@ -79,6 +79,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:contentInsetEnd="0dp"
+            app:contentInsetRight="0dp"
             app:layout_collapseMode="pin"
             app:titleTextColor="@color/white"
             tools:layout_height="52dp"

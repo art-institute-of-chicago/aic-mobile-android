@@ -117,7 +117,8 @@ sealed class ApiBodyGenerator {
                     "gallery_id",
                     "web_url",
                     "aic_start_at",
-                    "aic_end_at"
+                    "aic_end_at",
+                    "position"
             )
             exhibitionParams["size"] = 99
             exhibitionParams["query"] = mutableMapOf<String, Any>().apply {

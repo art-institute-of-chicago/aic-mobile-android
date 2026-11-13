@@ -6,7 +6,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
-String majorAndMinorVersion = "1.8"
+String majorAndMinorVersion = "1.9"
 Integer patchVersionCode = 0
 
 android {
@@ -14,9 +14,9 @@ android {
     defaultConfig {
         applicationId "edu.artic"
         minSdkVersion 24
-        targetSdkVersion 35
+        targetSdkVersion 36
         multiDexEnabled true
-        versionCode(patchVersionCode + 1800)
+        versionCode(patchVersionCode + 1900)
         versionName "$majorAndMinorVersion.$patchVersionCode"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 

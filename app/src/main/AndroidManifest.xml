@@ -7,6 +7,8 @@
     <application
         android:name=".ArticApp"
         android:allowBackup="true"
+        android:enableOnBackInvokedCallback="false"
+        tools:targetApi="33"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
